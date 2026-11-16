@@ -7,18 +7,18 @@
 
 *Mobile-first arrival planning · Istanbul discovery · Ethical travel intermediation*
 
-[▶ Canlı masaüstü demosu](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr) · [Traveler demo (English)](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=en) · [Researched tour prices](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
+[▶ Canlı demo](https://erenariel.github.io/Bosphorly/?lang=tr) · [Traveler demo (English)](https://erenariel.github.io/Bosphorly/?lang=en) · [Tour comparison](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
 </div>
 
-## ▶ Masaüstü ve mobil demoyu aç
+## ▶ Canlı demoyu aç
 
-**[Bosphorly ana sayfasını ve transfer formunu aç →](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr)**
+**[Bosphorly ana sayfasını ve transfer formunu aç →](https://erenariel.github.io/Bosphorly/?lang=tr)**
 
-Aşağıdaki görsele tıklayarak da masaüstü demosuna ulaşabilirsin. ChatGPT hesabı veya giriş gerektirmez; bağlantıyı açan herkes erişebilir. Bu ayrı inceleme yayını, [PR #4](https://github.com/erenariel/Bosphorly/pull/4) içindeki güncel arayüzü gösterir; ana dalın GitHub Pages yayınıyla aynı sürüm olmak zorunda değildir. Gerçek rezervasyon veya ödeme yapılmaz.
+Demo, bu deponun `main` dalından GitHub Pages ile otomatik yayınlanır; `main`e giren her değişiklik birkaç dakika içinde burada görünür. Giriş gerektirmez. Gerçek talep gönderilmez, ödeme alınmaz.
 
-[![Bosphorly masaüstü transfer demosunu aç](https://raw.githubusercontent.com/erenariel/Bosphorly/f3767fe75265322d39d10cd25b5ed502145bc01e/docs/review/desktop-transfer.jpg)](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr)
+[![Bosphorly transfer formu ve İstanbul haritası](docs/review/desktop-home.jpg)](https://erenariel.github.io/Bosphorly/?lang=tr#booking)
 
-[Transfer formuna git](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr#booking) · [Üyelik formunu aç](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/membership.html?lang=tr)
+[Transfer formu](https://erenariel.github.io/Bosphorly/?lang=tr#booking) · [Tur karşılaştırma](https://erenariel.github.io/Bosphorly/prices.html) · [İstanbul haritası](https://erenariel.github.io/Bosphorly/map.html) · [English](https://erenariel.github.io/Bosphorly/?lang=en)
 
 
 > **How Bosphorly works:** Bosphorly is a referral intermediary, the hotel reception's tour brochure desk moved online. Travelers compare licensed Istanbul tour and transfer companies and send a request through Bosphorly; the company confirms, delivers the service and collects payment; Bosphorly earns a contracted commission from the company for each completed referral. Hotels can join as referral partners. Details: [business model](docs/BUSINESS-MODEL.md).
