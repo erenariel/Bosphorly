@@ -15,3 +15,6 @@ The project owner selected the dark-blue logo with a white B, cyan airplane path
 2. Approve final vector master logo and monochrome variants.
 3. Validate readability at favicon and app icon sizes.
 4. Confirm licensing for any third-party images used in future tour cards.
+
+## Approved visual icon on website
+The small WebP icon (`assets/brand/approved-icon.webp`) is cropped directly from the user-selected original design. The older vector SVG is only a fallback, not the primary brand treatment.
