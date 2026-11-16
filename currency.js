@@ -8,7 +8,7 @@
   try { const s = localStorage.getItem(KEY); if (s === 'original' || CURRENCIES.includes(s)) chosen = s; } catch {}
   const lang = () => (window.BosphorlyLang ? window.BosphorlyLang.pick() : document.documentElement.lang || 'en');
   const tr = () => lang() === 'tr';
-  const locale = () => ({ tr: 'tr-TR', en: 'en-GB', ru: 'ru-RU', uk: 'uk-UA', de: 'de-DE', fr: 'fr-FR', nl: 'nl-NL', ar: 'ar-u-nu-latn', he: 'he-IL', az: 'az-Latn-AZ', fa: 'fa-IR', es: 'es-ES' }[lang()] || 'en-GB');
+  const locale = () => ({ tr: 'tr-TR', en: 'en-GB', ru: 'ru-RU', uk: 'uk-UA', de: 'de-DE', fr: 'fr-FR', nl: 'nl-NL', ar: 'ar-u-nu-latn', he: 'he-IL', az: 'az-Latn-AZ', fa: 'fa-IR', es: 'es-ES', it: 'it-IT', pt: 'pt-BR' }[lang()] || 'en-GB');
   const money = (v, c) => new Intl.NumberFormat(locale(), { style: 'currency', currency: c, maximumFractionDigits: c === 'TRY' || c === 'RUB' ? 0 : 2 }).format(v);
   const tryPer = c => (c === 'TRY' ? 1 : rates?.rates?.[c] ? rates.rates[c].forex_selling / rates.rates[c].unit : null);
 
@@ -26,7 +26,9 @@
     tr: { original: '¤ Orijinal', label: 'Para birimi', note: d => `Yaklaşık tutar: TCMB ${d} döviz satış kuru. Ödeme otel resepsiyonuna nakit yapılır.`, title: d => `TCMB ${d} kuru` },
     en: { original: '¤ Original', label: 'Currency', note: d => `Approximate amount at the TCMB ${d} forex selling rate. Payment is in cash at the hotel reception.`, title: d => `TCMB rate of ${d}` },
     ru: { original: '¤ Исходная', label: 'Валюта', note: d => `Примерная сумма по курсу продажи ЦБ Турции (TCMB) на ${d}. Оплата наличными на ресепшене отеля.`, title: d => `Курс TCMB на ${d}` },
-    ar: { original: '¤ الأصلية', label: 'العملة', note: d => `مبلغ تقريبي بسعر بيع البنك المركزي التركي (TCMB) بتاريخ ${d}. الدفع نقدًا في استقبال الفندق.`, title: d => `سعر TCMB بتاريخ ${d}` }
+    ar: { original: '¤ الأصلية', label: 'العملة', note: d => `مبلغ تقريبي بسعر بيع البنك المركزي التركي (TCMB) بتاريخ ${d}. الدفع نقدًا في استقبال الفندق.`, title: d => `سعر TCMB بتاريخ ${d}` },
+    it: { original: "¤ Originale", label: "Valuta", note: d => "Importo indicativo al cambio di vendita TCMB del {d}. Il pagamento avviene in contanti alla reception dell’hotel.".replace('{d}', d), title: d => "Cambio TCMB del {d}".replace('{d}', d) },
+    pt: { original: "¤ Original", label: "Moeda", note: d => "Valor aproximado pela taxa de venda do TCMB de {d}. O pagamento é feito em dinheiro na recepção do hotel.".replace('{d}', d), title: d => "Taxa do TCMB de {d}".replace('{d}', d) }
   };
   const txt = () => TXT[lang()] || TXT.en;
   function note() {
