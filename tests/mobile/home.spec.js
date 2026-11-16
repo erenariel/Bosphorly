@@ -16,5 +16,16 @@ test('homepage polish preserves local planning, language and reduced motion',asy
  }
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.hero-photo').evaluate(e=>getComputedStyle(e).animationName)).toBe('none');
+ // Every page follows the chosen language, including tour contents and right-to-left Arabic.
+ await page.goto('/prices.html?lang=ru');
+ await expect(page.locator('#heading')).toHaveText('Сравните туры по Стамбулу.');
+ await expect(page.locator('.item h2').first()).toHaveText('Утренняя прогулка по Босфору');
+ await page.goto('/booking.html?service=alaturka-massage&lang=ar');
+ await expect(page.locator('html')).toHaveAttribute('dir','rtl');
+ await expect(page.locator('#labelOption')).toHaveText('نوع التدليك');
+ await page.locator('.lang-select').selectOption('ru');
+ await expect(page.locator('#labelOption')).toHaveText('Вид массажа');
+ await page.goto('/account.html?lang=ar');
+ await expect(page.locator('#heading')).toHaveText('حسابي');
  expect(errors).toEqual([]);
 });

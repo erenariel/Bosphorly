@@ -15,5 +15,23 @@
     }
     return 'en';
   }
+  const NAMES = { tr: 'Türkçe', en: 'English', ru: 'Русский', uk: 'Українська', de: 'Deutsch', fr: 'Français', nl: 'Nederlands', ar: 'العربية', he: 'עברית', az: 'Azərbaycanca', fa: 'فارسی', es: 'Español' };
+  // A language menu for pages other than the home page: saves the choice and reopens the page in it.
+  function mount() {
+    document.querySelectorAll('[data-lang-mount]').forEach(el => {
+      if (el.querySelector('select')) return;
+      const s = document.createElement('select');
+      s.className = 'lang-select';
+      s.setAttribute('aria-label', 'Language');
+      for (const code of supported) { const o = document.createElement('option'); o.value = code; o.textContent = NAMES[code]; s.append(o); }
+      s.value = pick();
+      s.addEventListener('change', () => {
+        try { localStorage.setItem('bosphorly.language', s.value); } catch {}
+        const u = new URL(location.href); u.searchParams.set('lang', s.value); location.href = u.toString();
+      });
+      el.append(s);
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
   window.BosphorlyLang = Object.freeze({ supported, pick, rtl: l => ['ar', 'he', 'fa'].includes(l) });
 })();

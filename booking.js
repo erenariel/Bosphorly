@@ -8,10 +8,12 @@
   const query = new URLSearchParams(location.search);
   const lang = window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const tr = lang === 'tr';
+  const loc = lang === 'ar' ? 'ar-u-nu-latn' : lang; // Latin digits keep prices and times unambiguous
   document.documentElement.lang = lang;
 
   const i18n = {
     en: {
+      areaOther: 'Other', phHotel: 'e.g. Sultanahmet Palace', phRoom: 'e.g. 214', phName: 'e.g. Jane Smith', phPhone: '+44 7700 900123', phEmail: 'name@example.com', r_rate: 'Rate', rateBasis: 'forex selling',
       navAccount: 'My account', seeRequests: 'See my requests →', noSlots: 'No start times left today. Please choose another date.', invalidTime: 'Choose a start time.', labelOption: 'Massage type', labelDuration: 'Duration', minutes: 'min', openHours: 'Open daily {open}–{close}. Choose a start time.', r_option: 'Option', r_duration: 'Duration', r_fx: 'Approx. in',
       payNote: 'Payment: cash only, at the hotel reception. Tour companies such as Blue Brothers charge an extra 10% commission on credit card payments, so please pay in cash at reception.', r_pay: 'Payment', r_cash: 'Cash at the hotel reception',
       labelHotel: 'Hotel name', labelRoom: 'Room number (optional)', invalidHotel: 'Please enter your hotel name so the company knows where to pick you up.', r_hotel: 'Hotel', r_room: 'Room', openWa: 'Open WhatsApp', waTitle: 'Bosphorly booking request',
@@ -39,6 +41,7 @@
       r_ref: 'Reference', r_shownAt: 'Shown at', r_source: 'Price source', r_checked: 'checked', r_tour: 'Experience', r_company: 'Company', r_date: 'Date', r_time: 'Time', r_guests: 'Guests', r_area: 'Area', r_name: 'Name', r_phone: 'Phone', r_email: 'Email', r_unit: 'Price per person', r_total: 'Estimated total'
     },
     tr: {
+      areaOther: 'Diğer', phHotel: 'örn. Sultanahmet Palace', phRoom: 'örn. 214', phName: 'örn. Ayşe Yılmaz', phPhone: '+90 5xx xxx xx xx', phEmail: 'ornek@eposta.com', r_rate: 'Kur', rateBasis: 'döviz satış',
       navAccount: 'Hesabım', seeRequests: 'Taleplerimi gör →', noSlots: 'Bugün için uygun saat kalmadı. Lütfen başka bir tarih seç.', invalidTime: 'Bir başlangıç saati seç.', labelOption: 'Masaj türü', labelDuration: 'Süre', minutes: 'dk', openHours: 'Her gün {open}–{close} açık. Başlangıç saatini seç.', r_option: 'Seçenek', r_duration: 'Süre', r_fx: 'Yaklaşık',
       payNote: 'Ödeme: yalnızca nakit, otel resepsiyonuna. Blue Brothers gibi tur firmaları kredi kartı ödemelerinde %10 ek komisyon alır; bu yüzden ödemeyi resepsiyona nakit yapman gerekir.', r_pay: 'Ödeme', r_cash: 'Otel resepsiyonuna nakit',
       labelHotel: 'Otel adı', labelRoom: 'Oda numarası (isteğe bağlı)', invalidHotel: 'Firmanın seni nereden alacağını bilmesi için otel adını yaz.', r_hotel: 'Otel', r_room: 'Oda', openWa: 'WhatsApp’ı aç', waTitle: 'Bosphorly rezervasyon talebi',
@@ -64,14 +67,74 @@
       fixedSlot: 'Bu turun saati sabittir', flexible: ['Sabah', 'Öğleden sonra', 'Akşam', 'Esnek'], askPrice: 'Fiyat sor', from: 'Başlangıç',
       totalFrom: 'başlangıç', perGroup: 'Fiyat kişi başı değil; toplamı firma teyit eder.', yourChoice: 'Seçimin',
       r_ref: 'Referans', r_shownAt: 'Gösterildiği an', r_source: 'Fiyat kaynağı', r_checked: 'kontrol', r_tour: 'Deneyim', r_company: 'Firma', r_date: 'Tarih', r_time: 'Saat', r_guests: 'Kişi', r_area: 'Bölge', r_name: 'Ad soyad', r_phone: 'Telefon', r_email: 'E-posta', r_unit: 'Kişi başı fiyat', r_total: 'Tahmini toplam'
+    },
+    ru: {
+      navAccount: 'Мой аккаунт', seeRequests: 'Мои заявки →', noSlots: 'На сегодня свободного времени не осталось. Выберите другую дату.', invalidTime: 'Выберите время начала.',
+      labelOption: 'Вид массажа', labelDuration: 'Длительность', minutes: 'мин', openHours: 'Открыто ежедневно {open}–{close}. Выберите время начала.',
+      r_option: 'Вариант', r_duration: 'Длительность', r_fx: 'Примерно в',
+      payNote: 'Оплата: только наличными на ресепшене отеля. Туркомпании, например Blue Brothers, берут 10% комиссии за оплату картой, поэтому оплачивайте наличными на ресепшене.',
+      r_pay: 'Оплата', r_cash: 'Наличными на ресепшене отеля', labelHotel: 'Название отеля', labelRoom: 'Номер комнаты (необязательно)',
+      invalidHotel: 'Укажите название отеля, чтобы компания знала, откуда вас забрать.', r_hotel: 'Отель', r_room: 'Номер', openWa: 'Открыть WhatsApp', waTitle: 'Заявка Bosphorly',
+      eyebrow: 'ВАШ СТАМБУЛ · ПО-ВАШЕМУ', heading: 'Оставьте заявку через Bosphorly.',
+      subheading: 'Выберите тур, дату и район отеля. Заявка уходит от Bosphorly лицензированной компании, которая проводит тур; оплата наличными на ресепшене отеля.',
+      stepName: 'Детали заявки', formTitle: 'Ваша заявка', formIntro: 'Форма заявки. Ничего не отправляется компаниям автоматически.',
+      labelOffer: 'Тур', labelDate: 'Дата', labelTime: 'Время', labelGuests: 'Гости', labelArea: 'Район отеля', labelStatus: 'Цена с человека', labelAvailability: 'Примерная сумма',
+      priceNote: 'Цены — это собственные цены компании на указанную дату. Окончательную цену и наличие мест компания подтверждает при принятии заявки.',
+      consent: 'Я проверил(а) тур, время и цену выше. Я согласен(на), что заявка и контакты отправляются в Bosphorly через WhatsApp и что я оплачу наличными на ресепшене отеля.',
+      submit: 'Отправить заявку в WhatsApp →', whyTitle: 'Сравните здесь. Оплата наличными на ресепшене.',
+      whyText: 'Bosphorly показывает лицензированные компании Стамбула рядом и передаёт вашу заявку с кодом Bosphorly. Компания подтверждает и проводит тур; вы платите наличными на ресепшене отеля.',
+      item1: 'Цены компаний, без наценки Bosphorly', item2: 'Увиденная цена записывается в заявку WhatsApp', item3: 'Код Bosphorly в каждой заявке',
+      mapTitle: 'Изучите город до заявки', mapLink: 'Открыть карту Стамбула →',
+      invalidDate: 'Выберите будущую дату.', invalidGuests: 'Выберите от 1 до 16 гостей.', invalidOffer: 'Выберите тур.', invalidConsent: 'Подтвердите, что проверили тур, время и цену.',
+      resultTitle: 'Заявка готова', resultNotice: 'Открывается WhatsApp с готовым текстом заявки; нажмите «Отправить» в WhatsApp, чтобы передать её Bosphorly. Если не открылось, используйте кнопку ниже.',
+      notAvailable: 'Каталог недоступен. Обновите страницу.', protoTag: 'ПРОТОТИП', protoText: 'Заявки через WhatsApp · На сайте оплата не принимается',
+      labelName: 'Имя и фамилия', labelPhone: 'Мобильный / WhatsApp', labelEmail: 'Эл. почта (необязательно)',
+      contactNote: 'Когда вы нажмёте «Отправить» в WhatsApp, данные уйдут на линию Bosphorly для оформления заявки. Bosphorly не хранит их на сервере; копия остаётся только на этом устройстве, в разделе «Мой аккаунт».',
+      invalidName: 'Укажите имя и фамилию.', invalidPhone: 'Укажите действующий номер телефона/WhatsApp с кодом страны (например, +7…), чтобы компания могла подтвердить.', invalidEmail: 'Адрес эл. почты выглядит неверно.',
+      navHome: 'Главная', navCompare: 'Сравнить туры', navMap: 'Карта города', footerText: 'Bosphorly · Прототип · Введённые данные не хранятся на сервере.', backHome: '← На главную',
+      fixedSlot: 'У этого тура фиксированное время', flexible: ['Утро', 'День', 'Вечер', 'Любое'], askPrice: 'Цена по запросу', from: 'от', totalFrom: 'от',
+      perGroup: 'Цена не за человека; сумму подтверждает компания.', yourChoice: 'Ваш выбор',
+      r_ref: 'Код', r_shownAt: 'Цена показана', r_source: 'Источник цены', r_checked: 'проверено', r_tour: 'Услуга', r_company: 'Компания', r_date: 'Дата', r_time: 'Время',
+      r_guests: 'Гости', r_area: 'Район', r_name: 'Имя', r_phone: 'Телефон', r_email: 'Эл. почта', r_unit: 'Цена с человека', r_total: 'Примерная сумма',
+      areaOther: 'Другой', phHotel: 'например, Sultanahmet Palace', phRoom: 'например, 214', phName: 'например, Анна Иванова', phPhone: '+7 9xx xxx xx xx', phEmail: 'name@example.com', r_rate: 'Курс', rateBasis: 'продажа валюты'
+    },
+    ar: {
+      navAccount: 'حسابي', seeRequests: 'عرض طلباتي ←', noSlots: 'لا توجد أوقات متاحة اليوم. اختر تاريخًا آخر.', invalidTime: 'اختر وقت البدء.',
+      labelOption: 'نوع التدليك', labelDuration: 'المدة', minutes: 'دقيقة', openHours: 'مفتوح يوميًا {open}–{close}. اختر وقت البدء.',
+      r_option: 'الخيار', r_duration: 'المدة', r_fx: 'تقريبًا بـ',
+      payNote: 'الدفع: نقدًا فقط في استقبال الفندق. تأخذ شركات الجولات مثل Blue Brothers عمولة 10% على الدفع بالبطاقة، لذا يُرجى الدفع نقدًا في الاستقبال.',
+      r_pay: 'الدفع', r_cash: 'نقدًا في استقبال الفندق', labelHotel: 'اسم الفندق', labelRoom: 'رقم الغرفة (اختياري)',
+      invalidHotel: 'اكتب اسم فندقك لتعرف الشركة من أين تستلمك.', r_hotel: 'الفندق', r_room: 'الغرفة', openWa: 'افتح واتساب', waTitle: 'طلب حجز Bosphorly',
+      eyebrow: 'إسطنبول على طريقتك', heading: 'اطلب تجربتك عبر Bosphorly.',
+      subheading: 'اختر الجولة والتاريخ ومنطقة الفندق. يُرسل طلبك من Bosphorly إلى الشركة المرخّصة التي تنظم الجولة؛ والدفع نقدًا في استقبال الفندق.',
+      stepName: 'تفاصيل الطلب', formTitle: 'طلبك', formIntro: 'نموذج الطلب. لا يُرسل شيء تلقائيًا إلى الشركات.',
+      labelOffer: 'الجولة', labelDate: 'التاريخ', labelTime: 'الوقت', labelGuests: 'عدد الضيوف', labelArea: 'منطقة الفندق', labelStatus: 'السعر للشخص', labelAvailability: 'المجموع التقريبي',
+      priceNote: 'الأسعار هي الأسعار التي تنشرها الشركة في التاريخ المذكور. تؤكد الشركة السعر النهائي والتوفر عند قبول طلبك.',
+      consent: 'راجعت الجولة والوقت والسعر أعلاه. أوافق على إرسال طلبي وبيانات التواصل إلى Bosphorly عبر واتساب، وعلى الدفع نقدًا في استقبال الفندق.',
+      submit: 'أرسل الطلب عبر واتساب ←', whyTitle: 'قارن هنا. ادفع نقدًا في الاستقبال.',
+      whyText: 'تعرض Bosphorly شركات إسطنبول المرخّصة جنبًا إلى جنب وترسل طلبك برمز مرجعي. تؤكد الشركة الجولة وتنظمها؛ وتدفع نقدًا في استقبال الفندق.',
+      item1: 'أسعار الشركات دون رسوم إضافية من Bosphorly', item2: 'يُكتب السعر الذي رأيته في طلب واتساب', item3: 'رمز مرجعي من Bosphorly لكل طلب',
+      mapTitle: 'استكشف قبل الطلب', mapLink: 'افتح خريطة إسطنبول ←',
+      invalidDate: 'اختر تاريخًا قادمًا.', invalidGuests: 'اختر من 1 إلى 16 ضيفًا.', invalidOffer: 'اختر جولة.', invalidConsent: 'أكّد أنك راجعت الجولة والوقت والسعر.',
+      resultTitle: 'طلبك جاهز', resultNotice: 'يُفتح واتساب ونص طلبك جاهز؛ اضغط إرسال في واتساب لإيصاله إلى Bosphorly. إن لم يُفتح، استخدم الزر أدناه.',
+      notAvailable: 'الكتالوج غير متاح. أعد تحميل الصفحة.', protoTag: 'نموذج أولي', protoText: 'الطلبات عبر واتساب · لا يتم الدفع على هذا الموقع',
+      labelName: 'الاسم الكامل', labelPhone: 'الجوال / واتساب', labelEmail: 'البريد الإلكتروني (اختياري)',
+      contactNote: 'عند الضغط على إرسال في واتساب تُرسل بياناتك إلى خط Bosphorly لترتيب طلبك. لا تحفظها Bosphorly على أي خادم؛ تبقى نسخة على هذا الجهاز فقط في صفحة حسابي.',
+      invalidName: 'اكتب اسمك الكامل.', invalidPhone: 'اكتب رقم هاتف/واتساب صحيحًا مع رمز الدولة (مثل ‎+966…) لتتمكن الشركة من التأكيد.', invalidEmail: 'يبدو أن البريد الإلكتروني غير صحيح.',
+      navHome: 'الرئيسية', navCompare: 'قارن الجولات', navMap: 'خريطة المدينة', footerText: 'Bosphorly · نموذج أولي · لا يُحفظ ما تكتبه على أي خادم.', backHome: 'العودة إلى الرئيسية →',
+      fixedSlot: 'وقت هذه الجولة ثابت', flexible: ['صباحًا', 'بعد الظهر', 'مساءً', 'مرن'], askPrice: 'السعر عند الطلب', from: 'ابتداءً من', totalFrom: 'ابتداءً من',
+      perGroup: 'السعر ليس للشخص؛ تؤكد الشركة المجموع.', yourChoice: 'اختيارك',
+      r_ref: 'المرجع', r_shownAt: 'وقت عرض السعر', r_source: 'مصدر السعر', r_checked: 'تحقق في', r_tour: 'الخدمة', r_company: 'الشركة', r_date: 'التاريخ', r_time: 'الوقت',
+      r_guests: 'الضيوف', r_area: 'المنطقة', r_name: 'الاسم', r_phone: 'الهاتف', r_email: 'البريد الإلكتروني', r_unit: 'السعر للشخص', r_total: 'المجموع التقريبي',
+      areaOther: 'أخرى', phHotel: 'مثال: Sultanahmet Palace', phRoom: 'مثال: 214', phName: 'مثال: محمد أحمد', phPhone: '+966 5x xxx xxxx', phEmail: 'name@example.com', r_rate: 'سعر الصرف', rateBasis: 'سعر البيع'
     }
   };
   const t = i18n[lang] || i18n.en;
   if (i18n[lang] && window.BosphorlyLang.rtl(lang)) document.documentElement.dir = 'rtl';
   for (const [id, val] of Object.entries(t)) { const e = $(id); if (e && typeof val === 'string') e.textContent = val; }
   const area = $('area');
-  if (tr) [...area.options].at(-1).textContent = 'Diğer';
-  if (tr) { $('hotelName').placeholder = 'örn. Sultanahmet Palace'; $('room').placeholder = 'örn. 214'; $('fullName').placeholder = 'örn. Ayşe Yılmaz'; $('phone').placeholder = '+90 5xx xxx xx xx'; $('email').placeholder = 'ornek@eposta.com'; }
+  [...area.options].at(-1).textContent = t.areaOther;
+  $('hotelName').placeholder = t.phHotel; $('room').placeholder = t.phRoom; $('fullName').placeholder = t.phName; $('phone').placeholder = t.phPhone; $('email').placeholder = t.phEmail;
   const saved = window.BosphorlyAccount?.profile();
   if (saved) { $('hotelName').value = saved.hotel || ''; $('room').value = saved.room || ''; $('fullName').value = saved.name || ''; $('phone').value = saved.phone || ''; $('email').value = saved.email || ''; }
   const now = new Date();
@@ -80,16 +143,16 @@
 
   let records = [];
   const byId = new Map();
-  const plain = (v, c) => new Intl.NumberFormat(tr ? 'tr-TR' : 'en-GB', { style: 'currency', currency: c, maximumFractionDigits: 2 }).format(v);
+  const plain = (v, c) => new Intl.NumberFormat(loc, { style: 'currency', currency: c, maximumFractionDigits: 2 }).format(v);
   const fmt = (v, c) => window.BosphorlyCurrency ? window.BosphorlyCurrency.format(v, c) : plain(v, c);
-  const title = r => (tr && r.title_tr) || r.title;
+  const title = r => r['title_' + lang] || r.title;
   const current = () => byId.get($('offer').value);
   const perPerson = r => (r.basis || '').includes('per_person');
   const isFrom = r => (r.basis || '').startsWith('from');
 
   // Options (e.g. massage type) and durations each carry their own price.
   let optionsFor = null;
-  const optName = o => (tr && o.name_tr) || o.name;
+  const optName = o => o['name_' + lang] || o.name;
   const selOption = r => r?.options?.find(o => o.id === $('option').value) || null;
   const durationsOf = r => selOption(r)?.durations || r?.durations || null;
   const selDuration = r => { const list = durationsOf(r); return list ? list.find(x => String(x.min) === $('duration').value) || list[0] : null; };
@@ -108,7 +171,7 @@
     $('durationWrap').hidden = !list || list.length < 2 && !r.options;
     if (list) $('duration').replaceChildren(...list.map(x => { const el = document.createElement('option'); el.value = String(x.min); el.textContent = x.min + ' ' + t.minutes + ' — ' + plain(x.price, r.currency); return el; }));
     const o = selOption(r);
-    $('optionDesc').textContent = o ? ((tr && o.desc_tr) || o.desc) : '';
+    $('optionDesc').textContent = o ? (o['desc_' + lang] || o.desc) : '';
   }
 
   // Venues with opening hours offer start times that finish before closing.
@@ -133,7 +196,7 @@
       $('timeNote').textContent = slots.length ? t.openHours.replace('{open}', r.hours.open).replace('{close}', r.hours.close) : t.noSlots;
       return;
     }
-    const slot = r?.details && ((tr && r.details.tr?.schedule) || r.details.schedule);
+    const slot = r?.details && (r.details[lang]?.schedule || r.details.schedule);
     const fixed = slot && /\d{1,2}:\d{2}/.test(slot) ? slot : null;
     sel.replaceChildren();
     if (fixed) {
@@ -169,7 +232,7 @@
     box.replaceChildren();
     const head = document.createElement('strong');
     head.textContent = t.yourChoice + ': ' + title(r) + ' · ' + r.operator;
-    const L = r.details ? Object.assign({}, r.details, (tr && r.details.tr) || {}) : null;
+    const L = r.details ? Object.assign({}, r.details, r.details[lang] || {}) : null;
     const info = document.createElement('div');
     const o = selOption(r), dd = selDuration(r);
     info.textContent = [o ? optName(o) : null, dd ? dd.min + ' ' + t.minutes : L?.duration, $('time').selectedOptions[0]?.textContent].filter(Boolean).join(' · ');
@@ -239,11 +302,11 @@
     const h = document.createElement('h3'); h.textContent = t.resultTitle + ' · ' + snapshot.reference;
     const p = document.createElement('p'); p.textContent = t.resultNotice;
     const d = document.createElement('dl'); d.className = 'draft';
-    const dateText = new Intl.DateTimeFormat(tr ? 'tr-TR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
+    const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
     const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], ...(selOption(r) ? [[t.r_option, optName(selOption(r))]] : []), ...(selDuration(r) ? [[t.r_duration, selDuration(r).min + ' ' + t.minutes]] : []), [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
-      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[tr ? 'Kur' : 'Rate', 'TCMB ' + window.BosphorlyCurrency.rates.date + (tr ? ' döviz satış' : ' forex selling')]] : []), [t.r_hotel, hotel + ' (' + area.selectedOptions[0].textContent + ')'], ...(room ? [[t.r_room, room]] : []), [t.r_name, name], [t.r_phone, phone],
+      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), [t.r_hotel, hotel + ' (' + area.selectedOptions[0].textContent + ')'], ...(room ? [[t.r_room, room]] : []), [t.r_name, name], [t.r_phone, phone],
       ...(email ? [[t.r_email, email]] : []), [t.r_source, r.operator + ' · ' + t.r_checked + ' ' + (snapshot.priceChecked || '')],
-      [t.r_shownAt, new Intl.DateTimeFormat(tr ? 'tr-TR' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
+      [t.r_shownAt, new Intl.DateTimeFormat(loc, { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
     const lines = [t.waTitle + ' · ' + snapshot.reference, ...rows.filter(([k]) => k !== t.r_ref).map(([k, v]) => k + ': ' + v)];
     const c = window.BOSPHORLY_CONTACT || {};
