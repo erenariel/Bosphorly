@@ -1,0 +1,17 @@
+{
+  "name": "Bosphorly",
+  "short_name": "Bosphorly",
+  "description": "Istanbul, made simple — concept prototype",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#081153",
+  "theme_color": "#081153",
+  "icons": [
+    {
+      "src": "assets/brand/brandmark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
