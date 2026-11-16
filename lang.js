@@ -2,7 +2,7 @@
 // then the device/browser languages, then English. Pages fall back to English for any
 // language they do not translate yet.
 (() => {
-  const supported = ['tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az', 'fa', 'es'];
+  const supported = ['tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az', 'fa', 'es', 'it', 'pt'];
   function pick() {
     const fromUrl = new URLSearchParams(location.search).get('lang');
     if (fromUrl && supported.includes(fromUrl)) return fromUrl;
@@ -15,7 +15,7 @@
     }
     return 'en';
   }
-  const NAMES = { tr: 'Türkçe', en: 'English', ru: 'Русский', uk: 'Українська', de: 'Deutsch', fr: 'Français', nl: 'Nederlands', ar: 'العربية', he: 'עברית', az: 'Azərbaycanca', fa: 'فارسی', es: 'Español' };
+  const NAMES = { tr: 'Türkçe', en: 'English', ru: 'Русский', uk: 'Українська', de: 'Deutsch', fr: 'Français', nl: 'Nederlands', ar: 'العربية', he: 'עברית', az: 'Azərbaycanca', fa: 'فارسی', es: 'Español', it: "Italiano", pt: "Português" };
   // A language menu for pages other than the home page: saves the choice and reopens the page in it.
   function mount() {
     document.querySelectorAll('[data-lang-mount]').forEach(el => {
