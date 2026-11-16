@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Search tours, places and routes in Istanbul | Bosphorly</title>
+<meta name="description" content="Search Bosphorly: Istanbul tours, Bosphorus cruises, places to visit, walking routes and city guides in one place.">
+<meta name="theme-color" content="#0a1753">
+<link rel="icon" href="assets/brand/approved-icon.webp">
+<link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="discover.css">
+<script src="lang.js"></script>
+<script src="currency.js"></script>
+<script src="config/contact.js"></script>
+</head>
+<body>
+<div id="siteHeader" data-page="search"></div>
+<script src="site-header.js"></script>
+<section class="dc-hero">
+  <div class="dc-wrap">
+    <h1 id="srTitle">Search Bosphorly</h1>
+    <p id="srLead">Tours, places to visit, walking routes and guides, in one search.</p>
+    <form class="dc-search" role="search" id="searchForm" action="search.html"><input id="q" name="q" type="search" autocomplete="off" aria-label="Search" placeholder="Search places, tours, routes…" autofocus></form>
+  </div>
+</section>
+<main class="dc-wrap" style="padding-bottom:30px">
+  <p class="count" id="count" aria-live="polite"></p>
+  <div id="results"></div>
+</main>
+<p class="dc-foot">Bosphorly · Prototype</p>
+<script src="discover-common.js"></script>
+<script src="search.js"></script>
+</body>
+</html>

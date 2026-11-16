@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Discover Istanbul: places to visit, museums, theme parks and routes | Bosphorly</title>
+<meta name="description" content="33 places to visit in Istanbul: Hagia Sophia, Topkapı, Basilica Cistern, Galata Tower, Isfanbul (Vialand) theme park, Istanbul Aquarium (Aqua Florya), bazaars, neighbourhoods and Prof. İlber Ortaylı's walking route.">
+<meta name="theme-color" content="#0a1753">
+<link rel="icon" href="assets/brand/approved-icon.webp">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="stylesheet" href="header.css">
+<link rel="stylesheet" href="discover.css">
+<script src="lang.js"></script>
+<script src="currency.js"></script>
+<script src="config/contact.js"></script>
+</head>
+<body>
+<div id="siteHeader" data-page="discover"></div>
+<script src="site-header.js"></script>
+<section class="dc-hero">
+  <div class="dc-wrap">
+    <span class="eyebrow" id="exEyebrow">DISCOVER ISTANBUL</span>
+    <h1 id="exTitle">Everything worth seeing in Istanbul.</h1>
+    <p id="exLead">Palaces, museums, bazaars, neighbourhoods, theme parks and shows, with closing days, indicative prices and directions.</p>
+    <form class="dc-search" role="search" id="searchForm"><input id="q" type="search" autocomplete="off" aria-label="Search" placeholder="Search places, tours, routes…"></form>
+  </div>
+</section>
+<main class="dc-wrap">
+  <div class="chips" id="chips" role="group" aria-label="Categories"></div>
+  <div class="dc-layout">
+    <aside class="dc-side">
+      <a class="route-card" href="route.html" id="routeCard"><span class="eyebrow" id="routeCardEyebrow">WALKING ROUTE</span><strong id="routeCardTitle">Prof. İlber Ortaylı's Istanbul route</strong><span id="routeCardText">13 stops from Eminönü to Sultanahmet.</span><span class="go" id="routeOpen">See the route →</span></a>
+      <div class="dc-map" id="map" aria-label="Map of places"><div class="fallback" id="mapFallback">Map loading…</div></div>
+    </aside>
+    <section>
+      <p class="count" id="count" aria-live="polite"></p>
+      <div class="grid" id="grid"></div>
+      <p class="note" id="priceNote" style="margin-top:16px"></p>
+    </section>
+  </div>
+</main>
+<p class="dc-foot">Bosphorly · Prototype</p>
+<script src="discover-common.js"></script>
+<script src="explore.js"></script>
+</body>
+</html>

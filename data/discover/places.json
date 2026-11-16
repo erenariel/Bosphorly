@@ -1,0 +1,720 @@
+{
+ "checked": "2026-11-16",
+ "places": [
+  {
+   "id": "hagia-sophia",
+   "cat": "history",
+   "lat": 41.0086,
+   "lng": 28.9802,
+   "district": "Fatih · Sultanahmet",
+   "price": {
+    "min": 25,
+    "cur": "EUR"
+   },
+   "official": null,
+   "source": "https://clevertourists.com/resources/hagia-sophia-tickets-2026-price-dress-code-guide",
+   "aliases": [
+    "Ayasofya",
+    "Aya Sofya",
+    "Hagia Sofia",
+    "Santa Sofia",
+    "Sainte-Sophie",
+    "Айя-София"
+   ]
+  },
+  {
+   "id": "blue-mosque",
+   "cat": "history",
+   "lat": 41.0054,
+   "lng": 28.9768,
+   "district": "Fatih · Sultanahmet",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Sultanahmet Camii",
+    "Sultan Ahmed Mosque",
+    "Mavi Cami"
+   ]
+  },
+  {
+   "id": "topkapi",
+   "cat": "history",
+   "lat": 41.0115,
+   "lng": 28.9834,
+   "district": "Fatih · Sultanahmet",
+   "price": {
+    "min": 50,
+    "max": 55,
+    "cur": "EUR"
+   },
+   "closed": [
+    2
+   ],
+   "official": "https://muze.gov.tr",
+   "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
+   "aliases": [
+    "Topkapı Sarayı",
+    "Topkapi Palace",
+    "Harem"
+   ]
+  },
+  {
+   "id": "basilica-cistern",
+   "cat": "history",
+   "lat": 41.0084,
+   "lng": 28.9779,
+   "district": "Fatih · Sultanahmet",
+   "price": {
+    "min": 30,
+    "max": 38,
+    "cur": "EUR"
+   },
+   "official": "https://yerebatan.com",
+   "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
+   "aliases": [
+    "Yerebatan Sarnıcı",
+    "Yerebatan Sarayı",
+    "Medusa"
+   ]
+  },
+  {
+   "id": "archaeology",
+   "cat": "museum",
+   "lat": 41.0117,
+   "lng": 28.9813,
+   "district": "Fatih · Gülhane",
+   "price": {
+    "min": 15,
+    "cur": "EUR"
+   },
+   "closed": [
+    1
+   ],
+   "official": "https://muze.gov.tr",
+   "source": "https://www.guidedistanbultours.com/en/blog/entrance-fees-of-istanbul-museums",
+   "aliases": [
+    "İstanbul Arkeoloji Müzeleri",
+    "Archaeological Museum",
+    "Alexander Sarcophagus"
+   ]
+  },
+  {
+   "id": "suleymaniye",
+   "cat": "history",
+   "lat": 41.0162,
+   "lng": 28.9639,
+   "district": "Fatih · Süleymaniye",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Süleymaniye Camii",
+    "Suleymaniye Mosque",
+    "Mimar Sinan"
+   ]
+  },
+  {
+   "id": "chora",
+   "cat": "history",
+   "lat": 41.0312,
+   "lng": 28.939,
+   "district": "Fatih · Edirnekapı",
+   "price": null,
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Kariye",
+    "Kariye Camii",
+    "Chora Church",
+    "Kariye Müzesi"
+   ]
+  },
+  {
+   "id": "galata-tower",
+   "cat": "history",
+   "lat": 41.0256,
+   "lng": 28.9744,
+   "district": "Beyoğlu · Galata",
+   "price": {
+    "min": 30,
+    "cur": "EUR"
+   },
+   "official": "https://muze.gov.tr",
+   "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
+   "aliases": [
+    "Galata Kulesi",
+    "Galata Tower"
+   ]
+  },
+  {
+   "id": "dolmabahce",
+   "cat": "history",
+   "lat": 41.0391,
+   "lng": 29.0004,
+   "district": "Beşiktaş",
+   "price": {
+    "min": 40,
+    "max": 60,
+    "cur": "EUR"
+   },
+   "closed": [
+    1
+   ],
+   "official": "https://www.millisaraylar.gov.tr",
+   "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
+   "aliases": [
+    "Dolmabahçe Sarayı",
+    "Dolmabahce Palace"
+   ]
+  },
+  {
+   "id": "beylerbeyi",
+   "cat": "history",
+   "lat": 41.0422,
+   "lng": 29.0398,
+   "district": "Üsküdar · Beylerbeyi",
+   "price": null,
+   "closed": [
+    1
+   ],
+   "official": "https://www.millisaraylar.gov.tr",
+   "source": null,
+   "aliases": [
+    "Beylerbeyi Sarayı",
+    "Beylerbeyi Palace"
+   ]
+  },
+  {
+   "id": "maidens-tower",
+   "cat": "history",
+   "lat": 41.0211,
+   "lng": 29.0041,
+   "district": "Üsküdar",
+   "price": null,
+   "official": "https://kizkulesi.gov.tr",
+   "source": null,
+   "aliases": [
+    "Kız Kulesi",
+    "Maiden's Tower",
+    "Leander's Tower"
+   ]
+  },
+  {
+   "id": "rumeli-hisari",
+   "cat": "history",
+   "lat": 41.0846,
+   "lng": 29.0567,
+   "district": "Sarıyer · Rumelihisarı",
+   "price": null,
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Rumeli Hisarı",
+    "Rumelian Castle",
+    "Rumeli Fortress"
+   ]
+  },
+  {
+   "id": "istanbul-modern",
+   "cat": "museum",
+   "lat": 41.0262,
+   "lng": 28.9834,
+   "district": "Beyoğlu · Karaköy",
+   "price": null,
+   "closed": [
+    1
+   ],
+   "official": "https://www.istanbulmodern.org",
+   "source": null,
+   "aliases": [
+    "İstanbul Modern",
+    "Istanbul Museum of Modern Art"
+   ]
+  },
+  {
+   "id": "pera-museum",
+   "cat": "museum",
+   "lat": 41.0319,
+   "lng": 28.975,
+   "district": "Beyoğlu · Tepebaşı",
+   "price": null,
+   "closed": [
+    1
+   ],
+   "official": "https://www.peramuzesi.org.tr",
+   "source": null,
+   "aliases": [
+    "Pera Müzesi",
+    "Kaplumbağa Terbiyecisi",
+    "Tortoise Trainer"
+   ]
+  },
+  {
+   "id": "rahmi-koc",
+   "cat": "museum",
+   "lat": 41.0423,
+   "lng": 28.949,
+   "district": "Beyoğlu · Hasköy",
+   "price": null,
+   "closed": [
+    1
+   ],
+   "official": "https://www.rmk-museum.org.tr",
+   "source": null,
+   "aliases": [
+    "Rahmi M. Koç Müzesi",
+    "Rahmi Koc Museum"
+   ]
+  },
+  {
+   "id": "isfanbul",
+   "cat": "family",
+   "lat": 41.0659,
+   "lng": 28.9282,
+   "district": "Eyüpsultan",
+   "price": {
+    "min": 2075,
+    "cur": "TRY"
+   },
+   "official": "https://www.isfanbul.com",
+   "source": "https://thebettervacation.com/istanbul/vialand-theme-park/",
+   "aliases": [
+    "Vialand",
+    "İsfanbul",
+    "Isfanbul",
+    "Viaport",
+    "tema parkı",
+    "theme park",
+    "lunapark"
+   ]
+  },
+  {
+   "id": "istanbul-aquarium",
+   "cat": "family",
+   "lat": 40.964,
+   "lng": 28.7986,
+   "district": "Bakırköy · Florya",
+   "price": {
+    "min": 1000,
+    "max": 1100,
+    "cur": "TRY"
+   },
+   "official": "https://www.istanbulakvaryum.com",
+   "source": "https://istanbul.com/istanbul-aquarium",
+   "aliases": [
+    "İstanbul Akvaryum",
+    "Istanbul Aquarium",
+    "Aqua Florya",
+    "Florya Akvaryum",
+    "akvaryum"
+   ]
+  },
+  {
+   "id": "sea-life",
+   "cat": "family",
+   "lat": 41.0465,
+   "lng": 28.897,
+   "district": "Bayrampaşa · Forum İstanbul",
+   "price": null,
+   "official": "https://www.visitsealife.com/istanbul/",
+   "source": null,
+   "aliases": [
+    "SEA LIFE",
+    "Turkuazoo",
+    "Forum İstanbul akvaryum"
+   ]
+  },
+  {
+   "id": "legoland",
+   "cat": "family",
+   "lat": 41.0467,
+   "lng": 28.8966,
+   "district": "Bayrampaşa · Forum İstanbul",
+   "price": {
+    "min": 851,
+    "max": 945,
+    "cur": "TRY"
+   },
+   "official": "https://www.legolanddiscoverycentre.com/istanbul/",
+   "source": "https://www.legolanddiscoverycentre.com/istanbul/en/tickets-prices/qr-code/",
+   "aliases": [
+    "LEGOLAND Discovery Centre",
+    "Lego"
+   ]
+  },
+  {
+   "id": "madame-tussauds",
+   "cat": "family",
+   "lat": 41.0335,
+   "lng": 28.9777,
+   "district": "Beyoğlu · İstiklal",
+   "price": null,
+   "official": "https://www.madametussauds.com/istanbul/",
+   "source": null,
+   "aliases": [
+    "Madame Tussauds",
+    "balmumu müzesi",
+    "wax museum"
+   ]
+  },
+  {
+   "id": "miniaturk",
+   "cat": "family",
+   "lat": 41.0603,
+   "lng": 28.9493,
+   "district": "Beyoğlu · Sütlüce",
+   "price": null,
+   "official": "https://www.miniaturk.com.tr",
+   "source": null,
+   "aliases": [
+    "Miniatürk",
+    "Miniaturk"
+   ]
+  },
+  {
+   "id": "whirling-dervishes",
+   "cat": "experience",
+   "lat": 41.0146,
+   "lng": 28.9757,
+   "district": "Fatih · Sirkeci",
+   "price": {
+    "min": 1183,
+    "cur": "TRY"
+   },
+   "official": "https://www.hodjapasha.com",
+   "source": "https://thebettervacation.com/istanbul/whirling-dervishes-show-istanbul/",
+   "aliases": [
+    "Hodjapasha",
+    "HodjaPasha",
+    "Sema",
+    "semazen",
+    "dervish",
+    "Mevlevi"
+   ]
+  },
+  {
+   "id": "city-ferry",
+   "cat": "experience",
+   "lat": 41.0175,
+   "lng": 28.9745,
+   "district": "Eminönü · Karaköy · Kadıköy · Üsküdar",
+   "price": null,
+   "official": "https://www.sehirhatlari.istanbul",
+   "source": null,
+   "aliases": [
+    "Şehir Hatları",
+    "vapur",
+    "ferry",
+    "Istanbulkart",
+    "İstanbulkart"
+   ]
+  },
+  {
+   "id": "grand-bazaar",
+   "cat": "walk",
+   "lat": 41.0107,
+   "lng": 28.9681,
+   "district": "Fatih · Beyazıt",
+   "price": "free",
+   "closed": [
+    0
+   ],
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Kapalıçarşı",
+    "Kapali Carsi",
+    "Grand Bazaar",
+    "Covered Bazaar"
+   ]
+  },
+  {
+   "id": "spice-bazaar",
+   "cat": "walk",
+   "lat": 41.0166,
+   "lng": 28.9706,
+   "district": "Fatih · Eminönü",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Mısır Çarşısı",
+    "Misir Carsisi",
+    "Egyptian Bazaar",
+    "Spice Market"
+   ]
+  },
+  {
+   "id": "balat",
+   "cat": "walk",
+   "lat": 41.0301,
+   "lng": 28.9482,
+   "district": "Fatih · Balat",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Balat",
+    "Fener",
+    "renkli evler",
+    "colourful houses"
+   ]
+  },
+  {
+   "id": "istiklal",
+   "cat": "walk",
+   "lat": 41.034,
+   "lng": 28.979,
+   "district": "Beyoğlu · Taksim",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "İstiklal Caddesi",
+    "Istiklal Avenue",
+    "Taksim",
+    "nostaljik tramvay"
+   ]
+  },
+  {
+   "id": "ortakoy",
+   "cat": "walk",
+   "lat": 41.0474,
+   "lng": 29.0268,
+   "district": "Beşiktaş · Ortaköy",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Ortaköy",
+    "Ortakoy",
+    "kumpir"
+   ]
+  },
+  {
+   "id": "kadikoy",
+   "cat": "walk",
+   "lat": 40.99,
+   "lng": 29.027,
+   "district": "Kadıköy · Moda",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Kadıköy",
+    "Kadikoy",
+    "Moda",
+    "Asian side"
+   ]
+  },
+  {
+   "id": "camlica",
+   "cat": "walk",
+   "lat": 41.0274,
+   "lng": 29.0679,
+   "district": "Üsküdar · Çamlıca",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Çamlıca",
+    "Camlica",
+    "Çamlıca Camii",
+    "Camlica Mosque"
+   ]
+  },
+  {
+   "id": "pierre-loti",
+   "cat": "walk",
+   "lat": 41.0539,
+   "lng": 28.9338,
+   "district": "Eyüpsultan",
+   "price": null,
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Pierre Loti",
+    "Piyer Loti",
+    "Eyüp Sultan",
+    "teleferik",
+    "cable car"
+   ]
+  },
+  {
+   "id": "princes-islands",
+   "cat": "walk",
+   "lat": 40.874,
+   "lng": 29.129,
+   "district": "Adalar",
+   "price": null,
+   "official": "https://www.sehirhatlari.istanbul",
+   "source": null,
+   "aliases": [
+    "Adalar",
+    "Büyükada",
+    "Princes' Islands",
+    "Heybeliada",
+    "Kınalıada"
+   ]
+  },
+  {
+   "id": "emirgan",
+   "cat": "walk",
+   "lat": 41.1086,
+   "lng": 29.053,
+   "district": "Sarıyer · Emirgan",
+   "price": "free",
+   "official": null,
+   "source": null,
+   "aliases": [
+    "Emirgan Korusu",
+    "Emirgan Park",
+    "lale",
+    "tulips"
+   ]
+  }
+ ],
+ "stops": [
+  {
+   "id": "eminonu",
+   "lat": 41.017,
+   "lng": 28.9707,
+   "day": 1
+  },
+  {
+   "id": "suleymaniye",
+   "lat": 41.0162,
+   "lng": 28.9639,
+   "day": 1
+  },
+  {
+   "id": "kucukpazar",
+   "lat": 41.0185,
+   "lng": 28.9615,
+   "day": 1
+  },
+  {
+   "id": "zeyrek",
+   "lat": 41.0198,
+   "lng": 28.9567,
+   "day": 1
+  },
+  {
+   "id": "carsamba",
+   "lat": 41.0262,
+   "lng": 28.9462,
+   "day": 1
+  },
+  {
+   "id": "balat",
+   "lat": 41.0301,
+   "lng": 28.9482,
+   "day": 1
+  },
+  {
+   "id": "ayvansaray",
+   "lat": 41.0405,
+   "lng": 28.9425,
+   "day": 1
+  },
+  {
+   "id": "kariye",
+   "lat": 41.0312,
+   "lng": 28.939,
+   "day": 1
+  },
+  {
+   "id": "edirnekapi",
+   "lat": 41.0306,
+   "lng": 28.9335,
+   "day": 1
+  },
+  {
+   "id": "yedikule",
+   "lat": 40.994,
+   "lng": 28.9228,
+   "day": 2
+  },
+  {
+   "id": "cerrahpasa",
+   "lat": 41.004,
+   "lng": 28.943,
+   "day": 2
+  },
+  {
+   "id": "beyazit",
+   "lat": 41.0105,
+   "lng": 28.964,
+   "day": 2
+  },
+  {
+   "id": "sultanahmet",
+   "lat": 41.0055,
+   "lng": 28.9768,
+   "day": 2
+  }
+ ],
+ "guides": [
+  {
+   "href": "en/istanbul-guide.html",
+   "title": "Istanbul travel guide",
+   "lang": "en",
+   "keywords": "essentials tips first visit"
+  },
+  {
+   "href": "en/airport-transfer.html",
+   "title": "Istanbul airport transfer guide",
+   "lang": "en",
+   "keywords": "IST SAW airport taxi transfer Sabiha Gökçen"
+  },
+  {
+   "href": "en/public-transport.html",
+   "title": "Istanbul public transport",
+   "lang": "en",
+   "keywords": "metro tram ferry Istanbulkart Marmaray bus"
+  },
+  {
+   "href": "en/old-city.html",
+   "title": "Byzantine and Ottoman Istanbul",
+   "lang": "en",
+   "keywords": "Sultanahmet Hagia Sophia Topkapı old city"
+  },
+  {
+   "href": "en/bosphorus-cruises.html",
+   "title": "Bosphorus cruises and experiences",
+   "lang": "en",
+   "keywords": "boat cruise ferry Bosphorus"
+  },
+  {
+   "href": "tr/istanbul-rehberi.html",
+   "title": "İstanbul gezi rehberi",
+   "lang": "tr",
+   "keywords": "gezilecek yerler ipuçları"
+  },
+  {
+   "href": "tr/havalimani-transferi.html",
+   "title": "İstanbul havalimanı transfer rehberi",
+   "lang": "tr",
+   "keywords": "IST SAW taksi transfer Sabiha Gökçen"
+  },
+  {
+   "href": "tr/toplu-tasima.html",
+   "title": "İstanbul metro ve toplu taşıma",
+   "lang": "tr",
+   "keywords": "metro tramvay vapur İstanbulkart Marmaray otobüs"
+  },
+  {
+   "href": "tr/tarihi-yarimada.html",
+   "title": "Bizans ve Osmanlı mirası",
+   "lang": "tr",
+   "keywords": "Sultanahmet Ayasofya Topkapı tarihi yarımada"
+  },
+  {
+   "href": "tr/bogaz-turlari.html",
+   "title": "İstanbul Boğaz turları",
+   "lang": "tr",
+   "keywords": "tekne vapur Boğaz turu"
+  }
+ ]
+}
