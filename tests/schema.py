@@ -20,3 +20,12 @@ c.execute("INSERT INTO commissions VALUES ('c','b','h','EUR',20,'accrued','event
 c.execute("UPDATE booking_requests SET state='refund_pending' WHERE id='b'")
 assert c.execute('SELECT status FROM commissions').fetchone()[0]=='reversed'
 print('SQLite migration, fulfillment gate and refund reversal OK')
+c.executescript(Path('backend/migrations/0002_members.sql').read_text())
+assert c.execute('SELECT status,discount_bps FROM campaigns').fetchone()==('draft',1000)
+try:
+ c.execute("UPDATE campaigns SET status='approved'")
+ raise AssertionError('Incomplete campaign activated')
+except sqlite3.IntegrityError: pass
+c.execute("INSERT INTO members(id,identity_hash,encrypted_profile) VALUES('member','hash','encrypted')")
+assert c.execute('SELECT marketing_email FROM members').fetchone()[0]==0
+print('Member schema, optional consent default and draft campaign gate OK')

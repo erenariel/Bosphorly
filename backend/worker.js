@@ -1,3 +1,4 @@
+import {authenticateMember,saveMember,withdrawMarketing} from './membership.js';
 import {plan, publicQuote} from './domain.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export default {async fetch(request,env) {
@@ -12,7 +13,9 @@ export default {async fetch(request,env) {
  // A missing managed rate limiter fails closed, before reading any body.
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  if (url.pathname==='/v1/requests') return json({error:'Booking requests disabled pending separate launch approval; no data stored'},503);
- if (!['/v1/quotes','/v1/admin/providers/verify','/v1/admin/prices'].includes(url.pathname)) return json({error:'Not found'},404);
+ const membership=['/v1/members/profile','/v1/members/marketing/withdraw'].includes(url.pathname);
+ if(membership && (env.MEMBERSHIP_ENABLED!=='approved'||!env.MEMBER_DATA_KEY)) return json({error:'Membership preview only; service not configured'},503);
+ if (!membership && !['/v1/quotes','/v1/admin/providers/verify','/v1/admin/prices'].includes(url.pathname)) return json({error:'Not found'},404);
  const admin=url.pathname.startsWith('/v1/admin/');
  if (admin && (!env.ADMIN_TOKEN || request.headers.get('Authorization')!==`Bearer ${env.ADMIN_TOKEN}`)) return json({error:'Unauthorized'},401);
  if (!request.headers.get('Content-Type')?.startsWith('application/json')) return json({error:'JSON required'},415);
@@ -27,7 +30,11 @@ export default {async fetch(request,env) {
  raw+=decoder.decode();
  if (new TextEncoder().encode(raw).length>4096) return json({error:'Payload too large'},413);
  const body=JSON.parse(raw);
- if (url.pathname==='/v1/quotes') {
+ if(membership) {
+ let identity;try{identity=await authenticateMember(request,env)}catch{return json({error:'Verified sign-in required'},401);}
+ if(url.pathname.endsWith('/withdraw')&&Object.keys(body).length) return json({error:'Unexpected fields'},400);
+ response=json(url.pathname.endsWith('/withdraw')?await withdrawMarketing(env,identity):await saveMember(env,identity,body));
+ } else if (url.pathname==='/v1/quotes') {
  const p=plan(body);
  const row=await env.DB.prepare(`SELECT ap.unit_minor, ap.currency FROM approved_prices ap JOIN experiences e ON e.id=ap.experience_id JOIN providers pr ON pr.id=e.provider_id JOIN availability a ON a.experience_id=e.id WHERE e.id=? AND pr.status='verified' AND pr.currency=ap.currency AND ap.valid_from<=? AND ap.valid_until>=? AND a.service_date=? AND a.remaining>=? AND julianday(a.verified_until)>julianday('now') ORDER BY ap.created_at DESC, ap.id DESC LIMIT 1`).bind(p.experienceId,p.date,p.date,p.date,p.guests).first();
  response=json(publicQuote(row,p.guests));
