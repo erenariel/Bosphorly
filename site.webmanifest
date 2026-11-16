@@ -8,6 +8,12 @@
   "theme_color": "#081153",
   "icons": [
     {
+      "src": "assets/brand/approved-icon.webp",
+      "sizes": "160x160",
+      "type": "image/webp",
+      "purpose": "any"
+    },
+    {
       "src": "assets/brand/brandmark.svg",
       "sizes": "any",
       "type": "image/svg+xml",
