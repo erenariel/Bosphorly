@@ -1,0 +1,18 @@
+{
+  "status": "PUBLIC_TAXIMETER_REFERENCE_NOT_BOSPHORLY_QUOTES",
+  "currency": "TRY",
+  "effective_from": "2026-07-20",
+  "verified_at": "2026-11-16",
+  "review_after": "2026-12-16",
+  "decision": "17.07.2026 / 813 — İBB Meclisi",
+  "source_url": "https://tuhim.ibb.gov.tr/media/27494/taksi-ta%C5%9F%C4%B1mac%C4%B1l%C4%B1%C4%9F%C4%B1-%C3%BCcret-tarifesi.pdf",
+  "source_sha256": "eea48e2ca82f5f9a73e207c40cb77eac894e6862fef45a0c0ff33a512ade1631",
+  "categories": {
+    "yellow": {"opening_minor":7194,"per_km_minor":4792,"minimum_minor":23000,"stationary_minute_minor":998},
+    "turquoise": {"opening_minor":8273,"per_km_minor":5510,"minimum_minor":26500,"stationary_minute_minor":1147},
+    "licensed_eight": {"opening_minor":9352,"per_km_minor":6229,"minimum_minor":30000,"stationary_minute_minor":1297},
+    "black": {"opening_minor":12230,"per_km_minor":8146,"minimum_minor":40000,"stationary_minute_minor":1696}
+  },
+  "private_vito": {"status":"quote_required","approved_rates":null},
+  "scope": "One-way distance plus explicit stationary-waiting scenarios only. No live traffic, tolls, tunnels, bridges, supplier availability, Bosphorly commission or private VIP tariff. The range is not a maximum-fare guarantee."
+}
