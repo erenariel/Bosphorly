@@ -6,7 +6,8 @@
   const tr = lang === 'tr';
   document.documentElement.lang = lang;
 
-  const T = tr ? {
+  const D = {
+    tr: {
     home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', account: 'Hesabım', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
     eyebrow: 'TUR KARŞILAŞTIRMA · İSTANBUL', heading: 'İstanbul turlarını karşılaştır.',
     lead: 'Lisanslı firmaların kendi sitelerinde yayımladığı fiyatlar ve tur içerikleri. Neyin dahil olduğunu yan yana gör.',
@@ -16,9 +17,11 @@
     request: 'Bosphorly’de talep et →', soon: 'Firma anlaşması bekleniyor', checked: 'Kontrol', none: 'Eşleşen tur bulunamadı.',
     notListed: 'Fiyat sor', records: 'tur', included: 'Dahil', excluded: 'Dahil değil', more: 'Tüm ayrıntılar',
     schedule: 'Saatler', meeting: 'Buluşma', guide: 'Rehber', pickup: 'Transfer', cancel: 'İptal', notes: 'Bilmen gerekenler',
-    source: 'Kaynak: firmanın sitesi', noDetails: 'Firma sitesinde ayrıntılı içerik bulunamadı.', englishOnly: 'Ayrıntılar firmanın sitesindeki İngilizce metinden özetlendi.',
-    cats: { cruise: 'Boğaz turu', dinner: 'Akşam yemekli tur', city: 'Şehir turu', day: 'Günübirlik tur', islands: 'Adalar', hammam: 'Hamam', transfer: 'Transfer', multi: 'Çok günlü tur' }
-  } : {
+    source: 'Kaynak: firmanın sitesi', noDetails: 'Firma sitesinde ayrıntılı içerik bulunamadı.', englishOnly: '',
+    cats: { cruise: 'Boğaz turu', dinner: 'Akşam yemekli tur', city: 'Şehir turu', day: 'Günübirlik tur', islands: 'Adalar', hammam: 'Hamam', transfer: 'Transfer', multi: 'Çok günlü tur' },
+    allCompanies: 'Tüm firmalar', allCurrencies: 'Tüm para birimleri', massageTitle: 'Masaj türleri ve fiyatlar', min: 'dk', loadFail: 'Fiyat verisi açılamadı.'
+    },
+    en: {
     home: 'Home', plan: 'Request', map: 'Map',
     eyebrow: 'TOUR COMPARISON · ISTANBUL', heading: 'Compare Istanbul tours.',
     lead: 'Prices and tour contents published by licensed companies on their own websites. See what is included, side by side.',
@@ -29,11 +32,42 @@
     notListed: 'Ask for price', records: 'tours', included: 'Included', excluded: 'Not included', more: 'All details',
     schedule: 'Times', meeting: 'Meeting point', guide: 'Guide', pickup: 'Transfer', cancel: 'Cancellation', notes: 'Good to know',
     source: 'Source: company website', noDetails: 'No detailed contents found on the company website.', englishOnly: '',
-    cats: { cruise: 'Bosphorus cruise', dinner: 'Dinner cruise', city: 'City tour', day: 'Day trip', islands: 'Islands', hammam: 'Hammam', transfer: 'Transfer', multi: 'Multi-day tour' }
+    cats: { cruise: 'Bosphorus cruise', dinner: 'Dinner cruise', city: 'City tour', day: 'Day trip', islands: 'Islands', hammam: 'Hammam', transfer: 'Transfer', multi: 'Multi-day tour' },
+    account: 'My account', allCompanies: 'All companies', allCurrencies: 'All currencies', massageTitle: 'Massage types and prices', min: 'min', loadFail: 'Could not load the price catalog.'
+    },
+    ru: {
+    home: 'Главная', plan: 'Заявка', map: 'Карта', account: 'Мой аккаунт', footer: 'Bosphorly · Только сравнение · Оплата здесь не принимается.',
+    eyebrow: 'СРАВНЕНИЕ ТУРОВ · СТАМБУЛ', heading: 'Сравните туры по Стамбулу.',
+    lead: 'Цены и программы, опубликованные лицензированными компаниями на их собственных сайтах. Сравните, что включено.',
+    noticeTitle: 'Собрано с сайтов самих компаний; это не предложение Bosphorly.',
+    noticeBody: 'Цены и программы зависят от даты, возраста и пакета. Окончательную цену и наличие мест компания подтверждает при принятии заявки. Оплата только наличными на ресепшене отеля; за оплату картой туркомпании берут дополнительно 10%.',
+    query: 'Поиск тура или компании…', per: 'с человека', from: 'от', was: 'было',
+    request: 'Заявка через Bosphorly →', soon: 'Ожидается договор с компанией', checked: 'Проверено', none: 'Подходящих туров нет.',
+    notListed: 'Цена по запросу', records: 'туров', included: 'Включено', excluded: 'Не включено', more: 'Все подробности',
+    schedule: 'Время', meeting: 'Место встречи', guide: 'Гид', pickup: 'Трансфер', cancel: 'Отмена', notes: 'Полезно знать',
+    source: 'Источник: сайт компании', noDetails: 'Подробной программы на сайте компании нет.', englishOnly: '', allCompanies: 'Все компании', allCurrencies: 'Все валюты', massageTitle: 'Виды массажа и цены', min: 'мин', loadFail: 'Не удалось загрузить каталог.',
+    cats: { cruise: 'Прогулка по Босфору', dinner: 'Ужин на теплоходе', city: 'Городской тур', day: 'Однодневный тур', islands: 'Острова', hammam: 'Хаммам', transfer: 'Трансфер', multi: 'Многодневный тур' }
+    },
+    ar: {
+    home: 'الرئيسية', plan: 'طلب', map: 'الخريطة', account: 'حسابي', footer: 'Bosphorly · للمقارنة فقط · لا يتم الدفع هنا.',
+    eyebrow: 'مقارنة الجولات · إسطنبول', heading: 'قارن جولات إسطنبول.',
+    lead: 'أسعار وبرامج نشرتها شركات مرخّصة على مواقعها. قارن ما هو مشمول جنبًا إلى جنب.',
+    noticeTitle: 'مُلخّص من مواقع الشركات نفسها؛ ليس عرضًا من Bosphorly.',
+    noticeBody: 'قد تتغير الأسعار والبرامج حسب التاريخ والعمر والباقة. تؤكد الشركة السعر النهائي والتوفر عند قبول طلبك. الدفع نقدًا فقط في استقبال الفندق؛ تضيف شركات الجولات 10% على الدفع بالبطاقة.',
+    query: 'ابحث عن جولة أو شركة…', per: 'للشخص', from: 'ابتداءً من', was: 'كان',
+    request: 'اطلب عبر Bosphorly ←', soon: 'بانتظار اتفاق مع الشركة', checked: 'تم التحقق', none: 'لا توجد جولات مطابقة.',
+    notListed: 'السعر عند الطلب', records: 'جولة', included: 'مشمول', excluded: 'غير مشمول', more: 'كل التفاصيل',
+    schedule: 'الأوقات', meeting: 'نقطة اللقاء', guide: 'المرشد', pickup: 'النقل', cancel: 'الإلغاء', notes: 'معلومات مفيدة',
+    source: 'المصدر: موقع الشركة', noDetails: 'لا توجد تفاصيل على موقع الشركة.', englishOnly: '', allCompanies: 'كل الشركات', allCurrencies: 'كل العملات', massageTitle: 'أنواع التدليك والأسعار', min: 'دقيقة', loadFail: 'تعذّر تحميل الكتالوج.',
+    cats: { cruise: 'جولة في البوسفور', dinner: 'عشاء على قارب', city: 'جولة في المدينة', day: 'رحلة يوم واحد', islands: 'الجزر', hammam: 'حمام', transfer: 'نقل', multi: 'جولة عدة أيام' }
+    }
   };
+  const T = D[lang] || D.en;
+  if (D[lang] && window.BosphorlyLang.rtl(lang)) document.documentElement.dir = 'rtl';
   const ICON = { cruise: '⛴️', dinner: '🍽️', city: '🕌', day: '🏞️', islands: '🏝️', hammam: '♨️', transfer: '🚐', multi: '🧭' };
 
   for (const [id, text] of Object.entries(T)) if (typeof text === 'string' && $(id)) $(id).textContent = text;
+  $('operator').options[0].textContent = T.allCompanies; $('currency').options[0].textContent = T.allCurrencies;
   const Q = $('query');
   Q.placeholder = T.query;
 
@@ -52,7 +86,7 @@
   }
 
   const fmt = (value, currency) => window.BosphorlyCurrency ? window.BosphorlyCurrency.format(value, currency)
-    : new Intl.NumberFormat(tr ? 'tr-TR' : 'en-GB', { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
+    : new Intl.NumberFormat(lang === 'ar' ? 'ar-u-nu-latn' : lang, { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -67,9 +101,9 @@
     return ul;
   }
 
-  // Turkish text is stored under details.tr; any field without a translation falls back to the English summary.
+  // Translations live under details.<lang>; any field without one falls back to the English summary.
   function localized(d) {
-    const t = (tr && d.tr) || {};
+    const t = d[lang] || {};
     const pick = k => t[k] ?? d[k];
     return { duration: pick('duration'), pickup: pick('pickup'), guide: pick('guide'), highlights: pick('highlights'), included: pick('included'),
       not_included: pick('not_included'), cancellation: pick('cancellation'), notes: pick('notes'), schedule: pick('schedule'),
@@ -82,7 +116,7 @@
     const head = el('div', 'item-head');
     head.append(el('span', 'item-icon', ICON[cat]), el('span', 'item-cat', T.cats[cat]));
     const body = el('div', 'item-body');
-    body.append(el('span', 'operator', r.operator), el('h2', null, (tr && r.title_tr) || r.title));
+    body.append(el('span', 'operator', r.operator), el('h2', null, r['title_' + lang] || r.title));
 
     const priceRow = el('div', 'price-row');
     if (Number.isFinite(r.price)) {
@@ -115,12 +149,11 @@
       if (L.highlights?.length > 3) { more.append(list(L.highlights.slice(3), 'highlights')); }
       if (L.included?.length > 5) { more.append(el('p', 'list-title', T.included)); more.append(list(L.included.slice(5), 'ticks')); }
       if (r.options?.length) {
-        more.append(el('p', 'list-title', tr ? 'Masaj türleri ve fiyatlar' : 'Massage types and prices'));
-        more.append(list(r.options.map(o => ((tr && o.name_tr) || o.name) + ': ' + o.durations.map(x => x.min + (tr ? ' dk ' : ' min ') + fmt(x.price, r.currency)).join(' · ')), 'notes'));
+        more.append(el('p', 'list-title', T.massageTitle));
+        more.append(list(r.options.map(o => (o['name_' + lang] || o.name) + ': ' + o.durations.map(x => x.min + ' ' + T.min + ' ' + fmt(x.price, r.currency)).join(' · ')), 'notes'));
       }
       if (L.not_included?.length) { more.append(el('p', 'list-title', T.excluded)); more.append(list(L.not_included, 'crosses')); }
       if (L.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
-      if (tr && !L.translated && T.englishOnly) more.append(el('p', 'fine', T.englishOnly));
       const src = el('p', 'fine');
       const a = el('a', null, T.source);
       a.href = d.source_url; a.target = '_blank'; a.rel = 'noopener nofollow';
@@ -140,7 +173,7 @@
     const q = Q.value.toLocaleLowerCase();
     const op = $('operator').value, cur = $('currency').value;
     const data = rows.filter(x => (op === 'all' || x.operator === op) && (cur === 'all' || x.currency === cur) &&
-      (x.title + ' ' + (x.title_tr || '') + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ') + ' ' + (x.details?.tr?.highlights || []).join(' ')).toLocaleLowerCase().includes(q));
+      (x.title + ' ' + (x['title_' + lang] || '') + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ') + ' ' + (x.details?.[lang]?.highlights || []).join(' ')).toLocaleLowerCase().includes(q));
     const wrap = $('catalog');
     wrap.replaceChildren();
     $('summary').textContent = data.length + ' ' + T.records;
@@ -163,5 +196,5 @@
       }
       show();
     })
-    .catch(() => { $('summary').textContent = tr ? 'Fiyat verisi açılamadı.' : 'Could not load the price catalog.'; });
+    .catch(() => { $('summary').textContent = T.loadFail; });
 })();
