@@ -8,6 +8,7 @@
 
   const D = {
     tr: {
+    hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Hamam paketleri', hbMassages: 'Masajlar', hbBook: 'Hamam veya masaj rezervasyonu yap →', hbHours: 'Her gün 09:30–23:00 · Fatih ve Beyoğlu şubeleri', 
     home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', account: 'Hesabım', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
     eyebrow: 'TUR KARŞILAŞTIRMA · İSTANBUL', heading: 'İstanbul turlarını karşılaştır.',
     lead: 'Lisanslı firmaların kendi sitelerinde yayımladığı fiyatlar ve tur içerikleri. Neyin dahil olduğunu yan yana gör.',
@@ -22,6 +23,7 @@
     allCompanies: 'Tüm firmalar', allCurrencies: 'Tüm para birimleri', massageTitle: 'Masaj türleri ve fiyatlar', min: 'dk', loadFail: 'Fiyat verisi açılamadı.'
     },
     en: {
+    hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Hammam packages', hbMassages: 'Massages', hbBook: 'Book hammam or massage →', hbHours: 'Open daily 09:30–23:00 · Fatih and Beyoğlu branches', 
     home: 'Home', plan: 'Request', map: 'Map',
     eyebrow: 'TOUR COMPARISON · ISTANBUL', heading: 'Compare Istanbul tours.',
     lead: 'Prices and tour contents published by licensed companies on their own websites. See what is included, side by side.',
@@ -36,6 +38,7 @@
     account: 'My account', allCompanies: 'All companies', allCurrencies: 'All currencies', massageTitle: 'Massage types and prices', min: 'min', loadFail: 'Could not load the price catalog.'
     },
     ru: {
+    hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Пакеты хаммама', hbMassages: 'Массажи', hbBook: 'Забронировать хаммам или массаж →', hbHours: 'Ежедневно 09:30–23:00 · филиалы в Фатихе и Бейоглу', 
     home: 'Главная', plan: 'Заявка', map: 'Карта', account: 'Мой аккаунт', footer: 'Bosphorly · Только сравнение · Оплата здесь не принимается.',
     eyebrow: 'СРАВНЕНИЕ ТУРОВ · СТАМБУЛ', heading: 'Сравните туры по Стамбулу.',
     lead: 'Цены и программы, опубликованные лицензированными компаниями на их собственных сайтах. Сравните, что включено.',
@@ -49,6 +52,7 @@
     cats: { cruise: 'Прогулка по Босфору', dinner: 'Ужин на теплоходе', city: 'Городской тур', day: 'Однодневный тур', islands: 'Острова', hammam: 'Хаммам', transfer: 'Трансфер', multi: 'Многодневный тур' }
     },
     ar: {
+    hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'باقات الحمام', hbMassages: 'التدليك', hbBook: 'احجز الحمام أو التدليك ←', hbHours: 'يوميًا 09:30–23:00 · فرعا الفاتح وبيوغلو', 
     home: 'الرئيسية', plan: 'طلب', map: 'الخريطة', account: 'حسابي', footer: 'Bosphorly · للمقارنة فقط · لا يتم الدفع هنا.',
     eyebrow: 'مقارنة الجولات · إسطنبول', heading: 'قارن جولات إسطنبول.',
     lead: 'أسعار وبرامج نشرتها شركات مرخّصة على مواقعها. قارن ما هو مشمول جنبًا إلى جنب.',
@@ -169,6 +173,32 @@
     return article;
   }
 
+  function hammamCard(items) {
+    const article = el('article', 'item cat-hammam hb-card');
+    const head = el('div', 'item-head'); head.append(el('span', 'item-icon', ICON.hammam), el('span', 'item-cat', T.cats.hammam));
+    const body = el('div', 'item-body');
+    body.append(el('span', 'operator', 'Alaturka Hamam'), el('h2', null, T.hbTitle));
+    const min = Math.min(...items.flatMap(r => r.options ? r.options.flatMap(o => o.durations.map(d => d.price)) : [r.price]));
+    const priceRow = el('div', 'price-row'); priceRow.append(el('strong', null, T.from + ' ' + fmt(min, 'EUR')), el('span', 'per', T.per)); body.append(priceRow);
+    body.append(el('div', 'chips')); body.lastChild.append(el('span', 'chip', '🕘 ' + T.hbHours));
+    const pk = items.filter(r => !r.options);
+    body.append(el('p', 'list-title', T.hbPackages));
+    body.append(list(pk.map(r => (r['title_' + lang] || r.title) + ' · 60 ' + T.min + ': ' + fmt(r.price, r.currency)), 'ticks'));
+    const m = items.find(r => r.options);
+    if (m) {
+      const more = el('details', 'more'); more.append(el('summary', null, T.hbMassages + ' (' + m.options.length + ')'));
+      more.append(list(m.options.map(o => (o['name_' + lang] || o.name) + ': ' + o.durations.map(x => x.min + ' ' + T.min + ' ' + fmt(x.price, m.currency)).join(' · ')), 'notes'));
+      const d = pk[0]?.details; const L = d ? Object.assign({}, d, d[lang] || {}) : null;
+      if (L?.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
+      const src = el('p', 'fine'); const a = el('a', null, T.source); a.href = m.details?.source_url || m.source_url; a.target = '_blank'; a.rel = 'noopener nofollow';
+      src.append(a, document.createTextNode(' · ' + T.checked + ': ' + (m.details?.checked || ''))); more.append(src);
+      body.append(more);
+    }
+    const a = el('a', 'button', T.hbBook); a.href = 'booking.html?service=alaturka&lang=' + encodeURIComponent(lang); body.append(a);
+    article.append(head, body);
+    return article;
+  }
+
   function show() {
     const q = Q.value.toLocaleLowerCase();
     const op = $('operator').value, cur = $('currency').value;
@@ -176,11 +206,16 @@
       (x.title + ' ' + (x['title_' + lang] || '') + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ') + ' ' + (x.details?.[lang]?.highlights || []).join(' ')).toLocaleLowerCase().includes(q));
     const wrap = $('catalog');
     wrap.replaceChildren();
-    $('summary').textContent = data.length + ' ' + T.records;
+    $('summary').textContent = (data.filter(r => r.operator !== 'Alaturka Hamam').length + (data.some(r => r.operator === 'Alaturka Hamam') ? 1 : 0)) + ' ' + T.records;
     if (!data.length) { wrap.append(el('p', 'empty', T.none)); return; }
     // Records with researched contents first, then the rest.
     data.sort((a, b) => Number(Boolean(b.details?.included)) - Number(Boolean(a.details?.included)));
-    for (const r of data) wrap.append(card(r));
+    // Alaturka Hamam is shown as one card with all packages and massages.
+    let hammamDone = false;
+    for (const r of data) {
+      if (r.operator === 'Alaturka Hamam') { if (!hammamDone) { wrap.append(hammamCard(data.filter(x => x.operator === 'Alaturka Hamam'))); hammamDone = true; } continue; }
+      wrap.append(card(r));
+    }
   }
 
   if (window.BosphorlyCurrency) window.BosphorlyCurrency.onChange(() => { show(); $('fxNote').textContent = window.BosphorlyCurrency.note(); });

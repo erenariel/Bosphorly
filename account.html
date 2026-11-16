@@ -34,10 +34,9 @@ input{border:1px solid #cbd8eb;border-radius:10px;padding:10px;font:inherit;min-
 .saved{font-size:12px;color:#0f9d58;min-height:18px}
 footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12px;text-align:center}
 @media(max-width:780px){.grid{grid-template-columns:1fr}}
-.lang-select{border:1px solid #4a5a90;border-radius:9px;padding:5px 7px;font-size:12px;font-weight:700;background:#16236b;color:#fff;margin-left:6px;max-width:130px}</style></head>
+.lang-select{border:1px solid #4a5a90;border-radius:9px;padding:5px 7px;font-size:12px;font-weight:700;background:#16236b;color:#fff;margin-left:6px;max-width:130px}</style><link rel="stylesheet" href="header.css"><script src="lang.js"></script><script src="currency.js"></script></head>
 <body>
-<header><div class="nav"><a href="index.html" class="identity"><img src="assets/brand/approved-icon.webp" alt="">Bosphorly</a>
-<nav class="navmenu" aria-label="Main navigation"><a href="index.html" id="navHome">Home</a><a href="prices.html" id="navCompare">Compare tours</a><a href="account.html" id="navAccount" aria-current="page">My account</a><span data-currency-mount></span><span data-lang-mount></span></nav></div></header>
+<div id="siteHeader" data-page="account"></div><script src="site-header.js"></script>
 <main>
 <div class="eyebrow" id="eyebrow">MY BOSPHORLY</div>
 <h1 id="heading">My account</h1>
@@ -65,5 +64,5 @@ footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12
 </div>
 </main>
 <footer id="footer">Bosphorly · Prototype · Nothing on this page is sent to a server.</footer>
-<script src="lang.js"></script><script src="currency.js"></script><script src="account-store.js"></script><script src="account.js" defer></script>
+<script src="account-store.js"></script><script src="account.js" defer></script>
 </body></html>

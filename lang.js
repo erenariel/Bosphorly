@@ -24,9 +24,12 @@
       s.className = 'lang-select';
       s.setAttribute('aria-label', 'Language');
       for (const code of supported) { const o = document.createElement('option'); o.value = code; o.textContent = NAMES[code]; s.append(o); }
-      s.value = pick();
+      // Articles that exist in one language show that language, not the visitor's saved choice.
+      s.value = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2) : pick();
       s.addEventListener('change', () => {
         try { localStorage.setItem('bosphorly.language', s.value); } catch {}
+        const alt = window.BOSPHORLY_LANG_ALT; // e.g. guide articles that exist only in TR and EN
+        if (alt) { location.href = alt[s.value] || alt.en; return; }
         const u = new URL(location.href); u.searchParams.set('lang', s.value); location.href = u.toString();
       });
       el.append(s);
