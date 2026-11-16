@@ -95,7 +95,7 @@ def assert_booking_safety():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js"]
     for name in script_sources:
         subprocess.run(["node", "--check", str(ROOT / name)], check=True)
     for page in PAGES:
