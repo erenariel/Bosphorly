@@ -71,12 +71,13 @@
     return ul;
   }
 
-  // Turkish text exists for featured records; other records fall back to the operator's English summary.
+  // Turkish text is stored under details.tr; any field without a translation falls back to the English summary.
   function localized(d) {
     const t = (tr && d.tr) || {};
     const pick = k => t[k] ?? d[k];
     return { duration: pick('duration'), pickup: pick('pickup'), guide: pick('guide'), highlights: pick('highlights'), included: pick('included'),
-      not_included: pick('not_included'), cancellation: pick('cancellation'), notes: pick('notes'), translated: Boolean(t.highlights) };
+      not_included: pick('not_included'), cancellation: pick('cancellation'), notes: pick('notes'), schedule: pick('schedule'),
+      meeting_point: pick('meeting_point'), translated: Boolean(t.highlights) };
   }
 
   function card(r) {
@@ -85,7 +86,7 @@
     const head = el('div', 'item-head');
     head.append(el('span', 'item-icon', ICON[cat]), el('span', 'item-cat', T.cats[cat]));
     const body = el('div', 'item-body');
-    body.append(el('span', 'operator', r.operator), el('h2', null, r.title));
+    body.append(el('span', 'operator', r.operator), el('h2', null, (tr && r.title_tr) || r.title));
 
     const priceRow = el('div', 'price-row');
     if (Number.isFinite(r.price)) {
@@ -112,8 +113,8 @@
       const more = el('details', 'more');
       more.append(el('summary', null, T.more));
       const add = (label, value) => { if (value) { const p = el('p', 'kv'); p.append(el('b', null, label + ': '), document.createTextNode(value)); more.append(p); } };
-      add(T.schedule, d.schedule);
-      add(T.meeting, d.meeting_point);
+      add(T.schedule, L.schedule);
+      add(T.meeting, L.meeting_point);
       add(T.cancel, L.cancellation);
       if (L.highlights?.length > 3) { more.append(list(L.highlights.slice(3), 'highlights')); }
       if (L.included?.length > 5) { more.append(el('p', 'list-title', T.included)); more.append(list(L.included.slice(5), 'ticks')); }
@@ -141,7 +142,7 @@
     const q = Q.value.toLocaleLowerCase();
     const op = $('operator').value, cur = $('currency').value;
     const data = rows.filter(x => (op === 'all' || x.operator === op) && (cur === 'all' || x.currency === cur) &&
-      (x.title + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ')).toLocaleLowerCase().includes(q));
+      (x.title + ' ' + (x.title_tr || '') + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ') + ' ' + (x.details?.tr?.highlights || []).join(' ')).toLocaleLowerCase().includes(q));
     const wrap = $('catalog');
     wrap.replaceChildren();
     $('summary').textContent = data.length + ' ' + T.records;

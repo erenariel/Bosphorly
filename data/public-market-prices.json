@@ -94,10 +94,13 @@
             "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
             "Ödeme varışta (ön ödeme yok)",
             "Vejetaryen menü mevcut"
-          ]
+          ],
+          "schedule": "10:00–13:00",
+          "meeting_point": "Eminönü; alış saati rezervasyon sonrası SMS ile bildirilir"
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Sabah Boğaz Turu"
     },
     {
       "id": "bb-afternoon",
@@ -158,10 +161,13 @@
             "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
             "Ödeme varışta (ön ödeme yok)",
             "Vejetaryen menü mevcut"
-          ]
+          ],
+          "schedule": "13:00–16:00",
+          "meeting_point": "Eminönü; alış saati rezervasyon sonrası SMS ile bildirilir"
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Öğle Yemekli Boğaz Turu"
     },
     {
       "id": "bb-sunset",
@@ -222,10 +228,13 @@
             "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
             "Ödeme varışta (ön ödeme yok)",
             "Vejetaryen menü mevcut"
-          ]
+          ],
+          "schedule": "18:00–21:00",
+          "meeting_point": "Eminönü; alış saati rezervasyon sonrası SMS ile bildirilir"
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Gün Batımı Boğaz Turu"
     },
     {
       "id": "bb-oldcity",
@@ -286,10 +295,13 @@
             "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
             "Ödeme varışta (ön ödeme yok)",
             "Vejetaryen menü ücretsiz"
-          ]
+          ],
+          "schedule": "10:00–18:00",
+          "meeting_point": "Eminönü; alış saati rezervasyon sonrası SMS ile bildirilir"
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Tarihi Yarımada ve Balat Turu"
     },
     {
       "id": "bb-europeasia",
@@ -327,8 +339,34 @@
           "Infants 0–3 free, children 4–6 get 30% off",
           "Pay on arrival (no prepayment)"
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "7 saat",
+          "schedule": "10:00–17:00",
+          "pickup": "Otel transferi dahil",
+          "meeting_point": "Eminönü; alış saati rezervasyon sonrası SMS ile bildirilir",
+          "guide": "Canlı rehber: EN / RU / ES / TR",
+          "highlights": [
+            "Teknede kahvaltılı Boğaz turu",
+            "Asya kıyısında 19. yüzyıldan bir Osmanlı sarayı",
+            "Asya yakasının en yüksek noktasında Türkiye’nin en büyük camisi",
+            "Teleferikle çıkılan romantik bir seyir tepesi"
+          ],
+          "included": [
+            "Otel transferi",
+            "Canlı rehber",
+            "Kahvaltı ve öğle yemeği",
+            "Giriş biletleri",
+            "Boğaz turu",
+            "Duraklar arası otobüs"
+          ],
+          "notes": [
+            "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
+            "Ödeme varışta (ön ödeme yok)"
+          ]
+        }
+      },
+      "title_tr": "Tam Gün Asya ve Avrupa Turu"
     },
     {
       "id": "orient-classic",
@@ -356,8 +394,19 @@
         "notes": [
           "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "3 saat",
+          "highlights": [
+            "Boğaz’da akşam yemekli tekne turu",
+            "Akdeniz ve Türk mutfağı: meze, ızgara balık, kebap"
+          ],
+          "notes": [
+            "Dahil hizmetler firmanın tur sayfasında ayrıntılı yayımlanmamış; firmaya teyit ettirilmeli."
+          ]
+        }
+      },
+      "title_tr": "Klasik Akşam Yemekli Tekne Turu"
     },
     {
       "id": "orient-dinner",
@@ -396,7 +445,8 @@
           ]
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Premium Akşam Yemekli Tekne Turu"
     },
     {
       "id": "orient-alacarte",
@@ -425,8 +475,20 @@
         "notes": [
           "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "3 saat",
+          "highlights": [
+            "À la carte menü",
+            "Boğaz’da akşam yemekli tekne turu",
+            "Akdeniz ve Türk mutfağı: meze, ızgara balık, kebap"
+          ],
+          "notes": [
+            "Dahil hizmetler firmanın tur sayfasında ayrıntılı yayımlanmamış; firmaya teyit ettirilmeli."
+          ]
+        }
+      },
+      "title_tr": "À la Carte Akşam Yemekli Tekne Turu"
     },
     {
       "id": "sea-land",
@@ -504,10 +566,12 @@
             "Buluşma seçeneğinde Eminönü İskelesi yakınındaki ofiste check-in",
             "Kendi yiyecek ve içeceğini getirebilirsin",
             "Yağmurda da çalışır, kapalı oturma alanı var"
-          ]
+          ],
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi"
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Sabah Boğaz Turu"
     },
     {
       "id": "sl-afternoon",
@@ -555,8 +619,44 @@
           "Pickup service is available only if you select the Pickup option.",
           "You may bring your own food and drinks on board."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "2 saat",
+          "guide": "Canlı rehber yok; çok dilli sesli rehber",
+          "highlights": [
+            "Avrupa ile Asya arasında Boğaz turu",
+            "2 saatlik öğleden sonra gezisi",
+            "İki yakanın kıyılarını denizden gör",
+            "Saraylar, camiler, hisarlar, köprüler ve yalılar"
+          ],
+          "included": [
+            "2 saatlik paylaşımlı Boğaz turu",
+            "Otelden alış (seçilirse)",
+            "Teknede çok dilli anlatım",
+            "30 dilde mobil sesli rehber",
+            "Teknede ücretsiz Wi-Fi",
+            "Sınırsız çay ve Nescafé (self servis)",
+            "Teknede tuvalet"
+          ],
+          "not_included": [
+            "Tur sonrası otele dönüş",
+            "Yiyecek ve ek içecekler",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Osmanlı kostümüyle fotoğraf"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı 2 saatlik tekne turu",
+            "Buluşma seçeneğinde Eminönü İskelesi yakınındaki ofiste check-in yapılır",
+            "Otelden alış yalnızca transfer seçeneğiyle",
+            "Kendi yiyecek ve içeceğini getirebilirsin"
+          ]
+        }
+      },
+      "title_tr": "Öğleden Sonra Boğaz Turu"
     },
     {
       "id": "sl-sunset",
@@ -604,8 +704,44 @@
           "Pickup and return transfers are included only if the Transfer option is selected.",
           "Sunset colors and timing vary by season, weather, and visibility."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "2 saat",
+          "guide": "Canlı rehber yok; çok dilli sesli rehber",
+          "highlights": [
+            "Gün batımında Avrupa ile Asya arasında",
+            "2 saatlik Boğaz gezisi",
+            "Akşam ışığının İstanbul’un üzerinde değişimini izle",
+            "İki yakanın kıyılarını denizden gör"
+          ],
+          "included": [
+            "2 saatlik paylaşımlı gün batımı Boğaz turu",
+            "Otelden alış ve dönüş (transfer seçilirse)",
+            "Teknede çok dilli anlatım",
+            "30 dilde mobil sesli rehber",
+            "Teknede ücretsiz Wi-Fi",
+            "Sınırsız çay ve Nescafé (self servis)",
+            "Teknede tuvalet"
+          ],
+          "not_included": [
+            "Buluşma seçeneğinde transfer",
+            "Yiyecek ve ek içecekler",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Osmanlı kostümüyle fotoğraf"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı 2 saatlik tekne turu",
+            "Buluşma seçeneğinde Eminönü İskelesi yakınındaki ofiste check-in yapılır",
+            "Alış ve dönüş yalnızca transfer seçeneğiyle dahil",
+            "Gün batımı renkleri ve saati mevsime, havaya ve görüşe göre değişir"
+          ]
+        }
+      },
+      "title_tr": "Gün Batımı Boğaz Turu"
     },
     {
       "id": "sl-two-continents",
@@ -655,8 +791,47 @@
           "Standard options do not include lunch or admission to the Beylerbeyi Palace interior and are not available on Mondays.",
           "Palace & Lunch options include lunch and palace admission. On Mondays, Yildiz Palace is visited instead of Beylerbeyi Palace."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "10–12 saat",
+          "guide": "Profesyonel rehber",
+          "highlights": [
+            "Tek günde Avrupa ve Asya yakası",
+            "Çamlıca Tepesi’nden panoramik şehir manzarası",
+            "Asya yakasında Çamlıca Camii",
+            "Beylerbeyi Sarayı ve kıyı manzarası"
+          ],
+          "included": [
+            "Klimalı otobüsle ulaşım",
+            "Profesyonel rehber",
+            "Çamlıca Tepesi ve Çamlıca Camii",
+            "Standart seçenekte Beylerbeyi Sarayı bahçesi",
+            "Saray ve Öğle Yemeği seçeneğinde saray girişi (Salı–Pazar Beylerbeyi, Pazartesi Yıldız Sarayı)",
+            "Saray ve Öğle Yemeği seçeneğinde bir içecekli öğle yemeği",
+            "Eyüp teleferiği",
+            "2 saatlik Boğaz turu",
+            "Transfer seçeneğinde otelden alış ve dönüş"
+          ],
+          "not_included": [
+            "Standart seçenekte Beylerbeyi Sarayı iç mekân girişi",
+            "Standart seçenekte öğle yemeği",
+            "Buluşma seçeneğinde alış ve dönüş",
+            "Ek yiyecek ve içecekler",
+            "Kişisel harcamalar",
+            "Bahşiş"
+          ],
+          "notes": [
+            "2 saatlik Boğaz turunu da içeren, diğer yolcularla paylaşımlı tam gün otobüs turu",
+            "Mevsim, trafik ve koşullara göre yaklaşık 10–12 saat sürer",
+            "Standart seçenekte öğle yemeği ve saray içi girişi yok; Pazartesi yapılmaz",
+            "Saray ve Öğle Yemeği seçeneğinde Pazartesi Beylerbeyi yerine Yıldız Sarayı ziyaret edilir"
+          ]
+        }
+      },
+      "title_tr": "Otobüs ve Tekneyle Avrupa–Asya Turu"
     },
     {
       "id": "sl-oldcity",
@@ -705,8 +880,46 @@
           "The meeting point option is available only if selected.",
           "Pickup time may vary depending on hotel location and traffic."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "12 saat",
+          "guide": "Profesyonel rehber",
+          "highlights": [
+            "Tek günde Tarihi Yarımada",
+            "Rehber anlatımıyla Ayasofya",
+            "Sultanahmet Camii ve Sultanahmet Meydanı",
+            "Süleymaniye Camii"
+          ],
+          "included": [
+            "Transfer seçeneğinde otelden alış ve dönüş",
+            "Seçilirse buluşma noktası seçeneği",
+            "Tur boyunca klimalı araç",
+            "İngilizce konuşan profesyonel rehber",
+            "Alkolsüz içecekli yerel öğle yemeği",
+            "2 saatlik Boğaz turu",
+            "Teknede ücretsiz çay ve Nescafé",
+            "Teknede ücretsiz Wi-Fi",
+            "Hizmet bedeli ve vergiler"
+          ],
+          "not_included": [
+            "Topkapı Sarayı giriş bileti",
+            "Ayasofya Camii giriş bileti",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Öğle yemeğine dahil olmayan yiyecek ve içecekler"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı tam gün rehberli tur",
+            "Otelden alış ve dönüş yalnızca transfer seçeneğiyle",
+            "Buluşma noktası seçeneği yalnızca seçilirse geçerli",
+            "Alış saati otelin konumuna ve trafiğe göre değişebilir"
+          ]
+        }
+      },
+      "title_tr": "Tam Gün Tarihi Yarımada ve Boğaz Turu"
     },
     {
       "id": "sl-asia-half",
@@ -756,8 +969,47 @@
           "The bus tour ends at Eminonu Pier.",
           "Guests who continue with the Bosphorus cruise finish around 16:00 at Eminonu Pier."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "4 saat",
+          "guide": "Profesyonel rehber",
+          "highlights": [
+            "Rehberli sabah turuyla Asya yakası",
+            "İstanbul ve Boğaz’ın panoramik manzarası",
+            "Osmanlı mirası ve etkileyici mimari",
+            "Avrupa ile Asya yakaları arasında geçiş"
+          ],
+          "included": [
+            "Kara turunda klimalı araç",
+            "Profesyonel canlı rehber",
+            "Salı–Pazar Beylerbeyi Sarayı bahçeleri",
+            "Saray seçeneğinde saray içi girişi",
+            "Saray seçeneğinde Pazartesi Beylerbeyi yerine Yıldız Sarayı",
+            "Alış seçeneğinde otelden alış",
+            "2 saatlik Boğaz turu",
+            "Boğaz turunda mobil sesli rehber",
+            "Teknede sınırsız çay ve Nescafé (self servis)",
+            "Vergiler ve hizmet bedelleri"
+          ],
+          "not_included": [
+            "Standart seçenekte saray içi girişi",
+            "Tur sonrası otele dönüş",
+            "Yemek ve içecekler",
+            "Kişisel harcamalar",
+            "Bahşiş"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı yarım gün sabah turu",
+            "4 saatlik süre rehberli otobüs turunu kapsar",
+            "Otobüs turu Eminönü İskelesi’nde biter",
+            "Boğaz turuna devam edenler 16:00 civarında Eminönü’nde turu bitirir"
+          ]
+        }
+      },
+      "title_tr": "Yarım Gün Sabah Asya Yakası ve Boğaz Turu"
     },
     {
       "id": "sl-privateyacht",
@@ -767,7 +1019,8 @@
       "currency": "EUR",
       "basis": "from",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/",
+      "title_tr": "Ricos Özel Yat"
     },
     {
       "id": "azure-bursa",
@@ -800,8 +1053,26 @@
           "Shopping stops: Turkish delight, honey and jam makers",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün, her gün",
+          "pickup": "Otelden alış dahil",
+          "highlights": [
+            "İzmit Körfezi’nde 40 dakikalık feribot",
+            "Otobüs ve teleferikle Uludağ",
+            "600 yıllık çınar ağacı",
+            "Yeşil Cami, Yeşil Türbe, Koza Han ve Osmanlı evi"
+          ],
+          "included": [
+            "Dağ restoranında karışık ızgara öğle yemeği"
+          ],
+          "notes": [
+            "Alışveriş durakları: lokum, bal ve reçel üreticileri",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Tam Gün Bursa Turu"
     },
     {
       "id": "azure-bosphorus",
@@ -838,8 +1109,32 @@
           "60+ get 10% off, children 3–6 get 30% off, 0–2 free",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün",
+          "schedule": "Bölgeye göre 07:30–09:00 arası otelden alış",
+          "pickup": "Otelden alış dahil",
+          "guide": "Profesyonel rehber",
+          "highlights": [
+            "Miniatürk",
+            "Pierre Loti Tepesi ve Eyüp’e teleferik",
+            "Eyüp Sultan Türbesi ve Camii",
+            "2 saatlik Boğaz turu"
+          ],
+          "included": [
+            "Otelden alış",
+            "Profesyonel rehber",
+            "2 saatlik Boğaz turu",
+            "Restoranda öğle yemeği"
+          ],
+          "notes": [
+            "Öğle yemeğinden sonra alışveriş molası var",
+            "60 yaş üstüne %10, 3–6 yaşa %30 indirim, 0–2 yaş ücretsiz",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Tam Gün Boğaz Turu"
     },
     {
       "id": "azure-sapanca",
@@ -871,8 +1166,23 @@
           "ATV and zipline are not run by the agency",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün (22:00–23:00’te bitebilir)",
+          "highlights": [
+            "Sapanca Gölü",
+            "Maşukiye’de dere ve doğa",
+            "Mahmudiye şelaleleri yakınında öğle yemeği",
+            "Kartepe (yalnızca kış sezonunda)"
+          ],
+          "notes": [
+            "Alışveriş durakları: lokum, bal, AVM",
+            "ATV ve zipline acente tarafından işletilmiyor",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Sapanca ve Maşukiye Turu"
     },
     {
       "id": "azure-islands",
@@ -912,8 +1222,35 @@
           "Be on time at meeting points; the guide may leave latecomers",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün, yıl boyu",
+          "pickup": "Otelden alış ve dönüş dahil",
+          "guide": "İngilizce veya Arapça rehber",
+          "highlights": [
+            "Tekneyle yaklaşık 1 saatte Heybeliada",
+            "Büyükada’da öğle yemeği ve serbest zaman",
+            "Serbest zamanda yüzme imkânı",
+            "Dönüşte Sultanahmet yakınında alışveriş molası"
+          ],
+          "included": [
+            "Otel transferleri",
+            "Tekne biletleri",
+            "Alkolsüz içecekli öğle yemeği",
+            "İngilizce veya Arapça rehber"
+          ],
+          "not_included": [
+            "Teknede içecekler",
+            "Plaj giriş ücreti",
+            "Kişisel harcamalar"
+          ],
+          "notes": [
+            "Buluşma noktalarına zamanında gel; rehber geç kalanları bekleyemeyebilir",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Adalar Turu"
     },
     {
       "id": "azure-transfer",
@@ -942,8 +1279,21 @@
         "notes": [
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "Kapıdan kapıya",
+          "meeting_point": "Geliş salonu, isim tabelalı şoför",
+          "highlights": [
+            "İstanbul Havalimanı veya Sabiha Gökçen’den özel transfer",
+            "İsim tabelasıyla karşılama",
+            "Bagaj yardımı"
+          ],
+          "notes": [
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Özel Havalimanı Transferi"
     },
     {
       "id": "alaturka",
@@ -1001,10 +1351,13 @@
           "notes": [
             "Üst paketler: tuz veya kahve peelingi €65, Sultan hamam + masaj €75",
             "Havuz karma ve genelde soğuk (23 °C)"
-          ]
+          ],
+          "schedule": "Her gün 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek) ve Beyoğlu şubeleri"
         },
         "checked": "2026-11-16"
-      }
+      },
+      "title_tr": "Geleneksel Türk Hamamı Paketi"
     },
     {
       "id": "sl-generic-cruise",
@@ -1055,8 +1408,47 @@
           "The Morning and Afternoon Pickup option includes pickup before the cruise but does not include a return transfer.",
           "The Sunset Transfer option includes both pickup and a return transfer."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "2 saat",
+          "guide": "Canlı rehber yok; çok dilli sesli rehber",
+          "highlights": [
+            "Avrupa ile Asya arasında Boğaz turu",
+            "Sabah, öğleden sonra veya gün batımı seçeneği",
+            "2 saatlik deniz gezisi",
+            "İki yakanın kıyılarını denizden gör"
+          ],
+          "included": [
+            "2 saatlik paylaşımlı Boğaz turu",
+            "Sabah/öğleden sonra transfer seçeneğinde turdan önce otelden alış",
+            "Gün batımı transfer seçeneğinde alış ve dönüş",
+            "Teknede çok dilli anlatım",
+            "30 dilde mobil sesli rehber",
+            "Teknede ücretsiz Wi-Fi",
+            "Sınırsız çay ve Nescafé (self servis)",
+            "Teknede tuvalet"
+          ],
+          "not_included": [
+            "Buluşma seçeneğinde transfer",
+            "Sabah/öğleden sonra seçeneğinde otele dönüş",
+            "Yemek ve atıştırmalıklar",
+            "Ek içecekler",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Osmanlı kostümüyle fotoğraf"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı 2 saatlik tekne turu",
+            "Buluşma seçeneği sabah, öğleden sonra ve gün batımı turlarında geçerli",
+            "Sabah/öğleden sonra transferi yalnızca gidişi kapsar, dönüş dahil değil",
+            "Gün batımı transferi gidiş ve dönüşü kapsar"
+          ]
+        }
+      },
+      "title_tr": "2 Saatlik Boğaz Turu"
     },
     {
       "id": "sl-asia-afternoon",
@@ -1109,8 +1501,50 @@
           "Pickup time is approximate and may change depending on hotel location and traffic.",
           "Some faraway hotel areas may require an extra transportation fee, as shown in the booking system."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "8 saat",
+          "guide": "Profesyonel rehber",
+          "highlights": [
+            "Öğleden sonra Avrupa yakası",
+            "Eyüp’ün manevi atmosferi",
+            "Haliç manzarası",
+            "Eyüp teleferiği"
+          ],
+          "included": [
+            "Transfer seçeneğinde merkezi otellerden alış ve dönüş",
+            "Seçilirse buluşma noktası hizmeti",
+            "Klimalı araçla ulaşım",
+            "İngilizce, İspanyolca, Rusça, Arapça veya Fransızca profesyonel rehber",
+            "Tatlı ve bir alkolsüz içecekli öğle yemeği",
+            "Eyüp teleferik bileti",
+            "2 saatlik Boğaz turu",
+            "Sesli rehberli Boğaz turu",
+            "Teknede sınırsız çay ve Nescafé",
+            "Teknede ücretsiz Wi-Fi"
+          ],
+          "not_included": [
+            "Bahşiş",
+            "Kişisel harcamalar",
+            "Ek yiyecek ve içecekler",
+            "Alkollü içecekler",
+            "Alışveriş harcamaları",
+            "Osmanlı kostümüyle fotoğraf",
+            "Otobüste Wi-Fi",
+            "Açıkça dahil yazmayan ek hizmetler"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı öğleden sonra turu",
+            "Otelden alış ve dönüş yalnızca transfer seçeneğiyle",
+            "Alış saati yaklaşıktır, otelin konumuna ve trafiğe göre değişebilir",
+            "Uzak otel bölgeleri için ek ulaşım ücreti çıkabilir"
+          ]
+        }
+      },
+      "title_tr": "Yarım Gün Öğleden Sonra Avrupa Yakası Turu"
     },
     {
       "id": "sl-islands",
@@ -1163,8 +1597,50 @@
           "All guests travel together on the same boat.",
           "Free time on Buyukada is spent independently."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "Otelden alış ve dönüş dahil",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "8 saat",
+          "guide": "Profesyonel rehber",
+          "highlights": [
+            "Kınalıada ve Büyükada ziyareti",
+            "Marmara Denizi’nde tekne yolculuğu",
+            "Sakin ada manzaraları",
+            "Kınalıada’nın huzurlu atmosferi"
+          ],
+          "included": [
+            "Seçili İstanbul otellerinden alış ve dönüş",
+            "Klimalı araçla ulaşım",
+            "Gidiş-dönüş tekne",
+            "Ada vapur biletleri",
+            "Profesyonel rehber",
+            "Öğle yemeği",
+            "Adalarda rehber anlatımı",
+            "Hizmet bedeli ve vergiler"
+          ],
+          "not_included": [
+            "İçecekler",
+            "0–2 yaş çocuk yemekleri",
+            "Teknede satın alınan çay, kahve ve atıştırmalıklar",
+            "Bisiklet kiralama",
+            "Elektrikli araç kiralama",
+            "Halk veya özel plaj girişleri",
+            "Yüzme malzemesi",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Alışveriş harcamaları"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı tam gün tekne turu",
+            "İlk ada deniz veya operasyon koşullarına göre değişebilir",
+            "Tüm misafirler aynı teknede seyahat eder",
+            "Büyükada’daki serbest zaman bireysel geçirilir"
+          ]
+        }
+      },
+      "title_tr": "Öğle Yemekli Adalar Turu"
     },
     {
       "id": "sl-turkish-breakfast",
@@ -1214,8 +1690,47 @@
           "Breakfast lasts approximately 1 hour.",
           "The Bosphorus cruise departs from Eminonu Pier at 11:00."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "Transfer yok; mekânlar arası kısa yürüyüş",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "4 saat",
+          "guide": "Canlı rehber yok; çok dilli sesli rehber",
+          "highlights": [
+            "Deniz manzaralı terasta geleneksel Türk kahvaltısı",
+            "Tarihi Sirkeci’de yerel kahvaltı kültürü",
+            "Avrupa ile Asya arasında 2 saatlik Boğaz turu",
+            "Saraylar, camiler, köprüler ve yalılar"
+          ],
+          "included": [
+            "Deniz ve şehir manzaralı terasta geleneksel Türk kahvaltısı",
+            "2 saatlik Boğaz turu",
+            "11 dilde sesli rehber",
+            "Teknede ücretsiz Wi-Fi",
+            "Teknede sınırsız çay ve Nescafé",
+            "Teknede kapalı ve açık oturma alanı",
+            "Teknede tuvalet",
+            "Ofis, kahvaltı mekânı ve tekne arasında SeaLand ekibi desteği",
+            "Tüm vergiler ve hizmet bedelleri"
+          ],
+          "not_included": [
+            "Otelden alış ve dönüş",
+            "Araçla ulaşım",
+            "Ek yiyecek ve içecekler",
+            "Kişisel harcamalar",
+            "Alışveriş harcamaları",
+            "Bahşiş"
+          ],
+          "notes": [
+            "Program boyunca araç transferi yok",
+            "Ofis, kahvaltı mekânı ve Eminönü İskelesi arası yürüme mesafesi kısa",
+            "Kahvaltı yaklaşık 1 saat sürer",
+            "Boğaz turu 11:00’de Eminönü İskelesi’nden kalkar"
+          ]
+        }
+      },
+      "title_tr": "Türk Kahvaltısı ve Boğaz Turu"
     },
     {
       "id": "sl-dinner",
@@ -1266,8 +1781,46 @@
           "Transfer times may vary based on your location, traffic, and other guests.",
           "The Soft Drinks option includes unlimited soft drinks."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "pickup": "Otelden alış ve dönüş dahil",
+          "meeting_point": "Eminönü İskelesi yakınındaki Sea & Land ofisi",
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "duration": "3 saat",
+          "highlights": [
+            "Gece Avrupa ile Asya arasında",
+            "3 saatlik akşam yemekli Boğaz turu",
+            "Işıl ışıl İstanbul silüeti denizden",
+            "İki yakadaki ünlü kıyı yapıları"
+          ],
+          "included": [
+            "3 saatlik paylaşımlı akşam yemekli Boğaz turu",
+            "Merkezi noktalardan alış ve dönüş",
+            "Akşam yemeği",
+            "Türk gecesi şovu",
+            "DJ müziği",
+            "Sınırsız alkolsüz içecek",
+            "Alkollü seçenekte kişi başı 2 alkollü içecek",
+            "Kapalı ve açık alanlar",
+            "Klimalı tekne"
+          ],
+          "not_included": [
+            "İthal alkollü içecekler",
+            "Seçilen paketin üzerindeki alkollü içecekler",
+            "Pakete dahil olmayan içecekler",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Ayrıca ayarlanıp teyit edilmeyen özel gün ekstraları"
+          ],
+          "notes": [
+            "Diğer yolcularla paylaşımlı akşam yemekli tekne turu",
+            "İki seçenekte de merkezi noktalardan alış ve dönüş dahil",
+            "Transfer saatleri konuma, trafiğe ve diğer misafirlere göre değişebilir",
+            "Alkolsüz seçenekte sınırsız alkolsüz içecek var"
+          ]
+        }
+      },
+      "title_tr": "Eğlenceli Akşam Yemekli Tekne Turu"
     },
     {
       "id": "orient-private-newyear",
@@ -1297,8 +1850,20 @@
         "notes": [
           "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "3 saat",
+          "highlights": [
+            "Yılbaşı gecesine özel kiralık tekne",
+            "Boğaz’da akşam yemekli tekne turu",
+            "Akdeniz ve Türk mutfağı: meze, ızgara balık, kebap"
+          ],
+          "notes": [
+            "Dahil hizmetler firmanın tur sayfasında ayrıntılı yayımlanmamış; firmaya teyit ettirilmeli."
+          ]
+        }
+      },
+      "title_tr": "Özel Yılbaşı Boğaz Turu"
     },
     {
       "id": "orient-newyear-special",
@@ -1329,8 +1894,20 @@
         "notes": [
           "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "4 saat",
+          "highlights": [
+            "31 Aralık, Karaköy’den kalkış",
+            "Boğaz’da akşam yemekli tekne turu",
+            "Akdeniz ve Türk mutfağı: meze, ızgara balık, kebap"
+          ],
+          "notes": [
+            "Dahil hizmetler firmanın tur sayfasında ayrıntılı yayımlanmamış; firmaya teyit ettirilmeli."
+          ]
+        }
+      },
+      "title_tr": "Yılbaşı Gecesi Özel Turu"
     },
     {
       "id": "azure-sileagva",
@@ -1369,8 +1946,34 @@
         "notes": [
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün",
+          "pickup": "Otelden alış dahil",
+          "guide": "İngilizce veya Arapça rehber",
+          "highlights": [
+            "Saklı Göl molası",
+            "Şile’de kale ve deniz fenerine tepeden bakış",
+            "Ağva’da Göksu Deresi’nde tekne gezisi",
+            "Serbest zaman, Karadeniz’de yüzme"
+          ],
+          "included": [
+            "Alkolsüz içecekli öğle yemeği",
+            "Klimalı otobüs",
+            "Tekne gezisi",
+            "İngilizce veya Arapça rehber"
+          ],
+          "not_included": [
+            "Göl molasında çay/kahve",
+            "Yüzme harcamaları",
+            "Kişisel harcamalar"
+          ],
+          "notes": [
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Günübirlik Şile ve Ağva Turu"
     },
     {
       "id": "azure-two-continents",
@@ -1404,8 +2007,26 @@
           "Spice Bazaar is closed Sun: replaced with local shops",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün, her gün",
+          "highlights": [
+            "Mısır Çarşısı",
+            "Boğaz turu (Rumeli Hisarı tekneden)",
+            "Dolmabahçe Sarayı",
+            "Boğaz Köprüsü ve Çamlıca Tepesi"
+          ],
+          "included": [
+            "Öğle yemeği"
+          ],
+          "notes": [
+            "Dolmabahçe Pazartesi ve Perşembe kapalı: yerine Eyüp, Pierre Loti ve Miniatürk",
+            "Mısır Çarşısı Pazar kapalı: yerine yerel dükkânlar",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Boğaz, Dolmabahçe ve İki Kıta Turu"
     },
     {
       "id": "azure-yalova",
@@ -1434,8 +2055,22 @@
         "notes": [
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün",
+          "pickup": "Otelden alış dahil",
+          "guide": "İngilizce ve Arapça rehber",
+          "highlights": [
+            "Boğaz Köprüsü’nden geçiş, feribotla Yalova",
+            "Kükürtlü termal kaplıca ve Türk hamamı",
+            "14 metrelik şelale manzaralı öğle yemeği"
+          ],
+          "notes": [
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Günübirlik Yalova ve Termal Turu"
     },
     {
       "id": "azure-dinner",
@@ -1469,8 +2104,27 @@
           "The operator page mentions both a Bosphorus yacht and a restaurant: confirm the venue",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Akşam",
+          "pickup": "Otelden alış ve dönüş dahil",
+          "highlights": [
+            "Şov: mehter karşılaması, semazen, oryantal dans, halk dansları, DJ",
+            "Menü: soğuk mezeler, salata, ara sıcak, ana yemek (tavuk, balık, köfte veya vejetaryen), baklava ve meyve"
+          ],
+          "included": [
+            "Otelden alış ve dönüş",
+            "Tam menü akşam yemeği",
+            "Şov programı",
+            "Seçeneğe göre sınırsız yerli alkollü veya sınırsız alkolsüz içecek"
+          ],
+          "notes": [
+            "Firma sayfası hem Boğaz’da yat hem restoran diyor: mekân teyit edilmeli",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Akşam Yemekli Tekne ve Türk Gecesi Şovu"
     },
     {
       "id": "azure-city",
@@ -1503,8 +2157,25 @@
           "Hagia Sophia Mon → Basilica Cistern; Topkapı Tue → Chora or Beylerbeyi; Grand Bazaar Sun → shops",
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Tam gün, her gün",
+          "highlights": [
+            "Ayasofya, Sultanahmet Camii ve Hipodrom",
+            "Kapalıçarşı",
+            "Topkapı Sarayı",
+            "Rüstem Paşa veya Süleymaniye Camii"
+          ],
+          "included": [
+            "Öğle yemeği"
+          ],
+          "notes": [
+            "Pazartesi Ayasofya → Yerebatan Sarnıcı; Salı Topkapı → Kariye veya Beylerbeyi; Pazar Kapalıçarşı → dükkânlar",
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Tam Gün İstanbul Şehir Turu"
     },
     {
       "id": "azure-halfbosphorus",
@@ -1532,8 +2203,20 @@
         "notes": [
           "Prices load dynamically on the operator site; listed price kept from earlier research."
         ],
-        "checked": "2026-11-16"
-      }
+        "checked": "2026-11-16",
+        "tr": {
+          "duration": "Yarım gün",
+          "guide": "İngilizce veya Arapça rehber",
+          "highlights": [
+            "İki kıtanın Boğaz manzarası",
+            "Yalılar, saraylar, camiler ve kiliseler"
+          ],
+          "notes": [
+            "Fiyatlar firma sitesinde sonradan yükleniyor; önceki araştırmadaki fiyat korundu."
+          ]
+        }
+      },
+      "title_tr": "Yarım Gün Boğaz Turu"
     },
     {
       "id": "azure-triple-eurplane",
@@ -1544,7 +2227,8 @@
       "currency": "EUR",
       "basis": "as_listed",
       "price_type": "listed_discount",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "title_tr": "Uçakla Kapadokya, Pamukkale ve Efes"
     },
     {
       "id": "azure-triple-eurbus",
@@ -1555,7 +2239,8 @@
       "currency": "EUR",
       "basis": "as_listed",
       "price_type": "listed_discount",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "title_tr": "Otobüsle Kapadokya, Pamukkale ve Efes"
     }
   ],
   "detail_note": "details: tour contents summarised from each operator’s own page on the checked date. Fields are null where the operator does not say. Not Bosphorly promises; confirm with the operator before any request."
