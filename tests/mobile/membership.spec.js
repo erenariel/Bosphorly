@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect} from './fixtures.js';
 test('editable multilingual membership validates inputs without transmitting personal data',async({page})=>{
  const writes=[];const errors=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/membership.html?lang=tr');
