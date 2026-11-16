@@ -64,6 +64,8 @@ the commission depends on.
   be shown for comparison, always with the source and the date it was checked,
   marked "published by the operator, not a Bosphorly offer", and without a
   request button. Stale prices are removed or re-checked.
+- **Prototype note:** the public demo shows a request button on every tour so the flow can be tried end to end; nothing is sent. Before launch, only companies with a signed agreement get a live request button.
+- **Price snapshot:** every request stores, unchanged, the tour, time slot, unit price, estimated total, currency, price source, check date and the moment the price was shown, under the Bosphorly reference code. The guest gets the same summary. If a guest later says "it showed €20", the snapshot settles it. The company still confirms the final price when it accepts.
 - Fixed transfer fares (currently IST → Sultanahmet €55, SAW → Sultanahmet
   €65, one way) are the transfer company's retail tariffs, not Bosphorly's.
 

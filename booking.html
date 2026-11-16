@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Compare licensed Istanbul tour companies and request an experience through Bosphorly. You pay the company directly."><title>Request an experience | Bosphorly</title><link rel="icon" href="assets/brand/approved-icon.webp"><link rel="stylesheet" href="booking.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Compare licensed Istanbul tour companies and request an experience through Bosphorly. You pay the company directly."><title>Request an experience | Bosphorly</title><link rel="icon" href="assets/brand/approved-icon.webp"><link rel="stylesheet" href="booking.css"><style>.selection{display:grid;gap:4px}.selection small{color:#6b7f99}.mini-includes{list-style:none;margin:2px 0;padding:0;display:grid;gap:2px;font-size:13px}</style></head>
 <body>
 <div class="prototype"><span id="protoTag">PUBLIC PROTOTYPE</span> · <span id="protoText">No request is sent and no payment is taken by this website</span></div>
 <header class="header"><div class="head-wrap"><a class="logo" href="index.html"><img src="assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a><nav aria-label="Main navigation"><a href="index.html" id="navHome">Home</a><a href="prices.html" id="navCompare">Compare tours</a><a href="map.html" id="navMap">City map</a></nav></div></header>
@@ -9,7 +9,7 @@
 <div class="fields">
 <label class="wide" for="offer"><span id="labelOffer">Experience</span><select id="offer" required></select></label>
 <label for="date"><span id="labelDate">Preferred date</span><input id="date" type="date" required></label>
-<label for="time"><span id="labelTime">Preferred time</span><select id="time"><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option><option value="flexible">Flexible</option></select></label>
+<label for="time"><span id="labelTime">Preferred time</span><select id="time"></select><small id="timeNote" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label>
 <label for="guests"><span id="labelGuests">Guests</span><input type="number" id="guests" min="1" max="16" step="1" value="2" inputmode="numeric" required></label>
 <label for="area"><span id="labelArea">Hotel area</span><select id="area"><option value="Sultanahmet">Sultanahmet / Fatih</option><option value="Sirkeci">Sirkeci / Eminönü</option><option value="Taksim">Taksim / Beyoğlu</option><option value="Kadıköy">Kadıköy</option><option value="Other">Other</option></select></label>
 <label for="fullName"><span id="labelName">Full name</span><input id="fullName" maxlength="100" autocomplete="name" placeholder="e.g. Jane Smith" required></label>
@@ -18,7 +18,7 @@
 <p class="wide muted" id="contactNote" style="margin:0;font-size:13px">In this demo, what you type is not sent or saved anywhere; it disappears when you close the page.</p>
 </div>
 <div class="summary" aria-live="polite"><div><span id="labelStatus">Price status</span><strong id="price">Price set by the company</strong></div><div><span id="labelAvailability">Availability</span><strong id="availability">Confirmed by the company</strong></div></div>
-<div id="marketPrice" class="notice" aria-live="polite"><strong>Company published price:</strong> loading…</div><p id="priceNote" class="notice">Requestable prices are the ones each licensed company approves for Bosphorly, never higher than booking with the company directly. This public prototype does not send requests.</p>
+<div id="marketPrice" class="notice selection" aria-live="polite">Loading…</div><p id="priceNote" class="notice">Requestable prices are the ones each licensed company approves for Bosphorly, never higher than booking with the company directly. This public prototype does not send requests.</p>
 <label class="check"><input type="checkbox" id="ack"><span id="consent">I understand this is a preview only: no request is sent to any company and no payment is taken.</span></label>
 <p class="alert" id="error" role="alert" hidden></p>
 <button type="submit" class="primary" id="submit">Preview my request <span aria-hidden="true">→</span></button>

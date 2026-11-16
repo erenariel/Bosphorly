@@ -15,7 +15,7 @@
     eyebrow: 'TUR KARŞILAŞTIRMA · İSTANBUL', heading: 'İstanbul turlarını karşılaştır.',
     lead: 'Lisanslı firmaların kendi sitelerinde yayımladığı fiyatlar ve tur içerikleri. Neyin dahil olduğunu yan yana gör.',
     noticeTitle: 'Bilgiler firmaların kendi sitelerinden derlenmiştir; Bosphorly teklifi değildir.',
-    noticeBody: 'Fiyat ve içerikler tarihe, yaşa ve pakete göre değişebilir. Bir firma Bosphorly ile anlaşma imzaladığında o firmanın turları buradan talep edilebilir olacak.',
+    noticeBody: 'Fiyat ve içerikler tarihe, yaşa ve pakete göre değişebilir. Kesin fiyatı ve müsaitliği firma, talebini kabul ederken teyit eder.',
     query: 'Tur veya firma ara…', per: 'kişi başı', from: 'Başlangıç', was: 'önceki',
     request: 'Bosphorly’de talep et →', soon: 'Firma anlaşması bekleniyor', checked: 'Kontrol', none: 'Eşleşen tur bulunamadı.',
     notListed: 'Fiyat sor', records: 'tur', included: 'Dahil', excluded: 'Dahil değil', more: 'Tüm ayrıntılar',
@@ -27,7 +27,7 @@
     eyebrow: 'TOUR COMPARISON · ISTANBUL', heading: 'Compare Istanbul tours.',
     lead: 'Prices and tour contents published by licensed companies on their own websites. See what is included, side by side.',
     noticeTitle: 'Summarised from each company’s own website; not a Bosphorly offer.',
-    noticeBody: 'Prices and contents can change by date, age and package. Once a company signs an agreement with Bosphorly, its tours become requestable here.',
+    noticeBody: 'Prices and contents can change by date, age and package. The company confirms the final price and availability when it accepts your request.',
     query: 'Search tours or companies…', per: 'per person', from: 'From', was: 'was',
     request: 'Request on Bosphorly →', soon: 'Company agreement pending', checked: 'Checked', none: 'No matching tours.',
     notListed: 'Ask for price', records: 'tours', included: 'Included', excluded: 'Not included', more: 'All details',
@@ -41,7 +41,6 @@
   const Q = $('query');
   Q.placeholder = T.query;
 
-  const requestable = new Set(['bb-morning', 'bb-sunset', 'bb-oldcity', 'orient-dinner', 'sea-land', 'alaturka']);
   let rows = [];
 
   function category(r) {
@@ -129,11 +128,9 @@
       body.append(more);
     } else body.append(el('p', 'fine', T.noDetails));
 
-    if (requestable.has(r.id)) {
-      const a = el('a', 'button', T.request);
-      a.href = 'booking.html?service=' + encodeURIComponent(r.id) + (tr ? '&lang=tr' : '');
-      body.append(a);
-    } else body.append(el('div', 'unavailable', T.soon));
+    const a = el('a', 'button', T.request);
+    a.href = 'booking.html?service=' + encodeURIComponent(r.id) + (tr ? '&lang=tr' : '');
+    body.append(a);
     article.append(head, body);
     return article;
   }

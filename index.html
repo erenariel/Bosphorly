@@ -78,7 +78,6 @@ function applyLanguage(){$('language').value=state.lang;document.documentElement
 function renderTours(){
  const area=$('tourGrid');area.replaceChildren();
  const tr=state.lang==='tr';
- const metaText=tr?'Anlaşma bekleniyor':'Agreement pending';
  const action=tr?'Bosphorly’de talep et →':'Request on Bosphorly →';
  tours.filter(x=>state.filter==='all'||state.filter===x.category).forEach(x=>{
  const article=document.createElement('article');article.className='tour-card';
@@ -103,7 +102,7 @@ function renderTours(){
  const meta=document.createElement('div');meta.className='tour-meta';
  const duration=document.createElement('span');duration.textContent=L&&L.duration?'⏱ '+L.duration:(tr?({'About 3 h':'Yaklaşık 3 saat','Full day':'Tam gün','Evening':'Akşam','Ask for details':'Ayrıntılar netleşecek'}[x.duration]):x.duration);
  const price=document.createElement('b');price.textContent=market?publishedPrice(market):(tr?'Fiyat sor':'Ask for price');meta.append(duration,price);
- const disclosure=document.createElement('div');disclosure.className='tour-provider';disclosure.textContent=metaText+' · '+(tr?'Firmanın kendi sitesindeki fiyat ve içerik':'Price and contents from the company’s own website');
+ const disclosure=document.createElement('div');disclosure.className='tour-provider';disclosure.textContent=(tr?'Fiyat ve içerik firmanın kendi sitesinden':'Price and contents from the company’s own website')+(det&&det.checked?' · '+det.checked:'');
  const link=document.createElement('a');link.href='booking.html?service='+encodeURIComponent(x.id)+'&lang='+encodeURIComponent(state.lang);link.rel='nofollow';link.textContent=action;
  content.append(operator,h,p,inc,meta,disclosure,link);article.append(art,imageNote,content);area.append(article);
  });

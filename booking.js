@@ -1,62 +1,187 @@
 'use strict';
-/* Public, local-only demonstration: no PII, payment, API submission or request forwarding. */
-(()=>{
- const $=id=>document.getElementById(id);
- const query=new URLSearchParams(location.search);
- const tr=query.get('lang')==='tr'||(!query.has('lang')&&navigator.language.toLowerCase().startsWith('tr'));
- document.documentElement.lang=tr?'tr':'en';
- const i18n={
-  en:{eyebrow:'YOUR ISTANBUL · YOUR WAY',heading:'Request your experience through Bosphorly.',subheading:'Choose your activity, preferred date and hotel area. Your request goes from Bosphorly to the licensed company that runs the experience; you pay the company directly.',stepName:'Request details',formTitle:'Your request',formIntro:'A preview of the future request form. Nothing is sent to any company.',labelOffer:'Experience',labelDate:'Preferred date',labelTime:'Preferred time',labelGuests:'Guests',labelArea:'Hotel area',labelStatus:'Price status',labelAvailability:'Availability',price:'Price set by the company',availability:'Confirmed by the company',priceNote:'Requestable prices are the ones each licensed company approves for Bosphorly, never higher than booking with the company directly. This public prototype does not send requests.',consent:'I understand this is a preview only: no request is sent to any company and no payment is taken.',submit:'Preview my request →',whyTitle:'Compare here. Pay the company.',whyText:'Bosphorly lists licensed Istanbul companies side by side and forwards your request with a Bosphorly reference code. The company confirms, runs the experience and collects payment.',item1:'Company prices, no Bosphorly surcharge',item2:'Company licence checked before listing',item3:'Bosphorly reference code on every request',mapTitle:'Explore before you request',mapLink:'Open Istanbul city map →',invalidDate:'Choose a future date.',invalidGuests:'Select 1–16 guests.',invalidOffer:'Select an experience.',invalidConsent:'Acknowledge that this is a preview only.',resultTitle:'Request preview created — NOT SENT',resultNotice:'No request was sent. When requests open, this form will send your request with a Bosphorly reference code to the company, which confirms it and collects payment directly.',notAvailable:'Catalog not available. Please reload.',protoTag:'PUBLIC PROTOTYPE',labelName:'Full name',labelPhone:'Mobile / WhatsApp',labelEmail:'Email (optional)',contactNote:'In this demo, what you type is not sent or saved anywhere; it disappears when you close the page.',invalidName:'Please enter your full name.',invalidPhone:'Enter a valid phone/WhatsApp number with country code (e.g. +44…) so the company can confirm.',invalidEmail:'The email address does not look valid.',protoText:'No request is sent and no payment is taken by this website',navHome:'Home',navCompare:'Compare tours',navMap:'City map',footerText:'Bosphorly · Public demonstration · No personal identity or payment data is collected in this prototype.',backHome:'← Back to homepage'},
-  tr:{eyebrow:'İSTANBUL · SENİN PLANIN',heading:'Deneyimini Bosphorly üzerinden talep et.',subheading:'Etkinliğini, tarihini ve otel bölgeni seç. Talebin Bosphorly’den deneyimi düzenleyen lisanslı firmaya iletilir; ödemeyi doğrudan firmaya yaparsın.',stepName:'Talep detayları',formTitle:'Talebin',formIntro:'Gelecekteki talep formunun önizlemesi. Hiçbir firmaya bir şey gönderilmez.',labelOffer:'Deneyim',labelDate:'Tercih edilen tarih',labelTime:'Tercih edilen saat',labelGuests:'Kişi sayısı',labelArea:'Otel bölgesi',labelStatus:'Fiyat durumu',labelAvailability:'Müsaitlik',price:'Fiyatı firma belirler',availability:'Firma tarafından teyit edilir',priceNote:'Talep edilebilir fiyatlar, her lisanslı firmanın Bosphorly için onayladığı fiyatlardır ve firmadan doğrudan alacağın fiyattan yüksek olamaz. Bu açık prototip talep göndermez.',consent:'Bunun yalnızca önizleme olduğunu, hiçbir firmaya talep gönderilmeyeceğini ve ödeme alınmayacağını biliyorum.',submit:'Talebimi önizle →',whyTitle:'Burada karşılaştır. Ödemeyi firmaya yap.',whyText:'Bosphorly lisanslı İstanbul firmalarını yan yana gösterir ve talebini bir Bosphorly referans koduyla iletir. Onayı veren, hizmeti sunan ve ödemeyi alan firmadır.',item1:'Firma fiyatı, Bosphorly ek ücreti yok',item2:'Listelemeden önce firma lisansı kontrolü',item3:'Her talepte Bosphorly referans kodu',mapTitle:'Talep etmeden önce keşfet',mapLink:'İstanbul haritasını aç →',invalidDate:'İleri bir tarih seç.',invalidGuests:'1–16 kişi seç.',invalidOffer:'Bir deneyim seç.',invalidConsent:'Önizleme koşulunu onayla.',resultTitle:'Talep önizlemesi oluşturuldu — GÖNDERİLMEDİ',resultNotice:'Hiçbir talep gönderilmedi. Talepler açıldığında bu form talebini Bosphorly referans koduyla firmaya iletecek; onayı ve ödemeyi firma doğrudan alacak.',notAvailable:'Katalog açılamadı. Sayfayı yenile.',protoTag:'AÇIK PROTOTİP',labelName:'Ad soyad',labelPhone:'Cep telefonu / WhatsApp',labelEmail:'E-posta (isteğe bağlı)',contactNote:'Bu demoda yazdığın bilgiler hiçbir yere gönderilmez ve kaydedilmez; sayfayı kapatınca silinir.',invalidName:'Adını ve soyadını yaz.',invalidPhone:'Firmanın teyit edebilmesi için ülke koduyla geçerli bir telefon/WhatsApp numarası yaz (örn. +90…).',invalidEmail:'E-posta adresi geçerli görünmüyor.',protoText:'Bu site talep göndermez, ödeme almaz',navHome:'Ana sayfa',navCompare:'Tur karşılaştır',navMap:'Şehir haritası',footerText:'Bosphorly · Açık demo · Bu prototipte kimlik veya ödeme bilgisi toplanmaz.',backHome:'← Ana sayfaya dön'}
- };
- const t=i18n[tr?'tr':'en'];
- for(const [id,val] of Object.entries(t)){const e=$(id);if(e)e.textContent=val}
- const time=$('time');if(tr)[...time.options].forEach((o,i)=>o.textContent=['Sabah','Öğleden sonra','Akşam','Esnek'][i]);
- const area=$('area');if(tr)[...area.options].at(-1).textContent='Diğer';
- if(tr){$('fullName').placeholder='örn. Ayşe Yılmaz';$('phone').placeholder='+90 5xx xxx xx xx';$('email').placeholder='ornek@eposta.com';}
- const iso=new Date();const local=new Date(iso.getTime()-iso.getTimezoneOffset()*60000).toISOString().slice(0,10);$('date').min=local;$('date').value=local;
- let offers=[];
- let marketPrices=new Map();
- const renderMarketPrice=()=>{
-  const r=marketPrices.get($('offer').value);
-  const box=$('marketPrice');if(!box)return;
-  if(!r||typeof r.price!=='number'){
-   box.textContent=tr?'Firmanın yayımlanmış fiyatı bulunamadı. Firma henüz Bosphorly için fiyat onaylamadı.':'No published company price found yet. The company has not approved a price for Bosphorly.';
-   return;
+/* Public, local-only demonstration: nothing is sent, stored or forwarded.
+   Each request carries a price snapshot (tour, time slot, unit price, total, source, check date)
+   so that what the guest saw can be shown later. In production the server stores this snapshot. */
+(() => {
+  const $ = id => document.getElementById(id);
+  const query = new URLSearchParams(location.search);
+  const tr = query.get('lang') === 'tr' || (!query.has('lang') && navigator.language.toLowerCase().startsWith('tr'));
+  document.documentElement.lang = tr ? 'tr' : 'en';
+
+  const i18n = {
+    en: {
+      eyebrow: 'YOUR ISTANBUL · YOUR WAY', heading: 'Request your experience through Bosphorly.',
+      subheading: 'Choose a tour, date and hotel area. Your request goes from Bosphorly to the licensed company that runs it; you pay the company directly.',
+      stepName: 'Request details', formTitle: 'Your request', formIntro: 'A preview of the request form. Nothing is sent to any company.',
+      labelOffer: 'Tour', labelDate: 'Date', labelTime: 'Time', labelGuests: 'Guests', labelArea: 'Hotel area',
+      labelStatus: 'Price per person', labelAvailability: 'Estimated total',
+      priceNote: 'Prices are the company’s own published prices on the date shown. The company confirms the final price and availability when it accepts your request.',
+      consent: 'I have checked the tour, time and price above. I understand the company confirms the final price, and that this demo sends nothing.',
+      submit: 'Preview my request →', whyTitle: 'Compare here. Pay the company.',
+      whyText: 'Bosphorly lists licensed Istanbul companies side by side and forwards your request with a Bosphorly reference code. The company confirms, runs the experience and collects payment.',
+      item1: 'Company prices, no Bosphorly surcharge', item2: 'The price you saw is recorded with your request', item3: 'Bosphorly reference code on every request',
+      mapTitle: 'Explore before you request', mapLink: 'Open Istanbul city map →',
+      invalidDate: 'Choose a future date.', invalidGuests: 'Select 1–16 guests.', invalidOffer: 'Select a tour.', invalidConsent: 'Please confirm you have checked the tour, time and price.',
+      resultTitle: 'Request preview — NOT SENT', resultNotice: 'Nothing was sent. When requests open, this summary, with the price you saw, is saved under your reference code and sent to you and to the company.',
+      notAvailable: 'Catalog not available. Please reload.', protoTag: 'PUBLIC PROTOTYPE', protoText: 'No request is sent and no payment is taken by this website',
+      labelName: 'Full name', labelPhone: 'Mobile / WhatsApp', labelEmail: 'Email (optional)',
+      contactNote: 'In this demo, what you type is not sent or saved anywhere; it disappears when you close the page.',
+      invalidName: 'Please enter your full name.', invalidPhone: 'Enter a valid phone/WhatsApp number with country code (e.g. +44…) so the company can confirm.', invalidEmail: 'The email address does not look valid.',
+      navHome: 'Home', navCompare: 'Compare tours', navMap: 'City map',
+      footerText: 'Bosphorly · Public demonstration · Nothing you type is sent or stored.', backHome: '← Back to homepage',
+      fixedSlot: 'Fixed time for this tour', flexible: ['Morning', 'Afternoon', 'Evening', 'Flexible'], askPrice: 'Ask for price', from: 'From',
+      totalFrom: 'from', perGroup: 'Price is not per person; the company confirms the total.', yourChoice: 'Your selection',
+      r_ref: 'Reference', r_shownAt: 'Shown at', r_source: 'Price source', r_checked: 'checked', r_tour: 'Tour', r_company: 'Company', r_date: 'Date', r_time: 'Time', r_guests: 'Guests', r_area: 'Area', r_name: 'Name', r_phone: 'Phone', r_email: 'Email', r_unit: 'Price per person', r_total: 'Estimated total'
+    },
+    tr: {
+      eyebrow: 'İSTANBUL · SENİN PLANIN', heading: 'Deneyimini Bosphorly üzerinden talep et.',
+      subheading: 'Turu, tarihi ve otel bölgeni seç. Talebin Bosphorly’den turu düzenleyen lisanslı firmaya iletilir; ödemeyi doğrudan firmaya yaparsın.',
+      stepName: 'Talep detayları', formTitle: 'Talebin', formIntro: 'Talep formunun önizlemesi. Hiçbir firmaya bir şey gönderilmez.',
+      labelOffer: 'Tur', labelDate: 'Tarih', labelTime: 'Saat', labelGuests: 'Kişi sayısı', labelArea: 'Otel bölgesi',
+      labelStatus: 'Kişi başı fiyat', labelAvailability: 'Tahmini toplam',
+      priceNote: 'Fiyatlar, firmanın belirtilen tarihte kendi sitesinde yayımladığı fiyatlardır. Kesin fiyatı ve müsaitliği firma, talebini kabul ederken teyit eder.',
+      consent: 'Yukarıdaki tur, saat ve fiyatı kontrol ettim. Kesin fiyatı firmanın teyit edeceğini ve bu demonun hiçbir şey göndermediğini biliyorum.',
+      submit: 'Talebimi önizle →', whyTitle: 'Burada karşılaştır. Ödemeyi firmaya yap.',
+      whyText: 'Bosphorly lisanslı İstanbul firmalarını yan yana gösterir ve talebini bir Bosphorly referans koduyla iletir. Onayı veren, hizmeti sunan ve ödemeyi alan firmadır.',
+      item1: 'Firma fiyatı, Bosphorly ek ücreti yok', item2: 'Gördüğün fiyat talebinle birlikte kaydedilir', item3: 'Her talepte Bosphorly referans kodu',
+      mapTitle: 'Talep etmeden önce keşfet', mapLink: 'İstanbul haritasını aç →',
+      invalidDate: 'İleri bir tarih seç.', invalidGuests: '1–16 kişi seç.', invalidOffer: 'Bir tur seç.', invalidConsent: 'Tur, saat ve fiyatı kontrol ettiğini onayla.',
+      resultTitle: 'Talep önizlemesi — GÖNDERİLMEDİ', resultNotice: 'Hiçbir şey gönderilmedi. Talepler açıldığında bu özet, gördüğün fiyatla birlikte referans kodunla kaydedilecek ve hem sana hem firmaya iletilecek.',
+      notAvailable: 'Katalog açılamadı. Sayfayı yenile.', protoTag: 'AÇIK PROTOTİP', protoText: 'Bu site talep göndermez, ödeme almaz',
+      labelName: 'Ad soyad', labelPhone: 'Cep telefonu / WhatsApp', labelEmail: 'E-posta (isteğe bağlı)',
+      contactNote: 'Bu demoda yazdığın bilgiler hiçbir yere gönderilmez ve kaydedilmez; sayfayı kapatınca silinir.',
+      invalidName: 'Adını ve soyadını yaz.', invalidPhone: 'Firmanın teyit edebilmesi için ülke koduyla geçerli bir telefon/WhatsApp numarası yaz (örn. +90…).', invalidEmail: 'E-posta adresi geçerli görünmüyor.',
+      navHome: 'Ana sayfa', navCompare: 'Tur karşılaştır', navMap: 'Şehir haritası',
+      footerText: 'Bosphorly · Açık demo · Yazdığın hiçbir bilgi gönderilmez veya kaydedilmez.', backHome: '← Ana sayfaya dön',
+      fixedSlot: 'Bu turun saati sabittir', flexible: ['Sabah', 'Öğleden sonra', 'Akşam', 'Esnek'], askPrice: 'Fiyat sor', from: 'Başlangıç',
+      totalFrom: 'başlangıç', perGroup: 'Fiyat kişi başı değil; toplamı firma teyit eder.', yourChoice: 'Seçimin',
+      r_ref: 'Referans', r_shownAt: 'Gösterildiği an', r_source: 'Fiyat kaynağı', r_checked: 'kontrol', r_tour: 'Tur', r_company: 'Firma', r_date: 'Tarih', r_time: 'Saat', r_guests: 'Kişi', r_area: 'Bölge', r_name: 'Ad soyad', r_phone: 'Telefon', r_email: 'E-posta', r_unit: 'Kişi başı fiyat', r_total: 'Tahmini toplam'
+    }
+  };
+  const t = i18n[tr ? 'tr' : 'en'];
+  for (const [id, val] of Object.entries(t)) { const e = $(id); if (e && typeof val === 'string') e.textContent = val; }
+  const area = $('area');
+  if (tr) [...area.options].at(-1).textContent = 'Diğer';
+  if (tr) { $('fullName').placeholder = 'örn. Ayşe Yılmaz'; $('phone').placeholder = '+90 5xx xxx xx xx'; $('email').placeholder = 'ornek@eposta.com'; }
+  const now = new Date();
+  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  $('date').min = local; $('date').value = local;
+
+  let records = [];
+  const byId = new Map();
+  const fmt = (v, c) => new Intl.NumberFormat(tr ? 'tr-TR' : 'en-GB', { style: 'currency', currency: c, maximumFractionDigits: 2 }).format(v);
+  const title = r => (tr && r.title_tr) || r.title;
+  const current = () => byId.get($('offer').value);
+  const perPerson = r => (r.basis || '').includes('per_person');
+  const isFrom = r => (r.basis || '').startsWith('from');
+
+  // A tour with a fixed schedule offers only that slot, so the time can never contradict the price.
+  function renderTime(r) {
+    const sel = $('time');
+    const slot = r?.details && ((tr && r.details.tr?.schedule) || r.details.schedule);
+    const fixed = slot && /\d{1,2}:\d{2}/.test(slot) ? slot : null;
+    sel.replaceChildren();
+    if (fixed) {
+      const o = document.createElement('option'); o.value = fixed; o.textContent = fixed; sel.append(o);
+      $('timeNote').textContent = t.fixedSlot;
+    } else {
+      ['morning', 'afternoon', 'evening', 'flexible'].forEach((v, i) => { const o = document.createElement('option'); o.value = v; o.textContent = t.flexible[i]; sel.append(o); });
+      $('timeNote').textContent = '';
+    }
   }
-  const p=new Intl.NumberFormat(tr?'tr-TR':'en-GB',{style:'currency',currency:r.currency,maximumFractionDigits:2}).format(r.price);
-  const prefix=r.basis?.startsWith('from')?(tr?'Başlangıç ':'From '):'';
-  box.textContent=(tr?'Firmanın yayımladığı fiyat: ':'Company published price: ')+prefix+p+' · '+(tr?'Firma ile anlaşma imzalanana kadar talep edilemez.':'Requestable only after the company signs an agreement with Bosphorly.');
- };
- async function loadMarketPrices(){
-  try{const r=await fetch('data/public-market-prices.json',{cache:'no-store'});if(!r.ok)return;const data=await r.json();marketPrices=new Map((data.records||[]).map(x=>[x.id,x]));renderMarketPrice();}catch{}
- }
- 
- const namesTr={'bb-morning':'Sabah Boğaz Turu','bb-sunset':'Gün Batımı Boğaz Turu','bb-oldcity':'Bizans ve Osmanlı Mirası Turu','orient-dinner':'Boğaz’da Akşam Yemeği','sea-land':'Boğaz Gezi Turu','alaturka':'Geleneksel Türk Hamamı'};
- const getOffer=()=>offers.find(x=>x.id===$('offer').value);
- const labels=()=>{$('price').textContent=t.price;$('availability').textContent=t.availability;renderMarketPrice();};
- async function load(){
-  try{
-   const resp=await fetch('data/offers.json',{cache:'no-store'});if(!resp.ok)throw new Error('Cannot load offers');
-   const data=await resp.json();offers=(Array.isArray(data.offers)?data.offers:[]).filter(x=>x&&typeof x.id==='string');
-   $('offer').replaceChildren(...offers.map(x=>{const op=document.createElement('option');op.value=x.id;op.textContent=(tr&&namesTr[x.id])||x.name;return op;}));
-   const fromQuery=query.get('service');if(offers.some(o=>o.id===fromQuery))$('offer').value=fromQuery;
-   labels();
-  }catch(err){$('error').hidden=false;$('error').textContent=t.notAvailable;$('submit').disabled=true;}
- }
- $('offer').addEventListener('change',labels);
- $('bookingForm').addEventListener('submit',event=>{
-  event.preventDefault();const offer=getOffer();const num=$('guests').valueAsNumber;
-  const name=$('fullName').value.trim(),phone=$('phone').value.trim(),email=$('email').value.trim();
-  const phoneOk=/^\+?[0-9 ()-]{7,20}$/.test(phone)&&phone.replace(/\D/g,'').length>=7;
-  const msg=!offer?t.invalidOffer:!$('date').value||$('date').value<local?t.invalidDate:!Number.isInteger(num)||num<1||num>16?t.invalidGuests:name.length<2?t.invalidName:!phoneOk?t.invalidPhone:email&&!$('email').checkValidity()?t.invalidEmail:!$('ack').checked?t.invalidConsent:null;
-  $('error').hidden=!msg;$('error').textContent=msg||'';if(msg)return;
-  const preview=window.BosphorlyBooking.preview({experienceId:offer.id,date:$('date').value,guests:num});
-  const r=$('result');r.dataset.state=preview.state;r.replaceChildren();const h=document.createElement('h3');h.textContent=t.resultTitle;const p=document.createElement('p');p.textContent=t.resultNotice;
-  const d=document.createElement('dl');d.className='draft';
-  const fields=[[tr?'Deneyim':'Experience',tr&&namesTr[offer.id]||offer.name],[tr?'Tarih':'Date',$('date').value],[tr?'Zaman':'Time',time.selectedOptions[0].textContent],[tr?'Kişi':'Guests',String(num)],[tr?'Bölge':'Area',area.selectedOptions[0].textContent],[tr?'Ad soyad':'Name',name],[tr?'Telefon':'Phone',phone],...(email?[[tr?'E-posta':'Email',email]]:[]),[tr?'Fiyat':'Price',$('price').textContent]];
-  fields.forEach(([key,val])=>{const dt=document.createElement('dt');dt.textContent=key;const dd=document.createElement('dd');dd.textContent=val;d.append(dt,dd)});
-  r.append(h,p,d);r.hidden=false;r.focus();
- });
- load();loadMarketPrices();
+
+  function quote(r) {
+    const guests = $('guests').valueAsNumber;
+    if (!r || !Number.isFinite(r.price)) return { unit: t.askPrice, total: t.askPrice, unitMinor: null, totalMinor: null };
+    const unit = (isFrom(r) ? t.from + ' ' : '') + fmt(r.price, r.currency);
+    if (!perPerson(r) || !Number.isInteger(guests) || guests < 1) return { unit, total: t.perGroup, unitMinor: Math.round(r.price * 100), totalMinor: null };
+    const total = r.price * guests;
+    return { unit, total: (isFrom(r) ? t.totalFrom + ' ' : '') + fmt(total, r.currency) + ' (' + guests + ' × ' + fmt(r.price, r.currency) + ')',
+      unitMinor: Math.round(r.price * 100), totalMinor: Math.round(total * 100) };
+  }
+
+  function render() {
+    const r = current();
+    if (!r) return;
+    renderTime(r);
+    const q = quote(r);
+    $('price').textContent = q.unit;
+    $('availability').textContent = q.total;
+    const box = $('marketPrice');
+    box.replaceChildren();
+    const head = document.createElement('strong');
+    head.textContent = t.yourChoice + ': ' + title(r) + ' · ' + r.operator;
+    const L = r.details ? Object.assign({}, r.details, (tr && r.details.tr) || {}) : null;
+    const info = document.createElement('div');
+    info.textContent = [L?.duration, $('time').selectedOptions[0]?.textContent].filter(Boolean).join(' · ');
+    box.append(head, info);
+    if (L?.included?.length) {
+      const ul = document.createElement('ul'); ul.className = 'mini-includes';
+      L.included.slice(0, 4).forEach(i => { const li = document.createElement('li'); li.textContent = '✓ ' + i; ul.append(li); });
+      box.append(ul);
+    }
+    const src = document.createElement('small');
+    src.textContent = t.r_source + ': ' + r.operator + ' · ' + t.r_checked + ' ' + (r.details?.checked || '');
+    box.append(src);
+    $('ack').checked = false; // any change to the selection requires a fresh confirmation
+  }
+
+  function referenceCode() {
+    const a = new Uint8Array(4); crypto.getRandomValues(a);
+    return 'BOS-' + [...a].map(b => b.toString(36).padStart(2, '0')).join('').toUpperCase().slice(0, 6);
+  }
+
+  async function load() {
+    try {
+      const resp = await fetch('data/public-market-prices.json', { cache: 'no-store' });
+      if (!resp.ok) throw new Error('catalog');
+      const data = await resp.json();
+      records = (data.records || []).filter(x => x && typeof x.id === 'string');
+      records.forEach(r => byId.set(r.id, r));
+      const groups = new Map();
+      for (const r of records) { if (!groups.has(r.operator)) groups.set(r.operator, []); groups.get(r.operator).push(r); }
+      $('offer').replaceChildren(...[...groups].map(([op, list]) => {
+        const g = document.createElement('optgroup'); g.label = op;
+        list.forEach(r => { const o = document.createElement('option'); o.value = r.id; o.textContent = title(r) + ' — ' + (Number.isFinite(r.price) ? (isFrom(r) ? t.from + ' ' : '') + fmt(r.price, r.currency) : t.askPrice); g.append(o); });
+        return g;
+      }));
+      const fromQuery = query.get('service');
+      if (byId.has(fromQuery)) $('offer').value = fromQuery;
+      render();
+    } catch { $('error').hidden = false; $('error').textContent = t.notAvailable; $('submit').disabled = true; }
+  }
+
+  $('offer').addEventListener('change', render);
+  $('guests').addEventListener('input', render);
+  $('time').addEventListener('change', () => { $('ack').checked = false; });
+
+  $('bookingForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const r = current(); const num = $('guests').valueAsNumber;
+    const name = $('fullName').value.trim(), phone = $('phone').value.trim(), email = $('email').value.trim();
+    const phoneOk = /^\+?[0-9 ()-]{7,20}$/.test(phone) && phone.replace(/\D/g, '').length >= 7;
+    const msg = !r ? t.invalidOffer : !$('date').value || $('date').value < local ? t.invalidDate : !Number.isInteger(num) || num < 1 || num > 16 ? t.invalidGuests :
+      name.length < 2 ? t.invalidName : !phoneOk ? t.invalidPhone : email && !$('email').checkValidity() ? t.invalidEmail : !$('ack').checked ? t.invalidConsent : null;
+    $('error').hidden = !msg; $('error').textContent = msg || '';
+    if (msg) return;
+    const q = quote(r);
+    const shownAt = new Date();
+    // The snapshot is what a server would store unchanged with the request.
+    const snapshot = { reference: referenceCode(), recordId: r.id, operator: r.operator, tour: r.title, time: $('time').value,
+      date: $('date').value, guests: num, currency: r.currency ?? null, unitMinor: q.unitMinor, totalMinor: q.totalMinor,
+      basis: r.basis ?? null, priceSource: r.details?.source_url || r.source_url, priceChecked: r.details?.checked || null, shownAt: shownAt.toISOString() };
+    const preview = window.BosphorlyBooking.preview({ experienceId: r.id, date: snapshot.date, guests: num });
+    const box = $('result'); box.dataset.state = preview.state; box.replaceChildren();
+    const h = document.createElement('h3'); h.textContent = t.resultTitle;
+    const p = document.createElement('p'); p.textContent = t.resultNotice;
+    const d = document.createElement('dl'); d.className = 'draft';
+    const dateText = new Intl.DateTimeFormat(tr ? 'tr-TR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
+    const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
+      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], [t.r_area, area.selectedOptions[0].textContent], [t.r_name, name], [t.r_phone, phone],
+      ...(email ? [[t.r_email, email]] : []), [t.r_source, r.operator + ' · ' + t.r_checked + ' ' + (snapshot.priceChecked || '')],
+      [t.r_shownAt, new Intl.DateTimeFormat(tr ? 'tr-TR' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
+    rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
+    box.append(h, p, d); box.hidden = false; box.focus();
+  });
+  load();
 })();
