@@ -7,7 +7,7 @@ test('homepage polish preserves local planning, language and reduced motion',asy
  await expect(page.locator('.hero-photo img')).toBeVisible();
  await page.locator('.filter[data-filter="city"]').click();
  await expect(page.locator('.tour-card')).toHaveCount(1);
- await expect(page.locator('.tour-card a')).toHaveAttribute('href',/booking.html\?service=bb-oldcity/);
+ await expect(page.locator('.tour-card a[href*="booking.html"]')).toHaveAttribute('href',/booking.html\?service=bb-oldcity/);
  await page.locator('#language').selectOption('tr');
  await expect(page.locator('.hero-cta')).toHaveText('Deneyimleri keşfet');
  for(const lang of ['en','tr','ar']) {

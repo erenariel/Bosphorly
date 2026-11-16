@@ -35,3 +35,24 @@ test('site search finds places by old names and the route by the historian’s n
   await page.fill('#q', 'bosphorus');
   await expect(page.locator('.sr-group')).not.toHaveCount(0);
 });
+
+test('Google rating badge links to Google without a key and shows average and count with one', async ({ page }) => {
+  await page.route('https://**/*', r => r.abort());
+  await page.goto('/explore.html?lang=en&cat=family');
+  const first = page.locator('.place .g-rating').first();
+  await expect(first).toHaveText(/Google reviews/);
+  await expect(first).toHaveAttribute('href', /google\.com\/maps\/search/);
+
+  // With a key, the live lookup fills the badge. Google is replaced by a stub, so no request leaves the test.
+  await page.route('**/config/maps-public.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_PUBLIC_CONFIG=Object.freeze({googleMapsBrowserKey:"test-key"});' }));
+  await page.addInitScript(() => {
+    class Place { static async searchByText() { return { places: [{ id: 'ChIJtest', rating: 4.66, userRatingCount: 12345 }] }; } }
+    window.google = { maps: { importLibrary: async () => ({ Place }) } };
+  });
+  await page.goto('/prices.html?lang=tr');
+  const badge = page.locator('.g-rating').first();
+  await badge.scrollIntoViewIfNeeded();
+  await expect(badge).toHaveText(/4,7 \(12\.345\) · Google yorumları/);
+  await expect(badge).toHaveAttribute('href', 'https://search.google.com/local/reviews?placeid=ChIJtest');
+  await expect(badge).toHaveAttribute('aria-label', 'Google’da 12.345 yorumdan ortalama 4,7');
+});

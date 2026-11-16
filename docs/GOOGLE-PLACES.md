@@ -24,3 +24,12 @@ Official docs:
 - Do not use the public OpenStreetMap Nominatim service for client-side autocomplete at scale.
 - Do not assume all of Fatih costs €55/€65; **only Sultanahmet** is configured as a fixed-fare zone. Validated geofence/routing rules should replace the temporary address-text zone heuristic before live booking.
 - Hotel name and selected address must remain separate from any real passenger PII, and never be exposed in public logs.
+
+## Google rating badges (tours, companies and places to visit)
+The same browser key powers the "★ 4.7 (12,345) · Google reviews" badge on tour cards (home and comparison pages, one Google listing per tour company) and on every place in Discover Istanbul. `google-rating.js` does this.
+- **Without a key** the badge still works: it is a link to the place on Google Maps, where the reviews are one tap away.
+- **With a key** the rating and review count are fetched live from Places (New) when a badge scrolls into view, and the badge links straight to the Google reviews panel (`search.google.com/local/reviews?placeid=…`).
+- Nothing from Google is stored: values live in memory for one page view, as Google's terms require. Place IDs may be stored; to pin a listing, add `placeId` to a place in `tools/discover-src/master.json` or to a company in `OPERATORS` in `google-rating.js`.
+- **Cost:** a lookup that returns rating fields is billed at an Enterprise-tier Places SKU, so each badge that loads is one billable call. Set a daily quota and a budget alert in Google Cloud and check current prices on Google's SKU page before going live.
+- **Check the matches** once the key is live: the companies are found by name (e.g. "Blue Brothers Tour, Istanbul"). If a badge opens the wrong business, pin the correct `placeId`.
+- Show ratings as Google provides them. Do not filter or reorder reviews: Turkish rules on consumer reviews (in force from 1 August 2026) forbid hiding reviews because they are negative.

@@ -531,7 +531,10 @@
     const head = el('div', 'item-head');
     head.append(el('span', 'item-icon', ICON[cat]), el('span', 'item-cat', T.cats[cat]));
     const body = el('div', 'item-body');
-    body.append(el('span', 'operator', r.operator), el('h2', null, r['title_' + lang] || r.title));
+    body.append(el('span', 'operator', r.operator));
+    const gRate = window.BosphorlyRatings && window.BosphorlyRatings.forOperator(r.operator);
+    if (gRate) body.append(gRate);
+    body.append(el('h2', null, r['title_' + lang] || r.title));
 
     const priceRow = el('div', 'price-row');
     if (Number.isFinite(r.price)) {
@@ -588,7 +591,10 @@
     const article = el('article', 'item cat-hammam hb-card');
     const head = el('div', 'item-head'); head.append(el('span', 'item-icon', ICON.hammam), el('span', 'item-cat', T.cats.hammam));
     const body = el('div', 'item-body');
-    body.append(el('span', 'operator', 'Alaturka Hamam'), el('h2', null, T.hbTitle));
+    body.append(el('span', 'operator', 'Alaturka Hamam'));
+    const gRate = window.BosphorlyRatings && window.BosphorlyRatings.forOperator('Alaturka Hamam');
+    if (gRate) body.append(gRate);
+    body.append(el('h2', null, T.hbTitle));
     const min = Math.min(...items.flatMap(r => r.options ? r.options.flatMap(o => o.durations.map(d => d.price)) : [r.price]));
     const priceRow = el('div', 'price-row'); priceRow.append(el('strong', null, T.from + ' ' + fmt(min, 'EUR')), el('span', 'per', T.per)); body.append(priceRow);
     body.append(el('div', 'chips')); body.lastChild.append(el('span', 'chip', '🕘 ' + T.hbHours));
