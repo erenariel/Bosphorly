@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html"]
+PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html"]
 
 
 class References(HTMLParser):
@@ -95,12 +95,15 @@ def assert_booking_safety():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "explore.js", "route.js", "search.js", "tools/build_discover.py"]
     for name in script_sources:
+        if name.endswith(".py"):
+            continue
         subprocess.run(["node", "--check", str(ROOT / name)], check=True)
+    assert_discover_data()
     for page in PAGES:
         html = (ROOT / page).read_text(encoding="utf-8")
-        inline = re.findall(r"<script(?:\s[^>]*)?>([\s\S]*?)</script>", html, re.I)
+        inline = re.findall(r"<script(?:\s(?![^>]*application/ld\+json)[^>]*)?>([\s\S]*?)</script>", html, re.I)
         for content in inline:
             if not content.strip():
                 continue
@@ -108,6 +111,22 @@ def assert_js_parses():
                 f.write(content)
                 f.flush()
                 subprocess.run(["node", "--check", f.name], check=True)
+
+
+def assert_discover_data():
+    """Every language pack of the Discover pages covers every place, stop and label of the English one."""
+    import json
+    base = json.loads((ROOT / "data/discover/places.json").read_text(encoding="utf-8"))
+    en = json.loads((ROOT / "data/discover/en.json").read_text(encoding="utf-8"))
+    langs = re.search(r"const supported = \[([^\]]+)\]", (ROOT / "lang.js").read_text(encoding="utf-8")).group(1)
+    for lang in re.findall(r"'(\w+)'", langs):
+        pack = json.loads((ROOT / f"data/discover/{lang}.json").read_text(encoding="utf-8"))
+        for p in base["places"]:
+            assert len(pack["places"][p["id"]]) == 2, (lang, p["id"])
+            assert -90 < p["lat"] < 90 and -180 < p["lng"] < 180
+        for s in base["stops"]:
+            assert len(pack["stops"][s["id"]]) == 2, (lang, s["id"])
+        assert set(en["ui"]) <= set(pack["ui"]), (lang, set(en["ui"]) - set(pack["ui"]))
 
 
 if __name__ == "__main__":

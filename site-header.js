@@ -7,6 +7,8 @@
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const L = {
     home: { en: 'Home', tr: 'Ana sayfa', ru: 'Главная', uk: 'Головна', de: 'Startseite', fr: 'Accueil', nl: 'Home', ar: 'الرئيسية', he: 'דף הבית', az: 'Ana səhifə', fa: 'خانه', es: 'Inicio', it: "Home", pt: "Início" },
+    discover: { en: 'Discover', tr: 'Keşfet', ru: 'Что посмотреть', uk: 'Що подивитися', de: 'Entdecken', fr: 'Découvrir', nl: 'Ontdekken', ar: 'اكتشف', he: 'לגלות', az: 'Kəşf et', fa: 'کشف کنید', es: 'Descubrir', it: 'Scopri', pt: 'Descobrir' },
+    search: { en: 'Search', tr: 'Ara', ru: 'Поиск', uk: 'Пошук', de: 'Suche', fr: 'Rechercher', nl: 'Zoeken', ar: 'بحث', he: 'חיפוש', az: 'Axtar', fa: 'جست‌وجو', es: 'Buscar', it: 'Cerca', pt: 'Buscar' },
     prices: { en: 'Compare tours', tr: 'Tur karşılaştır', ru: 'Сравнить туры', uk: 'Порівняти тури', de: 'Touren vergleichen', fr: 'Comparer les visites', nl: 'Tours vergelijken', ar: 'قارن الجولات', he: 'השוואת סיורים', az: 'Turları müqayisə et', fa: 'مقایسه تورها', es: 'Comparar tours', it: "Confronta i tour", pt: "Comparar passeios" },
     map: { en: 'City map', tr: 'Şehir haritası', ru: 'Карта города', uk: 'Мапа міста', de: 'Stadtplan', fr: 'Plan de la ville', nl: 'Stadskaart', ar: 'خريطة المدينة', he: 'מפת העיר', az: 'Şəhər xəritəsi', fa: 'نقشه شهر', es: 'Mapa de la ciudad', it: "Mappa della città", pt: "Mapa da cidade" },
     account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta" }
@@ -14,11 +16,11 @@
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder
   const withCurrency = host.dataset.currency !== 'off';
-  const links = [['home', 'index.html'], ['prices', 'prices.html'], ['map', 'map.html'], ['account', 'account.html']];
+  const links = [['home', 'index.html'], ['discover', 'explore.html'], ['prices', 'prices.html'], ['account', 'account.html']];
   const header = document.createElement('header');
   header.className = 'site-header';
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
-    '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div></div>';
+    '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div></div>';
   const nav = header.querySelector('nav');
   for (const [key, href] of links) {
     const a = document.createElement('a');
