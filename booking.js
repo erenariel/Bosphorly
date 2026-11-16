@@ -6,8 +6,9 @@
 (() => {
   const $ = id => document.getElementById(id);
   const query = new URLSearchParams(location.search);
-  const tr = query.get('lang') === 'tr' || (!query.has('lang') && navigator.language.toLowerCase().startsWith('tr'));
-  document.documentElement.lang = tr ? 'tr' : 'en';
+  const lang = window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
+  const tr = lang === 'tr';
+  document.documentElement.lang = lang;
 
   const i18n = {
     en: {
@@ -63,7 +64,8 @@
       r_ref: 'Referans', r_shownAt: 'Gösterildiği an', r_source: 'Fiyat kaynağı', r_checked: 'kontrol', r_tour: 'Tur', r_company: 'Firma', r_date: 'Tarih', r_time: 'Saat', r_guests: 'Kişi', r_area: 'Bölge', r_name: 'Ad soyad', r_phone: 'Telefon', r_email: 'E-posta', r_unit: 'Kişi başı fiyat', r_total: 'Tahmini toplam'
     }
   };
-  const t = i18n[tr ? 'tr' : 'en'];
+  const t = i18n[lang] || i18n.en;
+  if (i18n[lang] && window.BosphorlyLang.rtl(lang)) document.documentElement.dir = 'rtl';
   for (const [id, val] of Object.entries(t)) { const e = $(id); if (e && typeof val === 'string') e.textContent = val; }
   const area = $('area');
   if (tr) [...area.options].at(-1).textContent = 'Diğer';

@@ -2,13 +2,9 @@
 /* Operator price and tour-content comparison. Local rendering only: no tracking, no checkout links. */
 (() => {
   const $ = id => document.getElementById(id);
-  const pref = () => {
-    let saved = '';
-    try { saved = localStorage.getItem('bosphorly.language') || ''; } catch {}
-    return saved || navigator.languages?.[0] || navigator.language || 'en';
-  };
-  const tr = pref().toLowerCase().startsWith('tr');
-  document.documentElement.lang = tr ? 'tr' : 'en';
+  const lang = window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
+  const tr = lang === 'tr';
+  document.documentElement.lang = lang;
 
   const T = tr ? {
     home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
@@ -129,7 +125,7 @@
     } else body.append(el('p', 'fine', T.noDetails));
 
     const a = el('a', 'button', T.request);
-    a.href = 'booking.html?service=' + encodeURIComponent(r.id) + (tr ? '&lang=tr' : '');
+    a.href = 'booking.html?service=' + encodeURIComponent(r.id) + '&lang=' + encodeURIComponent(lang);
     body.append(a);
     article.append(head, body);
     return article;
