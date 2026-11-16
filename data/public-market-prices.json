@@ -228,6 +228,58 @@
             "Pagamento na chegada (sem pagamento antecipado)",
             "Refeição vegetariana disponível"
           ]
+        },
+        "fr": {
+          "duration": "2 h de croisière + 1 h d’arrêt sur la rive asiatique",
+          "schedule": "10:00–13:00",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "meeting_point": "Eminönü ; l’heure de prise en charge est envoyée par SMS après la réservation",
+          "guide": "Guide en direct : EN / RU / ES / TR",
+          "highlights": [
+            "Plus de 25 sites entre l’Europe et l’Asie",
+            "Palais de Dolmabahçe et de Beylerbeyi vus depuis l’eau",
+            "Forteresses de Rumeli et d’Anadolu, ponts du Bosphore",
+            "Arrêt d’1 heure à Beylerbeyi, sur la rive asiatique"
+          ],
+          "included": [
+            "Petit-déjeuner à bord",
+            "Transfert depuis l’hôtel",
+            "Guide en direct",
+            "Arrêt d’1 heure sur la rive asiatique",
+            "Wi-Fi à bord",
+            "Thé et eau offerts"
+          ],
+          "notes": [
+            "Enfants de 0–3 ans gratuits, 4–6 ans 30 % de réduction",
+            "Paiement sur place (sans acompte)",
+            "Repas végétarien disponible"
+          ]
+        },
+        "es": {
+          "duration": "2 h de crucero + 1 h de parada en el lado asiático",
+          "schedule": "10:00–13:00",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "meeting_point": "Eminönü; la hora de recogida se envía por SMS tras la reserva",
+          "guide": "Guía en vivo: EN / RU / ES / TR",
+          "highlights": [
+            "Más de 25 lugares de interés entre Europa y Asia",
+            "Palacios de Dolmabahçe y Beylerbeyi desde el agua",
+            "Fortalezas de Rumeli y Anadolu, puentes del Bósforo",
+            "Parada de 1 hora en Beylerbeyi, en el lado asiático"
+          ],
+          "included": [
+            "Desayuno a bordo",
+            "Traslado desde el hotel",
+            "Guía en vivo",
+            "Parada de 1 hora en el lado asiático",
+            "Wi-Fi a bordo",
+            "Té y agua gratis"
+          ],
+          "notes": [
+            "Niños de 0–3 años gratis, de 4–6 años 30 % de descuento",
+            "Pago a la llegada (sin pago por adelantado)",
+            "Comida vegetariana disponible"
+          ]
         }
       },
       "title_tr": "Sabah Boğaz Turu",
@@ -235,7 +287,9 @@
       "title_ar": "جولة صباحية في البوسفور",
       "title_de": "Bosporus-Fahrt am Morgen",
       "title_it": "Crociera mattutina sul Bosforo",
-      "title_pt": "Cruzeiro matinal pelo Bósforo"
+      "title_pt": "Cruzeiro matinal pelo Bósforo",
+      "title_fr": "Croisière matinale sur le Bosphore",
+      "title_es": "Crucero matutino por el Bósforo"
     },
     {
       "id": "bb-afternoon",
@@ -430,6 +484,58 @@
             "Pagamento na chegada (sem pagamento antecipado)",
             "Refeição vegetariana disponível"
           ]
+        },
+        "fr": {
+          "duration": "2 h de croisière + 1 h d’arrêt sur la rive asiatique",
+          "schedule": "13:00–16:00",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "meeting_point": "Eminönü ; l’heure de prise en charge est envoyée par SMS après la réservation",
+          "guide": "Guide en direct : EN / RU / ES / TR",
+          "highlights": [
+            "Plus de 25 sites entre l’Europe et l’Asie",
+            "Palais de Dolmabahçe et de Beylerbeyi vus depuis l’eau",
+            "Forteresses de Rumeli et d’Anadolu, ponts du Bosphore",
+            "Arrêt d’1 heure à Beylerbeyi, sur la rive asiatique"
+          ],
+          "included": [
+            "Déjeuner à bord",
+            "Transfert depuis l’hôtel",
+            "Guide en direct",
+            "Arrêt d’1 heure sur la rive asiatique",
+            "Wi-Fi à bord",
+            "Thé et eau offerts"
+          ],
+          "notes": [
+            "Enfants de 0–3 ans gratuits, 4–6 ans 30 % de réduction",
+            "Paiement sur place (sans acompte)",
+            "Repas végétarien disponible"
+          ]
+        },
+        "es": {
+          "duration": "2 h de crucero + 1 h de parada en el lado asiático",
+          "schedule": "13:00–16:00",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "meeting_point": "Eminönü; la hora de recogida se envía por SMS tras la reserva",
+          "guide": "Guía en vivo: EN / RU / ES / TR",
+          "highlights": [
+            "Más de 25 lugares de interés entre Europa y Asia",
+            "Palacios de Dolmabahçe y Beylerbeyi desde el agua",
+            "Fortalezas de Rumeli y Anadolu, puentes del Bósforo",
+            "Parada de 1 hora en Beylerbeyi, en el lado asiático"
+          ],
+          "included": [
+            "Almuerzo a bordo",
+            "Traslado desde el hotel",
+            "Guía en vivo",
+            "Parada de 1 hora en el lado asiático",
+            "Wi-Fi a bordo",
+            "Té y agua gratis"
+          ],
+          "notes": [
+            "Niños de 0–3 años gratis, de 4–6 años 30 % de descuento",
+            "Pago a la llegada (sin pago por adelantado)",
+            "Comida vegetariana disponible"
+          ]
         }
       },
       "title_tr": "Öğle Yemekli Boğaz Turu",
@@ -437,7 +543,9 @@
       "title_ar": "جولة بعد الظهر في البوسفور مع الغداء",
       "title_de": "Bosporus-Fahrt am Nachmittag mit Mittagessen",
       "title_it": "Crociera pomeridiana sul Bosforo con pranzo",
-      "title_pt": "Cruzeiro vespertino pelo Bósforo com almoço"
+      "title_pt": "Cruzeiro vespertino pelo Bósforo com almoço",
+      "title_fr": "Croisière de l’après-midi sur le Bosphore avec déjeuner",
+      "title_es": "Crucero de tarde por el Bósforo con almuerzo"
     },
     {
       "id": "bb-sunset",
@@ -632,6 +740,58 @@
             "Pagamento na chegada (sem pagamento antecipado)",
             "Refeição vegetariana disponível"
           ]
+        },
+        "fr": {
+          "duration": "2 h de croisière + 1 h d’arrêt sur la rive asiatique",
+          "schedule": "18:00–21:00",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "meeting_point": "Eminönü ; l’heure de prise en charge est envoyée par SMS après la réservation",
+          "guide": "Guide en direct : EN / RU / ES / TR",
+          "highlights": [
+            "Plus de 25 sites entre l’Europe et l’Asie",
+            "Palais de Dolmabahçe et de Beylerbeyi vus depuis l’eau",
+            "Forteresses de Rumeli et d’Anadolu, ponts du Bosphore",
+            "Arrêt d’1 heure à Beylerbeyi, sur la rive asiatique"
+          ],
+          "included": [
+            "Biscuits et thé",
+            "Transfert depuis l’hôtel",
+            "Guide en direct",
+            "Arrêt d’1 heure sur la rive asiatique",
+            "Wi-Fi à bord",
+            "Eau offerte"
+          ],
+          "notes": [
+            "Enfants de 0–3 ans gratuits, 4–6 ans 30 % de réduction",
+            "Paiement sur place (sans acompte)",
+            "Repas végétarien disponible"
+          ]
+        },
+        "es": {
+          "duration": "2 h de crucero + 1 h de parada en el lado asiático",
+          "schedule": "18:00–21:00",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "meeting_point": "Eminönü; la hora de recogida se envía por SMS tras la reserva",
+          "guide": "Guía en vivo: EN / RU / ES / TR",
+          "highlights": [
+            "Más de 25 lugares de interés entre Europa y Asia",
+            "Palacios de Dolmabahçe y Beylerbeyi desde el agua",
+            "Fortalezas de Rumeli y Anadolu, puentes del Bósforo",
+            "Parada de 1 hora en Beylerbeyi, en el lado asiático"
+          ],
+          "included": [
+            "Galletas y té",
+            "Traslado desde el hotel",
+            "Guía en vivo",
+            "Parada de 1 hora en el lado asiático",
+            "Wi-Fi a bordo",
+            "Agua gratis"
+          ],
+          "notes": [
+            "Niños de 0–3 años gratis, de 4–6 años 30 % de descuento",
+            "Pago a la llegada (sin pago por adelantado)",
+            "Comida vegetariana disponible"
+          ]
         }
       },
       "title_tr": "Gün Batımı Boğaz Turu",
@@ -639,7 +799,9 @@
       "title_ar": "جولة الغروب في البوسفور",
       "title_de": "Bosporus-Fahrt bei Sonnenuntergang",
       "title_it": "Crociera al tramonto sul Bosforo",
-      "title_pt": "Cruzeiro ao pôr do sol pelo Bósforo"
+      "title_pt": "Cruzeiro ao pôr do sol pelo Bósforo",
+      "title_fr": "Croisière au coucher du soleil sur le Bosphore",
+      "title_es": "Crucero al atardecer por el Bósforo"
     },
     {
       "id": "bb-oldcity",
@@ -834,6 +996,58 @@
             "Pagamento na chegada (sem pagamento antecipado)",
             "Menu vegetariano sem custo extra"
           ]
+        },
+        "fr": {
+          "duration": "8 heures",
+          "schedule": "10:00–18:00",
+          "pickup": "Transfert depuis l’hôtel inclus",
+          "meeting_point": "Eminönü ; l’heure de prise en charge est envoyée par SMS après la réservation",
+          "guide": "Guide professionnel : EN / TR",
+          "highlights": [
+            "Sainte-Sophie et la Mosquée bleue",
+            "Croisière sur le Bosphore avec déjeuner à bord",
+            "Les maisons et rues colorées de Balat",
+            "Église de fer (Saint-Étienne) et église Saint-Georges"
+          ],
+          "included": [
+            "Transfert depuis l’hôtel",
+            "Guide professionnel",
+            "Déjeuner",
+            "Billets d’entrée",
+            "Croisière sur le Bosphore",
+            "Bus entre les étapes"
+          ],
+          "notes": [
+            "Enfants de 0–3 ans gratuits, 4–6 ans 30 % de réduction",
+            "Paiement sur place (sans acompte)",
+            "Menu végétarien sans supplément"
+          ]
+        },
+        "es": {
+          "duration": "8 horas",
+          "schedule": "10:00–18:00",
+          "pickup": "Traslado desde el hotel incluido",
+          "meeting_point": "Eminönü; la hora de recogida se envía por SMS tras la reserva",
+          "guide": "Guía profesional: EN / TR",
+          "highlights": [
+            "Santa Sofía y la Mezquita Azul",
+            "Crucero por el Bósforo con almuerzo a bordo",
+            "Las casas y calles de colores de Balat",
+            "Iglesia de Hierro (San Esteban) e Iglesia de San Jorge"
+          ],
+          "included": [
+            "Traslado desde el hotel",
+            "Guía profesional",
+            "Almuerzo",
+            "Entradas",
+            "Crucero por el Bósforo",
+            "Autobús entre las paradas"
+          ],
+          "notes": [
+            "Niños de 0–3 años gratis, de 4–6 años 30 % de descuento",
+            "Pago a la llegada (sin pago por adelantado)",
+            "Menú vegetariano sin coste adicional"
+          ]
         }
       },
       "title_tr": "Tarihi Yarımada ve Balat Turu",
@@ -841,7 +1055,9 @@
       "title_ar": "جولة المدينة القديمة",
       "title_de": "Altstadt-Tour",
       "title_it": "Tour della Città Vecchia",
-      "title_pt": "Tour pela Cidade Velha"
+      "title_pt": "Tour pela Cidade Velha",
+      "title_fr": "Visite de la vieille ville",
+      "title_es": "Tour por la Ciudad Vieja"
     },
     {
       "id": "bb-europeasia",
@@ -1029,6 +1245,56 @@
             "Crianças de 0–3 anos grátis, de 4–6 anos com 30% de desconto",
             "Pagamento na chegada (sem pagamento antecipado)"
           ]
+        },
+        "fr": {
+          "duration": "7 heures",
+          "schedule": "10:00–17:00",
+          "pickup": "Transfert depuis l’hôtel inclus",
+          "meeting_point": "Eminönü ; l’heure de prise en charge est envoyée par SMS après la réservation",
+          "guide": "Guide en direct : EN / RU / ES / TR",
+          "highlights": [
+            "Croisière sur le Bosphore avec petit-déjeuner à bord",
+            "Palais ottoman du XIXe siècle sur la rive asiatique",
+            "La plus grande mosquée de Turquie, sur le plus haut belvédère de la rive asiatique",
+            "Belvédère romantique accessible en téléphérique"
+          ],
+          "included": [
+            "Transfert depuis l’hôtel",
+            "Guide en direct",
+            "Petit-déjeuner et déjeuner",
+            "Billets d’entrée",
+            "Croisière sur le Bosphore",
+            "Bus entre les étapes"
+          ],
+          "notes": [
+            "Enfants de 0–3 ans gratuits, 4–6 ans 30 % de réduction",
+            "Paiement sur place (sans acompte)"
+          ]
+        },
+        "es": {
+          "duration": "7 horas",
+          "schedule": "10:00–17:00",
+          "pickup": "Traslado desde el hotel incluido",
+          "meeting_point": "Eminönü; la hora de recogida se envía por SMS tras la reserva",
+          "guide": "Guía en vivo: EN / RU / ES / TR",
+          "highlights": [
+            "Crucero por el Bósforo con desayuno a bordo",
+            "Palacio otomano del siglo XIX en la orilla asiática",
+            "La mayor mezquita de Turquía, en el mirador más alto del lado asiático",
+            "Mirador romántico al que se sube en teleférico"
+          ],
+          "included": [
+            "Traslado desde el hotel",
+            "Guía en vivo",
+            "Desayuno y almuerzo",
+            "Entradas",
+            "Crucero por el Bósforo",
+            "Autobús entre las paradas"
+          ],
+          "notes": [
+            "Niños de 0–3 años gratis, de 4–6 años 30 % de descuento",
+            "Pago a la llegada (sin pago por adelantado)"
+          ]
         }
       },
       "title_tr": "Tam Gün Asya ve Avrupa Turu",
@@ -1036,7 +1302,9 @@
       "title_ar": "آسيا وأوروبا في يوم كامل",
       "title_de": "Asien & Europa an einem Tag",
       "title_it": "Asia ed Europa, giornata intera",
-      "title_pt": "Ásia e Europa, dia inteiro"
+      "title_pt": "Ásia e Europa, dia inteiro",
+      "title_fr": "Asie et Europe, journée complète",
+      "title_es": "Asia y Europa, día completo"
     },
     {
       "id": "orient-classic",
@@ -1124,6 +1392,26 @@
           "notes": [
             "O que está incluído não é detalhado na página do passeio; confirme com a empresa."
           ]
+        },
+        "fr": {
+          "duration": "3 heures",
+          "highlights": [
+            "Croisière dîner en soirée sur le Bosphore",
+            "Menu méditerranéen et turc : mezzés, poisson grillé, kebab"
+          ],
+          "notes": [
+            "Les prestations ne sont pas détaillées sur la page de l’opérateur ; vérifiez auprès de lui."
+          ]
+        },
+        "es": {
+          "duration": "3 horas",
+          "highlights": [
+            "Crucero nocturno con cena por el Bósforo",
+            "Menú mediterráneo y turco: meze, pescado a la parrilla, kebab"
+          ],
+          "notes": [
+            "Lo que incluye no se detalla en la página del operador; confírmalo con él."
+          ]
         }
       },
       "title_tr": "Klasik Akşam Yemekli Tekne Turu",
@@ -1131,7 +1419,9 @@
       "title_ar": "عشاء كلاسيكي على متن قارب",
       "title_de": "Klassische Dinner-Fahrt",
       "title_it": "Crociera con cena classica",
-      "title_pt": "Cruzeiro com jantar clássico"
+      "title_pt": "Cruzeiro com jantar clássico",
+      "title_fr": "Croisière dîner classique",
+      "title_es": "Crucero con cena clásica"
     },
     {
       "id": "orient-dinner",
@@ -1219,6 +1509,26 @@
           "notes": [
             "O que está incluído não é detalhado na página do passeio; confirme com a empresa."
           ]
+        },
+        "fr": {
+          "duration": "3 heures",
+          "highlights": [
+            "Croisière dîner en soirée sur le Bosphore",
+            "Menu méditerranéen et turc : mezzés, poisson grillé, kebab"
+          ],
+          "notes": [
+            "Les prestations ne sont pas détaillées sur la page de l’opérateur ; vérifiez auprès de lui."
+          ]
+        },
+        "es": {
+          "duration": "3 horas",
+          "highlights": [
+            "Crucero nocturno con cena por el Bósforo",
+            "Menú mediterráneo y turco: meze, pescado a la parrilla, kebab"
+          ],
+          "notes": [
+            "Lo que incluye no se detalla en la página del operador; confírmalo con él."
+          ]
         }
       },
       "title_tr": "Premium Akşam Yemekli Tekne Turu",
@@ -1226,7 +1536,9 @@
       "title_ar": "عشاء مميز على متن قارب",
       "title_de": "Premium-Dinner-Fahrt",
       "title_it": "Crociera con cena Premium",
-      "title_pt": "Cruzeiro com jantar Premium"
+      "title_pt": "Cruzeiro com jantar Premium",
+      "title_fr": "Croisière dîner Premium",
+      "title_es": "Crucero con cena Premium"
     },
     {
       "id": "orient-alacarte",
@@ -1321,6 +1633,28 @@
           "notes": [
             "O que está incluído não é detalhado na página do passeio; confirme com a empresa."
           ]
+        },
+        "fr": {
+          "duration": "3 heures",
+          "highlights": [
+            "Menu à la carte",
+            "Croisière dîner en soirée sur le Bosphore",
+            "Menu méditerranéen et turc : mezzés, poisson grillé, kebab"
+          ],
+          "notes": [
+            "Les prestations ne sont pas détaillées sur la page de l’opérateur ; vérifiez auprès de lui."
+          ]
+        },
+        "es": {
+          "duration": "3 horas",
+          "highlights": [
+            "Menú a la carta",
+            "Crucero nocturno con cena por el Bósforo",
+            "Menú mediterráneo y turco: meze, pescado a la parrilla, kebab"
+          ],
+          "notes": [
+            "Lo que incluye no se detalla en la página del operador; confírmalo con él."
+          ]
         }
       },
       "title_tr": "À la Carte Akşam Yemekli Tekne Turu",
@@ -1328,7 +1662,9 @@
       "title_ar": "عشاء آ لا كارت على متن قارب",
       "title_de": "À-la-carte-Dinner-Fahrt",
       "title_it": "Crociera con cena à la carte",
-      "title_pt": "Cruzeiro com jantar à la carte"
+      "title_pt": "Cruzeiro com jantar à la carte",
+      "title_fr": "Croisière dîner à la carte",
+      "title_es": "Crucero con cena a la carta"
     },
     {
       "id": "sea-land",
@@ -1579,6 +1915,74 @@
             "O serviço de busca só está disponível se você escolher a opção Pickup.",
             "Você pode levar sua própria comida e bebida a bordo."
           ]
+        },
+        "fr": {
+          "duration": "2 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Pas de guide en direct ; audioguide multilingue",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Croisière sur le Bosphore entre l’Europe et l’Asie",
+            "Profitez d’une croisière panoramique complète de 2 heures",
+            "Découvrez les rives européenne et asiatique d’Istanbul",
+            "Admirez palais, mosquées, forteresses, ponts et demeures"
+          ],
+          "included": [
+            "Croisière panoramique partagée de 2 heures sur le Bosphore",
+            "Prise en charge, si l’option Pickup est choisie",
+            "Commentaires à bord en plusieurs langues",
+            "Audioguide sur mobile en 30 langues",
+            "Wi-Fi gratuit à bord",
+            "Thé turc et Nescafé à volonté, en libre-service",
+            "Toilettes à bord"
+          ],
+          "not_included": [
+            "Transfert retour après la croisière",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Photos en costume ottoman"
+          ],
+          "notes": [
+            "Il s’agit d’une croisière panoramique partagée de 2 heures sur le Bosphore avec d’autres passagers.",
+            "Avec l’option Meeting Point, l’enregistrement se fait à notre bureau près de l’embarcadère d’Eminönü.",
+            "La prise en charge n’est disponible que si vous choisissez l’option Pickup.",
+            "Vous pouvez apporter vos propres boissons et repas à bord."
+          ]
+        },
+        "es": {
+          "duration": "2 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Sin guía en vivo; audioguía multilingüe",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Crucero por el Bósforo entre Europa y Asia",
+            "Disfruta de un crucero panorámico completo de 2 horas",
+            "Contempla las orillas europea y asiática de Estambul",
+            "Admira palacios, mezquitas, fortalezas, puentes y mansiones"
+          ],
+          "included": [
+            "Crucero panorámico compartido de 2 horas por el Bósforo",
+            "Servicio de recogida, si eliges la opción Pickup",
+            "Comentarios a bordo en varios idiomas",
+            "Audioguía en el móvil en 30 idiomas",
+            "Wi-Fi gratis a bordo",
+            "Té turco y Nescafé ilimitados, autoservicio",
+            "Aseos a bordo"
+          ],
+          "not_included": [
+            "Traslado de regreso tras el crucero",
+            "Gastos personales",
+            "Propinas",
+            "Fotos con trajes otomanos"
+          ],
+          "notes": [
+            "Es un crucero panorámico compartido de 2 horas por el Bósforo con otros pasajeros.",
+            "Con la opción Meeting Point debes hacer el check-in en nuestra oficina junto al muelle de Eminönü.",
+            "El servicio de recogida solo está disponible si eliges la opción Pickup.",
+            "Puedes llevar tu propia comida y bebida a bordo."
+          ]
         }
       },
       "title_tr": "Sabah Boğaz Turu",
@@ -1586,7 +1990,9 @@
       "title_ar": "جولة صباحية في البوسفور",
       "title_de": "Bosporus-Fahrt am Morgen",
       "title_it": "Crociera mattutina sul Bosforo",
-      "title_pt": "Cruzeiro matinal pelo Bósforo"
+      "title_pt": "Cruzeiro matinal pelo Bósforo",
+      "title_fr": "Croisière matinale sur le Bosphore",
+      "title_es": "Crucero matutino por el Bósforo"
     },
     {
       "id": "sl-afternoon",
@@ -1844,6 +2250,76 @@
             "O serviço de busca só está disponível se você escolher a opção Pickup.",
             "Você pode levar sua própria comida e bebida a bordo."
           ]
+        },
+        "fr": {
+          "duration": "2 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Pas de guide en direct ; audioguide multilingue",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Naviguez sur le Bosphore entre l’Europe et l’Asie",
+            "Profitez d’une croisière panoramique de 2 heures l’après-midi",
+            "Découvrez les rives européenne et asiatique d’Istanbul",
+            "Admirez palais, mosquées, forteresses, ponts et demeures"
+          ],
+          "included": [
+            "Croisière panoramique partagée de 2 heures sur le Bosphore",
+            "Prise en charge, si l’option Pickup est choisie",
+            "Commentaires à bord en plusieurs langues",
+            "Audioguide sur mobile en 30 langues",
+            "Wi-Fi gratuit à bord",
+            "Thé turc et Nescafé à volonté, en libre-service",
+            "Toilettes à bord"
+          ],
+          "not_included": [
+            "Transfert retour après la croisière",
+            "Repas et boissons supplémentaires",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Photos en costume ottoman"
+          ],
+          "notes": [
+            "Il s’agit d’une croisière panoramique partagée de 2 heures sur le Bosphore avec d’autres passagers.",
+            "Avec l’option Meeting Point, l’enregistrement se fait à notre bureau près de l’embarcadère d’Eminönü.",
+            "La prise en charge n’est disponible que si vous choisissez l’option Pickup.",
+            "Vous pouvez apporter vos propres boissons et repas à bord."
+          ]
+        },
+        "es": {
+          "duration": "2 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Sin guía en vivo; audioguía multilingüe",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Navega por el Bósforo entre Europa y Asia",
+            "Disfruta de un crucero panorámico de 2 horas por la tarde",
+            "Contempla las orillas europea y asiática de Estambul",
+            "Admira palacios, mezquitas, fortalezas, puentes y mansiones"
+          ],
+          "included": [
+            "Crucero panorámico compartido de 2 horas por el Bósforo",
+            "Servicio de recogida, si eliges la opción Pickup",
+            "Comentarios a bordo en varios idiomas",
+            "Audioguía en el móvil en 30 idiomas",
+            "Wi-Fi gratis a bordo",
+            "Té turco y Nescafé ilimitados, autoservicio",
+            "Aseos a bordo"
+          ],
+          "not_included": [
+            "Traslado de regreso tras el crucero",
+            "Comida y bebidas adicionales",
+            "Gastos personales",
+            "Propinas",
+            "Fotos con trajes otomanos"
+          ],
+          "notes": [
+            "Es un crucero panorámico compartido de 2 horas por el Bósforo con otros pasajeros.",
+            "Con la opción Meeting Point debes hacer el check-in en nuestra oficina junto al muelle de Eminönü.",
+            "El servicio de recogida solo está disponible si eliges la opción Pickup.",
+            "Puedes llevar tu propia comida y bebida a bordo."
+          ]
         }
       },
       "title_tr": "Öğleden Sonra Boğaz Turu",
@@ -1851,7 +2327,9 @@
       "title_ar": "جولة بعد الظهر في البوسفور",
       "title_de": "Bosporus-Fahrt am Nachmittag",
       "title_it": "Crociera pomeridiana sul Bosforo",
-      "title_pt": "Cruzeiro vespertino pelo Bósforo"
+      "title_pt": "Cruzeiro vespertino pelo Bósforo",
+      "title_fr": "Croisière de l’après-midi sur le Bosphore",
+      "title_es": "Crucero de tarde por el Bósforo"
     },
     {
       "id": "sl-sunset",
@@ -2109,6 +2587,76 @@
             "Busca e retorno só estão incluídos se a opção Transfer for escolhida.",
             "As cores e o horário do pôr do sol variam com a estação, o tempo e a visibilidade."
           ]
+        },
+        "fr": {
+          "duration": "2 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Pas de guide en direct ; audioguide multilingue",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Croisière entre l’Europe et l’Asie au coucher du soleil",
+            "Profitez d’une croisière panoramique de 2 heures sur le Bosphore",
+            "Regardez la lumière du soir changer sur Istanbul",
+            "Les rives européenne et asiatique vues depuis l’eau"
+          ],
+          "included": [
+            "Croisière panoramique partagée de 2 heures sur le Bosphore au coucher du soleil",
+            "Prise en charge et retour, si l’option Transfer est choisie",
+            "Commentaires à bord en plusieurs langues",
+            "Audioguide sur mobile en 30 langues",
+            "Wi-Fi gratuit à bord",
+            "Thé turc et Nescafé à volonté, en libre-service",
+            "Toilettes à bord"
+          ],
+          "not_included": [
+            "Transferts avec l’option Meeting Point",
+            "Repas et boissons supplémentaires",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Photos en costume ottoman"
+          ],
+          "notes": [
+            "Il s’agit d’une croisière panoramique partagée de 2 heures sur le Bosphore avec d’autres passagers.",
+            "L’option Meeting Point nécessite un enregistrement à notre bureau près de l’embarcadère d’Eminönü.",
+            "Prise en charge et retour ne sont inclus que si l’option Transfer est choisie.",
+            "Les couleurs et l’heure du coucher du soleil varient selon la saison, la météo et la visibilité."
+          ]
+        },
+        "es": {
+          "duration": "2 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Sin guía en vivo; audioguía multilingüe",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Crucero entre Europa y Asia al atardecer",
+            "Disfruta de un crucero panorámico de 2 horas por el Bósforo",
+            "Mira cómo cambia la luz de la tarde sobre Estambul",
+            "Las orillas europea y asiática desde el agua"
+          ],
+          "included": [
+            "Crucero panorámico compartido de 2 horas por el Bósforo al atardecer",
+            "Recogida y regreso, si eliges la opción Transfer",
+            "Comentarios a bordo en varios idiomas",
+            "Audioguía en el móvil en 30 idiomas",
+            "Wi-Fi gratis a bordo",
+            "Té turco y Nescafé ilimitados, autoservicio",
+            "Aseos a bordo"
+          ],
+          "not_included": [
+            "Traslados con la opción Meeting Point",
+            "Comida y bebidas adicionales",
+            "Gastos personales",
+            "Propinas",
+            "Fotos con trajes otomanos"
+          ],
+          "notes": [
+            "Es un crucero panorámico compartido de 2 horas por el Bósforo con otros pasajeros.",
+            "La opción Meeting Point requiere hacer el check-in en nuestra oficina junto al muelle de Eminönü.",
+            "La recogida y el regreso solo están incluidos si eliges la opción Transfer.",
+            "Los colores y la hora del atardecer varían según la estación, el tiempo y la visibilidad."
+          ]
         }
       },
       "title_tr": "Gün Batımı Boğaz Turu",
@@ -2116,7 +2664,9 @@
       "title_ar": "جولة الغروب في البوسفور",
       "title_de": "Bosporus-Fahrt bei Sonnenuntergang",
       "title_it": "Crociera al tramonto sul Bosforo",
-      "title_pt": "Cruzeiro ao pôr do sol pelo Bósforo"
+      "title_pt": "Cruzeiro ao pôr do sol pelo Bósforo",
+      "title_fr": "Croisière au coucher du soleil sur le Bosphore",
+      "title_es": "Crucero al atardecer por el Bósforo"
     },
     {
       "id": "sl-two-continents",
@@ -2394,6 +2944,82 @@
             "As opções Standard não incluem almoço nem entrada no interior do Palácio de Beylerbeyi e não estão disponíveis às segundas.",
             "As opções Palácio e Almoço incluem almoço e entrada no palácio. Às segundas, visita-se o Palácio Yıldız em vez de Beylerbeyi."
           ]
+        },
+        "fr": {
+          "duration": "10–12 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Guide professionnel",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Découvrez Istanbul entre l’Europe et l’Asie en une seule journée",
+            "Vue panoramique sur la ville depuis la colline de Çamlıca",
+            "Visitez l’impressionnante mosquée de Çamlıca sur la rive asiatique",
+            "Découvrez le cadre au bord de l’eau et l’héritage ottoman du palais de Beylerbeyi"
+          ],
+          "included": [
+            "Transport en bus climatisé",
+            "Guide touristique professionnel",
+            "Colline et mosquée de Çamlıca",
+            "Entrée aux jardins du palais de Beylerbeyi avec les options Standard",
+            "Entrée au palais avec les options Palais et Déjeuner : Beylerbeyi du mardi au dimanche, palais de Yıldız le lundi",
+            "Déjeuner avec une boisson si l’option Palais et Déjeuner est choisie",
+            "Téléphérique d’Eyüp",
+            "Croisière panoramique de 2 heures sur le Bosphore",
+            "Prise en charge et retour si une option avec Transfer est choisie"
+          ],
+          "not_included": [
+            "Entrée à l’intérieur du palais de Beylerbeyi avec les options Standard",
+            "Déjeuner avec les options Standard",
+            "Prise en charge et retour avec les options Meeting Point",
+            "Repas et boissons supplémentaires",
+            "Dépenses personnelles",
+            "Pourboires"
+          ],
+          "notes": [
+            "Il s’agit d’une visite partagée d’une journée en bus, avec une croisière panoramique de 2 heures sur le Bosphore.",
+            "L’expérience dure environ 10–12 heures selon la saison, la circulation et les conditions de la visite.",
+            "Les options Standard n’incluent ni le déjeuner ni l’entrée à l’intérieur du palais de Beylerbeyi et ne sont pas proposées le lundi.",
+            "Les options Palais et Déjeuner incluent le déjeuner et l’entrée au palais. Le lundi, on visite le palais de Yıldız au lieu de Beylerbeyi."
+          ]
+        },
+        "es": {
+          "duration": "10–12 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Guía profesional",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Recorre Estambul entre Europa y Asia en un solo día",
+            "Vistas panorámicas de la ciudad desde la colina de Çamlıca",
+            "Visita la impresionante Mezquita de Çamlıca en el lado asiático",
+            "Descubre el entorno junto al agua y el legado otomano del Palacio de Beylerbeyi"
+          ],
+          "included": [
+            "Transporte en autobús con aire acondicionado",
+            "Guía turístico profesional",
+            "Colina y Mezquita de Çamlıca",
+            "Entrada a los jardines del Palacio de Beylerbeyi con las opciones Standard",
+            "Entrada al palacio con las opciones Palacio y Almuerzo: Beylerbeyi de martes a domingo, Palacio de Yıldız los lunes",
+            "Almuerzo con una bebida si eliges la opción Palacio y Almuerzo",
+            "Teleférico de Eyüp",
+            "Crucero panorámico de 2 horas por el Bósforo",
+            "Recogida y regreso si eliges una opción con Transfer"
+          ],
+          "not_included": [
+            "Entrada al interior del Palacio de Beylerbeyi con las opciones Standard",
+            "Almuerzo con las opciones Standard",
+            "Recogida y regreso con las opciones Meeting Point",
+            "Comida y bebidas adicionales",
+            "Gastos personales",
+            "Propinas"
+          ],
+          "notes": [
+            "Es un tour compartido de día completo en autobús, con un crucero panorámico de 2 horas por el Bósforo.",
+            "La experiencia dura unas 10–12 horas, según la estación, el tráfico y las condiciones del tour.",
+            "Las opciones Standard no incluyen almuerzo ni entrada al interior del Palacio de Beylerbeyi y no están disponibles los lunes.",
+            "Las opciones Palacio y Almuerzo incluyen almuerzo y entrada al palacio. Los lunes se visita el Palacio de Yıldız en lugar de Beylerbeyi."
+          ]
         }
       },
       "title_tr": "Otobüs ve Tekneyle Avrupa–Asya Turu",
@@ -2401,7 +3027,9 @@
       "title_ar": "أوروبا وآسيا بالحافلة والقارب",
       "title_de": "Europa & Asien mit Bus und Schiff",
       "title_it": "Tour in pullman e battello Europa e Asia",
-      "title_pt": "Tour de ônibus e barco Europa e Ásia"
+      "title_pt": "Tour de ônibus e barco Europa e Ásia",
+      "title_fr": "Visite en bus et en bateau Europe et Asie",
+      "title_es": "Tour en autobús y barco por Europa y Asia"
     },
     {
       "id": "sl-oldcity",
@@ -2672,6 +3300,80 @@
             "A opção de ponto de encontro só está disponível se for escolhida.",
             "O horário de busca pode variar conforme a localização do hotel e o trânsito."
           ]
+        },
+        "fr": {
+          "duration": "12 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Guide professionnel",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Découvrez en une journée la vieille ville historique d’Istanbul",
+            "Sainte-Sophie avec les commentaires du guide",
+            "Visitez la Mosquée bleue et la place Sultanahmet",
+            "Admirez la grande mosquée Süleymaniye"
+          ],
+          "included": [
+            "Prise en charge et retour à l’hôtel inclus si l’option transfert est choisie",
+            "Option point de rendez-vous disponible si choisie",
+            "Transport climatisé pendant la visite",
+            "Guide professionnel anglophone",
+            "Déjeuner local avec une boisson",
+            "Croisière panoramique de 2 heures sur le Bosphore",
+            "Thé et Nescafé offerts à bord du bateau",
+            "Wi-Fi gratuit à bord du bateau",
+            "Frais de service et taxes locales"
+          ],
+          "not_included": [
+            "Billet d’entrée au palais de Topkapı",
+            "Billet d’entrée à la mosquée Sainte-Sophie",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Repas et boissons en plus du déjeuner inclus"
+          ],
+          "notes": [
+            "Il s’agit d’une visite guidée partagée d’une journée avec d’autres passagers.",
+            "La prise en charge et le retour à l’hôtel ne sont possibles que si l’option transfert est choisie.",
+            "L’option point de rendez-vous n’est disponible que si elle est choisie.",
+            "L’heure de prise en charge peut varier selon l’emplacement de l’hôtel et la circulation."
+          ]
+        },
+        "es": {
+          "duration": "12 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Guía profesional",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Descubre en un día la histórica Ciudad Vieja de Estambul",
+            "Santa Sofía con las explicaciones del guía",
+            "Visita la Mezquita Azul y la plaza de Sultanahmet",
+            "Admira la gran Mezquita de Süleymaniye"
+          ],
+          "included": [
+            "Recogida y regreso al hotel incluidos si eliges la opción con traslado",
+            "Opción de punto de encuentro disponible si se elige",
+            "Transporte con aire acondicionado durante el tour",
+            "Guía profesional de habla inglesa",
+            "Almuerzo local con un refresco",
+            "Crucero panorámico de 2 horas por el Bósforo",
+            "Té y Nescafé de cortesía a bordo del barco",
+            "Wi-Fi gratis a bordo del barco",
+            "Cargos por servicio e impuestos locales"
+          ],
+          "not_included": [
+            "Entrada al Palacio de Topkapı",
+            "Entrada a la Mezquita de Santa Sofía",
+            "Gastos personales",
+            "Propinas",
+            "Comida y bebidas no incluidas en el almuerzo"
+          ],
+          "notes": [
+            "Es un tour guiado compartido de día completo con otros pasajeros.",
+            "La recogida y el regreso al hotel solo están disponibles si eliges la opción con traslado.",
+            "La opción de punto de encuentro solo está disponible si se elige.",
+            "La hora de recogida puede variar según la ubicación del hotel y el tráfico."
+          ]
         }
       },
       "title_tr": "Tam Gün Tarihi Yarımada ve Boğaz Turu",
@@ -2679,7 +3381,9 @@
       "title_ar": "المدينة القديمة والبوسفور في يوم كامل",
       "title_de": "Altstadt & Bosporus an einem Tag",
       "title_it": "Città Vecchia e Bosforo, giornata intera",
-      "title_pt": "Cidade Velha e Bósforo, dia inteiro"
+      "title_pt": "Cidade Velha e Bósforo, dia inteiro",
+      "title_fr": "Vieille ville et Bosphore, journée complète",
+      "title_es": "Ciudad Vieja y Bósforo, día completo"
     },
     {
       "id": "sl-asia-half",
@@ -2957,6 +3661,82 @@
             "O passeio de ônibus termina no píer de Eminönü.",
             "Quem segue para o cruzeiro pelo Bósforo termina por volta das 16:00 no píer de Eminönü."
           ]
+        },
+        "fr": {
+          "duration": "4 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Guide professionnel",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Découvrez la rive asiatique d’Istanbul lors d’une visite guidée le matin",
+            "Vues panoramiques sur Istanbul et le Bosphore",
+            "Découvrez l’héritage ottoman et une architecture impressionnante",
+            "Passez de la rive européenne à la rive asiatique de la ville"
+          ],
+          "included": [
+            "Transport climatisé pendant la partie terrestre",
+            "Guide touristique professionnel en direct",
+            "Jardins du palais de Beylerbeyi, du mardi au dimanche",
+            "Entrée à l’intérieur du palais, si une option Palais est choisie",
+            "Le lundi, palais de Yıldız au lieu de Beylerbeyi, avec les options Palais",
+            "Prise en charge, si une option Pickup est choisie",
+            "Croisière panoramique de 2 heures sur le Bosphore",
+            "Audioguide sur mobile pendant la croisière sur le Bosphore",
+            "Thé turc et Nescafé à volonté à bord du bateau, en libre-service",
+            "Taxes et frais de service"
+          ],
+          "not_included": [
+            "Entrée à l’intérieur du palais avec les options Standard",
+            "Transfert retour après la visite",
+            "Repas et boissons",
+            "Dépenses personnelles",
+            "Pourboires"
+          ],
+          "notes": [
+            "Il s’agit d’une visite partagée d’une demi-journée le matin avec d’autres voyageurs.",
+            "La durée de 4 heures correspond à la partie guidée en bus.",
+            "La visite en bus se termine à l’embarcadère d’Eminönü.",
+            "Ceux qui poursuivent avec la croisière sur le Bosphore terminent vers 16:00 à l’embarcadère d’Eminönü."
+          ]
+        },
+        "es": {
+          "duration": "4 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Guía profesional",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Descubre el lado asiático de Estambul en un tour guiado por la mañana",
+            "Vistas panorámicas de Estambul y del Bósforo",
+            "Descubre el legado otomano y una arquitectura impresionante",
+            "Cruza entre el lado europeo y el asiático de la ciudad"
+          ],
+          "included": [
+            "Transporte con aire acondicionado durante la parte terrestre",
+            "Guía turístico profesional en vivo",
+            "Jardines del Palacio de Beylerbeyi, de martes a domingo",
+            "Entrada al interior del palacio, si eliges una opción Palacio",
+            "Los lunes, Palacio de Yıldız en lugar de Beylerbeyi, con las opciones Palacio",
+            "Servicio de recogida, si eliges una opción Pickup",
+            "Crucero panorámico de 2 horas por el Bósforo",
+            "Audioguía en el móvil durante el crucero por el Bósforo",
+            "Té turco y Nescafé ilimitados a bordo del barco, autoservicio",
+            "Impuestos y cargos por servicio"
+          ],
+          "not_included": [
+            "Entrada al interior del palacio con las opciones Standard",
+            "Traslado de regreso tras el tour",
+            "Comidas y bebidas",
+            "Gastos personales",
+            "Propinas"
+          ],
+          "notes": [
+            "Es un tour compartido de medio día por la mañana con otros viajeros.",
+            "La duración de 4 horas corresponde a la parte guiada en autobús.",
+            "El tour en autobús termina en el muelle de Eminönü.",
+            "Quienes siguen con el crucero por el Bósforo terminan hacia las 16:00 en el muelle de Eminönü."
+          ]
         }
       },
       "title_tr": "Yarım Gün Sabah Asya Yakası ve Boğaz Turu",
@@ -2964,7 +3744,9 @@
       "title_ar": "صباح الجانب الآسيوي والبوسفور (نصف يوم)",
       "title_de": "Asiatische Seite & Bosporus am Vormittag (halber Tag)",
       "title_it": "Mezza giornata: Asia e Bosforo al mattino",
-      "title_pt": "Meio dia: Ásia e Bósforo pela manhã"
+      "title_pt": "Meio dia: Ásia e Bósforo pela manhã",
+      "title_fr": "Demi-journée : Asie et Bosphore le matin",
+      "title_es": "Medio día: Asia y Bósforo por la mañana"
     },
     {
       "id": "sl-privateyacht",
@@ -2980,7 +3762,9 @@
       "title_ar": "يخت ريكوس الخاص",
       "title_de": "Private Yacht Ricos",
       "title_it": "Yacht privato Ricos",
-      "title_pt": "Iate privado Ricos"
+      "title_pt": "Iate privado Ricos",
+      "title_fr": "Yacht privé Ricos",
+      "title_es": "Yate privado Ricos"
     },
     {
       "id": "azure-bursa",
@@ -3115,6 +3899,40 @@
             "Paradas para compras: lokum, mel e geleias",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète, tous les jours",
+          "pickup": "Prise en charge à l’hôtel incluse",
+          "highlights": [
+            "Ferry de 40 minutes à travers le golfe d’İzmit",
+            "Mont Uludağ en bus et en télésiège",
+            "Platane vieux de 600 ans",
+            "Mosquée verte, tombeau vert, marché de la soie et maison ottomane"
+          ],
+          "included": [
+            "Déjeuner de grillades dans un restaurant de montagne"
+          ],
+          "notes": [
+            "Arrêts shopping : loukoums, miel et confitures",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo, a diario",
+          "pickup": "Recogida en el hotel incluida",
+          "highlights": [
+            "Ferry de 40 minutos por el golfo de İzmit",
+            "Monte Uludağ en autobús y telesilla",
+            "Plátano de 600 años",
+            "Mezquita Verde, Tumba Verde, Mercado de la Seda y casa otomana"
+          ],
+          "included": [
+            "Almuerzo de parrillada mixta en un restaurante de montaña"
+          ],
+          "notes": [
+            "Paradas de compras: delicias turcas, miel y mermeladas",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Tam Gün Bursa Turu",
@@ -3122,7 +3940,9 @@
       "title_ar": "بورصة في يوم كامل",
       "title_de": "Bursa an einem Tag",
       "title_it": "Bursa, giornata intera",
-      "title_pt": "Bursa, dia inteiro"
+      "title_pt": "Bursa, dia inteiro",
+      "title_fr": "Bursa, journée complète",
+      "title_es": "Bursa, día completo"
     },
     {
       "id": "azure-bosphorus",
@@ -3297,6 +4117,52 @@
             "Acima de 60 anos 10% de desconto, crianças de 3–6 anos 30% de desconto, 0–2 grátis",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète",
+          "schedule": "Prise en charge à l’hôtel 07:30–09:00 selon le quartier",
+          "pickup": "Prise en charge à l’hôtel incluse",
+          "guide": "Guide professionnel",
+          "highlights": [
+            "Parc Miniatürk",
+            "Colline de Pierre Loti et téléphérique vers Eyüp",
+            "Tombeau et mosquée d’Eyüp Sultan",
+            "Croisière de 2 heures sur le Bosphore"
+          ],
+          "included": [
+            "Prise en charge à l’hôtel",
+            "Guide professionnel",
+            "Croisière de 2 heures sur le Bosphore",
+            "Déjeuner au restaurant"
+          ],
+          "notes": [
+            "Comprend un arrêt shopping après le déjeuner",
+            "60 ans et plus 10 % de réduction, enfants 3–6 ans 30 %, 0–2 ans gratuits",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo",
+          "schedule": "Recogida en el hotel 07:30–09:00 según la zona",
+          "pickup": "Recogida en el hotel incluida",
+          "guide": "Guía profesional",
+          "highlights": [
+            "Parque Miniatürk",
+            "Colina de Pierre Loti y teleférico a Eyüp",
+            "Tumba y mezquita de Eyüp Sultan",
+            "Crucero de 2 horas por el Bósforo"
+          ],
+          "included": [
+            "Recogida en el hotel",
+            "Guía profesional",
+            "Crucero de 2 horas por el Bósforo",
+            "Almuerzo en restaurante"
+          ],
+          "notes": [
+            "Incluye una parada de compras tras el almuerzo",
+            "Mayores de 60 años 10 % de descuento, niños de 3–6 años 30 %, de 0–2 gratis",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Tam Gün Boğaz Turu",
@@ -3304,7 +4170,9 @@
       "title_ar": "جولة البوسفور في يوم كامل",
       "title_de": "Bosporus-Tour an einem Tag",
       "title_it": "Tour del Bosforo, giornata intera",
-      "title_pt": "Tour pelo Bósforo, dia inteiro"
+      "title_pt": "Tour pelo Bósforo, dia inteiro",
+      "title_fr": "Visite du Bosphore, journée complète",
+      "title_es": "Tour por el Bósforo, día completo"
     },
     {
       "id": "azure-sapanca",
@@ -3420,6 +4288,34 @@
             "Quadriciclo e tirolesa não são operados pela agência",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète (peut finir à 22:00–23:00)",
+          "highlights": [
+            "Lac de Sapanca",
+            "La rivière et la nature de Maşukiye",
+            "Déjeuner près des cascades de Mahmudiye",
+            "Kartepe (en hiver uniquement)"
+          ],
+          "notes": [
+            "Arrêts shopping : loukoums, miel, un centre commercial",
+            "Le quad et la tyrolienne ne sont pas gérés par l’agence",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo (puede terminar a las 22:00–23:00)",
+          "highlights": [
+            "Lago Sapanca",
+            "El río y la naturaleza de Maşukiye",
+            "Almuerzo cerca de las cascadas de Mahmudiye",
+            "Kartepe (solo en invierno)"
+          ],
+          "notes": [
+            "Paradas de compras: delicias turcas, miel, un centro comercial",
+            "El quad y la tirolina no los gestiona la agencia",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Sapanca ve Maşukiye Turu",
@@ -3427,7 +4323,9 @@
       "title_ar": "سبانجا وماشوكية",
       "title_de": "Sapanca & Maşukiye",
       "title_it": "Sapanca e Maşukiye",
-      "title_pt": "Sapanca e Maşukiye"
+      "title_pt": "Sapanca e Maşukiye",
+      "title_fr": "Sapanca et Maşukiye",
+      "title_es": "Sapanca y Maşukiye"
     },
     {
       "id": "azure-islands",
@@ -3623,6 +4521,58 @@
             "Chegue no horário aos pontos de encontro; o guia pode partir sem os atrasados",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète, toute l’année",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "guide": "Guide anglophone ou arabophone",
+          "highlights": [
+            "Environ 1 heure de bateau jusqu’à Heybeliada",
+            "Büyükada avec déjeuner et temps libre",
+            "Baignade possible pendant le temps libre",
+            "Arrêt shopping près de Sultanahmet au retour"
+          ],
+          "included": [
+            "Transferts depuis l’hôtel",
+            "Billets de bateau",
+            "Déjeuner avec une boisson",
+            "Guide anglophone ou arabophone"
+          ],
+          "not_included": [
+            "Boissons sur le bateau",
+            "Entrée à la plage",
+            "Dépenses personnelles"
+          ],
+          "notes": [
+            "Soyez à l’heure aux points de rendez-vous ; le guide peut partir sans les retardataires",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo, todo el año",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "guide": "Guía de habla inglesa o árabe",
+          "highlights": [
+            "Alrededor de 1 hora en barco hasta Heybeliada",
+            "Büyükada con almuerzo y tiempo libre",
+            "Posibilidad de bañarse en el tiempo libre",
+            "Parada de compras cerca de Sultanahmet a la vuelta"
+          ],
+          "included": [
+            "Traslados desde el hotel",
+            "Billetes de barco",
+            "Almuerzo con un refresco",
+            "Guía de habla inglesa o árabe"
+          ],
+          "not_included": [
+            "Bebidas en el barco",
+            "Entrada a la playa",
+            "Gastos personales"
+          ],
+          "notes": [
+            "Sé puntual en los puntos de encuentro; el guía puede salir sin quienes lleguen tarde",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Adalar Turu",
@@ -3630,7 +4580,9 @@
       "title_ar": "جولة جزر الأمراء",
       "title_de": "Prinzeninseln-Tour",
       "title_it": "Tour delle Isole dei Principi",
-      "title_pt": "Tour pelas Ilhas dos Príncipes"
+      "title_pt": "Tour pelas Ilhas dos Príncipes",
+      "title_fr": "Visite des îles des Princes",
+      "title_es": "Tour por las Islas de los Príncipes"
     },
     {
       "id": "azure-transfer",
@@ -3731,6 +4683,30 @@
           "notes": [
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "pickup": "Porte à porte",
+          "meeting_point": "Hall des arrivées, chauffeur avec pancarte à votre nom",
+          "highlights": [
+            "Transfert privé depuis l’aéroport d’Istanbul ou Sabiha Gökçen",
+            "Accueil avec pancarte à votre nom",
+            "Aide pour les bagages"
+          ],
+          "notes": [
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "pickup": "Puerta a puerta",
+          "meeting_point": "Sala de llegadas, conductor con cartel con tu nombre",
+          "highlights": [
+            "Traslado privado desde el Aeropuerto de Estambul o Sabiha Gökçen",
+            "Recibimiento con cartel con tu nombre",
+            "Ayuda con el equipaje"
+          ],
+          "notes": [
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Özel Havalimanı Transferi",
@@ -3738,7 +4714,9 @@
       "title_ar": "نقل خاص من المطار",
       "title_de": "Privater Flughafentransfer",
       "title_it": "Transfer privato dall’aeroporto",
-      "title_pt": "Traslado privativo do aeroporto"
+      "title_pt": "Traslado privativo do aeroporto",
+      "title_fr": "Transfert privé depuis l’aéroport",
+      "title_es": "Traslado privado desde el aeropuerto"
     },
     {
       "id": "alaturka",
@@ -3920,6 +4898,54 @@
             "Toalha, peştemal, sabonete, xampu, luva e chinelos fornecidos",
             "A piscina é mista e geralmente fria (23 °C); leve sua roupa de banho"
           ]
+        },
+        "fr": {
+          "duration": "60 minutes",
+          "schedule": "Tous les jours 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ou Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Gommage au kese et massage à la mousse sur marbre chaud",
+            "Massage à la mousse de savon à la lavande",
+            "Masque visage à l’argile"
+          ],
+          "included": [
+            "Gommage au kese",
+            "Massage à la mousse de savon à la lavande sur marbre chaud",
+            "Masque visage à l’argile",
+            "Bain de vapeur, sauna et salon de détente"
+          ],
+          "not_included": [
+            "Maillot de bain pour la piscine"
+          ],
+          "notes": [
+            "Espaces séparés pour femmes, hommes et couples",
+            "Serviette, peştemal, savon, shampoing, gant et chaussons fournis",
+            "La piscine est mixte et souvent froide (23 °C) ; apportez votre maillot"
+          ]
+        },
+        "es": {
+          "duration": "60 minutos",
+          "schedule": "A diario 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) o Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Exfoliación con kese y masaje de espuma sobre mármol caliente",
+            "Masaje de espuma con jabón de lavanda",
+            "Mascarilla facial de arcilla"
+          ],
+          "included": [
+            "Exfoliación con kese",
+            "Masaje de espuma con jabón de lavanda sobre mármol caliente",
+            "Mascarilla facial de arcilla",
+            "Baño de vapor, sauna y sala de descanso"
+          ],
+          "not_included": [
+            "Bañador para la piscina"
+          ],
+          "notes": [
+            "Zonas separadas para mujeres, hombres y parejas",
+            "Toalla, peştemal, jabón, champú, manopla y zapatillas incluidos",
+            "La piscina es mixta y suele estar fría (23 °C); lleva tu propio bañador"
+          ]
         }
       },
       "title_tr": "Geleneksel Türk Hamamı Paketi",
@@ -3939,7 +4965,9 @@
       "title_ar": "باقة الحمام التركي التقليدي",
       "title_de": "Traditionelles türkisches Hamam-Paket",
       "title_it": "Pacchetto hammam turco tradizionale",
-      "title_pt": "Pacote de hamam turco tradicional"
+      "title_pt": "Pacote de hamam turco tradicional",
+      "title_fr": "Forfait hammam turc traditionnel",
+      "title_es": "Paquete de hammam turco tradicional"
     },
     {
       "id": "alaturka-peeling",
@@ -4141,13 +5169,65 @@
             "Toalha, peştemal, sabonete, xampu, luva e chinelos fornecidos",
             "A piscina é mista e geralmente fria (23 °C); leve sua roupa de banho"
           ]
+        },
+        "fr": {
+          "duration": "60 minutes",
+          "schedule": "Tous les jours 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ou Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Gommage au kese, puis gommage profond au sel marin ou au café",
+            "Massage à la mousse sur marbre chaud",
+            "Masque visage à l’argile"
+          ],
+          "included": [
+            "Gommage au kese",
+            "Gommage au sel marin ou au café",
+            "Massage à la mousse de savon à la lavande sur marbre chaud",
+            "Masque visage à l’argile",
+            "Bain de vapeur, sauna et salon de détente"
+          ],
+          "not_included": [
+            "Maillot de bain pour la piscine"
+          ],
+          "notes": [
+            "Espaces séparés pour femmes, hommes et couples",
+            "Serviette, peştemal, savon, shampoing, gant et chaussons fournis",
+            "La piscine est mixte et souvent froide (23 °C) ; apportez votre maillot"
+          ]
+        },
+        "es": {
+          "duration": "60 minutos",
+          "schedule": "A diario 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) o Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Exfoliación con kese y después peeling profundo de sal marina o café",
+            "Masaje de espuma sobre mármol caliente",
+            "Mascarilla facial de arcilla"
+          ],
+          "included": [
+            "Exfoliación con kese",
+            "Peeling de sal marina o café",
+            "Masaje de espuma con jabón de lavanda sobre mármol caliente",
+            "Mascarilla facial de arcilla",
+            "Baño de vapor, sauna y sala de descanso"
+          ],
+          "not_included": [
+            "Bañador para la piscina"
+          ],
+          "notes": [
+            "Zonas separadas para mujeres, hombres y parejas",
+            "Toalla, peştemal, jabón, champú, manopla y zapatillas incluidos",
+            "La piscina es mixta y suele estar fría (23 °C); lleva tu propio bañador"
+          ]
         }
       },
       "title_ru": "Хаммам с пилингом морской солью или кофе",
       "title_ar": "باقة حمام بتقشير بملح البحر أو القهوة",
       "title_de": "Hamam-Paket mit Meersalz- oder Kaffee-Peeling",
       "title_it": "Pacchetto hammam con peeling al sale marino o al caffè",
-      "title_pt": "Pacote de hamam com esfoliação de sal marinho ou café"
+      "title_pt": "Pacote de hamam com esfoliação de sal marinho ou café",
+      "title_fr": "Forfait hammam avec gommage au sel marin ou au café",
+      "title_es": "Paquete de hammam con peeling de sal marina o café"
     },
     {
       "id": "alaturka-sultan",
@@ -4349,13 +5429,65 @@
             "Toalha, peştemal, sabonete, xampu, luva e chinelos fornecidos",
             "A piscina é mista e geralmente fria (23 °C); leve sua roupa de banho"
           ]
+        },
+        "fr": {
+          "duration": "60 minutes",
+          "schedule": "Tous les jours 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ou Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Gommage au kese et massage à la mousse sur marbre chaud",
+            "Massage anti-stress à l’huile bio dans une salle privée",
+            "Masque visage à l’argile"
+          ],
+          "included": [
+            "Gommage au kese",
+            "Massage à la mousse de savon à la lavande sur marbre chaud",
+            "Massage anti-stress de la tête aux pieds à l’huile bio",
+            "Masque visage à l’argile",
+            "Bain de vapeur, sauna et salon de détente"
+          ],
+          "not_included": [
+            "Maillot de bain pour la piscine"
+          ],
+          "notes": [
+            "Espaces séparés pour femmes, hommes et couples",
+            "Serviette, peştemal, savon, shampoing, gant et chaussons fournis",
+            "La piscine est mixte et souvent froide (23 °C) ; apportez votre maillot"
+          ]
+        },
+        "es": {
+          "duration": "60 minutos",
+          "schedule": "A diario 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) o Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Exfoliación con kese y masaje de espuma sobre mármol caliente",
+            "Masaje antiestrés con aceite ecológico en una sala privada",
+            "Mascarilla facial de arcilla"
+          ],
+          "included": [
+            "Exfoliación con kese",
+            "Masaje de espuma con jabón de lavanda sobre mármol caliente",
+            "Masaje antiestrés de la cabeza a los pies con aceite ecológico",
+            "Mascarilla facial de arcilla",
+            "Baño de vapor, sauna y sala de descanso"
+          ],
+          "not_included": [
+            "Bañador para la piscina"
+          ],
+          "notes": [
+            "Zonas separadas para mujeres, hombres y parejas",
+            "Toalla, peştemal, jabón, champú, manopla y zapatillas incluidos",
+            "La piscina es mixta y suele estar fría (23 °C); lleva tu propio bañador"
+          ]
         }
       },
       "title_ru": "Султанский хаммам и массаж",
       "title_ar": "باقة حمام السلطان والتدليك",
       "title_de": "Sultan-Hamam- und Massagepaket",
       "title_it": "Pacchetto Hammam del Sultano e massaggio",
-      "title_pt": "Pacote Hamam do Sultão e massagem"
+      "title_pt": "Pacote Hamam do Sultão e massagem",
+      "title_fr": "Forfait Hammam du Sultan et massage",
+      "title_es": "Paquete Hammam del Sultán y masaje"
     },
     {
       "id": "alaturka-massage",
@@ -4399,7 +5531,11 @@
           "name_it": "Massaggio balinese",
           "desc_it": "Pressione su punti precisi partendo dai piedi; stimola la circolazione e rilassa.",
           "name_pt": "Massagem balinesa",
-          "desc_pt": "Pressão em pontos específicos a partir dos pés; ativa a circulação e relaxa."
+          "desc_pt": "Pressão em pontos específicos a partir dos pés; ativa a circulação e relaxa.",
+          "name_fr": "Massage balinais",
+          "desc_fr": "Pressions sur des points précis en partant des pieds ; stimule la circulation et détend.",
+          "name_es": "Masaje balinés",
+          "desc_es": "Presión en puntos concretos empezando por los pies; activa la circulación y relaja."
         },
         {
           "id": "aroma",
@@ -4426,7 +5562,11 @@
           "name_it": "Massaggio aromaterapico",
           "desc_it": "Oli essenziali alle erbe con movimenti lenti e delicati.",
           "name_pt": "Massagem com aromaterapia",
-          "desc_pt": "Óleos essenciais de ervas com movimentos lentos e suaves."
+          "desc_pt": "Óleos essenciais de ervas com movimentos lentos e suaves.",
+          "name_fr": "Massage aromathérapie",
+          "desc_fr": "Huiles essentielles de plantes avec des gestes lents et doux.",
+          "name_es": "Masaje de aromaterapia",
+          "desc_es": "Aceites esenciales de hierbas con movimientos lentos y suaves."
         },
         {
           "id": "swedish",
@@ -4453,7 +5593,11 @@
           "name_it": "Massaggio svedese",
           "desc_it": "Tecniche svedesi classiche per sciogliere la tensione muscolare.",
           "name_pt": "Massagem sueca",
-          "desc_pt": "Técnicas suecas clássicas para aliviar a tensão muscular."
+          "desc_pt": "Técnicas suecas clássicas para aliviar a tensão muscular.",
+          "name_fr": "Massage suédois",
+          "desc_fr": "Techniques suédoises classiques pour relâcher les tensions musculaires.",
+          "name_es": "Masaje sueco",
+          "desc_es": "Técnicas suecas clásicas para aliviar la tensión muscular."
         },
         {
           "id": "antistress",
@@ -4480,7 +5624,11 @@
           "name_it": "Massaggio antistress",
           "desc_it": "Massaggio lento di testa, collo, schiena e gambe per sciogliere le tensioni.",
           "name_pt": "Massagem antiestresse",
-          "desc_pt": "Massagem lenta da cabeça, pescoço, costas e pernas para liberar a tensão."
+          "desc_pt": "Massagem lenta da cabeça, pescoço, costas e pernas para liberar a tensão.",
+          "name_fr": "Massage anti-stress",
+          "desc_fr": "Massage lent de la tête, du cou, du dos et des jambes pour libérer les tensions.",
+          "name_es": "Masaje antiestrés",
+          "desc_es": "Masaje lento de cabeza, cuello, espalda y piernas para liberar tensiones."
         },
         {
           "id": "deeptissue",
@@ -4507,7 +5655,11 @@
           "name_it": "Massaggio decontratturante profondo",
           "desc_it": "Rilassa muscoli e tessuto connettivo; per dolori cronici e spasmi.",
           "name_pt": "Massagem de tecido profundo",
-          "desc_pt": "Relaxa músculos e tecido conjuntivo; para dores crônicas e espasmos."
+          "desc_pt": "Relaxa músculos e tecido conjuntivo; para dores crônicas e espasmos.",
+          "name_fr": "Massage des tissus profonds",
+          "desc_fr": "Détend muscles et tissus conjonctifs ; pour douleurs chroniques et spasmes.",
+          "name_es": "Masaje de tejido profundo",
+          "desc_es": "Relaja músculos y tejido conectivo; para dolor crónico y espasmos."
         },
         {
           "id": "back",
@@ -4534,7 +5686,11 @@
           "name_it": "Massaggio medico alla schiena",
           "desc_it": "Massaggio ritmico della schiena contro mal di schiena e spasmi muscolari.",
           "name_pt": "Massagem terapêutica nas costas",
-          "desc_pt": "Massagem rítmica nas costas para dor lombar e espasmos musculares."
+          "desc_pt": "Massagem rítmica nas costas para dor lombar e espasmos musculares.",
+          "name_fr": "Massage thérapeutique du dos",
+          "desc_fr": "Massage rythmé du dos contre les douleurs et spasmes musculaires.",
+          "name_es": "Masaje terapéutico de espalda",
+          "desc_es": "Masaje rítmico de espalda para el dolor de espalda y los espasmos musculares."
         },
         {
           "id": "foot",
@@ -4561,7 +5717,11 @@
           "name_it": "Massaggio medico ai piedi",
           "desc_it": "Concentrato sulla pianta dei piedi per un rilassamento profondo.",
           "name_pt": "Massagem terapêutica nos pés",
-          "desc_pt": "Focada na sola dos pés para um relaxamento profundo."
+          "desc_pt": "Focada na sola dos pés para um relaxamento profundo.",
+          "name_fr": "Massage thérapeutique des pieds",
+          "desc_fr": "Centré sur la plante des pieds pour une détente profonde.",
+          "name_es": "Masaje terapéutico de pies",
+          "desc_es": "Centrado en las plantas de los pies para una relajación profunda."
         },
         {
           "id": "sport",
@@ -4588,7 +5748,11 @@
           "name_it": "Massaggio sportivo",
           "desc_it": "Prima o dopo lo sport, per sostenere la prestazione.",
           "name_pt": "Massagem esportiva",
-          "desc_pt": "Antes ou depois do esporte, para apoiar o desempenho."
+          "desc_pt": "Antes ou depois do esporte, para apoiar o desempenho.",
+          "name_fr": "Massage sportif",
+          "desc_fr": "Avant ou après le sport, pour soutenir la performance.",
+          "name_es": "Masaje deportivo",
+          "desc_es": "Antes o después del deporte, para apoyar el rendimiento."
         },
         {
           "id": "hotstones",
@@ -4615,7 +5779,11 @@
           "name_it": "Massaggio con pietre calde",
           "desc_it": "Le pietre riscaldate migliorano la circolazione e alleviano i crampi muscolari.",
           "name_pt": "Massagem com pedras quentes",
-          "desc_pt": "As pedras aquecidas melhoram a circulação e aliviam cãibras musculares."
+          "desc_pt": "As pedras aquecidas melhoram a circulação e aliviam cãibras musculares.",
+          "name_fr": "Massage aux pierres chaudes",
+          "desc_fr": "Les pierres chauffées améliorent la circulation et soulagent les crampes.",
+          "name_es": "Masaje con piedras calientes",
+          "desc_es": "Las piedras calientes mejoran la circulación y alivian los calambres musculares."
         },
         {
           "id": "fourhand",
@@ -4642,7 +5810,11 @@
           "name_it": "Massaggio a quattro mani",
           "desc_it": "Due terapisti che lavorano in sincronia.",
           "name_pt": "Massagem a quatro mãos",
-          "desc_pt": "Dois terapeutas trabalhando em sincronia."
+          "desc_pt": "Dois terapeutas trabalhando em sincronia.",
+          "name_fr": "Massage à quatre mains",
+          "desc_fr": "Deux praticiens qui travaillent en synchronisation.",
+          "name_es": "Masaje a cuatro manos",
+          "desc_es": "Dos terapeutas trabajando en sincronía."
         }
       ],
       "details": {
@@ -4775,13 +5947,51 @@
             "Áreas separadas para mulheres, homens e casais",
             "O preço muda conforme o tipo e a duração da massagem escolhida"
           ]
+        },
+        "fr": {
+          "duration": "30 ou 60 minutes",
+          "schedule": "Tous les jours 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ou Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "10 types de massage, 30 ou 60 minutes",
+            "Balinais, aromathérapie, suédois, anti-stress, tissus profonds",
+            "Massages sportif, aux pierres chaudes et à quatre mains"
+          ],
+          "included": [
+            "Massage choisi (30 ou 60 minutes)",
+            "Bain de vapeur, sauna et salon de détente"
+          ],
+          "notes": [
+            "Espaces séparés pour femmes, hommes et couples",
+            "Le prix varie selon le type et la durée du massage choisis"
+          ]
+        },
+        "es": {
+          "duration": "30 o 60 minutos",
+          "schedule": "A diario 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) o Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "10 tipos de masaje, 30 o 60 minutos",
+            "Balinés, aromaterapia, sueco, antiestrés, tejido profundo",
+            "Masajes deportivo, con piedras calientes y a cuatro manos"
+          ],
+          "included": [
+            "Masaje elegido (30 o 60 minutos)",
+            "Baño de vapor, sauna y sala de descanso"
+          ],
+          "notes": [
+            "Zonas separadas para mujeres, hombres y parejas",
+            "El precio cambia según el tipo y la duración del masaje que elijas"
+          ]
         }
       },
       "title_ru": "Меню массажей",
       "title_ar": "قائمة التدليك",
       "title_de": "Massagekarte",
       "title_it": "Menù dei massaggi",
-      "title_pt": "Menu de massagens"
+      "title_pt": "Menu de massagens",
+      "title_fr": "Carte des massages",
+      "title_es": "Carta de masajes"
     },
     {
       "id": "sl-generic-cruise",
@@ -5060,6 +6270,82 @@
             "A opção Pickup manhã e tarde inclui a busca antes do cruzeiro, mas não o traslado de volta.",
             "A opção Transfer pôr do sol inclui a busca e o traslado de volta."
           ]
+        },
+        "fr": {
+          "duration": "2 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Pas de guide en direct ; audioguide multilingue",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Naviguez le long du Bosphore entre l’Europe et l’Asie",
+            "Choisissez un départ le matin, l’après-midi ou au coucher du soleil",
+            "Profitez d’une croisière panoramique de 2 heures sur l’eau",
+            "Découvrez les rives européenne et asiatique d’Istanbul"
+          ],
+          "included": [
+            "Croisière panoramique partagée de 2 heures sur le Bosphore",
+            "Prise en charge avant la croisière si l’option Pickup matin ou après-midi est choisie",
+            "Prise en charge et retour si l’option Transfer coucher du soleil est choisie",
+            "Commentaires à bord en plusieurs langues",
+            "Audioguide sur mobile en 30 langues",
+            "Wi-Fi gratuit à bord",
+            "Thé turc et Nescafé à volonté, en libre-service",
+            "Toilettes à bord"
+          ],
+          "not_included": [
+            "Transferts avec l’option Meeting Point",
+            "Transfert retour pour l’option Pickup matin ou après-midi",
+            "Repas et en-cas",
+            "Boissons supplémentaires",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Photos en costume ottoman"
+          ],
+          "notes": [
+            "Il s’agit d’une croisière panoramique partagée de 2 heures sur le Bosphore avec d’autres passagers.",
+            "L’option Meeting Point est disponible pour les départs du matin, de l’après-midi et du coucher du soleil.",
+            "L’option Pickup matin et après-midi inclut la prise en charge avant la croisière, mais pas le retour.",
+            "L’option Transfer coucher du soleil inclut la prise en charge et le retour."
+          ]
+        },
+        "es": {
+          "duration": "2 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Sin guía en vivo; audioguía multilingüe",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Navega por el Bósforo entre Europa y Asia",
+            "Elige salida por la mañana, por la tarde o al atardecer",
+            "Disfruta de un crucero panorámico de 2 horas desde el agua",
+            "Contempla las orillas europea y asiática de Estambul"
+          ],
+          "included": [
+            "Crucero panorámico compartido de 2 horas por el Bósforo",
+            "Recogida antes del crucero si eliges la opción Pickup de mañana o tarde",
+            "Recogida y regreso si eliges la opción Transfer al atardecer",
+            "Comentarios a bordo en varios idiomas",
+            "Audioguía en el móvil en 30 idiomas",
+            "Wi-Fi gratis a bordo",
+            "Té turco y Nescafé ilimitados, autoservicio",
+            "Aseos a bordo"
+          ],
+          "not_included": [
+            "Traslados con la opción Meeting Point",
+            "Traslado de regreso con la opción Pickup de mañana o tarde",
+            "Comidas y aperitivos",
+            "Bebidas adicionales",
+            "Gastos personales",
+            "Propinas",
+            "Fotos con trajes otomanos"
+          ],
+          "notes": [
+            "Es un crucero panorámico compartido de 2 horas por el Bósforo con otros pasajeros.",
+            "La opción Meeting Point está disponible para las salidas de mañana, tarde y atardecer.",
+            "La opción Pickup de mañana y tarde incluye la recogida antes del crucero, pero no el traslado de regreso.",
+            "La opción Transfer al atardecer incluye la recogida y el traslado de regreso."
+          ]
         }
       },
       "title_tr": "2 Saatlik Boğaz Turu",
@@ -5067,7 +6353,9 @@
       "title_ar": "جولة ساعتين في البوسفور",
       "title_de": "Zweistündige Bosporus-Fahrt",
       "title_it": "Crociera di due ore sul Bosforo",
-      "title_pt": "Cruzeiro de duas horas pelo Bósforo"
+      "title_pt": "Cruzeiro de duas horas pelo Bósforo",
+      "title_fr": "Croisière de deux heures sur le Bosphore",
+      "title_es": "Crucero de dos horas por el Bósforo"
     },
     {
       "id": "sl-asia-afternoon",
@@ -5366,6 +6654,88 @@
             "O horário de busca é aproximado e pode mudar conforme a localização do hotel e o trânsito.",
             "Algumas regiões mais distantes podem exigir uma taxa extra de transporte, como mostrado no sistema de reserva."
           ]
+        },
+        "fr": {
+          "duration": "8 heures",
+          "pickup": "Prise en charge à l’hôtel en option (choisissez l’option avec transfert)",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Guide professionnel",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Découvrez la rive européenne d’Istanbul l’après-midi",
+            "Ressentez l’atmosphère spirituelle du quartier d’Eyüp",
+            "Profitez de belles vues sur la Corne d’Or",
+            "Montez dans le téléphérique d’Eyüp"
+          ],
+          "included": [
+            "Prise en charge et retour dans certains hôtels du centre d’Istanbul, si l’option transfert est choisie",
+            "Service point de rendez-vous, si cette option est choisie",
+            "Transport en véhicule climatisé",
+            "Guide professionnel en anglais, espagnol, russe, arabe ou français",
+            "Déjeuner avec dessert et 1 boisson",
+            "Billet du téléphérique d’Eyüp",
+            "Croisière panoramique de 2 heures sur le Bosphore",
+            "Visite du Bosphore avec audioguide",
+            "Thé turc et Nescafé à volonté à bord du bateau",
+            "Wi-Fi gratuit à bord du bateau"
+          ],
+          "not_included": [
+            "Pourboires",
+            "Dépenses personnelles",
+            "Repas et boissons supplémentaires",
+            "Boissons alcoolisées",
+            "Achats",
+            "Photos en costume ottoman",
+            "Wi-Fi dans le bus",
+            "Services supplémentaires non clairement indiqués comme inclus"
+          ],
+          "notes": [
+            "Il s’agit d’une visite partagée l’après-midi avec d’autres voyageurs.",
+            "La prise en charge et le retour à l’hôtel ne sont possibles que si l’option transfert est choisie.",
+            "L’heure de prise en charge est approximative et peut changer selon l’emplacement de l’hôtel et la circulation.",
+            "Certains quartiers éloignés peuvent entraîner un supplément de transport, indiqué dans le système de réservation."
+          ]
+        },
+        "es": {
+          "duration": "8 horas",
+          "pickup": "Recogida en el hotel opcional (elige la opción con traslado)",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Guía profesional",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Descubre el lado europeo de Estambul por la tarde",
+            "Siente el ambiente espiritual del barrio de Eyüp",
+            "Disfruta de bonitas vistas sobre el Cuerno de Oro",
+            "Sube al teleférico de Eyüp"
+          ],
+          "included": [
+            "Recogida y regreso desde hoteles seleccionados del centro de Estambul, si eliges la opción con traslado",
+            "Servicio de punto de encuentro, si eliges esa opción",
+            "Transporte en vehículo con aire acondicionado",
+            "Guía profesional en inglés, español, ruso, árabe o francés",
+            "Almuerzo con postre y 1 refresco",
+            "Billete del teleférico de Eyüp",
+            "Crucero panorámico de 2 horas por el Bósforo",
+            "Tour por el Bósforo con audioguía",
+            "Té turco y Nescafé ilimitados a bordo del barco",
+            "Wi-Fi gratis a bordo del barco"
+          ],
+          "not_included": [
+            "Propinas",
+            "Gastos personales",
+            "Comida y bebidas adicionales",
+            "Bebidas alcohólicas",
+            "Gastos en compras",
+            "Fotos con trajes otomanos",
+            "Wi-Fi en el autobús",
+            "Servicios extra que no se indican claramente como incluidos"
+          ],
+          "notes": [
+            "Es un tour de tarde compartido con otros viajeros.",
+            "La recogida y el regreso al hotel solo están disponibles si eliges la opción con traslado.",
+            "La hora de recogida es aproximada y puede cambiar según la ubicación del hotel y el tráfico.",
+            "Algunas zonas alejadas pueden tener un suplemento de transporte, como se indica en el sistema de reservas."
+          ]
         }
       },
       "title_tr": "Yarım Gün Öğleden Sonra Avrupa Yakası Turu",
@@ -5373,7 +6743,9 @@
       "title_ar": "الجانب الأوروبي بعد الظهر (نصف يوم)",
       "title_de": "Europäische Seite am Nachmittag (halber Tag)",
       "title_it": "Mezza giornata: Europa al pomeriggio",
-      "title_pt": "Meio dia: Europa à tarde"
+      "title_pt": "Meio dia: Europa à tarde",
+      "title_fr": "Demi-journée : Europe l’après-midi",
+      "title_es": "Medio día: Europa por la tarde"
     },
     {
       "id": "sl-islands",
@@ -5672,6 +7044,88 @@
             "Todos os hóspedes viajam juntos no mesmo barco.",
             "O tempo livre em Büyükada é por conta própria."
           ]
+        },
+        "fr": {
+          "duration": "8 heures",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Guide professionnel",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Visitez Kınalıada et Büyükada",
+            "Naviguez sur la mer de Marmara",
+            "Profitez des paysages paisibles des îles",
+            "Découvrez l’atmosphère détendue de Kınalıada"
+          ],
+          "included": [
+            "Prise en charge et retour dans certains hôtels d’Istanbul",
+            "Transport en véhicule climatisé",
+            "Transport en bateau aller-retour",
+            "Billets de ferry pour les îles",
+            "Guide touristique professionnel",
+            "Déjeuner",
+            "Explications du guide sur les îles",
+            "Frais de service et taxes locales"
+          ],
+          "not_included": [
+            "Boissons",
+            "Repas des enfants de 0 à 2 ans",
+            "Thé, café et en-cas achetés à bord",
+            "Location de vélo",
+            "Location de véhicule électrique",
+            "Entrée aux plages publiques ou privées",
+            "Équipement de baignade",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Achats"
+          ],
+          "notes": [
+            "Il s’agit d’une excursion en bateau partagée d’une journée avec d’autres passagers.",
+            "La première île peut changer selon l’état de la mer ou des conditions d’exploitation.",
+            "Tous les voyageurs naviguent ensemble sur le même bateau.",
+            "Le temps libre à Büyükada se passe en autonomie."
+          ]
+        },
+        "es": {
+          "duration": "8 horas",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Guía profesional",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Visita Kınalıada y Büyükada",
+            "Navega por el mar de Mármara",
+            "Disfruta de los tranquilos paisajes de las islas",
+            "Descubre el ambiente relajado de Kınalıada"
+          ],
+          "included": [
+            "Recogida y regreso en hoteles seleccionados de Estambul",
+            "Transporte en vehículo con aire acondicionado",
+            "Transporte en barco de ida y vuelta",
+            "Billetes del ferry a las islas",
+            "Guía turístico profesional",
+            "Almuerzo",
+            "Explicaciones del guía sobre las islas",
+            "Cargos por servicio e impuestos locales"
+          ],
+          "not_included": [
+            "Bebidas",
+            "Comidas para niños de 0 a 2 años",
+            "Té, café y aperitivos comprados a bordo",
+            "Alquiler de bicicletas",
+            "Alquiler de vehículos eléctricos",
+            "Entrada a playas públicas o privadas",
+            "Material de baño",
+            "Gastos personales",
+            "Propinas",
+            "Gastos en compras"
+          ],
+          "notes": [
+            "Es un tour en barco compartido de día completo con otros pasajeros.",
+            "La primera isla puede cambiar según el estado del mar o las condiciones operativas.",
+            "Todos los viajeros van juntos en el mismo barco.",
+            "El tiempo libre en Büyükada es por tu cuenta."
+          ]
         }
       },
       "title_tr": "Öğle Yemekli Adalar Turu",
@@ -5679,7 +7133,9 @@
       "title_ar": "جولة جزر الأمراء مع الغداء",
       "title_de": "Prinzeninseln-Tour mit Mittagessen",
       "title_it": "Tour delle Isole dei Principi con pranzo",
-      "title_pt": "Tour pelas Ilhas dos Príncipes com almoço"
+      "title_pt": "Tour pelas Ilhas dos Príncipes com almoço",
+      "title_fr": "Visite des îles des Princes avec déjeuner",
+      "title_es": "Tour por las Islas de los Príncipes con almuerzo"
     },
     {
       "id": "sl-turkish-breakfast",
@@ -5957,6 +7413,82 @@
             "O café da manhã dura cerca de 1 hora.",
             "O cruzeiro pelo Bósforo sai do píer de Eminönü às 11:00."
           ]
+        },
+        "fr": {
+          "duration": "4 heures",
+          "pickup": "Pas de transfert ; trajets à pied entre les lieux",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "guide": "Pas de guide en direct ; audioguide multilingue",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Savourez un petit-déjeuner turc traditionnel avec vue panoramique sur la mer",
+            "Découvrez l’authentique culture du petit-déjeuner local dans le quartier historique de Sirkeci",
+            "Naviguez 2 heures sur le Bosphore entre l’Europe et l’Asie",
+            "Admirez palais, mosquées, ponts et demeures au bord de l’eau"
+          ],
+          "included": [
+            "Petit-déjeuner turc traditionnel sur une terrasse panoramique avec vue sur la mer et la ville",
+            "Croisière panoramique de deux heures sur le Bosphore",
+            "Audioguide disponible en 11 langues",
+            "Wi-Fi gratuit à bord",
+            "Thé turc et Nescafé à volonté à bord",
+            "Places intérieures et extérieures à bord",
+            "Toilettes à bord",
+            "Assistance de l’équipe SeaLand entre le bureau, le lieu du petit-déjeuner et le bateau",
+            "Toutes les taxes et frais de service applicables"
+          ],
+          "not_included": [
+            "Prise en charge et retour à l’hôtel",
+            "Transport en véhicule",
+            "Repas et boissons supplémentaires",
+            "Dépenses personnelles",
+            "Achats",
+            "Pourboires"
+          ],
+          "notes": [
+            "Il n’y a aucun transfert en véhicule pendant le programme.",
+            "Les distances à pied entre le bureau, le lieu du petit-déjeuner et l’embarcadère d’Eminönü sont courtes.",
+            "Le petit-déjeuner dure environ 1 heure.",
+            "La croisière sur le Bosphore part de l’embarcadère d’Eminönü à 11:00."
+          ]
+        },
+        "es": {
+          "duration": "4 horas",
+          "pickup": "Sin traslado; los desplazamientos entre lugares son a pie",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "guide": "Sin guía en vivo; audioguía multilingüe",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Disfruta de un desayuno turco tradicional con vistas panorámicas al mar",
+            "Vive la auténtica cultura del desayuno local en el histórico Sirkeci",
+            "Navega 2 horas por el Bósforo entre Europa y Asia",
+            "Admira palacios, mezquitas, puentes y mansiones junto al agua"
+          ],
+          "included": [
+            "Desayuno turco tradicional en una terraza panorámica con vistas al mar y la ciudad",
+            "Crucero panorámico de dos horas por el Bósforo",
+            "Audioguía disponible en 11 idiomas",
+            "Wi-Fi gratis a bordo",
+            "Té turco y Nescafé ilimitados a bordo",
+            "Asientos interiores y exteriores a bordo",
+            "Aseos a bordo",
+            "Asistencia del equipo de SeaLand entre la oficina, el lugar del desayuno y el barco",
+            "Todos los impuestos y cargos por servicio aplicables"
+          ],
+          "not_included": [
+            "Recogida y regreso al hotel",
+            "Transporte en vehículo",
+            "Comida y bebidas adicionales",
+            "Gastos personales",
+            "Gastos en compras",
+            "Propinas"
+          ],
+          "notes": [
+            "No hay traslado en vehículo durante el programa.",
+            "Las distancias a pie entre la oficina, el lugar del desayuno y el muelle de Eminönü son cortas.",
+            "El desayuno dura aproximadamente 1 hora.",
+            "El crucero por el Bósforo sale del muelle de Eminönü a las 11:00."
+          ]
         }
       },
       "title_tr": "Türk Kahvaltısı ve Boğaz Turu",
@@ -5964,7 +7496,9 @@
       "title_ar": "الإفطار التركي وجولة البوسفور",
       "title_de": "Türkisches Frühstück & Bosporus-Fahrt",
       "title_it": "Colazione turca e crociera sul Bosforo",
-      "title_pt": "Café da manhã turco e cruzeiro pelo Bósforo"
+      "title_pt": "Café da manhã turco e cruzeiro pelo Bósforo",
+      "title_fr": "Petit-déjeuner turc et croisière sur le Bosphore",
+      "title_es": "Desayuno turco y crucero por el Bósforo"
     },
     {
       "id": "sl-dinner",
@@ -6237,6 +7771,80 @@
             "Os horários de traslado podem variar conforme sua localização, o trânsito e os outros hóspedes.",
             "A opção sem álcool inclui refrigerantes à vontade."
           ]
+        },
+        "fr": {
+          "duration": "3 heures",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "meeting_point": "Bureau Sea & Land près de l’embarcadère d’Eminönü",
+          "cancellation": "Annulation gratuite jusqu’à 24 heures avant",
+          "highlights": [
+            "Croisière de nuit entre l’Europe et l’Asie",
+            "Profitez d’une croisière dîner de 3 heures sur le Bosphore",
+            "La silhouette illuminée d’Istanbul vue depuis l’eau",
+            "Admirez les monuments célèbres le long des deux rives"
+          ],
+          "included": [
+            "Croisière dîner partagée de 3 heures sur le Bosphore",
+            "Prise en charge et retour depuis certains lieux du centre d’Istanbul",
+            "Dîner",
+            "Spectacle de nuit turque",
+            "Musique DJ",
+            "Boissons sans alcool à volonté",
+            "2 boissons alcoolisées par personne si l’option avec alcool est choisie",
+            "Espaces intérieurs et extérieurs",
+            "Bateau climatisé"
+          ],
+          "not_included": [
+            "Boissons alcoolisées importées",
+            "Boissons alcoolisées au-delà de la formule choisie",
+            "Boissons non incluses dans la formule choisie",
+            "Dépenses personnelles",
+            "Pourboires",
+            "Extras pour occasions spéciales, sauf accord et confirmation séparés"
+          ],
+          "notes": [
+            "Il s’agit d’une croisière dîner sur le Bosphore partagée avec d’autres passagers.",
+            "Les deux options incluent la prise en charge et le retour depuis certains lieux du centre d’Istanbul.",
+            "Les horaires de transfert peuvent varier selon votre emplacement, la circulation et les autres voyageurs.",
+            "L’option sans alcool inclut des boissons sans alcool à volonté."
+          ]
+        },
+        "es": {
+          "duration": "3 horas",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "meeting_point": "Oficina de Sea & Land junto al muelle de Eminönü",
+          "cancellation": "Cancelación gratuita hasta 24 horas antes",
+          "highlights": [
+            "Crucero nocturno entre Europa y Asia",
+            "Disfruta de un crucero con cena de 3 horas por el Bósforo",
+            "El horizonte iluminado de Estambul desde el agua",
+            "Admira monumentos famosos a lo largo de ambas orillas"
+          ],
+          "included": [
+            "Crucero compartido de 3 horas con cena por el Bósforo",
+            "Recogida y regreso desde puntos seleccionados del centro de Estambul",
+            "Cena",
+            "Espectáculo de noche turca",
+            "Música con DJ",
+            "Refrescos ilimitados",
+            "2 bebidas alcohólicas por persona si eliges la opción con alcohol",
+            "Zonas interiores y exteriores",
+            "Barco con aire acondicionado"
+          ],
+          "not_included": [
+            "Bebidas alcohólicas importadas",
+            "Bebidas alcohólicas adicionales al paquete elegido",
+            "Bebidas no incluidas en el paquete elegido",
+            "Gastos personales",
+            "Propinas",
+            "Extras para ocasiones especiales, salvo acuerdo y confirmación aparte"
+          ],
+          "notes": [
+            "Es un crucero con cena por el Bósforo compartido con otros pasajeros.",
+            "Ambas opciones incluyen recogida y regreso desde puntos seleccionados del centro de Estambul.",
+            "Los horarios de traslado pueden variar según tu ubicación, el tráfico y otros viajeros.",
+            "La opción sin alcohol incluye refrescos ilimitados."
+          ]
         }
       },
       "title_tr": "Eğlenceli Akşam Yemekli Tekne Turu",
@@ -6244,7 +7852,9 @@
       "title_ar": "عشاء على متن قارب مع برنامج ترفيهي",
       "title_de": "Dinner-Fahrt mit Unterhaltung",
       "title_it": "Crociera con cena e spettacolo",
-      "title_pt": "Cruzeiro com jantar e show"
+      "title_pt": "Cruzeiro com jantar e show",
+      "title_fr": "Croisière dîner avec spectacle",
+      "title_es": "Crucero con cena y espectáculo"
     },
     {
       "id": "orient-private-newyear",
@@ -6340,6 +7950,28 @@
           "notes": [
             "O que está incluído não é detalhado na página do passeio; confirme com a empresa."
           ]
+        },
+        "fr": {
+          "duration": "3 heures",
+          "highlights": [
+            "Croisière privée pour le réveillon du Nouvel An",
+            "Croisière dîner en soirée sur le Bosphore",
+            "Menu méditerranéen et turc : mezzés, poisson grillé, kebab"
+          ],
+          "notes": [
+            "Les prestations ne sont pas détaillées sur la page de l’opérateur ; vérifiez auprès de lui."
+          ]
+        },
+        "es": {
+          "duration": "3 horas",
+          "highlights": [
+            "Crucero privado en Nochevieja",
+            "Crucero nocturno con cena por el Bósforo",
+            "Menú mediterráneo y turco: meze, pescado a la parrilla, kebab"
+          ],
+          "notes": [
+            "Lo que incluye no se detalla en la página del operador; confírmalo con él."
+          ]
         }
       },
       "title_tr": "Özel Yılbaşı Boğaz Turu",
@@ -6347,7 +7979,9 @@
       "title_ar": "جولة خاصة في البوسفور ليلة رأس السنة",
       "title_de": "Private Silvesterfahrt auf dem Bosporus",
       "title_it": "Crociera privata di Capodanno sul Bosforo",
-      "title_pt": "Cruzeiro privativo de Ano-Novo pelo Bósforo"
+      "title_pt": "Cruzeiro privativo de Ano-Novo pelo Bósforo",
+      "title_fr": "Croisière privée du Nouvel An sur le Bosphore",
+      "title_es": "Crucero privado de Año Nuevo por el Bósforo"
     },
     {
       "id": "orient-newyear-special",
@@ -6444,6 +8078,28 @@
           "notes": [
             "O que está incluído não é detalhado na página do passeio; confirme com a empresa."
           ]
+        },
+        "fr": {
+          "duration": "4 heures",
+          "highlights": [
+            "31 décembre, départ de Karaköy",
+            "Croisière dîner en soirée sur le Bosphore",
+            "Menu méditerranéen et turc : mezzés, poisson grillé, kebab"
+          ],
+          "notes": [
+            "Les prestations ne sont pas détaillées sur la page de l’opérateur ; vérifiez auprès de lui."
+          ]
+        },
+        "es": {
+          "duration": "4 horas",
+          "highlights": [
+            "31 de diciembre, salida desde Karaköy",
+            "Crucero nocturno con cena por el Bósforo",
+            "Menú mediterráneo y turco: meze, pescado a la parrilla, kebab"
+          ],
+          "notes": [
+            "Lo que incluye no se detalla en la página del operador; confírmalo con él."
+          ]
         }
       },
       "title_tr": "Yılbaşı Gecesi Özel Turu",
@@ -6451,7 +8107,9 @@
       "title_ar": "رحلة خاصة ليلة رأس السنة",
       "title_de": "Silvester-Sonderfahrt",
       "title_it": "Crociera speciale di Capodanno",
-      "title_pt": "Cruzeiro especial de Réveillon"
+      "title_pt": "Cruzeiro especial de Réveillon",
+      "title_fr": "Croisière spéciale du réveillon",
+      "title_es": "Crucero especial de Nochevieja"
     },
     {
       "id": "azure-sileagva",
@@ -6640,6 +8298,56 @@
           "notes": [
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète",
+          "pickup": "Prise en charge à l’hôtel incluse",
+          "guide": "Guide anglophone ou arabophone",
+          "highlights": [
+            "Arrêt au lac caché (Saklı Göl)",
+            "Vue depuis la colline de Şile sur le château et le phare",
+            "Promenade en bateau sur la rivière Göksu à Ağva",
+            "Temps libre, baignade dans la mer Noire"
+          ],
+          "included": [
+            "Déjeuner avec une boisson",
+            "Bus climatisé",
+            "Promenade en bateau",
+            "Guide anglophone ou arabophone"
+          ],
+          "not_included": [
+            "Thé/café à l’arrêt au lac",
+            "Frais de baignade",
+            "Dépenses personnelles"
+          ],
+          "notes": [
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo",
+          "pickup": "Recogida en el hotel incluida",
+          "guide": "Guía de habla inglesa o árabe",
+          "highlights": [
+            "Parada en el lago escondido (Saklı Göl)",
+            "Vista desde la colina de Şile del castillo y el faro",
+            "Paseo en barca por el río Göksu en Ağva",
+            "Tiempo libre, baño en el mar Negro"
+          ],
+          "included": [
+            "Almuerzo con un refresco",
+            "Autobús con aire acondicionado",
+            "Paseo en barca",
+            "Guía de habla inglesa o árabe"
+          ],
+          "not_included": [
+            "Té/café en la parada del lago",
+            "Gastos de baño",
+            "Gastos personales"
+          ],
+          "notes": [
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Günübirlik Şile ve Ağva Turu",
@@ -6647,7 +8355,9 @@
       "title_ar": "شيلي وأغفا في يوم واحد",
       "title_de": "Şile und Ağva an einem Tag",
       "title_it": "Tour giornaliero di Şile e Ağva",
-      "title_pt": "Tour diário por Şile e Ağva"
+      "title_pt": "Tour diário por Şile e Ağva",
+      "title_fr": "Excursion quotidienne à Şile et Ağva",
+      "title_es": "Tour diario a Şile y Ağva"
     },
     {
       "id": "azure-two-continents",
@@ -6783,6 +8493,40 @@
             "O Bazar das Especiarias fecha aos domingos: substituído por lojas locais",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète, tous les jours",
+          "highlights": [
+            "Bazar aux épices",
+            "Croisière sur le Bosphore (forteresse de Rumeli vue du bateau)",
+            "Palais de Dolmabahçe",
+            "Pont du Bosphore et colline de Çamlıca"
+          ],
+          "included": [
+            "Déjeuner"
+          ],
+          "notes": [
+            "Dolmabahçe est fermé lun. et jeu. : remplacé par Eyüp, Pierre Loti et Miniatürk",
+            "Le Bazar aux épices est fermé le dim. : remplacé par des boutiques locales",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo, a diario",
+          "highlights": [
+            "Bazar de las Especias",
+            "Crucero por el Bósforo (Fortaleza de Rumeli desde el barco)",
+            "Palacio de Dolmabahçe",
+            "Puente del Bósforo y colina de Çamlıca"
+          ],
+          "included": [
+            "Almuerzo"
+          ],
+          "notes": [
+            "Dolmabahçe cierra lun. y jue.: se sustituye por Eyüp, Pierre Loti y Miniatürk",
+            "El Bazar de las Especias cierra los dom.: se sustituye por tiendas locales",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Boğaz, Dolmabahçe ve İki Kıta Turu",
@@ -6790,7 +8534,9 @@
       "title_ar": "البوسفور ودولمة بهجة والقارتان",
       "title_de": "Bosporus, Dolmabahçe & zwei Kontinente",
       "title_it": "Bosforo, Dolmabahçe e due continenti",
-      "title_pt": "Bósforo, Dolmabahçe e dois continentes"
+      "title_pt": "Bósforo, Dolmabahçe e dois continentes",
+      "title_fr": "Bosphore, Dolmabahçe et deux continents",
+      "title_es": "Bósforo, Dolmabahçe y dos continentes"
     },
     {
       "id": "azure-yalova",
@@ -6897,6 +8643,32 @@
           "notes": [
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète",
+          "pickup": "Prise en charge à l’hôtel incluse",
+          "guide": "Guide anglophone et arabophone",
+          "highlights": [
+            "Traversée du pont du Bosphore, ferry pour Yalova",
+            "Thermes sulfureux et bain turc",
+            "Déjeuner avec vue sur une cascade de 14 m"
+          ],
+          "notes": [
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo",
+          "pickup": "Recogida en el hotel incluida",
+          "guide": "Guía de habla inglesa y árabe",
+          "highlights": [
+            "Cruce del Puente del Bósforo, ferry a Yalova",
+            "Termas sulfurosas y baño turco",
+            "Almuerzo con vistas a una cascada de 14 m"
+          ],
+          "notes": [
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Günübirlik Yalova ve Termal Turu",
@@ -6904,7 +8676,9 @@
       "title_ar": "يالوفا والينابيع الحرارية في يوم واحد",
       "title_de": "Yalova & Thermalbad an einem Tag",
       "title_it": "Tour giornaliero di Yalova e terme",
-      "title_pt": "Tour diário por Yalova e termas"
+      "title_pt": "Tour diário por Yalova e termas",
+      "title_fr": "Excursion quotidienne à Yalova et aux thermes",
+      "title_es": "Tour diario a Yalova y termas"
     },
     {
       "id": "azure-dinner",
@@ -7046,6 +8820,42 @@
             "A página da empresa menciona tanto um iate no Bósforo quanto um restaurante: confirme o local",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Soirée",
+          "pickup": "Prise en charge et retour à l’hôtel inclus",
+          "highlights": [
+            "Spectacle : accueil Mehter, derviches tourneurs, danse du ventre, danses folkloriques, DJ",
+            "Menu : entrées froides, salade, entrée, plat (poulet, poisson, boulettes ou végétarien), baklava et fruits"
+          ],
+          "included": [
+            "Prise en charge et retour à l’hôtel",
+            "Dîner complet",
+            "Programme du spectacle",
+            "Alcools locaux à volonté ou boissons sans alcool à volonté (selon l’option)"
+          ],
+          "notes": [
+            "La page de l’opérateur mentionne à la fois un yacht sur le Bosphore et un restaurant : vérifiez le lieu",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Noche",
+          "pickup": "Recogida y regreso al hotel incluidos",
+          "highlights": [
+            "Espectáculo: bienvenida Mehter, derviches giróvagos, danza del vientre, bailes folclóricos, DJ",
+            "Menú: entrantes fríos, ensalada, entrante, plato principal (pollo, pescado, albóndigas o vegetariano), baklava y fruta"
+          ],
+          "included": [
+            "Recogida y regreso al hotel",
+            "Cena completa",
+            "Programa del espectáculo",
+            "Bebidas alcohólicas locales ilimitadas o refrescos ilimitados (según la opción)"
+          ],
+          "notes": [
+            "La página del operador menciona tanto un yate en el Bósforo como un restaurante: confirma el lugar",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Akşam Yemekli Tekne ve Türk Gecesi Şovu",
@@ -7053,7 +8863,9 @@
       "title_ar": "عشاء على قارب وعرض ليلة تركية",
       "title_de": "Dinner-Fahrt & türkische Nachtshow",
       "title_it": "Crociera con cena e spettacolo di notte turca",
-      "title_pt": "Cruzeiro com jantar e show de noite turca"
+      "title_pt": "Cruzeiro com jantar e show de noite turca",
+      "title_fr": "Croisière dîner et spectacle de nuit turque",
+      "title_es": "Crucero con cena y espectáculo de noche turca"
     },
     {
       "id": "azure-city",
@@ -7182,6 +8994,38 @@
             "Santa Sofia seg → Cisterna da Basílica; Topkapı ter → Chora ou Beylerbeyi; Grande Bazar dom → lojas",
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Journée complète, tous les jours",
+          "highlights": [
+            "Sainte-Sophie, Mosquée bleue et Hippodrome",
+            "Grand Bazar",
+            "Palais de Topkapı",
+            "Mosquée Rüstem Paşa ou Süleymaniye"
+          ],
+          "included": [
+            "Déjeuner"
+          ],
+          "notes": [
+            "Sainte-Sophie lun. → Citerne Basilique ; Topkapı mar. → Chora ou Beylerbeyi ; Grand Bazar dim. → boutiques",
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Día completo, a diario",
+          "highlights": [
+            "Santa Sofía, Mezquita Azul e Hipódromo",
+            "Gran Bazar",
+            "Palacio de Topkapı",
+            "Mezquita de Rüstem Paşa o de Süleymaniye"
+          ],
+          "included": [
+            "Almuerzo"
+          ],
+          "notes": [
+            "Santa Sofía lun. → Cisterna Basílica; Topkapı mar. → Chora o Beylerbeyi; Gran Bazar dom. → tiendas",
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Tam Gün İstanbul Şehir Turu",
@@ -7189,7 +9033,9 @@
       "title_ar": "جولة مدينة إسطنبول في يوم كامل",
       "title_de": "Istanbul-Stadtrundfahrt an einem Tag",
       "title_it": "Tour di Istanbul, giornata intera",
-      "title_pt": "Tour por Istambul, dia inteiro"
+      "title_pt": "Tour por Istambul, dia inteiro",
+      "title_fr": "Visite d’Istanbul, journée complète",
+      "title_es": "Tour por Estambul, día completo"
     },
     {
       "id": "azure-halfbosphorus",
@@ -7283,6 +9129,28 @@
           "notes": [
             "Os preços carregam dinamicamente no site da empresa; o preço mostrado vem de uma pesquisa anterior."
           ]
+        },
+        "fr": {
+          "duration": "Demi-journée",
+          "guide": "Guide anglophone ou arabophone",
+          "highlights": [
+            "Le Bosphore avec vue sur les deux continents",
+            "Yalı, palais, mosquées et églises"
+          ],
+          "notes": [
+            "Les prix se chargent dynamiquement sur le site de l’opérateur ; le prix affiché provient d’une recherche antérieure."
+          ]
+        },
+        "es": {
+          "duration": "Medio día",
+          "guide": "Guía de habla inglesa o árabe",
+          "highlights": [
+            "El Bósforo con vistas a ambos continentes",
+            "Yalı, palacios, mezquitas e iglesias"
+          ],
+          "notes": [
+            "Los precios se cargan dinámicamente en la web del operador; el precio mostrado procede de una consulta anterior."
+          ]
         }
       },
       "title_tr": "Yarım Gün Boğaz Turu",
@@ -7290,7 +9158,9 @@
       "title_ar": "جولة البوسفور لنصف يوم",
       "title_de": "Bosporus-Tour am halben Tag",
       "title_it": "Tour del Bosforo, mezza giornata",
-      "title_pt": "Tour pelo Bósforo, meio dia"
+      "title_pt": "Tour pelo Bósforo, meio dia",
+      "title_fr": "Visite du Bosphore, demi-journée",
+      "title_es": "Tour por el Bósforo, medio día"
     },
     {
       "id": "azure-triple-eurplane",
@@ -7307,7 +9177,9 @@
       "title_ar": "كبادوكيا وباموكالي وأفسس بالطائرة",
       "title_de": "Kappadokien, Pamukkale & Ephesus per Flug",
       "title_it": "Cappadocia, Pamukkale ed Efeso in aereo",
-      "title_pt": "Capadócia, Pamukkale e Éfeso de avião"
+      "title_pt": "Capadócia, Pamukkale e Éfeso de avião",
+      "title_fr": "Cappadoce, Pamukkale et Éphèse en avion",
+      "title_es": "Capadocia, Pamukkale y Éfeso en avión"
     },
     {
       "id": "azure-triple-eurbus",
@@ -7324,7 +9196,9 @@
       "title_ar": "كبادوكيا وباموكالي وأفسس بالحافلة",
       "title_de": "Kappadokien, Pamukkale & Ephesus per Bus",
       "title_it": "Cappadocia, Pamukkale ed Efeso in pullman",
-      "title_pt": "Capadócia, Pamukkale e Éfeso de ônibus"
+      "title_pt": "Capadócia, Pamukkale e Éfeso de ônibus",
+      "title_fr": "Cappadoce, Pamukkale et Éphèse en bus",
+      "title_es": "Capadocia, Pamukkale y Éfeso en autobús"
     }
   ],
   "detail_note": "details: tour contents summarised from each operator’s own page on the checked date. Fields are null where the operator does not say. Not Bosphorly promises; confirm with the operator before any request."
