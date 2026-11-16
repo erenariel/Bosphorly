@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "map.html", "booking.html", "presentation.html", "dashboard.html"]
+PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html"]
 
 
 class References(HTMLParser):
@@ -68,6 +68,25 @@ def assert_booking_safety():
         if offer["price_eur"] is not None:
             assert offer["rate_status"] == "approved"
             assert offer["partner_status"] == "contracted"
+    market = json.loads((ROOT / "data/public-market-prices.json").read_text(encoding="utf-8"))
+    assert len(market["records"]) >= 20, "Expected researched public operator rates"
+    assert market["status"] == "PUBLIC_OPERATOR_PRICE_RESEARCH_NOT_BOSPHORLY_QUOTES"
+    assert all(item["price_type"].startswith("listed") or item["price_type"] == "not_publicly_listed" for item in market["records"])
+    assert all(item.get("source_url", "").startswith("https://") for item in market["records"])
+    rates = {x["airport"]: x for x in offers["transfers"]["rate_rules"]}
+    assert rates["IST"]["price_eur"] == 55
+    assert rates["SAW"]["price_eur"] == 65
+    assert offers["transfers"]["pricing_status"].startswith("FIXED_")
+    homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+    assert "function preferredLanguage()" in homepage
+    assert "navigator.languages" in homepage
+    assert "hotelPlacesMount" in homepage and "hotelVerification" in homepage
+    assert "Illustrative transfer price" not in homepage
+    assert "data/public-market-prices.json" in homepage
+    assert "assets/brand/approved-icon.webp" in homepage
+    assert "config/maps-public.js" in homepage
+    key = (ROOT / "config/maps-public.js").read_text(encoding="utf-8")
+    assert 'googleMapsBrowserKey: ""' in key, "Do not commit real Google credentials in the public template"
     assert (ROOT / "assets/brand/approved-icon.webp").stat().st_size > 1000
     assert (ROOT / "assets/maps/istanbul-schematic.svg").stat().st_size > 500
     page = (ROOT / "map.html").read_text()
@@ -76,7 +95,7 @@ def assert_booking_safety():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js"]
     for name in script_sources:
         subprocess.run(["node", "--check", str(ROOT / name)], check=True)
     for page in PAGES:
