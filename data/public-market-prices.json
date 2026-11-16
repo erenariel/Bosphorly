@@ -150,11 +150,38 @@
             "الدفع عند الوصول (بلا دفع مسبق)",
             "تتوفر وجبة نباتية"
           ]
+        },
+        "de": {
+          "duration": "2 Std. Schiff + 1 Std. Stopp auf der asiatischen Seite",
+          "schedule": "10:00–13:00",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "meeting_point": "Eminönü; Abholzeit per SMS nach der Buchung",
+          "guide": "Live-Guide: EN / RU / ES / TR",
+          "highlights": [
+            "Über 25 Sehenswürdigkeiten zwischen Europa und Asien",
+            "Dolmabahçe- und Beylerbeyi-Palast vom Wasser aus",
+            "Festungen Rumeli und Anadolu, Bosporusbrücken",
+            "1 Std. Stopp in Beylerbeyi auf der asiatischen Seite"
+          ],
+          "included": [
+            "Frühstück an Bord",
+            "Hoteltransfer",
+            "Live-Guide",
+            "1 Std. Stopp auf der asiatischen Seite",
+            "WLAN an Bord",
+            "Tee und Wasser gratis"
+          ],
+          "notes": [
+            "Kinder 0–3 frei, 4–6 Jahre 30 % Rabatt",
+            "Zahlung vor Ort (keine Vorauszahlung)",
+            "Vegetarisches Essen verfügbar"
+          ]
         }
       },
       "title_tr": "Sabah Boğaz Turu",
       "title_ru": "Утренняя прогулка по Босфору",
-      "title_ar": "جولة صباحية في البوسفور"
+      "title_ar": "جولة صباحية في البوسفور",
+      "title_de": "Bosporus-Fahrt am Morgen"
     },
     {
       "id": "bb-afternoon",
@@ -271,11 +298,38 @@
             "الدفع عند الوصول (بلا دفع مسبق)",
             "تتوفر وجبة نباتية"
           ]
+        },
+        "de": {
+          "duration": "2 Std. Schiff + 1 Std. Stopp auf der asiatischen Seite",
+          "schedule": "13:00–16:00",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "meeting_point": "Eminönü; Abholzeit per SMS nach der Buchung",
+          "guide": "Live-Guide: EN / RU / ES / TR",
+          "highlights": [
+            "Über 25 Sehenswürdigkeiten zwischen Europa und Asien",
+            "Dolmabahçe- und Beylerbeyi-Palast vom Wasser aus",
+            "Festungen Rumeli und Anadolu, Bosporusbrücken",
+            "1 Std. Stopp in Beylerbeyi auf der asiatischen Seite"
+          ],
+          "included": [
+            "Mittagessen an Bord",
+            "Hoteltransfer",
+            "Live-Guide",
+            "1 Std. Stopp auf der asiatischen Seite",
+            "WLAN an Bord",
+            "Tee und Wasser gratis"
+          ],
+          "notes": [
+            "Kinder 0–3 frei, 4–6 Jahre 30 % Rabatt",
+            "Zahlung vor Ort (keine Vorauszahlung)",
+            "Vegetarisches Essen verfügbar"
+          ]
         }
       },
       "title_tr": "Öğle Yemekli Boğaz Turu",
       "title_ru": "Дневная прогулка по Босфору с обедом",
-      "title_ar": "جولة بعد الظهر في البوسفور مع الغداء"
+      "title_ar": "جولة بعد الظهر في البوسفور مع الغداء",
+      "title_de": "Bosporus-Fahrt am Nachmittag mit Mittagessen"
     },
     {
       "id": "bb-sunset",
@@ -392,11 +446,38 @@
             "الدفع عند الوصول (بلا دفع مسبق)",
             "تتوفر وجبة نباتية"
           ]
+        },
+        "de": {
+          "duration": "2 Std. Schiff + 1 Std. Stopp auf der asiatischen Seite",
+          "schedule": "18:00–21:00",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "meeting_point": "Eminönü; Abholzeit per SMS nach der Buchung",
+          "guide": "Live-Guide: EN / RU / ES / TR",
+          "highlights": [
+            "Über 25 Sehenswürdigkeiten zwischen Europa und Asien",
+            "Dolmabahçe- und Beylerbeyi-Palast vom Wasser aus",
+            "Festungen Rumeli und Anadolu, Bosporusbrücken",
+            "1 Std. Stopp in Beylerbeyi auf der asiatischen Seite"
+          ],
+          "included": [
+            "Kekse und Tee",
+            "Hoteltransfer",
+            "Live-Guide",
+            "1 Std. Stopp auf der asiatischen Seite",
+            "WLAN an Bord",
+            "Wasser gratis"
+          ],
+          "notes": [
+            "Kinder 0–3 frei, 4–6 Jahre 30 % Rabatt",
+            "Zahlung vor Ort (keine Vorauszahlung)",
+            "Vegetarisches Essen verfügbar"
+          ]
         }
       },
       "title_tr": "Gün Batımı Boğaz Turu",
       "title_ru": "Прогулка по Босфору на закате",
-      "title_ar": "جولة الغروب في البوسفور"
+      "title_ar": "جولة الغروب في البوسفور",
+      "title_de": "Bosporus-Fahrt bei Sonnenuntergang"
     },
     {
       "id": "bb-oldcity",
@@ -513,11 +594,38 @@
             "الدفع عند الوصول (بلا دفع مسبق)",
             "قائمة نباتية مجانية"
           ]
+        },
+        "de": {
+          "duration": "8 Stunden",
+          "schedule": "10:00–18:00",
+          "pickup": "Hoteltransfer inklusive",
+          "meeting_point": "Eminönü; Abholzeit per SMS nach der Buchung",
+          "guide": "Professioneller Guide: EN / TR",
+          "highlights": [
+            "Hagia Sophia und Blaue Moschee",
+            "Bosporus-Fahrt mit Mittagessen an Bord",
+            "Bunte Häuser und Gassen von Balat",
+            "Eiserne Kirche (St. Stephan) und Georgskirche"
+          ],
+          "included": [
+            "Hoteltransfer",
+            "Professioneller Guide",
+            "Mittagessen",
+            "Eintrittskarten",
+            "Bosporus-Fahrt",
+            "Bus zwischen den Stopps"
+          ],
+          "notes": [
+            "Kinder 0–3 frei, 4–6 Jahre 30 % Rabatt",
+            "Zahlung vor Ort (keine Vorauszahlung)",
+            "Vegetarisches Menü kostenlos"
+          ]
         }
       },
       "title_tr": "Tarihi Yarımada ve Balat Turu",
       "title_ru": "Тур по Старому городу",
-      "title_ar": "جولة المدينة القديمة"
+      "title_ar": "جولة المدينة القديمة",
+      "title_de": "Altstadt-Tour"
     },
     {
       "id": "bb-europeasia",
@@ -630,11 +738,37 @@
             "الأطفال 0–3 مجانًا، و4–6 بخصم 30%",
             "الدفع عند الوصول (بلا دفع مسبق)"
           ]
+        },
+        "de": {
+          "duration": "7 Stunden",
+          "schedule": "10:00–17:00",
+          "pickup": "Hoteltransfer inklusive",
+          "meeting_point": "Eminönü; Abholzeit per SMS nach der Buchung",
+          "guide": "Live-Guide: EN / RU / ES / TR",
+          "highlights": [
+            "Bosporus-Fahrt mit Frühstück an Bord",
+            "Osmanischer Palast aus dem 19. Jahrhundert am asiatischen Ufer",
+            "Die größte Moschee der Türkei auf dem höchsten Aussichtspunkt der asiatischen Seite",
+            "Romantischer Aussichtspunkt, per Seilbahn erreichbar"
+          ],
+          "included": [
+            "Hoteltransfer",
+            "Live-Guide",
+            "Frühstück und Mittagessen",
+            "Eintrittskarten",
+            "Bosporus-Fahrt",
+            "Bus zwischen den Stopps"
+          ],
+          "notes": [
+            "Kinder 0–3 frei, 4–6 Jahre 30 % Rabatt",
+            "Zahlung vor Ort (keine Vorauszahlung)"
+          ]
         }
       },
       "title_tr": "Tam Gün Asya ve Avrupa Turu",
       "title_ru": "Азия и Европа за один день",
-      "title_ar": "آسيا وأوروبا في يوم كامل"
+      "title_ar": "آسيا وأوروبا في يوم كامل",
+      "title_de": "Asien & Europa an einem Tag"
     },
     {
       "id": "orient-classic",
@@ -692,11 +826,22 @@
           "notes": [
             "لا توضّح صفحة الجولة ما هو مشمول؛ تأكد من الشركة."
           ]
+        },
+        "de": {
+          "duration": "3 Stunden",
+          "highlights": [
+            "Abendliche Dinner-Fahrt auf dem Bosporus",
+            "Mediterranes und türkisches Menü: Meze, gegrillter Fisch, Kebab"
+          ],
+          "notes": [
+            "Leistungen sind auf der Tourseite des Anbieters nicht aufgeführt; bitte beim Anbieter erfragen."
+          ]
         }
       },
       "title_tr": "Klasik Akşam Yemekli Tekne Turu",
       "title_ru": "Классический ужин на теплоходе",
-      "title_ar": "عشاء كلاسيكي على متن قارب"
+      "title_ar": "عشاء كلاسيكي على متن قارب",
+      "title_de": "Klassische Dinner-Fahrt"
     },
     {
       "id": "orient-dinner",
@@ -754,11 +899,22 @@
           "notes": [
             "لا توضّح صفحة الجولة ما هو مشمول؛ تأكد من الشركة."
           ]
+        },
+        "de": {
+          "duration": "3 Stunden",
+          "highlights": [
+            "Abendliche Dinner-Fahrt auf dem Bosporus",
+            "Mediterranes und türkisches Menü: Meze, gegrillter Fisch, Kebab"
+          ],
+          "notes": [
+            "Leistungen sind auf der Tourseite des Anbieters nicht aufgeführt; bitte beim Anbieter erfragen."
+          ]
         }
       },
       "title_tr": "Premium Akşam Yemekli Tekne Turu",
       "title_ru": "Премиальный ужин на теплоходе",
-      "title_ar": "عشاء مميز على متن قارب"
+      "title_ar": "عشاء مميز على متن قارب",
+      "title_de": "Premium-Dinner-Fahrt"
     },
     {
       "id": "orient-alacarte",
@@ -820,11 +976,23 @@
           "notes": [
             "لا توضّح صفحة الجولة ما هو مشمول؛ تأكد من الشركة."
           ]
+        },
+        "de": {
+          "duration": "3 Stunden",
+          "highlights": [
+            "À-la-carte-Menü",
+            "Abendliche Dinner-Fahrt auf dem Bosporus",
+            "Mediterranes und türkisches Menü: Meze, gegrillter Fisch, Kebab"
+          ],
+          "notes": [
+            "Leistungen sind auf der Tourseite des Anbieters nicht aufgeführt; bitte beim Anbieter erfragen."
+          ]
         }
       },
       "title_tr": "À la Carte Akşam Yemekli Tekne Turu",
       "title_ru": "Ужин à la carte на теплоходе",
-      "title_ar": "عشاء آ لا كارت على متن قارب"
+      "title_ar": "عشاء آ لا كارت على متن قارب",
+      "title_de": "À-la-carte-Dinner-Fahrt"
     },
     {
       "id": "sea-land",
@@ -973,11 +1141,46 @@
             "خدمة الاستلام متاحة فقط إذا اخترت خيار الاستلام.",
             "يمكنك إحضار طعامك وشرابك على متن القارب."
           ]
+        },
+        "de": {
+          "duration": "2 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Kein Live-Guide; mehrsprachiger Audioguide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Fahrt zwischen Europa und Asien auf dem Bosporus",
+            "Volle 2-stündige Rundfahrt",
+            "Europäisches und asiatisches Ufer Istanbuls",
+            "Paläste, Moscheen, Festungen, Brücken und Villen"
+          ],
+          "included": [
+            "2-stündige Bosporus-Rundfahrt in der Gruppe",
+            "Abholung, wenn die Abholoption gewählt ist",
+            "Mehrsprachige Erläuterungen an Bord",
+            "Mobiler Audioguide in 30 Sprachen",
+            "Kostenloses WLAN an Bord",
+            "Türkischer Tee und Nescafé unbegrenzt, Selbstbedienung",
+            "Toiletten an Bord"
+          ],
+          "not_included": [
+            "Rücktransfer nach der Fahrt",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Fotos im osmanischen Kostüm"
+          ],
+          "notes": [
+            "Dies ist eine 2-stündige Bosporus-Rundfahrt mit anderen Gästen.",
+            "Bei der Treffpunkt-Option melden Sie sich in unserem Büro am Anleger Eminönü an.",
+            "Abholung nur, wenn Sie die Abholoption wählen.",
+            "Eigene Speisen und Getränke dürfen mitgebracht werden."
+          ]
         }
       },
       "title_tr": "Sabah Boğaz Turu",
       "title_ru": "Утренняя прогулка по Босфору",
-      "title_ar": "جولة صباحية في البوسفور"
+      "title_ar": "جولة صباحية في البوسفور",
+      "title_de": "Bosporus-Fahrt am Morgen"
     },
     {
       "id": "sl-afternoon",
@@ -1130,11 +1333,47 @@
             "خدمة الاستلام متاحة فقط إذا اخترت خيار الاستلام.",
             "يمكنك إحضار طعامك وشرابك على متن القارب."
           ]
+        },
+        "de": {
+          "duration": "2 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Kein Live-Guide; mehrsprachiger Audioguide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Bosporus-Fahrt zwischen Europa und Asien",
+            "2-stündige Rundfahrt am Nachmittag",
+            "Europäisches und asiatisches Ufer Istanbuls",
+            "Paläste, Moscheen, Festungen, Brücken und Villen"
+          ],
+          "included": [
+            "2-stündige Bosporus-Rundfahrt in der Gruppe",
+            "Abholung, wenn die Abholoption gewählt ist",
+            "Mehrsprachige Erläuterungen an Bord",
+            "Mobiler Audioguide in 30 Sprachen",
+            "Kostenloses WLAN an Bord",
+            "Türkischer Tee und Nescafe unbegrenzt, Selbstbedienung",
+            "Toiletten an Bord"
+          ],
+          "not_included": [
+            "Rücktransfer nach der Fahrt",
+            "Essen und weitere Getränke",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Fotos im osmanischen Kostüm"
+          ],
+          "notes": [
+            "Dies ist eine 2-stündige Bosporus-Rundfahrt mit anderen Gästen.",
+            "Bei der Treffpunkt-Option melden Sie sich in unserem Büro am Anleger Eminönü an.",
+            "Abholung nur, wenn Sie die Abholoption wählen.",
+            "Eigene Speisen und Getränke dürfen mitgebracht werden."
+          ]
         }
       },
       "title_tr": "Öğleden Sonra Boğaz Turu",
       "title_ru": "Дневная прогулка по Босфору",
-      "title_ar": "جولة بعد الظهر في البوسفور"
+      "title_ar": "جولة بعد الظهر في البوسفور",
+      "title_de": "Bosporus-Fahrt am Nachmittag"
     },
     {
       "id": "sl-sunset",
@@ -1287,11 +1526,47 @@
             "الذهاب والعودة مشمولان فقط إذا اخترت خيار النقل.",
             "ألوان الغروب وتوقيته يختلفان حسب الموسم والطقس والرؤية."
           ]
+        },
+        "de": {
+          "duration": "2 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Kein Live-Guide; mehrsprachiger Audioguide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Fahrt zwischen Europa und Asien bei Sonnenuntergang",
+            "2-stündige Bosporus-Rundfahrt",
+            "Abendlicht über Istanbul",
+            "Europäisches und asiatisches Ufer vom Wasser aus"
+          ],
+          "included": [
+            "2-stündige Sonnenuntergangsfahrt in der Gruppe",
+            "Hin- und Rücktransfer, wenn die Transferoption gewählt ist",
+            "Mehrsprachige Erläuterungen an Bord",
+            "Mobiler Audioguide in 30 Sprachen",
+            "Kostenloses WLAN an Bord",
+            "Türkischer Tee und Nescafe unbegrenzt, Selbstbedienung",
+            "Toiletten an Bord"
+          ],
+          "not_included": [
+            "Transfer bei der Treffpunkt-Option",
+            "Essen und weitere Getränke",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Fotos im osmanischen Kostüm"
+          ],
+          "notes": [
+            "Dies ist eine 2-stündige Bosporus-Rundfahrt mit anderen Gästen.",
+            "Bei der Treffpunkt-Option melden Sie sich in unserem Büro am Anleger Eminönü an.",
+            "Hin- und Rücktransfer nur mit der Transferoption.",
+            "Farben und Zeit des Sonnenuntergangs hängen von Saison, Wetter und Sicht ab."
+          ]
         }
       },
       "title_tr": "Gün Batımı Boğaz Turu",
       "title_ru": "Прогулка по Босфору на закате",
-      "title_ar": "جولة الغروب في البوسفور"
+      "title_ar": "جولة الغروب في البوسفور",
+      "title_de": "Bosporus-Fahrt bei Sonnenuntergang"
     },
     {
       "id": "sl-two-continents",
@@ -1455,11 +1730,50 @@
             "الخيارات العادية لا تشمل الغداء ولا دخول قصر بيلربيي من الداخل، ولا تُنظّم يوم الاثنين.",
             "خيارات القصر والغداء تشمل الغداء ودخول القصر. يوم الاثنين يُزار قصر يلدز بدل بيلربيي."
           ]
+        },
+        "de": {
+          "duration": "10–12 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Professioneller Guide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Istanbul in Europa und Asien an einem Tag",
+            "Panoramablick vom Çamlıca-Hügel",
+            "Die eindrucksvolle Çamlıca-Moschee auf der asiatischen Seite",
+            "Beylerbeyi-Palast: Uferlage und osmanisches Erbe"
+          ],
+          "included": [
+            "Klimatisierter Bus",
+            "Professioneller Reiseleiter",
+            "Çamlıca-Hügel und Çamlıca-Moschee",
+            "Eintritt in den Garten des Beylerbeyi-Palasts (Standardoptionen)",
+            "Palasteintritt bei den Optionen „Palast & Mittagessen“: Beylerbeyi Dienstag bis Sonntag, Yıldız montags",
+            "Mittagessen mit einem Getränk bei der Option „Palast & Mittagessen“",
+            "Seilbahn Eyüp",
+            "2-stündige Bosporus-Rundfahrt",
+            "Hin- und Rücktransfer, wenn eine Transferoption gewählt ist"
+          ],
+          "not_included": [
+            "Innenbesichtigung des Beylerbeyi-Palasts (Standardoptionen)",
+            "Mittagessen (Standardoptionen)",
+            "Transfer bei Treffpunkt-Optionen",
+            "Zusätzliche Speisen und Getränke",
+            "Persönliche Ausgaben",
+            "Trinkgelder"
+          ],
+          "notes": [
+            "Dies ist eine ganztägige Bustour mit anderen Gästen, inklusive 2-stündiger Bosporus-Fahrt.",
+            "Die Tour dauert je nach Saison, Verkehr und Bedingungen etwa 10–12 Stunden.",
+            "Standardoptionen enthalten weder Mittagessen noch den Innenbesuch des Beylerbeyi-Palasts und finden montags nicht statt.",
+            "Optionen „Palast & Mittagessen“ enthalten Mittagessen und Palasteintritt. Montags wird statt Beylerbeyi der Yıldız-Palast besucht."
+          ]
         }
       },
       "title_tr": "Otobüs ve Tekneyle Avrupa–Asya Turu",
       "title_ru": "Европа и Азия: автобус и теплоход",
-      "title_ar": "أوروبا وآسيا بالحافلة والقارب"
+      "title_ar": "أوروبا وآسيا بالحافلة والقارب",
+      "title_de": "Europa & Asien mit Bus und Schiff"
     },
     {
       "id": "sl-oldcity",
@@ -1619,11 +1933,49 @@
             "خيار نقطة اللقاء متاح فقط إذا اخترته.",
             "قد يختلف موعد الاستلام حسب موقع الفندق وحركة المرور."
           ]
+        },
+        "de": {
+          "duration": "12 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Professioneller Guide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Die historische Altstadt an einem Tag",
+            "Hagia Sophia mit Erläuterungen des Guides",
+            "Blaue Moschee und Sultanahmet-Platz",
+            "Die prächtige Süleymaniye-Moschee"
+          ],
+          "included": [
+            "Hotelabholung und Rückfahrt, wenn die Transferoption gewählt ist",
+            "Treffpunkt-Option, falls gewählt",
+            "Klimatisierter Transport während der Tour",
+            "Professioneller englischsprachiger Guide",
+            "Lokales Mittagessen mit Softdrink",
+            "2-stündige Bosporus-Rundfahrt",
+            "Tee und Nescafe gratis an Bord",
+            "Kostenloses WLAN an Bord",
+            "Servicegebühren und lokale Steuern"
+          ],
+          "not_included": [
+            "Eintritt Topkapı-Palast",
+            "Eintritt Hagia-Sophia-Moschee",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Speisen und Getränke außerhalb des Mittagessens"
+          ],
+          "notes": [
+            "Dies ist eine ganztägige geführte Tour mit anderen Gästen.",
+            "Hotelabholung und Rückfahrt nur mit der Transferoption.",
+            "Die Treffpunkt-Option gilt nur, wenn sie gewählt ist.",
+            "Die Abholzeit hängt von Hotellage und Verkehr ab."
+          ]
         }
       },
       "title_tr": "Tam Gün Tarihi Yarımada ve Boğaz Turu",
       "title_ru": "Старый город и Босфор за день",
-      "title_ar": "المدينة القديمة والبوسفور في يوم كامل"
+      "title_ar": "المدينة القديمة والبوسفور في يوم كامل",
+      "title_de": "Altstadt & Bosporus an einem Tag"
     },
     {
       "id": "sl-asia-half",
@@ -1787,11 +2139,50 @@
             "تنتهي جولة الحافلة عند رصيف إمينونو.",
             "من يواصل جولة البوسفور ينهيها نحو الساعة 16:00 عند رصيف إمينونو."
           ]
+        },
+        "de": {
+          "duration": "4 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Professioneller Guide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Istanbuls asiatische Seite auf einer geführten Vormittagstour",
+            "Panoramablick auf Istanbul und den Bosporus",
+            "Osmanisches Erbe und beeindruckende Architektur",
+            "Wechsel zwischen europäischer und asiatischer Seite"
+          ],
+          "included": [
+            "Klimatisierter Transport auf der Landtour",
+            "Professioneller Live-Guide",
+            "Gärten des Beylerbeyi-Palasts, Dienstag bis Sonntag",
+            "Innenbesichtigung des Palasts bei Palast-Optionen",
+            "Montags Yıldız- statt Beylerbeyi-Palast (Palast-Optionen)",
+            "Abholung bei Wahl einer Abholoption",
+            "2-stündige Bosporus-Rundfahrt",
+            "Mobiler Audioguide während der Bosporus-Fahrt",
+            "Türkischer Tee und Nescafe unbegrenzt an Bord, Selbstbedienung",
+            "Steuern und Servicegebühren"
+          ],
+          "not_included": [
+            "Innenbesichtigung des Palasts (Standardoptionen)",
+            "Rücktransfer nach der Tour",
+            "Speisen und Getränke",
+            "Persönliche Ausgaben",
+            "Trinkgelder"
+          ],
+          "notes": [
+            "Dies ist eine Halbtagestour am Vormittag mit anderen Gästen.",
+            "Die 4 Stunden umfassen den geführten Busteil.",
+            "Die Bustour endet am Anleger Eminönü.",
+            "Wer mit der Bosporus-Fahrt weitermacht, ist gegen 16:00 am Anleger Eminönü fertig."
+          ]
         }
       },
       "title_tr": "Yarım Gün Sabah Asya Yakası ve Boğaz Turu",
       "title_ru": "Утро на азиатском берегу и Босфор (полдня)",
-      "title_ar": "صباح الجانب الآسيوي والبوسفور (نصف يوم)"
+      "title_ar": "صباح الجانب الآسيوي والبوسفور (نصف يوم)",
+      "title_de": "Asiatische Seite & Bosporus am Vormittag (halber Tag)"
     },
     {
       "id": "sl-privateyacht",
@@ -1804,7 +2195,8 @@
       "source_url": "https://www.sealandtrip.com/",
       "title_tr": "Ricos Özel Yat",
       "title_ru": "Частная яхта Ricos",
-      "title_ar": "يخت ريكوس الخاص"
+      "title_ar": "يخت ريكوس الخاص",
+      "title_de": "Private Yacht Ricos"
     },
     {
       "id": "azure-bursa",
@@ -1888,11 +2280,29 @@
             "محطات تسوق: الحلقوم والعسل والمربى",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig, täglich",
+          "pickup": "Hotelabholung inklusive",
+          "highlights": [
+            "40 Minuten Fähre über den Golf von İzmit",
+            "Uludağ-Berg mit Bus und Sessellift",
+            "600 Jahre alte Platane",
+            "Grüne Moschee, Grünes Mausoleum, Seidenmarkt und osmanisches Haus"
+          ],
+          "included": [
+            "Grillteller zum Mittagessen in einem Bergrestaurant"
+          ],
+          "notes": [
+            "Einkaufsstopps: Lokum, Honig und Marmelade",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Tam Gün Bursa Turu",
       "title_ru": "Бурса за один день",
-      "title_ar": "بورصة في يوم كامل"
+      "title_ar": "بورصة في يوم كامل",
+      "title_de": "Bursa an einem Tag"
     },
     {
       "id": "azure-bosphorus",
@@ -1998,11 +2408,35 @@
             "خصم 10% لمن هم فوق 60، و30% للأطفال 3–6، و0–2 مجانًا",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig",
+          "schedule": "Hotelabholung 07:30–09:00 je nach Gegend",
+          "pickup": "Hotelabholung inklusive",
+          "guide": "Professioneller Guide",
+          "highlights": [
+            "Miniatürk-Park",
+            "Pierre-Loti-Hügel und Seilbahn nach Eyüp",
+            "Grabmal und Moschee Eyüp Sultan",
+            "2-stündige Bosporus-Fahrt"
+          ],
+          "included": [
+            "Hotelabholung",
+            "Professioneller Guide",
+            "2-stündige Bosporus-Fahrt",
+            "Mittagessen im Restaurant"
+          ],
+          "notes": [
+            "Mit Einkaufsstopp nach dem Mittagessen",
+            "Ab 60 Jahren 10 % Rabatt, Kinder 3–6 Jahre 30 %, 0–2 frei",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Tam Gün Boğaz Turu",
       "title_ru": "Босфор за один день",
-      "title_ar": "جولة البوسفور في يوم كامل"
+      "title_ar": "جولة البوسفور في يوم كامل",
+      "title_de": "Bosporus-Tour an einem Tag"
     },
     {
       "id": "azure-sapanca",
@@ -2076,11 +2510,26 @@
             "الدراجات الرباعية والزيبلاين لا تديرها الوكالة",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig (Ende ggf. 22:00–23:00)",
+          "highlights": [
+            "Sapanca-See",
+            "Fluss und Natur in Maşukiye",
+            "Mittagessen bei den Mahmudiye-Wasserfällen",
+            "Kartepe (nur im Winter)"
+          ],
+          "notes": [
+            "Einkaufsstopps: Lokum, Honig, Einkaufszentrum",
+            "Quad und Zipline werden nicht von der Agentur betrieben",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Sapanca ve Maşukiye Turu",
       "title_ru": "Сапанджа и Машукие",
-      "title_ar": "سبانجا وماشوكية"
+      "title_ar": "سبانجا وماشوكية",
+      "title_de": "Sapanca & Maşukiye"
     },
     {
       "id": "azure-islands",
@@ -2198,11 +2647,38 @@
             "كن في موعدك عند نقاط اللقاء؛ قد لا ينتظر المرشد المتأخرين",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig, ganzjährig",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "guide": "Englisch- oder arabischsprachiger Guide",
+          "highlights": [
+            "Etwa 1 Stunde mit dem Boot nach Heybeliada",
+            "Büyükada mit Mittagessen und Freizeit",
+            "In der Freizeit kann gebadet werden",
+            "Einkaufsstopp bei Sultanahmet auf dem Rückweg"
+          ],
+          "included": [
+            "Hoteltransfers",
+            "Bootstickets",
+            "Mittagessen mit Softdrink",
+            "Englisch- oder arabischsprachiger Guide"
+          ],
+          "not_included": [
+            "Getränke auf dem Boot",
+            "Strandeintritt",
+            "Persönliche Ausgaben"
+          ],
+          "notes": [
+            "Seien Sie pünktlich am Treffpunkt; der Guide wartet ggf. nicht auf Nachzügler",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Adalar Turu",
       "title_ru": "Тур на Принцевы острова",
-      "title_ar": "جولة جزر الأمراء"
+      "title_ar": "جولة جزر الأمراء",
+      "title_de": "Prinzeninseln-Tour"
     },
     {
       "id": "azure-transfer",
@@ -2267,11 +2743,24 @@
           "notes": [
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "pickup": "Von Tür zu Tür",
+          "meeting_point": "Ankunftshalle, Fahrer mit Namensschild",
+          "highlights": [
+            "Privater Transfer vom Flughafen Istanbul oder Sabiha Gökçen",
+            "Empfang mit Namensschild",
+            "Hilfe beim Gepäck"
+          ],
+          "notes": [
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Özel Havalimanı Transferi",
       "title_ru": "Индивидуальный трансфер из аэропорта",
-      "title_ar": "نقل خاص من المطار"
+      "title_ar": "نقل خاص من المطار",
+      "title_de": "Privater Flughafentransfer"
     },
     {
       "id": "alaturka",
@@ -2381,6 +2870,30 @@
             "تُقدَّم المنشفة والبشتمال والصابون والشامبو والقفاز والنعال",
             "المسبح مختلط وبارد عادة (23 °م)؛ أحضر ملابس السباحة الخاصة بك"
           ]
+        },
+        "de": {
+          "duration": "60 Minuten",
+          "schedule": "Täglich 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Hotel Lady Diana) oder Beyoğlu (Hotel Grand Haliç, Ebene −1)",
+          "highlights": [
+            "Kese-Peeling und Schaummassage auf warmem Marmor",
+            "Schaummassage mit Lavendelseife",
+            "Tonerde-Gesichtsmaske"
+          ],
+          "included": [
+            "Kese-Peeling",
+            "Schaummassage mit Lavendelseife auf warmem Marmor",
+            "Tonerde-Gesichtsmaske",
+            "Dampfbad, Sauna und Ruhebereich"
+          ],
+          "not_included": [
+            "Badebekleidung für den Pool"
+          ],
+          "notes": [
+            "Getrennte Bereiche für Frauen, Männer und Paare",
+            "Handtuch, Peştemal, Seife, Shampoo, Handschuh und Hausschuhe werden gestellt",
+            "Der Pool ist gemischt und meist kühl (23 °C); eigene Badebekleidung mitbringen"
+          ]
         }
       },
       "title_tr": "Geleneksel Türk Hamamı Paketi",
@@ -2397,7 +2910,8 @@
         }
       ],
       "title_ru": "Традиционный турецкий хаммам",
-      "title_ar": "باقة الحمام التركي التقليدي"
+      "title_ar": "باقة الحمام التركي التقليدي",
+      "title_de": "Traditionelles türkisches Hamam-Paket"
     },
     {
       "id": "alaturka-peeling",
@@ -2524,10 +3038,36 @@
             "تُقدَّم المنشفة والبشتمال والصابون والشامبو والقفاز والنعال",
             "المسبح مختلط وبارد عادة (23 °م)؛ أحضر ملابس السباحة الخاصة بك"
           ]
+        },
+        "de": {
+          "duration": "60 Minuten",
+          "schedule": "Täglich 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Hotel Lady Diana) oder Beyoğlu (Hotel Grand Haliç, Ebene −1)",
+          "highlights": [
+            "Kese-Peeling, danach ein tiefes Meersalz- oder Kaffee-Peeling",
+            "Schaummassage auf warmem Marmor",
+            "Tonerde-Gesichtsmaske"
+          ],
+          "included": [
+            "Kese-Peeling",
+            "Meersalz- oder Kaffee-Peeling",
+            "Schaummassage mit Lavendelseife auf warmem Marmor",
+            "Tonerde-Gesichtsmaske",
+            "Dampfbad, Sauna und Ruhebereich"
+          ],
+          "not_included": [
+            "Badebekleidung für den Pool"
+          ],
+          "notes": [
+            "Getrennte Bereiche für Frauen, Männer und Paare",
+            "Handtuch, Peştemal, Seife, Shampoo, Handschuh und Hausschuhe werden gestellt",
+            "Der Pool ist gemischt und meist kühl (23 °C); eigene Badebekleidung mitbringen"
+          ]
         }
       },
       "title_ru": "Хаммам с пилингом морской солью или кофе",
-      "title_ar": "باقة حمام بتقشير بملح البحر أو القهوة"
+      "title_ar": "باقة حمام بتقشير بملح البحر أو القهوة",
+      "title_de": "Hamam-Paket mit Meersalz- oder Kaffee-Peeling"
     },
     {
       "id": "alaturka-sultan",
@@ -2654,10 +3194,36 @@
             "تُقدَّم المنشفة والبشتمال والصابون والشامبو والقفاز والنعال",
             "المسبح مختلط وبارد عادة (23 °م)؛ أحضر ملابس السباحة الخاصة بك"
           ]
+        },
+        "de": {
+          "duration": "60 Minuten",
+          "schedule": "Täglich 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Hotel Lady Diana) oder Beyoğlu (Hotel Grand Haliç, Ebene −1)",
+          "highlights": [
+            "Kese-Peeling und Schaummassage auf warmem Marmor",
+            "Anti-Stress-Massage mit Bio-Öl im Einzelraum",
+            "Tonerde-Gesichtsmaske"
+          ],
+          "included": [
+            "Kese-Peeling",
+            "Schaummassage mit Lavendelseife auf warmem Marmor",
+            "Anti-Stress-Massage mit Bio-Öl von Kopf bis Fuß",
+            "Tonerde-Gesichtsmaske",
+            "Dampfbad, Sauna und Ruhebereich"
+          ],
+          "not_included": [
+            "Badebekleidung für den Pool"
+          ],
+          "notes": [
+            "Getrennte Bereiche für Frauen, Männer und Paare",
+            "Handtuch, Peştemal, Seife, Shampoo, Handschuh und Hausschuhe werden gestellt",
+            "Der Pool ist gemischt und meist kühl (23 °C); eigene Badebekleidung mitbringen"
+          ]
         }
       },
       "title_ru": "Султанский хаммам и массаж",
-      "title_ar": "باقة حمام السلطان والتدليك"
+      "title_ar": "باقة حمام السلطان والتدليك",
+      "title_de": "Sultan-Hamam- und Massagepaket"
     },
     {
       "id": "alaturka-massage",
@@ -2695,7 +3261,9 @@
           "name_ru": "Балийский массаж",
           "desc_ru": "Надавливание на точки начиная со стоп; улучшает кровообращение и расслабляет.",
           "name_ar": "تدليك بالي",
-          "desc_ar": "ضغط على نقاط محددة بدءًا من القدمين؛ ينشّط الدورة الدموية ويريح."
+          "desc_ar": "ضغط على نقاط محددة بدءًا من القدمين؛ ينشّط الدورة الدموية ويريح.",
+          "name_de": "Bali-Massage",
+          "desc_de": "Druck auf bestimmte Punkte, beginnend an den Füßen; regt die Durchblutung an und entspannt."
         },
         {
           "id": "aroma",
@@ -2716,7 +3284,9 @@
           "name_ru": "Ароматерапевтический массаж",
           "desc_ru": "Растительные эфирные масла и медленные мягкие движения.",
           "name_ar": "تدليك عطري",
-          "desc_ar": "زيوت عطرية نباتية بحركات بطيئة ولطيفة."
+          "desc_ar": "زيوت عطرية نباتية بحركات بطيئة ولطيفة.",
+          "name_de": "Aromatherapie-Massage",
+          "desc_de": "Pflanzliche ätherische Öle mit langsamen, sanften Bewegungen."
         },
         {
           "id": "swedish",
@@ -2737,7 +3307,9 @@
           "name_ru": "Шведский массаж",
           "desc_ru": "Классические шведские техники снимают мышечное напряжение.",
           "name_ar": "تدليك سويدي",
-          "desc_ar": "تقنيات سويدية كلاسيكية لتخفيف شد العضلات."
+          "desc_ar": "تقنيات سويدية كلاسيكية لتخفيف شد العضلات.",
+          "name_de": "Schwedische Massage",
+          "desc_de": "Klassische schwedische Techniken lösen Muskelverspannungen."
         },
         {
           "id": "antistress",
@@ -2758,7 +3330,9 @@
           "name_ru": "Антистресс-массаж",
           "desc_ru": "Медленный массаж головы, шеи, спины и ног снимает напряжение.",
           "name_ar": "تدليك مضاد للتوتر",
-          "desc_ar": "تدليك بطيء للرأس والرقبة والظهر والساقين لإزالة التوتر."
+          "desc_ar": "تدليك بطيء للرأس والرقبة والظهر والساقين لإزالة التوتر.",
+          "name_de": "Anti-Stress-Massage",
+          "desc_de": "Langsame Massage von Kopf, Nacken, Rücken und Beinen gegen Verspannung."
         },
         {
           "id": "deeptissue",
@@ -2779,7 +3353,9 @@
           "name_ru": "Глубокий массаж тканей",
           "desc_ru": "Расслабляет мышцы и соединительную ткань; при хронической боли и спазмах.",
           "name_ar": "تدليك الأنسجة العميقة",
-          "desc_ar": "يرخي العضلات والأنسجة الضامة؛ للآلام المزمنة والتشنجات."
+          "desc_ar": "يرخي العضلات والأنسجة الضامة؛ للآلام المزمنة والتشنجات.",
+          "name_de": "Tiefengewebsmassage",
+          "desc_de": "Lockert Muskeln und Bindegewebe; bei chronischen Schmerzen und Krämpfen."
         },
         {
           "id": "back",
@@ -2800,7 +3376,9 @@
           "name_ru": "Лечебный массаж спины",
           "desc_ru": "Ритмичный массаж спины при боли и мышечных спазмах.",
           "name_ar": "تدليك طبي للظهر",
-          "desc_ar": "تدليك إيقاعي للظهر لآلامه وتشنجات العضلات."
+          "desc_ar": "تدليك إيقاعي للظهر لآلامه وتشنجات العضلات.",
+          "name_de": "Medizinische Rückenmassage",
+          "desc_de": "Rhythmische Rückenmassage bei Rückenschmerzen und Muskelkrämpfen."
         },
         {
           "id": "foot",
@@ -2821,7 +3399,9 @@
           "name_ru": "Лечебный массаж стоп",
           "desc_ru": "Массаж подошв стоп для глубокого расслабления.",
           "name_ar": "تدليك طبي للقدمين",
-          "desc_ar": "يركّز على باطن القدمين لاسترخاء عميق."
+          "desc_ar": "يركّز على باطن القدمين لاسترخاء عميق.",
+          "name_de": "Medizinische Fußmassage",
+          "desc_de": "Konzentriert auf die Fußsohlen für tiefe Entspannung."
         },
         {
           "id": "sport",
@@ -2842,7 +3422,9 @@
           "name_ru": "Спортивный массаж",
           "desc_ru": "До или после спорта, для поддержки формы.",
           "name_ar": "تدليك رياضي",
-          "desc_ar": "قبل الرياضة أو بعدها لدعم الأداء."
+          "desc_ar": "قبل الرياضة أو بعدها لدعم الأداء.",
+          "name_de": "Sportmassage",
+          "desc_de": "Vor oder nach dem Sport zur Unterstützung der Leistung."
         },
         {
           "id": "hotstones",
@@ -2863,7 +3445,9 @@
           "name_ru": "Массаж горячими камнями",
           "desc_ru": "Горячие камни улучшают кровообращение и снимают мышечные спазмы.",
           "name_ar": "تدليك بالأحجار الساخنة",
-          "desc_ar": "الأحجار الساخنة تحسّن الدورة الدموية وتخفف تشنجات العضلات."
+          "desc_ar": "الأحجار الساخنة تحسّن الدورة الدموية وتخفف تشنجات العضلات.",
+          "name_de": "Hot-Stone-Massage",
+          "desc_de": "Heiße Steine fördern die Durchblutung und lösen Muskelkrämpfe."
         },
         {
           "id": "fourhand",
@@ -2884,7 +3468,9 @@
           "name_ru": "Массаж в четыре руки",
           "desc_ru": "Два терапевта работают синхронно.",
           "name_ar": "تدليك بأربع أيدٍ",
-          "desc_ar": "معالجان يعملان بتناغم."
+          "desc_ar": "معالجان يعملان بتناغم.",
+          "name_de": "Vierhandmassage",
+          "desc_de": "Zwei Therapeuten arbeiten im Gleichklang."
         }
       ],
       "details": {
@@ -2963,10 +3549,29 @@
             "أقسام منفصلة للنساء والرجال والأزواج",
             "يتغيّر السعر حسب نوع التدليك والمدة"
           ]
+        },
+        "de": {
+          "duration": "30 oder 60 Minuten",
+          "schedule": "Täglich 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Hotel Lady Diana) oder Beyoğlu (Hotel Grand Haliç, Ebene −1)",
+          "highlights": [
+            "10 Massagearten, 30 oder 60 Minuten",
+            "Bali, Aromatherapie, Schwedisch, Anti-Stress, Tiefengewebe",
+            "Sport-, Hot-Stone- und Vierhandmassage"
+          ],
+          "included": [
+            "Gewählte Massage (30 oder 60 Minuten)",
+            "Dampfbad, Sauna und Ruhebereich"
+          ],
+          "notes": [
+            "Getrennte Bereiche für Frauen, Männer und Paare",
+            "Der Preis hängt von Massageart und Dauer ab"
+          ]
         }
       },
       "title_ru": "Меню массажей",
-      "title_ar": "قائمة التدليك"
+      "title_ar": "قائمة التدليك",
+      "title_de": "Massagekarte"
     },
     {
       "id": "sl-generic-cruise",
@@ -3131,11 +3736,50 @@
             "خيار الاستلام الصباحي وبعد الظهر يشمل الاستلام قبل الجولة دون العودة.",
             "خيار نقل الغروب يشمل الذهاب والعودة."
           ]
+        },
+        "de": {
+          "duration": "2 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Kein Live-Guide; mehrsprachiger Audioguide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Fahrt auf dem Bosporus zwischen Europa und Asien",
+            "Abfahrt am Vormittag, Nachmittag oder zum Sonnenuntergang",
+            "2-stündige Rundfahrt auf dem Wasser",
+            "Europäisches und asiatisches Ufer Istanbuls"
+          ],
+          "included": [
+            "2-stündige Bosporus-Rundfahrt in der Gruppe",
+            "Abholung vor der Fahrt bei Wahl der Abholoption am Vormittag oder Nachmittag",
+            "Hin- und Rücktransfer bei Wahl der Sonnenuntergangs-Transferoption",
+            "Mehrsprachige Erläuterungen an Bord",
+            "Mobiler Audioguide in 30 Sprachen",
+            "Kostenloses WLAN an Bord",
+            "Türkischer Tee und Nescafe unbegrenzt, Selbstbedienung",
+            "Toiletten an Bord"
+          ],
+          "not_included": [
+            "Transfer bei der Treffpunkt-Option",
+            "Rücktransfer bei der Abholoption am Vormittag oder Nachmittag",
+            "Mahlzeiten und Snacks",
+            "Zusätzliche Getränke",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Fotos im osmanischen Kostüm"
+          ],
+          "notes": [
+            "Dies ist eine 2-stündige Bosporus-Rundfahrt mit anderen Gästen.",
+            "Die Treffpunkt-Option gilt für Abfahrten am Vormittag, Nachmittag und zum Sonnenuntergang.",
+            "Die Abholoption am Vormittag und Nachmittag umfasst die Abholung, aber keinen Rücktransfer.",
+            "Die Sonnenuntergangs-Transferoption umfasst Abholung und Rücktransfer."
+          ]
         }
       },
       "title_tr": "2 Saatlik Boğaz Turu",
       "title_ru": "Двухчасовая прогулка по Босфору",
-      "title_ar": "جولة ساعتين في البوسفور"
+      "title_ar": "جولة ساعتين في البوسفور",
+      "title_de": "Zweistündige Bosporus-Fahrt"
     },
     {
       "id": "sl-asia-afternoon",
@@ -3311,11 +3955,53 @@
             "موعد الاستلام تقريبي وقد يتغير حسب موقع الفندق وحركة المرور.",
             "قد تتطلب بعض المناطق البعيدة رسوم نقل إضافية كما يظهر في نظام الحجز."
           ]
+        },
+        "de": {
+          "duration": "8 Stunden",
+          "pickup": "Hotelabholung optional (Transferoption wählen)",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Professioneller Guide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Istanbuls europäische Seite am Nachmittag",
+            "Die spirituelle Atmosphäre von Eyüp",
+            "Schöne Ausblicke über das Goldene Horn",
+            "Fahrt mit der Seilbahn Eyüp"
+          ],
+          "included": [
+            "Hotelabholung und Rückfahrt von ausgewählten zentralen Hotels bei Wahl der Transferoption",
+            "Treffpunkt-Service bei Wahl der Treffpunkt-Option",
+            "Transport in einem klimatisierten Fahrzeug",
+            "Professioneller Guide auf Englisch, Spanisch, Russisch, Arabisch oder Französisch",
+            "Mittagessen mit Dessert und 1 Softdrink",
+            "Ticket für die Seilbahn Eyüp",
+            "2-stündige Bosporus-Rundfahrt",
+            "Bosporus-Fahrt mit Audioguide",
+            "Türkischer Tee und Nescafe unbegrenzt an Bord",
+            "Kostenloses WLAN an Bord"
+          ],
+          "not_included": [
+            "Trinkgelder",
+            "Persönliche Ausgaben",
+            "Zusätzliche Speisen und Getränke",
+            "Alkoholische Getränke",
+            "Einkaufsausgaben",
+            "Fotos im osmanischen Kostüm",
+            "WLAN im Bus",
+            "Zusatzleistungen, die nicht ausdrücklich als inklusive genannt sind"
+          ],
+          "notes": [
+            "Dies ist eine Nachmittagstour mit anderen Gästen.",
+            "Hotelabholung und Rückfahrt nur mit der Transferoption.",
+            "Die Abholzeit ist ungefähr und hängt von Hotellage und Verkehr ab.",
+            "Für weit entfernte Hotelgegenden kann ein Transferaufschlag anfallen, wie im Buchungssystem angezeigt."
+          ]
         }
       },
       "title_tr": "Yarım Gün Öğleden Sonra Avrupa Yakası Turu",
       "title_ru": "Европейская часть днём (полдня)",
-      "title_ar": "الجانب الأوروبي بعد الظهر (نصف يوم)"
+      "title_ar": "الجانب الأوروبي بعد الظهر (نصف يوم)",
+      "title_de": "Europäische Seite am Nachmittag (halber Tag)"
     },
     {
       "id": "sl-islands",
@@ -3491,11 +4177,53 @@
             "يسافر جميع الضيوف معًا على القارب نفسه.",
             "الوقت الحر في بيوك أدا يكون بشكل مستقل."
           ]
+        },
+        "de": {
+          "duration": "8 Stunden",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Professioneller Guide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Besuch von Kınalıada und Büyükada",
+            "Fahrt über das Marmarameer",
+            "Ruhige Insellandschaften",
+            "Die entspannte Atmosphäre von Kınalıada"
+          ],
+          "included": [
+            "Hotelabholung und Rückfahrt bei ausgewählten Istanbuler Hotels",
+            "Transport in einem klimatisierten Fahrzeug",
+            "Hin- und Rückfahrt mit dem Boot",
+            "Fährtickets zu den Inseln",
+            "Professioneller Reiseleiter",
+            "Mittagessen",
+            "Erläuterungen des Guides auf den Inseln",
+            "Servicegebühren und lokale Steuern"
+          ],
+          "not_included": [
+            "Getränke",
+            "Mahlzeiten für Kinder von 0 bis 2 Jahren",
+            "An Bord gekaufter Tee, Kaffee und Snacks",
+            "Fahrradverleih",
+            "Verleih von Elektrofahrzeugen",
+            "Eintritt für öffentliche oder private Strände",
+            "Schwimmausrüstung",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Einkaufsausgaben"
+          ],
+          "notes": [
+            "Dies ist eine ganztägige Bootstour mit anderen Gästen.",
+            "Die erste Insel kann je nach Seegang oder Betrieb wechseln.",
+            "Alle Gäste fahren gemeinsam im selben Boot.",
+            "Die Freizeit auf Büyükada verbringen Sie individuell."
+          ]
         }
       },
       "title_tr": "Öğle Yemekli Adalar Turu",
       "title_ru": "Принцевы острова с обедом",
-      "title_ar": "جولة جزر الأمراء مع الغداء"
+      "title_ar": "جولة جزر الأمراء مع الغداء",
+      "title_de": "Prinzeninseln-Tour mit Mittagessen"
     },
     {
       "id": "sl-turkish-breakfast",
@@ -3659,11 +4387,50 @@
             "يستغرق الإفطار نحو ساعة.",
             "تنطلق جولة البوسفور من رصيف إمينونو الساعة 11:00."
           ]
+        },
+        "de": {
+          "duration": "4 Stunden",
+          "pickup": "Kein Transfer; zu Fuß zwischen den Stationen",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "guide": "Kein Live-Guide; mehrsprachiger Audioguide",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Traditionelles türkisches Frühstück mit Panoramablick aufs Meer",
+            "Lokale Frühstückskultur im historischen Sirkeci",
+            "2 Stunden auf dem Bosporus zwischen Europa und Asien",
+            "Paläste, Moscheen, Brücken und Villen am Ufer"
+          ],
+          "included": [
+            "Traditionelles türkisches Frühstück auf einer Panoramaterrasse mit Meer- und Stadtblick",
+            "Zweistündige Bosporus-Rundfahrt",
+            "Audioguide in 11 Sprachen",
+            "Kostenloses WLAN an Bord",
+            "Türkischer Tee und Nescafe unbegrenzt an Bord",
+            "Sitzplätze innen und an Deck",
+            "Toiletten an Bord",
+            "Begleitung durch das SeaLand-Team zwischen Büro, Frühstückslokal und Schiff",
+            "Alle anfallenden Steuern und Servicegebühren"
+          ],
+          "not_included": [
+            "Hotelabholung und Rückfahrt",
+            "Fahrzeugtransport",
+            "Zusätzliche Speisen und Getränke",
+            "Persönliche Ausgaben",
+            "Einkaufsausgaben",
+            "Trinkgelder"
+          ],
+          "notes": [
+            "Im Programm gibt es keinen Fahrzeugtransfer.",
+            "Die Fußwege zwischen Büro, Frühstückslokal und Anleger Eminönü sind kurz.",
+            "Das Frühstück dauert etwa 1 Stunde.",
+            "Die Bosporus-Fahrt startet um 11:00 am Anleger Eminönü."
+          ]
         }
       },
       "title_tr": "Türk Kahvaltısı ve Boğaz Turu",
       "title_ru": "Турецкий завтрак и прогулка по Босфору",
-      "title_ar": "الإفطار التركي وجولة البوسفور"
+      "title_ar": "الإفطار التركي وجولة البوسفور",
+      "title_de": "Türkisches Frühstück & Bosporus-Fahrt"
     },
     {
       "id": "sl-dinner",
@@ -3825,11 +4592,49 @@
             "تختلف مواعيد النقل حسب موقعك وحركة المرور والضيوف الآخرين.",
             "خيار المشروبات غير الكحولية يشمل مشروبات غازية بلا حدود."
           ]
+        },
+        "de": {
+          "duration": "3 Stunden",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "meeting_point": "Büro von Sea & Land am Anleger Eminönü",
+          "cancellation": "Kostenlose Stornierung bis 24 Stunden vorher",
+          "highlights": [
+            "Nachtfahrt zwischen Europa und Asien",
+            "3-stündige Dinner-Fahrt auf dem Bosporus",
+            "Istanbuls beleuchtete Skyline vom Wasser aus",
+            "Berühmte Bauten an beiden Ufern"
+          ],
+          "included": [
+            "3-stündige Dinner-Fahrt in der Gruppe",
+            "Abholung und Rückfahrt von ausgewählten zentralen Orten in Istanbul",
+            "Abendessen",
+            "Türkische Nachtshow",
+            "DJ-Musik",
+            "Softdrinks unbegrenzt",
+            "2 alkoholische Getränke pro Person bei der Option mit Alkohol",
+            "Innen- und Außenbereiche",
+            "Klimatisiertes Schiff"
+          ],
+          "not_included": [
+            "Importierte alkoholische Getränke",
+            "Alkohol über das gewählte Paket hinaus",
+            "Nicht im Paket enthaltene Getränke",
+            "Persönliche Ausgaben",
+            "Trinkgelder",
+            "Extras für besondere Anlässe, sofern nicht separat vereinbart"
+          ],
+          "notes": [
+            "Dies ist eine Dinner-Fahrt auf dem Bosporus mit anderen Gästen.",
+            "Beide Optionen enthalten Abholung und Rückfahrt von ausgewählten zentralen Orten.",
+            "Die Transferzeiten hängen von Ihrem Standort, dem Verkehr und anderen Gästen ab.",
+            "Die Softdrink-Option enthält unbegrenzt Softdrinks."
+          ]
         }
       },
       "title_tr": "Eğlenceli Akşam Yemekli Tekne Turu",
       "title_ru": "Ужин на теплоходе с развлекательной программой",
-      "title_ar": "عشاء على متن قارب مع برنامج ترفيهي"
+      "title_ar": "عشاء على متن قارب مع برنامج ترفيهي",
+      "title_de": "Dinner-Fahrt mit Unterhaltung"
     },
     {
       "id": "orient-private-newyear",
@@ -3892,11 +4697,23 @@
           "notes": [
             "لا توضّح صفحة الجولة ما هو مشمول؛ تأكد من الشركة."
           ]
+        },
+        "de": {
+          "duration": "3 Stunden",
+          "highlights": [
+            "Private Fahrt in der Silvesternacht",
+            "Abendliche Dinner-Fahrt auf dem Bosporus",
+            "Mediterranes und türkisches Menü: Meze, gegrillter Fisch, Kebab"
+          ],
+          "notes": [
+            "Leistungen sind auf der Tourseite des Anbieters nicht aufgeführt; bitte beim Anbieter erfragen."
+          ]
         }
       },
       "title_tr": "Özel Yılbaşı Boğaz Turu",
       "title_ru": "Частный новогодний круиз по Босфору",
-      "title_ar": "جولة خاصة في البوسفور ليلة رأس السنة"
+      "title_ar": "جولة خاصة في البوسفور ليلة رأس السنة",
+      "title_de": "Private Silvesterfahrt auf dem Bosporus"
     },
     {
       "id": "orient-newyear-special",
@@ -3960,11 +4777,23 @@
           "notes": [
             "لا توضّح صفحة الجولة ما هو مشمول؛ تأكد من الشركة."
           ]
+        },
+        "de": {
+          "duration": "4 Stunden",
+          "highlights": [
+            "31. Dezember, Abfahrt in Karaköy",
+            "Abendliche Dinner-Fahrt auf dem Bosporus",
+            "Mediterranes und türkisches Menü: Meze, gegrillter Fisch, Kebab"
+          ],
+          "notes": [
+            "Leistungen sind auf der Tourseite des Anbieters nicht aufgeführt; bitte beim Anbieter erfragen."
+          ]
         }
       },
       "title_tr": "Yılbaşı Gecesi Özel Turu",
       "title_ru": "Особый новогодний круиз",
-      "title_ar": "رحلة خاصة ليلة رأس السنة"
+      "title_ar": "رحلة خاصة ليلة رأس السنة",
+      "title_de": "Silvester-Sonderfahrt"
     },
     {
       "id": "azure-sileagva",
@@ -4078,11 +4907,37 @@
           "notes": [
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig",
+          "pickup": "Hotelabholung inklusive",
+          "guide": "Englisch- oder arabischsprachiger Guide",
+          "highlights": [
+            "Stopp am versteckten See (Saklı Göl)",
+            "Blick vom Hügel auf Burg und Leuchtturm von Şile",
+            "Bootsfahrt auf dem Fluss Göksu in Ağva",
+            "Freizeit, Baden im Schwarzen Meer"
+          ],
+          "included": [
+            "Mittagessen mit Softdrink",
+            "Klimatisierter Bus",
+            "Bootsfahrt",
+            "Englisch- oder arabischsprachiger Guide"
+          ],
+          "not_included": [
+            "Tee/Kaffee beim Seestopp",
+            "Ausgaben fürs Baden",
+            "Persönliche Ausgaben"
+          ],
+          "notes": [
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Günübirlik Şile ve Ağva Turu",
       "title_ru": "Шиле и Агва за один день",
-      "title_ar": "شيلي وأغفا في يوم واحد"
+      "title_ar": "شيلي وأغفا في يوم واحد",
+      "title_de": "Şile und Ağva an einem Tag"
     },
     {
       "id": "azure-two-continents",
@@ -4167,11 +5022,29 @@
             "السوق المصري مغلق الأحد: يُستبدل بمحلات محلية",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig, täglich",
+          "highlights": [
+            "Ägyptischer Basar",
+            "Bosporus-Fahrt (Rumeli-Festung vom Boot aus)",
+            "Dolmabahçe-Palast",
+            "Bosporusbrücke und Çamlıca-Hügel"
+          ],
+          "included": [
+            "Mittagessen"
+          ],
+          "notes": [
+            "Dolmabahçe ist Mo & Do geschlossen: stattdessen Eyüp, Pierre Loti und Miniatürk",
+            "Ägyptischer Basar ist So geschlossen: stattdessen lokale Geschäfte",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Boğaz, Dolmabahçe ve İki Kıta Turu",
       "title_ru": "Босфор, Долмабахче и два континента",
-      "title_ar": "البوسفور ودولمة بهجة والقارتان"
+      "title_ar": "البوسفور ودولمة بهجة والقارتان",
+      "title_de": "Bosporus, Dolmabahçe & zwei Kontinente"
     },
     {
       "id": "azure-yalova",
@@ -4239,11 +5112,25 @@
           "notes": [
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig",
+          "pickup": "Hotelabholung inklusive",
+          "guide": "Englisch- und arabischsprachiger Guide",
+          "highlights": [
+            "Über die Bosporusbrücke, mit der Fähre nach Yalova",
+            "Schwefelhaltige Thermalquelle und türkisches Bad",
+            "Mittagessen mit Blick auf einen 14 m hohen Wasserfall"
+          ],
+          "notes": [
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Günübirlik Yalova ve Termal Turu",
       "title_ru": "Ялова и термальные источники за день",
-      "title_ar": "يالوفا والينابيع الحرارية في يوم واحد"
+      "title_ar": "يالوفا والينابيع الحرارية في يوم واحد",
+      "title_de": "Yalova & Thermalbad an einem Tag"
     },
     {
       "id": "azure-dinner",
@@ -4331,11 +5218,30 @@
             "تذكر صفحة الشركة يختًا في البوسفور ومطعمًا معًا: تأكد من المكان",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Abends",
+          "pickup": "Abholung und Rückfahrt zum Hotel inklusive",
+          "highlights": [
+            "Show: Mehter-Empfang, tanzender Derwisch, Bauchtanz, Volkstänze, DJ",
+            "Menü: kalte Vorspeisen, Salat, warme Vorspeise, Hauptgang (Huhn, Fisch, Köfte oder vegetarisch), Baklava und Obst"
+          ],
+          "included": [
+            "Hotelabholung und Rückfahrt",
+            "Mehrgängiges Abendessen",
+            "Showprogramm",
+            "Unbegrenzt lokale alkoholische Getränke oder Softdrinks (je nach Option)"
+          ],
+          "notes": [
+            "Die Seite des Anbieters nennt sowohl eine Bosporus-Yacht als auch ein Restaurant: Ort bitte bestätigen lassen",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Akşam Yemekli Tekne ve Türk Gecesi Şovu",
       "title_ru": "Ужин на теплоходе и турецкое ночное шоу",
-      "title_ar": "عشاء على قارب وعرض ليلة تركية"
+      "title_ar": "عشاء على قارب وعرض ليلة تركية",
+      "title_de": "Dinner-Fahrt & türkische Nachtshow"
     },
     {
       "id": "azure-city",
@@ -4416,11 +5322,28 @@
             "الاثنين: آيا صوفيا ← صهريج البازيليك؛ الثلاثاء: توبكابي ← كورا أو بيلربيي؛ الأحد: البازار الكبير ← المحلات",
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Ganztägig, täglich",
+          "highlights": [
+            "Hagia Sophia, Blaue Moschee und Hippodrom",
+            "Großer Basar",
+            "Topkapı-Palast",
+            "Rüstem-Paşa- oder Süleymaniye-Moschee"
+          ],
+          "included": [
+            "Mittagessen"
+          ],
+          "notes": [
+            "Mo: Hagia Sophia → Basilika-Zisterne; Di: Topkapı → Chora oder Beylerbeyi; So: Großer Basar → Geschäfte",
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Tam Gün İstanbul Şehir Turu",
       "title_ru": "Стамбул за один день",
-      "title_ar": "جولة مدينة إسطنبول في يوم كامل"
+      "title_ar": "جولة مدينة إسطنبول في يوم كامل",
+      "title_de": "Istanbul-Stadtrundfahrt an einem Tag"
     },
     {
       "id": "azure-halfbosphorus",
@@ -4481,11 +5404,23 @@
           "notes": [
             "الأسعار تُحمّل ديناميكيًا على موقع الشركة؛ السعر المعروض من بحث سابق."
           ]
+        },
+        "de": {
+          "duration": "Halber Tag",
+          "guide": "Englisch- oder arabischsprachiger Guide",
+          "highlights": [
+            "Bosporus-Blick auf beide Kontinente",
+            "Yalı-Villen, Paläste, Moscheen und Kirchen"
+          ],
+          "notes": [
+            "Preise werden auf der Website des Anbieters dynamisch geladen; angegeben ist der Preis aus früherer Recherche."
+          ]
         }
       },
       "title_tr": "Yarım Gün Boğaz Turu",
       "title_ru": "Босфор за полдня",
-      "title_ar": "جولة البوسفور لنصف يوم"
+      "title_ar": "جولة البوسفور لنصف يوم",
+      "title_de": "Bosporus-Tour am halben Tag"
     },
     {
       "id": "azure-triple-eurplane",
@@ -4499,7 +5434,8 @@
       "source_url": "https://www.azureturizm.com/",
       "title_tr": "Uçakla Kapadokya, Pamukkale ve Efes",
       "title_ru": "Каппадокия, Памуккале и Эфес на самолёте",
-      "title_ar": "كبادوكيا وباموكالي وأفسس بالطائرة"
+      "title_ar": "كبادوكيا وباموكالي وأفسس بالطائرة",
+      "title_de": "Kappadokien, Pamukkale & Ephesus per Flug"
     },
     {
       "id": "azure-triple-eurbus",
@@ -4513,7 +5449,8 @@
       "source_url": "https://www.azureturizm.com/",
       "title_tr": "Otobüsle Kapadokya, Pamukkale ve Efes",
       "title_ru": "Каппадокия, Памуккале и Эфес на автобусе",
-      "title_ar": "كبادوكيا وباموكالي وأفسس بالحافلة"
+      "title_ar": "كبادوكيا وباموكالي وأفسس بالحافلة",
+      "title_de": "Kappadokien, Pamukkale & Ephesus per Bus"
     }
   ],
   "detail_note": "details: tour contents summarised from each operator’s own page on the checked date. Fields are null where the operator does not say. Not Bosphorly promises; confirm with the operator before any request."

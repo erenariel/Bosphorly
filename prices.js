@@ -64,6 +64,21 @@
     schedule: 'الأوقات', meeting: 'نقطة اللقاء', guide: 'المرشد', pickup: 'النقل', cancel: 'الإلغاء', notes: 'معلومات مفيدة',
     source: 'المصدر: موقع الشركة', noDetails: 'لا توجد تفاصيل على موقع الشركة.', englishOnly: '', allCompanies: 'كل الشركات', allCurrencies: 'كل العملات', massageTitle: 'أنواع التدليك والأسعار', min: 'دقيقة', loadFail: 'تعذّر تحميل الكتالوج.',
     cats: { cruise: 'جولة في البوسفور', dinner: 'عشاء على قارب', city: 'جولة في المدينة', day: 'رحلة يوم واحد', islands: 'الجزر', hammam: 'حمام', transfer: 'نقل', multi: 'جولة عدة أيام' }
+    },
+    de: {
+    hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Hamam-Pakete', hbMassages: 'Massagen', hbBook: 'Hamam oder Massage buchen →', hbHours: 'Täglich 09:30–23:00 · Filialen Fatih und Beyoğlu',
+    home: 'Startseite', plan: 'Anfrage', map: 'Karte', account: 'Mein Konto', footer: 'Bosphorly · Nur Vergleich · Hier wird keine Zahlung angenommen.',
+    eyebrow: 'TOURENVERGLEICH · ISTANBUL', heading: 'Istanbul-Touren vergleichen.',
+    lead: 'Preise und Programme, die lizenzierte Anbieter auf ihren eigenen Websites veröffentlichen. Vergleichen Sie die Leistungen nebeneinander.',
+    noticeTitle: 'Zusammengefasst von den Websites der Anbieter; kein Angebot von Bosphorly.',
+    noticeBody: 'Preise und Programme können je nach Datum, Alter und Paket variieren. Endpreis und Verfügbarkeit bestätigt der Anbieter bei Annahme Ihrer Anfrage. Zahlung nur bar an der Hotelrezeption; Touranbieter berechnen bei Kartenzahlung 10 % Aufschlag.',
+    query: 'Tour oder Anbieter suchen…', per: 'pro Person', from: 'Ab', was: 'vorher',
+    request: 'Über Bosphorly anfragen →', soon: 'Vereinbarung mit Anbieter ausstehend', checked: 'Geprüft', none: 'Keine passenden Touren.',
+    notListed: 'Preis auf Anfrage', records: 'Touren', included: 'Inklusive', excluded: 'Nicht inklusive', more: 'Alle Details',
+    schedule: 'Zeiten', meeting: 'Treffpunkt', guide: 'Guide', pickup: 'Transfer', cancel: 'Stornierung', notes: 'Gut zu wissen',
+    source: 'Quelle: Website des Anbieters', noDetails: 'Keine detaillierten Inhalte auf der Website des Anbieters.', englishOnly: '',
+    allCompanies: 'Alle Anbieter', allCurrencies: 'Alle Währungen', massageTitle: 'Massagearten und Preise', min: 'Min.', loadFail: 'Katalog konnte nicht geladen werden.',
+    cats: { cruise: 'Bosporus-Fahrt', dinner: 'Dinner-Fahrt', city: 'Stadttour', day: 'Tagesausflug', islands: 'Inseln', hammam: 'Hamam', transfer: 'Transfer', multi: 'Mehrtagestour' }
     }
   };
   const T = D[lang] || D.en;
