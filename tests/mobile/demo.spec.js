@@ -7,7 +7,7 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  expect(await page.locator('.logo img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
  await expect(page.locator('#result')).toHaveAttribute('data-state','draft');
- await expect(page.locator('#result')).toContainText('NOT BOOKED');
+ await expect(page.locator('#result')).toContainText('NOT SENT');
  for(const dir of ['ltr','rtl']) {
  await page.locator('html').evaluate((e,d)=>e.dir=d,dir);
  expect(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth||e.getBoundingClientRect().left<0).map(e=>e.tagName+'.'+e.className)}))).toMatchObject({scroll:page.viewportSize().width});
