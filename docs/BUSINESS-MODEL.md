@@ -54,6 +54,10 @@ The traveler stays on Bosphorly until the request is sent. There is no
 redirect to a supplier's own checkout: a redirect loses the attribution that
 the commission depends on.
 
+### Current request channel: WhatsApp
+
+Until the request server exists, both forms (airport transfer and tours) open WhatsApp with the full request written out (reference code, tour or route, date and time, guests, price per person and total, hotel and room, contact, price source and the moment the price was shown) addressed to the Bosphorly WhatsApp Business line. The guest presses send. The message in the WhatsApp chat is the record of what the guest saw. Limits: nothing reaches Bosphorly if the guest does not press send, the text can be edited before sending, and there is no central list of requests. A server-side request store fixes all three.
+
 ## Prices shown to travelers
 
 - **Contracted companies:** the price the company approved for Bosphorly in

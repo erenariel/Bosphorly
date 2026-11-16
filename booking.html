@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Compare licensed Istanbul tour companies and request an experience through Bosphorly. You pay the company directly."><title>Request an experience | Bosphorly</title><link rel="icon" href="assets/brand/approved-icon.webp"><link rel="stylesheet" href="booking.css"><style>.selection{display:grid;gap:4px}.selection small{color:#6b7f99}.mini-includes{list-style:none;margin:2px 0;padding:0;display:grid;gap:2px;font-size:13px}</style></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Compare licensed Istanbul tour companies and request an experience through Bosphorly. You pay the company directly."><title>Request an experience | Bosphorly</title><link rel="icon" href="assets/brand/approved-icon.webp"><link rel="stylesheet" href="booking.css"><style>.wa-button{display:inline-block;margin-top:12px;background:#1fa855;color:#fff;padding:12px 16px;border-radius:12px;font-weight:800;text-decoration:none}.selection{display:grid;gap:4px}.selection small{color:#6b7f99}.mini-includes{list-style:none;margin:2px 0;padding:0;display:grid;gap:2px;font-size:13px}</style></head>
 <body>
 <div class="prototype"><span id="protoTag">PUBLIC PROTOTYPE</span> · <span id="protoText">No request is sent and no payment is taken by this website</span></div>
 <header class="header"><div class="head-wrap"><a class="logo" href="index.html"><img src="assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a><nav aria-label="Main navigation"><a href="index.html" id="navHome">Home</a><a href="prices.html" id="navCompare">Compare tours</a><a href="map.html" id="navMap">City map</a></nav></div></header>
@@ -12,6 +12,8 @@
 <label for="time"><span id="labelTime">Preferred time</span><select id="time"></select><small id="timeNote" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label>
 <label for="guests"><span id="labelGuests">Guests</span><input type="number" id="guests" min="1" max="16" step="1" value="2" inputmode="numeric" required></label>
 <label for="area"><span id="labelArea">Hotel area</span><select id="area"><option value="Sultanahmet">Sultanahmet / Fatih</option><option value="Sirkeci">Sirkeci / Eminönü</option><option value="Taksim">Taksim / Beyoğlu</option><option value="Kadıköy">Kadıköy</option><option value="Other">Other</option></select></label>
+<label for="hotelName"><span id="labelHotel">Hotel name</span><input id="hotelName" maxlength="120" autocomplete="organization" placeholder="e.g. Sultanahmet Palace" required></label>
+<label for="room"><span id="labelRoom">Room number (optional)</span><input id="room" maxlength="12" autocomplete="off" placeholder="e.g. 214"></label>
 <label for="fullName"><span id="labelName">Full name</span><input id="fullName" maxlength="100" autocomplete="name" placeholder="e.g. Jane Smith" required></label>
 <label for="phone"><span id="labelPhone">Mobile / WhatsApp</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" placeholder="+44 7700 900123" required></label>
 <label class="wide" for="email"><span id="labelEmail">Email (optional)</span><input id="email" type="email" inputmode="email" autocomplete="email" maxlength="140" placeholder="name@example.com"></label>
@@ -30,5 +32,6 @@
 <div class="city-link"><span>🗺️</span><div><strong id="mapTitle">Explore before you request</strong><a href="map.html" id="mapLink">Open Istanbul city map →</a></div></div>
 </aside></div>
 <footer><p id="footerText">Bosphorly · Public demonstration · No personal identity or payment data is collected in this prototype.</p><a href="index.html" id="backHome">← Back to homepage</a></footer></main>
+<script src="config/contact.js"></script>
 <script src="booking-adapter.js" defer></script>
 <script src="booking.js" defer></script></body></html>
