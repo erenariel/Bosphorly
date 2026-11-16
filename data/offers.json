@@ -79,20 +79,26 @@
     }
   ],
   "transfers": {
-    "examples_only": true,
-    "display_notice": "Historical test values provided by the product owner, not a confirmed tariff or live sale.",
+    "pricing_scope": "one-way airport to Sultanahmet",
+    "pricing_status": "FIXED_BOSPHORLY_PUBLIC_FARE_PROVIDED_BY_OPERATOR",
+    "currency": "EUR",
+    "source": "project_owner_confirmed_2026-11-16",
+    "booking_enabled": false,
+    "notice": "The below are fixed customer-facing Bosphorly rates for Sultanahmet, not hypothetical examples. Other zones require an individual quote. Real fulfillment and vehicle capacity remain unavailable until licensed suppliers are contracted.",
     "rate_rules": [
       {
         "airport": "IST",
         "zone": "sultanahmet",
-        "example_eur": 55,
-        "approved_for_sale": false
+        "price_eur": 55,
+        "fare_kind": "fixed_one_way",
+        "approved_as_customer_fare": true
       },
       {
         "airport": "SAW",
         "zone": "sultanahmet",
-        "example_eur": 65,
-        "approved_for_sale": false
+        "price_eur": 65,
+        "fare_kind": "fixed_one_way",
+        "approved_as_customer_fare": true
       }
     ]
   }
