@@ -12,6 +12,10 @@
 <label for="time"><span id="labelTime">Preferred time</span><select id="time"><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option><option value="flexible">Flexible</option></select></label>
 <label for="guests"><span id="labelGuests">Guests</span><input type="number" id="guests" min="1" max="16" step="1" value="2" inputmode="numeric" required></label>
 <label for="area"><span id="labelArea">Hotel area</span><select id="area"><option value="Sultanahmet">Sultanahmet / Fatih</option><option value="Sirkeci">Sirkeci / Eminönü</option><option value="Taksim">Taksim / Beyoğlu</option><option value="Kadıköy">Kadıköy</option><option value="Other">Other</option></select></label>
+<label for="fullName"><span id="labelName">Full name</span><input id="fullName" maxlength="100" autocomplete="name" placeholder="e.g. Jane Smith" required></label>
+<label for="phone"><span id="labelPhone">Mobile / WhatsApp</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" placeholder="+44 7700 900123" required></label>
+<label class="wide" for="email"><span id="labelEmail">Email (optional)</span><input id="email" type="email" inputmode="email" autocomplete="email" maxlength="140" placeholder="name@example.com"></label>
+<p class="wide muted" id="contactNote" style="margin:0;font-size:13px">In this demo, what you type is not sent or saved anywhere; it disappears when you close the page.</p>
 </div>
 <div class="summary" aria-live="polite"><div><span id="labelStatus">Price status</span><strong id="price">Price set by the company</strong></div><div><span id="labelAvailability">Availability</span><strong id="availability">Confirmed by the company</strong></div></div>
 <div id="marketPrice" class="notice" aria-live="polite"><strong>Company published price:</strong> loading…</div><p id="priceNote" class="notice">Requestable prices are the ones each licensed company approves for Bosphorly, never higher than booking with the company directly. This public prototype does not send requests.</p>

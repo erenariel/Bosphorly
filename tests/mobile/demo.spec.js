@@ -6,6 +6,9 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect(page.locator('.logo img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
  expect(await page.locator('.logo img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
+ await expect(page.locator('#error')).toBeVisible();
+ await page.locator('#fullName').fill('Test Guest');await page.locator('#phone').fill('+90 555 000 00 00');await page.locator('#submit').click();
+ await expect(page.locator('#error')).toBeHidden();
  await expect(page.locator('#result')).toHaveAttribute('data-state','draft');
  await expect(page.locator('#result')).toContainText('NOT SENT');
  for(const dir of ['ltr','rtl']) {
