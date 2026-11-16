@@ -187,7 +187,14 @@
     const m = items.find(r => r.options);
     if (m) {
       const more = el('details', 'more'); more.append(el('summary', null, T.hbMassages + ' (' + m.options.length + ')'));
-      more.append(list(m.options.map(o => (o['name_' + lang] || o.name) + ': ' + o.durations.map(x => x.min + ' ' + T.min + ' ' + fmt(x.price, m.currency)).join(' · ')), 'notes'));
+      const tiers = new Map();
+      m.options.forEach(o => { const k = o.durations.map(x => x.min + ':' + x.price).join('|'); if (!tiers.has(k)) tiers.set(k, { durations: o.durations, names: [] }); tiers.get(k).names.push(o['name_' + lang] || o.name); });
+      tiers.forEach(tier => {
+        const box = el('div', 'hb-tier');
+        const pr = el('div', 'hb-tier-prices'); tier.durations.forEach(x => pr.append(el('span', null, x.min + ' ' + T.min + ' · ' + fmt(x.price, m.currency))));
+        const chips = el('div', 'hb-chips'); tier.names.forEach(n => chips.append(el('span', null, n)));
+        box.append(pr, chips); more.append(box);
+      });
       const d = pk[0]?.details; const L = d ? Object.assign({}, d, d[lang] || {}) : null;
       if (L?.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
       const src = el('p', 'fine'); const a = el('a', null, T.source); a.href = m.details?.source_url || m.source_url; a.target = '_blank'; a.rel = 'noopener nofollow';
