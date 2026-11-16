@@ -33,6 +33,8 @@
     const facts = el('div', 'facts');
     facts.append(el('span', 'price' + (p.price === 'free' ? ' free' : ''), D.priceText(p, t)));
     const closed = D.closedText(p, t); if (closed) facts.append(el('span', 'closed', closed));
+    // Google rating of the place itself (not for the city ferry, which has no single listing).
+    if (window.BosphorlyRatings && p.id !== 'city-ferry') facts.append(window.BosphorlyRatings.badge({ query: p.nameEn + ', Istanbul', lat: p.lat, lng: p.lng, placeId: p.placeId }));
     c.append(facts);
     const act = el('div', 'actions');
     const dir = el('a', 'btn', '📍 ' + t('directions')); dir.href = D.mapsLink(p.lat, p.lng); dir.target = '_blank'; dir.rel = 'noopener';
