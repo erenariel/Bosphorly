@@ -49,6 +49,17 @@
     msgSaved: 'تم الحفظ.', confirmClear: 'هل تريد حذف ملفك وكل سجل الطلبات على هذا الجهاز؟', cleared: 'تم الحذف.',
     emptyUpcoming: 'لا توجد طلبات قادمة.', emptyPast: 'لا توجد طلبات سابقة.', browse: 'استكشف الجولات ←',
     status: 'أُرسل إلى واتساب · بانتظار التأكيد', reopen: 'افتح في واتساب مجددًا', remove: 'إزالة من القائمة', guests: 'ضيوف', transfer: 'النقل من المطار'
+    },
+    de: {
+    navHome: 'Startseite', navCompare: 'Touren vergleichen', navAccount: 'Mein Konto', eyebrow: 'MEIN BOSPHORLY', heading: 'Mein Konto',
+    lead: 'Ihre Angaben und die Anfragen, die Sie über Bosphorly gesendet haben.',
+    deviceNote: 'Nur auf diesem Gerät gespeichert. Wenn Sie Bosphorly auf einem anderen Handy oder Computer öffnen, sind diese Anfragen dort noch nicht sichtbar.',
+    reqTitle: 'Meine Anfragen', tabUpcoming: 'Bevorstehend', tabPast: 'Vergangen', profileTitle: 'Meine Angaben', lName: 'Vollständiger Name', lPhone: 'Mobil / WhatsApp',
+    lEmail: 'E-Mail (optional)', lHotel: 'Hotel', lRoom: 'Zimmernummer', saveBtn: 'Speichern', clearBtn: 'Alles auf diesem Gerät löschen',
+    profileNote: 'Gespeicherte Angaben füllen die Anfrageformulare für Sie aus.', footer: 'Bosphorly · Prototyp · Nichts auf dieser Seite wird an einen Server gesendet.',
+    msgSaved: 'Gespeichert.', confirmClear: 'Profil und gesamten Anfrageverlauf auf diesem Gerät löschen?', cleared: 'Gelöscht.',
+    emptyUpcoming: 'Keine bevorstehenden Anfragen.', emptyPast: 'Keine vergangenen Anfragen.', browse: 'Touren entdecken →',
+    status: 'An WhatsApp gesendet · Bestätigung ausstehend', reopen: 'Erneut in WhatsApp öffnen', remove: 'Aus der Liste entfernen', guests: 'Gäste', transfer: 'Flughafentransfer'
     }
   };
   const T = D[lang] || D.en;
