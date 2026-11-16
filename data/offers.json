@@ -1,0 +1,99 @@
+{
+  "version": "2026-11-16",
+  "mode": "PUBLIC_DEMO_NO_TRANSACTIONS",
+  "explanation": "Only Bosphorly-controlled service records belong in the public catalog. Operators must be contracted before sale. Do not put provider referral links here.",
+  "currency": "EUR",
+  "booking_enabled": false,
+  "offers": [
+    {
+      "id": "bb-morning",
+      "slug": "bosphorus-morning",
+      "name": "Morning Bosphorus Cruise",
+      "category": "cruise",
+      "duration": "Approx. 3 hours",
+      "description": "See the Bosphorus by boat. Stops, guide language and inclusions need confirmation.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false
+    },
+    {
+      "id": "bb-sunset",
+      "slug": "bosphorus-sunset",
+      "name": "Bosphorus Sunset Cruise",
+      "category": "cruise",
+      "duration": "Approx. 3 hours",
+      "description": "Discover the Bosphorus as evening approaches. Exact departure is subject to confirmation.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false
+    },
+    {
+      "id": "bb-oldcity",
+      "slug": "old-city-heritage",
+      "name": "Byzantine & Ottoman Heritage Tour",
+      "category": "city",
+      "duration": "Full-day concept",
+      "description": "Historic Peninsula, Galata and Balat heritage-focused itinerary. Access and guide languages vary.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false
+    },
+    {
+      "id": "orient-dinner",
+      "slug": "bosphorus-dinner",
+      "name": "Dinner on the Bosphorus",
+      "category": "cruise",
+      "duration": "Evening concept",
+      "description": "Dinner and cruise package; exact menu and pickup details not yet approved.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false
+    },
+    {
+      "id": "sea-land",
+      "slug": "bosphorus-sightseeing",
+      "name": "Bosphorus Sightseeing",
+      "category": "cruise",
+      "duration": "To be confirmed",
+      "description": "Sightseeing by boat with operator details to be confirmed.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false
+    },
+    {
+      "id": "alaturka",
+      "slug": "hammam-experience",
+      "name": "Traditional Turkish Hammam",
+      "category": "wellness",
+      "duration": "To be confirmed",
+      "description": "Hammam experience. Treatments and schedules vary by provider.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false
+    }
+  ],
+  "transfers": {
+    "examples_only": true,
+    "display_notice": "Historical test values provided by the product owner, not a confirmed tariff or live sale.",
+    "rate_rules": [
+      {
+        "airport": "IST",
+        "zone": "sultanahmet",
+        "example_eur": 55,
+        "approved_for_sale": false
+      },
+      {
+        "airport": "SAW",
+        "zone": "sultanahmet",
+        "example_eur": 65,
+        "approved_for_sale": false
+      }
+    ]
+  }
+}
