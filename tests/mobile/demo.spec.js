@@ -2,19 +2,23 @@ import {test,expect} from '@playwright/test';
 test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await page.goto('/booking.html?lang=en');
- await expect(page.locator('#offer option')).toHaveCount(39);
+ await expect(page.locator('#offer option')).toHaveCount(35);
  await page.locator('#offer').selectOption('bb-sunset');
  await expect(page.locator('#time option')).toHaveCount(1);
  await expect(page.locator('#time')).toHaveValue('18:00–21:00');
  await expect(page.locator('#price')).toContainText('20');
  await page.locator('#date').fill(new Date(Date.now()+86400000).toISOString().slice(0,10));await page.locator('#date').dispatchEvent('change');
- await page.locator('#offer').selectOption('alaturka-massage');
+ // Hammam requests list only Alaturka services and ask for the branch.
+ await page.goto('/booking.html?service=alaturka-massage&lang=en');
+ await expect(page.locator('#offer option')).toHaveCount(4);
+ await expect(page.locator('#branchWrap')).toBeVisible();
+ await page.locator('#date').fill(new Date(Date.now()+86400000).toISOString().slice(0,10));await page.locator('#date').dispatchEvent('change');
  await page.locator('#option').selectOption('hotstones');await page.locator('#duration').selectOption('60');
  await expect(page.locator('#price')).toContainText('110');
  await expect(page.locator('#time option').last()).toHaveText('22:00');
- await page.locator('#offer').selectOption('bb-sunset');
- await expect(page.locator('.logo img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
- expect(await page.locator('.logo img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
+ await page.goto('/booking.html?service=bb-sunset&lang=en');
+ await expect(page.locator('.sh-brand img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
+ await expect.poll(()=>page.locator('.sh-brand img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
  await expect(page.locator('#error')).toBeVisible();
  await page.locator('#hotelName').fill('Test Hotel');await page.locator('#room').fill('214');await page.locator('#fullName').fill('Test Guest');await page.locator('#phone').fill('+90 555 000 00 00');await page.locator('#submit').click();

@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 test('homepage polish preserves local planning, language and reduced motion',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');
- await expect(page.locator('.tour-card')).toHaveCount(8);
+ await expect(page.locator('.tour-card')).toHaveCount(6);
  await expect(page.locator('.hero-cta')).toHaveAttribute('href','#experiences');
  await expect(page.locator('.hero-photo img')).toBeVisible();
  await page.locator('.filter[data-filter="city"]').click();
@@ -25,6 +25,12 @@ test('homepage polish preserves local planning, language and reduced motion',asy
  await expect(page.locator('#labelOption')).toHaveText('نوع التدليك');
  await page.locator('.lang-select').selectOption('ru');
  await expect(page.locator('#labelOption')).toHaveText('Вид массажа');
+ // Every page carries the shared header; guide articles switch to their counterpart in the other language.
+ await page.goto('/en/istanbul-guide.html');
+ await expect(page.locator('.site-header .lang-select')).toHaveValue('en');
+ await Promise.all([page.waitForURL(/tr\/istanbul-rehberi\.html/),page.locator('.site-header .lang-select').selectOption('tr')]);
+ await page.goto('/prices.html?lang=tr');
+ await expect(page.locator('.hb-card')).toHaveCount(1);
  await page.goto('/account.html?lang=ar');
  await expect(page.locator('#heading')).toHaveText('حسابي');
  expect(errors).toEqual([]);
