@@ -1,0 +1,142 @@
+[
+  {
+    "id": "sultanahmet",
+    "name": "Sultanahmet",
+    "category": "heritage",
+    "district": "Fatih",
+    "lat": 41.0055,
+    "lng": 28.9769,
+    "summary": "Historic Peninsula hub for Byzantine and Ottoman landmarks.",
+    "guide": "en/old-city.html"
+  },
+  {
+    "id": "hagia-sophia",
+    "name": "Hagia Sophia",
+    "category": "heritage",
+    "district": "Fatih",
+    "lat": 41.0086,
+    "lng": 28.9802,
+    "summary": "Byzantine and Ottoman architectural heritage.",
+    "guide": "en/old-city.html"
+  },
+  {
+    "id": "topkapi",
+    "name": "Topkapı Palace",
+    "category": "heritage",
+    "district": "Fatih",
+    "lat": 41.0115,
+    "lng": 28.9834,
+    "summary": "Ottoman imperial palace complex.",
+    "guide": "en/old-city.html"
+  },
+  {
+    "id": "grand-bazaar",
+    "name": "Grand Bazaar",
+    "category": "shopping",
+    "district": "Fatih",
+    "lat": 41.0107,
+    "lng": 28.9681,
+    "summary": "Historic covered market and shops.",
+    "guide": "en/istanbul-guide.html"
+  },
+  {
+    "id": "galata",
+    "name": "Galata Tower",
+    "category": "heritage",
+    "district": "Beyoğlu",
+    "lat": 41.0256,
+    "lng": 28.9744,
+    "summary": "Tower and historic Galata streets.",
+    "guide": "en/istanbul-guide.html"
+  },
+  {
+    "id": "balat",
+    "name": "Balat",
+    "category": "neighborhood",
+    "district": "Fatih",
+    "lat": 41.0301,
+    "lng": 28.9482,
+    "summary": "Colorful streets and layered community history.",
+    "guide": "en/istanbul-guide.html"
+  },
+  {
+    "id": "eminonu",
+    "name": "Eminönü",
+    "category": "transport",
+    "district": "Fatih",
+    "lat": 41.0168,
+    "lng": 28.9699,
+    "summary": "Tram and ferry interchange on the waterfront.",
+    "guide": "en/public-transport.html"
+  },
+  {
+    "id": "taksim",
+    "name": "Taksim Square",
+    "category": "neighborhood",
+    "district": "Beyoğlu",
+    "lat": 41.037,
+    "lng": 28.985,
+    "summary": "Major square and metro connections.",
+    "guide": "en/public-transport.html"
+  },
+  {
+    "id": "besiktas",
+    "name": "Beşiktaş",
+    "category": "neighborhood",
+    "district": "Beşiktaş",
+    "lat": 41.042,
+    "lng": 29.006,
+    "summary": "Bosphorus neighborhood with ferry links.",
+    "guide": "en/istanbul-guide.html"
+  },
+  {
+    "id": "uskudar",
+    "name": "Üsküdar",
+    "category": "transport",
+    "district": "Üsküdar",
+    "lat": 41.0261,
+    "lng": 29.0158,
+    "summary": "Asian-side waterfront rail and ferry links.",
+    "guide": "en/public-transport.html"
+  },
+  {
+    "id": "kadikoy",
+    "name": "Kadıköy",
+    "category": "neighborhood",
+    "district": "Kadıköy",
+    "lat": 40.9908,
+    "lng": 29.028,
+    "summary": "Dining, markets and Asian-side transport hub.",
+    "guide": "en/istanbul-guide.html"
+  },
+  {
+    "id": "maidens-tower",
+    "name": "Maiden’s Tower",
+    "category": "heritage",
+    "district": "Üsküdar",
+    "lat": 41.0211,
+    "lng": 29.0041,
+    "summary": "Historic island tower in the Bosphorus.",
+    "guide": "en/bosphorus-cruises.html"
+  },
+  {
+    "id": "ist",
+    "name": "Istanbul Airport (IST)",
+    "category": "airport",
+    "district": "Arnavutköy",
+    "lat": 41.2753,
+    "lng": 28.7519,
+    "summary": "International airport served by the M11 metro.",
+    "guide": "en/airport-transfer.html"
+  },
+  {
+    "id": "saw",
+    "name": "Sabiha Gökçen Airport (SAW)",
+    "category": "airport",
+    "district": "Pendik",
+    "lat": 40.8986,
+    "lng": 29.3092,
+    "summary": "Asian-side airport served by the M4 metro.",
+    "guide": "en/airport-transfer.html"
+  }
+]

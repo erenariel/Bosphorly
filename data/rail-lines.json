@@ -1,0 +1,142 @@
+[
+  {
+    "id": "M11",
+    "name": "Istanbul Airport rail connection",
+    "mode": "Metro",
+    "note": "IST airport rail connection; confirm operating stations and times.",
+    "source": "https://www.uab.gov.tr/"
+  },
+  {
+    "id": "M4",
+    "name": "Kadıköy – Sabiha Gökçen Airport",
+    "mode": "Metro",
+    "note": "Asian-side line serving SAW.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M2",
+    "name": "Yenikapı – Hacıosman",
+    "mode": "Metro",
+    "note": "Taksim and Şişhane corridor.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M5",
+    "name": "Üsküdar – Sultanbeyli corridor",
+    "mode": "Metro",
+    "note": "Verify the current terminus with Metro Istanbul.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "T1",
+    "name": "Kabataş – Bağcılar",
+    "mode": "Tram",
+    "note": "Visitor tram through Sultanahmet and Eminönü.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "T5",
+    "name": "Eminönü – Alibeyköy",
+    "mode": "Tram",
+    "note": "Golden Horn corridor.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "F1",
+    "name": "Taksim – Kabataş",
+    "mode": "Funicular",
+    "note": "Short rail link to the waterfront.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "Marmaray",
+    "name": "Europe ↔ Asia suburban rail",
+    "mode": "Commuter rail",
+    "note": "Cross-Bosphorus rail under the water.",
+    "source": "https://marmaray.gov.tr/"
+  },
+  {
+    "id": "M1A",
+    "name": "Yenikapı – Atatürk Havalimanı",
+    "mode": "Metro",
+    "note": "Not the same airport as Istanbul Airport (IST).",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M1B",
+    "name": "Yenikapı – Kirazlı",
+    "mode": "Metro",
+    "note": "Western city route.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M3",
+    "name": "Bakırköy – Kayaşehir corridor",
+    "mode": "Metro",
+    "note": "Verify operating stops.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M6",
+    "name": "Levent – Hisarüstü",
+    "mode": "Metro",
+    "note": "M2 connection near Boğaziçi University.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M7",
+    "name": "Yıldız – Mahmutbey corridor",
+    "mode": "Metro",
+    "note": "Check current route map.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M8",
+    "name": "Bostancı – Parseller",
+    "mode": "Metro",
+    "note": "Asian-side rail route.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "M9",
+    "name": "Ataköy – Olimpiyat corridor",
+    "mode": "Metro",
+    "note": "Check current stops.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "T3",
+    "name": "Kadıköy – Moda",
+    "mode": "Tram",
+    "note": "Neighborhood circle tram.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "T4",
+    "name": "Topkapı – Mescid-i Selam",
+    "mode": "Tram",
+    "note": "European side line.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "TF1",
+    "name": "Maçka – Taşkışla",
+    "mode": "Cable car",
+    "note": "Short aerial line.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "TF2",
+    "name": "Eyüp – Piyer Loti",
+    "mode": "Cable car",
+    "note": "Golden Horn cableway.",
+    "source": "https://www.metro.istanbul/en"
+  },
+  {
+    "id": "F4",
+    "name": "Hisarüstü – Aşiyan",
+    "mode": "Funicular",
+    "note": "Rail link toward Bosphorus waterfront.",
+    "source": "https://www.metro.istanbul/en"
+  }
+]

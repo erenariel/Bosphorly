@@ -1,0 +1,50 @@
+{
+  "status": "UNVERIFIED_PUBLIC_RESEARCH",
+  "notice": "Research references only. No live price, contract or booking permission.",
+  "suppliers": [
+    {
+      "name": "Blue Brothers",
+      "url": "https://www.bluebrotherstour.com/",
+      "categories": [
+        "cruise",
+        "historic-tour"
+      ],
+      "partnership": "not_confirmed"
+    },
+    {
+      "name": "Sea & Land",
+      "url": "https://sealandtrip.com/",
+      "categories": [
+        "city",
+        "bosphorus"
+      ],
+      "partnership": "not_confirmed"
+    },
+    {
+      "name": "Azure Tour",
+      "url": "https://www.azureturizm.com/",
+      "categories": [
+        "day-trip",
+        "tour"
+      ],
+      "partnership": "not_confirmed"
+    },
+    {
+      "name": "Orient Bosphorus",
+      "url": "https://orientbosphorus.com/",
+      "categories": [
+        "dinner-cruise"
+      ],
+      "partnership": "not_confirmed"
+    },
+    {
+      "name": "Alaturka Hamam",
+      "url": "https://www.alaturkahamam.com/",
+      "categories": [
+        "hammam",
+        "wellness"
+      ],
+      "partnership": "not_confirmed"
+    }
+  ]
+}
