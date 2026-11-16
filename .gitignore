@@ -1,0 +1,9 @@
+# Local-only and sensitive files
+.env
+.env.*
+!.env.example
+node_modules/
+.DS_Store
+__pycache__/
+*.pyc
+*.log
