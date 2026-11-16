@@ -1,0 +1,22 @@
+name: Public prototype quality checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  static-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify required files and security boundaries
+        shell: bash
+        run: |
+          test -s index.html
+          test -s README.md
+          test -s SECURITY.md
+          test -s dashboard.html
+          test -s presentation.html
+          test -s assets/brand/brandmark.svg
+          ! grep -R -n -E '(sk_live_|ghp_[A-Za-z0-9]{30,}|-----BEGIN (RSA|OPENSSH) PRIVATE KEY-----)' --include='*.html' --include='*.js' --include='*.md' .
