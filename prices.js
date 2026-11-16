@@ -11,14 +11,14 @@
   document.documentElement.lang = tr ? 'tr' : 'en';
 
   const T = tr ? {
-    home: 'Ana sayfa', plan: 'Talep et', map: 'Harita',
+    home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
     eyebrow: 'TUR KARŞILAŞTIRMA · İSTANBUL', heading: 'İstanbul turlarını karşılaştır.',
     lead: 'Lisanslı firmaların kendi sitelerinde yayımladığı fiyatlar ve tur içerikleri. Neyin dahil olduğunu yan yana gör.',
     noticeTitle: 'Bilgiler firmaların kendi sitelerinden derlenmiştir; Bosphorly teklifi değildir.',
     noticeBody: 'Fiyat ve içerikler tarihe, yaşa ve pakete göre değişebilir. Bir firma Bosphorly ile anlaşma imzaladığında o firmanın turları buradan talep edilebilir olacak.',
     query: 'Tur veya firma ara…', per: 'kişi başı', from: 'Başlangıç', was: 'önceki',
     request: 'Bosphorly’de talep et →', soon: 'Firma anlaşması bekleniyor', checked: 'Kontrol', none: 'Eşleşen tur bulunamadı.',
-    notListed: 'Fiyat sorunuz', records: 'tur', included: 'Dahil', excluded: 'Dahil değil', more: 'Tüm ayrıntılar',
+    notListed: 'Fiyat sor', records: 'tur', included: 'Dahil', excluded: 'Dahil değil', more: 'Tüm ayrıntılar',
     schedule: 'Saatler', meeting: 'Buluşma', guide: 'Rehber', pickup: 'Transfer', cancel: 'İptal', notes: 'Bilmen gerekenler',
     source: 'Kaynak: firmanın sitesi', noDetails: 'Firma sitesinde ayrıntılı içerik bulunamadı.', englishOnly: 'Ayrıntılar firmanın sitesindeki İngilizce metinden özetlendi.',
     cats: { cruise: 'Boğaz turu', dinner: 'Akşam yemekli tur', city: 'Şehir turu', day: 'Günübirlik tur', islands: 'Adalar', hammam: 'Hamam', transfer: 'Transfer', multi: 'Çok günlü tur' }
