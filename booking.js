@@ -17,7 +17,7 @@
  let offers=[];
  const namesTr={'bb-morning':'Sabah Boğaz Turu','bb-sunset':'Gün Batımı Boğaz Turu','bb-oldcity':'Bizans ve Osmanlı Mirası Turu','orient-dinner':'Boğaz’da Akşam Yemeği','sea-land':'Boğaz Gezi Turu','alaturka':'Geleneksel Türk Hamamı'};
  const getOffer=()=>offers.find(x=>x.id===$('offer').value);
- const labels=()=>{const x=getOffer();$('price').textContent=x?.price_eur!=null&&x.rate_status==='approved'&&x.partner_status==='contracted'?new Intl.NumberFormat(tr?'tr-TR':'en-US',{style:'currency',currency:'EUR'}).format(x.price_eur):t.price;$('availability').textContent=x?.available?'Contact to verify':t.availability;};
+ const labels=()=>{$('price').textContent=t.price;$('availability').textContent=t.availability;};
  async function load(){
   try{
    const resp=await fetch('data/offers.json',{cache:'no-store'});if(!resp.ok)throw new Error('Cannot load offers');
@@ -32,7 +32,8 @@
   event.preventDefault();const offer=getOffer();const num=$('guests').valueAsNumber;
   const msg=!offer?t.invalidOffer:!$('date').value||$('date').value<local?t.invalidDate:!Number.isInteger(num)||num<1||num>16?t.invalidGuests:!$('ack').checked?t.invalidConsent:null;
   $('error').hidden=!msg;$('error').textContent=msg||'';if(msg)return;
-  const r=$('result');r.replaceChildren();const h=document.createElement('h3');h.textContent=t.resultTitle;const p=document.createElement('p');p.textContent=t.resultNotice;
+  const preview=window.BosphorlyBooking.preview({experienceId:offer.id,date:$('date').value,guests:num});
+  const r=$('result');r.dataset.state=preview.state;r.replaceChildren();const h=document.createElement('h3');h.textContent=t.resultTitle;const p=document.createElement('p');p.textContent=t.resultNotice;
   const d=document.createElement('dl');d.className='draft';
   const fields=[[tr?'Deneyim':'Experience',tr&&namesTr[offer.id]||offer.name],[tr?'Tarih':'Date',$('date').value],[tr?'Zaman':'Time',time.selectedOptions[0].textContent],[tr?'Kişi':'Guests',String(num)],[tr?'Bölge':'Area',area.selectedOptions[0].textContent],[tr?'Fiyat':'Price',$('price').textContent]];
   fields.forEach(([key,val])=>{const dt=document.createElement('dt');dt.textContent=key;const dd=document.createElement('dd');dd.textContent=val;d.append(dt,dd)});
