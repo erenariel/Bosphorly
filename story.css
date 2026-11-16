@@ -2,3 +2,4 @@
 
 .hero-transfer{display:inline-block;border:1px solid #b4d2e366;color:#eff8ff;border-radius:12px;padding:14px 18px;font-size:13px;font-weight:750;margin:8px 0 8px 10px}.hero-transfer:hover{background:#ffffff10}@media(max-width:560px){.hero-transfer{margin-inline:0;display:block;width:fit-content}}
 .journey-strip article>span{flex:0 0 22px;white-space:nowrap}
+.story-heading>div,.journey-strip article>div,.sendoff-actions{min-width:0}.sendoff-actions{max-width:100%;flex-shrink:1}.sendoff-actions a{max-width:100%;white-space:normal;overflow-wrap:anywhere}
