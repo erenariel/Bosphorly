@@ -7,7 +7,7 @@
 
 *Mobile-first arrival planning · Istanbul discovery · Ethical travel intermediation*
 
-[▶ Canlı masaüstü demosu](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr) · [Traveler demo](index.html) · [Researched tour prices](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
+[▶ Canlı masaüstü demosu](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr) · [Traveler demo (English)](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=en) · [Researched tour prices](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
 </div>
 
 ## ▶ Masaüstü ve mobil demoyu aç
