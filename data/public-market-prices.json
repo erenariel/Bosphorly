@@ -1306,58 +1306,457 @@
       "source_url": "https://www.alaturkahamam.com/services",
       "details": {
         "source_url": "https://www.alaturkahamam.com/services",
+        "checked": "2026-11-16",
         "duration": "60 minutes",
         "schedule": "Daily 09:30–23:00",
         "pickup": null,
-        "meeting_point": "Branches in Fatih (Binbirdirek) and Beyoğlu",
+        "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) or Beyoğlu (Grand Haliç Hotel, −1)",
         "guide": null,
         "highlights": [
           "Kese scrub and foam massage on warm marble",
-          "Clay face mask",
-          "Separate women’s, men’s and couple sections"
+          "Lavender soap foam massage",
+          "Clay face mask"
         ],
         "included": [
           "Kese scrub",
-          "Foam massage with lavender soap",
+          "Foam massage with lavender soap on warm marble",
           "Clay face mask",
-          "Steam bath, sauna and relaxation lounge",
-          "Towel, peştemal, soap, shampoo, mitt and slippers"
+          "Steam bath, sauna and relaxation lounge"
         ],
         "not_included": [
           "Swimsuit for the pool"
         ],
         "cancellation": null,
         "notes": [
-          "Upgrades: sea-salt or coffee peeling €65, Sultan hammam + massage €75",
-          "Pool is mixed and usually cold (23 °C)"
+          "Separate women’s, men’s and couple sections",
+          "Towel, peştemal, soap, shampoo, mitt and slippers provided",
+          "Pool is mixed and usually cold (23 °C); bring your own swimsuit"
         ],
         "tr": {
           "duration": "60 dakika",
+          "schedule": "Her gün 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) veya Beyoğlu (Grand Haliç Hotel, −1. kat)",
           "highlights": [
             "Kese ve sıcak mermerde köpük masajı",
-            "Kil yüz maskesi",
-            "Kadın, erkek ve çift bölümleri"
+            "Lavanta sabunlu köpük masajı",
+            "Kil yüz maskesi"
           ],
           "included": [
             "Kese",
-            "Lavanta sabunlu köpük masajı",
+            "Sıcak mermerde lavanta sabunlu köpük masajı",
             "Kil yüz maskesi",
-            "Buhar odası, sauna ve dinlenme salonu",
-            "Havlu, peştemal, sabun, şampuan, kese ve terlik"
+            "Buhar odası, sauna ve dinlenme salonu"
           ],
           "not_included": [
             "Havuz için mayo"
           ],
           "notes": [
-            "Üst paketler: tuz veya kahve peelingi €65, Sultan hamam + masaj €75",
-            "Havuz karma ve genelde soğuk (23 °C)"
-          ],
-          "schedule": "Her gün 09:30–23:00",
-          "meeting_point": "Fatih (Binbirdirek) ve Beyoğlu şubeleri"
-        },
-        "checked": "2026-11-16"
+            "Kadın, erkek ve çift bölümleri ayrı",
+            "Havlu, peştemal, sabun, şampuan, kese ve terlik verilir",
+            "Havuz karma ve genelde soğuk (23 °C); mayonu kendin getir"
+          ]
+        }
       },
-      "title_tr": "Geleneksel Türk Hamamı Paketi"
+      "title_tr": "Geleneksel Türk Hamamı Paketi",
+      "hours": {
+        "open": "09:30",
+        "close": "23:00",
+        "step_min": 30,
+        "days": "Mon–Sun"
+      },
+      "durations": [
+        {
+          "min": 60,
+          "price": 55
+        }
+      ]
+    },
+    {
+      "id": "alaturka-peeling",
+      "operator": "Alaturka Hamam",
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.alaturkahamam.com/services",
+      "hours": {
+        "open": "09:30",
+        "close": "23:00",
+        "step_min": 30,
+        "days": "Mon–Sun"
+      },
+      "title": "Sea Salt or Coffee Peeling Hammam Package",
+      "title_tr": "Tuz veya Kahve Peelingli Hamam Paketi",
+      "price": 65,
+      "durations": [
+        {
+          "min": 60,
+          "price": 65
+        }
+      ],
+      "details": {
+        "source_url": "https://www.alaturkahamam.com/services",
+        "checked": "2026-11-16",
+        "duration": "60 minutes",
+        "schedule": "Daily 09:30–23:00",
+        "pickup": null,
+        "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) or Beyoğlu (Grand Haliç Hotel, −1)",
+        "guide": null,
+        "highlights": [
+          "Kese scrub, then a deep sea-salt or coffee peeling",
+          "Foam massage on warm marble",
+          "Clay face mask"
+        ],
+        "included": [
+          "Kese scrub",
+          "Sea-salt or coffee peeling",
+          "Foam massage with lavender soap on warm marble",
+          "Clay face mask",
+          "Steam bath, sauna and relaxation lounge"
+        ],
+        "not_included": [
+          "Swimsuit for the pool"
+        ],
+        "cancellation": null,
+        "notes": [
+          "Separate women’s, men’s and couple sections",
+          "Towel, peştemal, soap, shampoo, mitt and slippers provided",
+          "Pool is mixed and usually cold (23 °C); bring your own swimsuit"
+        ],
+        "tr": {
+          "duration": "60 dakika",
+          "schedule": "Her gün 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) veya Beyoğlu (Grand Haliç Hotel, −1. kat)",
+          "highlights": [
+            "Kese, ardından deniz tuzu veya kahve ile derin peeling",
+            "Sıcak mermerde köpük masajı",
+            "Kil yüz maskesi"
+          ],
+          "included": [
+            "Kese",
+            "Deniz tuzu veya kahve peelingi",
+            "Sıcak mermerde lavanta sabunlu köpük masajı",
+            "Kil yüz maskesi",
+            "Buhar odası, sauna ve dinlenme salonu"
+          ],
+          "not_included": [
+            "Havuz için mayo"
+          ],
+          "notes": [
+            "Kadın, erkek ve çift bölümleri ayrı",
+            "Havlu, peştemal, sabun, şampuan, kese ve terlik verilir",
+            "Havuz karma ve genelde soğuk (23 °C); mayonu kendin getir"
+          ]
+        }
+      }
+    },
+    {
+      "id": "alaturka-sultan",
+      "operator": "Alaturka Hamam",
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.alaturkahamam.com/services",
+      "hours": {
+        "open": "09:30",
+        "close": "23:00",
+        "step_min": 30,
+        "days": "Mon–Sun"
+      },
+      "title": "Sultan Hammam and Massage Package",
+      "title_tr": "Sultan Hamam ve Masaj Paketi",
+      "price": 75,
+      "durations": [
+        {
+          "min": 60,
+          "price": 75
+        }
+      ],
+      "details": {
+        "source_url": "https://www.alaturkahamam.com/services",
+        "checked": "2026-11-16",
+        "duration": "60 minutes",
+        "schedule": "Daily 09:30–23:00",
+        "pickup": null,
+        "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) or Beyoğlu (Grand Haliç Hotel, −1)",
+        "guide": null,
+        "highlights": [
+          "Kese scrub and foam massage on warm marble",
+          "Anti-stress massage with organic oil in a private room",
+          "Clay face mask"
+        ],
+        "included": [
+          "Kese scrub",
+          "Foam massage with lavender soap on warm marble",
+          "Head-to-toe anti-stress massage with organic oil",
+          "Clay face mask",
+          "Steam bath, sauna and relaxation lounge"
+        ],
+        "not_included": [
+          "Swimsuit for the pool"
+        ],
+        "cancellation": null,
+        "notes": [
+          "Separate women’s, men’s and couple sections",
+          "Towel, peştemal, soap, shampoo, mitt and slippers provided",
+          "Pool is mixed and usually cold (23 °C); bring your own swimsuit"
+        ],
+        "tr": {
+          "duration": "60 dakika",
+          "schedule": "Her gün 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) veya Beyoğlu (Grand Haliç Hotel, −1. kat)",
+          "highlights": [
+            "Kese ve sıcak mermerde köpük masajı",
+            "Özel odada organik yağla anti-stres masajı",
+            "Kil yüz maskesi"
+          ],
+          "included": [
+            "Kese",
+            "Sıcak mermerde lavanta sabunlu köpük masajı",
+            "Organik yağla baştan ayağa anti-stres masajı",
+            "Kil yüz maskesi",
+            "Buhar odası, sauna ve dinlenme salonu"
+          ],
+          "not_included": [
+            "Havuz için mayo"
+          ],
+          "notes": [
+            "Kadın, erkek ve çift bölümleri ayrı",
+            "Havlu, peştemal, sabun, şampuan, kese ve terlik verilir",
+            "Havuz karma ve genelde soğuk (23 °C); mayonu kendin getir"
+          ]
+        }
+      }
+    },
+    {
+      "id": "alaturka-massage",
+      "operator": "Alaturka Hamam",
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.alaturkahamam.com/services",
+      "hours": {
+        "open": "09:30",
+        "close": "23:00",
+        "step_min": 30,
+        "days": "Mon–Sun"
+      },
+      "title": "Massage menu",
+      "title_tr": "Masaj menüsü",
+      "price": 35,
+      "options": [
+        {
+          "id": "bali",
+          "name": "Bali massage",
+          "name_tr": "Bali masajı",
+          "desc": "Pressure on set points starting from the feet; boosts circulation and relaxes.",
+          "desc_tr": "Ayaklardan başlayarak belirli noktalara baskı; dolaşımı uyarır, rahatlatır.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "aroma",
+          "name": "Aromatherapy massage",
+          "name_tr": "Aromaterapi masajı",
+          "desc": "Herbal essential oils with slow, gentle movements.",
+          "desc_tr": "Bitkisel esans yağlarıyla yavaş ve yumuşak hareketler.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "swedish",
+          "name": "Swedish massage",
+          "name_tr": "İsveç masajı",
+          "desc": "Classic Swedish techniques to ease muscle tension.",
+          "desc_tr": "Klasik İsveç teknikleriyle kas gerginliğini azaltır.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "antistress",
+          "name": "Anti-stress massage",
+          "name_tr": "Anti-stres masajı",
+          "desc": "Slow massage of head, neck, back and legs to release tension.",
+          "desc_tr": "Baş, boyun, sırt ve bacaklara yavaş masaj; gerginliği alır.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "deeptissue",
+          "name": "Deep tissue massage",
+          "name_tr": "Derin doku masajı",
+          "desc": "Relaxes muscle and connective tissue; for chronic pain and spasms.",
+          "desc_tr": "Kas ve bağ dokusunu gevşetir; kronik ağrı ve spazmlara iyi gelir.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "back",
+          "name": "Medical back massage",
+          "name_tr": "Medikal sırt masajı",
+          "desc": "Rhythmic back massage for back pain and muscle spasms.",
+          "desc_tr": "Sırta ritmik hareketler; sırt ağrısı ve spazmları azaltır.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "foot",
+          "name": "Medical foot massage",
+          "name_tr": "Medikal ayak masajı",
+          "desc": "Focused on the soles of the feet for deep relaxation.",
+          "desc_tr": "Ayak tabanına odaklanır; derin rahatlama sağlar.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 35
+            },
+            {
+              "min": 60,
+              "price": 65
+            }
+          ]
+        },
+        {
+          "id": "sport",
+          "name": "Sport massage",
+          "name_tr": "Spor masajı",
+          "desc": "Before or after sport, to support performance.",
+          "desc_tr": "Spor öncesi ve sonrası; performansı destekler.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 65
+            },
+            {
+              "min": 60,
+              "price": 110
+            }
+          ]
+        },
+        {
+          "id": "hotstones",
+          "name": "Hot stones massage",
+          "name_tr": "Sıcak taş masajı",
+          "desc": "Heated stones improve circulation and ease muscle cramps.",
+          "desc_tr": "Isıtılmış taşlarla dolaşımı artırır, kas kramplarını gevşetir.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 65
+            },
+            {
+              "min": 60,
+              "price": 110
+            }
+          ]
+        },
+        {
+          "id": "fourhand",
+          "name": "Four-hand massage",
+          "name_tr": "Dört el masajı",
+          "desc": "Two therapists working in sync.",
+          "desc_tr": "İki terapist aynı anda, uyum içinde uygular.",
+          "durations": [
+            {
+              "min": 30,
+              "price": 65
+            },
+            {
+              "min": 60,
+              "price": 110
+            }
+          ]
+        }
+      ],
+      "details": {
+        "source_url": "https://www.alaturkahamam.com/services",
+        "checked": "2026-11-16",
+        "duration": "30 or 60 minutes",
+        "schedule": "Daily 09:30–23:00",
+        "pickup": null,
+        "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) or Beyoğlu (Grand Haliç Hotel, −1)",
+        "guide": null,
+        "highlights": [
+          "10 massage types, 30 or 60 minutes",
+          "Bali, aromatherapy, Swedish, anti-stress, deep tissue",
+          "Sport, hot stones and four-hand massages"
+        ],
+        "included": [
+          "Chosen massage (30 or 60 minutes)",
+          "Steam bath, sauna and relaxation lounge"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Separate women’s, men’s and couple sections",
+          "Prices change with the massage type and duration you choose"
+        ],
+        "tr": {
+          "duration": "30 veya 60 dakika",
+          "schedule": "Her gün 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) veya Beyoğlu (Grand Haliç Hotel, −1. kat)",
+          "highlights": [
+            "10 masaj çeşidi, 30 veya 60 dakika",
+            "Bali, aromaterapi, İsveç, anti-stres, derin doku",
+            "Spor, sıcak taş ve dört el masajı"
+          ],
+          "included": [
+            "Seçtiğin masaj (30 veya 60 dakika)",
+            "Buhar odası, sauna ve dinlenme salonu"
+          ],
+          "notes": [
+            "Kadın, erkek ve çift bölümleri ayrı",
+            "Fiyat, seçtiğin masaj türüne ve süreye göre değişir"
+          ]
+        }
+      }
     },
     {
       "id": "sl-generic-cruise",
