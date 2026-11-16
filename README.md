@@ -104,7 +104,7 @@ Real booking requests, confirmation numbers, card payments, passport information
 ## Traveler pricing and browser localization (16 Nov 2026)
 
 - **Sultanahmet airport transfers are fixed**, not estimated, at **IST → Sultanahmet €55** and **SAW → Sultanahmet €65**, one way. These are the project's customer tariffs as provided by the operator. Other destinations remain `Ask for price`. Real reservations remain disabled until fulfillment is integrated.
-- **21 sourced operator records** (20 advertised prices and one rate-on-request) are in `data/public-market-prices.json`. Cards and `prices.html` show original posted currencies and mark them as **operator research, NOT Bosphorly sales rates**. Dates/packages/seasonal discounts can change.
+- **36 sourced operator records** (35 advertised prices and one rate-on-request) are in `data/public-market-prices.json`. Cards and `prices.html` show original posted currencies and mark them as **operator research, NOT Bosphorly sales rates**. Dates/packages/seasonal discounts can change.
 - On first launch, the traveler's interface detects the browser language via `navigator.languages`. A manually chosen language is remembered for subsequent visits.
 - Optional Google Places (New) autocomplete identifies a selected Istanbul hotel by its name, formatted address and location. Without a configured restricted browser key, a clearly marked manual fallback remains available. See [Google Places activation](docs/GOOGLE-PLACES.md).
 - The homepage includes subtle animated water flourishes through CSS, respecting the visitor's reduced-motion preference. No heavy animated GIF is required.
