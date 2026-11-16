@@ -4,10 +4,10 @@ import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 import worker from '../backend/worker.js';
 import {documents,validateMember,authenticateMember,encryptProfile,saveMember,withdrawMarketing} from '../backend/membership.js';
 const identity={issuer:'https://identity.example.invalid',subject:'opaque-subject',email:'synthetic@example.invalid'};
-const body={fullName:'Synthetic Guest',email:identity.email,country:'TR',termsVersion:documents.terms,privacyVersion:documents.privacy,marketingEmail:false};
+const body={fullName:'Synthetic Guest',email:identity.email,country:'TR',termsVersion:documents.terms,privacyVersion:documents.privacy,marketingEmail:false,preferredLanguage:'tr'};
 test('required fields, verified email, valid countries and explicit versioned choices',()=>{
  assert.equal(validateMember(body,identity).country,'TR');
- for(const change of [{email:'attacker@example.invalid'},{fullName:''},{country:'ZZ'},{marketingEmail:'true'},{termsVersion:'old'},{privacyVersion:'old'},{passport:'not-allowed'}]) assert.throws(()=>validateMember({...body,...change},identity));
+ for(const change of [{email:'attacker@example.invalid'},{fullName:''},{country:'ZZ'},{marketingEmail:'true'},{termsVersion:'old'},{privacyVersion:'old'},{passport:'not-allowed'},{preferredLanguage:'xx'}]) assert.throws(()=>validateMember({...body,...change},identity));
  const {marketingEmail,...missing}=body;assert.throws(()=>validateMember(missing,identity));
  assert.doesNotThrow(()=>validateMember({...body,fullName:'أحمد محمد',country:'PS'},identity));
 });

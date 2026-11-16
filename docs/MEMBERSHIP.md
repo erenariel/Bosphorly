@@ -6,12 +6,16 @@ fulfillment and hotel commissions remain separate from member marketing.
 
 ## Delivered
 
-`membership.html?lang=tr` (also en/ar/ru) demonstrates registration, required
-country selection, separate terms/privacy acknowledgement, optional unchecked
-email permission, an account preference view, withdrawal and reset. Identity
-fields are disabled synthetic values: no real account or profile is created,
-no mail sent and no data stored in browser storage or submitted. The public
-Pages frontend has no membership API URL or sign-in credentials configured.
+`membership.html?lang=tr` (also en/ar/ru) provides editable blank name and
+email fields, required country selection and a preferred communication language
+(defaulted to the screen language). Terms/privacy acknowledgements and optional
+unchecked marketing permission stay separate. No form details are submitted,
+persisted or displayed as a registered account. The local check clearly reports
+that registration is unavailable; clear-form and clear-email-choice actions
+only affect this form. The frontend still has no API URL or sign-in credentials.
+Controls carry no HTML name attributes so a script failure cannot serialize PII
+into a native form GET. The continue control is a plain button, not a native
+submit. Autocomplete can use the browser's own name/email suggestions.
 Country means residence, not ethnicity or nationality. RTL and mobile supported.
 English legal draft text is explicitly tagged `lang=en` when translation is
 pending; reviewed legal translations are a launch gate, not automatic fallback
@@ -28,6 +32,7 @@ The existing Worker exposes two rate-limited POST routes with strict origin
 controls, bearer identity, bounded JSON bodies and no cookies:
 
 - `/v1/members/profile`: requires fullName, email, ISO country code,
+  preferredLanguage (en/tr/ru/uk/de/fr/nl/ar/he/az/fa/es),
   termsVersion `membership-draft-v1`, privacyVersion `privacy-draft-v1` and
   marketingEmail boolean. Email must match a cryptographically verified,
   email-verified identity token. Upserts converge on the SHA-256 hash of issuer
@@ -101,3 +106,32 @@ redemptions need unique booking/member idempotency, limits and atomic reversal.
 Run `npm test` and `npm run test:mobile`. Tests use only synthetic identities and
 sample data, verify token claims/signatures, encryption, strict fields, optional
 consent, disabled collection, draft campaign gating and mobile/RTL behavior.
+
+## Registration field research (2026-11-16)
+
+Sources were consulted to inform a product decision, not to claim these fields
+are all legally mandatory for every travel platform:
+
+- [GetYourGuide privacy policy, section 2.1](https://www.getyourguide.com/c/privacy-policy/):
+  name and email are account data; managed identity is an alternative to a local
+  password. This supports a short registration form, not copying its policies.
+- [KVKK basic principles](https://kvkk.gov.tr/SharedFolderServer/CMSFiles/a23bfe08-9b3a-4c2f-8a97-a259dcc0e667.PDF):
+  collect data related and proportionate to the purpose; do not collect details
+  simply because they might be needed later.
+- [KVKK consent guidance](https://www.kvkk.gov.tr/Icerik/2037/Acik-Riza-Alirken-Dikkat-Edilecek-Hususlar):
+  purpose-specific, freely given and withdrawable consent.
+
+| Information | Bosphorly decision | Purpose |
+| --- | --- | --- |
+| Full name | Required, editable single field | Member identity, accommodates international names |
+| Email | Required; verify at real activation | Account access and service communication |
+| Residence country | Required (owner requirement) | Service localisation; not nationality or ethnicity |
+| Communication language | Prefilled, changeable | Communicate in the guest's chosen language |
+| Terms acceptance | Separate required acknowledgement | Record the reviewed terms version on launch |
+| Privacy notice | Separate acknowledgement | Inform the member; not blanket processing consent |
+| Campaign email | Optional, unchecked | Promotional messages only with separate permission |
+| Phone, flight and hotel | Defer to relevant booking | Not necessary for account creation |
+| Birth date, sex, national ID/passport, street address, card | Not requested | No current membership purpose |
+
+The field choices above are Bosphorly product decisions informed by the sources.
+No new age/date-of-birth or SMS-marketing requirement has been inferred.
