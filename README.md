@@ -7,8 +7,19 @@
 
 *Mobile-first arrival planning · Istanbul discovery · Ethical travel intermediation*
 
-[Traveler demo](index.html) · [Researched tour prices](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
+[▶ Canlı masaüstü demosu](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr) · [Traveler demo](index.html) · [Researched tour prices](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
 </div>
+
+## ▶ Masaüstü ve mobil demoyu aç
+
+**[Bosphorly ana sayfasını ve transfer formunu aç →](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr)**
+
+Aşağıdaki görsele tıklayarak da masaüstü demosuna ulaşabilirsin. Aynı ChatGPT hesabınla giriş yapman gerekebilir. Bu ayrı inceleme yayını, [PR #4](https://github.com/erenariel/Bosphorly/pull/4) içindeki güncel arayüzü gösterir; ana dalın GitHub Pages yayınıyla aynı sürüm olmak zorunda değildir. Gerçek rezervasyon veya ödeme yapılmaz.
+
+[![Bosphorly masaüstü transfer demosunu aç](https://raw.githubusercontent.com/erenariel/Bosphorly/f3767fe75265322d39d10cd25b5ed502145bc01e/docs/review/desktop-transfer.jpg)](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr)
+
+[Transfer formuna git](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr#booking) · [Üyelik formunu aç](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/membership.html?lang=tr)
+
 
 > **Public prototype · 16 November 2026.** This is not a live agency, payment service, reservation engine, or partner portal. No bookings or charges are made. All demo prices, provider cards, referral KPIs, commissions and sample transactions are illustrative or third-party research, **not confirmed commercial offers**.
 
