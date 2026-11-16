@@ -48,3 +48,9 @@ test('admin mutation is authenticated, validated and batched with audit',async()
  assert.equal((await worker.fetch(req('/v1/admin/prices',{...body,unitMinor:-1},headers),config)).status,400);
  assert.equal((await worker.fetch(req('/v1/admin/providers/verify',{id:'p',licenseReference:'license-id',sourceReference:'review-id'},headers),config)).status,200);
 });
+
+test('Anatolia catalog entries remain unpriced, unverified route proposals',async()=>{
+ const {readFile}=await import('node:fs/promises');const catalog=JSON.parse(await readFile(new URL('../data/offers.json',import.meta.url),'utf8'));const routes=catalog.offers.filter(o=>o.category==='anatolia');assert.equal(routes.length,6);assert.equal(new Set(catalog.offers.map(o=>o.id)).size,catalog.offers.length);
+ for(const route of routes){assert.equal(route.price_eur,null);assert.equal(route.rate_status,'quote_required');assert.equal(route.available,false);assert.equal(route.partner_status,'pending_contract');for(const lang of ['tr','ar','ru'])assert.ok(route.translations[lang].name&&route.translations[lang].description);}
+ assert.equal(catalog.booking_enabled,false);
+});

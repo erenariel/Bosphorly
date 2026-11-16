@@ -1,0 +1,80 @@
+{
+  "cappadocia": {
+    "path": "assets/images/anatolia-cappadocia.webp",
+    "title": "Cappadocia Aerial View Landscape.jpg",
+    "author": "Benh LIEU SONG (Flickr)",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Cappadocia_Aerial_View_Landscape.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Cappadocia_Aerial_View_Landscape.jpg",
+    "modifications": "Resized and converted to WebP; displayed with cover crop.",
+    "width": 1280,
+    "height": 853,
+    "checked_at": "2026-11-16"
+  },
+  "pamukkale": {
+    "path": "assets/images/anatolia-pamukkale.webp",
+    "title": "The travertines of Pamukkale 3.jpg",
+    "author": "Slyronit",
+    "license": "CC BY-SA 4.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source_url": "https://commons.wikimedia.org/wiki/File:The_travertines_of_Pamukkale_3.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/6/68/The_travertines_of_Pamukkale_3.jpg",
+    "modifications": "Resized and converted to WebP; displayed with cover crop.",
+    "width": 1280,
+    "height": 960,
+    "checked_at": "2026-11-16"
+  },
+  "ephesus": {
+    "path": "assets/images/anatolia-ephesus.webp",
+    "title": "Ephesus Celsus Library Façade.jpg",
+    "author": "Benh LIEU SONG",
+    "license": "CC BY-SA 3.0",
+    "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Ephesus_Celsus_Library_Fa%C3%A7ade.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/8/84/Ephesus_Celsus_Library_Fa%C3%A7ade.jpg",
+    "modifications": "Resized and converted to WebP; displayed with cover crop.",
+    "width": 1280,
+    "height": 992,
+    "checked_at": "2026-11-16"
+  },
+  "black-sea": {
+    "path": "assets/images/anatolia-black-sea.webp",
+    "title": "Uzungöl, Trabzon 2014.jpg",
+    "author": "Hamdigumus",
+    "license": "CC0",
+    "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Uzung%C3%B6l,_Trabzon_2014.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Uzung%C3%B6l%2C_Trabzon_2014.jpg",
+    "modifications": "Resized and converted to WebP; displayed with cover crop.",
+    "width": 1280,
+    "height": 853,
+    "checked_at": "2026-11-16"
+  },
+  "sanliurfa": {
+    "path": "assets/images/anatolia-sanliurfa.webp",
+    "title": "The archaeological site of Göbekli Tepe - main excavation area.png",
+    "author": "German Archaeological Institute, photo E. Kücük.",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0",
+    "source_url": "https://commons.wikimedia.org/wiki/File:The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/The_archaeological_site_of_G%C3%B6bekli_Tepe_-_main_excavation_area.png",
+    "modifications": "Resized and converted to WebP; displayed with cover crop.",
+    "width": 759,
+    "height": 1000,
+    "checked_at": "2026-11-16"
+  },
+  "nemrut": {
+    "path": "assets/images/anatolia-nemrut.webp",
+    "title": "Heads Nemrut dag temple.jpg",
+    "author": "Klearchos Santorini, Cyclades, Greece",
+    "license": "CC BY 3.0",
+    "license_url": "https://creativecommons.org/licenses/by/3.0",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Heads_Nemrut_dag_temple.jpg",
+    "original_url": "https://upload.wikimedia.org/wikipedia/commons/7/7a/Heads_Nemrut_dag_temple.jpg",
+    "modifications": "Resized and converted to WebP; displayed with cover crop.",
+    "width": 423,
+    "height": 640,
+    "checked_at": "2026-11-16"
+  }
+}

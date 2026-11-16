@@ -1,0 +1,564 @@
+{
+  "checked_at": "2026-11-16",
+  "status": "PUBLIC_RESEARCH_NOT_BOSPHORLY_QUOTES",
+  "notice": "Operator retail references, not wholesale/net costs, approved suppliers, availability or Bosphorly sale prices. No automated scraping or checkout redirection.",
+  "routes": [
+    {
+      "id": "anatolia-cappadocia",
+      "slug": "cappadocia",
+      "overview": {
+        "tr": "Kapadokya’da tek bir standart tur yok: Kırmızı Tur daha çok Göreme ve kuzey çevresini, Yeşil Tur ise vadi ve yeraltı şehri duraklarını birleştiriyor. Aynı renk adı bile farklı şirketlerde aynı program anlamına gelmiyor.",
+        "en": "Cappadocia tours differ by route: Red programmes focus on Göreme and the north; Green programmes combine valleys and underground sites. Colour names do not guarantee identical stops."
+      },
+      "stops": {
+        "tr": "Göreme • Uçhisar • Paşabağ / alternatif: Kaymaklı • Keşlik • Soğanlı",
+        "en": "Göreme • Uçhisar • Paşabağ / alternative: Kaymaklı • Keşlik • Soğanlı"
+      },
+      "practical": {
+        "tr": "Dar yeraltı geçitleri ve yürüyüş koşulları için erişilebilirliği doğrulayın. Balon uçuşu bu kültür turlarının parçası değil. İstanbul ulaşımı ve otel gecesi ayrıca planlanır.",
+        "en": "Confirm accessibility for narrow underground passages and walking. Balloon flights are separate. Travel from Istanbul and overnight accommodation need separate planning."
+      },
+      "suppliers": [
+        {
+          "id": "about-red",
+          "operator": "About Cappadocia",
+          "title": "Red Tour",
+          "source_url": "https://aboutcappadocia.com/en/experiences/red-tour",
+          "checked_at": "2026-11-16",
+          "price": 70,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Göreme / merkez Kapadokya otelleri",
+            "en": "Göreme / central Cappadocia hotels"
+          },
+          "duration": "09:50–16:30",
+          "included": {
+            "tr": "Yerel otel transferi, İngilizce rehber, öğle yemeği, program girişleri",
+            "en": "Local hotel transfers, English guide, lunch, programme admissions"
+          },
+          "excluded": {
+            "tr": "İçecek, Karanlık Kilise ek bileti, balon, şehirler arası ulaşım, konaklama",
+            "en": "Drinks, Dark Church supplement, balloon, intercity travel, accommodation"
+          },
+          "notes": {
+            "tr": "Yetişkin €70; 7 yaş altı ayrı koltuk kullanan çocuk €35. Kesin tarih/fiyat yazılı onay ister.",
+            "en": "Adult €70; under-7 child using a separate seat €35. Date and final price need written confirmation."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        },
+        {
+          "id": "adventures-green",
+          "operator": "Cappadocia Adventures",
+          "title": "Green Tour · Keşlik / Soğanlı group",
+          "source_url": "https://cappadociaadventures.com/tour/cappadocia-green-tour/",
+          "checked_at": "2026-11-16",
+          "price": 45,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "from",
+          "departure": {
+            "tr": "Merkez Kapadokya otelleri",
+            "en": "Central Cappadocia hotels"
+          },
+          "duration": {
+            "tr": "İlanda 6 saat; saatli akış daha uzun, doğrulanmalı",
+            "en": "Listed as 6 hours; timed itinerary is longer, confirm"
+          },
+          "included": {
+            "tr": "Grup seçeneğinde yerel transfer, rehber, öğle yemeği ve girişler",
+            "en": "Group option: local transfers, guide, lunch and admissions"
+          },
+          "excluded": {
+            "tr": "İçecek, kişisel harcama; özel seçenekte yemek ve girişler hariç",
+            "en": "Drinks and personal spending; private option excludes lunch and admissions"
+          },
+          "notes": {
+            "tr": "€45 başlangıç yalnızca belirtilen grup rotası. Özel tur ayrı: kişi başı €160 başlangıç; aynı kapsam değil.",
+            "en": "€45 from applies to the stated group route. Private option is separately from €160/person, with different inclusions."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        }
+      ]
+    },
+    {
+      "id": "anatolia-pamukkale",
+      "slug": "pamukkale",
+      "overview": {
+        "tr": "Beyaz travertenlerle Hierapolis’in tiyatro ve nekropolünü aynı gün içinde inceleyen yerel geziler bulunuyor. Denizli çıkışlı bir tur, İstanbul’dan uçuşlu paketle eşdeğer değil.",
+        "en": "Local day trips combine the travertines with Hierapolis theatre and necropolis. A tour departing Denizli is not equivalent to an Istanbul package with flights."
+      },
+      "stops": {
+        "tr": "Pamukkale travertenleri • Hierapolis • antik tiyatro",
+        "en": "Pamukkale travertines • Hierapolis • ancient theatre"
+      },
+      "practical": {
+        "tr": "Traverten yürüyüşü kaygan ve bazı bölümlerde çıplak ayak gerektirebilir. Antik Havuz konusunda operatör yüzme önerirken Bakanlık PDF’si kapalı notu taşıyor; erişim ayrıca doğrulanmalı.",
+        "en": "Travertines can be slippery and may require barefoot walking. The operator mentions swimming while the Ministry PDF marks the Antique Pool closed: reconfirm access."
+      },
+      "suppliers": [
+        {
+          "id": "hieracity-pamukkale",
+          "operator": "Hieracity Travel",
+          "title": "Pamukkale & Hierapolis day tour",
+          "source_url": "https://www.hieracitytravel.com/en/tours/pamukkale-hierapolis-tour/",
+          "checked_at": "2026-11-16",
+          "price": 70,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Denizli / Pamukkale / Karahayıt otelleri",
+            "en": "Denizli / Pamukkale / Karahayıt hotels"
+          },
+          "duration": "8 h",
+          "included": {
+            "tr": "Yerel otel transferi, rehber, öğle yemeği",
+            "en": "Local hotel transfers, guide, lunch"
+          },
+          "excluded": {
+            "tr": "Örenyeri bileti, Antik Havuz, İstanbul ulaşımı, konaklama",
+            "en": "Site ticket, Antique Pool, travel from Istanbul, accommodation"
+          },
+          "notes": {
+            "tr": "Tur bedeli girişsizdir; zorunlu giriş doğrulanmadan toplam gezi bedeli hesaplanamaz.",
+            "en": "Tour fare excludes admission; a full trip total needs a confirmed site ticket."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        },
+        {
+          "id": "turkiye-pamukkale",
+          "operator": "Turkiye Tour",
+          "title": "Pamukkale Day Tour with Hierapolis & Lunch",
+          "source_url": "https://www.turkiyetour.net/tours/pamukkale-day-tour-with-hierapolis-lunch",
+          "checked_at": "2026-11-16",
+          "price": 138,
+          "currency": "EUR",
+          "basis": "unconfirmed",
+          "price_type": "from",
+          "departure": {
+            "tr": "Denizli / Pamukkale",
+            "en": "Denizli / Pamukkale"
+          },
+          "duration": "8 h",
+          "included": {
+            "tr": "Yerel otel transferi, öğle yemeği, giriş ücretleri",
+            "en": "Local hotel transfers, lunch, admission fees"
+          },
+          "excluded": {
+            "tr": "Kişisel harcama; uçuş ve otel gecesi dahil gösterilmiyor",
+            "en": "Personal spending; flights and hotel nights are not listed as included"
+          },
+          "notes": {
+            "tr": "Sayfa €138 başlangıç gösteriyor; fiyat birimi açık değil. Kişi/grup teyidi olmadan kişi sayısıyla çarpılmaz.",
+            "en": "Page displays from €138 without a clear billing unit. Do not multiply until per-person/group basis is confirmed."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        }
+      ]
+    },
+    {
+      "id": "anatolia-ephesus",
+      "slug": "ephesus",
+      "overview": {
+        "tr": "Kuşadası çıkışlı geziler Efes’i Meryem Ana Evi, Artemis Tapınağı veya Şirince ile birleştirebiliyor. Kısa kruvaziyer turu ile tam günlük geziyi kapsamları üzerinden karşılaştırın.",
+        "en": "Trips from Kuşadası may combine Ephesus with the House of Mary, Artemis or Şirince. Compare short cruise excursions and full-day tours by their actual scope."
+      },
+      "stops": {
+        "tr": "Efes / Celsus Kütüphanesi • Artemis • seçeneğe göre Meryem Ana Evi / Şirince",
+        "en": "Ephesus / Celsus Library • Artemis • House of Mary / Şirince depending on option"
+      },
+      "practical": {
+        "tr": "Antik taş yollarda yürüyüş var; kruvaziyer dönüş saatini doğrulayın. Aşağıdaki €39 grup turu Mart 2027’de başlıyor; bugün için mevcut ürün kabul edilemez.",
+        "en": "Expect walking on ancient paving; confirm ship return times. The €39 group tour below starts in March 2027 and must not be treated as currently running."
+      },
+      "suppliers": [
+        {
+          "id": "alpaca-ephesus",
+          "operator": "Alpaca Travel Turkey",
+          "title": "Ephesus Tour from Kuşadası",
+          "source_url": "https://www.alpacatravelturkey.com/tour/ephesus-tour-from-kusadasi/",
+          "checked_at": "2026-11-16",
+          "price": 100,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Kuşadası oteli veya limanı",
+            "en": "Kuşadası hotel or cruise port"
+          },
+          "duration": "7–8 h",
+          "included": {
+            "tr": "Yerel transfer, İngilizce rehber, program girişleri, öğle yemeği",
+            "en": "Local transfers, English guide, programme admissions, lunch"
+          },
+          "excluded": {
+            "tr": "İçecek, Yamaç Evler, bahşiş, kişisel harcama, İstanbul ulaşımı",
+            "en": "Drinks, Terrace Houses, tips, personal spending, travel from Istanbul"
+          },
+          "notes": {
+            "tr": "İptal şartları ödeme öncesi ayrıca yazılı netleşmeli.",
+            "en": "Cancellation terms must be confirmed in writing before payment."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": "18552 — operator claim only"
+        },
+        {
+          "id": "inca-ephesus",
+          "operator": "Inca Tour Turkey",
+          "title": "Shared Ephesus, Virgin Mary & Şirince",
+          "source_url": "https://incatourturkey.com/tour/ephesus-virgin-mary-s-house-daily-departure-from-kusadasi-shared",
+          "checked_at": "2026-11-16",
+          "price": 119,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "from",
+          "departure": {
+            "tr": "Kuşadası / Selçuk",
+            "en": "Kuşadası / Selçuk"
+          },
+          "duration": {
+            "tr": "Tam gün",
+            "en": "Full day"
+          },
+          "included": {
+            "tr": "Yerel transfer, rehber, öğle yemeği, program girişleri ve vergiler",
+            "en": "Local transfers, guide, lunch, programme admissions and taxes"
+          },
+          "excluded": {
+            "tr": "İçecek, kişisel gider, bahşiş, otel gecesi",
+            "en": "Drinks, personal spending, tips, hotel nights"
+          },
+          "notes": {
+            "tr": "Grup İngilizce; diğer diller için ayrı özel teklif.",
+            "en": "Group is English guided; other languages require a private quote."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": "A-5751 — operator claim only"
+        },
+        {
+          "id": "efesotours-future",
+          "operator": "Efesotours / Tayf Turizm",
+          "title": "Ephesus, Experience Museum & Artemis",
+          "source_url": "https://efesotours.com/en/tours/ephesus-artemis-temple/",
+          "checked_at": "2026-11-16",
+          "price": 39,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Kuşadası kruvaziyer limanı",
+            "en": "Kuşadası cruise port"
+          },
+          "duration": "4 h 20 min",
+          "included": {
+            "tr": "Grup gezisi, rehber ve liman dönüşü",
+            "en": "Group excursion, guide and port return"
+          },
+          "excluded": {
+            "tr": "Girişler; kaynak Efes için ayrıca €40 listeliyor",
+            "en": "Admissions; the operator separately lists €40 for Ephesus"
+          },
+          "notes": {
+            "tr": "YALNIZCA Mart 2027’den itibaren. 30 dakika deri mağazası durağı var. €39 her şey dahil değildir.",
+            "en": "ONLY from March 2027. Includes a 30-minute leather outlet stop. €39 is not an all-inclusive total."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": "2290 — operator claim only",
+          "sales_start_month": "2027-03",
+          "requires_travel_date_confirmation": true
+        }
+      ]
+    },
+    {
+      "id": "anatolia-black-sea",
+      "slug": "black-sea",
+      "overview": {
+        "tr": "Trabzon–Rize önerisi tek bir satın alınabilir paket değil. Uzungöl ve Ayder iki ayrı günübirlik ürün; ikisini isteyen misafir için en az iki ayrı tur günü planlamak gerekir.",
+        "en": "The Trabzon–Rize idea is not one bookable package. Uzungöl and Ayder are separate day tours; taking both requires planning two distinct tour days."
+      },
+      "stops": {
+        "tr": "Uzungöl / Sürmene / çay fabrikası • ayrı günde Fırtına Vadisi / Ayder",
+        "en": "Uzungöl / Sürmene / tea factory • separate day: Fırtına Valley / Ayder"
+      },
+      "practical": {
+        "tr": "Hava ve yol koşulları yayla erişimini değiştirebilir. Zipline ve rafting dahil değildir. Yerel rehberlik Türkçe; diğer diller için teyit gerekir.",
+        "en": "Weather and road conditions affect highland access. Zipline and rafting are extra. Listed local guiding is Turkish; confirm other languages."
+      },
+      "suppliers": [
+        {
+          "id": "sumela-uzungol",
+          "operator": "Sümela Turizm",
+          "title": "Uzungöl Tour",
+          "source_url": "https://sumelatur.com/en/tur/uzungol-turu",
+          "checked_at": "2026-11-16",
+          "price": 1000,
+          "currency": "TRY",
+          "basis": "per_person",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Trabzon acente önü",
+            "en": "Trabzon agency office"
+          },
+          "duration": {
+            "tr": "Günübirlik · 10:00 kalkış",
+            "en": "Day trip · departure 10:00"
+          },
+          "included": {
+            "tr": "Yerel araç, Türkçe rehberlik, zorunlu seyahat sigortası",
+            "en": "Local vehicle, Turkish guiding, mandatory travel insurance"
+          },
+          "excluded": {
+            "tr": "Yemek, içecek, ekstra etkinlik, müze girişleri, konaklama",
+            "en": "Meals, drinks, extra activities, museum entry, accommodation"
+          },
+          "notes": {
+            "tr": "4–12 yaş çocuk ₺700; 0–3 yaş kucakta ücretsiz beyanı var. Koltuk ve tarih ayrıca onaylanır.",
+            "en": "Listed child 4–12: ₺700; ages 0–3 free on lap. Seat and date need confirmation."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": "A-7059 — operator claim only"
+        },
+        {
+          "id": "sumela-ayder",
+          "operator": "Sümela Turizm",
+          "title": "Ayder Plateau Tour",
+          "source_url": "https://sumelatur.com/en/tur/ayder-turu",
+          "checked_at": "2026-11-16",
+          "price": 1100,
+          "currency": "TRY",
+          "basis": "per_person",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Trabzon acente önü",
+            "en": "Trabzon agency office"
+          },
+          "duration": {
+            "tr": "Günübirlik · 09:00 kalkış",
+            "en": "Day trip · departure 09:00"
+          },
+          "included": {
+            "tr": "Yerel araç, Türkçe rehberlik, zorunlu seyahat sigortası",
+            "en": "Local vehicle, Turkish guiding, mandatory travel insurance"
+          },
+          "excluded": {
+            "tr": "Yemek, içecek, ekstra etkinlik ve giriş ücretleri",
+            "en": "Meals, drinks, optional activities and entry fees"
+          },
+          "notes": {
+            "tr": "4–12 yaş ₺550; kaynak 0–3 yaş kabul edilmediğini belirtiyor.",
+            "en": "Listed child 4–12: ₺550; source says ages 0–3 not accepted."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": "A-7059 — operator claim only"
+        }
+      ]
+    },
+    {
+      "id": "anatolia-sanliurfa",
+      "slug": "sanliurfa",
+      "overview": {
+        "tr": "Göbeklitepe gezisi şehir müzeleri ve Balıklıgöl ile veya daha geniş bir Harran rotasıyla birleşebilir. Özel iki kişilik tur ilanını kişi başı grup fiyatıyla aynı birimde kıyaslamayın.",
+        "en": "Göbeklitepe tours may include city museums and Balıklıgöl or extend towards Harran. A two-person private-tour listing is not directly comparable to a per-person group fare."
+      },
+      "stops": {
+        "tr": "Göbeklitepe • Şanlıurfa müzeleri • Balıklıgöl / programa göre Kızılkoyun",
+        "en": "Göbeklitepe • Şanlıurfa museums • Balıklıgöl / Kızılkoyun depending on programme"
+      },
+      "practical": {
+        "tr": "Müze erişimleri ve biletleri doğrulanmalı. Şanlıurfa’ya uçuş ve otel gecesi bu yerel fiyatlardan çıkarılamaz.",
+        "en": "Confirm museum access and ticket costs. Flights to Şanlıurfa and hotel nights cannot be inferred from local tour fares."
+      },
+      "suppliers": [
+        {
+          "id": "kaliru-urfa",
+          "operator": "Kaliru Turizm",
+          "title": "Tour A · Göbeklitepe, Balıklıgöl & Museums",
+          "source_url": "https://kaliru.com.tr/eng/dailytours/",
+          "checked_at": "2026-11-16",
+          "price": 85,
+          "currency": "EUR",
+          "basis": "unconfirmed",
+          "price_type": "from",
+          "departure": {
+            "tr": "Şanlıurfa; grup için ofis, özelde buluşma teyidi",
+            "en": "Şanlıurfa; office for groups, confirm private meeting point"
+          },
+          "duration": "10:00–17:00",
+          "included": {
+            "tr": "Yerel ulaşım, rehber, vergiler",
+            "en": "Local transport, guide, taxes"
+          },
+          "excluded": {
+            "tr": "Müze/örenyeri girişleri, yemek, içecek, isteğe bağlı etkinlik",
+            "en": "Museum/site tickets, meals, drinks, optional activities"
+          },
+          "notes": {
+            "tr": "€85 başlangıç ilanının kişi/grup birimi açık değil. Aynı sayfanın buluşma ve haftalık gün bilgileri tutarsız; yazılı teyit gerekli.",
+            "en": "From €85 has no clear per-person/group unit. Meeting and weekly schedule details on the page differ; written clarification is needed."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        },
+        {
+          "id": "gobekli-private",
+          "operator": "Gobekli Tepe Tours",
+          "title": "Full Day Göbekli Tepe tour",
+          "source_url": "https://www.gobeklitours.com/service-page/full-day-gobekli-tepe-tour",
+          "checked_at": "2026-11-16",
+          "price": 490,
+          "currency": "USD",
+          "basis": "private_two",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Şanlıurfa oteli veya havalimanı",
+            "en": "Şanlıurfa hotel or airport"
+          },
+          "duration": "8 h",
+          "included": {
+            "tr": "Özel gezi, yerel alış/bırakış",
+            "en": "Private tour, local pickup/drop-off"
+          },
+          "excluded": {
+            "tr": "Yemek, girişler ve diğer kapsam bu ilan üzerinde açıklanmıyor",
+            "en": "Meals, admissions and other inclusions are not detailed on this listing"
+          },
+          "notes": {
+            "tr": "Kaynak iki kişinin paylaşımına göre tur başına sabit $490 diyor. Daha büyük gruba ölçeklenemez; dahil hizmetler ve fatura birimi yazılı netleşmeli.",
+            "en": "Listing says $490 fixed per tour based on two people sharing. Cannot scale to a larger group; confirm inclusions and billing basis in writing."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        }
+      ]
+    },
+    {
+      "id": "anatolia-nemrut",
+      "slug": "nemrut",
+      "overview": {
+        "tr": "Nemrut için kısa zirve gezisiyle Cendere, Karakuş ve Arsemia duraklarını içeren uzun tur farklı ürünlerdir. Kalkış şehri ve özel/grup yapısı maliyeti önemli ölçüde değiştirir.",
+        "en": "Short summit visits and longer trips including Cendere, Karakuş and Arsemia are different products. Departure city and private/group format materially change the budget."
+      },
+      "stops": {
+        "tr": "Nemrut terasları • programa göre Arsemia / Cendere / Karakuş",
+        "en": "Nemrut terraces • Arsemia / Cendere / Karakuş depending on programme"
+      },
+      "practical": {
+        "tr": "Soğuk, erken kalkış ve mevsimsel yol kapanmalarını hesaba katın. Gün doğumu görünürlüğü ve zirve erişimi garanti değildir.",
+        "en": "Plan for cold weather, early starts and seasonal road closures. Sunrise visibility and summit access are not guaranteed."
+      },
+      "suppliers": [
+        {
+          "id": "farout-nemrut",
+          "operator": "Farout Turkey",
+          "title": "Nemrut Sunrise Tour",
+          "source_url": "https://faroutturkey.com/tours/daily-trip/nemrut-sunrise-tour",
+          "checked_at": "2026-11-16",
+          "price": 229,
+          "currency": "EUR",
+          "basis": "per_person",
+          "price_type": "from",
+          "departure": {
+            "tr": "Adıyaman / Kahta",
+            "en": "Adıyaman / Kahta"
+          },
+          "duration": {
+            "tr": "Gün doğumu odaklı özel tur; süre teyit edilmeli",
+            "en": "Private sunrise tour; duration needs confirmation"
+          },
+          "included": {
+            "tr": "Yerel alış/bırakış ve ilan başlığında öğle yemeği",
+            "en": "Local pickup/drop-off; lunch is tagged on the listing"
+          },
+          "excluded": {
+            "tr": "Giriş ve diğer ücretler ayrıntılı listelenmiyor; ayrıca teyit",
+            "en": "Admissions and other costs not itemised; confirm separately"
+          },
+          "notes": {
+            "tr": "€229 başlangıç kişi başı gösteriliyor. Sayfada “Sold Out” da var; müsait ürün olarak sunulamaz. Yemek/rehber/giriş kapsamını yazılı teyit edin.",
+            "en": "From €229/person is displayed alongside “Sold Out”. Do not treat as available; reconfirm meal, guiding and admission scope."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        },
+        {
+          "id": "kommagene-nemrut",
+          "operator": "Kommagene / Nemrut Guide Tours",
+          "title": "Long Nemrut Tour",
+          "source_url": "https://nemrutguide.com/en/uzun-nemrut-turu",
+          "checked_at": "2026-11-16",
+          "price": null,
+          "currency": "EUR",
+          "basis": "unconfirmed",
+          "price_type": "listed",
+          "departure": {
+            "tr": "Kahta / Adıyaman",
+            "en": "Kahta / Adıyaman"
+          },
+          "duration": {
+            "tr": "Seçeneğe göre yaklaşık yarım–tam gün",
+            "en": "Roughly half/full day depending on option"
+          },
+          "included": {
+            "tr": "Rota açıklaması mevcut; kapsam teklif aşamasında",
+            "en": "Route is described; inclusions need a quote"
+          },
+          "excluded": {
+            "tr": "Tur, bilet, yemek ve dil için fiyat ayrımı istenmeli",
+            "en": "Request separate tour, ticket, meal and language pricing"
+          },
+          "notes": {
+            "tr": "Rakam yayımlanmıyor; iletişimle fiyat talep ediliyor. Tahmini net maliyet veya fiyat eklenmedi.",
+            "en": "No numeric public price; operator requests contact. No invented fare or net cost is supplied."
+          },
+          "verification_status": "not_verified_by_bosphorly",
+          "contract_status": "not_contracted",
+          "net_cost": null,
+          "commission": null,
+          "license_claim": null
+        }
+      ]
+    }
+  ]
+}

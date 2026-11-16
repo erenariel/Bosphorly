@@ -33,12 +33,13 @@
  
  const namesTr={'bb-morning':'Sabah Boğaz Turu','bb-sunset':'Gün Batımı Boğaz Turu','bb-oldcity':'Bizans ve Osmanlı Mirası Turu','orient-dinner':'Boğaz’da Akşam Yemeği','sea-land':'Boğaz Gezi Turu','alaturka':'Geleneksel Türk Hamamı'};
  const getOffer=()=>offers.find(x=>x.id===$('offer').value);
- const labels=()=>{$('price').textContent=t.price;$('availability').textContent=t.availability;renderMarketPrice();};
+ const description=document.createElement('p');description.className='notice wide';description.id='routeProposal';$('offer').closest('label').after(description);const researchLink=document.createElement('a');researchLink.id='routeResearchLink';researchLink.className='wide';researchLink.textContent=tr?'Şirketleri, programları ve ilan fiyatlarını incele →':'Explore operators, programmes and published prices →';description.after(researchLink);
+ const labels=()=>{const selected=getOffer();description.hidden=selected?.category!=='anatolia';researchLink.hidden=description.hidden;researchLink.href='anatolia.html?route='+encodeURIComponent(selected?.id||'')+'&lang='+(tr?'tr':'en');description.textContent=selected?.category==='anatolia'?((tr?selected.translations?.tr?.description:selected.description)+' '+(tr?'Rota önerisidir. Tarih, süre, ulaşım, konaklama, rehberlik ve girişler ayrıca teklif ve onay gerektirir.':'Route proposal. Dates, duration, transport, accommodation, guiding and admissions need a separate quote and confirmation.')):'';$('price').textContent=t.price;$('availability').textContent=t.availability;renderMarketPrice();};
  async function load(){
   try{
    const resp=await fetch('data/offers.json',{cache:'no-store'});if(!resp.ok)throw new Error('Cannot load offers');
    const data=await resp.json();offers=(Array.isArray(data.offers)?data.offers:[]).filter(x=>x&&typeof x.id==='string');
-   $('offer').replaceChildren(...offers.map(x=>{const op=document.createElement('option');op.value=x.id;op.textContent=(tr&&namesTr[x.id])||x.name;return op;}));
+   $('offer').replaceChildren(...offers.map(x=>{const op=document.createElement('option');op.value=x.id;op.textContent=(tr&&(x.translations?.tr?.name||namesTr[x.id]))||x.name;return op;}));
    const fromQuery=query.get('service');if(offers.some(o=>o.id===fromQuery))$('offer').value=fromQuery;
    labels();
   }catch(err){$('error').hidden=false;$('error').textContent=t.notAvailable;$('submit').disabled=true;}
@@ -51,7 +52,7 @@
   const preview=window.BosphorlyBooking.preview({experienceId:offer.id,date:$('date').value,guests:num});
   const r=$('result');r.dataset.state=preview.state;r.replaceChildren();const h=document.createElement('h3');h.textContent=t.resultTitle;const p=document.createElement('p');p.textContent=t.resultNotice;
   const d=document.createElement('dl');d.className='draft';
-  const fields=[[tr?'Deneyim':'Experience',tr&&namesTr[offer.id]||offer.name],[tr?'Tarih':'Date',$('date').value],[tr?'Zaman':'Time',time.selectedOptions[0].textContent],[tr?'Kişi':'Guests',String(num)],[tr?'Bölge':'Area',area.selectedOptions[0].textContent],[tr?'Fiyat':'Price',$('price').textContent]];
+  const fields=[[tr?'Deneyim':'Experience',tr&&(offer.translations?.tr?.name||namesTr[offer.id])||offer.name],[tr?'Tarih':'Date',$('date').value],[tr?'Zaman':'Time',time.selectedOptions[0].textContent],[tr?'Kişi':'Guests',String(num)],[tr?'Bölge':'Area',area.selectedOptions[0].textContent],[tr?'Fiyat':'Price',$('price').textContent]];
   fields.forEach(([key,val])=>{const dt=document.createElement('dt');dt.textContent=key;const dd=document.createElement('dd');dd.textContent=val;d.append(dt,dd)});
   r.append(h,p,d);r.hidden=false;r.focus();
  });
