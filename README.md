@@ -15,9 +15,9 @@
 ## What is available
 
 - 📱 **Mobile-first traveler concept**: selectable arrival airport, hotel zone, skip-transfer action, multi-step form preview and 12 draft language locales (TR, EN, RU, UK, DE, FR, NL, AR, HE, AZ, FA, ES). Some UI strings need human review.
-- 🗺️ **Istanbul discovery map**: 14 landmark/airport/neighborhood pins, search and filters, with public OpenStreetMap/Leaflet tiles when internet is available.
+- 🗺️ **Istanbul discovery map**: 14 landmark/airport/neighborhood pins, search and filters, with public OpenStreetMap/Leaflet tiles when internet is available **and a built-in offline schematic fallback** when map tiles cannot load.
 - 🚇 **Transport pointers**: links to official M11, M4 and tram service sources. Not real-time journey planning; do not assume listed station changes or service times are current.
-- 🎟️ **Research-based experience examples**: links to providers, no claimed commercial relationship.
+- 🎟️ **In-platform experience planning**: travelers stay on Bosphorly through the product and booking-preview journey. No third-party supplier checkout redirects or supplier-published fares appear on traveler cards. `data/offers.json` is an internal catalog of unsigned draft products; rates are quote-required until contractual approval.
 - 🏨 **Partner console (illustrative)**: responsive presentation of synthetic referral counts, commission calculations and a readiness checklist, without real bookings or customer data.
 - ✨ **Product presentation**: vision for travelers, hotels, licensed travel suppliers and the proposed commission model.
 - 🔎 **SEO and publishing foundations**: accessible structure, plain-language disclosures, source links and an editorial strategy.
@@ -27,17 +27,23 @@
 
 ```text
 index.html             Standalone mobile-first traveler demo
+booking.html           In-platform booking preview (not a real reservation)
+booking.js             Local-only booking validation and catalog integration
+booking.css            Responsive booking styles
+data/offers.json       Bosphorly-owned draft products and rate status
 map.html               Istanbul map and transport information
 presentation.html      Product vision and investor/partner presentation
 presentation.css       Presentation styling
 dashboard.html         Public synthetic partner console
 dashboard.css          Dashboard responsive styling
 dashboard.js           Demo-only tab and filter logic
-assets/brand/           Distinctive Bosphorly visual identity (concept SVG)
+assets/brand/           User-selected compact logo + fallback vector icon
+assets/maps/            Istanbul schematic fallback map
 docs/PRODUCT.md        Core product and personas
 docs/ROADMAP.md        Delivery phases
 docs/SEO.md            Destination-content strategy
 docs/LEGAL-GATES.md    Compliance, privacy and legal checks
+tools/check_site.py     JS, internal-link, pricing and redirect smoke tests
 BRAND.md               Brand direction
 PROJECT_BRIEF.md       Extended original project brief
 SECURITY.md            Responsible reporting and prototype security
@@ -87,3 +93,9 @@ See [product spec](docs/PRODUCT.md), [roadmap](docs/ROADMAP.md) and [legal gates
 The original selected visual direction is a white **B**, aqua flight trail and historic gold forms on midnight blue. The public website uses a small optimized crop of the user-selected artwork (`assets/brand/approved-icon.webp`). The separate SVG remains an approximate fallback, not the master vector logo. Full-size image exports are retained outside the public repo pending final brand packaging.
 
 © 2026 Bosphorly concept. Brand name, domain and trademark availability require verification.
+
+## In-platform checkout policy (November 2026)
+
+Every traveler experience card leads to `booking.html?service=<approved-id>`. The public catalog **must not contain referral/affiliate checkout links** to outside agencies. Prices visible to guests will be approved and maintained by Bosphorly administrators after valid supplier contracts; the static `data/offers.json` is a read-only demonstration and **not a trusted price source for production purchases**.
+
+Real booking requests, confirmation numbers, card payments, passport information, commissions and customer messages all require a secure backend and a separate legal/operational release gate. Codex implementation brief: [Issue #1](https://github.com/erenariel/Bosphorly/issues/1).
