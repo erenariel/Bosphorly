@@ -2,11 +2,17 @@ import {test,expect} from '@playwright/test';
 test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await page.goto('/booking.html?lang=en');
- await expect(page.locator('#offer option')).toHaveCount(36);
+ await expect(page.locator('#offer option')).toHaveCount(39);
  await page.locator('#offer').selectOption('bb-sunset');
  await expect(page.locator('#time option')).toHaveCount(1);
  await expect(page.locator('#time')).toHaveValue('18:00–21:00');
  await expect(page.locator('#price')).toContainText('20');
+ await page.locator('#date').fill(new Date(Date.now()+86400000).toISOString().slice(0,10));await page.locator('#date').dispatchEvent('change');
+ await page.locator('#offer').selectOption('alaturka-massage');
+ await page.locator('#option').selectOption('hotstones');await page.locator('#duration').selectOption('60');
+ await expect(page.locator('#price')).toContainText('110');
+ await expect(page.locator('#time option').last()).toHaveText('22:00');
+ await page.locator('#offer').selectOption('bb-sunset');
  await expect(page.locator('.logo img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
  expect(await page.locator('.logo img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
@@ -20,7 +26,14 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await page.locator('html').evaluate((e,d)=>e.dir=d,dir);
  expect(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth||e.getBoundingClientRect().left<0).map(e=>e.tagName+'.'+e.className)}))).toMatchObject({scroll:page.viewportSize().width});
  }
- expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
+ // The request is kept only on this device for the My account page; nothing is sent to a server.
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('bosphorly.account')).requests.length)).toBe(1);
+ expect(await page.evaluate(()=>sessionStorage.length)).toBe(0);
+ await page.goto('/account.html?lang=en');
+ await expect(page.locator('.req')).toHaveCount(1);
+ await expect(page.locator('.req .ref')).toContainText('BOS-');
+ await page.goto('/booking.html?lang=en');
+ await expect(page.locator('#fullName')).toHaveValue('Test Guest');
  expect(await page.context().cookies()).toHaveLength(0);
  expect(writes).toEqual([]);
  await page.route('https://**/*',r=>r.abort());

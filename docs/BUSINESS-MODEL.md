@@ -58,6 +58,14 @@ the commission depends on.
 
 In the current hotel pilot, guests pay **in cash at the hotel reception**, both for airport transfers and for tours. The reception accepts cash only. Tour companies such as Blue Brothers add a 10% commission on credit card payments, which is why guests are asked to pay cash. Both request forms and the WhatsApp message state this. How the reception settles with each company, and how this fits the referral model's "company collects payment" description, must be written into each company agreement.
 
+### Currency display
+
+Prices stay in each company's own currency. Guests can view an approximate amount in TRY, EUR, USD, GBP, RUB, SAR, AED or AZN, converted at the TCMB (Central Bank of the Republic of Türkiye) forex selling rate. `tools/fetch_rates.py` refreshes `data/rates.json` on every deploy and on a weekday schedule after TCMB publishes; if the fetch fails the last good bulletin stays, and its date is always shown. Converted amounts are labelled approximate, and the original price is always shown next to them.
+
+### Guest accounts (device-only for now)
+
+"My account" (`account.html`) keeps the guest's details and the requests they sent on their own device (browser storage). It pre-fills forms and lists upcoming and past requests with their reference codes. It is not a real account: it does not follow the guest to another device, and Bosphorly cannot see it. Cross-device accounts and request status updates need the request server described above.
+
 ### Current request channel: WhatsApp
 
 Until the request server exists, both forms (airport transfer and tours) open WhatsApp with the full request written out (reference code, tour or route, date and time, guests, price per person and total, hotel and room, contact, price source and the moment the price was shown) addressed to the Bosphorly WhatsApp Business line. The guest presses send. The message in the WhatsApp chat is the record of what the guest saw. Limits: nothing reaches Bosphorly if the guest does not press send, the text can be edited before sending, and there is no central list of requests. A server-side request store fixes all three.

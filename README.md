@@ -14,7 +14,7 @@
 
 **[Bosphorly ana sayfasını ve transfer formunu aç →](https://erenariel.github.io/Bosphorly/)**
 
-Demo, bu deponun `main` dalından GitHub Pages ile otomatik yayınlanır; `main`e giren her değişiklik birkaç dakika içinde burada görünür. Site, ziyaretçinin cihaz dilinde açılır (12 dil); dil menüden değiştirilebilir. Giriş gerektirmez. Formlar talebi WhatsApp mesajı olarak hazırlar; misafir WhatsApp’ta “Gönder”e basınca talep Bosphorly WhatsApp hattına ulaşır. Sitede ödeme alınmaz ve girilen bilgiler saklanmaz.
+Demo, bu deponun `main` dalından GitHub Pages ile otomatik yayınlanır; `main`e giren her değişiklik birkaç dakika içinde burada görünür. Site, ziyaretçinin cihaz dilinde açılır (12 dil); dil menüden değiştirilebilir. Giriş gerektirmez. Formlar talebi WhatsApp mesajı olarak hazırlar; misafir WhatsApp’ta “Gönder”e basınca talep Bosphorly WhatsApp hattına ulaşır. Sitede ödeme alınmaz. Bilgiler sunucuda saklanmaz; misafirin profili ve talepleri yalnızca kendi cihazında, [Hesabım](account.html) sayfasında tutulur. Fiyatlar istenirse TCMB günlük kuruyla başka para biriminde gösterilir.
 
 [![Bosphorly transfer formu ve İstanbul haritası](docs/review/desktop-home.jpg)](https://erenariel.github.io/Bosphorly/#booking)
 

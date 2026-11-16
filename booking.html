@@ -1,13 +1,15 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Compare licensed Istanbul tour companies and request an experience through Bosphorly. You pay in cash at the hotel reception."><title>Request an experience | Bosphorly</title><link rel="icon" href="assets/brand/approved-icon.webp"><link rel="stylesheet" href="booking.css"><style>.pay-note{background:#fff4dc;border:1px solid #f1d39a;color:#6d4b10;font-weight:600;padding:12px 14px;border-radius:12px}.wa-button{display:inline-block;margin-top:12px;background:#1fa855;color:#fff;padding:12px 16px;border-radius:12px;font-weight:800;text-decoration:none}.selection{display:grid;gap:4px}.selection small{color:#6b7f99}.mini-includes{list-style:none;margin:2px 0;padding:0;display:grid;gap:2px;font-size:13px}</style></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Compare licensed Istanbul tour companies and request an experience through Bosphorly. You pay in cash at the hotel reception."><title>Request an experience | Bosphorly</title><link rel="icon" href="assets/brand/approved-icon.webp"><link rel="stylesheet" href="booking.css"><style>.currency-select{border:1px solid #4a5a90;border-radius:9px;padding:5px 7px;font-size:12px;font-weight:700;background:#16236b;color:#fff;margin-left:6px}.pay-note{background:#fff4dc;border:1px solid #f1d39a;color:#6d4b10;font-weight:600;padding:12px 14px;border-radius:12px}.wa-button{display:inline-block;margin-top:12px;background:#1fa855;color:#fff;padding:12px 16px;border-radius:12px;font-weight:800;text-decoration:none}.selection{display:grid;gap:4px}.selection small{color:#6b7f99}.mini-includes{list-style:none;margin:2px 0;padding:0;display:grid;gap:2px;font-size:13px}</style></head>
 <body>
 <div class="prototype"><span id="protoTag">PUBLIC PROTOTYPE</span> · <span id="protoText">No request is sent and no payment is taken by this website</span></div>
-<header class="header"><div class="head-wrap"><a class="logo" href="index.html"><img src="assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a><nav aria-label="Main navigation"><a href="index.html" id="navHome">Home</a><a href="prices.html" id="navCompare">Compare tours</a><a href="map.html" id="navMap">City map</a></nav></div></header>
+<header class="header"><div class="head-wrap"><a class="logo" href="index.html"><img src="assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a><nav aria-label="Main navigation"><a href="index.html" id="navHome">Home</a><a href="prices.html" id="navCompare">Compare tours</a><a href="map.html" id="navMap">City map</a><a href="account.html" id="navAccount">My account</a><span data-currency-mount></span></nav></div></header>
 <main class="container"><div class="intro"><div><span class="eyebrow" id="eyebrow">YOUR ISTANBUL · YOUR WAY</span><h1 id="heading">Request your experience through Bosphorly.</h1><p id="subheading">Choose your activity, preferred date and hotel area. Your request goes from Bosphorly to the licensed company that runs it; you pay in cash at the hotel reception.</p></div><div class="step-indicator"><span>01</span><strong id="stepName">Request details</strong></div></div>
 <div class="layout"><section class="panel" aria-labelledby="formTitle"><h2 id="formTitle">Your request</h2><p class="muted" id="formIntro">A preview of the future request form. Nothing is sent to any company.</p>
 <form id="bookingForm" novalidate>
 <div class="fields">
 <label class="wide" for="offer"><span id="labelOffer">Experience</span><select id="offer" required></select></label>
+<label class="wide" for="option" id="optionWrap" hidden><span id="labelOption">Massage type</span><select id="option"></select><small id="optionDesc" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label>
+<label for="duration" id="durationWrap" hidden><span id="labelDuration">Duration</span><select id="duration"></select></label>
 <label for="date"><span id="labelDate">Preferred date</span><input id="date" type="date" required></label>
 <label for="time"><span id="labelTime">Preferred time</span><select id="time"></select><small id="timeNote" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label>
 <label for="guests"><span id="labelGuests">Guests</span><input type="number" id="guests" min="1" max="16" step="1" value="2" inputmode="numeric" required></label>
@@ -17,7 +19,7 @@
 <label for="fullName"><span id="labelName">Full name</span><input id="fullName" maxlength="100" autocomplete="name" placeholder="e.g. Jane Smith" required></label>
 <label for="phone"><span id="labelPhone">Mobile / WhatsApp</span><input id="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="32" placeholder="+44 7700 900123" required></label>
 <label class="wide" for="email"><span id="labelEmail">Email (optional)</span><input id="email" type="email" inputmode="email" autocomplete="email" maxlength="140" placeholder="name@example.com"></label>
-<p class="wide muted" id="contactNote" style="margin:0;font-size:13px">In this demo, what you type is not sent or saved anywhere; it disappears when you close the page.</p>
+<p class="wide muted" id="contactNote" style="margin:0;font-size:13px">When you press send in WhatsApp, your details go to the Bosphorly WhatsApp line to arrange your request. Bosphorly does not store them on a server; a copy stays only on this device, under My account.</p>
 </div>
 <div class="summary" aria-live="polite"><div><span id="labelStatus">Price status</span><strong id="price">Price set by the company</strong></div><div><span id="labelAvailability">Availability</span><strong id="availability">Confirmed by the company</strong></div></div>
 <div id="marketPrice" class="notice selection" aria-live="polite">Loading…</div><p id="priceNote" class="notice">Requestable prices are the ones each licensed company approves for Bosphorly, never higher than booking with the company directly. This public prototype does not send requests.</p>
@@ -34,6 +36,8 @@
 </aside></div>
 <footer><p id="footerText">Bosphorly · Public demonstration · No personal identity or payment data is collected in this prototype.</p><a href="index.html" id="backHome">← Back to homepage</a></footer></main>
 <script src="lang.js"></script>
+<script src="currency.js"></script>
+<script src="account-store.js"></script>
 <script src="config/contact.js"></script>
 <script src="booking-adapter.js" defer></script>
 <script src="booking.js" defer></script></body></html>

@@ -7,7 +7,7 @@
   document.documentElement.lang = lang;
 
   const T = tr ? {
-    home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
+    home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', account: 'Hesabım', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
     eyebrow: 'TUR KARŞILAŞTIRMA · İSTANBUL', heading: 'İstanbul turlarını karşılaştır.',
     lead: 'Lisanslı firmaların kendi sitelerinde yayımladığı fiyatlar ve tur içerikleri. Neyin dahil olduğunu yan yana gör.',
     noticeTitle: 'Bilgiler firmaların kendi sitelerinden derlenmiştir; Bosphorly teklifi değildir.',
@@ -41,7 +41,7 @@
 
   function category(r) {
     const t = (r.title + ' ' + r.id).toLowerCase();
-    if (/hammam|hamam/.test(t)) return 'hammam';
+    if (/hammam|hamam|massage|masaj/.test(t)) return 'hammam';
     if (/transfer/.test(t)) return 'transfer';
     if (/cappadocia|pamukkale/.test(t)) return 'multi';
     if (/dinner|new year|à la carte|turkish night/.test(t)) return 'dinner';
@@ -51,7 +51,8 @@
     return 'city';
   }
 
-  const fmt = (value, currency) => new Intl.NumberFormat(tr ? 'tr-TR' : 'en-GB', { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
+  const fmt = (value, currency) => window.BosphorlyCurrency ? window.BosphorlyCurrency.format(value, currency)
+    : new Intl.NumberFormat(tr ? 'tr-TR' : 'en-GB', { style: 'currency', currency, maximumFractionDigits: 2 }).format(value);
 
   function el(tag, cls, text) {
     const e = document.createElement(tag);
@@ -113,6 +114,10 @@
       add(T.cancel, L.cancellation);
       if (L.highlights?.length > 3) { more.append(list(L.highlights.slice(3), 'highlights')); }
       if (L.included?.length > 5) { more.append(el('p', 'list-title', T.included)); more.append(list(L.included.slice(5), 'ticks')); }
+      if (r.options?.length) {
+        more.append(el('p', 'list-title', tr ? 'Masaj türleri ve fiyatlar' : 'Massage types and prices'));
+        more.append(list(r.options.map(o => ((tr && o.name_tr) || o.name) + ': ' + o.durations.map(x => x.min + (tr ? ' dk ' : ' min ') + fmt(x.price, r.currency)).join(' · ')), 'notes'));
+      }
       if (L.not_included?.length) { more.append(el('p', 'list-title', T.excluded)); more.append(list(L.not_included, 'crosses')); }
       if (L.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
       if (tr && !L.translated && T.englishOnly) more.append(el('p', 'fine', T.englishOnly));
@@ -145,6 +150,7 @@
     for (const r of data) wrap.append(card(r));
   }
 
+  if (window.BosphorlyCurrency) window.BosphorlyCurrency.onChange(() => { show(); $('fxNote').textContent = window.BosphorlyCurrency.note(); });
   $('operator').addEventListener('change', show);
   $('currency').addEventListener('change', show);
   Q.addEventListener('input', show);
