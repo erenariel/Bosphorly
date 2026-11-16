@@ -53,7 +53,7 @@ def assert_no_supplier_checkout_redirects():
         assert domain not in homepage.lower(), f"Unexpected supplier redirect: {domain}"
         assert domain not in booking.lower(), f"Unexpected supplier redirect: {domain}"
     assert "booking.html?service=" in homepage
-    assert "data/offers.json" in (ROOT / "booking.js").read_text()
+    assert "data/public-market-prices.json" in (ROOT / "booking.js").read_text()
 
 
 def assert_booking_safety():

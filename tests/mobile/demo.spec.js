@@ -2,7 +2,11 @@ import {test,expect} from '@playwright/test';
 test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await page.goto('/booking.html?lang=en');
- await expect(page.locator('#offer option')).toHaveCount(6);
+ await expect(page.locator('#offer option')).toHaveCount(36);
+ await page.locator('#offer').selectOption('bb-sunset');
+ await expect(page.locator('#time option')).toHaveCount(1);
+ await expect(page.locator('#time')).toHaveValue('18:00–21:00');
+ await expect(page.locator('#price')).toContainText('20');
  await expect(page.locator('.logo img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
  expect(await page.locator('.logo img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
