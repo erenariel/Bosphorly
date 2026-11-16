@@ -76,6 +76,168 @@
       "rate_status": "quote_required",
       "partner_status": "pending_contract",
       "available": false
+    },
+    {
+      "id": "anatolia-cappadocia",
+      "slug": "cappadocia",
+      "name": "Cappadocia: Valleys & Heritage",
+      "category": "anatolia",
+      "duration": "Program to be confirmed",
+      "description": "Discover the landscapes around Göreme and the region’s cultural heritage. Balloon flights are not included or guaranteed.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false,
+      "art": "◒",
+      "translations": {
+        "tr": {
+          "name": "Kapadokya: Vadiler ve Miras",
+          "description": "Göreme çevresindeki vadilerden bölgenin kültürel mirasına uzanan bir keşif fikri. Balon uçuşu dahil veya garantili değildir."
+        },
+        "ar": {
+          "name": "كبادوكيا: الوديان والتراث",
+          "description": "اكتشف مناظر غوريمه وتراث المنطقة. رحلات المنطاد غير مشمولة أو مضمونة."
+        },
+        "ru": {
+          "name": "Каппадокия: долины и наследие",
+          "description": "Пейзажи Гёреме и культурное наследие региона. Полёт на воздушном шаре не включён и не гарантирован."
+        }
+      }
+    },
+    {
+      "id": "anatolia-pamukkale",
+      "slug": "pamukkale",
+      "name": "Pamukkale & Hierapolis",
+      "category": "anatolia",
+      "duration": "Program to be confirmed",
+      "description": "Explore the landscape of Pamukkale alongside the ancient heritage of Hierapolis. Site access and the itinerary need confirmation.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false,
+      "art": "≋",
+      "translations": {
+        "tr": {
+          "name": "Pamukkale ve Hierapolis",
+          "description": "Pamukkale’nin manzarasını Hierapolis’in antik mirasıyla birlikte keşfetme fikri. Ziyaret alanları ve program ayrıca doğrulanır."
+        },
+        "ar": {
+          "name": "باموكالي وهيرابوليس",
+          "description": "استكشف مناظر باموكالي وتراث هيرابوليس القديم. دخول المواقع والبرنامج يحتاجان إلى تأكيد."
+        },
+        "ru": {
+          "name": "Памуккале и Иераполис",
+          "description": "Ландшафты Памуккале и античное наследие Иераполиса. Доступ к объектам и программа требуют подтверждения."
+        }
+      }
+    },
+    {
+      "id": "anatolia-ephesus",
+      "slug": "ephesus",
+      "name": "Ephesus & the Aegean",
+      "category": "anatolia",
+      "duration": "Program to be confirmed",
+      "description": "Follow the ancient stories of Ephesus and discover the atmosphere of Selçuk. Visits and guiding arrangements need confirmation.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false,
+      "art": "⌑",
+      "translations": {
+        "tr": {
+          "name": "Efes ve Ege’nin İzinde",
+          "description": "Efes’in antik hikâyelerinden Selçuk’un sokaklarına uzanın. Ziyaretler ve rehberlik düzeni onay sonrasında netleşir."
+        },
+        "ar": {
+          "name": "أفسس وساحل إيجة",
+          "description": "اكتشف قصص أفسس القديمة وأجواء سلجوق. الزيارات والترتيبات الإرشادية تحتاج إلى تأكيد."
+        },
+        "ru": {
+          "name": "Эфес и Эгейский регион",
+          "description": "Античные истории Эфеса и атмосфера Сельчука. Посещения и услуги гида требуют подтверждения."
+        }
+      }
+    },
+    {
+      "id": "anatolia-black-sea",
+      "slug": "black-sea",
+      "name": "Black Sea: Trabzon & Rize",
+      "category": "anatolia",
+      "duration": "Program to be confirmed",
+      "description": "An inspiration route through the green landscapes of Trabzon and Rize. Highland access and stops depend on season and conditions.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false,
+      "art": "⋀",
+      "translations": {
+        "tr": {
+          "name": "Karadeniz: Trabzon ve Rize",
+          "description": "Trabzon ve Rize’nin yeşil manzaralarından ilham alan bir rota. Yayla erişimi ve duraklar mevsim ve koşullara göre netleşir."
+        },
+        "ar": {
+          "name": "البحر الأسود: طرابزون وريزه",
+          "description": "مسار مستوحى من طبيعة طرابزون وريزه الخضراء. الوصول للمرتفعات والمحطات يتوقف على الموسم والظروف."
+        },
+        "ru": {
+          "name": "Черноморье: Трабзон и Ризе",
+          "description": "Маршрут по зелёным пейзажам Трабзона и Ризе. Доступ в горы и остановки зависят от сезона и условий."
+        }
+      }
+    },
+    {
+      "id": "anatolia-sanliurfa",
+      "slug": "sanliurfa",
+      "name": "Şanlıurfa & Göbeklitepe",
+      "category": "anatolia",
+      "duration": "Program to be confirmed",
+      "description": "Discover the cultural layers of Şanlıurfa and the archaeological heritage of Göbeklitepe. Access, transport and guiding need confirmation.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false,
+      "art": "∩",
+      "translations": {
+        "tr": {
+          "name": "Şanlıurfa ve Göbeklitepe",
+          "description": "Şanlıurfa’nın kültür katmanlarını ve Göbeklitepe’nin arkeolojik mirasını keşfedin. Erişim, ulaşım ve rehberlik ayrıca onaylanır."
+        },
+        "ar": {
+          "name": "شانلي أورفا وغوبكلي تبه",
+          "description": "اكتشف ثقافة شانلي أورفا والتراث الأثري لغوبكلي تبه. الدخول والنقل والإرشاد تحتاج إلى تأكيد."
+        },
+        "ru": {
+          "name": "Шанлыурфа и Гёбекли-Тепе",
+          "description": "Культурные слои Шанлыурфы и археологическое наследие Гёбекли-Тепе. Доступ, транспорт и гид требуют подтверждения."
+        }
+      }
+    },
+    {
+      "id": "anatolia-nemrut",
+      "slug": "nemrut",
+      "name": "Mount Nemrut & Adıyaman",
+      "category": "anatolia",
+      "duration": "Program to be confirmed",
+      "description": "A heritage route inspired by Mount Nemrut and Adıyaman. Summit access is seasonal; sunrise visits are not guaranteed.",
+      "price_eur": null,
+      "rate_status": "quote_required",
+      "partner_status": "pending_contract",
+      "available": false,
+      "art": "△",
+      "translations": {
+        "tr": {
+          "name": "Nemrut Dağı ve Adıyaman",
+          "description": "Nemrut Dağı ve Adıyaman’dan ilham alan bir kültür rotası. Zirve erişimi mevsimseldir; gün doğumu ziyareti garanti değildir."
+        },
+        "ar": {
+          "name": "جبل نمرود وأديامان",
+          "description": "مسار تراثي مستوحى من جبل نمرود وأديامان. الوصول إلى القمة موسمي وزيارة الشروق غير مضمونة."
+        },
+        "ru": {
+          "name": "Немрут-Даг и Адыяман",
+          "description": "Культурный маршрут по Немрут-Дагу и Адыяману. Доступ к вершине сезонный; посещение на рассвете не гарантируется."
+        }
+      }
     }
   ],
   "transfers": {

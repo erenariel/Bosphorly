@@ -2,7 +2,7 @@ import {test,expect} from './fixtures.js';
 test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await page.goto('/booking.html?lang=en');
- await expect(page.locator('#offer option')).toHaveCount(6);
+ await expect(page.locator('#offer option')).toHaveCount(12);
  await expect(page.locator('.logo img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
  expect(await page.locator('.logo img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
