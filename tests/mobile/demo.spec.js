@@ -10,7 +10,7 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect(page.locator('#result')).toContainText('NOT BOOKED');
  for(const dir of ['ltr','rtl']) {
  await page.locator('html').evaluate((e,d)=>e.dir=d,dir);
- expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ expect(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth||e.getBoundingClientRect().left<0).map(e=>e.tagName+'.'+e.className)}))).toMatchObject({scroll:page.viewportSize().width});
  }
  expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
  expect(await page.context().cookies()).toHaveLength(0);
