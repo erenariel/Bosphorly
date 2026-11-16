@@ -3,13 +3,36 @@
   "status": "PUBLIC_OPERATOR_PRICE_RESEARCH_NOT_BOSPHORLY_QUOTES",
   "note": "Publicly displayed operator prices for market research only. These do NOT constitute Bosphorly sales tariffs, contracted inventory or real-time availability. Currency and basis preserved. Subject to change by source. No external customer checkout links. The seasonal listings and older catalogue items may not be available on selected travel dates; check before sale.",
   "sources": [
+    "https://orientbosphorus.com/tours",
+    "https://www.alaturkahamam.com/",
+    "https://www.alaturkahamam.com/services",
+    "https://www.azureturizm.com/",
+    "https://www.azureturizm.com/bosphorus-cruise-dolmabahce-palace-and-two-continents-tour",
+    "https://www.azureturizm.com/daily-sile-and-agva-tour",
+    "https://www.azureturizm.com/daily-yalova-and-thermal-tour",
+    "https://www.azureturizm.com/dinner-cruise-and-turkish-night-show",
+    "https://www.azureturizm.com/full-day-bosphorus-tour-in-istanbul",
+    "https://www.azureturizm.com/full-day-bursa-tour-from-istanbul",
+    "https://www.azureturizm.com/full-day-istanbul-city-tour",
+    "https://www.azureturizm.com/full-day-princes-islands-tour-in-istanbul",
+    "https://www.azureturizm.com/full-day-sapanca-and-masukiye-tour-from-istanbul",
+    "https://www.azureturizm.com/half-day-bosphorus-tour",
+    "https://www.azureturizm.com/private-airport-transfer",
+    "https://www.bluebrotherstour.com/asia-europe-1",
     "https://www.bluebrotherstour.com/bosphorus-tour",
     "https://www.bluebrotherstour.com/ru/old-city-tour",
-    "https://www.bluebrotherstour.com/asia-europe-1",
-    "https://orientbosphorus.com/tours",
     "https://www.sealandtrip.com/",
-    "https://www.azureturizm.com/",
-    "https://www.alaturkahamam.com/"
+    "https://www.sealandtrip.com/experiences/afternoon-bosphorus-cruise-tour-in-istanbul",
+    "https://www.sealandtrip.com/experiences/bosphorus-cruise-tour-in-istanbul-for-2-hours",
+    "https://www.sealandtrip.com/experiences/bosphorus-morning-cruise-tour-in-istanbul",
+    "https://www.sealandtrip.com/experiences/bosphorus-sunset-cruise-tour-in-istanbul",
+    "https://www.sealandtrip.com/experiences/dinner-cruise-with-entertainment-in-istanbul",
+    "https://www.sealandtrip.com/experiences/istanbul-europe-asia-tour-by-bus-and-bosphorus-cruise",
+    "https://www.sealandtrip.com/experiences/istanbul-full-day-old-city-and-bosphorus-tour",
+    "https://www.sealandtrip.com/experiences/istanbul-half-day-afternoon-europe-tour",
+    "https://www.sealandtrip.com/experiences/istanbul-half-day-morning-asia-with-bosphorus-tour",
+    "https://www.sealandtrip.com/experiences/istanbul-turkish-breakfast-and-bosphorus-cruise",
+    "https://www.sealandtrip.com/experiences/princes-islands-tour-from-istanbul-with-lunch"
   ],
   "records": [
     {
@@ -20,7 +43,61 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour"
+      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour",
+      "details": {
+        "source_url": "https://www.bluebrotherstour.com/bosphorus-tour",
+        "duration": "2 h cruise + 1 h stop on the Asian side",
+        "schedule": "10:00–13:00",
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": "Eminönü; pickup time sent by SMS after booking",
+        "guide": "Live guide: EN / RU / ES / TR",
+        "highlights": [
+          "Passes 25+ landmarks between Europe and Asia",
+          "Dolmabahçe and Beylerbeyi palaces from the water",
+          "Rumeli and Anadolu fortresses, Bosphorus bridges",
+          "1-hour stop at Beylerbeyi on the Asian side"
+        ],
+        "included": [
+          "Breakfast on board",
+          "Hotel transfer",
+          "Live guide",
+          "1-hour stop on the Asian side",
+          "Wi-Fi on board",
+          "Free tea and water"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Infants 0–3 free, children 4–6 get 30% off",
+          "Pay on arrival (no prepayment)",
+          "Vegetarian meal available"
+        ],
+        "tr": {
+          "duration": "2 saat tekne + Asya yakasında 1 saat mola",
+          "pickup": "Otelden alış ve dönüş dahil",
+          "guide": "Canlı rehber: EN / RU / ES / TR",
+          "highlights": [
+            "Avrupa ile Asya arasında 25+ simge yapı",
+            "Dolmabahçe ve Beylerbeyi saraylarını denizden gör",
+            "Rumeli ve Anadolu hisarları, Boğaz köprüleri",
+            "Asya yakasında Beylerbeyi’nde 1 saat mola"
+          ],
+          "included": [
+            "Teknede kahvaltı",
+            "Otel transferi",
+            "Canlı rehber",
+            "Asya yakasında 1 saat mola",
+            "Teknede Wi-Fi",
+            "Ücretsiz çay ve su"
+          ],
+          "notes": [
+            "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
+            "Ödeme varışta (ön ödeme yok)",
+            "Vejetaryen menü mevcut"
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "bb-afternoon",
@@ -30,7 +107,61 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour"
+      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour",
+      "details": {
+        "source_url": "https://www.bluebrotherstour.com/bosphorus-tour",
+        "duration": "2 h cruise + 1 h stop on the Asian side",
+        "schedule": "13:00–16:00",
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": "Eminönü; pickup time sent by SMS after booking",
+        "guide": "Live guide: EN / RU / ES / TR",
+        "highlights": [
+          "Passes 25+ landmarks between Europe and Asia",
+          "Dolmabahçe and Beylerbeyi palaces from the water",
+          "Rumeli and Anadolu fortresses, Bosphorus bridges",
+          "1-hour stop at Beylerbeyi on the Asian side"
+        ],
+        "included": [
+          "Lunch on board",
+          "Hotel transfer",
+          "Live guide",
+          "1-hour stop on the Asian side",
+          "Wi-Fi on board",
+          "Free tea and water"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Infants 0–3 free, children 4–6 get 30% off",
+          "Pay on arrival (no prepayment)",
+          "Vegetarian meal available"
+        ],
+        "tr": {
+          "duration": "2 saat tekne + Asya yakasında 1 saat mola",
+          "pickup": "Otelden alış ve dönüş dahil",
+          "guide": "Canlı rehber: EN / RU / ES / TR",
+          "highlights": [
+            "Avrupa ile Asya arasında 25+ simge yapı",
+            "Dolmabahçe ve Beylerbeyi saraylarını denizden gör",
+            "Rumeli ve Anadolu hisarları, Boğaz köprüleri",
+            "Asya yakasında Beylerbeyi’nde 1 saat mola"
+          ],
+          "included": [
+            "Teknede öğle yemeği",
+            "Otel transferi",
+            "Canlı rehber",
+            "Asya yakasında 1 saat mola",
+            "Teknede Wi-Fi",
+            "Ücretsiz çay ve su"
+          ],
+          "notes": [
+            "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
+            "Ödeme varışta (ön ödeme yok)",
+            "Vejetaryen menü mevcut"
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "bb-sunset",
@@ -40,7 +171,61 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour"
+      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour",
+      "details": {
+        "source_url": "https://www.bluebrotherstour.com/bosphorus-tour",
+        "duration": "2 h cruise + 1 h stop on the Asian side",
+        "schedule": "18:00–21:00",
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": "Eminönü; pickup time sent by SMS after booking",
+        "guide": "Live guide: EN / RU / ES / TR",
+        "highlights": [
+          "Passes 25+ landmarks between Europe and Asia",
+          "Dolmabahçe and Beylerbeyi palaces from the water",
+          "Rumeli and Anadolu fortresses, Bosphorus bridges",
+          "1-hour stop at Beylerbeyi on the Asian side"
+        ],
+        "included": [
+          "Cookies and tea",
+          "Hotel transfer",
+          "Live guide",
+          "1-hour stop on the Asian side",
+          "Wi-Fi on board",
+          "Free water"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Infants 0–3 free, children 4–6 get 30% off",
+          "Pay on arrival (no prepayment)",
+          "Vegetarian meal available"
+        ],
+        "tr": {
+          "duration": "2 saat tekne + Asya yakasında 1 saat mola",
+          "pickup": "Otelden alış ve dönüş dahil",
+          "guide": "Canlı rehber: EN / RU / ES / TR",
+          "highlights": [
+            "Avrupa ile Asya arasında 25+ simge yapı",
+            "Dolmabahçe ve Beylerbeyi saraylarını denizden gör",
+            "Rumeli ve Anadolu hisarları, Boğaz köprüleri",
+            "Asya yakasında Beylerbeyi’nde 1 saat mola"
+          ],
+          "included": [
+            "Kurabiye ve çay",
+            "Otel transferi",
+            "Canlı rehber",
+            "Asya yakasında 1 saat mola",
+            "Teknede Wi-Fi",
+            "Ücretsiz su"
+          ],
+          "notes": [
+            "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
+            "Ödeme varışta (ön ödeme yok)",
+            "Vejetaryen menü mevcut"
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "bb-oldcity",
@@ -50,7 +235,61 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://www.bluebrotherstour.com/ru/old-city-tour"
+      "source_url": "https://www.bluebrotherstour.com/ru/old-city-tour",
+      "details": {
+        "source_url": "https://www.bluebrotherstour.com/ru/old-city-tour",
+        "duration": "8 hours",
+        "schedule": "10:00–18:00",
+        "pickup": "Hotel transfer included",
+        "meeting_point": "Eminönü; pickup time sent by SMS after booking",
+        "guide": "Professional guide: EN / TR",
+        "highlights": [
+          "Hagia Sophia and the Blue Mosque",
+          "Bosphorus cruise with lunch on board",
+          "Balat’s colourful houses and streets",
+          "Iron Church (St Stephen) and St George Church"
+        ],
+        "included": [
+          "Hotel transfer",
+          "Professional guide",
+          "Lunch",
+          "Entrance tickets",
+          "Bosphorus cruise",
+          "Bus between stops"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Infants 0–3 free, children 4–6 get 30% off",
+          "Pay on arrival (no prepayment)",
+          "Vegetarian menu free of charge"
+        ],
+        "tr": {
+          "duration": "8 saat",
+          "pickup": "Otel transferi dahil",
+          "guide": "Profesyonel rehber: EN / TR",
+          "highlights": [
+            "Ayasofya ve Sultanahmet Camii",
+            "Öğle yemekli Boğaz turu",
+            "Balat’ın renkli evleri ve sokakları",
+            "Demir Kilise (Sveti Stefan) ve Aya Yorgi Kilisesi"
+          ],
+          "included": [
+            "Otel transferi",
+            "Profesyonel rehber",
+            "Öğle yemeği",
+            "Giriş biletleri",
+            "Boğaz turu",
+            "Duraklar arası otobüs"
+          ],
+          "notes": [
+            "0–3 yaş ücretsiz, 4–6 yaşa %30 indirim",
+            "Ödeme varışta (ön ödeme yok)",
+            "Vejetaryen menü ücretsiz"
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "bb-europeasia",
@@ -60,7 +299,36 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://www.bluebrotherstour.com/asia-europe-1"
+      "source_url": "https://www.bluebrotherstour.com/asia-europe-1",
+      "details": {
+        "source_url": "https://www.bluebrotherstour.com/asia-europe-1",
+        "duration": "7 hours",
+        "schedule": "10:00–17:00",
+        "pickup": "Hotel transfer included",
+        "meeting_point": "Eminönü; pickup time sent by SMS after booking",
+        "guide": "Live guide: EN / RU / ES / TR",
+        "highlights": [
+          "Bosphorus cruise with breakfast on board",
+          "19th-century Ottoman palace on the Asian shore",
+          "Turkey’s largest mosque on the highest Asian-side viewpoint",
+          "Romantic viewpoint reached by cable car"
+        ],
+        "included": [
+          "Hotel transfer",
+          "Live guide",
+          "Breakfast and lunch",
+          "Entrance tickets",
+          "Bosphorus cruise",
+          "Bus between stops"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Infants 0–3 free, children 4–6 get 30% off",
+          "Pay on arrival (no prepayment)"
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "orient-classic",
@@ -70,7 +338,26 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://orientbosphorus.com/tours"
+      "source_url": "https://orientbosphorus.com/tours",
+      "details": {
+        "source_url": "https://orientbosphorus.com/tours",
+        "duration": "3 hours",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Evening dinner cruise on the Bosphorus",
+          "Mediterranean and Turkish menu: meze, grilled fish, kebab"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "orient-dinner",
@@ -80,7 +367,36 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://orientbosphorus.com/tours"
+      "source_url": "https://orientbosphorus.com/tours",
+      "details": {
+        "source_url": "https://orientbosphorus.com/tours",
+        "duration": "3 hours",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Evening dinner cruise on the Bosphorus",
+          "Mediterranean and Turkish menu: meze, grilled fish, kebab"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
+        ],
+        "tr": {
+          "duration": "3 saat",
+          "highlights": [
+            "Boğaz’da akşam yemekli tekne turu",
+            "Akdeniz ve Türk mutfağı: meze, ızgara balık, kebap"
+          ],
+          "notes": [
+            "Dahil hizmetler firmanın tur sayfasında ayrıntılı yayımlanmamış; firmaya teyit ettirilmeli."
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "orient-alacarte",
@@ -90,70 +406,358 @@
       "currency": "EUR",
       "basis": "per_person",
       "price_type": "listed",
-      "source_url": "https://orientbosphorus.com/tours"
+      "source_url": "https://orientbosphorus.com/tours",
+      "details": {
+        "source_url": "https://orientbosphorus.com/tours",
+        "duration": "3 hours",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "À la carte menu",
+          "Evening dinner cruise on the Bosphorus",
+          "Mediterranean and Turkish menu: meze, grilled fish, kebab"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sea-land",
       "operator": "Sea & Land",
       "title": "Morning Bosphorus Cruise",
-      "price": 8,
-      "original_price": 10,
-      "currency": "EUR",
+      "price": 9,
+      "original_price": 12,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed_discount",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/bosphorus-morning-cruise-tour-in-istanbul",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/bosphorus-morning-cruise-tour-in-istanbul",
+        "duration": "2 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "No live guide; multilingual audio guide",
+        "highlights": [
+          "Cruise between Europe and Asia on the Bosphorus",
+          "Enjoy a full 2-hour sightseeing cruise",
+          "See Istanbul's European and Asian waterfronts",
+          "Admire palaces, mosques, fortresses, bridges, and mansions"
+        ],
+        "included": [
+          "2-hour shared Bosphorus sightseeing cruise",
+          "Pickup service, if the Pickup option is selected",
+          "Multilingual onboard commentary",
+          "Mobile audio guide in 30 languages",
+          "Free onboard Wi-Fi",
+          "Unlimited Turkish tea and Nescafé, self-service",
+          "Restrooms onboard"
+        ],
+        "not_included": [
+          "Return transfer after the cruise",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Ottoman costume photography"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared 2 hour Bosphorus sightseeing cruise with other passengers.",
+          "The Meeting Point option requires you to check in at our office near Eminonu Pier.",
+          "Pickup service is available only if you select the Pickup option.",
+          "You may bring your own food and drinks on board."
+        ],
+        "tr": {
+          "duration": "2 saat",
+          "pickup": "İsteğe bağlı otelden alış (transfer seçeneğiyle)",
+          "guide": "Canlı rehber yok; çok dilli sesli rehber",
+          "highlights": [
+            "Avrupa ile Asya arasında Boğaz turu",
+            "Tam 2 saatlik gezi",
+            "İki yakanın kıyılarını denizden gör",
+            "Saraylar, camiler, hisarlar, köprüler ve yalılar"
+          ],
+          "included": [
+            "2 saatlik paylaşımlı Boğaz turu",
+            "Otelden alış (seçilirse)",
+            "Teknede çok dilli anlatım",
+            "30 dilde mobil sesli rehber",
+            "Teknede ücretsiz Wi-Fi",
+            "Sınırsız çay ve Nescafé (self servis)",
+            "Teknede tuvalet"
+          ],
+          "not_included": [
+            "Tur sonrası otele dönüş",
+            "Kişisel harcamalar",
+            "Bahşiş",
+            "Osmanlı kostümüyle fotoğraf"
+          ],
+          "cancellation": "24 saat öncesine kadar ücretsiz iptal",
+          "notes": [
+            "Diğer yolcularla paylaşımlı tekne",
+            "Buluşma seçeneğinde Eminönü İskelesi yakınındaki ofiste check-in",
+            "Kendi yiyecek ve içeceğini getirebilirsin",
+            "Yağmurda da çalışır, kapalı oturma alanı var"
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-afternoon",
       "operator": "Sea & Land",
       "title": "Afternoon Bosphorus Cruise",
-      "price": 8,
-      "original_price": 10,
-      "currency": "EUR",
+      "price": 9,
+      "original_price": 12,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed_discount",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/afternoon-bosphorus-cruise-tour-in-istanbul",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/afternoon-bosphorus-cruise-tour-in-istanbul",
+        "duration": "2 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "No live guide; multilingual audio guide",
+        "highlights": [
+          "Cruise the Bosphorus between Europe and Asia",
+          "Enjoy a 2-hour afternoon sightseeing cruise",
+          "See Istanbul’s European and Asian waterfronts",
+          "Admire palaces, mosques, fortresses, bridges, and mansions"
+        ],
+        "included": [
+          "2-hour shared Bosphorus sightseeing cruise",
+          "Pickup service, if the Pickup option is selected",
+          "Multilingual onboard commentary",
+          "Mobile audio guide in 30 languages",
+          "Free onboard Wi-Fi",
+          "Unlimited Turkish tea and Nescafe, self-service",
+          "Restrooms onboard"
+        ],
+        "not_included": [
+          "Return transfer after the cruise",
+          "Food and additional beverages",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Ottoman costume photography"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared 2 hour Bosphorus sightseeing cruise with other passengers.",
+          "The Meeting Point option requires you to check in at our office near Eminonu Pier.",
+          "Pickup service is available only if you select the Pickup option.",
+          "You may bring your own food and drinks on board."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-sunset",
       "operator": "Sea & Land",
       "title": "Sunset Bosphorus Cruise",
-      "price": 8,
-      "original_price": 10,
-      "currency": "EUR",
+      "price": 9,
+      "original_price": 12,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed_discount",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/bosphorus-sunset-cruise-tour-in-istanbul",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/bosphorus-sunset-cruise-tour-in-istanbul",
+        "duration": "2 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "No live guide; multilingual audio guide",
+        "highlights": [
+          "Cruise between Europe and Asia at sunset",
+          "Enjoy a 2-hour Bosphorus sightseeing cruise",
+          "Watch the evening light shift across Istanbul",
+          "See the European and Asian waterfronts from the water"
+        ],
+        "included": [
+          "2-hour shared Bosphorus sunset sightseeing cruise",
+          "Pickup and return transfer, if the Transfer option is selected",
+          "Multilingual onboard commentary",
+          "Mobile audio guide in 30 languages",
+          "Free onboard Wi-Fi",
+          "Unlimited Turkish tea and Nescafe, self-service",
+          "Restrooms onboard"
+        ],
+        "not_included": [
+          "Transfers for the Meeting Point option",
+          "Food and additional beverages",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Ottoman costume photography"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared 2 hour Bosphorus sightseeing cruise with other passengers.",
+          "The Meeting Point option requires check in at our office near Eminonu Pier.",
+          "Pickup and return transfers are included only if the Transfer option is selected.",
+          "Sunset colors and timing vary by season, weather, and visibility."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-two-continents",
       "operator": "Sea & Land",
       "title": "Europe & Asia Bus and Boat Tour",
-      "price": 55,
-      "currency": "EUR",
+      "price": 61,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/istanbul-europe-asia-tour-by-bus-and-bosphorus-cruise",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/istanbul-europe-asia-tour-by-bus-and-bosphorus-cruise",
+        "duration": "10–12 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "Professional guide",
+        "highlights": [
+          "Explore Istanbul across Europe and Asia in one full-day experience",
+          "Enjoy panoramic city views from Camlica Hill",
+          "Visit the impressive Camlica Mosque on the Asian side",
+          "Discover the waterfront setting and Ottoman heritage of Beylerbeyi Palace"
+        ],
+        "included": [
+          "Air-conditioned bus transportation",
+          "Professional tour guide",
+          "Camlica Hill and Camlica Mosque",
+          "Beylerbeyi Palace garden admission with Standard options",
+          "Palace admission with Palace & Lunch options: Beylerbeyi Palace Tuesday to Sunday, Yildiz Palace on Mondays",
+          "Lunch with one drink if the Palace & Lunch option is selected",
+          "Eyup cable car",
+          "2-hour Bosphorus sightseeing cruise",
+          "Pickup and drop-off if a Transfer option is selected"
+        ],
+        "not_included": [
+          "Beylerbeyi Palace interior admission with Standard options",
+          "Lunch with Standard options",
+          "Pickup and drop-off with Meeting Point options",
+          "Extra food and drinks",
+          "Personal expenses",
+          "Tips and gratuities"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared full day Istanbul tour by bus, including a 2 hour Bosphorus sightseeing cruise.",
+          "The full experience lasts approximately 10 12 hours, depending on the season, traffic, and tour conditions.",
+          "Standard options do not include lunch or admission to the Beylerbeyi Palace interior and are not available on Mondays.",
+          "Palace & Lunch options include lunch and palace admission. On Mondays, Yildiz Palace is visited instead of Beylerbeyi Palace."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-oldcity",
       "operator": "Sea & Land",
       "title": "Full Day Old City & Bosphorus",
-      "price": 70,
-      "currency": "EUR",
+      "price": 78,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/istanbul-full-day-old-city-and-bosphorus-tour",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/istanbul-full-day-old-city-and-bosphorus-tour",
+        "duration": "12 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "Professional guide",
+        "highlights": [
+          "Discover Istanbul's historic Old City in one full day",
+          "See Hagia Sophia with a guide's commentary",
+          "Visit the Blue Mosque and Sultanahmet Square",
+          "Admire the grand Suleymaniye Mosque"
+        ],
+        "included": [
+          "Hotel pickup and drop-off are included if the transfer option is selected",
+          "Meeting point option available if selected",
+          "Air-conditioned transportation during the tour",
+          "Professional English-speaking guide",
+          "Local lunch with a soft drink",
+          "2-hour Bosphorus sightseeing cruise",
+          "Complimentary tea and Nescafe on board the boat",
+          "Free Wi-Fi on board the boat",
+          "Service charges and local taxes"
+        ],
+        "not_included": [
+          "Topkapi Palace entrance ticket",
+          "Hagia Sophia Mosque entrance ticket",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Extra food and drinks not listed in the included lunch"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared full day guided tour with other passengers.",
+          "Hotel pickup and drop off are available only if the transfer option is selected.",
+          "The meeting point option is available only if selected.",
+          "Pickup time may vary depending on hotel location and traffic."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-asia-half",
       "operator": "Sea & Land",
       "title": "Half-day Morning Asia Bosphorus",
-      "price": 40,
-      "currency": "EUR",
+      "price": 45,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/istanbul-half-day-morning-asia-with-bosphorus-tour",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/istanbul-half-day-morning-asia-with-bosphorus-tour",
+        "duration": "4 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "Professional guide",
+        "highlights": [
+          "Explore Istanbul’s Asian side on a guided morning tour",
+          "Enjoy panoramic views of Istanbul and the Bosphorus",
+          "Discover Ottoman heritage and impressive architecture",
+          "Cross between the European and Asian sides of the city"
+        ],
+        "included": [
+          "Air-conditioned transportation during the land tour",
+          "Professional live tour guide",
+          "Beylerbeyi Palace gardens, Tuesday through Sunday",
+          "Palace interior admission, if a Palace option is selected",
+          "Yildiz Palace instead of Beylerbeyi Palace on Mondays, with Palace options",
+          "Pickup service, if a Pickup option is selected",
+          "2-hour Bosphorus sightseeing cruise",
+          "Mobile audio guide during the Bosphorus cruise",
+          "Unlimited Turkish tea and Nescafe onboard the boat, self-service",
+          "Taxes and service fees"
+        ],
+        "not_included": [
+          "Palace interior admission with Standard options",
+          "Return transfer after the tour",
+          "Meals and drinks",
+          "Personal expenses",
+          "Tips and gratuities"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared half day morning tour with other guests.",
+          "The 4 hour duration covers the guided bus tour portion.",
+          "The bus tour ends at Eminonu Pier.",
+          "Guests who continue with the Bosphorus cruise finish around 16:00 at Eminonu Pier."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-privateyacht",
@@ -173,7 +777,31 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/full-day-bursa-tour-from-istanbul",
+        "duration": "Full day, daily",
+        "schedule": null,
+        "pickup": "Hotel pickup included",
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "40-minute ferry across the İzmit Gulf",
+          "Uludağ mountain by bus and chair lift",
+          "600-year-old plane tree",
+          "Green Mosque, Green Tomb, Silk Market and Ottoman house"
+        ],
+        "included": [
+          "Mixed grill lunch at a mountain restaurant"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Shopping stops: Turkish delight, honey and jam makers",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-bosphorus",
@@ -183,7 +811,35 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/full-day-bosphorus-tour-in-istanbul",
+        "duration": "Full day",
+        "schedule": "Hotel pickup 07:30–09:00 by area",
+        "pickup": "Hotel pickup included",
+        "meeting_point": null,
+        "guide": "Professional guide",
+        "highlights": [
+          "Miniatürk park",
+          "Pierre Loti hill and cable car to Eyüp",
+          "Eyüp Sultan tomb and mosque",
+          "2-hour Bosphorus cruise"
+        ],
+        "included": [
+          "Hotel pickup",
+          "Professional guide",
+          "2-hour Bosphorus cruise",
+          "Lunch at a restaurant"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Includes a shopping stop after lunch",
+          "60+ get 10% off, children 3–6 get 30% off, 0–2 free",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-sapanca",
@@ -193,7 +849,30 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/full-day-sapanca-and-masukiye-tour-from-istanbul",
+        "duration": "Full day (may end 22:00–23:00)",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Lake Sapanca",
+          "Maşukiye river and nature",
+          "Lunch near the Mahmudiye waterfalls",
+          "Kartepe (winter season only)"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Shopping stops: Turkish delight, honey, a mall",
+          "ATV and zipline are not run by the agency",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-islands",
@@ -203,7 +882,38 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/full-day-princes-islands-tour-in-istanbul",
+        "duration": "Full day, all year",
+        "schedule": null,
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": null,
+        "guide": "English or Arabic-speaking guide",
+        "highlights": [
+          "About 1 hour by boat to Heybeliada",
+          "Büyükada with lunch and free time",
+          "Swimming possible in free time",
+          "Shopping stop near Sultanahmet on return"
+        ],
+        "included": [
+          "Hotel transfers",
+          "Boat tickets",
+          "Lunch with a soft drink",
+          "English or Arabic-speaking guide"
+        ],
+        "not_included": [
+          "Drinks on the boat",
+          "Beach entrance fee",
+          "Personal expenses"
+        ],
+        "cancellation": null,
+        "notes": [
+          "Be on time at meeting points; the guide may leave latecomers",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-transfer",
@@ -213,69 +923,351 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/private-airport-transfer",
+        "duration": null,
+        "schedule": null,
+        "pickup": "Door to door",
+        "meeting_point": "Arrivals hall, driver with name sign",
+        "guide": null,
+        "highlights": [
+          "Private transfer from Istanbul Airport or Sabiha Gökçen",
+          "Meet and greet with a name sign",
+          "Help with luggage"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "alaturka",
       "operator": "Alaturka Hamam",
-      "title": "Traditional Hammam",
-      "price": null,
+      "title": "Traditional Turkish Hammam Package",
+      "price": 55,
       "currency": "EUR",
-      "basis": "quote_required",
-      "price_type": "not_publicly_listed",
-      "source_url": "https://www.alaturkahamam.com/"
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.alaturkahamam.com/services",
+      "details": {
+        "source_url": "https://www.alaturkahamam.com/services",
+        "duration": "60 minutes",
+        "schedule": "Daily 09:30–23:00",
+        "pickup": null,
+        "meeting_point": "Branches in Fatih (Binbirdirek) and Beyoğlu",
+        "guide": null,
+        "highlights": [
+          "Kese scrub and foam massage on warm marble",
+          "Clay face mask",
+          "Separate women’s, men’s and couple sections"
+        ],
+        "included": [
+          "Kese scrub",
+          "Foam massage with lavender soap",
+          "Clay face mask",
+          "Steam bath, sauna and relaxation lounge",
+          "Towel, peştemal, soap, shampoo, mitt and slippers"
+        ],
+        "not_included": [
+          "Swimsuit for the pool"
+        ],
+        "cancellation": null,
+        "notes": [
+          "Upgrades: sea-salt or coffee peeling €65, Sultan hammam + massage €75",
+          "Pool is mixed and usually cold (23 °C)"
+        ],
+        "tr": {
+          "duration": "60 dakika",
+          "highlights": [
+            "Kese ve sıcak mermerde köpük masajı",
+            "Kil yüz maskesi",
+            "Kadın, erkek ve çift bölümleri"
+          ],
+          "included": [
+            "Kese",
+            "Lavanta sabunlu köpük masajı",
+            "Kil yüz maskesi",
+            "Buhar odası, sauna ve dinlenme salonu",
+            "Havlu, peştemal, sabun, şampuan, kese ve terlik"
+          ],
+          "not_included": [
+            "Havuz için mayo"
+          ],
+          "notes": [
+            "Üst paketler: tuz veya kahve peelingi €65, Sultan hamam + masaj €75",
+            "Havuz karma ve genelde soğuk (23 °C)"
+          ]
+        },
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-generic-cruise",
       "operator": "Sea & Land",
       "title": "Two-hour Bosphorus Cruise",
-      "price": 8,
-      "original_price": 10,
-      "currency": "EUR",
+      "price": 9,
+      "original_price": 12,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed_discount",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/bosphorus-cruise-tour-in-istanbul-for-2-hours",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/bosphorus-cruise-tour-in-istanbul-for-2-hours",
+        "duration": "2 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "No live guide; multilingual audio guide",
+        "highlights": [
+          "Cruise along the Bosphorus between Europe and Asia",
+          "Choose a morning, afternoon, or sunset departure",
+          "Enjoy a 2-hour sightseeing cruise from the water",
+          "See Istanbul’s European and Asian waterfronts"
+        ],
+        "included": [
+          "2-hour shared Bosphorus sightseeing cruise",
+          "Pickup service before the cruise if the Morning or Afternoon Pickup option is selected",
+          "Pickup and return transfer if the Sunset Transfer option is selected",
+          "Multilingual onboard commentary",
+          "Mobile audio guide in 30 languages",
+          "Free onboard Wi-Fi",
+          "Unlimited Turkish tea and Nescafe, self-service",
+          "Restrooms onboard"
+        ],
+        "not_included": [
+          "Transfers for the Meeting Point option",
+          "Return transfer for the Morning or Afternoon Pickup option",
+          "Meals and snacks",
+          "Additional beverages",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Ottoman costume photography"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared 2 hour Bosphorus sightseeing cruise with other passengers.",
+          "The Meeting Point option is available for morning, afternoon, and sunset departures.",
+          "The Morning and Afternoon Pickup option includes pickup before the cruise but does not include a return transfer.",
+          "The Sunset Transfer option includes both pickup and a return transfer."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-asia-afternoon",
       "operator": "Sea & Land",
       "title": "Half-Day Afternoon Europe Tour",
-      "price": 70,
-      "currency": "EUR",
+      "price": 78,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/istanbul-half-day-afternoon-europe-tour",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/istanbul-half-day-afternoon-europe-tour",
+        "duration": "8 hours",
+        "schedule": null,
+        "pickup": "Optional hotel pickup (choose the transfer option)",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "Professional guide",
+        "highlights": [
+          "Discover Istanbul’s European side in the afternoon",
+          "Enjoy the spiritual atmosphere of the Eyup area",
+          "Take in beautiful views over the Golden Horn",
+          "Ride the Eyup cable car"
+        ],
+        "included": [
+          "Hotel pickup and drop-off from selected central Istanbul hotels, if the transfer option is selected",
+          "Meeting point service, if the meeting point option is selected",
+          "Transportation in an air-conditioned vehicle",
+          "Professional tour guide in English, Spanish, Russian, Arabic, or French",
+          "Lunch with dessert and 1 soft drink",
+          "Eyup cable car ticket",
+          "2-hour Bosphorus sightseeing cruise",
+          "Audio-guided Bosphorus tour",
+          "Unlimited Turkish tea and Nescafe onboard the boat",
+          "Free Wi-Fi onboard the boat"
+        ],
+        "not_included": [
+          "Tips and gratuities",
+          "Personal expenses",
+          "Extra food and drinks",
+          "Alcoholic drinks",
+          "Shopping expenses",
+          "Ottoman costume photography",
+          "Wi-Fi on the bus",
+          "Extra services are not clearly mentioned as included"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared afternoon tour with other guests.",
+          "Hotel pickup and drop off are available only if the transfer option is selected.",
+          "Pickup time is approximate and may change depending on hotel location and traffic.",
+          "Some faraway hotel areas may require an extra transportation fee, as shown in the booking system."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-islands",
       "operator": "Sea & Land",
       "title": "Princes Islands Tour with Lunch",
-      "price": 40,
-      "currency": "EUR",
+      "price": 45,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/princes-islands-tour-from-istanbul-with-lunch",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/princes-islands-tour-from-istanbul-with-lunch",
+        "duration": "8 hours",
+        "schedule": null,
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "Professional guide",
+        "highlights": [
+          "Visit both Kinaliada and Buyukada",
+          "Cruise the Sea of Marmara",
+          "Enjoy peaceful island scenery",
+          "Explore Kinaliada’s relaxed atmosphere"
+        ],
+        "included": [
+          "Hotel pickup and drop-off at selected Istanbul hotels",
+          "Transportation in an air-conditioned vehicle",
+          "Round-trip boat transportation",
+          "Island ferry tickets",
+          "Professional tour guide",
+          "Lunch",
+          "Guided island explanations",
+          "Service charges and local taxes"
+        ],
+        "not_included": [
+          "Drinks",
+          "Meals for children aged 0 to 2",
+          "Tea, coffee, and snacks purchased onboard",
+          "Bicycle rental",
+          "Electric vehicle rental",
+          "Public or private beach entrance fees",
+          "Swimming equipment",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Shopping expenses"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared full day boat tour with other passengers.",
+          "The first island may change based on sea or operational conditions.",
+          "All guests travel together on the same boat.",
+          "Free time on Buyukada is spent independently."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-turkish-breakfast",
       "operator": "Sea & Land",
       "title": "Turkish Breakfast & Bosphorus Cruise",
-      "price": 40,
-      "currency": "EUR",
+      "price": 45,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/istanbul-turkish-breakfast-and-bosphorus-cruise",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/istanbul-turkish-breakfast-and-bosphorus-cruise",
+        "duration": "4 hours",
+        "schedule": null,
+        "pickup": "No transfer; walking between venues",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": "No live guide; multilingual audio guide",
+        "highlights": [
+          "Enjoy a traditional Turkish breakfast with panoramic sea views",
+          "Experience authentic local breakfast culture in historic Sirkeci",
+          "Cruise the Bosphorus between Europe and Asia for 2 hours",
+          "Admire palaces, mosques, bridges, and waterfront mansions"
+        ],
+        "included": [
+          "Traditional Turkish breakfast on a panoramic terrace with sea and city views",
+          "Two-hour Bosphorus sightseeing cruise",
+          "Audio guide available in 11 languages",
+          "Free Wi-Fi on board",
+          "Unlimited Turkish tea and Nescafe on board",
+          "Indoor and outdoor seating on board",
+          "Restroom facilities on board",
+          "SeaLand team assistance between the office, breakfast venue, and boat",
+          "All applicable taxes and service fees"
+        ],
+        "not_included": [
+          "Hotel pickup and drop-off",
+          "Vehicle transportation",
+          "Additional food and drinks",
+          "Personal expenses",
+          "Shopping expenses",
+          "Tips and gratuities"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "There is no vehicle transfer during the program.",
+          "Walking distances between the office, breakfast venue, and Eminonu Pier are short.",
+          "Breakfast lasts approximately 1 hour.",
+          "The Bosphorus cruise departs from Eminonu Pier at 11:00."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "sl-dinner",
       "operator": "Sea & Land",
       "title": "Dinner Cruise with Entertainment",
-      "price": 30,
-      "original_price": 50,
-      "currency": "EUR",
+      "price": 34,
+      "original_price": 56,
+      "currency": "USD",
       "basis": "from_per_person",
       "price_type": "listed_discount",
-      "source_url": "https://www.sealandtrip.com/"
+      "source_url": "https://www.sealandtrip.com/experiences/dinner-cruise-with-entertainment-in-istanbul",
+      "details": {
+        "source_url": "https://www.sealandtrip.com/experiences/dinner-cruise-with-entertainment-in-istanbul",
+        "duration": "3 hours",
+        "schedule": null,
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": "Sea & Land office near Eminönü Pier",
+        "guide": null,
+        "highlights": [
+          "Cruise between Europe and Asia at night",
+          "Enjoy a 3-hour Bosphorus dinner cruise",
+          "See Istanbul’s illuminated skyline from the water",
+          "Admire famous waterfront landmarks along both shores"
+        ],
+        "included": [
+          "3-hour shared Bosphorus dinner cruise",
+          "Pickup and drop-off from selected central Istanbul locations",
+          "Dinner",
+          "Turkish night show entertainment",
+          "DJ music",
+          "Unlimited soft drinks",
+          "2 alcoholic drinks per person if the Alcoholic Drinks option is selected",
+          "Indoor and outdoor areas",
+          "Air-conditioned boat"
+        ],
+        "not_included": [
+          "Imported alcoholic drinks",
+          "Additional alcoholic drinks beyond the selected package",
+          "Drinks not included in the selected package",
+          "Personal expenses",
+          "Tips and gratuities",
+          "Special-occasion extras unless separately arranged and confirmed"
+        ],
+        "cancellation": "Free cancellation up to 24 hours before",
+        "notes": [
+          "This is a shared Bosphorus dinner cruise with other passengers.",
+          "Both options include pickup and drop off at selected central Istanbul locations.",
+          "Transfer times may vary based on your location, traffic, and other guests.",
+          "The Soft Drinks option includes unlimited soft drinks."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "orient-private-newyear",
@@ -286,7 +1278,27 @@
       "basis": "per_person",
       "price_type": "listed",
       "source_url": "https://orientbosphorus.com/tours",
-      "seasonal": true
+      "seasonal": true,
+      "details": {
+        "source_url": "https://orientbosphorus.com/tours",
+        "duration": "3 hours",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Private New Year’s Eve cruise",
+          "Evening dinner cruise on the Bosphorus",
+          "Mediterranean and Turkish menu: meze, grilled fish, kebab"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "orient-newyear-special",
@@ -298,7 +1310,27 @@
       "price_type": "listed",
       "source_url": "https://orientbosphorus.com/tours",
       "seasonal": true,
-      "service_date": "2026-12-31"
+      "service_date": "2026-12-31",
+      "details": {
+        "source_url": "https://orientbosphorus.com/tours",
+        "duration": "4 hours",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "31 December, departs from Karaköy",
+          "Evening dinner cruise on the Bosphorus",
+          "Mediterranean and Turkish menu: meze, grilled fish, kebab"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Inclusions are not detailed on the operator’s tour page; confirm with the operator."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-sileagva",
@@ -308,7 +1340,37 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/daily-sile-and-agva-tour",
+        "duration": "Full day",
+        "schedule": null,
+        "pickup": "Hotel pickup included",
+        "meeting_point": null,
+        "guide": "English or Arabic-speaking guide",
+        "highlights": [
+          "Stop at the hidden lake (Saklı Göl)",
+          "Şile hilltop view of the castle and lighthouse",
+          "Boat ride on the Göksu river in Ağva",
+          "Free time, swimming in the Black Sea"
+        ],
+        "included": [
+          "Lunch with a soft drink",
+          "Air-conditioned bus",
+          "Boat ride",
+          "English or Arabic-speaking guide"
+        ],
+        "not_included": [
+          "Tea/coffee at the lake stop",
+          "Swimming expenses",
+          "Personal expenses"
+        ],
+        "cancellation": null,
+        "notes": [
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-two-continents",
@@ -318,7 +1380,32 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/bosphorus-cruise-dolmabahce-palace-and-two-continents-tour",
+        "duration": "Full day, daily",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Spice Bazaar",
+          "Bosphorus cruise (Rumeli Fortress from the boat)",
+          "Dolmabahçe Palace",
+          "Bosphorus Bridge and Çamlıca Hill"
+        ],
+        "included": [
+          "Lunch"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Dolmabahçe is closed Mon & Thu: replaced with Eyüp, Pierre Loti and Miniatürk",
+          "Spice Bazaar is closed Sun: replaced with local shops",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-yalova",
@@ -328,7 +1415,27 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/daily-yalova-and-thermal-tour",
+        "duration": "Full day",
+        "schedule": null,
+        "pickup": "Hotel pickup included",
+        "meeting_point": null,
+        "guide": "English and Arabic-speaking guide",
+        "highlights": [
+          "Cross the Bosphorus Bridge, ferry to Yalova",
+          "Thermal sulphur spa and Turkish bath",
+          "Lunch with a view of a 14 m waterfall"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-dinner",
@@ -338,7 +1445,32 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/dinner-cruise-and-turkish-night-show",
+        "duration": "Evening",
+        "schedule": null,
+        "pickup": "Hotel pickup and drop-off included",
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Show: Mehter welcome, whirling dervish, belly dance, folk dances, DJ",
+          "Menu: cold starters, salad, starter, main (chicken, fish, meatballs or vegetarian), baklava and fruit"
+        ],
+        "included": [
+          "Hotel pickup and drop-off",
+          "Full-course dinner",
+          "Show program",
+          "Unlimited local alcoholic drinks or unlimited soft drinks (by option)"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "The operator page mentions both a Bosphorus yacht and a restaurant: confirm the venue",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-city",
@@ -348,7 +1480,31 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/full-day-istanbul-city-tour",
+        "duration": "Full day, daily",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": null,
+        "highlights": [
+          "Hagia Sophia, Blue Mosque and Hippodrome",
+          "Grand Bazaar",
+          "Topkapı Palace",
+          "Rüstem Paşa or Süleymaniye Mosque"
+        ],
+        "included": [
+          "Lunch"
+        ],
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Hagia Sophia Mon → Basilica Cistern; Topkapı Tue → Chora or Beylerbeyi; Grand Bazaar Sun → shops",
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-halfbosphorus",
@@ -358,7 +1514,26 @@
       "currency": "USD",
       "basis": "as_listed",
       "price_type": "listed",
-      "source_url": "https://www.azureturizm.com/"
+      "source_url": "https://www.azureturizm.com/",
+      "details": {
+        "source_url": "https://www.azureturizm.com/half-day-bosphorus-tour",
+        "duration": "Half day",
+        "schedule": null,
+        "pickup": null,
+        "meeting_point": null,
+        "guide": "English or Arabic-speaking guide",
+        "highlights": [
+          "Bosphorus views of both continents",
+          "Yalı mansions, palaces, mosques and churches"
+        ],
+        "included": null,
+        "not_included": null,
+        "cancellation": null,
+        "notes": [
+          "Prices load dynamically on the operator site; listed price kept from earlier research."
+        ],
+        "checked": "2026-11-16"
+      }
     },
     {
       "id": "azure-triple-eurplane",
@@ -382,5 +1557,6 @@
       "price_type": "listed_discount",
       "source_url": "https://www.azureturizm.com/"
     }
-  ]
+  ],
+  "detail_note": "details: tour contents summarised from each operator’s own page on the checked date. Fields are null where the operator does not say. Not Bosphorly promises; confirm with the operator before any request."
 }
