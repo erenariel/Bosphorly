@@ -7,7 +7,7 @@
 
 *Mobile-first arrival planning · Istanbul discovery · Ethical travel intermediation*
 
-[Traveler demo](index.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
+[Traveler demo](index.html) · [Researched tour prices](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
 </div>
 
 > **Public prototype · 16 November 2026.** This is not a live agency, payment service, reservation engine, or partner portal. No bookings or charges are made. All demo prices, provider cards, referral KPIs, commissions and sample transactions are illustrative or third-party research, **not confirmed commercial offers**.
@@ -30,7 +30,7 @@ index.html             Standalone mobile-first traveler demo
 booking.html           In-platform booking preview (not a real reservation)
 booking.js             Local-only booking validation and catalog integration
 booking.css            Responsive booking styles
-data/offers.json       Bosphorly-owned draft products and rate status
+data/offers.json       Bosphorly-owned draft products and fixed Sultanahmet transfer tariffs\ndata/public-market-prices.json   Source-checked public operator price research\nprices.html            Public tour price research page (not live Bosphorly tariffs)\nprices.js              Local price filter and rendering\nhotel-lookup.js        Optional Google Places hotel matching\nconfig/maps-public.js  Restricted browser-only Google Maps key configuration
 map.html               Istanbul map and transport information
 presentation.html      Product vision and investor/partner presentation
 presentation.css       Presentation styling
@@ -80,7 +80,7 @@ Go to **Settings → Pages → Build and deployment** on this repository, select
 
 ## Planned next milestones
 
-Supplier and hotel verification; actual zone-based pricing; contracts and rights to sell; booking backend; consentful reservation details; hosted payment solution; transparent cancellation/refunds; fulfilled-sales commissions and rewards; professionally reviewed localized editorial guides.
+Supplier and hotel verification; Google Places configuration and location-based service zones; contracts and rights to sell; booking backend; consentful reservation details; hosted payment solution; transparent cancellation/refunds; fulfilled-sales commissions and rewards; professionally reviewed localized editorial guides.
 
 See [product spec](docs/PRODUCT.md), [roadmap](docs/ROADMAP.md) and [legal gates](docs/LEGAL-GATES.md).
 
@@ -99,3 +99,14 @@ The original selected visual direction is a white **B**, aqua flight trail and h
 Every traveler experience card leads to `booking.html?service=<approved-id>`. The public catalog **must not contain referral/affiliate checkout links** to outside agencies. Prices visible to guests will be approved and maintained by Bosphorly administrators after valid supplier contracts; the static `data/offers.json` is a read-only demonstration and **not a trusted price source for production purchases**.
 
 Real booking requests, confirmation numbers, card payments, passport information, commissions and customer messages all require a secure backend and a separate legal/operational release gate. Codex implementation brief: [Issue #1](https://github.com/erenariel/Bosphorly/issues/1).
+
+
+## Traveler pricing and browser localization (16 Nov 2026)
+
+- **Sultanahmet airport transfers are fixed**, not estimated, at **IST → Sultanahmet €55** and **SAW → Sultanahmet €65**, one way. These are the project's customer tariffs as provided by the operator. Other destinations remain `Ask for price`. Real reservations remain disabled until fulfillment is integrated.
+- **36 sourced operator records** (35 advertised prices and one rate-on-request) are in `data/public-market-prices.json`. Cards and `prices.html` show original posted currencies and mark them as **operator research, NOT Bosphorly sales rates**. Dates/packages/seasonal discounts can change.
+- On first launch, the traveler's interface detects the browser language via `navigator.languages`. A manually chosen language is remembered for subsequent visits.
+- Optional Google Places (New) autocomplete identifies a selected Istanbul hotel by its name, formatted address and location. Without a configured restricted browser key, a clearly marked manual fallback remains available. See [Google Places activation](docs/GOOGLE-PLACES.md).
+- The homepage includes subtle animated water flourishes through CSS, respecting the visitor's reduced-motion preference. No heavy animated GIF is required.
+
+**Data rule:** Supplier public list prices must never silently become confirmed retail tariffs. Price approvals and booking fulfillment need the secure backend planned in Issue #1.

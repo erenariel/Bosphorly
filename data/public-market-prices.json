@@ -1,0 +1,386 @@
+{
+  "checked_at": "2026-11-16",
+  "status": "PUBLIC_OPERATOR_PRICE_RESEARCH_NOT_BOSPHORLY_QUOTES",
+  "note": "Publicly displayed operator prices for market research only. These do NOT constitute Bosphorly sales tariffs, contracted inventory or real-time availability. Currency and basis preserved. Subject to change by source. No external customer checkout links. The seasonal listings and older catalogue items may not be available on selected travel dates; check before sale.",
+  "sources": [
+    "https://www.bluebrotherstour.com/bosphorus-tour",
+    "https://www.bluebrotherstour.com/ru/old-city-tour",
+    "https://www.bluebrotherstour.com/asia-europe-1",
+    "https://orientbosphorus.com/tours",
+    "https://www.sealandtrip.com/",
+    "https://www.azureturizm.com/",
+    "https://www.alaturkahamam.com/"
+  ],
+  "records": [
+    {
+      "id": "bb-morning",
+      "operator": "Blue Brothers",
+      "title": "Morning Bosphorus Cruise",
+      "price": 25,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour"
+    },
+    {
+      "id": "bb-afternoon",
+      "operator": "Blue Brothers",
+      "title": "Afternoon Bosphorus Cruise with lunch",
+      "price": 35,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour"
+    },
+    {
+      "id": "bb-sunset",
+      "operator": "Blue Brothers",
+      "title": "Sunset Bosphorus Cruise",
+      "price": 20,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.bluebrotherstour.com/bosphorus-tour"
+    },
+    {
+      "id": "bb-oldcity",
+      "operator": "Blue Brothers",
+      "title": "Old City Tour",
+      "price": 90,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.bluebrotherstour.com/ru/old-city-tour"
+    },
+    {
+      "id": "bb-europeasia",
+      "operator": "Blue Brothers",
+      "title": "Asia & Europe Full Day",
+      "price": 90,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://www.bluebrotherstour.com/asia-europe-1"
+    },
+    {
+      "id": "orient-classic",
+      "operator": "Orient Bosphorus",
+      "title": "Classic Dinner Cruise",
+      "price": 50,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://orientbosphorus.com/tours"
+    },
+    {
+      "id": "orient-dinner",
+      "operator": "Orient Bosphorus",
+      "title": "Premium Dinner Cruise",
+      "price": 70,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://orientbosphorus.com/tours"
+    },
+    {
+      "id": "orient-alacarte",
+      "operator": "Orient Bosphorus",
+      "title": "À la Carte Dinner Cruise",
+      "price": 120,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://orientbosphorus.com/tours"
+    },
+    {
+      "id": "sea-land",
+      "operator": "Sea & Land",
+      "title": "Morning Bosphorus Cruise",
+      "price": 8,
+      "original_price": 10,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed_discount",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-afternoon",
+      "operator": "Sea & Land",
+      "title": "Afternoon Bosphorus Cruise",
+      "price": 8,
+      "original_price": 10,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed_discount",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-sunset",
+      "operator": "Sea & Land",
+      "title": "Sunset Bosphorus Cruise",
+      "price": 8,
+      "original_price": 10,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed_discount",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-two-continents",
+      "operator": "Sea & Land",
+      "title": "Europe & Asia Bus and Boat Tour",
+      "price": 55,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-oldcity",
+      "operator": "Sea & Land",
+      "title": "Full Day Old City & Bosphorus",
+      "price": 70,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-asia-half",
+      "operator": "Sea & Land",
+      "title": "Half-day Morning Asia Bosphorus",
+      "price": 40,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-privateyacht",
+      "operator": "Sea & Land",
+      "title": "Ricos Private Yacht",
+      "price": 180,
+      "currency": "EUR",
+      "basis": "from",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "azure-bursa",
+      "operator": "Azure Tour",
+      "title": "Full Day Bursa",
+      "price": 60,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-bosphorus",
+      "operator": "Azure Tour",
+      "title": "Full Day Bosphorus Tour",
+      "price": 60,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-sapanca",
+      "operator": "Azure Tour",
+      "title": "Sapanca & Maşukiye",
+      "price": 45,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-islands",
+      "operator": "Azure Tour",
+      "title": "Princes Islands Tour",
+      "price": 50,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-transfer",
+      "operator": "Azure Tour",
+      "title": "Private Airport Transfer",
+      "price": 33.21,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "alaturka",
+      "operator": "Alaturka Hamam",
+      "title": "Traditional Hammam",
+      "price": null,
+      "currency": "EUR",
+      "basis": "quote_required",
+      "price_type": "not_publicly_listed",
+      "source_url": "https://www.alaturkahamam.com/"
+    },
+    {
+      "id": "sl-generic-cruise",
+      "operator": "Sea & Land",
+      "title": "Two-hour Bosphorus Cruise",
+      "price": 8,
+      "original_price": 10,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed_discount",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-asia-afternoon",
+      "operator": "Sea & Land",
+      "title": "Half-Day Afternoon Europe Tour",
+      "price": 70,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-islands",
+      "operator": "Sea & Land",
+      "title": "Princes Islands Tour with Lunch",
+      "price": 40,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-turkish-breakfast",
+      "operator": "Sea & Land",
+      "title": "Turkish Breakfast & Bosphorus Cruise",
+      "price": 40,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "sl-dinner",
+      "operator": "Sea & Land",
+      "title": "Dinner Cruise with Entertainment",
+      "price": 30,
+      "original_price": 50,
+      "currency": "EUR",
+      "basis": "from_per_person",
+      "price_type": "listed_discount",
+      "source_url": "https://www.sealandtrip.com/"
+    },
+    {
+      "id": "orient-private-newyear",
+      "operator": "Orient Bosphorus",
+      "title": "Private New Year Bosphorus Cruise",
+      "price": 300,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://orientbosphorus.com/tours",
+      "seasonal": true
+    },
+    {
+      "id": "orient-newyear-special",
+      "operator": "Orient Bosphorus",
+      "title": "New Year’s Eve Special Cruise",
+      "price": 250,
+      "currency": "EUR",
+      "basis": "per_person",
+      "price_type": "listed",
+      "source_url": "https://orientbosphorus.com/tours",
+      "seasonal": true,
+      "service_date": "2026-12-31"
+    },
+    {
+      "id": "azure-sileagva",
+      "operator": "Azure Tour",
+      "title": "Daily Şile and Ağva Tour",
+      "price": 30,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-two-continents",
+      "operator": "Azure Tour",
+      "title": "Bosphorus, Dolmabahçe & Two Continents",
+      "price": 70,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-yalova",
+      "operator": "Azure Tour",
+      "title": "Daily Yalova & Thermal Tour",
+      "price": 40,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-dinner",
+      "operator": "Azure Tour",
+      "title": "Dinner Cruise & Turkish Night Show",
+      "price": 60,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-city",
+      "operator": "Azure Tour",
+      "title": "Full Day Istanbul City Tour",
+      "price": 150,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-halfbosphorus",
+      "operator": "Azure Tour",
+      "title": "Half-Day Bosphorus Tour",
+      "price": 40,
+      "currency": "USD",
+      "basis": "as_listed",
+      "price_type": "listed",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-triple-eurplane",
+      "operator": "Azure Tour",
+      "title": "Cappadocia, Pamukkale & Ephesus by Plane",
+      "price": 600,
+      "original_price": 750,
+      "currency": "EUR",
+      "basis": "as_listed",
+      "price_type": "listed_discount",
+      "source_url": "https://www.azureturizm.com/"
+    },
+    {
+      "id": "azure-triple-eurbus",
+      "operator": "Azure Tour",
+      "title": "Cappadocia, Pamukkale & Ephesus by Bus",
+      "price": 448,
+      "original_price": 560,
+      "currency": "EUR",
+      "basis": "as_listed",
+      "price_type": "listed_discount",
+      "source_url": "https://www.azureturizm.com/"
+    }
+  ]
+}

@@ -15,9 +15,25 @@
  const area=$('area');if(tr)[...area.options].at(-1).textContent='Diğer';
  const iso=new Date();const local=new Date(iso.getTime()-iso.getTimezoneOffset()*60000).toISOString().slice(0,10);$('date').min=local;$('date').value=local;
  let offers=[];
+ let marketPrices=new Map();
+ const renderMarketPrice=()=>{
+  const r=marketPrices.get($('offer').value);
+  const box=$('marketPrice');if(!box)return;
+  if(!r||typeof r.price!=='number'){
+   box.textContent=tr?'Acentenin yayımlanmış fiyatı bulunamadı. Bosphorly satış fiyatı henüz belirlenmedi.':'No verified published supplier rate yet. Bosphorly selling price has not been approved.';
+   return;
+  }
+  const p=new Intl.NumberFormat(tr?'tr-TR':'en-GB',{style:'currency',currency:r.currency,maximumFractionDigits:2}).format(r.price);
+  const prefix=r.basis?.startsWith('from')?(tr?'Başlangıç ':'From '):'';
+  box.textContent=(tr?'Acentenin yayımladığı fiyat: ':'Supplier published price: ')+prefix+p+' · '+(tr?'Bosphorly satış fiyatı değildir; işlem için sözleşme ve onay gerekir.':'Not a Bosphorly selling tariff; contract and approval required.');
+ };
+ async function loadMarketPrices(){
+  try{const r=await fetch('data/public-market-prices.json',{cache:'no-store'});if(!r.ok)return;const data=await r.json();marketPrices=new Map((data.records||[]).map(x=>[x.id,x]));renderMarketPrice();}catch{}
+ }
+ 
  const namesTr={'bb-morning':'Sabah Boğaz Turu','bb-sunset':'Gün Batımı Boğaz Turu','bb-oldcity':'Bizans ve Osmanlı Mirası Turu','orient-dinner':'Boğaz’da Akşam Yemeği','sea-land':'Boğaz Gezi Turu','alaturka':'Geleneksel Türk Hamamı'};
  const getOffer=()=>offers.find(x=>x.id===$('offer').value);
- const labels=()=>{$('price').textContent=t.price;$('availability').textContent=t.availability;};
+ const labels=()=>{$('price').textContent=t.price;$('availability').textContent=t.availability;renderMarketPrice();};
  async function load(){
   try{
    const resp=await fetch('data/offers.json',{cache:'no-store'});if(!resp.ok)throw new Error('Cannot load offers');
@@ -39,5 +55,5 @@
   fields.forEach(([key,val])=>{const dt=document.createElement('dt');dt.textContent=key;const dd=document.createElement('dd');dd.textContent=val;d.append(dt,dd)});
   r.append(h,p,d);r.hidden=false;r.focus();
  });
- load();
+ load();loadMarketPrices();
 })();
