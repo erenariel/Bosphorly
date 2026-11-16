@@ -17,8 +17,8 @@
     info.dataset.verified=ok?'yes':'no';
   };
   const manualNotice=()=>setInfo(tr()?
-    'Otel adresi otomatik doğrulanmadı. Otel adını ve bölgesini elle seçebilirsin.':
-    'Hotel address is not verified automatically. You may enter the hotel and select its area manually.');
+    'Otel adresini elle gir; henüz otomatik doğrulanmadı.':
+    'Enter the hotel address manually; it is not automatically verified.');
   function zoneFromLocation(address=''){
     const normalized=address.toLocaleLowerCase('tr-TR');
     if(/sultanahmet|cankurtaran|binbirdirek|kucuk ayasofya|küçük ayasofya|ale mdar|alemd ar/.test(normalized))return 'sultanahmet';

@@ -3,6 +3,8 @@ async function open(page){await page.goto('/?lang=tr');await expect(page.locator
 test('direction, addresses, Vito rows and return dates work without sending PII',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await open(page);
+ await expect(page.locator('.transfer-map')).not.toHaveAttribute('open','');
+ await page.locator('.transfer-map summary').click();await expect(page.locator('.transfer-map img')).toBeVisible();await page.locator('.transfer-map summary').click();
  await expect(page.locator('#pickupAddress')).toHaveValue('İstanbul Havalimanı (IST)');await expect(page.locator('#pickupAddress')).toHaveAttribute('readonly','');
  await page.locator('#airport').selectOption('SAW');await expect(page.locator('#pickupAddress')).toHaveValue('Sabiha Gökçen (SAW)');
  await page.locator('#hotel').fill('Synthetic Hotel');await page.locator('#dropoffAddress').fill('Synthetic street, Istanbul');

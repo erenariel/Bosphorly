@@ -60,3 +60,13 @@ supported. Automated browser checks now include desktop width 1440 alongside
 360/390/768. Tests cover capacity, route reversal, return chronology, Google
 fixture population/invalidation, modal dismissal, form validation and no PII
 submission. `npm test` and `npm run test:mobile` must pass before delivery.
+
+## Compact layout
+
+The route stage groups journey choices, route/vehicle and pickup/destination
+addresses. Hotel and area share a row on desktop; addresses sit side by side.
+The map is preserved in an optional disclosure, while route endpoints and a
+single fare label remain visible. Passenger rows begin with first/last name.
+Duplicate address and fare notices are removed; quote scope and unverified
+manual-address status remain visible. Capacity, directions and validation are
+unchanged.
