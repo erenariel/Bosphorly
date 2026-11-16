@@ -12,3 +12,7 @@ test-results/
 playwright-report/
 .wrangler/
 .dev.vars
+
+# Ad-hoc screenshots must not land in the repository root
+/*.png
+/*.jpg
