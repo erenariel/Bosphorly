@@ -2,8 +2,10 @@
 
 ## Delivered scope
 
-An optional calculator sits under pickup/destination on transfer stage one.
-The new address/area → address direction hides irrelevant hotel/airport fields.
+A standalone homepage section, `#routeEstimator`, sits before the transfer section.
+It has its own start/destination inputs; transfer fields and selections are independent.
+Vehicle/waiting options and detailed privacy/source notes open on demand.
+The transfer address/area → address direction still hides irrelevant hotel/airport fields.
 Entering addresses does not generate geocoder traffic: the user clicks Find,
 chooses the intended Istanbul matches, and the road route is then computed.
 This supports districts, landmarks and street addresses. A district result is a
@@ -92,8 +94,9 @@ queries, selections and routes are not persisted to local/session storage,
 Bosphorly servers or the URL, and are not logged by application code. Providers
 may keep their own logs; their source/policy links are provided in the UI.
 
-Changing an address, direction, airport, hotel or trip type immediately clears
-results and cancels pending work. Deselecting a match also prevents stale results
+Changing a calculator address immediately clears results and cancels pending
+work. Transfer address, direction, airport, hotel and trip changes do not affect
+the independent calculator. Deselecting a match also prevents stale results
 from reappearing. Failures do not block the independent local transfer plan.
 
 Tests use synthetic addresses/routes and never hit public geocoders/routers.
