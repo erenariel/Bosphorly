@@ -14,7 +14,7 @@
 
 **[Bosphorly ana sayfasını ve transfer formunu aç →](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr)**
 
-Aşağıdaki görsele tıklayarak da masaüstü demosuna ulaşabilirsin. Aynı ChatGPT hesabınla giriş yapman gerekebilir. Bu ayrı inceleme yayını, [PR #4](https://github.com/erenariel/Bosphorly/pull/4) içindeki güncel arayüzü gösterir; ana dalın GitHub Pages yayınıyla aynı sürüm olmak zorunda değildir. Gerçek rezervasyon veya ödeme yapılmaz.
+Aşağıdaki görsele tıklayarak da masaüstü demosuna ulaşabilirsin. ChatGPT hesabı veya giriş gerektirmez; bağlantıyı açan herkes erişebilir. Bu ayrı inceleme yayını, [PR #4](https://github.com/erenariel/Bosphorly/pull/4) içindeki güncel arayüzü gösterir; ana dalın GitHub Pages yayınıyla aynı sürüm olmak zorunda değildir. Gerçek rezervasyon veya ödeme yapılmaz.
 
 [![Bosphorly masaüstü transfer demosunu aç](https://raw.githubusercontent.com/erenariel/Bosphorly/f3767fe75265322d39d10cd25b5ed502145bc01e/docs/review/desktop-transfer.jpg)](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr)
 
