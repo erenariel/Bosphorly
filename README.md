@@ -1,5 +1,5 @@
 <div align="center">
-<img src="assets/brand/brandmark.svg" alt="Bosphorly B app icon — vector concept" width="128">
+<img src="assets/brand/approved-icon.webp" alt="Bosphorly B app icon — vector concept" width="128">
 
 # Bosphorly
 
@@ -84,6 +84,6 @@ See [product spec](docs/PRODUCT.md), [roadmap](docs/ROADMAP.md) and [legal gates
 
 ## Brand
 
-The original selected visual direction is a white **B**, aqua flight trail and historic gold forms on midnight blue. The current SVG in this repository is a vector concept based on those elements; the master high-resolution selected artwork remains in the private design starter package until its original image asset is explicitly added to this repository.
+The original selected visual direction is a white **B**, aqua flight trail and historic gold forms on midnight blue. The public website uses a small optimized crop of the user-selected artwork (`assets/brand/approved-icon.webp`). The separate SVG remains an approximate fallback, not the master vector logo. Full-size image exports are retained outside the public repo pending final brand packaging.
 
 © 2026 Bosphorly concept. Brand name, domain and trademark availability require verification.
