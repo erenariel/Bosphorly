@@ -33,7 +33,9 @@
     es: { original: "¤ Original", label: "Moneda", note: d => "Importe aproximado al tipo de venta del TCMB del {d}. El pago se hace en efectivo en la recepción del hotel.".replace('{d}', d), title: d => "Tipo del TCMB del {d}".replace('{d}', d) },
     uk: { original: "¤ Початкова", label: "Валюта", note: d => "Орієнтовна сума за курсом продажу ЦБ Туреччини (TCMB) на {d}. Оплата готівкою на рецепції готелю.".replace('{d}', d), title: d => "Курс TCMB на {d}".replace('{d}', d) },
     nl: { original: "¤ Origineel", label: "Valuta", note: d => "Bedrag bij benadering tegen de TCMB-verkoopkoers van {d}. Betalen gebeurt contant bij de hotelreceptie.".replace('{d}', d), title: d => "TCMB-koers van {d}".replace('{d}', d) },
-    az: { original: "¤ Orijinal", label: "Valyuta", note: d => "TCMB-nin {d} tarixli satış məzənnəsi ilə təxmini məbləğ. Ödəniş otel resepşnında nağd edilir.".replace('{d}', d), title: d => "TCMB {d} məzənnəsi".replace('{d}', d) }
+    az: { original: "¤ Orijinal", label: "Valyuta", note: d => "TCMB-nin {d} tarixli satış məzənnəsi ilə təxmini məbləğ. Ödəniş otel resepşnında nağd edilir.".replace('{d}', d), title: d => "TCMB {d} məzənnəsi".replace('{d}', d) },
+    he: { original: "¤ מקורי", label: "מטבע", note: d => "סכום משוער לפי שער המכירה של TCMB מתאריך {d}. התשלום במזומן בקבלת המלון.".replace('{d}', d), title: d => "שער TCMB מתאריך {d}".replace('{d}', d) },
+    fa: { original: "¤ اصلی", label: "ارز", note: d => "مبلغ تقریبی با نرخ فروش TCMB در تاریخ {d}. پرداخت به‌صورت نقدی در پذیرش هتل انجام می‌شود.".replace('{d}', d), title: d => "نرخ TCMB در تاریخ {d}".replace('{d}', d) }
   };
   const txt = () => TXT[lang()] || TXT.en;
   function note() {
