@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b1553"><meta name="description" content="Explore and plan Istanbul experiences inside Bosphorly. View transparent price status and service details."><title>Plan an experience | Bosphorly</title><link rel="icon" href="assets/brand/brandmark.svg"><link rel="stylesheet" href="booking.css"></head>
+<body>
+<div class="prototype"><span>PUBLIC PROTOTYPE</span> · No reservation, payment or price guarantee is made by this website</div>
+<header class="header"><div class="head-wrap"><a class="logo" href="index.html"><img src="assets/brand/brandmark.svg" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a><nav aria-label="Main navigation"><a href="index.html">Home</a><a href="map.html">City map</a><a href="dashboard.html">Partners</a></nav></div></header>
+<main class="container"><div class="intro"><div><span class="eyebrow" id="eyebrow">YOUR ISTANBUL · YOUR WAY</span><h1 id="heading">Plan your experience with Bosphorly.</h1><p id="subheading">Choose your activity, preferred date and hotel area. You stay on Bosphorly throughout the journey—no supplier-site redirection.</p></div><div class="step-indicator"><span>01</span><strong id="stepName">Experience details</strong></div></div>
+<div class="layout"><section class="panel" aria-labelledby="formTitle"><h2 id="formTitle">Your experience</h2><p class="muted" id="formIntro">A simple preview of our future reservation journey.</p>
+<form id="bookingForm" novalidate>
+<div class="fields">
+<label class="wide" for="offer"><span id="labelOffer">Experience</span><select id="offer" required></select></label>
+<label for="date"><span id="labelDate">Preferred date</span><input id="date" type="date" required></label>
+<label for="time"><span id="labelTime">Preferred time</span><select id="time"><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option><option value="flexible">Flexible</option></select></label>
+<label for="guests"><span id="labelGuests">Guests</span><input type="number" id="guests" min="1" max="16" step="1" value="2" inputmode="numeric" required></label>
+<label for="area"><span id="labelArea">Hotel area</span><select id="area"><option value="Sultanahmet">Sultanahmet / Fatih</option><option value="Sirkeci">Sirkeci / Eminönü</option><option value="Taksim">Taksim / Beyoğlu</option><option value="Kadıköy">Kadıköy</option><option value="Other">Other</option></select></label>
+</div>
+<div class="summary" aria-live="polite"><div><span id="labelStatus">Price status</span><strong id="price">Quote required</strong></div><div><span id="labelAvailability">Availability</span><strong id="availability">Not yet connected</strong></div></div>
+<p id="priceNote" class="notice">Bosphorly will publish only rates approved by its contracted suppliers. The public prototype does not accept reservations.</p>
+<label class="check"><input type="checkbox" id="ack"><span id="consent">I understand that this is a preview only and no reservation is sent or confirmed.</span></label>
+<p class="alert" id="error" role="alert" hidden></p>
+<button type="submit" class="primary" id="submit">Review my plan <span aria-hidden="true">→</span></button>
+</form>
+<div id="result" class="result" tabindex="-1" hidden></div>
+</section>
+<aside class="side">
+<div class="side-card"><div class="symbol"><img src="assets/brand/brandmark.svg" alt="Bosphorly"></div><h3 id="whyTitle">One platform. Transparent planning.</h3><p id="whyText">Your future booking, supplier confirmation and cancellation rules will be managed in one clear journey, not by sending you to another website.</p><ul><li id="item1">Bosphorly-controlled prices</li><li id="item2">Supplier status verified before sale</li><li id="item3">Hotel referral attribution in the future partner system</li></ul></div>
+<div class="city-link"><span>🗺️</span><div><strong id="mapTitle">Explore before booking</strong><a href="map.html" id="mapLink">Open Istanbul city map →</a></div></div>
+</aside></div>
+<footer><p>Bosphorly · Public demonstration · No personal identity or payment data is collected in this prototype.</p><a href="index.html">← Back to homepage</a></footer></main>
+<script src="booking.js" defer></script></body></html>
