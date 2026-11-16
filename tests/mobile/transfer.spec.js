@@ -1,5 +1,6 @@
 import {test,expect} from './fixtures.js';
-async function open(page){await page.goto('/?lang=tr');await expect(page.locator('#clubWelcome')).toBeVisible();await expect(page.locator('#clubWelcome')).toContainText('taslak');await page.locator('#dismissClub').click();await expect(page.locator('#clubWelcome')).toBeHidden();}
+async function open(page){await page.goto('/?lang=tr');await expect(page.locator('dialog[open]')).toHaveCount(0);await expect(page.locator('#membershipLink')).toHaveText('Üye ol');}
+
 test('direction, addresses, Vito rows and return dates work without sending PII',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await open(page);

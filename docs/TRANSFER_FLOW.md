@@ -48,17 +48,18 @@ Only the existing owner-provided one-way airport → Sultanahmet retail rates in
 price is inferred, multiplied or invented: those routes require a quote. The
 UI does not guarantee availability or apply a discount.
 
-The initial accessible native dialog introduces Bosphorly Club and the proposed
-10% mobile-member benefit, explicitly a draft without approved dates/scope/limits.
-Close, Escape and continue-exploring dismiss it. It appears once per page load;
-no tracking cookie or personal-storage flag is added. Membership remains optional.
-A user can open the existing separate membership form with the current language.
+Membership is an optional header link labelled “Üye ol” in Turkish, with matching
+labels in all existing homepage locales. It opens the separate membership page
+in the chosen language. No opening dialog, backdrop, focus trap or dismissal
+step interrupts discovery. On mobile the action shares the first header row
+with the logo; language and navigation remain in the second row. The proposed
+10% campaign stays a draft on the membership page and is not applied to quotes.
 
 Transfer labels support English, Turkish, Arabic and Russian; other existing
 homepage locales fall back to English for new transfer labels. RTL layout remains
 supported. Automated browser checks now include desktop width 1440 alongside
 360/390/768. Tests cover capacity, route reversal, return chronology, Google
-fixture population/invalidation, modal dismissal, form validation and no PII
+fixture population/invalidation, unobstructed opening and membership navigation, form validation and no PII
 submission. `npm test` and `npm run test:mobile` must pass before delivery.
 
 ## Compact layout

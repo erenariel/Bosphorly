@@ -2,7 +2,9 @@ import {test,expect} from './fixtures.js';
 test('homepage polish preserves local planning, language and reduced motion',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');
- await page.locator('#dismissClub').click();
+
+ await expect(page.locator('dialog')).toHaveCount(0);
+ await expect(page.locator('#membershipLink')).toBeVisible();
  await expect(page.locator('.tour-card')).toHaveCount(6);
  await expect(page.locator('.hero-cta')).toHaveAttribute('href','#experiences');
  await expect(page.locator('.hero-photo img')).toBeVisible();
@@ -18,4 +20,5 @@ test('homepage polish preserves local planning, language and reduced motion',asy
  await page.emulateMedia({reducedMotion:'reduce'});
  expect(await page.locator('.hero-photo').evaluate(e=>getComputedStyle(e).animationName)).toBe('none');
  expect(errors).toEqual([]);
+ await page.locator('#language').selectOption('tr');await expect(page.locator('#membershipLink')).toHaveText('Üye ol');await page.locator('#membershipLink').click();await expect(page).toHaveURL(/membership.html\?lang=tr$/);await expect(page.locator('#memberForm')).toBeVisible();
 });

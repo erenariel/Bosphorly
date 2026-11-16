@@ -9,6 +9,9 @@ body{line-height:1.65}a,button,input,select{-webkit-tap-highlight-color:transpar
 @media(max-width:560px){.topbar{padding-block:16px;gap:10px;min-height:76px}.nav{gap:6px}.nav select{max-width:115px}.brand small{letter-spacing:1.8px}.hero h1{font-size:48px;letter-spacing:-1.8px}.hero-photo img{height:280px}.hero-points{font-size:11px;margin:22px 0}.hero-map{display:flex;margin-inline-start:0}.hero-copy{padding-top:34px}.hero-caption{font-size:10px!important}.booking-section,.experiences{padding-block:44px}.tour-art{height:220px}.tour-content p{min-height:0}.section-heading{gap:12px;flex-wrap:wrap}.steps{flex-shrink:0}.form-actions{flex-wrap:wrap}.photo-caption{padding:10px 12px}.photo-caption b{font-size:13px}.hero-photo{margin-top:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
-@media(max-width:850px){.nav #membershipLink{display:inline-block;font-size:11px}.nav{gap:8px}.topbar{flex-wrap:wrap}}
+@media(max-width:850px){.nav{gap:8px}.topbar{flex-wrap:wrap}}
 
 .membership-cta{display:inline-block;margin-top:20px}
+
+/* Optional membership: a quiet header action, never an opening overlay. */
+.topbar{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px}.membership-button{display:inline-flex;align-items:center;justify-content:center;max-width:150px;padding:10px 17px;border:1px solid #193b64;border-radius:10px;background:#102653;color:#fff;font-size:12px;font-weight:750;text-align:center;line-height:1.4}.membership-button:hover{background:#1c426e}@media(max-width:850px){.topbar{grid-template-columns:minmax(0,1fr) auto;gap:10px}.topbar .brand{grid-column:1;grid-row:1}.topbar .membership-button{grid-column:2;grid-row:1;max-width:128px;padding:10px 15px}.topbar .nav{grid-column:1/-1;grid-row:2;justify-content:space-between;gap:8px}.topbar .langlabel{margin-inline-start:auto}}
