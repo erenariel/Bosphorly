@@ -71,3 +71,15 @@ single fare label remain visible. Passenger rows begin with first/last name.
 Duplicate address and fare notices are removed; quote scope and unverified
 manual-address status remain visible. Capacity, directions and validation are
 unchanged.
+
+## Focused transfer entry
+
+The form starts with Airport transfer / Private route buttons. Only two relevant
+directions are shown in each mode. Airport routes show a single editable hotel
+endpoint: the airport address remains automatically populated and read-only in
+the form model, but its duplicate textarea is hidden. A static Vito capacity
+note replaces the single-option vehicle selector. Hotel area is optional and
+opens on demand; hotel lookup remains available. Route / Passengers / Dates
+labels identify the three steps. Existing price scope, return validation, Google
+address invalidation and local-only passenger handling are preserved. The
+standalone journey fare calculator remains independent.

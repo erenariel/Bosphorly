@@ -4,13 +4,15 @@ async function open(page){await page.goto('/?lang=tr');await expect(page.locator
 test('direction, addresses, Vito rows and return dates work without sending PII',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
  await open(page);
+ await expect(page.locator('#airportTransferMode')).toHaveAttribute('aria-pressed','true');await expect(page.locator('#pickupField')).toBeHidden();await expect(page.locator('#dropoffField')).toBeVisible();await expect(page.locator('#direction option:not([hidden])')).toHaveCount(2);await expect(page.locator('.transfer-area')).not.toHaveAttribute('open','');
+ if(process.env.CAPTURE_REVIEW&&[390,1440].includes(page.viewportSize().width))await page.locator('#booking').screenshot({path:`docs/review/${page.viewportSize().width===1440?'desktop':'mobile'}-airport-simple.jpg`,animations:'disabled'});
  await expect(page.locator('.transfer-map')).not.toHaveAttribute('open','');
  await page.locator('.transfer-map summary').click();await expect(page.locator('.transfer-map img')).toBeVisible();await page.locator('.transfer-map summary').click();
  await expect(page.locator('#pickupAddress')).toHaveValue('İstanbul Havalimanı (IST)');await expect(page.locator('#pickupAddress')).toHaveAttribute('readonly','');
  await page.locator('#airport').selectOption('SAW');await expect(page.locator('#pickupAddress')).toHaveValue('Sabiha Gökçen (SAW)');
  await page.locator('#hotel').fill('Synthetic Hotel');await page.locator('#dropoffAddress').fill('Synthetic street, Istanbul');
  await page.locator('#direction').selectOption('hotel-airport');await expect(page.locator('#pickupAddress')).toHaveValue('Synthetic street, Istanbul');await expect(page.locator('#dropoffAddress')).toHaveValue('Sabiha Gökçen (SAW)');await expect(page.locator('#price')).toHaveText('Fiyat teklifi gerekli');
- await page.locator('#direction').selectOption('hotel-region');await expect(page.locator('#airportField')).toBeHidden();await page.locator('#dropoffAddress').fill('Synthetic destination');
+ await page.locator('#privateTransferMode').click();await expect(page.locator('#privateTransferMode')).toHaveAttribute('aria-pressed','true');await expect(page.locator('#direction option:not([hidden])')).toHaveCount(2);await page.locator('#direction').selectOption('hotel-region');await expect(page.locator('#airportField')).toBeHidden();await page.locator('#dropoffAddress').fill('Synthetic destination');
  await page.locator('#tripType').selectOption('return');await page.locator('#routeNext').click();await page.locator('#passengers').selectOption('7');await expect(page.locator('.passenger-row')).toHaveCount(7);
  await expect(page.locator('#passenger-1-nationality option')).toHaveCount(250);
  for(let i=1;i<=7;i++){await page.locator(`#passenger-${i}-nationality`).selectOption('TR');await page.locator(`#passenger-${i}-gender`).selectOption(i%2?'male':'female');await page.locator(`#passenger-${i}-firstName`).fill('Synthetic');await page.locator(`#passenger-${i}-lastName`).fill('Guest');await page.locator(`#passenger-${i}-passport`).fill('TEST-NOT-REAL');}
