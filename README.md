@@ -1,111 +1,76 @@
 <div align="center">
-<img src="assets/brand/bosphorly-logo.webp" alt="Bosphorly brand" width="460">
+<img src="assets/brand/brandmark.svg" alt="Bosphorly B app icon — vector concept" width="128">
 
 # Bosphorly
 
 **Istanbul, made simple.**
 
-Mobile-first Istanbul travel companion · Airport transfer planning · City guides · Maps · Partner console
+*Mobile-first arrival planning · Istanbul discovery · Ethical travel intermediation*
 
-[Explore the traveler experience](index.html) · [Product presentation](presentation.html) · [Partner dashboard (demo)](dashboard.html) · [Product blueprint](docs/PRODUCT.md) · [SEO plan](docs/SEO.md)
+[Traveler demo](index.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
 </div>
 
-> **Status: public pre-launch prototype (November 2026).** No bookings, payments, real coupons, live availability, hotel referrals or commercial partnerships are enabled. Any supplier names, prices, dashboard transactions and commissions are clearly labeled research or synthetic examples.
+> **Public prototype · 16 November 2026.** This is not a live agency, payment service, reservation engine, or partner portal. No bookings or charges are made. All demo prices, provider cards, referral KPIs, commissions and sample transactions are illustrative or third-party research, **not confirmed commercial offers**.
 
-## What you can try today
+## What is available
 
-- 📱 **Mobile-first public experience:** responsive arrival planner, transfer skip option, basic accessible multi-step form, and a bottom navigation bar for phones.
-- 🗺️ **Istanbul city discovery:** searchable map with 14 selected locations and list fallback. Leaflet/OpenStreetMap loads only when internet access allows. Positions are approximate, **not navigational turn-by-turn routes**.
-- 🚇 **Transit introduction:** 20 sourced rail connections, including M11 to IST and M4 to SAW, with links to authoritative operators. This is **not** a complete or live transport feed.
-- ✈️ **Transfer preview:** IST/SAW and hotel-area selection with **price on request**. Public pricing is intentionally disabled until authorized supplier price rules exist.
-- ⛵ **Experiences research:** public example tours and links to original suppliers. No reseller agreements claimed.
-- 🌐 **Language foundations:** 12 draft UI locales (TR/EN/RU/UK/DE/FR/NL/AR/HE/AZ/FA/ES), including RTL direction. Some text still falls back to English and must be professionally reviewed before production.
-- 📖 **Indexed-content groundwork:** five original topic guides in English and five in Turkish, with source links, `Article` JSON-LD, descriptive titles, readable text and review dates.
-- 🪄 **Brand and product presentation:** responsive B2B story about traveler, hotel and supplier value.
-- 🏨 **Independent partner console:** sample referral KPIs, tabs, illustrative bookings, commission formula and production-readiness checklist. **Never enter real partner or customer data.**
+- 📱 **Mobile-first traveler concept**: selectable arrival airport, hotel zone, skip-transfer action, multi-step form preview and 12 draft language locales (TR, EN, RU, UK, DE, FR, NL, AR, HE, AZ, FA, ES). Some UI strings need human review.
+- 🗺️ **Istanbul discovery map**: 14 landmark/airport/neighborhood pins, search and filters, with public OpenStreetMap/Leaflet tiles when internet is available.
+- 🚇 **Transport pointers**: links to official M11, M4 and tram service sources. Not real-time journey planning; do not assume listed station changes or service times are current.
+- 🎟️ **Research-based experience examples**: links to providers, no claimed commercial relationship.
+- 🏨 **Partner console (illustrative)**: responsive presentation of synthetic referral counts, commission calculations and a readiness checklist, without real bookings or customer data.
+- ✨ **Product presentation**: vision for travelers, hotels, licensed travel suppliers and the proposed commission model.
+- 🔎 **SEO and publishing foundations**: accessible structure, plain-language disclosures, source links and an editorial strategy.
+- 🛡️ **Security boundaries**: never enter actual card/passport details or customer information into prototype forms.
 
-## Project separation
+## Repository structure
 
-**Bosphorly** is a standalone codebase and travel-intermediary product. It shares **no code, booking data, credentials, CI, releases, environment, repository history or production integrations** with **KonaklamaFlow**, the hotel-operations project. Never copy KonaklamaFlow hotel guest records into this public repository.
+```text
+index.html             Standalone mobile-first traveler demo
+map.html               Istanbul map and transport information
+presentation.html      Product vision and investor/partner presentation
+presentation.css       Presentation styling
+dashboard.html         Public synthetic partner console
+dashboard.css          Dashboard responsive styling
+dashboard.js           Demo-only tab and filter logic
+assets/brand/           Distinctive Bosphorly visual identity (concept SVG)
+docs/PRODUCT.md        Core product and personas
+docs/ROADMAP.md        Delivery phases
+docs/SEO.md            Destination-content strategy
+docs/LEGAL-GATES.md    Compliance, privacy and legal checks
+BRAND.md               Brand direction
+PROJECT_BRIEF.md       Extended original project brief
+SECURITY.md            Responsible reporting and prototype security
+CONTRIBUTING.md        Contribution guidelines
+.github/workflows/     Quality check and Pages publishing
+```
 
 ## Local preview
 
-No package install or API key is required for the demo UI.
+Open `index.html` in a browser or run a local static server:
 
 ```bash
-python3 -m http.server 8080
-# Open http://localhost:8080
+python3 -m http.server 8000
 ```
 
-- Traveler application: `index.html`
-- Partner dashboard (sample only): `dashboard.html`
-- Visitor guides: `en/` and `tr/`
+Then visit `http://localhost:8000/`. Interactive map tiles need access to OpenStreetMap and Leaflet CDNs.
 
-The external OpenStreetMap tiles and Leaflet library need an internet connection; if unavailable, the location list and official transport links remain useful.
+## Deploy
 
-## Tests
+Go to **Settings → Pages → Build and deployment** on this repository, select **GitHub Actions** as the source, and check the `Deploy Bosphorly public prototype` workflow. Publishing is only complete when GitHub Pages reports a live URL.
 
-```bash
-python3 tools/check_site.py
-node --check app.js
-node --check city.js
-node --check dashboard.js
-```
+## Planned next milestones
 
-CI runs static link/metadata checks and JavaScript syntax checks. A production browser/E2E and accessibility suite is still on the roadmap.
+Supplier and hotel verification; actual zone-based pricing; contracts and rights to sell; booking backend; consentful reservation details; hosted payment solution; transparent cancellation/refunds; fulfilled-sales commissions and rewards; professionally reviewed localized editorial guides.
 
-## Publish to GitHub (public)
+See [product spec](docs/PRODUCT.md), [roadmap](docs/ROADMAP.md) and [legal gates](docs/LEGAL-GATES.md).
 
-The connected GitHub app in ChatGPT can edit **existing** repositories but cannot currently create a new one. **This package has not been published to GitHub.**
+## Separation from KonaklamaFlow
 
-1. Open <https://github.com/new>. Choose owner `erenariel`, repository name `Bosphorly` (or another distinct name), **Public**, and do **not** initialize with README, license or `.gitignore` because they already exist here.
-2. Unpack this project in a local directory and follow the commands below, or upload its contents through GitHub's web file upload tool. Do not upload the ZIP as a single file expecting GitHub Pages to unpack it.
-3. After the repository exists, a GitHub connector with write access can add or update files. It must remain separate from `erenariel/konaklamaflow`.
+**Bosphorly and KonaklamaFlow are independent projects.** Never transfer hotel guest records, tokens, production credentials, private contracts or source code between them without explicit authority and a separate privacy/security review.
 
-```bash
-git init
-git branch -M main
-git add .
-git commit -m "feat: launch Bosphorly mobile-first public prototype"
-git remote add origin https://github.com/erenariel/Bosphorly.git
-git push -u origin main
-```
+## Brand
 
-To publish the website, open **Settings → Pages → Build and deployment → GitHub Actions**. The `.github/workflows/pages.yml` workflow deploys on `main` when GitHub Pages is enabled. Never treat `dashboard.html` as a secure staff panel on a public static site.
+The original selected visual direction is a white **B**, aqua flight trail and historic gold forms on midnight blue. The current SVG in this repository is a vector concept based on those elements; the master high-resolution selected artwork remains in the private design starter package until its original image asset is explicitly added to this repository.
 
-After the site has a real public address and a verified canonical URL, run:
-
-```bash
-python3 tools/generate_sitemap.py --site-url https://erenariel.github.io/Bosphorly/
-```
-
-Commit the generated `sitemap.xml`, `robots.txt`, and canonical/hreflang metadata. If you use a custom domain, provide that **actual** URL instead. Add the live property to Google Search Console and submit the sitemap. Search indexing and Google AI citations are **not guaranteed**.
-
-## Key boundaries
-
-- **No live payments or bookings:** use a licensed supplier agreement, a backend, availability handling and hosted checkout before enabling sales.
-- **No verified partners:** listed operators came from brochure/public research. Do not copy third-party brochure photos, logos or catalogs without permission.
-- **No personal data in a public repository:** sample inputs stay in the browser; do not commit passport scans, bookings, phone numbers or tokens.
-- **No hard-coded cancellation rule:** each product needs the supplier's legally reviewed terms and a clear merchant-of-record disclosure.
-- **No false live rail predictions:** give official operator links and regularly review sourced content.
-
-## Repository layout
-
-| Area | Purpose |
-| --- | --- |
-| `index.html`, `app.js`, `styles.css` | Mobile traveler demo, multilingual reservation preview, sample tours |
-| `launch.css`, `launch-i18n.js` | New premium visual layer, mobile navigation and incremental translations |
-| `city.js`, `data/` | Discoverable locations and official-line references |
-| `en/`, `tr/`, `guide.css` | Editorial visitor guides and SEO groundwork |
-| `presentation.html`, `presentation.css` | Responsive corporate product presentation |
-| `dashboard.html`, `dashboard.*` | Separate desktop-first **fake-data** partner experience |
-| `assets/brand/` | User-selected brand logo and app icons |
-| `docs/` | Product, architecture, search and regulatory decisions |
-| `tools/` | Lightweight static quality checks and post-deploy sitemap generator |
-| `.github/` | CI and GitHub Pages deployment workflow |
-
-## License & brand
-
-The repository can be **publicly readable without being open-source licensed**. No source code or brand license has been granted yet. The Bosphorly logo is a project-owner-selected artwork. Confirm commercial rights and trademark availability before use in production. If open-source reuse is desired, pick an explicit code license later and handle brand assets separately.
-
-See [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Production gates](docs/LEGAL-GATES.md).
+© 2026 Bosphorly concept. Brand name, domain and trademark availability require verification.
