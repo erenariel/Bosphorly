@@ -84,16 +84,21 @@ code separately; never drop financial/audit tables as a rollback strategy.
 
 ## Launch gates
 
+Bosphorly runs as a referral intermediary (see BUSINESS-MODEL.md): requests
+are forwarded to the licensed company, which confirms and collects payment.
 Before enabling requests or collecting even email/phone: obtain separate owner
-approval, verify the licensed travel partner and signed contracts, complete
-KVKK privacy notice/retention/access/deletion review, and publish specific
-cancellation/refund and consumer terms. Before confirmation: implement operator
+approval, confirm the referral model's licensing position, verify each company
+and its signed commission agreement, complete KVKK privacy notice (naming the
+companies that receive the details)/retention/access/deletion review, and
+publish specific cancellation/refund and consumer terms. Before confirmation: implement operator
 acceptance evidence, capacity concurrency, request idempotency and signed quote
-expiry. Before payments: separate approval, payment compliance/PCI review and
-an approved provider integration. Never collect raw cards or passports. No
+expiry. Bosphorly does not collect payments in the referral model; doing so later
+would be a separate business decision needing licensing, payment compliance/PCI
+review and an approved provider integration. Never collect raw cards or
+passports. No
 emails, supplier connections, payments, customer storage or production launch
-are enabled by this PR. Checkout must remain in Bosphorly; provider fulfillment
-is server-side only, never a redirect/affiliate CTA.
+are enabled by this PR. The request must be sent through Bosphorly so it
+carries a Bosphorly reference code; never a redirect to a company checkout.
 
 Run `npm ci && npm test`, then `npx playwright install chromium` and
 `npm run test:mobile`. Mobile smoke covers 360/390/768, draft state, RTL layout,

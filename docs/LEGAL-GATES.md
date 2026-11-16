@@ -1,8 +1,16 @@
 # Safety and legal readiness gates
 
-This repository is a public prototype, not a licensed travel agency or completed reservation service.
+This repository is a public prototype, not a licensed travel agency or completed reservation service. Bosphorly's intended model is a referral intermediary: licensed companies sell, deliver and collect payment; Bosphorly earns a commission from them (see [BUSINESS-MODEL.md](BUSINESS-MODEL.md)).
 
-Before accepting real reservations or customer money, obtain professional Turkish legal and regulatory review of the travel intermediary/agency model, licensed supplier and seller-of-record responsibilities, consumer disclosures, payment/invoice flow, applicable cancellation terms, and personal-data obligations (including KVKK and any relevant cross-border rules).
+Before forwarding real traveler requests, obtain professional Turkish legal and regulatory review of:
+
+- whether the referral model needs Bosphorly's own travel agency certificate under Law 1618, or should run under a partner A-group agency;
+- how the traveler is told that the contract and payment are with the company, and who handles complaints about the service;
+- commission invoicing and the tax treatment of hotel shares;
+- KVKK: the privacy notice must name the companies that receive the traveler's details and why;
+- applicable cancellation terms per service.
+
+Collecting payments on Bosphorly (becoming merchant of record) is outside the current model and requires its own legal, licensing and PSP review.
 
 Never treat an unqualified non-refundable statement as a universal rule. Set service-specific cancellation windows, legal exceptions, supplier obligations and dispute handling transparently.
 

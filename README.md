@@ -21,6 +21,8 @@ Aşağıdaki görsele tıklayarak da masaüstü demosuna ulaşabilirsin. ChatGPT
 [Transfer formuna git](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/?lang=tr#booking) · [Üyelik formunu aç](https://bosphorly-pr2-demo.comfortingdingo1.chatgpt.site/membership.html?lang=tr)
 
 
+> **How Bosphorly works:** Bosphorly is a referral intermediary, the hotel reception's tour brochure desk moved online. Travelers compare licensed Istanbul tour and transfer companies and send a request through Bosphorly; the company confirms, delivers the service and collects payment; Bosphorly earns a contracted commission from the company for each completed referral. Hotels can join as referral partners. Details: [business model](docs/BUSINESS-MODEL.md).
+
 > **Public prototype · 16 November 2026.** This is not a live agency, payment service, reservation engine, or partner portal. No bookings or charges are made. All demo prices, provider cards, referral KPIs, commissions and sample transactions are illustrative or third-party research, **not confirmed commercial offers**.
 
 ## What is available
@@ -28,8 +30,8 @@ Aşağıdaki görsele tıklayarak da masaüstü demosuna ulaşabilirsin. ChatGPT
 - 📱 **Mobile-first traveler concept**: selectable arrival airport, hotel zone, skip-transfer action, multi-step form preview and 12 draft language locales (TR, EN, RU, UK, DE, FR, NL, AR, HE, AZ, FA, ES). Some UI strings need human review.
 - 🗺️ **Istanbul discovery map**: 14 landmark/airport/neighborhood pins, search and filters, with public OpenStreetMap/Leaflet tiles when internet is available **and a built-in offline schematic fallback** when map tiles cannot load.
 - 🚇 **Transport pointers**: links to official M11, M4 and tram service sources. Not real-time journey planning; do not assume listed station changes or service times are current.
-- 🎟️ **In-platform experience planning**: travelers stay on Bosphorly through the product and booking-preview journey. No third-party supplier checkout redirects or supplier-published fares appear on traveler cards. `data/offers.json` is an internal catalog of unsigned draft products; rates are quote-required until contractual approval.
-- 🏨 **Partner console (illustrative)**: responsive presentation of synthetic referral counts, commission calculations and a readiness checklist, without real bookings or customer data.
+- 🎟️ **In-platform request journey**: travelers stay on Bosphorly until they send a request, so every referral carries a Bosphorly reference code; there are no redirects to supplier checkouts. Payment is made to the company, not to Bosphorly. `data/offers.json` is an internal catalog of draft products; a price becomes requestable only after the company has approved it in a signed agreement.
+- 🏨 **Partner console (illustrative)**: responsive presentation of synthetic referral counts, company commissions, hotel shares and a readiness checklist, without real bookings or customer data.
 - ✨ **Product presentation**: vision for travelers, hotels, licensed travel suppliers and the proposed commission model.
 - 🔎 **SEO and publishing foundations**: accessible structure, plain-language disclosures, source links and an editorial strategy.
 - 🛡️ **Security boundaries**: never enter actual card/passport details or customer information into prototype forms.
@@ -41,7 +43,12 @@ index.html             Standalone mobile-first traveler demo
 booking.html           In-platform booking preview (not a real reservation)
 booking.js             Local-only booking validation and catalog integration
 booking.css            Responsive booking styles
-data/offers.json       Bosphorly-owned draft products and fixed Sultanahmet transfer tariffs\ndata/public-market-prices.json   Source-checked public operator price research\nprices.html            Public tour price research page (not live Bosphorly tariffs)\nprices.js              Local price filter and rendering\nhotel-lookup.js        Optional Google Places hotel matching\nconfig/maps-public.js  Restricted browser-only Google Maps key configuration
+data/offers.json       Draft referral catalog and fixed Sultanahmet transfer tariffs
+data/public-market-prices.json   Source-checked public operator prices (for comparison)
+prices.html            Published operator prices page (not Bosphorly offers)
+prices.js              Local price filter and rendering
+hotel-lookup.js        Optional Google Places hotel matching
+config/maps-public.js  Restricted browser-only Google Maps key configuration
 map.html               Istanbul map and transport information
 presentation.html      Product vision and investor/partner presentation
 presentation.css       Presentation styling
@@ -50,6 +57,7 @@ dashboard.css          Dashboard responsive styling
 dashboard.js           Demo-only tab and filter logic
 assets/brand/           User-selected compact logo + fallback vector icon
 assets/maps/            Istanbul schematic fallback map
+docs/BUSINESS-MODEL.md Referral intermediary model, commissions and agreements
 docs/PRODUCT.md        Core product and personas
 docs/ROADMAP.md        Delivery phases
 docs/SEO.md            Destination-content strategy
@@ -91,9 +99,9 @@ Go to **Settings → Pages → Build and deployment** on this repository, select
 
 ## Planned next milestones
 
-Supplier and hotel verification; Google Places configuration and location-based service zones; contracts and rights to sell; booking backend; consentful reservation details; hosted payment solution; transparent cancellation/refunds; fulfilled-sales commissions and rewards; professionally reviewed localized editorial guides.
+Legal review of the referral model; signed commission agreements and licence checks with tour/transfer companies (starting with the Sultanahmet transfer); request form with Bosphorly reference codes; company confirm/decline flow; monthly coded-sales reconciliation and commission invoicing; hotel referral shares; Google Places and service zones; professionally reviewed localized editorial guides.
 
-See [product spec](docs/PRODUCT.md), [roadmap](docs/ROADMAP.md) and [legal gates](docs/LEGAL-GATES.md).
+See [business model](docs/BUSINESS-MODEL.md), [product spec](docs/PRODUCT.md), [roadmap](docs/ROADMAP.md) and [legal gates](docs/LEGAL-GATES.md).
 
 ## Separation from KonaklamaFlow
 
@@ -105,19 +113,19 @@ The original selected visual direction is a white **B**, aqua flight trail and h
 
 © 2026 Bosphorly concept. Brand name, domain and trademark availability require verification.
 
-## In-platform checkout policy (November 2026)
+## In-platform request policy (November 2026)
 
-Every traveler experience card leads to `booking.html?service=<approved-id>`. The public catalog **must not contain referral/affiliate checkout links** to outside agencies. Prices visible to guests will be approved and maintained by Bosphorly administrators after valid supplier contracts; the static `data/offers.json` is a read-only demonstration and **not a trusted price source for production purchases**.
+Every traveler experience card leads to `booking.html?service=<approved-id>`, where the traveler sends a request through Bosphorly. The public catalog **must not link out to company checkouts**: the request has to go through Bosphorly so that it carries a Bosphorly reference code, which is what the commission is reconciled against. Requestable prices are the ones each company has approved in its agreement; the static `data/offers.json` is a read-only demonstration and **not a trusted price source**.
 
-Real booking requests, confirmation numbers, card payments, passport information, commissions and customer messages all require a secure backend and a separate legal/operational release gate. Codex implementation brief: [Issue #1](https://github.com/erenariel/Bosphorly/issues/1).
+Forwarding real requests, reference codes, passenger details, commissions and customer messages all require a secure backend and a separate legal/operational release gate. Bosphorly does not take card payments in this model. Codex implementation brief: [Issue #1](https://github.com/erenariel/Bosphorly/issues/1).
 
 
 ## Traveler pricing and browser localization (16 Nov 2026)
 
-- **Sultanahmet airport transfers are fixed**, not estimated, at **IST → Sultanahmet €55** and **SAW → Sultanahmet €65**, one way. These are the project's customer tariffs as provided by the operator. Other destinations remain `Ask for price`. Real reservations remain disabled until fulfillment is integrated.
-- **36 sourced operator records** (35 advertised prices and one rate-on-request) are in `data/public-market-prices.json`. Cards and `prices.html` show original posted currencies and mark them as **operator research, NOT Bosphorly sales rates**. Dates/packages/seasonal discounts can change.
+- **Sultanahmet airport transfers are fixed**, not estimated, at **IST → Sultanahmet €55** and **SAW → Sultanahmet €65**, one way. These are the transfer company's own retail tariffs; the traveler pays the company, and Bosphorly's commission comes from the company. Other destinations remain `Ask for price`. Real reservations remain disabled until fulfillment is integrated.
+- **36 sourced operator records** (35 advertised prices and one rate-on-request) are in `data/public-market-prices.json`. Comparing companies' published prices is part of the product. Until a company signs an agreement, its price is shown with its source and check date, marked **published by the operator, NOT a Bosphorly offer**, and cannot be requested. Dates/packages/seasonal discounts can change, so records must be re-checked regularly.
 - On first launch, the traveler's interface detects the browser language via `navigator.languages`. A manually chosen language is remembered for subsequent visits.
 - Optional Google Places (New) autocomplete identifies a selected Istanbul hotel by its name, formatted address and location. Without a configured restricted browser key, a clearly marked manual fallback remains available. See [Google Places activation](docs/GOOGLE-PLACES.md).
 - The homepage includes subtle animated water flourishes through CSS, respecting the visitor's reduced-motion preference. No heavy animated GIF is required.
 
-**Data rule:** Supplier public list prices must never silently become confirmed retail tariffs. Price approvals and booking fulfillment need the secure backend planned in Issue #1.
+**Data rule:** A company's published list price must never silently become a requestable price. Only prices the company has approved in a signed agreement can be requested, and they must not exceed what the traveler would pay the company directly (price parity). Price approvals and request forwarding need the secure backend planned in Issue #1.
