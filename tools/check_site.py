@@ -69,7 +69,7 @@ def assert_booking_safety():
             assert offer["rate_status"] == "approved"
             assert offer["partner_status"] == "contracted"
     market = json.loads((ROOT / "data/public-market-prices.json").read_text(encoding="utf-8"))
-    assert len(market["records"]) >= 20, "Expected researched public operator rates"
+    assert len(market["records"]) >= 35, "Expected researched public operator rates"
     assert market["status"] == "PUBLIC_OPERATOR_PRICE_RESEARCH_NOT_BOSPHORLY_QUOTES"
     assert all(item["price_type"].startswith("listed") or item["price_type"] == "not_publicly_listed" for item in market["records"])
     assert all(item.get("source_url", "").startswith("https://") for item in market["records"])
