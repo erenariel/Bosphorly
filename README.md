@@ -45,6 +45,19 @@ CONTRIBUTING.md        Contribution guidelines
 .github/workflows/     Quality check and Pages publishing
 ```
 
+
+## New Istanbul guide library
+
+Original English and Turkish visitor articles (editorial prototypes, not live operator information):
+
+- [English Istanbul travel guide](en/istanbul-guide.html) · [Türkçe İstanbul rehberi](tr/istanbul-rehberi.html)
+- [IST and SAW airport transfers](en/airport-transfer.html) · [Havalimanı transferi](tr/havalimani-transferi.html)
+- [Metro and public transport](en/public-transport.html) · [Toplu taşıma](tr/toplu-tasima.html)
+- [Byzantine and Ottoman Old City](en/old-city.html) · [Tarihî Yarımada](tr/tarihi-yarimada.html)
+- [Bosphorus cruises](en/bosphorus-cruises.html) · [Boğaz turları](tr/bogaz-turlari.html)
+
+Editorial location and rail reference records: [places](data/places.json) · [rail lines](data/rail-lines.json). These are not live map routing or transit feeds.
+
 ## Local preview
 
 Open `index.html` in a browser or run a local static server:
