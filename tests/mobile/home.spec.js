@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test';
 test('homepage polish preserves local planning, language and reduced motion',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');
+ await page.locator('#dismissClub').click();
  await expect(page.locator('.tour-card')).toHaveCount(6);
  await expect(page.locator('.hero-cta')).toHaveAttribute('href','#experiences');
  await expect(page.locator('.hero-photo img')).toBeVisible();

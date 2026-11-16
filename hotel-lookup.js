@@ -8,7 +8,8 @@
   const info=document.getElementById('hotelVerification');
   const zone=document.getElementById('zone');
   if(!input||!container||!info||!zone)return;
-  let identity=null;
+  let identity=null;let revision=0;
+  function invalidate(){identity=null;revision++;window.dispatchEvent(new Event('bosphorly:hotel-cleared'));}
   const primaryLanguage=()=>document.documentElement.lang||'en';
   const tr=()=>primaryLanguage()==='tr';
   const setInfo=(message,ok=false)=>{
@@ -30,8 +31,8 @@
     current:()=>identity?{...identity}:null,
     isVerified:()=>Boolean(identity),
   });
-  input.addEventListener('input',()=>{identity=null;manualNotice()});
-  zone.addEventListener('change',()=>{if(identity){identity=null;setInfo(tr()?
+  input.addEventListener('input',()=>{invalidate();manualNotice()});
+  zone.addEventListener('change',()=>{if(identity){invalidate();setInfo(tr()?
     'Bölgeyi elle değiştirdin. Google otel eşleşmesini tekrar seçmelisin.':
     'You changed the area manually; reselect your hotel to verify its address.')}});
   manualNotice();
@@ -52,10 +53,13 @@
       autocomplete.includedRegionCodes=['tr'];
       // Bias toward greater Istanbul rather than returning hotels from elsewhere.
       autocomplete.locationBias={north:41.75,south:40.5,east:30.2,west:27.65};
+      autocomplete.addEventListener('input',()=>{invalidate();manualNotice();});
       autocomplete.addEventListener('gmp-select',async({placePrediction})=>{
         try{
+          invalidate();const selectedRevision=revision;
           const place=placePrediction.toPlace();
           await place.fetchFields({fields:['id','displayName','formattedAddress','location','addressComponents']});
+          if(selectedRevision!==revision)return;
           if(!place.id||!place.formattedAddress||!place.location){
             setInfo(tr()?'Otelin adresi doğrulanamadı.':'Hotel address could not be verified.');
             return;
