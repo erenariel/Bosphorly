@@ -9,7 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "tools" / "discover-src"
 OUT = ROOT / "data" / "discover"
-LANGS = ["en", "tr", "ru", "uk", "de", "fr", "nl", "ar", "he", "az", "fa", "es", "it", "pt", "hr", "hu", "bs"]
+LANGS = ["en", "tr", "ru", "uk", "de", "fr", "nl", "ar", "he", "az", "fa", "es", "it", "pt", "hr", "hu", "bs", "zh", "ja", "ko", "hi", "bn", "id"]
+MASTER_LANGS = ("en", "tr")
 CHECKED = "2026-11-16"
 GUIDES = [
     ("en/istanbul-guide.html", "Istanbul travel guide", "en", "essentials tips first visit"),
@@ -28,8 +29,10 @@ GUIDES = [
 def main():
     master = json.loads((SRC / "master.json").read_text(encoding="utf-8"))
     OUT.mkdir(parents=True, exist_ok=True)
-    places = [{k: v for k, v in p.items() if k not in LANGS} for p in master["places"]]
-    stops = [{k: v for k, v in s.items() if k not in LANGS} for s in master["stops"]]
+    # master.json carries only the English and Turkish texts; every other language has its own file.
+    # (Do not strip by LANGS: "id" is both Indonesian and the record id.)
+    places = [{k: v for k, v in p.items() if k not in MASTER_LANGS} for p in master["places"]]
+    stops = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master["stops"]]
     guides = [{"href": h, "title": t, "lang": l, "keywords": k} for h, t, l, k in GUIDES]
     base = {"checked": CHECKED, "places": places, "stops": stops, "guides": guides}
     (OUT / "places.json").write_text(json.dumps(base, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
