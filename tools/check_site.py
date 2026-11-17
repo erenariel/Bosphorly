@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html"]
+PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html", "partner.html"]
 
 
 class References(HTMLParser):
@@ -95,7 +95,7 @@ def assert_booking_safety():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "weather.js", "explore.js", "route.js", "search.js", "tools/build_discover.py"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "explore.js", "route.js", "search.js", "tools/build_discover.py"]
     for name in script_sources:
         if name.endswith(".py"):
             continue
@@ -127,6 +127,12 @@ def assert_discover_data():
         for s in base["stops"]:
             assert len(pack["stops"][s["id"]]) == 2, (lang, s["id"])
         assert set(en["ui"]) <= set(pack["ui"]), (lang, set(en["ui"]) - set(pack["ui"]))
+        # Membership texts: every key, with the same {placeholders} as English.
+        men = json.loads((ROOT / "data/members/en.json").read_text(encoding="utf-8"))
+        mpack = json.loads((ROOT / f"data/members/{lang}.json").read_text(encoding="utf-8"))
+        for k, v in men.items():
+            assert k in mpack, (lang, k)
+            assert sorted(re.findall(r"\{\w+\}", v)) == sorted(re.findall(r"\{\w+\}", mpack[k])), (lang, k)
 
 
 if __name__ == "__main__":

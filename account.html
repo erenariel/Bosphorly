@@ -34,7 +34,24 @@ input{border:1px solid #cbd8eb;border-radius:10px;padding:10px;font:inherit;min-
 .saved{font-size:12px;color:#0f9d58;min-height:18px}
 footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12px;text-align:center}
 @media(max-width:780px){.grid{grid-template-columns:1fr}}
-.lang-select{border:1px solid #4a5a90;border-radius:9px;padding:5px 7px;font-size:12px;font-weight:700;background:#16236b;color:#fff;margin-left:6px;max-width:130px}</style><link rel="stylesheet" href="header.css"><script src="lang.js"></script><script src="currency.js"></script></head>
+.lang-select{border:1px solid #4a5a90;border-radius:9px;padding:5px 7px;font-size:12px;font-weight:700;background:#16236b;color:#fff;margin-left:6px;max-width:130px}.member{margin-bottom:20px;background:linear-gradient(160deg,#fff,#f6faff)}
+.m-head h2{margin:0 0 4px}.m-lead{color:var(--muted);margin:0 0 12px}
+.m-perks{margin:0 0 14px;padding-inline-start:20px;display:grid;gap:4px}.m-perks li::marker{content:'🎁  '}
+.m-soon{background:#eef5ff;border:1px solid #cfe0f7;border-radius:12px;padding:10px 12px;font-size:13px;margin:0}
+.m-form{display:grid;gap:4px;max-width:420px}.m-form .btn{justify-self:start;min-height:44px;padding:10px 18px}
+.m-check{display:flex;gap:8px;align-items:flex-start;font-weight:600;font-size:13px}.m-check input{min-height:auto;width:20px;height:20px;margin:1px 0 0;flex:none}
+.m-msg{color:#a12a2a;font-size:13px;min-height:18px;margin:4px 0 0}.m-sent{font-size:13px;color:var(--muted);margin:0 0 6px}
+.m-fine{font-size:12.5px;color:var(--muted);margin:6px 0}.m-fine a{text-decoration:underline;color:var(--teal)}
+.member h3{font-size:15px;margin:16px 0 8px}
+.m-coupons{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.m-coupon{flex:0 0 220px;border:2px dashed #f0b44c;background:#fff9ec;border-radius:14px;padding:12px;display:grid;gap:6px}
+.m-coupon.held{border-color:#7ab2e6;background:#f1f7ff}.m-coupon.redeemed,.m-coupon.expired{border-color:#d6dde8;background:#f6f8fb;opacity:.75}
+.m-ctop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.m-pct{font-size:20px;color:#8a5600}.m-kind{font-size:11px;font-weight:800;color:#6d4b10;background:#fff1d1;border-radius:999px;padding:2px 8px}
+.m-code{font:700 14px ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px;color:var(--navy)}.m-state{font-size:12px;color:var(--muted)}
+.m-dots{display:flex;gap:6px;font-size:24px;color:#c9d3e3}.m-dots .on{color:#f4b400}
+.m-invite input{width:100%;margin:4px 0 8px;font:12px ui-monospace,Menlo,Consolas,monospace}
+.m-settings{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
+</style><link rel="stylesheet" href="header.css"><script src="lang.js"></script><script src="currency.js"></script></head>
 <body>
 <div id="siteHeader" data-page="account"></div><script src="site-header.js"></script>
 <main>
@@ -42,6 +59,7 @@ footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12
 <h1 id="heading">My account</h1>
 <p class="lead" id="lead">Your details and the requests you sent through Bosphorly.</p>
 <p class="device-note" id="deviceNote">Saved on this device only. Opening Bosphorly on another phone or computer will not show these requests yet.</p>
+<section class="card member" id="member" aria-live="polite"></section>
 <div class="grid">
  <section class="card" aria-labelledby="reqTitle">
   <h2 id="reqTitle">My requests</h2>
@@ -64,5 +82,5 @@ footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12
 </div>
 </main>
 <footer><span id="footer">Bosphorly · Prototype · Nothing on this page is sent to a server.</span> · <a href="privacy.html" class="privacy-link" style="text-decoration:underline">🔒 Privacy · KVKK</a></footer>
-<script src="account-store.js"></script><script src="account.js" defer></script>
+<script src="account-store.js"></script><script src="config/api.js"></script><script src="member.js"></script><script src="account.js" defer></script><script src="account-member.js" defer></script>
 </body></html>

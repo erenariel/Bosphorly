@@ -25,7 +25,7 @@
 <div class="summary" aria-live="polite"><div><span id="labelStatus">Price status</span><strong id="price">Price set by the company</strong></div><div><span id="labelAvailability">Availability</span><strong id="availability">Confirmed by the company</strong></div></div>
 <div id="marketPrice" class="notice selection" aria-live="polite">Loading…</div><p id="priceNote" class="notice">Requestable prices are the ones each licensed company approves for Bosphorly, never higher than booking with the company directly. This public prototype does not send requests.</p>
 <p id="payNote" class="notice pay-note">Payment: cash only, at the hotel reception. Tour companies such as Blue Brothers charge an extra 10% commission on credit card payments, so please pay in cash at reception.</p>
-<label class="check"><input type="checkbox" id="ack"><span id="consent">I understand this is a preview only: no request is sent to any company and no payment is taken.</span></label>
+<div id="couponWrap" class="coupon-box" hidden><label for="coupon"><span id="couponLabel">Coupon</span><select id="coupon"></select></label><p id="couponAfter" class="coupon-after" hidden></p><p id="couponNote" class="coupon-note"></p></div><p id="couponHint" class="coupon-note" hidden><a href="account.html" id="couponHintLink"></a></p><label class="check"><input type="checkbox" id="ack"><span id="consent">I understand this is a preview only: no request is sent to any company and no payment is taken.</span></label>
 <p class="alert" id="error" role="alert" hidden></p>
 <button type="submit" class="primary" id="submit">Preview my request <span aria-hidden="true">→</span></button>
 </form>
@@ -41,4 +41,4 @@
 <script src="account-store.js"></script>
 <script src="config/contact.js"></script>
 <script src="booking-adapter.js" defer></script>
-<script src="weather.js" defer></script><script src="booking.js" defer></script></body></html>
+<script src="config/api.js"></script><script src="member.js"></script><script src="weather.js" defer></script><script src="booking.js" defer></script></body></html>

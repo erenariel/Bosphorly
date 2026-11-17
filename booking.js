@@ -1173,6 +1173,7 @@
 
   function render() {
     if (window.BosphorlyWeather) window.BosphorlyWeather.forDate($('dateWeather'), $('date').value, $('offer').value);
+    renderCoupon();
     const r = current();
     if (!r) return;
     renderOptions(r);
@@ -1250,7 +1251,38 @@
   $('date').addEventListener('change', render);
   $('time').addEventListener('change', () => { $('ack').checked = false; });
 
-  $('bookingForm').addEventListener('submit', event => {
+  // Membership coupons (member.js). Without an API or when signed out, only a sign-in hint is shown.
+  const MB = window.BosphorlyMember; let MT = null, coupons = [];
+  const chosenCoupon = () => coupons.find(c => c.code === $('coupon').value) || null;
+  const pct = bps => new Intl.NumberFormat(loc, { style: 'percent', maximumFractionDigits: 1 }).format(bps / 10000);
+  function couponTotal(r, q, c) {
+    if (!c || !Number.isFinite(q.totalValue)) return null;
+    return fmt(Math.round(q.totalValue * (10000 - c.percentBps)) / 10000, r.currency);
+  }
+  function renderCoupon() {
+    if (!MT || $('couponWrap').hidden) return;
+    const r = current(), c = chosenCoupon(), after = r && c ? couponTotal(r, quote(r), c) : null;
+    $('couponAfter').hidden = !after;
+    $('couponAfter').textContent = after ? MT.bAfter + ': ' + after : '';
+  }
+  async function setupCoupons() {
+    if (!MB || !MB.enabled()) return;
+    MT = await MB.texts();
+    if (!MB.signedIn()) { $('couponHintLink').textContent = MT.bSignInHint; $('couponHint').hidden = false; return; }
+    coupons = await MB.usableCoupons();
+    if (!coupons.length) return;
+    const kinds = { welcome: MT.kWelcome, referral: MT.kReferral, hotel: MT.kHotel, second_tour: MT.kSecond, loyalty: MT.kLoyalty };
+    $('couponLabel').textContent = MT.bCoupon; $('couponNote').textContent = MT.bCouponNote;
+    const none = document.createElement('option'); none.value = ''; none.textContent = MT.bNoCoupon;
+    $('coupon').replaceChildren(none, ...coupons.map(c => { const o = document.createElement('option'); o.value = c.code; o.textContent = MB.fill(MT.mOff, { p: pct(c.percentBps) }) + ' · ' + (kinds[c.kind] || c.kind) + ' · ' + c.code; return o; }));
+    $('coupon').value = coupons[0].code;
+    $('couponWrap').hidden = false;
+    renderCoupon();
+  }
+  $('coupon').addEventListener('change', renderCoupon);
+  setupCoupons();
+
+  $('bookingForm').addEventListener('submit', async event => {
     event.preventDefault();
     const r = current(); const num = $('guests').valueAsNumber;
     const hotel = $('hotelName').value.trim(), room = $('room').value.trim(), name = $('fullName').value.trim(), phone = $('phone').value.trim(), email = $('email').value.trim();
@@ -1261,8 +1293,20 @@
     if (msg) return;
     const q = quote(r);
     const shownAt = new Date();
+    const reference = referenceCode();
+    // A signed-in member's request is registered so the coupon is reserved and the tour earns a stamp.
+    // With a coupon, wait for the reservation; WhatsApp then opens from the button (no automatic pop-up).
+    const coupon = MB && MB.signedIn() ? chosenCoupon() : null;
+    let held = null;
+    if (MB && MB.signedIn()) {
+      const reg = MB.registerRequest({ ref: reference, serviceId: r.id, date: $('date').value, guests: num, ...(coupon ? { couponCode: coupon.code } : {}) });
+      if (coupon) {
+        try { held = (await reg).coupon; } catch { $('error').hidden = false; $('error').textContent = MT.bCouponFail; return; }
+        coupons = coupons.filter(c => c.code !== coupon.code);
+      } else reg.catch(() => {});
+    }
     // The snapshot is what a server would store unchanged with the request.
-    const snapshot = { reference: referenceCode(), recordId: r.id, operator: r.operator, tour: r.title, option: selOption(r)?.name || null, durationMin: selDuration(r)?.min || null, time: $('time').value,
+    const snapshot = { reference, recordId: r.id, operator: r.operator, tour: r.title, option: selOption(r)?.name || null, durationMin: selDuration(r)?.min || null, time: $('time').value,
       date: $('date').value, guests: num, currency: r.currency ?? null, unitMinor: q.unitMinor, totalMinor: q.totalMinor,
       basis: r.basis ?? null, priceSource: r.details?.source_url || r.source_url, priceChecked: r.details?.checked || null, shownAt: shownAt.toISOString() };
     const preview = window.BosphorlyBooking.preview({ experienceId: r.id, date: snapshot.date, guests: num });
@@ -1272,7 +1316,7 @@
     const d = document.createElement('dl'); d.className = 'draft';
     const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
     const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], ...(selOption(r) ? [[t.r_option, optName(selOption(r))]] : []), ...(selDuration(r) ? [[t.r_duration, selDuration(r).min + ' ' + t.minutes]] : []), [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
-      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), ...(room ? [[t.r_room, room]] : []), [t.r_name, name], [t.r_phone, phone],
+      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), ...(room ? [[t.r_room, room]] : []), [t.r_name, name], [t.r_phone, phone],
       ...(email ? [[t.r_email, email]] : []), [t.r_source, r.operator + ' · ' + t.r_checked + ' ' + (snapshot.priceChecked || '')],
       [t.r_shownAt, new Intl.DateTimeFormat(loc, { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
@@ -1288,7 +1332,7 @@
       window.BosphorlyAccount.addRequest({ ref: snapshot.reference, type: 'tour', title: title(r) + (selOption(r) ? ' · ' + optName(selOption(r)) : ''), operator: r.operator,
         date: snapshot.date, time: $('time').selectedOptions[0]?.textContent || '', guests: num, total: q.total, waUrl: url, snapshot });
     }
-    window.open(url, '_blank', 'noopener');
+    if (!held) window.open(url, '_blank', 'noopener');
   });
   load();
 })();
