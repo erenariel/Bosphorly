@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Partner check-in | Bosphorly</title>
+<meta name="description" content="For tour companies and hotel reception: look up a Bosphorly request, apply the member's coupon and mark the tour completed.">
+<link rel="icon" href="assets/brand/approved-icon.webp">
+<link rel="stylesheet" href="header.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f8fc;color:#14213d;font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:560px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:26px;margin:4px 0 6px}.lead{color:#5d6f8a;margin:0 0 16px}
+.card{background:#fff;border:1px solid #dce6f3;border-radius:16px;padding:16px;margin-bottom:14px}
+label{display:grid;gap:5px;font-size:13px;font-weight:700;margin-bottom:10px}
+input{border:1px solid #cbd8eb;border-radius:10px;padding:10px;font:inherit;min-height:44px;width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:10px 14px;font:700 14px inherit;font-family:inherit;cursor:pointer;min-height:44px}
+.primary{background:#0a1753;color:#fff}.ok{background:#1fa855;color:#fff}.ghost{background:#eef3f9;color:#14213d}.danger{background:#fdecec;color:#a12a2a}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}dt{color:#5d6f8a}dd{margin:0;font-weight:700}
+.coupon{border:2px dashed #f0b44c;background:#fff9ec;border-radius:12px;padding:10px 12px;margin-top:10px;font-weight:800;color:#8a5600}
+.msg{min-height:20px;font-size:14px}.msg.err{color:#a12a2a}.msg.good{color:#137148}
+.fine{font-size:12px;color:#5d6f8a}
+</style>
+<script src="config/api.js"></script>
+</head>
+<body>
+<div id="siteHeader" data-page="partner" data-currency="off"></div>
+<script src="lang.js"></script>
+<script src="site-header.js"></script>
+<main>
+  <h1 data-tr="İş ortağı girişi" data-en="Partner check-in">İş ortağı girişi</h1>
+  <p class="lead" data-tr="Tur firmaları ve otel resepsiyonu için: talep kodunu gir, misafirin kuponunu gör ve tur bittiğinde tamamlandı olarak işaretle." data-en="For tour companies and hotel reception: enter the request code, see the guest's coupon and mark the tour completed when it is done.">Tur firmaları ve otel resepsiyonu için.</p>
+  <section class="card">
+    <label><span data-tr="İş ortağı anahtarı" data-en="Partner key">İş ortağı anahtarı</span><input id="key" type="password" autocomplete="off"></label>
+    <label><span data-tr="Talep kodu (ör. BOS-7K2M9Q)" data-en="Request code (e.g. BOS-7K2M9Q)">Talep kodu</span><input id="ref" autocomplete="off" autocapitalize="characters"></label>
+    <button class="primary" id="find" data-tr="Talebi bul" data-en="Find request">Talebi bul</button>
+    <p class="msg" id="msg" role="status"></p>
+  </section>
+  <section class="card" id="result" hidden></section>
+  <p class="fine" data-tr="Anahtar yalnızca bu sekmede tutulur. Misafirin e-postası ve telefonu burada gösterilmez." data-en="The key is kept in this tab only. The guest's e-mail and phone are not shown here.">Anahtar yalnızca bu sekmede tutulur.</p>
+</main>
+<script>
+(() => {
+  const tr = (window.BosphorlyLang ? window.BosphorlyLang.pick() : 'tr') === 'tr';
+  document.documentElement.lang = tr ? 'tr' : 'en';
+  document.querySelectorAll('[data-tr]').forEach(e => { e.textContent = tr ? e.dataset.tr : e.dataset.en; });
+  const L = tr
+    ? { service: 'Hizmet', date: 'Tarih', guests: 'Kişi', guest: 'Misafir', state: 'Durum', coupon: 'Kupon', off: 'indirim', fulfil: 'Tur tamamlandı', cancel: 'İptal edildi', done: 'Kaydedildi.', noApi: 'API henüz yapılandırılmadı (config/api.js).', fail: 'Bulunamadı ya da anahtar hatalı.', closed: 'Bu talep zaten kapatılmış.', states: { requested: 'Bekliyor', fulfilled: 'Tamamlandı', cancelled: 'İptal' }, cs: { held: 'ayrıldı, tur tamamlanınca kullanılmış sayılır', redeemed: 'kullanıldı', issued: 'serbest' }, confirm: 'Tur tamamlandı olarak işaretlensin mi? Kupon kullanılmış sayılacak.' }
+    : { service: 'Service', date: 'Date', guests: 'Guests', guest: 'Guest', state: 'Status', coupon: 'Coupon', off: 'off', fulfil: 'Tour completed', cancel: 'Cancelled', done: 'Saved.', noApi: 'The API is not configured yet (config/api.js).', fail: 'Not found, or the key is wrong.', closed: 'This request is already closed.', states: { requested: 'Open', fulfilled: 'Completed', cancelled: 'Cancelled' }, cs: { held: 'reserved; counts as used when the tour is completed', redeemed: 'used', issued: 'free' }, confirm: 'Mark the tour as completed? The coupon will count as used.' };
+  const $ = id => document.getElementById(id);
+  const base = ((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '');
+  try { $('key').value = sessionStorage.getItem('bosphorly.partner') || ''; } catch {}
+  const msg = (t, cls = '') => { $('msg').textContent = t; $('msg').className = 'msg ' + cls; };
+  async function call(path) {
+    if (!base) throw Object.assign(new Error(L.noApi), { status: 0 });
+    try { sessionStorage.setItem('bosphorly.partner', $('key').value); } catch {}
+    const r = await fetch(base + path, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + $('key').value.trim() }, body: JSON.stringify({ ref: $('ref').value.trim().toUpperCase() }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw Object.assign(new Error(r.status === 409 ? L.closed : L.fail), { status: r.status });
+    return d;
+  }
+  const pct = bps => new Intl.NumberFormat(tr ? 'tr' : 'en', { style: 'percent', maximumFractionDigits: 1 }).format(bps / 10000);
+  function show(d) {
+    const box = $('result'); box.replaceChildren(); box.hidden = false;
+    const dl = document.createElement('dl');
+    [[L.service, d.serviceId], [L.date, d.date], [L.guests, String(d.guests)], [L.guest, d.firstName || '—'], [L.state, L.states[d.state] || d.state]]
+      .forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; dl.append(dt, dd); });
+    box.append(dl);
+    if (d.coupon) { const c = document.createElement('div'); c.className = 'coupon'; c.textContent = L.coupon + ': ' + d.coupon.code + ' · ' + pct(d.coupon.percentBps) + ' ' + L.off + ' · ' + (L.cs[d.coupon.status] || d.coupon.status); box.append(c); }
+    if (d.state === 'requested') {
+      const row = document.createElement('div'); row.className = 'row'; row.style.marginTop = '12px';
+      const ok = document.createElement('button'); ok.className = 'ok'; ok.textContent = '✓ ' + L.fulfil;
+      const no = document.createElement('button'); no.className = 'danger'; no.textContent = L.cancel;
+      ok.onclick = () => { if (confirm(L.confirm)) act('/v1/partner/fulfil'); };
+      no.onclick = () => act('/v1/partner/cancel');
+      row.append(ok, no); box.append(row);
+    }
+  }
+  async function act(path) { try { show(await call(path)); msg(L.done, 'good'); } catch (e) { msg(e.message, 'err'); } }
+  $('find').onclick = async () => { msg(''); $('result').hidden = true; try { show(await call('/v1/partner/lookup')); } catch (e) { msg(e.message, 'err'); } };
+})();
+</script>
+</body>
+</html>

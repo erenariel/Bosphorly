@@ -49,3 +49,11 @@ test('no forecast, no box: the page still works when Open-Meteo is unreachable',
   await page.goto('/index.html?lang=en');
   await expect(page.locator('#weather')).toBeHidden();
 });
+
+test('the forecast leaves nothing in the browser storage', async ({ page }) => {
+  await stub(page);
+  await page.goto('/index.html?lang=en');
+  await expect(page.locator('#weather .wx-day')).toHaveCount(7);
+  expect(await page.evaluate(() => sessionStorage.length)).toBe(0);
+  expect(await page.evaluate(() => Object.keys(localStorage).filter(k => /weather/.test(k)))).toEqual([]);
+});

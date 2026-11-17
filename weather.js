@@ -3,10 +3,9 @@
    - BosphorlyWeather.strip(node): 7-day strip for the home page.
    - BosphorlyWeather.forDate(node, isoDate, serviceId): forecast for a chosen request date, with a rain note
      for open-air tours in Istanbul. Forecasts reach 16 days ahead.
-   The forecast is kept for one hour in this browser tab only (sessionStorage). */
+   The forecast is fetched once per page and kept in memory only: nothing is written to the browser's storage. */
 (() => {
   const URL = 'https://api.open-meteo.com/v1/forecast?latitude=41.0082&longitude=28.9784&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FIstanbul&forecast_days=16';
-  const KEY = 'bosphorly.weather';
   const RAIN_NOTE_AT = 60; // % chance of rain
   // [title, sub, today, rain {p}%, forecast for {d}, rain note, too far, source, clear, partly, cloudy, fog, drizzle, rain, snow, storm]
   const T = {
@@ -48,11 +47,9 @@
   function load() {
     if (pending) return pending;
     pending = (async () => {
-      try { const c = JSON.parse(sessionStorage.getItem(KEY) || 'null'); if (c && Date.now() - c.at < 36e5) return c.data; } catch {}
       const r = await fetch(URL); if (!r.ok) throw new Error('weather ' + r.status);
       const j = await r.json(); const d = j.daily;
       const data = d.time.map((date, i) => ({ date, code: d.weather_code[i], max: d.temperature_2m_max[i], min: d.temperature_2m_min[i], rain: d.precipitation_probability_max[i] }));
-      try { sessionStorage.setItem(KEY, JSON.stringify({ at: Date.now(), data })); } catch {}
       return data;
     })();
     pending.catch(() => { pending = null; });
