@@ -410,6 +410,84 @@
             "پرداخت در محل (بدون پیش‌پرداخت)",
             "غذای گیاهی موجود است"
           ]
+        },
+        "hr": {
+          "duration": "2 h krstarenja + 1 h zaustavljanja na azijskoj strani",
+          "schedule": "10:00–13:00",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Prolazi pokraj više od 25 znamenitosti između Europe i Azije",
+            "Palače Dolmabahçe i Beylerbeyi s vode",
+            "Tvrđave Rumeli i Anadolu, bosporski mostovi",
+            "Jednosatno zaustavljanje u Beylerbeyiju na azijskoj strani"
+          ],
+          "included": [
+            "Doručak na brodu",
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Jednosatno zaustavljanje na azijskoj strani",
+            "Wi-Fi na brodu",
+            "Besplatan čaj i voda"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Dostupan vegetarijanski obrok"
+          ]
+        },
+        "hu": {
+          "duration": "2 óra hajózás + 1 óra megálló az ázsiai oldalon",
+          "schedule": "10:00–13:00",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "meeting_point": "Eminönü; a felvétel idejét foglalás után SMS-ben küldik",
+          "guide": "Élő idegenvezetés: EN / RU / ES / TR",
+          "highlights": [
+            "Több mint 25 látnivaló mellett halad el Európa és Ázsia között",
+            "A Dolmabahçe és a Beylerbeyi palota a vízről",
+            "A Rumeli és az Anadolu erőd, a Boszporusz hídjai",
+            "Egyórás megálló Beylerbeyiben, az ázsiai oldalon"
+          ],
+          "included": [
+            "Reggeli a fedélzeten",
+            "Szállodai transzfer",
+            "Élő idegenvezetés",
+            "Egyórás megálló az ázsiai oldalon",
+            "Wi-Fi a fedélzeten",
+            "Ingyenes tea és víz"
+          ],
+          "notes": [
+            "0–3 éves kor között ingyenes, 4–6 éves gyerekeknek 30% kedvezmény",
+            "Fizetés a helyszínen (előleg nélkül)",
+            "Vegetáriánus étel kérhető"
+          ]
+        },
+        "bs": {
+          "duration": "2 h krstarenja + 1 h zaustavljanja na azijskoj strani",
+          "schedule": "10:00–13:00",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Prolazi pokraj više od 25 znamenitosti između Evrope i Azije",
+            "Palate Dolmabahçe i Beylerbeyi s vode",
+            "Tvrđave Rumeli i Anadolu, bosporski mostovi",
+            "Jednosatno zaustavljanje u Beylerbeyiju na azijskoj strani"
+          ],
+          "included": [
+            "Doručak na brodu",
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Jednosatno zaustavljanje na azijskoj strani",
+            "Wi-Fi na brodu",
+            "Besplatan čaj i voda"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Dostupan vegetarijanski obrok"
+          ]
         }
       },
       "title_tr": "Sabah Boğaz Turu",
@@ -424,7 +502,10 @@
       "title_nl": "Ochtendcruise over de Bosporus",
       "title_az": "Səhər Boğaz kruizi",
       "title_he": "שייט בוקר בבוספורוס",
-      "title_fa": "کروز صبحگاهی بسفر"
+      "title_fa": "کروز صبحگاهی بسفر",
+      "title_hr": "Jutarnje krstarenje Bosporom",
+      "title_hu": "Délelőtti boszporuszi hajókirándulás",
+      "title_bs": "Jutarnje krstarenje Bosporom"
     },
     {
       "id": "bb-afternoon",
@@ -801,6 +882,84 @@
             "پرداخت در محل (بدون پیش‌پرداخت)",
             "غذای گیاهی موجود است"
           ]
+        },
+        "hr": {
+          "duration": "2 h krstarenja + 1 h zaustavljanja na azijskoj strani",
+          "schedule": "13:00–16:00",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Prolazi pokraj više od 25 znamenitosti između Europe i Azije",
+            "Palače Dolmabahçe i Beylerbeyi s vode",
+            "Tvrđave Rumeli i Anadolu, bosporski mostovi",
+            "Jednosatno zaustavljanje u Beylerbeyiju na azijskoj strani"
+          ],
+          "included": [
+            "Ručak na brodu",
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Jednosatno zaustavljanje na azijskoj strani",
+            "Wi-Fi na brodu",
+            "Besplatan čaj i voda"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Dostupan vegetarijanski obrok"
+          ]
+        },
+        "hu": {
+          "duration": "2 óra hajózás + 1 óra megálló az ázsiai oldalon",
+          "schedule": "13:00–16:00",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "meeting_point": "Eminönü; a felvétel idejét foglalás után SMS-ben küldik",
+          "guide": "Élő idegenvezetés: EN / RU / ES / TR",
+          "highlights": [
+            "Több mint 25 látnivaló mellett halad el Európa és Ázsia között",
+            "A Dolmabahçe és a Beylerbeyi palota a vízről",
+            "A Rumeli és az Anadolu erőd, a Boszporusz hídjai",
+            "Egyórás megálló Beylerbeyiben, az ázsiai oldalon"
+          ],
+          "included": [
+            "Ebéd a fedélzeten",
+            "Szállodai transzfer",
+            "Élő idegenvezetés",
+            "Egyórás megálló az ázsiai oldalon",
+            "Wi-Fi a fedélzeten",
+            "Ingyenes tea és víz"
+          ],
+          "notes": [
+            "0–3 éves kor között ingyenes, 4–6 éves gyerekeknek 30% kedvezmény",
+            "Fizetés a helyszínen (előleg nélkül)",
+            "Vegetáriánus étel kérhető"
+          ]
+        },
+        "bs": {
+          "duration": "2 h krstarenja + 1 h zaustavljanja na azijskoj strani",
+          "schedule": "13:00–16:00",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Prolazi pokraj više od 25 znamenitosti između Evrope i Azije",
+            "Palate Dolmabahçe i Beylerbeyi s vode",
+            "Tvrđave Rumeli i Anadolu, bosporski mostovi",
+            "Jednosatno zaustavljanje u Beylerbeyiju na azijskoj strani"
+          ],
+          "included": [
+            "Ručak na brodu",
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Jednosatno zaustavljanje na azijskoj strani",
+            "Wi-Fi na brodu",
+            "Besplatan čaj i voda"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Dostupan vegetarijanski obrok"
+          ]
         }
       },
       "title_tr": "Öğle Yemekli Boğaz Turu",
@@ -815,7 +974,10 @@
       "title_nl": "Middagcruise over de Bosporus met lunch",
       "title_az": "Günorta yeməyi ilə günorta Boğaz kruizi",
       "title_he": "שייט צהריים בבוספורוס עם ארוחת צהריים",
-      "title_fa": "کروز بعدازظهر بسفر با ناهار"
+      "title_fa": "کروز بعدازظهر بسفر با ناهار",
+      "title_hr": "Poslijepodnevno krstarenje Bosporom s ručkom",
+      "title_hu": "Délutáni boszporuszi hajókirándulás ebéddel",
+      "title_bs": "Poslijepodnevno krstarenje Bosporom s ručkom"
     },
     {
       "id": "bb-sunset",
@@ -1192,6 +1354,84 @@
             "پرداخت در محل (بدون پیش‌پرداخت)",
             "غذای گیاهی موجود است"
           ]
+        },
+        "hr": {
+          "duration": "2 h krstarenja + 1 h zaustavljanja na azijskoj strani",
+          "schedule": "18:00–21:00",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Prolazi pokraj više od 25 znamenitosti između Europe i Azije",
+            "Palače Dolmabahçe i Beylerbeyi s vode",
+            "Tvrđave Rumeli i Anadolu, bosporski mostovi",
+            "Jednosatno zaustavljanje u Beylerbeyiju na azijskoj strani"
+          ],
+          "included": [
+            "Keksi i čaj",
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Jednosatno zaustavljanje na azijskoj strani",
+            "Wi-Fi na brodu",
+            "Besplatna voda"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Dostupan vegetarijanski obrok"
+          ]
+        },
+        "hu": {
+          "duration": "2 óra hajózás + 1 óra megálló az ázsiai oldalon",
+          "schedule": "18:00–21:00",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "meeting_point": "Eminönü; a felvétel idejét foglalás után SMS-ben küldik",
+          "guide": "Élő idegenvezetés: EN / RU / ES / TR",
+          "highlights": [
+            "Több mint 25 látnivaló mellett halad el Európa és Ázsia között",
+            "A Dolmabahçe és a Beylerbeyi palota a vízről",
+            "A Rumeli és az Anadolu erőd, a Boszporusz hídjai",
+            "Egyórás megálló Beylerbeyiben, az ázsiai oldalon"
+          ],
+          "included": [
+            "Keksz és tea",
+            "Szállodai transzfer",
+            "Élő idegenvezetés",
+            "Egyórás megálló az ázsiai oldalon",
+            "Wi-Fi a fedélzeten",
+            "Ingyenes víz"
+          ],
+          "notes": [
+            "0–3 éves kor között ingyenes, 4–6 éves gyerekeknek 30% kedvezmény",
+            "Fizetés a helyszínen (előleg nélkül)",
+            "Vegetáriánus étel kérhető"
+          ]
+        },
+        "bs": {
+          "duration": "2 h krstarenja + 1 h zaustavljanja na azijskoj strani",
+          "schedule": "18:00–21:00",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Prolazi pokraj više od 25 znamenitosti između Evrope i Azije",
+            "Palate Dolmabahçe i Beylerbeyi s vode",
+            "Tvrđave Rumeli i Anadolu, bosporski mostovi",
+            "Jednosatno zaustavljanje u Beylerbeyiju na azijskoj strani"
+          ],
+          "included": [
+            "Keksi i čaj",
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Jednosatno zaustavljanje na azijskoj strani",
+            "Wi-Fi na brodu",
+            "Besplatna voda"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Dostupan vegetarijanski obrok"
+          ]
         }
       },
       "title_tr": "Gün Batımı Boğaz Turu",
@@ -1206,7 +1446,10 @@
       "title_nl": "Zonsondergangcruise over de Bosporus",
       "title_az": "Gün batımı Boğaz kruizi",
       "title_he": "שייט שקיעה בבוספורוס",
-      "title_fa": "کروز غروب بسفر"
+      "title_fa": "کروز غروب بسفر",
+      "title_hr": "Krstarenje Bosporom u zalazak sunca",
+      "title_hu": "Naplementés boszporuszi hajókirándulás",
+      "title_bs": "Krstarenje Bosporom u zalazak sunca"
     },
     {
       "id": "bb-oldcity",
@@ -1583,6 +1826,84 @@
             "پرداخت در محل (بدون پیش‌پرداخت)",
             "منوی گیاهی بدون هزینه اضافه"
           ]
+        },
+        "hr": {
+          "duration": "8 sati",
+          "schedule": "10:00–18:00",
+          "pickup": "Uključen transfer iz hotela",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Profesionalni vodič: EN / TR",
+          "highlights": [
+            "Aja Sofija i Plava džamija",
+            "Krstarenje Bosporom s ručkom na brodu",
+            "Šarene kuće i ulice Balata",
+            "Željezna crkva (sv. Stjepana) i crkva sv. Jurja"
+          ],
+          "included": [
+            "Transfer iz hotela",
+            "Profesionalni vodič",
+            "Ručak",
+            "Ulaznice",
+            "Krstarenje Bosporom",
+            "Autobus između postaja"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Vegetarijanski meni bez doplate"
+          ]
+        },
+        "hu": {
+          "duration": "8 óra",
+          "schedule": "10:00–18:00",
+          "pickup": "Szállodai transzfer benne van",
+          "meeting_point": "Eminönü; a felvétel idejét foglalás után SMS-ben küldik",
+          "guide": "Hivatásos idegenvezető: EN / TR",
+          "highlights": [
+            "Hagia Sophia és a Kék mecset",
+            "Boszporuszi hajókirándulás ebéddel a fedélzeten",
+            "Balat színes házai és utcái",
+            "A Vastemplom (Szent István) és a Szent György-templom"
+          ],
+          "included": [
+            "Szállodai transzfer",
+            "Hivatásos idegenvezető",
+            "Ebéd",
+            "Belépőjegyek",
+            "Boszporuszi hajókirándulás",
+            "Busz a megállók között"
+          ],
+          "notes": [
+            "0–3 éves kor között ingyenes, 4–6 éves gyerekeknek 30% kedvezmény",
+            "Fizetés a helyszínen (előleg nélkül)",
+            "Vegetáriánus menü felár nélkül"
+          ]
+        },
+        "bs": {
+          "duration": "8 sati",
+          "schedule": "10:00–18:00",
+          "pickup": "Uključen transfer iz hotela",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Profesionalni vodič: EN / TR",
+          "highlights": [
+            "Aja Sofija i Plava džamija",
+            "Krstarenje Bosporom s ručkom na brodu",
+            "Šarene kuće i ulice Balata",
+            "Željezna crkva (sv. Stefana) i crkva sv. Đorđa"
+          ],
+          "included": [
+            "Transfer iz hotela",
+            "Profesionalni vodič",
+            "Ručak",
+            "Ulaznice",
+            "Krstarenje Bosporom",
+            "Autobus između postaja"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)",
+            "Vegetarijanski meni bez doplate"
+          ]
         }
       },
       "title_tr": "Tarihi Yarımada ve Balat Turu",
@@ -1597,7 +1918,10 @@
       "title_nl": "Oude Stad-tour",
       "title_az": "Köhnə Şəhər turu",
       "title_he": "סיור בעיר העתיקה",
-      "title_fa": "تور شهر قدیم"
+      "title_fa": "تور شهر قدیم",
+      "title_hr": "Tura Starog grada",
+      "title_hu": "Óvárosi túra",
+      "title_bs": "Tura Starog grada"
     },
     {
       "id": "bb-europeasia",
@@ -1960,6 +2284,81 @@
             "کودکان ۰ تا ۳ سال رایگان، ۴ تا ۶ سال ۳۰٪ تخفیف",
             "پرداخت در محل (بدون پیش‌پرداخت)"
           ]
+        },
+        "hr": {
+          "duration": "7 sati",
+          "schedule": "10:00–17:00",
+          "pickup": "Uključen transfer iz hotela",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Krstarenje Bosporom s doručkom na brodu",
+            "Osmanska palača iz 19. stoljeća na azijskoj obali",
+            "Najveća džamija u Turskoj na najvišem vidikovcu azijske strane",
+            "Romantični vidikovac do kojeg se stiže žičarom"
+          ],
+          "included": [
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Doručak i ručak",
+            "Ulaznice",
+            "Krstarenje Bosporom",
+            "Autobus između postaja"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)"
+          ]
+        },
+        "hu": {
+          "duration": "7 óra",
+          "schedule": "10:00–17:00",
+          "pickup": "Szállodai transzfer benne van",
+          "meeting_point": "Eminönü; a felvétel idejét foglalás után SMS-ben küldik",
+          "guide": "Élő idegenvezetés: EN / RU / ES / TR",
+          "highlights": [
+            "Boszporuszi hajókirándulás reggelivel a fedélzeten",
+            "19. századi oszmán palota az ázsiai parton",
+            "Törökország legnagyobb mecsete az ázsiai oldal legmagasabb kilátópontján",
+            "Romantikus kilátó, kabinos felvonóval"
+          ],
+          "included": [
+            "Szállodai transzfer",
+            "Élő idegenvezetés",
+            "Reggeli és ebéd",
+            "Belépőjegyek",
+            "Boszporuszi hajókirándulás",
+            "Busz a megállók között"
+          ],
+          "notes": [
+            "0–3 éves kor között ingyenes, 4–6 éves gyerekeknek 30% kedvezmény",
+            "Fizetés a helyszínen (előleg nélkül)"
+          ]
+        },
+        "bs": {
+          "duration": "7 sati",
+          "schedule": "10:00–17:00",
+          "pickup": "Uključen transfer iz hotela",
+          "meeting_point": "Eminönü; vrijeme preuzimanja šalje se SMS-om nakon rezervacije",
+          "guide": "Vodič uživo: EN / RU / ES / TR",
+          "highlights": [
+            "Krstarenje Bosporom s doručkom na brodu",
+            "Osmanska palata iz 19. stoljeća na azijskoj obali",
+            "Najveća džamija u Turskoj na najvišem vidikovcu azijske strane",
+            "Romantični vidikovac do kojeg se stiže žičarom"
+          ],
+          "included": [
+            "Transfer iz hotela",
+            "Vodič uživo",
+            "Doručak i ručak",
+            "Ulaznice",
+            "Krstarenje Bosporom",
+            "Autobus između postaja"
+          ],
+          "notes": [
+            "Bebe 0–3 besplatno, djeca 4–6 imaju 30% popusta",
+            "Plaćanje na licu mjesta (bez predujma)"
+          ]
         }
       },
       "title_tr": "Tam Gün Asya ve Avrupa Turu",
@@ -1974,7 +2373,10 @@
       "title_nl": "Azië & Europa, hele dag",
       "title_az": "Asiya və Avropa, tam gün",
       "title_he": "אסיה ואירופה, יום מלא",
-      "title_fa": "آسیا و اروپا، یک روز کامل"
+      "title_fa": "آسیا و اروپا، یک روز کامل",
+      "title_hr": "Azija i Europa, cijeli dan",
+      "title_hu": "Ázsia és Európa, egész napos",
+      "title_bs": "Azija i Evropa, cijeli dan"
     },
     {
       "id": "orient-classic",
@@ -2132,6 +2534,36 @@
           "notes": [
             "موارد شامل در صفحه تور شرکت ذکر نشده؛ از شرکت بپرسید."
           ]
+        },
+        "hr": {
+          "duration": "3 sata",
+          "highlights": [
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Što je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
+        },
+        "hu": {
+          "duration": "3 óra",
+          "highlights": [
+            "Esti vacsorás hajókirándulás a Boszporuszon",
+            "Mediterrán és török menü: meze, grillezett hal, kebab"
+          ],
+          "notes": [
+            "A túra oldala nem részletezi, mi van benne az árban; egyeztessen a szervezővel."
+          ]
+        },
+        "bs": {
+          "duration": "3 sata",
+          "highlights": [
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Šta je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
         }
       },
       "title_tr": "Klasik Akşam Yemekli Tekne Turu",
@@ -2146,7 +2578,10 @@
       "title_nl": "Klassieke dinercruise",
       "title_az": "Klassik şam yeməyi kruizi",
       "title_he": "שייט ארוחת ערב קלאסי",
-      "title_fa": "کروز شام کلاسیک"
+      "title_fa": "کروز شام کلاسیک",
+      "title_hr": "Klasično krstarenje s večerom",
+      "title_hu": "Klasszikus vacsorás hajókirándulás",
+      "title_bs": "Klasično krstarenje s večerom"
     },
     {
       "id": "orient-dinner",
@@ -2304,6 +2739,36 @@
           "notes": [
             "موارد شامل در صفحه تور شرکت ذکر نشده؛ از شرکت بپرسید."
           ]
+        },
+        "hr": {
+          "duration": "3 sata",
+          "highlights": [
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Što je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
+        },
+        "hu": {
+          "duration": "3 óra",
+          "highlights": [
+            "Esti vacsorás hajókirándulás a Boszporuszon",
+            "Mediterrán és török menü: meze, grillezett hal, kebab"
+          ],
+          "notes": [
+            "A túra oldala nem részletezi, mi van benne az árban; egyeztessen a szervezővel."
+          ]
+        },
+        "bs": {
+          "duration": "3 sata",
+          "highlights": [
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Šta je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
         }
       },
       "title_tr": "Premium Akşam Yemekli Tekne Turu",
@@ -2318,7 +2783,10 @@
       "title_nl": "Premium dinercruise",
       "title_az": "Premium şam yeməyi kruizi",
       "title_he": "שייט ארוחת ערב Premium",
-      "title_fa": "کروز شام پریمیوم"
+      "title_fa": "کروز شام پریمیوم",
+      "title_hr": "Premium krstarenje s večerom",
+      "title_hu": "Prémium vacsorás hajókirándulás",
+      "title_bs": "Premium krstarenje s večerom"
     },
     {
       "id": "orient-alacarte",
@@ -2490,6 +2958,39 @@
           "notes": [
             "موارد شامل در صفحه تور شرکت ذکر نشده؛ از شرکت بپرسید."
           ]
+        },
+        "hr": {
+          "duration": "3 sata",
+          "highlights": [
+            "Meni à la carte",
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Što je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
+        },
+        "hu": {
+          "duration": "3 óra",
+          "highlights": [
+            "À la carte menü",
+            "Esti vacsorás hajókirándulás a Boszporuszon",
+            "Mediterrán és török menü: meze, grillezett hal, kebab"
+          ],
+          "notes": [
+            "A túra oldala nem részletezi, mi van benne az árban; egyeztessen a szervezővel."
+          ]
+        },
+        "bs": {
+          "duration": "3 sata",
+          "highlights": [
+            "Meni à la carte",
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Šta je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
         }
       },
       "title_tr": "À la Carte Akşam Yemekli Tekne Turu",
@@ -2504,7 +3005,10 @@
       "title_nl": "À-la-carte dinercruise",
       "title_az": "À la carte şam yeməyi kruizi",
       "title_he": "שייט ארוחת ערב à la carte",
-      "title_fa": "کروز شام آلاکارت"
+      "title_fa": "کروز شام آلاکارت",
+      "title_hr": "Krstarenje s večerom à la carte",
+      "title_hu": "À la carte vacsorás hajókirándulás",
+      "title_bs": "Krstarenje s večerom à la carte"
     },
     {
       "id": "sea-land",
@@ -2993,6 +3497,108 @@
             "سرویس سوار شدن فقط با انتخاب گزینه Pickup ممکن است.",
             "می‌توانید غذا و نوشیدنی خودتان را به کشتی بیاورید."
           ]
+        },
+        "hr": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje Bosporom između Europe i Azije",
+            "Uživajte u punih 2 sata razgledavanja s broda",
+            "Pogledajte europsku i azijsku obalu Istanbula",
+            "Divite se palačama, džamijama, tvrđavama, mostovima i vilama"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom",
+            "Preuzimanje, ako je odabrana opcija s preuzimanjem",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Povratni transfer nakon krstarenja",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografiranje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Uz opciju mjesta sastanka morate se prijaviti u našem uredu blizu pristaništa Eminönü.",
+            "Preuzimanje je dostupno samo ako odaberete opciju s preuzimanjem.",
+            "Na brod možete ponijeti vlastitu hranu i piće."
+          ]
+        },
+        "hu": {
+          "duration": "2 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Nincs élő idegenvezetés; többnyelvű audioguide",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Hajózás a Boszporuszon Európa és Ázsia között",
+            "Teljes kétórás városnéző hajózás",
+            "Isztambul európai és ázsiai partjainak látványa",
+            "Paloták, mecsetek, erődök, hidak és kúriák"
+          ],
+          "included": [
+            "Kétórás közös boszporuszi városnéző hajózás",
+            "Felvétel, ha a felvételes opciót választja",
+            "Többnyelvű kommentár a fedélzeten",
+            "Mobil audioguide 30 nyelven",
+            "Ingyenes Wi-Fi a fedélzeten",
+            "Korlátlan török tea és Nescafé, önkiszolgáló",
+            "Mosdó a fedélzeten"
+          ],
+          "not_included": [
+            "Visszaszállítás a hajózás után",
+            "Személyes kiadások",
+            "Borravaló",
+            "Fotózás oszmán viseletben"
+          ],
+          "notes": [
+            "Ez egy közös, kétórás boszporuszi városnéző hajózás más utasokkal.",
+            "A találkozási pontos opciónál az eminönüi kikötő melletti irodánkban kell jelentkezni.",
+            "Felvétel csak a felvételes opció választása esetén van.",
+            "Saját ételt és italt is hozhat a fedélzetre."
+          ]
+        },
+        "bs": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje Bosporom između Evrope i Azije",
+            "Uživajte u punih 2 sata razgledavanja s broda",
+            "Pogledajte evropsku i azijsku obalu Istanbula",
+            "Divite se palatama, džamijama, tvrđavama, mostovima i vilama"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom",
+            "Preuzimanje, ako je odabrana opcija s preuzimanjem",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Povratni transfer nakon krstarenja",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografisanje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Uz opciju mjesta sastanka morate se prijaviti u našem uredu blizu pristaništa Eminönü.",
+            "Preuzimanje je dostupno samo ako odaberete opciju s preuzimanjem.",
+            "Na brod možete ponijeti vlastitu hranu i piće."
+          ]
         }
       },
       "title_tr": "Sabah Boğaz Turu",
@@ -3007,7 +3613,10 @@
       "title_nl": "Ochtendcruise over de Bosporus",
       "title_az": "Səhər Boğaz kruizi",
       "title_he": "שייט בוקר בבוספורוס",
-      "title_fa": "کروز صبحگاهی بسفر"
+      "title_fa": "کروز صبحگاهی بسفر",
+      "title_hr": "Jutarnje krstarenje Bosporom",
+      "title_hu": "Délelőtti boszporuszi hajókirándulás",
+      "title_bs": "Jutarnje krstarenje Bosporom"
     },
     {
       "id": "sl-afternoon",
@@ -3510,6 +4119,111 @@
             "سرویس سوار شدن فقط با انتخاب گزینه Pickup ممکن است.",
             "می‌توانید غذا و نوشیدنی خودتان را به کشتی بیاورید."
           ]
+        },
+        "hr": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarite Bosporom između Europe i Azije",
+            "Uživajte u dvosatnom poslijepodnevnom krstarenju",
+            "Pogledajte europsku i azijsku obalu Istanbula",
+            "Divite se palačama, džamijama, tvrđavama, mostovima i vilama"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom",
+            "Preuzimanje, ako je odabrana opcija s preuzimanjem",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Povratni transfer nakon krstarenja",
+            "Hrana i dodatna pića",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografiranje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Uz opciju mjesta sastanka morate se prijaviti u našem uredu blizu pristaništa Eminönü.",
+            "Preuzimanje je dostupno samo ako odaberete opciju s preuzimanjem.",
+            "Na brod možete ponijeti vlastitu hranu i piće."
+          ]
+        },
+        "hu": {
+          "duration": "2 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Nincs élő idegenvezetés; többnyelvű audioguide",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Hajózás a Boszporuszon Európa és Ázsia között",
+            "Kétórás délutáni városnéző hajózás",
+            "Isztambul európai és ázsiai partjainak látványa",
+            "Paloták, mecsetek, erődök, hidak és kúriák"
+          ],
+          "included": [
+            "Kétórás közös boszporuszi városnéző hajózás",
+            "Felvétel, ha a felvételes opciót választja",
+            "Többnyelvű kommentár a fedélzeten",
+            "Mobil audioguide 30 nyelven",
+            "Ingyenes Wi-Fi a fedélzeten",
+            "Korlátlan török tea és Nescafé, önkiszolgáló",
+            "Mosdó a fedélzeten"
+          ],
+          "not_included": [
+            "Visszaszállítás a hajózás után",
+            "Étel és további italok",
+            "Személyes kiadások",
+            "Borravaló",
+            "Fotózás oszmán viseletben"
+          ],
+          "notes": [
+            "Ez egy közös, kétórás boszporuszi városnéző hajózás más utasokkal.",
+            "A találkozási pontos opciónál az eminönüi kikötő melletti irodánkban kell jelentkezni.",
+            "Felvétel csak a felvételes opció választása esetén van.",
+            "Saját ételt és italt is hozhat a fedélzetre."
+          ]
+        },
+        "bs": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarite Bosporom između Evrope i Azije",
+            "Uživajte u dvosatnom poslijepodnevnom krstarenju",
+            "Pogledajte evropsku i azijsku obalu Istanbula",
+            "Divite se palatama, džamijama, tvrđavama, mostovima i vilama"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom",
+            "Preuzimanje, ako je odabrana opcija s preuzimanjem",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Povratni transfer nakon krstarenja",
+            "Hrana i dodatna pića",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografisanje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Uz opciju mjesta sastanka morate se prijaviti u našem uredu blizu pristaništa Eminönü.",
+            "Preuzimanje je dostupno samo ako odaberete opciju s preuzimanjem.",
+            "Na brod možete ponijeti vlastitu hranu i piće."
+          ]
         }
       },
       "title_tr": "Öğleden Sonra Boğaz Turu",
@@ -3524,7 +4238,10 @@
       "title_nl": "Middagcruise over de Bosporus",
       "title_az": "Günorta Boğaz kruizi",
       "title_he": "שייט צהריים בבוספורוס",
-      "title_fa": "کروز بعدازظهر بسفر"
+      "title_fa": "کروز بعدازظهر بسفر",
+      "title_hr": "Poslijepodnevno krstarenje Bosporom",
+      "title_hu": "Délutáni boszporuszi hajókirándulás",
+      "title_bs": "Poslijepodnevno krstarenje Bosporom"
     },
     {
       "id": "sl-sunset",
@@ -4027,6 +4744,111 @@
             "سوار شدن و برگشت فقط با گزینه Transfer شامل است.",
             "رنگ‌ها و زمان غروب بسته به فصل، هوا و دید متفاوت است."
           ]
+        },
+        "hr": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje između Europe i Azije u zalazak sunca",
+            "Uživajte u dvosatnom krstarenju Bosporom",
+            "Gledajte kako se večernje svjetlo mijenja nad Istanbulom",
+            "Pogledajte europsku i azijsku obalu s vode"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom u zalazak sunca",
+            "Preuzimanje i povratni transfer, ako je odabrana opcija s transferom",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Transferi uz opciju mjesta sastanka",
+            "Hrana i dodatna pića",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografiranje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Uz opciju mjesta sastanka potrebna je prijava u našem uredu blizu pristaništa Eminönü.",
+            "Preuzimanje i povratni transfer uključeni su samo ako je odabrana opcija s transferom.",
+            "Boje i vrijeme zalaska sunca ovise o godišnjem dobu, vremenu i vidljivosti."
+          ]
+        },
+        "hu": {
+          "duration": "2 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Nincs élő idegenvezetés; többnyelvű audioguide",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Hajózás Európa és Ázsia között naplementekor",
+            "Kétórás boszporuszi városnéző hajózás",
+            "Nézze, ahogy az esti fények átrajzolják Isztambult",
+            "Az európai és az ázsiai part a vízről"
+          ],
+          "included": [
+            "Kétórás közös naplementés boszporuszi hajózás",
+            "Felvétel és visszaszállítás, ha a transzferes opciót választja",
+            "Többnyelvű kommentár a fedélzeten",
+            "Mobil audioguide 30 nyelven",
+            "Ingyenes Wi-Fi a fedélzeten",
+            "Korlátlan török tea és Nescafé, önkiszolgáló",
+            "Mosdó a fedélzeten"
+          ],
+          "not_included": [
+            "Transzfer a találkozási pontos opciónál",
+            "Étel és további italok",
+            "Személyes kiadások",
+            "Borravaló",
+            "Fotózás oszmán viseletben"
+          ],
+          "notes": [
+            "Ez egy közös, kétórás boszporuszi városnéző hajózás más utasokkal.",
+            "A találkozási pontos opciónál az eminönüi kikötő melletti irodánkban kell jelentkezni.",
+            "A felvétel és a visszaszállítás csak a transzferes opció választása esetén van benne.",
+            "A naplemente színei és időpontja évszaktól, időjárástól és látási viszonyoktól függ."
+          ]
+        },
+        "bs": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje između Evrope i Azije u zalazak sunca",
+            "Uživajte u dvosatnom krstarenju Bosporom",
+            "Gledajte kako se večernje svjetlo mijenja nad Istanbulom",
+            "Pogledajte evropsku i azijsku obalu s vode"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom u zalazak sunca",
+            "Preuzimanje i povratni transfer, ako je odabrana opcija s transferom",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Transferi uz opciju mjesta sastanka",
+            "Hrana i dodatna pića",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografisanje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Uz opciju mjesta sastanka potrebna je prijava u našem uredu blizu pristaništa Eminönü.",
+            "Preuzimanje i povratni transfer uključeni su samo ako je odabrana opcija s transferom.",
+            "Boje i vrijeme zalaska sunca ovise o godišnjem dobu, vremenu i vidljivosti."
+          ]
         }
       },
       "title_tr": "Gün Batımı Boğaz Turu",
@@ -4041,7 +4863,10 @@
       "title_nl": "Zonsondergangcruise over de Bosporus",
       "title_az": "Gün batımı Boğaz kruizi",
       "title_he": "שייט שקיעה בבוספורוס",
-      "title_fa": "کروز غروب بسفر"
+      "title_fa": "کروز غروب بسفر",
+      "title_hr": "Krstarenje Bosporom u zalazak sunca",
+      "title_hu": "Naplementés boszporuszi hajókirándulás",
+      "title_bs": "Krstarenje Bosporom u zalazak sunca"
     },
     {
       "id": "sl-two-continents",
@@ -4585,6 +5410,120 @@
             "گزینه‌های Standard شامل ناهار و ورود به داخل کاخ بیلربیی نیستند و دوشنبه‌ها ارائه نمی‌شوند.",
             "گزینه‌های کاخ و ناهار شامل ناهار و ورود به کاخ هستند. دوشنبه‌ها به جای بیلربیی از کاخ ییلدیز بازدید می‌شود."
           ]
+        },
+        "hr": {
+          "duration": "10–12 sati",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Istražite Istanbul u Europi i Aziji u jednom cjelodnevnom doživljaju",
+            "Uživajte u panoramskom pogledu na grad s brda Çamlıca",
+            "Posjetite impresivnu džamiju Çamlıca na azijskoj strani",
+            "Otkrijte palaču Beylerbeyi uz vodu i njezinu osmansku baštinu"
+          ],
+          "included": [
+            "Prijevoz klimatiziranim autobusom",
+            "Profesionalni turistički vodič",
+            "Brdo Çamlıca i džamija Çamlıca",
+            "Ulaz u vrt palače Beylerbeyi uz standardne opcije",
+            "Ulaz u palaču uz opcije Palača i ručak: palača Beylerbeyi od utorka do nedjelje, palača Yıldız ponedjeljkom",
+            "Ručak s jednim pićem ako je odabrana opcija Palača i ručak",
+            "Žičara Eyüp",
+            "Dvosatno krstarenje Bosporom",
+            "Preuzimanje i povratak ako je odabrana opcija s transferom"
+          ],
+          "not_included": [
+            "Ulaz u unutrašnjost palače Beylerbeyi uz standardne opcije",
+            "Ručak uz standardne opcije",
+            "Preuzimanje i povratak uz opcije mjesta sastanka",
+            "Dodatna hrana i pića",
+            "Osobni troškovi",
+            "Napojnice"
+          ],
+          "notes": [
+            "Ovo je zajednička cjelodnevna tura Istanbulom autobusom, uključujući dvosatno krstarenje Bosporom.",
+            "Cijeli doživljaj traje otprilike 10–12 sati, ovisno o sezoni, prometu i uvjetima ture.",
+            "Standardne opcije ne uključuju ručak ni ulaz u unutrašnjost palače Beylerbeyi i nisu dostupne ponedjeljkom.",
+            "Opcije Palača i ručak uključuju ručak i ulaz u palaču. Ponedjeljkom se umjesto palače Beylerbeyi posjećuje palača Yıldız."
+          ]
+        },
+        "hu": {
+          "duration": "10–12 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Hivatásos idegenvezető",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Fedezze fel Isztambult Európában és Ázsiában egyetlen egész napos programban",
+            "Panorámás kilátás a városra a Çamlıca-dombról",
+            "A lenyűgöző Çamlıca mecset az ázsiai oldalon",
+            "A vízparti Beylerbeyi palota és oszmán öröksége"
+          ],
+          "included": [
+            "Utazás légkondicionált busszal",
+            "Hivatásos idegenvezető",
+            "Çamlıca-domb és Çamlıca mecset",
+            "Belépés a Beylerbeyi palota kertjébe a Standard opciókkal",
+            "Belépés a palotába a Palota és ebéd opciókkal: kedd–vasárnap Beylerbeyi palota, hétfőn Yıldız palota",
+            "Ebéd egy itallal, ha a Palota és ebéd opciót választja",
+            "Eyüpi kabinos felvonó",
+            "Kétórás boszporuszi városnéző hajózás",
+            "Felvétel és visszaszállítás, ha transzferes opciót választ"
+          ],
+          "not_included": [
+            "A Beylerbeyi palota belső tereinek belépője a Standard opciókkal",
+            "Ebéd a Standard opciókkal",
+            "Felvétel és visszaszállítás a találkozási pontos opciókkal",
+            "További étel és ital",
+            "Személyes kiadások",
+            "Borravaló"
+          ],
+          "notes": [
+            "Ez egy közös, egész napos buszos isztambuli túra kétórás boszporuszi hajózással.",
+            "A program évszaktól, forgalomtól és a túra körülményeitől függően nagyjából 10–12 órás.",
+            "A Standard opciók nem tartalmazzák az ebédet és a Beylerbeyi palota belső tereinek belépőjét, és hétfőn nem elérhetők.",
+            "A Palota és ebéd opciók tartalmazzák az ebédet és a palotabelépőt. Hétfőn a Beylerbeyi palota helyett a Yıldız palotát látogatják."
+          ]
+        },
+        "bs": {
+          "duration": "10–12 sati",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Istražite Istanbul u Evropi i Aziji u jednom cjelodnevnom doživljaju",
+            "Uživajte u panoramskom pogledu na grad s brda Çamlıca",
+            "Posjetite impresivnu džamiju Çamlıca na azijskoj strani",
+            "Otkrijte palatu Beylerbeyi uz vodu i njenu osmansku baštinu"
+          ],
+          "included": [
+            "Prevoz klimatizovanim autobusom",
+            "Profesionalni turistički vodič",
+            "Brdo Çamlıca i džamija Çamlıca",
+            "Ulaz u vrt palate Beylerbeyi uz standardne opcije",
+            "Ulaz u palatu uz opcije Palata i ručak: palata Beylerbeyi od utorka do nedjelje, palata Yıldız ponedjeljkom",
+            "Ručak s jednim pićem ako je odabrana opcija Palata i ručak",
+            "Žičara Eyüp",
+            "Dvosatno krstarenje Bosporom",
+            "Preuzimanje i povratak ako je odabrana opcija s transferom"
+          ],
+          "not_included": [
+            "Ulaz u unutrašnjost palate Beylerbeyi uz standardne opcije",
+            "Ručak uz standardne opcije",
+            "Preuzimanje i povratak uz opcije mjesta sastanka",
+            "Dodatna hrana i pića",
+            "Osobni troškovi",
+            "Napojnice"
+          ],
+          "notes": [
+            "Ovo je zajednička cjelodnevna tura Istanbulom autobusom, uključujući dvosatno krstarenje Bosporom.",
+            "Cijeli doživljaj traje otprilike 10–12 sati, ovisno o sezoni, prometu i uslovima ture.",
+            "Standardne opcije ne uključuju ručak ni ulaz u unutrašnjost palate Beylerbeyi i nisu dostupne ponedjeljkom.",
+            "Opcije Palata i ručak uključuju ručak i ulaz u palatu. Ponedjeljkom se umjesto palate Beylerbeyi posjećuje palata Yıldız."
+          ]
         }
       },
       "title_tr": "Otobüs ve Tekneyle Avrupa–Asya Turu",
@@ -4599,7 +5538,10 @@
       "title_nl": "Bus- en boottour Europa & Azië",
       "title_az": "Avropa və Asiya avtobus və gəmi turu",
       "title_he": "סיור אוטובוס וסירה אירופה ואסיה",
-      "title_fa": "تور اتوبوس و قایق اروپا و آسیا"
+      "title_fa": "تور اتوبوس و قایق اروپا و آسیا",
+      "title_hr": "Tura Europa i Azija autobusom i brodom",
+      "title_hu": "Európa és Ázsia túra busszal és hajóval",
+      "title_bs": "Tura Evropa i Azija autobusom i brodom"
     },
     {
       "id": "sl-oldcity",
@@ -5129,6 +6071,117 @@
             "گزینه محل ملاقات فقط در صورت انتخاب در دسترس است.",
             "ساعت سوار شدن بسته به محل هتل و ترافیک ممکن است تغییر کند."
           ]
+        },
+        "hr": {
+          "duration": "12 sati",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Otkrijte povijesni Stari grad Istanbula u jednom danu",
+            "Razgledajte Aja Sofiju uz komentar vodiča",
+            "Posjetite Plavu džamiju i trg Sultanahmet",
+            "Divite se veličanstvenoj džamiji Süleymaniye"
+          ],
+          "included": [
+            "Preuzimanje iz hotela i povratak uključeni su ako je odabrana opcija s transferom",
+            "Opcija mjesta sastanka dostupna ako je odabrana",
+            "Klimatizirani prijevoz tijekom ture",
+            "Profesionalni vodič na engleskom",
+            "Lokalni ručak s bezalkoholnim pićem",
+            "Dvosatno krstarenje Bosporom",
+            "Besplatan čaj i Nescafé na brodu",
+            "Besplatan Wi-Fi na brodu",
+            "Naknade za uslugu i lokalni porezi"
+          ],
+          "not_included": [
+            "Ulaznica za palaču Topkapı",
+            "Ulaznica za džamiju Aja Sofija",
+            "Osobni troškovi",
+            "Napojnice",
+            "Dodatna hrana i pića koji nisu dio uključenog ručka"
+          ],
+          "notes": [
+            "Ovo je zajednička cjelodnevna tura s vodičem i drugim putnicima.",
+            "Preuzimanje iz hotela i povratak dostupni su samo ako je odabrana opcija s transferom.",
+            "Opcija mjesta sastanka dostupna je samo ako je odabrana.",
+            "Vrijeme preuzimanja može se razlikovati ovisno o lokaciji hotela i prometu."
+          ]
+        },
+        "hu": {
+          "duration": "12 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Hivatásos idegenvezető",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Fedezze fel Isztambul történelmi óvárosát egyetlen nap alatt",
+            "Hagia Sophia idegenvezetői magyarázattal",
+            "A Kék mecset és a Sultanahmet tér",
+            "A lenyűgöző Szülejmán mecset"
+          ],
+          "included": [
+            "Szállodai felvétel és visszaszállítás, ha a transzferes opciót választja",
+            "Találkozási pontos opció, ha azt választja",
+            "Légkondicionált közlekedés a túra alatt",
+            "Hivatásos, angolul beszélő idegenvezető",
+            "Helyi ebéd üdítővel",
+            "Kétórás boszporuszi városnéző hajózás",
+            "Ingyenes tea és Nescafé a hajón",
+            "Ingyenes Wi-Fi a hajón",
+            "Szolgáltatási díjak és helyi adók"
+          ],
+          "not_included": [
+            "Belépőjegy a Topkapı palotába",
+            "Belépőjegy a Hagia Sophia mecsetbe",
+            "Személyes kiadások",
+            "Borravaló",
+            "Az ebédhez nem tartozó további étel és ital"
+          ],
+          "notes": [
+            "Ez egy közös, egész napos idegenvezetett túra más utasokkal.",
+            "Szállodai felvétel és visszaszállítás csak a transzferes opció választása esetén van.",
+            "A találkozási pontos opció csak akkor elérhető, ha azt választja.",
+            "A felvétel ideje a szálloda helyétől és a forgalomtól függően változhat."
+          ]
+        },
+        "bs": {
+          "duration": "12 sati",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Otkrijte historijski Stari grad Istanbula u jednom danu",
+            "Razgledajte Aja Sofiju uz komentar vodiča",
+            "Posjetite Plavu džamiju i trg Sultanahmet",
+            "Divite se veličanstvenoj džamiji Süleymaniye"
+          ],
+          "included": [
+            "Preuzimanje iz hotela i povratak uključeni su ako je odabrana opcija s transferom",
+            "Opcija mjesta sastanka dostupna ako je odabrana",
+            "Klimatizovani prevoz tokom ture",
+            "Profesionalni vodič na engleskom",
+            "Lokalni ručak s bezalkoholnim pićem",
+            "Dvosatno krstarenje Bosporom",
+            "Besplatan čaj i Nescafé na brodu",
+            "Besplatan Wi-Fi na brodu",
+            "Naknade za uslugu i lokalni porezi"
+          ],
+          "not_included": [
+            "Ulaznica za palatu Topkapı",
+            "Ulaznica za džamiju Aja Sofija",
+            "Osobni troškovi",
+            "Napojnice",
+            "Dodatna hrana i pića koji nisu dio uključenog ručka"
+          ],
+          "notes": [
+            "Ovo je zajednička cjelodnevna tura s vodičem i drugim putnicima.",
+            "Preuzimanje iz hotela i povratak dostupni su samo ako je odabrana opcija s transferom.",
+            "Opcija mjesta sastanka dostupna je samo ako je odabrana.",
+            "Vrijeme preuzimanja može se razlikovati ovisno o lokaciji hotela i prometu."
+          ]
         }
       },
       "title_tr": "Tam Gün Tarihi Yarımada ve Boğaz Turu",
@@ -5143,7 +6196,10 @@
       "title_nl": "Oude Stad & Bosporus, hele dag",
       "title_az": "Köhnə Şəhər və Boğaz, tam gün",
       "title_he": "העיר העתיקה והבוספורוס, יום מלא",
-      "title_fa": "شهر قدیم و بسفر، یک روز کامل"
+      "title_fa": "شهر قدیم و بسفر، یک روز کامل",
+      "title_hr": "Stari grad i Bospor, cijeli dan",
+      "title_hu": "Óváros és Boszporusz, egész napos",
+      "title_bs": "Stari grad i Bospor, cijeli dan"
     },
     {
       "id": "sl-asia-half",
@@ -5687,6 +6743,120 @@
             "تور اتوبوس در اسکله امین‌اونو به پایان می‌رسد.",
             "کسانی که کروز بسفر را ادامه می‌دهند حدود ساعت 16:00 در اسکله امین‌اونو تمام می‌کنند."
           ]
+        },
+        "hr": {
+          "duration": "4 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Istražite azijsku stranu Istanbula na jutarnjoj turi s vodičem",
+            "Uživajte u panoramskom pogledu na Istanbul i Bospor",
+            "Otkrijte osmansku baštinu i impresivnu arhitekturu",
+            "Prijeđite s europske na azijsku stranu grada"
+          ],
+          "included": [
+            "Klimatizirani prijevoz tijekom kopnenog dijela ture",
+            "Profesionalni vodič uživo",
+            "Vrtovi palače Beylerbeyi, od utorka do nedjelje",
+            "Ulaz u unutrašnjost palače, ako je odabrana opcija s palačom",
+            "Ponedjeljkom palača Yıldız umjesto palače Beylerbeyi, uz opcije s palačom",
+            "Preuzimanje, ako je odabrana opcija s preuzimanjem",
+            "Dvosatno krstarenje Bosporom",
+            "Mobilni audiovodič tijekom krstarenja Bosporom",
+            "Neograničen turski čaj i Nescafé na brodu, samoposluživanje",
+            "Porezi i naknade za uslugu"
+          ],
+          "not_included": [
+            "Ulaz u unutrašnjost palače uz standardne opcije",
+            "Povratni transfer nakon ture",
+            "Obroci i pića",
+            "Osobni troškovi",
+            "Napojnice"
+          ],
+          "notes": [
+            "Ovo je zajednička poludnevna jutarnja tura s drugim gostima.",
+            "Trajanje od 4 sata odnosi se na dio ture autobusom s vodičem.",
+            "Tura autobusom završava na pristaništu Eminönü.",
+            "Gosti koji nastave s krstarenjem Bosporom završavaju oko 16:00 na pristaništu Eminönü."
+          ]
+        },
+        "hu": {
+          "duration": "4 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Hivatásos idegenvezető",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Fedezze fel Isztambul ázsiai oldalát egy délelőtti, idegenvezetett túrán",
+            "Panorámás kilátás Isztambulra és a Boszporuszra",
+            "Oszmán örökség és lenyűgöző építészet",
+            "Átkelés a város európai és ázsiai oldala között"
+          ],
+          "included": [
+            "Légkondicionált közlekedés a szárazföldi túra alatt",
+            "Hivatásos élő idegenvezető",
+            "A Beylerbeyi palota kertjei, keddtől vasárnapig",
+            "Belépés a palota belső tereibe, ha palotás opciót választ",
+            "Hétfőn a Beylerbeyi palota helyett a Yıldız palota, palotás opciókkal",
+            "Felvétel, ha felvételes opciót választ",
+            "Kétórás boszporuszi városnéző hajózás",
+            "Mobil audioguide a boszporuszi hajózás alatt",
+            "Korlátlan török tea és Nescafé a hajón, önkiszolgáló",
+            "Adók és szolgáltatási díjak"
+          ],
+          "not_included": [
+            "A palota belső tereinek belépője a Standard opciókkal",
+            "Visszaszállítás a túra után",
+            "Étel és ital",
+            "Személyes kiadások",
+            "Borravaló"
+          ],
+          "notes": [
+            "Ez egy közös, félnapos délelőtti túra más vendégekkel.",
+            "A 4 órás időtartam az idegenvezetett buszos részre vonatkozik.",
+            "A buszos túra az eminönüi kikötőnél ér véget.",
+            "A boszporuszi hajózással folytató vendégek 16:00 körül végeznek az eminönüi kikötőnél."
+          ]
+        },
+        "bs": {
+          "duration": "4 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Istražite azijsku stranu Istanbula na jutarnjoj turi s vodičem",
+            "Uživajte u panoramskom pogledu na Istanbul i Bospor",
+            "Otkrijte osmansku baštinu i impresivnu arhitekturu",
+            "Prijeđite s evropske na azijsku stranu grada"
+          ],
+          "included": [
+            "Klimatizovani prevoz tokom kopnenog dijela ture",
+            "Profesionalni vodič uživo",
+            "Vrtovi palate Beylerbeyi, od utorka do nedjelje",
+            "Ulaz u unutrašnjost palate, ako je odabrana opcija s palatom",
+            "Ponedjeljkom palata Yıldız umjesto palate Beylerbeyi, uz opcije s palatom",
+            "Preuzimanje, ako je odabrana opcija s preuzimanjem",
+            "Dvosatno krstarenje Bosporom",
+            "Mobilni audiovodič tokom krstarenja Bosporom",
+            "Neograničen turski čaj i Nescafé na brodu, samoposluživanje",
+            "Porezi i naknade za uslugu"
+          ],
+          "not_included": [
+            "Ulaz u unutrašnjost palate uz standardne opcije",
+            "Povratni transfer nakon ture",
+            "Obroci i pića",
+            "Osobni troškovi",
+            "Napojnice"
+          ],
+          "notes": [
+            "Ovo je zajednička poludnevna jutarnja tura s drugim gostima.",
+            "Trajanje od 4 sata odnosi se na dio ture autobusom s vodičem.",
+            "Tura autobusom završava na pristaništu Eminönü.",
+            "Gosti koji nastave s krstarenjem Bosporom završavaju oko 16:00 na pristaništu Eminönü."
+          ]
         }
       },
       "title_tr": "Yarım Gün Sabah Asya Yakası ve Boğaz Turu",
@@ -5701,7 +6871,10 @@
       "title_nl": "Halve dag: Azië & Bosporus in de ochtend",
       "title_az": "Yarım gün: səhər Asiya və Boğaz",
       "title_he": "חצי יום: אסיה והבוספורוס בבוקר",
-      "title_fa": "نیم‌روز: آسیا و بسفر در صبح"
+      "title_fa": "نیم‌روز: آسیا و بسفر در صبح",
+      "title_hr": "Poludnevna jutarnja tura Azija i Bospor",
+      "title_hu": "Félnapos délelőtti túra: Ázsia és Boszporusz",
+      "title_bs": "Poludnevna jutarnja tura Azija i Bospor"
     },
     {
       "id": "sl-privateyacht",
@@ -5724,7 +6897,10 @@
       "title_nl": "Privéjacht Ricos",
       "title_az": "Ricos şəxsi yaxtası",
       "title_he": "יאכטה פרטית Ricos",
-      "title_fa": "قایق تفریحی خصوصی Ricos"
+      "title_fa": "قایق تفریحی خصوصی Ricos",
+      "title_hr": "Privatna jahta Ricos",
+      "title_hu": "Ricos magánjacht",
+      "title_bs": "Privatna jahta Ricos"
     },
     {
       "id": "azure-bursa",
@@ -5978,6 +7154,57 @@
             "توقف خرید: راحت‌الحلقوم، عسل و مربا",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan, svakodnevno",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "highlights": [
+            "Vožnja trajektom od 40 minuta preko Izmitskog zaljeva",
+            "Planina Uludağ autobusom i sjedežnicom",
+            "Platana stara 600 godina",
+            "Zelena džamija, Zelena grobnica, Tržnica svile i osmanska kuća"
+          ],
+          "included": [
+            "Ručak s miješanim roštiljem u planinskom restoranu"
+          ],
+          "notes": [
+            "Usputne kupovine: rahat-lokum, med i džemovi",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap, naponta",
+          "pickup": "Szállodai felvétel benne van",
+          "highlights": [
+            "40 perces kompút az İzmiti-öblön át",
+            "Az Uludağ-hegy busszal és ülőlifttel",
+            "600 éves platánfa",
+            "Zöld mecset, Zöld türbe, Selyempiac és oszmán ház"
+          ],
+          "included": [
+            "Vegyes grilltál ebédre egy hegyi étteremben"
+          ],
+          "notes": [
+            "Vásárlási megállók: lokum, méz és lekvárkészítők",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan, svakodnevno",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "highlights": [
+            "Vožnja trajektom od 40 minuta preko Izmitskog zaljeva",
+            "Planina Uludağ autobusom i sjedežnicom",
+            "Platana stara 600 godina",
+            "Zelena džamija, Zelena grobnica, Tržnica svile i osmanska kuća"
+          ],
+          "included": [
+            "Ručak s miješanim roštiljem u planinskom restoranu"
+          ],
+          "notes": [
+            "Usputne kupovine: rahatlokum, med i džemovi",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Tam Gün Bursa Turu",
@@ -5992,7 +7219,10 @@
       "title_nl": "Bursa, hele dag",
       "title_az": "Bursa, tam gün",
       "title_he": "בורסה, יום מלא",
-      "title_fa": "بورسا، یک روز کامل"
+      "title_fa": "بورسا، یک روز کامل",
+      "title_hr": "Bursa, cijeli dan",
+      "title_hu": "Bursa, egész napos",
+      "title_bs": "Bursa, cijeli dan"
     },
     {
       "id": "azure-bosphorus",
@@ -6328,6 +7558,75 @@
             "بالای ۶۰ سال ۱۰٪ تخفیف، کودکان ۳ تا ۶ سال ۳۰٪، ۰ تا ۲ رایگان",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan",
+          "schedule": "Preuzimanje iz hotela 07:30–09:00, ovisno o četvrti",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "guide": "Profesionalni vodič",
+          "highlights": [
+            "Park Miniatürk",
+            "Brdo Pierre Loti i žičara do Eyüpa",
+            "Turbe i džamija Eyüp Sultan",
+            "Dvosatno krstarenje Bosporom"
+          ],
+          "included": [
+            "Preuzimanje iz hotela",
+            "Profesionalni vodič",
+            "Dvosatno krstarenje Bosporom",
+            "Ručak u restoranu"
+          ],
+          "notes": [
+            "Uključuje usputnu kupovinu nakon ručka",
+            "Osobe 60+ imaju 10% popusta, djeca 3–6 imaju 30% popusta, 0–2 besplatno",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap",
+          "schedule": "Szállodai felvétel 07:30–09:00 között, környéktől függően",
+          "pickup": "Szállodai felvétel benne van",
+          "guide": "Hivatásos idegenvezető",
+          "highlights": [
+            "Miniatürk park",
+            "Pierre Loti-domb és kabinos felvonó Eyüpbe",
+            "Eyüp szultán türbéje és mecsete",
+            "Kétórás boszporuszi hajózás"
+          ],
+          "included": [
+            "Szállodai felvétel",
+            "Hivatásos idegenvezető",
+            "Kétórás boszporuszi hajózás",
+            "Ebéd étteremben"
+          ],
+          "notes": [
+            "Ebéd után vásárlási megálló is van",
+            "60 év felett 10%, 3–6 éves gyerekeknek 30% kedvezmény, 0–2 éves kor között ingyenes",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan",
+          "schedule": "Preuzimanje iz hotela 07:30–09:00, ovisno o četvrti",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "guide": "Profesionalni vodič",
+          "highlights": [
+            "Park Miniatürk",
+            "Brdo Pierre Loti i žičara do Eyüpa",
+            "Turbe i džamija Eyüp Sultan",
+            "Dvosatno krstarenje Bosporom"
+          ],
+          "included": [
+            "Preuzimanje iz hotela",
+            "Profesionalni vodič",
+            "Dvosatno krstarenje Bosporom",
+            "Ručak u restoranu"
+          ],
+          "notes": [
+            "Uključuje usputnu kupovinu nakon ručka",
+            "Osobe 60+ imaju 10% popusta, djeca 3–6 imaju 30% popusta, 0–2 besplatno",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Tam Gün Boğaz Turu",
@@ -6342,7 +7641,10 @@
       "title_nl": "Bosporustour, hele dag",
       "title_az": "Boğaz turu, tam gün",
       "title_he": "סיור בוספורוס, יום מלא",
-      "title_fa": "تور بسفر، یک روز کامل"
+      "title_fa": "تور بسفر، یک روز کامل",
+      "title_hr": "Cjelodnevna tura Bosporom",
+      "title_hu": "Egész napos boszporuszi túra",
+      "title_bs": "Cjelodnevna tura Bosporom"
     },
     {
       "id": "azure-sapanca",
@@ -6556,6 +7858,48 @@
             "موتور چهارچرخ و زیپ‌لاین توسط آژانس اجرا نمی‌شوند",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan (može završiti u 22:00–23:00)",
+          "highlights": [
+            "Jezero Sapanca",
+            "Rijeka i priroda Maşukiye",
+            "Ručak blizu slapova Mahmudiye",
+            "Kartepe (samo u zimskoj sezoni)"
+          ],
+          "notes": [
+            "Usputne kupovine: rahat-lokum, med, trgovački centar",
+            "ATV i zipline ne organizira agencija",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap (22:00–23:00 között is végződhet)",
+          "highlights": [
+            "Sapanca-tó",
+            "A Maşukiye-patak és a természet",
+            "Ebéd a Mahmudiye-vízesések közelében",
+            "Kartepe (csak téli szezonban)"
+          ],
+          "notes": [
+            "Vásárlási megállók: lokum, méz, bevásárlóközpont",
+            "A quadozást és a zipline-t nem az iroda szervezi",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan (može završiti u 22:00–23:00)",
+          "highlights": [
+            "Jezero Sapanca",
+            "Rijeka i priroda Maşukiye",
+            "Ručak blizu slapova Mahmudiye",
+            "Kartepe (samo u zimskoj sezoni)"
+          ],
+          "notes": [
+            "Usputne kupovine: rahatlokum, med, trgovački centar",
+            "ATV i zipline ne organizuje agencija",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Sapanca ve Maşukiye Turu",
@@ -6570,7 +7914,10 @@
       "title_nl": "Sapanca & Maşukiye",
       "title_az": "Sapanca və Maşukiyə",
       "title_he": "סאפנג'ה ומאשוקייה",
-      "title_fa": "ساپانجا و ماشوکیه"
+      "title_fa": "ساپانجا و ماشوکیه",
+      "title_hr": "Sapanca i Maşukiye",
+      "title_hu": "Sapanca és Maşukiye",
+      "title_bs": "Sapanca i Maşukiye"
     },
     {
       "id": "azure-islands",
@@ -6948,6 +8295,84 @@
             "سر وقت در محل ملاقات باشید؛ راهنما ممکن است منتظر افراد دیررس نماند",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan, cijele godine",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "guide": "Vodič na engleskom ili arapskom",
+          "highlights": [
+            "Oko 1 sat brodom do Heybeliade",
+            "Büyükada s ručkom i slobodnim vremenom",
+            "Kupanje moguće u slobodno vrijeme",
+            "Usputna kupovina blizu Sultanahmeta pri povratku"
+          ],
+          "included": [
+            "Transferi iz hotela",
+            "Karte za brod",
+            "Ručak s bezalkoholnim pićem",
+            "Vodič na engleskom ili arapskom"
+          ],
+          "not_included": [
+            "Pića na brodu",
+            "Ulaznica za plažu",
+            "Osobni troškovi"
+          ],
+          "notes": [
+            "Budite točni na mjestima sastanka; vodič može otići bez onih koji kasne",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap, egész évben",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "guide": "Angolul vagy arabul beszélő idegenvezető",
+          "highlights": [
+            "Kb. 1 óra hajóval Heybeliadáig",
+            "Büyükada ebéddel és szabadidővel",
+            "Szabadidőben fürdeni is lehet",
+            "Vásárlási megálló Sultanahmet közelében visszafelé"
+          ],
+          "included": [
+            "Szállodai transzferek",
+            "Hajójegyek",
+            "Ebéd üdítővel",
+            "Angolul vagy arabul beszélő idegenvezető"
+          ],
+          "not_included": [
+            "Italok a hajón",
+            "Strandbelépő",
+            "Személyes kiadások"
+          ],
+          "notes": [
+            "Érkezzen pontosan a találkozási pontokra; az idegenvezető nem vár a későkre",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan, cijele godine",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "guide": "Vodič na engleskom ili arapskom",
+          "highlights": [
+            "Oko 1 sat brodom do Heybeliade",
+            "Büyükada s ručkom i slobodnim vremenom",
+            "Kupanje moguće u slobodno vrijeme",
+            "Usputna kupovina blizu Sultanahmeta pri povratku"
+          ],
+          "included": [
+            "Transferi iz hotela",
+            "Karte za brod",
+            "Ručak s bezalkoholnim pićem",
+            "Vodič na engleskom ili arapskom"
+          ],
+          "not_included": [
+            "Pića na brodu",
+            "Ulaznica za plažu",
+            "Osobni troškovi"
+          ],
+          "notes": [
+            "Budite tačni na mjestima sastanka; vodič može otići bez onih koji kasne",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Adalar Turu",
@@ -6962,7 +8387,10 @@
       "title_nl": "Prinseneilanden-tour",
       "title_az": "Adalar turu (Prens adaları)",
       "title_he": "סיור באיי הנסיכים",
-      "title_fa": "تور جزایر پرنس"
+      "title_fa": "تور جزایر پرنس",
+      "title_hr": "Tura Prinčevskim otocima",
+      "title_hu": "Hercegek-szigeteki túra",
+      "title_bs": "Tura Prinčevskim ostrvima"
     },
     {
       "id": "azure-transfer",
@@ -7147,6 +8575,42 @@
           "notes": [
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "pickup": "Od vrata do vrata",
+          "meeting_point": "Dolazna dvorana, vozač s natpisom s imenom",
+          "highlights": [
+            "Privatni transfer iz Zračne luke Istanbul ili Sabiha Gökçen",
+            "Doček s natpisom s imenom",
+            "Pomoć s prtljagom"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "pickup": "Háztól házig",
+          "meeting_point": "Érkezési csarnok, a sofőr névtáblával vár",
+          "highlights": [
+            "Privát transzfer az Isztambuli repülőtérről vagy a Sabiha Gökçenről",
+            "Fogadás névtáblával",
+            "Segítség a csomagokkal"
+          ],
+          "notes": [
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "pickup": "Od vrata do vrata",
+          "meeting_point": "Dolazna dvorana, vozač s natpisom s imenom",
+          "highlights": [
+            "Privatni transfer iz Aerodroma Istanbul ili Sabiha Gökçen",
+            "Doček s natpisom s imenom",
+            "Pomoć s prtljagom"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Özel Havalimanı Transferi",
@@ -7161,7 +8625,10 @@
       "title_nl": "Privétransfer van het vliegveld",
       "title_az": "Hava limanından şəxsi transfer",
       "title_he": "העברה פרטית משדה התעופה",
-      "title_fa": "ترانسفر خصوصی از فرودگاه"
+      "title_fa": "ترانسفر خصوصی از فرودگاه",
+      "title_hr": "Privatni transfer iz zračne luke",
+      "title_hu": "Privát reptéri transzfer",
+      "title_bs": "Privatni transfer s aerodroma"
     },
     {
       "id": "alaturka",
@@ -7511,6 +8978,78 @@
             "حوله، لنگ (پشتمال)، صابون، شامپو، کیسه و دمپایی ارائه می‌شود",
             "استخر مختلط و معمولاً سرد است (۲۳ درجه)؛ لباس شنای خود را بیاورید"
           ]
+        },
+        "hr": {
+          "duration": "60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Piling rukavicom kese i masaža pjenom na toplom mramoru",
+            "Masaža pjenom od sapuna s lavandom",
+            "Maska od gline za lice"
+          ],
+          "included": [
+            "Piling rukavicom kese",
+            "Masaža pjenom od sapuna s lavandom na toplom mramoru",
+            "Maska od gline za lice",
+            "Parna kupelj, sauna i salon za opuštanje"
+          ],
+          "not_included": [
+            "Kupaći kostim za bazen"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Osigurani ručnik, peštemal, sapun, šampon, rukavica i papuče",
+            "Bazen je zajednički i obično hladan (23 °C); ponesite vlastiti kupaći kostim"
+          ]
+        },
+        "hu": {
+          "duration": "60 perc",
+          "schedule": "Minden nap 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) vagy Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Kese-kesztyűs radírozás és habmasszázs a meleg márványon",
+            "Habmasszázs levendulás szappannal",
+            "Agyagos arcmaszk"
+          ],
+          "included": [
+            "Kese-kesztyűs radírozás",
+            "Habmasszázs levendulás szappannal a meleg márványon",
+            "Agyagos arcmaszk",
+            "Gőzfürdő, szauna és pihenő"
+          ],
+          "not_included": [
+            "Fürdőruha a medencéhez"
+          ],
+          "notes": [
+            "Külön női, férfi és páros részleg",
+            "Törölköző, pestemál, szappan, sampon, kesztyű és papucs biztosított",
+            "A medence közös és általában hideg (23 °C); hozzon saját fürdőruhát"
+          ]
+        },
+        "bs": {
+          "duration": "60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Piling rukavicom kese i masaža pjenom na toplom mramoru",
+            "Masaža pjenom od sapuna s lavandom",
+            "Maska od gline za lice"
+          ],
+          "included": [
+            "Piling rukavicom kese",
+            "Masaža pjenom od sapuna s lavandom na toplom mramoru",
+            "Maska od gline za lice",
+            "Parno kupatilo, sauna i salon za opuštanje"
+          ],
+          "not_included": [
+            "Kupaći kostim za bazen"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Osigurani ručnik, peštemal, sapun, šampon, rukavica i papuče",
+            "Bazen je zajednički i obično hladan (23 °C); ponesite vlastiti kupaći kostim"
+          ]
         }
       },
       "title_tr": "Geleneksel Türk Hamamı Paketi",
@@ -7537,7 +9076,10 @@
       "title_nl": "Traditioneel Turks hamampakket",
       "title_az": "Ənənəvi türk hamamı paketi",
       "title_he": "חבילת חמאם טורקי מסורתי",
-      "title_fa": "پکیج حمام ترکی سنتی"
+      "title_fa": "پکیج حمام ترکی سنتی",
+      "title_hr": "Paket tradicionalnog turskog hamama",
+      "title_hu": "Hagyományos török hamamcsomag",
+      "title_bs": "Paket tradicionalnog turskog hamama"
     },
     {
       "id": "alaturka-peeling",
@@ -7914,6 +9456,81 @@
             "حوله، لنگ (پشتمال)، صابون، شامپو، کیسه و دمپایی ارائه می‌شود",
             "استخر مختلط و معمولاً سرد است (۲۳ درجه)؛ لباس شنای خود را بیاورید"
           ]
+        },
+        "hr": {
+          "duration": "60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Piling rukavicom kese, zatim dubinski piling morskom soli ili kavom",
+            "Masaža pjenom na toplom mramoru",
+            "Maska od gline za lice"
+          ],
+          "included": [
+            "Piling rukavicom kese",
+            "Piling morskom soli ili kavom",
+            "Masaža pjenom od sapuna s lavandom na toplom mramoru",
+            "Maska od gline za lice",
+            "Parna kupelj, sauna i salon za opuštanje"
+          ],
+          "not_included": [
+            "Kupaći kostim za bazen"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Osigurani ručnik, peštemal, sapun, šampon, rukavica i papuče",
+            "Bazen je zajednički i obično hladan (23 °C); ponesite vlastiti kupaći kostim"
+          ]
+        },
+        "hu": {
+          "duration": "60 perc",
+          "schedule": "Minden nap 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) vagy Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Kese-kesztyűs radírozás, majd mélytisztító tengeri sós vagy kávés radír",
+            "Habmasszázs a meleg márványon",
+            "Agyagos arcmaszk"
+          ],
+          "included": [
+            "Kese-kesztyűs radírozás",
+            "Tengeri sós vagy kávés radír",
+            "Habmasszázs levendulás szappannal a meleg márványon",
+            "Agyagos arcmaszk",
+            "Gőzfürdő, szauna és pihenő"
+          ],
+          "not_included": [
+            "Fürdőruha a medencéhez"
+          ],
+          "notes": [
+            "Külön női, férfi és páros részleg",
+            "Törölköző, pestemál, szappan, sampon, kesztyű és papucs biztosított",
+            "A medence közös és általában hideg (23 °C); hozzon saját fürdőruhát"
+          ]
+        },
+        "bs": {
+          "duration": "60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Piling rukavicom kese, zatim dubinski piling morskom soli ili kafom",
+            "Masaža pjenom na toplom mramoru",
+            "Maska od gline za lice"
+          ],
+          "included": [
+            "Piling rukavicom kese",
+            "Piling morskom soli ili kafom",
+            "Masaža pjenom od sapuna s lavandom na toplom mramoru",
+            "Maska od gline za lice",
+            "Parno kupatilo, sauna i salon za opuštanje"
+          ],
+          "not_included": [
+            "Kupaći kostim za bazen"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Osigurani ručnik, peštemal, sapun, šampon, rukavica i papuče",
+            "Bazen je zajednički i obično hladan (23 °C); ponesite vlastiti kupaći kostim"
+          ]
         }
       },
       "title_ru": "Хаммам с пилингом морской солью или кофе",
@@ -7927,7 +9544,10 @@
       "title_nl": "Hamampakket met zeezout- of koffiepeeling",
       "title_az": "Dəniz duzu və ya qəhvə pilinqi ilə hamam paketi",
       "title_he": "חבילת חמאם עם פילינג מלח ים או קפה",
-      "title_fa": "پکیج حمام با لایه‌برداری نمک دریا یا قهوه"
+      "title_fa": "پکیج حمام با لایه‌برداری نمک دریا یا قهوه",
+      "title_hr": "Paket hamama s pilingom od morske soli ili kave",
+      "title_hu": "Hamamcsomag tengeri sós vagy kávés bőrradírral",
+      "title_bs": "Paket hamama s pilingom od morske soli ili kafe"
     },
     {
       "id": "alaturka-sultan",
@@ -8304,6 +9924,81 @@
             "حوله، لنگ (پشتمال)، صابون، شامپو، کیسه و دمپایی ارائه می‌شود",
             "استخر مختلط و معمولاً سرد است (۲۳ درجه)؛ لباس شنای خود را بیاورید"
           ]
+        },
+        "hr": {
+          "duration": "60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Piling rukavicom kese i masaža pjenom na toplom mramoru",
+            "Antistresna masaža organskim uljem u zasebnoj sobi",
+            "Maska od gline za lice"
+          ],
+          "included": [
+            "Piling rukavicom kese",
+            "Masaža pjenom od sapuna s lavandom na toplom mramoru",
+            "Antistresna masaža cijelog tijela organskim uljem",
+            "Maska od gline za lice",
+            "Parna kupelj, sauna i salon za opuštanje"
+          ],
+          "not_included": [
+            "Kupaći kostim za bazen"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Osigurani ručnik, peštemal, sapun, šampon, rukavica i papuče",
+            "Bazen je zajednički i obično hladan (23 °C); ponesite vlastiti kupaći kostim"
+          ]
+        },
+        "hu": {
+          "duration": "60 perc",
+          "schedule": "Minden nap 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) vagy Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Kese-kesztyűs radírozás és habmasszázs a meleg márványon",
+            "Stresszoldó masszázs bioolajjal, külön szobában",
+            "Agyagos arcmaszk"
+          ],
+          "included": [
+            "Kese-kesztyűs radírozás",
+            "Habmasszázs levendulás szappannal a meleg márványon",
+            "Tetőtől talpig stresszoldó masszázs bioolajjal",
+            "Agyagos arcmaszk",
+            "Gőzfürdő, szauna és pihenő"
+          ],
+          "not_included": [
+            "Fürdőruha a medencéhez"
+          ],
+          "notes": [
+            "Külön női, férfi és páros részleg",
+            "Törölköző, pestemál, szappan, sampon, kesztyű és papucs biztosított",
+            "A medence közös és általában hideg (23 °C); hozzon saját fürdőruhát"
+          ]
+        },
+        "bs": {
+          "duration": "60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "Piling rukavicom kese i masaža pjenom na toplom mramoru",
+            "Antistresna masaža organskim uljem u zasebnoj sobi",
+            "Maska od gline za lice"
+          ],
+          "included": [
+            "Piling rukavicom kese",
+            "Masaža pjenom od sapuna s lavandom na toplom mramoru",
+            "Antistresna masaža cijelog tijela organskim uljem",
+            "Maska od gline za lice",
+            "Parno kupatilo, sauna i salon za opuštanje"
+          ],
+          "not_included": [
+            "Kupaći kostim za bazen"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Osigurani ručnik, peštemal, sapun, šampon, rukavica i papuče",
+            "Bazen je zajednički i obično hladan (23 °C); ponesite vlastiti kupaći kostim"
+          ]
         }
       },
       "title_ru": "Султанский хаммам и массаж",
@@ -8317,7 +10012,10 @@
       "title_nl": "Sultan-hamam- en massagepakket",
       "title_az": "Sultan hamamı və masaj paketi",
       "title_he": "חבילת חמאם הסולטן ועיסוי",
-      "title_fa": "پکیج حمام سلطان و ماساژ"
+      "title_fa": "پکیج حمام سلطان و ماساژ",
+      "title_hr": "Paket sultanskog hamama i masaže",
+      "title_hu": "Szultáni hamam- és masszázscsomag",
+      "title_bs": "Paket sultanskog hamama i masaže"
     },
     {
       "id": "alaturka-massage",
@@ -8375,7 +10073,13 @@
           "name_he": "עיסוי באלינזי",
           "desc_he": "לחץ על נקודות מסוימות החל מכפות הרגליים; משפר את זרימת הדם ומרגיע.",
           "name_fa": "ماساژ بالی",
-          "desc_fa": "فشار روی نقاط مشخص از کف پا به بالا؛ گردش خون را بهتر می‌کند و آرامش می‌دهد."
+          "desc_fa": "فشار روی نقاط مشخص از کف پا به بالا؛ گردش خون را بهتر می‌کند و آرامش می‌دهد.",
+          "name_hr": "Balijska masaža",
+          "desc_hr": "Pritisak na određene točke počevši od stopala; potiče cirkulaciju i opušta.",
+          "name_hu": "Balinéz masszázs",
+          "desc_hu": "Nyomás meghatározott pontokra a talptól kezdve; serkenti a keringést és ellazít.",
+          "name_bs": "Balijska masaža",
+          "desc_bs": "Pritisak na određene tačke počevši od stopala; potiče cirkulaciju i opušta."
         },
         {
           "id": "aroma",
@@ -8416,7 +10120,13 @@
           "name_he": "עיסוי ארומתרפיה",
           "desc_he": "שמנים אתריים מצמחים בתנועות איטיות ועדינות.",
           "name_fa": "ماساژ آروماتراپی",
-          "desc_fa": "روغن‌های اسانس گیاهی با حرکات آرام و ملایم."
+          "desc_fa": "روغن‌های اسانس گیاهی با حرکات آرام و ملایم.",
+          "name_hr": "Masaža aromaterapijom",
+          "desc_hr": "Biljna eterična ulja uz spore, nježne pokrete.",
+          "name_hu": "Aromaterápiás masszázs",
+          "desc_hu": "Gyógynövényes illóolajok lassú, gyengéd mozdulatokkal.",
+          "name_bs": "Masaža aromaterapijom",
+          "desc_bs": "Biljna eterična ulja uz spore, nježne pokrete."
         },
         {
           "id": "swedish",
@@ -8457,7 +10167,13 @@
           "name_he": "עיסוי שוודי",
           "desc_he": "טכניקות שוודיות קלאסיות להקלה על מתח בשרירים.",
           "name_fa": "ماساژ سوئدی",
-          "desc_fa": "تکنیک‌های کلاسیک سوئدی برای رفع گرفتگی عضلات."
+          "desc_fa": "تکنیک‌های کلاسیک سوئدی برای رفع گرفتگی عضلات.",
+          "name_hr": "Švedska masaža",
+          "desc_hr": "Klasične švedske tehnike za opuštanje napetih mišića.",
+          "name_hu": "Svéd masszázs",
+          "desc_hu": "Klasszikus svéd technikák az izomfeszültség oldására.",
+          "name_bs": "Švedska masaža",
+          "desc_bs": "Klasične švedske tehnike za opuštanje napetih mišića."
         },
         {
           "id": "antistress",
@@ -8498,7 +10214,13 @@
           "name_he": "עיסוי נגד מתחים",
           "desc_he": "עיסוי איטי של הראש, הצוואר, הגב והרגליים לשחרור מתחים.",
           "name_fa": "ماساژ ضداسترس",
-          "desc_fa": "ماساژ آرام سر، گردن، کمر و پاها برای رهایی از تنش."
+          "desc_fa": "ماساژ آرام سر، گردن، کمر و پاها برای رهایی از تنش.",
+          "name_hr": "Antistresna masaža",
+          "desc_hr": "Spora masaža glave, vrata, leđa i nogu za otpuštanje napetosti.",
+          "name_hu": "Stresszoldó masszázs",
+          "desc_hu": "A fej, a nyak, a hát és a láb lassú masszázsa a feszültség oldására.",
+          "name_bs": "Antistresna masaža",
+          "desc_bs": "Spora masaža glave, vrata, leđa i nogu za otpuštanje napetosti."
         },
         {
           "id": "deeptissue",
@@ -8539,7 +10261,13 @@
           "name_he": "עיסוי רקמות עמוק",
           "desc_he": "מרפה שרירים ורקמת חיבור; לכאב כרוני ולעוויתות.",
           "name_fa": "ماساژ بافت عمقی",
-          "desc_fa": "عضلات و بافت همبند را آزاد می‌کند؛ برای درد مزمن و اسپاسم."
+          "desc_fa": "عضلات و بافت همبند را آزاد می‌کند؛ برای درد مزمن و اسپاسم.",
+          "name_hr": "Duboka masaža tkiva",
+          "desc_hr": "Opušta mišiće i vezivno tkivo; za kroničnu bol i grčeve.",
+          "name_hu": "Mélyszöveti masszázs",
+          "desc_hu": "Lazítja az izmokat és a kötőszövetet; krónikus fájdalomra és görcsökre.",
+          "name_bs": "Duboka masaža tkiva",
+          "desc_bs": "Opušta mišiće i vezivno tkivo; za kroničnu bol i grčeve."
         },
         {
           "id": "back",
@@ -8580,7 +10308,13 @@
           "name_he": "עיסוי גב רפואי",
           "desc_he": "עיסוי גב קצבי לכאבי גב ולעוויתות שרירים.",
           "name_fa": "ماساژ درمانی کمر",
-          "desc_fa": "ماساژ ریتمیک کمر برای کمردرد و اسپاسم عضلانی."
+          "desc_fa": "ماساژ ریتمیک کمر برای کمردرد و اسپاسم عضلانی.",
+          "name_hr": "Medicinska masaža leđa",
+          "desc_hr": "Ritmična masaža leđa kod bolova u leđima i mišićnih grčeva.",
+          "name_hu": "Gyógyhátmasszázs",
+          "desc_hu": "Ritmikus hátmasszázs hátfájásra és izomgörcsökre.",
+          "name_bs": "Medicinska masaža leđa",
+          "desc_bs": "Ritmična masaža leđa kod bolova u leđima i mišićnih grčeva."
         },
         {
           "id": "foot",
@@ -8621,7 +10355,13 @@
           "name_he": "עיסוי כפות רגליים רפואי",
           "desc_he": "מתמקד בכפות הרגליים להרפיה עמוקה.",
           "name_fa": "ماساژ درمانی پا",
-          "desc_fa": "متمرکز بر کف پا برای آرامش عمیق."
+          "desc_fa": "متمرکز بر کف پا برای آرامش عمیق.",
+          "name_hr": "Medicinska masaža stopala",
+          "desc_hr": "Usmjerena na tabane za duboko opuštanje.",
+          "name_hu": "Gyógytalpmasszázs",
+          "desc_hu": "A talpra összpontosít a mély ellazulásért.",
+          "name_bs": "Medicinska masaža stopala",
+          "desc_bs": "Usmjerena na tabane za duboko opuštanje."
         },
         {
           "id": "sport",
@@ -8662,7 +10402,13 @@
           "name_he": "עיסוי ספורט",
           "desc_he": "לפני או אחרי ספורט, לתמיכה בביצועים.",
           "name_fa": "ماساژ ورزشی",
-          "desc_fa": "قبل یا بعد از ورزش، برای پشتیبانی از عملکرد."
+          "desc_fa": "قبل یا بعد از ورزش، برای پشتیبانی از عملکرد.",
+          "name_hr": "Sportska masaža",
+          "desc_hr": "Prije ili nakon sporta, za bolju izvedbu.",
+          "name_hu": "Sportmasszázs",
+          "desc_hu": "Sport előtt vagy után, a teljesítmény támogatására.",
+          "name_bs": "Sportska masaža",
+          "desc_bs": "Prije ili nakon sporta, za bolju izvedbu."
         },
         {
           "id": "hotstones",
@@ -8703,7 +10449,13 @@
           "name_he": "עיסוי אבנים חמות",
           "desc_he": "אבנים מחוממות משפרות את זרימת הדם ומקלות על התכווצויות.",
           "name_fa": "ماساژ سنگ داغ",
-          "desc_fa": "سنگ‌های گرم گردش خون را بهتر و گرفتگی عضلات را کم می‌کنند."
+          "desc_fa": "سنگ‌های گرم گردش خون را بهتر و گرفتگی عضلات را کم می‌کنند.",
+          "name_hr": "Masaža vrućim kamenjem",
+          "desc_hr": "Zagrijano kamenje poboljšava cirkulaciju i ublažava grčeve mišića.",
+          "name_hu": "Forrókő-masszázs",
+          "desc_hu": "A felmelegített kövek javítják a keringést és oldják az izomgörcsöket.",
+          "name_bs": "Masaža vrućim kamenjem",
+          "desc_bs": "Zagrijano kamenje poboljšava cirkulaciju i ublažava grčeve mišića."
         },
         {
           "id": "fourhand",
@@ -8744,7 +10496,13 @@
           "name_he": "עיסוי ארבע ידיים",
           "desc_he": "שני מטפלים שעובדים בסנכרון.",
           "name_fa": "ماساژ چهاردست",
-          "desc_fa": "دو ماساژور که هماهنگ کار می‌کنند."
+          "desc_fa": "دو ماساژور که هماهنگ کار می‌کنند.",
+          "name_hr": "Masaža u četiri ruke",
+          "desc_hr": "Dva terapeuta rade usklađeno.",
+          "name_hu": "Négykezes masszázs",
+          "desc_hu": "Két terapeuta dolgozik összehangoltan.",
+          "name_bs": "Masaža u četiri ruke",
+          "desc_bs": "Dva terapeuta rade usklađeno."
         }
       ],
       "details": {
@@ -9003,6 +10761,60 @@
             "بخش‌های جداگانه برای زنان، مردان و زوج‌ها",
             "قیمت بسته به نوع و مدت ماساژ انتخابی تغییر می‌کند"
           ]
+        },
+        "hr": {
+          "duration": "30 ili 60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "10 vrsta masaže, 30 ili 60 minuta",
+            "Balijska, aromaterapija, švedska, antistresna, duboka masaža tkiva",
+            "Sportska masaža, vruće kamenje i masaža u četiri ruke"
+          ],
+          "included": [
+            "Odabrana masaža (30 ili 60 minuta)",
+            "Parna kupelj, sauna i salon za opuštanje"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Cijene ovise o odabranoj vrsti i trajanju masaže"
+          ]
+        },
+        "hu": {
+          "duration": "30 vagy 60 perc",
+          "schedule": "Minden nap 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) vagy Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "10 masszázsfajta, 30 vagy 60 perc",
+            "Balinéz, aromaterápiás, svéd, stresszoldó, mélyszöveti",
+            "Sport-, forrókő- és négykezes masszázs"
+          ],
+          "included": [
+            "Választott masszázs (30 vagy 60 perc)",
+            "Gőzfürdő, szauna és pihenő"
+          ],
+          "notes": [
+            "Külön női, férfi és páros részleg",
+            "Az ár a választott masszázsfajtától és időtartamtól függ"
+          ]
+        },
+        "bs": {
+          "duration": "30 ili 60 minuta",
+          "schedule": "Svaki dan 09:30–23:00",
+          "meeting_point": "Fatih (Binbirdirek, Lady Diana Hotel) ili Beyoğlu (Grand Haliç Hotel, −1)",
+          "highlights": [
+            "10 vrsta masaže, 30 ili 60 minuta",
+            "Balijska, aromaterapija, švedska, antistresna, duboka masaža tkiva",
+            "Sportska masaža, vruće kamenje i masaža u četiri ruke"
+          ],
+          "included": [
+            "Odabrana masaža (30 ili 60 minuta)",
+            "Parno kupatilo, sauna i salon za opuštanje"
+          ],
+          "notes": [
+            "Odvojeni ženski, muški dio i dio za parove",
+            "Cijene ovise o odabranoj vrsti i trajanju masaže"
+          ]
         }
       },
       "title_ru": "Меню массажей",
@@ -9016,7 +10828,10 @@
       "title_nl": "Massagemenu",
       "title_az": "Masaj menyusu",
       "title_he": "תפריט עיסויים",
-      "title_fa": "منوی ماساژ"
+      "title_fa": "منوی ماساژ",
+      "title_hr": "Ponuda masaža",
+      "title_hu": "Masszázsválaszték",
+      "title_bs": "Ponuda masaža"
     },
     {
       "id": "sl-generic-cruise",
@@ -9561,6 +11376,120 @@
             "گزینه Pickup صبح و بعدازظهر شامل سوار شدن پیش از کروز است اما ترانسفر برگشت ندارد.",
             "گزینه Transfer غروب شامل سوار شدن و ترانسفر برگشت است."
           ]
+        },
+        "hr": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje Bosporom između Europe i Azije",
+            "Odaberite jutarnji, poslijepodnevni ili polazak u zalazak sunca",
+            "Uživajte u dvosatnom razgledavanju s vode",
+            "Pogledajte europsku i azijsku obalu Istanbula"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom",
+            "Preuzimanje prije krstarenja ako je odabrana jutarnja ili poslijepodnevna opcija s preuzimanjem",
+            "Preuzimanje i povratni transfer ako je odabrana opcija s transferom u zalazak sunca",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Transferi uz opciju mjesta sastanka",
+            "Povratni transfer uz jutarnju ili poslijepodnevnu opciju s preuzimanjem",
+            "Obroci i grickalice",
+            "Dodatna pića",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografiranje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Opcija mjesta sastanka dostupna je za jutarnje, poslijepodnevne polaske i polaske u zalazak sunca.",
+            "Jutarnja i poslijepodnevna opcija s preuzimanjem uključuje preuzimanje prije krstarenja, ali ne i povratni transfer.",
+            "Opcija s transferom u zalazak sunca uključuje i preuzimanje i povratni transfer."
+          ]
+        },
+        "hu": {
+          "duration": "2 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Nincs élő idegenvezetés; többnyelvű audioguide",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Hajózás a Boszporuszon Európa és Ázsia között",
+            "Délelőtti, délutáni vagy naplementés indulás",
+            "Kétórás városnézés a vízről",
+            "Isztambul európai és ázsiai partjainak látványa"
+          ],
+          "included": [
+            "Kétórás közös boszporuszi városnéző hajózás",
+            "Felvétel a hajózás előtt, ha a délelőtti vagy délutáni felvételes opciót választja",
+            "Felvétel és visszaszállítás, ha a naplementés transzferes opciót választja",
+            "Többnyelvű kommentár a fedélzeten",
+            "Mobil audioguide 30 nyelven",
+            "Ingyenes Wi-Fi a fedélzeten",
+            "Korlátlan török tea és Nescafé, önkiszolgáló",
+            "Mosdó a fedélzeten"
+          ],
+          "not_included": [
+            "Transzfer a találkozási pontos opciónál",
+            "Visszaszállítás a délelőtti vagy délutáni felvételes opciónál",
+            "Étel és snack",
+            "További italok",
+            "Személyes kiadások",
+            "Borravaló",
+            "Fotózás oszmán viseletben"
+          ],
+          "notes": [
+            "Ez egy közös, kétórás boszporuszi városnéző hajózás más utasokkal.",
+            "A találkozási pontos opció délelőtti, délutáni és naplementés indulásra is elérhető.",
+            "A délelőtti és délutáni felvételes opció a hajózás előtti felvételt tartalmazza, a visszaszállítást nem.",
+            "A naplementés transzferes opció a felvételt és a visszaszállítást is tartalmazza."
+          ]
+        },
+        "bs": {
+          "duration": "2 sata",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje Bosporom između Evrope i Azije",
+            "Odaberite jutarnji, poslijepodnevni ili polazak u zalazak sunca",
+            "Uživajte u dvosatnom razgledavanju s vode",
+            "Pogledajte evropsku i azijsku obalu Istanbula"
+          ],
+          "included": [
+            "Dvosatno zajedničko krstarenje Bosporom",
+            "Preuzimanje prije krstarenja ako je odabrana jutarnja ili poslijepodnevna opcija s preuzimanjem",
+            "Preuzimanje i povratni transfer ako je odabrana opcija s transferom u zalazak sunca",
+            "Višejezični komentar na brodu",
+            "Mobilni audiovodič na 30 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé, samoposluživanje",
+            "Toaleti na brodu"
+          ],
+          "not_included": [
+            "Transferi uz opciju mjesta sastanka",
+            "Povratni transfer uz jutarnju ili poslijepodnevnu opciju s preuzimanjem",
+            "Obroci i grickalice",
+            "Dodatna pića",
+            "Osobni troškovi",
+            "Napojnice",
+            "Fotografisanje u osmanskoj nošnji"
+          ],
+          "notes": [
+            "Ovo je zajedničko dvosatno krstarenje Bosporom s drugim putnicima.",
+            "Opcija mjesta sastanka dostupna je za jutarnje, poslijepodnevne polaske i polaske u zalazak sunca.",
+            "Jutarnja i poslijepodnevna opcija s preuzimanjem uključuje preuzimanje prije krstarenja, ali ne i povratni transfer.",
+            "Opcija s transferom u zalazak sunca uključuje i preuzimanje i povratni transfer."
+          ]
         }
       },
       "title_tr": "2 Saatlik Boğaz Turu",
@@ -9575,7 +11504,10 @@
       "title_nl": "Bosporuscruise van twee uur",
       "title_az": "İki saatlıq Boğaz kruizi",
       "title_he": "שייט של שעתיים בבוספורוס",
-      "title_fa": "کروز دو ساعته بسفر"
+      "title_fa": "کروز دو ساعته بسفر",
+      "title_hr": "Dvosatno krstarenje Bosporom",
+      "title_hu": "Kétórás boszporuszi hajókirándulás",
+      "title_bs": "Dvosatno krstarenje Bosporom"
     },
     {
       "id": "sl-asia-afternoon",
@@ -10161,6 +12093,129 @@
             "ساعت سوار شدن تقریبی است و بسته به محل هتل و ترافیک ممکن است تغییر کند.",
             "برای برخی مناطق دور ممکن است هزینه حمل‌ونقل اضافه‌ای باشد، همان‌طور که در سیستم رزرو آمده است."
           ]
+        },
+        "hr": {
+          "duration": "8 sati",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Otkrijte europsku stranu Istanbula poslijepodne",
+            "Uživajte u duhovnoj atmosferi četvrti Eyüp",
+            "Uživajte u prekrasnom pogledu na Zlatni rog",
+            "Provozajte se žičarom Eyüp"
+          ],
+          "included": [
+            "Preuzimanje i povratak iz odabranih hotela u središtu Istanbula, ako je odabrana opcija s transferom",
+            "Usluga mjesta sastanka, ako je odabrana opcija mjesta sastanka",
+            "Prijevoz klimatiziranim vozilom",
+            "Profesionalni vodič na engleskom, španjolskom, ruskom, arapskom ili francuskom",
+            "Ručak s desertom i 1 bezalkoholnim pićem",
+            "Karta za žičaru Eyüp",
+            "Dvosatno krstarenje Bosporom",
+            "Tura Bosporom uz audiovodič",
+            "Neograničen turski čaj i Nescafé na brodu",
+            "Besplatan Wi-Fi na brodu"
+          ],
+          "not_included": [
+            "Napojnice",
+            "Osobni troškovi",
+            "Dodatna hrana i pića",
+            "Alkoholna pića",
+            "Troškovi kupovine",
+            "Fotografiranje u osmanskoj nošnji",
+            "Wi-Fi u autobusu",
+            "Dodatne usluge nisu jasno navedene kao uključene"
+          ],
+          "notes": [
+            "Ovo je zajednička poslijepodnevna tura s drugim gostima.",
+            "Preuzimanje iz hotela i povratak dostupni su samo ako je odabrana opcija s transferom.",
+            "Vrijeme preuzimanja je približno i može se promijeniti ovisno o lokaciji hotela i prometu.",
+            "Za neke udaljene četvrti može se naplatiti dodatni prijevoz, kako je prikazano u sustavu za rezervacije."
+          ]
+        },
+        "hu": {
+          "duration": "8 óra",
+          "pickup": "Szállodai felvétel kérhető (válassza a transzferes opciót)",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Hivatásos idegenvezető",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Fedezze fel délután Isztambul európai oldalát",
+            "Eyüp környékének spirituális hangulata",
+            "Gyönyörű kilátás az Aranyszarv-öbölre",
+            "Utazás az eyüpi kabinos felvonóval"
+          ],
+          "included": [
+            "Szállodai felvétel és visszaszállítás kijelölt belvárosi szállodákból, ha a transzferes opciót választja",
+            "Találkozási pont, ha a találkozási pontos opciót választja",
+            "Utazás légkondicionált járművel",
+            "Hivatásos idegenvezető angolul, spanyolul, oroszul, arabul vagy franciául",
+            "Ebéd desszerttel és 1 üdítővel",
+            "Jegy az eyüpi kabinos felvonóra",
+            "Kétórás boszporuszi városnéző hajózás",
+            "Boszporuszi túra audioguide-dal",
+            "Korlátlan török tea és Nescafé a hajón",
+            "Ingyenes Wi-Fi a hajón"
+          ],
+          "not_included": [
+            "Borravaló",
+            "Személyes kiadások",
+            "További étel és ital",
+            "Alkoholos italok",
+            "Vásárlási kiadások",
+            "Fotózás oszmán viseletben",
+            "Wi-Fi a buszon",
+            "A további szolgáltatásokat nem tüntetik fel egyértelműen az árban foglaltként"
+          ],
+          "notes": [
+            "Ez egy közös délutáni túra más vendégekkel.",
+            "Szállodai felvétel és visszaszállítás csak a transzferes opció választása esetén van.",
+            "A felvétel ideje hozzávetőleges, és a szálloda helyétől és a forgalomtól függően változhat.",
+            "Egyes távoli környékeken a foglalási rendszerben feltüntetett szállítási felár lehet."
+          ]
+        },
+        "bs": {
+          "duration": "8 sati",
+          "pickup": "Neobavezno preuzimanje iz hotela (odaberite opciju s transferom)",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Otkrijte evropsku stranu Istanbula poslijepodne",
+            "Uživajte u duhovnoj atmosferi četvrti Eyüp",
+            "Uživajte u prekrasnom pogledu na Zlatni rog",
+            "Provozajte se žičarom Eyüp"
+          ],
+          "included": [
+            "Preuzimanje i povratak iz odabranih hotela u središtu Istanbula, ako je odabrana opcija s transferom",
+            "Usluga mjesta sastanka, ako je odabrana opcija mjesta sastanka",
+            "Prevoz klimatizovanim vozilom",
+            "Profesionalni vodič na engleskom, španjolskom, ruskom, arapskom ili francuskom",
+            "Ručak s desertom i 1 bezalkoholnim pićem",
+            "Karta za žičaru Eyüp",
+            "Dvosatno krstarenje Bosporom",
+            "Tura Bosporom uz audiovodič",
+            "Neograničen turski čaj i Nescafé na brodu",
+            "Besplatan Wi-Fi na brodu"
+          ],
+          "not_included": [
+            "Napojnice",
+            "Osobni troškovi",
+            "Dodatna hrana i pića",
+            "Alkoholna pića",
+            "Troškovi kupovine",
+            "Fotografisanje u osmanskoj nošnji",
+            "Wi-Fi u autobusu",
+            "Dodatne usluge nisu jasno navedene kao uključene"
+          ],
+          "notes": [
+            "Ovo je zajednička poslijepodnevna tura s drugim gostima.",
+            "Preuzimanje iz hotela i povratak dostupni su samo ako je odabrana opcija s transferom.",
+            "Vrijeme preuzimanja je približno i može se promijeniti ovisno o lokaciji hotela i prometu.",
+            "Za neke udaljene četvrti može se naplatiti dodatni prevoz, kako je prikazano u sistemu za rezervacije."
+          ]
         }
       },
       "title_tr": "Yarım Gün Öğleden Sonra Avrupa Yakası Turu",
@@ -10175,7 +12230,10 @@
       "title_nl": "Halve dag: Europa in de middag",
       "title_az": "Yarım gün: günorta Avropa",
       "title_he": "חצי יום: אירופה אחר הצהריים",
-      "title_fa": "نیم‌روز: اروپا در بعدازظهر"
+      "title_fa": "نیم‌روز: اروپا در بعدازظهر",
+      "title_hr": "Poludnevna poslijepodnevna tura europskom stranom",
+      "title_hu": "Félnapos délutáni túra az európai oldalon",
+      "title_bs": "Poludnevna poslijepodnevna tura evropskom stranom"
     },
     {
       "id": "sl-islands",
@@ -10761,6 +12819,129 @@
             "همه مهمانان با هم در یک قایق سفر می‌کنند.",
             "وقت آزاد در بیوک‌آدا به‌صورت مستقل است."
           ]
+        },
+        "hr": {
+          "duration": "8 sati",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Posjetite Kınaliadu i Büyükadu",
+            "Krstarite Mramornim morem",
+            "Uživajte u mirnim otočkim prizorima",
+            "Istražite opuštenu atmosferu Kınaliade"
+          ],
+          "included": [
+            "Preuzimanje i povratak iz odabranih hotela u Istanbulu",
+            "Prijevoz klimatiziranim vozilom",
+            "Povratni prijevoz brodom",
+            "Karte za otočki trajekt",
+            "Profesionalni turistički vodič",
+            "Ručak",
+            "Objašnjenja vodiča na otocima",
+            "Naknade za uslugu i lokalni porezi"
+          ],
+          "not_included": [
+            "Pića",
+            "Obroci za djecu od 0 do 2 godine",
+            "Čaj, kava i grickalice kupljeni na brodu",
+            "Najam bicikla",
+            "Najam električnog vozila",
+            "Ulaznice za javne ili privatne plaže",
+            "Oprema za kupanje",
+            "Osobni troškovi",
+            "Napojnice",
+            "Troškovi kupovine"
+          ],
+          "notes": [
+            "Ovo je zajednička cjelodnevna tura brodom s drugim putnicima.",
+            "Prvi otok može se promijeniti ovisno o stanju mora ili organizacijskim uvjetima.",
+            "Svi gosti putuju zajedno istim brodom.",
+            "Slobodno vrijeme na Büyükadi provodite samostalno."
+          ]
+        },
+        "hu": {
+          "duration": "8 óra",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Hivatásos idegenvezető",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Kınalıada és Büyükada meglátogatása",
+            "Hajózás a Márvány-tengeren",
+            "Nyugodt szigeti tájak",
+            "Kınalıada laza hangulata"
+          ],
+          "included": [
+            "Szállodai felvétel és visszaszállítás kijelölt isztambuli szállodákból",
+            "Utazás légkondicionált járművel",
+            "Oda-vissza hajóút",
+            "Jegyek a szigeti kompra",
+            "Hivatásos idegenvezető",
+            "Ebéd",
+            "Idegenvezetői magyarázat a szigeteken",
+            "Szolgáltatási díjak és helyi adók"
+          ],
+          "not_included": [
+            "Italok",
+            "Étkezés 0–2 éves gyerekeknek",
+            "A fedélzeten vásárolt tea, kávé és snack",
+            "Kerékpárbérlés",
+            "Elektromos jármű bérlése",
+            "Nyilvános vagy magánstrandok belépője",
+            "Fürdőfelszerelés",
+            "Személyes kiadások",
+            "Borravaló",
+            "Vásárlási kiadások"
+          ],
+          "notes": [
+            "Ez egy közös, egész napos hajótúra más utasokkal.",
+            "Az első sziget a tenger állapotától vagy szervezési okokból változhat.",
+            "Minden vendég ugyanazon a hajón utazik.",
+            "A Büyükadán töltött szabadidőt önállóan tölti."
+          ]
+        },
+        "bs": {
+          "duration": "8 sati",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Profesionalni vodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Posjetite Kınaliadu i Büyükadu",
+            "Krstarite Mramornim morem",
+            "Uživajte u mirnim ostrvskim prizorima",
+            "Istražite opuštenu atmosferu Kınaliade"
+          ],
+          "included": [
+            "Preuzimanje i povratak iz odabranih hotela u Istanbulu",
+            "Prevoz klimatizovanim vozilom",
+            "Povratni prevoz brodom",
+            "Karte za ostrvski trajekt",
+            "Profesionalni turistički vodič",
+            "Ručak",
+            "Objašnjenja vodiča na ostrvima",
+            "Naknade za uslugu i lokalni porezi"
+          ],
+          "not_included": [
+            "Pića",
+            "Obroci za djecu od 0 do 2 godine",
+            "Čaj, kafa i grickalice kupljeni na brodu",
+            "Najam bicikla",
+            "Najam električnog vozila",
+            "Ulaznice za javne ili privatne plaže",
+            "Oprema za kupanje",
+            "Osobni troškovi",
+            "Napojnice",
+            "Troškovi kupovine"
+          ],
+          "notes": [
+            "Ovo je zajednička cjelodnevna tura brodom s drugim putnicima.",
+            "Prvo ostrvo se može promijeniti ovisno o stanju mora ili organizacijskim uslovima.",
+            "Svi gosti putuju zajedno istim brodom.",
+            "Slobodno vrijeme na Büyükadi provodite samostalno."
+          ]
         }
       },
       "title_tr": "Öğle Yemekli Adalar Turu",
@@ -10775,7 +12956,10 @@
       "title_nl": "Prinseneilanden-tour met lunch",
       "title_az": "Naharla Adalar turu",
       "title_he": "סיור באיי הנסיכים עם ארוחת צהריים",
-      "title_fa": "تور جزایر پرنس با ناهار"
+      "title_fa": "تور جزایر پرنس با ناهار",
+      "title_hr": "Tura Prinčevskim otocima s ručkom",
+      "title_hu": "Hercegek-szigeteki túra ebéddel",
+      "title_bs": "Tura Prinčevskim ostrvima s ručkom"
     },
     {
       "id": "sl-turkish-breakfast",
@@ -11319,6 +13503,120 @@
             "صبحانه حدود ۱ ساعت طول می‌کشد.",
             "کروز بسفر ساعت 11:00 از اسکله امین‌اونو حرکت می‌کند."
           ]
+        },
+        "hr": {
+          "duration": "4 sata",
+          "pickup": "Bez transfera; između mjesta se hoda pješice",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Uživajte u tradicionalnom turskom doručku s panoramskim pogledom na more",
+            "Doživite autentičnu lokalnu kulturu doručka u povijesnom Sirkeciju",
+            "Krstarite Bosporom između Europe i Azije 2 sata",
+            "Divite se palačama, džamijama, mostovima i vilama uz obalu"
+          ],
+          "included": [
+            "Tradicionalni turski doručak na panoramskoj terasi s pogledom na more i grad",
+            "Dvosatno krstarenje Bosporom",
+            "Audiovodič na 11 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé na brodu",
+            "Unutarnja i vanjska sjedala na brodu",
+            "Toaleti na brodu",
+            "Pomoć tima SeaLand između ureda, mjesta doručka i broda",
+            "Svi primjenjivi porezi i naknade za uslugu"
+          ],
+          "not_included": [
+            "Preuzimanje iz hotela i povratak",
+            "Prijevoz vozilom",
+            "Dodatna hrana i pića",
+            "Osobni troškovi",
+            "Troškovi kupovine",
+            "Napojnice"
+          ],
+          "notes": [
+            "Tijekom programa nema transfera vozilom.",
+            "Udaljenosti između ureda, mjesta doručka i pristaništa Eminönü su kratke.",
+            "Doručak traje otprilike 1 sat.",
+            "Krstarenje Bosporom polazi s pristaništa Eminönü u 11:00."
+          ]
+        },
+        "hu": {
+          "duration": "4 óra",
+          "pickup": "Nincs transzfer; a helyszínek között gyalog",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "guide": "Nincs élő idegenvezetés; többnyelvű audioguide",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Hagyományos török reggeli panorámás tengeri kilátással",
+            "Hiteles helyi reggelizési kultúra a történelmi Sirkeciben",
+            "Kétórás hajózás a Boszporuszon Európa és Ázsia között",
+            "Paloták, mecsetek, hidak és vízparti kúriák"
+          ],
+          "included": [
+            "Hagyományos török reggeli panorámás teraszon, kilátással a tengerre és a városra",
+            "Kétórás boszporuszi városnéző hajózás",
+            "Audioguide 11 nyelven",
+            "Ingyenes Wi-Fi a fedélzeten",
+            "Korlátlan török tea és Nescafé a fedélzeten",
+            "Fedett és nyitott ülőhelyek a fedélzeten",
+            "Mosdó a fedélzeten",
+            "A SeaLand csapatának segítsége az iroda, a reggelizőhely és a hajó között",
+            "Minden vonatkozó adó és szolgáltatási díj"
+          ],
+          "not_included": [
+            "Szállodai felvétel és visszaszállítás",
+            "Járműves szállítás",
+            "További étel és ital",
+            "Személyes kiadások",
+            "Vásárlási kiadások",
+            "Borravaló"
+          ],
+          "notes": [
+            "A program alatt nincs járműves transzfer.",
+            "Az iroda, a reggelizőhely és az eminönüi kikötő között rövid a gyaloglás.",
+            "A reggeli körülbelül 1 órás.",
+            "A boszporuszi hajó 11:00-kor indul az eminönüi kikötőből."
+          ]
+        },
+        "bs": {
+          "duration": "4 sata",
+          "pickup": "Bez transfera; između mjesta se hoda pješice",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "guide": "Bez vodiča uživo; višejezični audiovodič",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Uživajte u tradicionalnom turskom doručku s panoramskim pogledom na more",
+            "Doživite autentičnu lokalnu kulturu doručka u historijskom Sirkeciju",
+            "Krstarite Bosporom između Evrope i Azije 2 sata",
+            "Divite se palatama, džamijama, mostovima i vilama uz obalu"
+          ],
+          "included": [
+            "Tradicionalni turski doručak na panoramskoj terasi s pogledom na more i grad",
+            "Dvosatno krstarenje Bosporom",
+            "Audiovodič na 11 jezika",
+            "Besplatan Wi-Fi na brodu",
+            "Neograničen turski čaj i Nescafé na brodu",
+            "Unutarnja i vanjska sjedala na brodu",
+            "Toaleti na brodu",
+            "Pomoć tima SeaLand između ureda, mjesta doručka i broda",
+            "Svi primjenjivi porezi i naknade za uslugu"
+          ],
+          "not_included": [
+            "Preuzimanje iz hotela i povratak",
+            "Prevoz vozilom",
+            "Dodatna hrana i pića",
+            "Osobni troškovi",
+            "Troškovi kupovine",
+            "Napojnice"
+          ],
+          "notes": [
+            "Tokom programa nema transfera vozilom.",
+            "Udaljenosti između ureda, mjesta doručka i pristaništa Eminönü su kratke.",
+            "Doručak traje otprilike 1 sat.",
+            "Krstarenje Bosporom polazi s pristaništa Eminönü u 11:00."
+          ]
         }
       },
       "title_tr": "Türk Kahvaltısı ve Boğaz Turu",
@@ -11333,7 +13631,10 @@
       "title_nl": "Turks ontbijt & Bosporuscruise",
       "title_az": "Türk səhər yeməyi və Boğaz kruizi",
       "title_he": "ארוחת בוקר טורקית ושייט בבוספורוס",
-      "title_fa": "صبحانه ترکی و کروز بسفر"
+      "title_fa": "صبحانه ترکی و کروز بسفر",
+      "title_hr": "Turski doručak i krstarenje Bosporom",
+      "title_hu": "Török reggeli és boszporuszi hajókirándulás",
+      "title_bs": "Turski doručak i krstarenje Bosporom"
     },
     {
       "id": "sl-dinner",
@@ -11865,6 +14166,117 @@
             "زمان ترانسفر بسته به محل شما، ترافیک و مهمانان دیگر ممکن است تغییر کند.",
             "گزینه بدون الکل شامل نوشابه نامحدود است."
           ]
+        },
+        "hr": {
+          "duration": "3 sata",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje između Europe i Azije noću",
+            "Uživajte u trosatnom krstarenju Bosporom s večerom",
+            "Pogledajte osvijetljenu panoramu Istanbula s vode",
+            "Divite se poznatim znamenitostima uz obje obale"
+          ],
+          "included": [
+            "Trosatno zajedničko krstarenje Bosporom s večerom",
+            "Preuzimanje i povratak s odabranih lokacija u središtu Istanbula",
+            "Večera",
+            "Turska večer sa zabavnim programom",
+            "DJ glazba",
+            "Neograničena bezalkoholna pića",
+            "2 alkoholna pića po osobi ako je odabrana opcija s alkoholnim pićima",
+            "Unutarnji i vanjski prostori",
+            "Klimatizirani brod"
+          ],
+          "not_included": [
+            "Uvozna alkoholna pića",
+            "Dodatna alkoholna pića izvan odabranog paketa",
+            "Pića koja nisu uključena u odabrani paket",
+            "Osobni troškovi",
+            "Napojnice",
+            "Dodaci za posebne prigode, osim ako nisu posebno dogovoreni i potvrđeni"
+          ],
+          "notes": [
+            "Ovo je zajedničko krstarenje Bosporom s večerom i drugim putnicima.",
+            "Obje opcije uključuju preuzimanje i povratak s odabranih lokacija u središtu Istanbula.",
+            "Vrijeme transfera može se razlikovati ovisno o vašoj lokaciji, prometu i drugim gostima.",
+            "Opcija s bezalkoholnim pićima uključuje neograničena bezalkoholna pića."
+          ]
+        },
+        "hu": {
+          "duration": "3 óra",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "meeting_point": "A Sea & Land irodája az eminönüi kikötő közelében",
+          "cancellation": "Ingyenes lemondás 24 órával előtte",
+          "highlights": [
+            "Hajózás Európa és Ázsia között éjjel",
+            "Háromórás vacsorás hajózás a Boszporuszon",
+            "Isztambul kivilágított látképe a vízről",
+            "Híres vízparti látnivalók mindkét parton"
+          ],
+          "included": [
+            "Háromórás közös vacsorás boszporuszi hajózás",
+            "Felvétel és visszaszállítás kijelölt belvárosi helyszínekről",
+            "Vacsora",
+            "Török esti műsor",
+            "DJ-zene",
+            "Korlátlan üdítő",
+            "Személyenként 2 alkoholos ital, ha az alkoholos italos opciót választja",
+            "Fedett és nyitott terek",
+            "Légkondicionált hajó"
+          ],
+          "not_included": [
+            "Import alkoholos italok",
+            "A választott csomagon felüli alkoholos italok",
+            "A választott csomagban nem szereplő italok",
+            "Személyes kiadások",
+            "Borravaló",
+            "Különleges alkalmakra szóló extrák, hacsak külön nem egyeztették és erősítették meg"
+          ],
+          "notes": [
+            "Ez egy közös vacsorás boszporuszi hajózás más utasokkal.",
+            "Mindkét opció tartalmazza a felvételt és a visszaszállítást kijelölt belvárosi helyszínekről.",
+            "A transzfer ideje a tartózkodási helytől, a forgalomtól és a többi vendégtől függően változhat.",
+            "Az üdítős opció korlátlan üdítőt tartalmaz."
+          ]
+        },
+        "bs": {
+          "duration": "3 sata",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "meeting_point": "Ured Sea & Land blizu pristaništa Eminönü",
+          "cancellation": "Besplatno otkazivanje do 24 sata prije",
+          "highlights": [
+            "Krstarenje između Evrope i Azije noću",
+            "Uživajte u trosatnom krstarenju Bosporom s večerom",
+            "Pogledajte osvijetljenu panoramu Istanbula s vode",
+            "Divite se poznatim znamenitostima uz obje obale"
+          ],
+          "included": [
+            "Trosatno zajedničko krstarenje Bosporom s večerom",
+            "Preuzimanje i povratak s odabranih lokacija u središtu Istanbula",
+            "Večera",
+            "Turska večer sa zabavnim programom",
+            "DJ muzika",
+            "Neograničena bezalkoholna pića",
+            "2 alkoholna pića po osobi ako je odabrana opcija s alkoholnim pićima",
+            "Unutarnji i vanjski prostori",
+            "Klimatizovani brod"
+          ],
+          "not_included": [
+            "Uvozna alkoholna pića",
+            "Dodatna alkoholna pića izvan odabranog paketa",
+            "Pića koja nisu uključena u odabrani paket",
+            "Osobni troškovi",
+            "Napojnice",
+            "Dodaci za posebne prigode, osim ako nisu posebno dogovoreni i potvrđeni"
+          ],
+          "notes": [
+            "Ovo je zajedničko krstarenje Bosporom s večerom i drugim putnicima.",
+            "Obje opcije uključuju preuzimanje i povratak s odabranih lokacija u središtu Istanbula.",
+            "Vrijeme transfera može se razlikovati ovisno o vašoj lokaciji, prometu i drugim gostima.",
+            "Opcija s bezalkoholnim pićima uključuje neograničena bezalkoholna pića."
+          ]
         }
       },
       "title_tr": "Eğlenceli Akşam Yemekli Tekne Turu",
@@ -11879,7 +14291,10 @@
       "title_nl": "Dinercruise met entertainment",
       "title_az": "Şou ilə şam yeməyi kruizi",
       "title_he": "שייט ארוחת ערב עם מופע",
-      "title_fa": "کروز شام با برنامه سرگرمی"
+      "title_fa": "کروز شام با برنامه سرگرمی",
+      "title_hr": "Krstarenje s večerom i zabavnim programom",
+      "title_hu": "Vacsorás hajókirándulás szórakoztató műsorral",
+      "title_bs": "Krstarenje s večerom i zabavnim programom"
     },
     {
       "id": "orient-private-newyear",
@@ -12052,6 +14467,39 @@
           "notes": [
             "موارد شامل در صفحه تور شرکت ذکر نشده؛ از شرکت بپرسید."
           ]
+        },
+        "hr": {
+          "duration": "3 sata",
+          "highlights": [
+            "Privatno krstarenje u novogodišnjoj noći",
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Što je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
+        },
+        "hu": {
+          "duration": "3 óra",
+          "highlights": [
+            "Privát hajózás szilveszter éjjel",
+            "Esti vacsorás hajókirándulás a Boszporuszon",
+            "Mediterrán és török menü: meze, grillezett hal, kebab"
+          ],
+          "notes": [
+            "A túra oldala nem részletezi, mi van benne az árban; egyeztessen a szervezővel."
+          ]
+        },
+        "bs": {
+          "duration": "3 sata",
+          "highlights": [
+            "Privatno krstarenje u novogodišnjoj noći",
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Šta je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
         }
       },
       "title_tr": "Özel Yılbaşı Boğaz Turu",
@@ -12066,7 +14514,10 @@
       "title_nl": "Privé-oudejaarscruise over de Bosporus",
       "title_az": "Şəxsi Yeni il Boğaz kruizi",
       "title_he": "שייט פרטי לשנה החדשה בבוספורוס",
-      "title_fa": "کروز خصوصی سال نو در بسفر"
+      "title_fa": "کروز خصوصی سال نو در بسفر",
+      "title_hr": "Privatno novogodišnje krstarenje Bosporom",
+      "title_hu": "Privát szilveszteri boszporuszi hajózás",
+      "title_bs": "Privatno novogodišnje krstarenje Bosporom"
     },
     {
       "id": "orient-newyear-special",
@@ -12240,6 +14691,39 @@
           "notes": [
             "موارد شامل در صفحه تور شرکت ذکر نشده؛ از شرکت بپرسید."
           ]
+        },
+        "hr": {
+          "duration": "4 sata",
+          "highlights": [
+            "31. prosinca, polazak iz Karaköya",
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Što je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
+        },
+        "hu": {
+          "duration": "4 óra",
+          "highlights": [
+            "December 31., indulás Karaköyből",
+            "Esti vacsorás hajókirándulás a Boszporuszon",
+            "Mediterrán és török menü: meze, grillezett hal, kebab"
+          ],
+          "notes": [
+            "A túra oldala nem részletezi, mi van benne az árban; egyeztessen a szervezővel."
+          ]
+        },
+        "bs": {
+          "duration": "4 sata",
+          "highlights": [
+            "31. decembra, polazak iz Karaköya",
+            "Večernje krstarenje Bosporom s večerom",
+            "Mediteranski i turski meni: meze, riba s roštilja, kebab"
+          ],
+          "notes": [
+            "Šta je uključeno nije detaljno navedeno na stranici ture; provjerite s organizatorom."
+          ]
         }
       },
       "title_tr": "Yılbaşı Gecesi Özel Turu",
@@ -12254,7 +14738,10 @@
       "title_nl": "Speciale oudejaarscruise",
       "title_az": "Xüsusi Yeni il gecəsi kruizi",
       "title_he": "שייט מיוחד לערב השנה החדשה",
-      "title_fa": "کروز ویژه شب سال نو"
+      "title_fa": "کروز ویژه شب سال نو",
+      "title_hr": "Posebno krstarenje u novogodišnjoj noći",
+      "title_hu": "Különleges szilveszteri hajózás",
+      "title_bs": "Posebno krstarenje u novogodišnjoj noći"
     },
     {
       "id": "azure-sileagva",
@@ -12618,6 +15105,81 @@
           "notes": [
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "guide": "Vodič na engleskom ili arapskom",
+          "highlights": [
+            "Zaustavljanje kod skrivenog jezera (Saklı Göl)",
+            "Pogled s brda u Şileu na tvrđavu i svjetionik",
+            "Vožnja brodom po rijeci Göksu u Ağvi",
+            "Slobodno vrijeme, kupanje u Crnom moru"
+          ],
+          "included": [
+            "Ručak s bezalkoholnim pićem",
+            "Klimatizirani autobus",
+            "Vožnja brodom",
+            "Vodič na engleskom ili arapskom"
+          ],
+          "not_included": [
+            "Čaj/kava na zaustavljanju kod jezera",
+            "Troškovi kupanja",
+            "Osobni troškovi"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap",
+          "pickup": "Szállodai felvétel benne van",
+          "guide": "Angolul vagy arabul beszélő idegenvezető",
+          "highlights": [
+            "Megálló a rejtett tónál (Saklı Göl)",
+            "Kilátás Şile dombjáról a várra és a világítótoronyra",
+            "Csónakázás a Göksu folyón Ağvában",
+            "Szabadidő, fürdés a Fekete-tengerben"
+          ],
+          "included": [
+            "Ebéd üdítővel",
+            "Légkondicionált busz",
+            "Csónakázás",
+            "Angolul vagy arabul beszélő idegenvezető"
+          ],
+          "not_included": [
+            "Tea/kávé a tónál",
+            "Fürdéssel kapcsolatos kiadások",
+            "Személyes kiadások"
+          ],
+          "notes": [
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "guide": "Vodič na engleskom ili arapskom",
+          "highlights": [
+            "Zaustavljanje kod skrivenog jezera (Saklı Göl)",
+            "Pogled s brda u Şileu na tvrđavu i svjetionik",
+            "Vožnja brodom po rijeci Göksu u Ağvi",
+            "Slobodno vrijeme, kupanje u Crnom moru"
+          ],
+          "included": [
+            "Ručak s bezalkoholnim pićem",
+            "Klimatizovani autobus",
+            "Vožnja brodom",
+            "Vodič na engleskom ili arapskom"
+          ],
+          "not_included": [
+            "Čaj/kafa na zaustavljanju kod jezera",
+            "Troškovi kupanja",
+            "Osobni troškovi"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Günübirlik Şile ve Ağva Turu",
@@ -12632,7 +15194,10 @@
       "title_nl": "Dagtour naar Şile en Ağva",
       "title_az": "Gündəlik Şilə və Ağva turu",
       "title_he": "סיור יומי לשילה ולאגווה",
-      "title_fa": "تور روزانه شیله و آغوا"
+      "title_fa": "تور روزانه شیله و آغوا",
+      "title_hr": "Dnevna tura Şile i Ağva",
+      "title_hu": "Napi túra Şilébe és Ağvába",
+      "title_bs": "Dnevna tura Şile i Ağva"
     },
     {
       "id": "azure-two-continents",
@@ -12887,6 +15452,57 @@
             "بازار ادویه یکشنبه تعطیل است: به جای آن مغازه‌های محلی",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan, svakodnevno",
+          "highlights": [
+            "Bazar začina",
+            "Krstarenje Bosporom (tvrđava Rumeli s broda)",
+            "Palača Dolmabahçe",
+            "Bosporski most i brdo Çamlıca"
+          ],
+          "included": [
+            "Ručak"
+          ],
+          "notes": [
+            "Dolmabahçe je zatvoren ponedjeljkom i četvrtkom: zamjena su Eyüp, Pierre Loti i Miniatürk",
+            "Bazar začina zatvoren je nedjeljom: zamjena su lokalne trgovine",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap, naponta",
+          "highlights": [
+            "Fűszerbazár",
+            "Boszporuszi hajózás (a Rumeli erőd a hajóról)",
+            "Dolmabahçe palota",
+            "Boszporusz-híd és Çamlıca-domb"
+          ],
+          "included": [
+            "Ebéd"
+          ],
+          "notes": [
+            "A Dolmabahçe hétfőn és csütörtökön zárva: helyette Eyüp, Pierre Loti és Miniatürk",
+            "A Fűszerbazár vasárnap zárva: helyette helyi üzletek",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan, svakodnevno",
+          "highlights": [
+            "Bazar začina",
+            "Krstarenje Bosporom (tvrđava Rumeli s broda)",
+            "Palata Dolmabahçe",
+            "Bosporski most i brdo Çamlıca"
+          ],
+          "included": [
+            "Ručak"
+          ],
+          "notes": [
+            "Dolmabahçe je zatvoren ponedjeljkom i četvrtkom: zamjena su Eyüp, Pierre Loti i Miniatürk",
+            "Bazar začina zatvoren je nedjeljom: zamjena su lokalne trgovine",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Boğaz, Dolmabahçe ve İki Kıta Turu",
@@ -12901,7 +15517,10 @@
       "title_nl": "Bosporus, Dolmabahçe & twee continenten",
       "title_az": "Boğaz, Dolmabahçe və iki qitə",
       "title_he": "הבוספורוס, דולמבחצ'ה ושתי יבשות",
-      "title_fa": "بسفر، دلمه‌باغچه و دو قاره"
+      "title_fa": "بسفر، دلمه‌باغچه و دو قاره",
+      "title_hr": "Bospor, Dolmabahçe i dva kontinenta",
+      "title_hu": "Boszporusz, Dolmabahçe és két kontinens",
+      "title_bs": "Bospor, Dolmabahçe i dva kontinenta"
     },
     {
       "id": "azure-yalova",
@@ -13099,6 +15718,45 @@
           "notes": [
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "guide": "Vodič na engleskom i arapskom",
+          "highlights": [
+            "Prelazak Bosporskim mostom, trajekt do Yalove",
+            "Termalno sumporno lječilište i turska kupelj",
+            "Ručak s pogledom na slap visok 14 m"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap",
+          "pickup": "Szállodai felvétel benne van",
+          "guide": "Angolul és arabul beszélő idegenvezető",
+          "highlights": [
+            "Átkelés a Boszporusz-hídon, komp Yalovába",
+            "Kénes termálfürdő és török fürdő",
+            "Ebéd kilátással egy 14 méteres vízesésre"
+          ],
+          "notes": [
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan",
+          "pickup": "Uključeno preuzimanje iz hotela",
+          "guide": "Vodič na engleskom i arapskom",
+          "highlights": [
+            "Prelazak Bosporskim mostom, trajekt do Yalove",
+            "Termalno sumporno lječilište i tursko kupatilo",
+            "Ručak s pogledom na slap visok 14 m"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Günübirlik Yalova ve Termal Turu",
@@ -13113,7 +15771,10 @@
       "title_nl": "Dagtour naar Yalova & thermen",
       "title_az": "Gündəlik Yalova və termal turu",
       "title_he": "סיור יומי לילובה ולמעיינות החמים",
-      "title_fa": "تور روزانه یالووا و چشمه‌های آب گرم"
+      "title_fa": "تور روزانه یالووا و چشمه‌های آب گرم",
+      "title_hr": "Dnevna tura Yalova i termalne kupke",
+      "title_hu": "Napi túra Yalovába és termálfürdőbe",
+      "title_bs": "Dnevna tura Yalova i termalne kupke"
     },
     {
       "id": "azure-dinner",
@@ -13381,6 +16042,60 @@
             "صفحه شرکت هم به قایق تفریحی بسفر و هم به رستوران اشاره دارد: محل را بپرسید",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Večer",
+          "pickup": "Uključen prijevoz iz hotela i natrag",
+          "highlights": [
+            "Program: dobrodošlica uz mehter, derviš koji se vrti, trbušni ples, narodni plesovi, DJ",
+            "Meni: hladna predjela, salata, predjelo, glavno jelo (piletina, riba, ćufte ili vegetarijansko), baklava i voće"
+          ],
+          "included": [
+            "Preuzimanje iz hotela i povratak",
+            "Večera s više sljedova",
+            "Zabavni program",
+            "Neograničena domaća alkoholna pića ili neograničena bezalkoholna pića (ovisno o opciji)"
+          ],
+          "notes": [
+            "Stranica organizatora spominje i jahtu na Bosporu i restoran: provjerite mjesto",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Este",
+          "pickup": "Szállodai felvétel és visszaszállítás benne van",
+          "highlights": [
+            "Műsor: mehter fogadás, kerengő dervis, hastánc, néptáncok, DJ",
+            "Menü: hideg előételek, saláta, előétel, főétel (csirke, hal, húsgombóc vagy vegetáriánus), baklava és gyümölcs"
+          ],
+          "included": [
+            "Szállodai felvétel és visszaszállítás",
+            "Többfogásos vacsora",
+            "Műsor",
+            "Korlátlan helyi alkoholos ital vagy korlátlan üdítő (opciótól függően)"
+          ],
+          "notes": [
+            "A szervező oldala boszporuszi jachtot és éttermet is említ: egyeztesse a helyszínt",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Večer",
+          "pickup": "Uključen prevoz iz hotela i natrag",
+          "highlights": [
+            "Program: dobrodošlica uz mehter, derviš koji se vrti, trbušni ples, narodni plesovi, DJ",
+            "Meni: hladna predjela, salata, predjelo, glavno jelo (piletina, riba, ćufte ili vegetarijansko), baklava i voće"
+          ],
+          "included": [
+            "Preuzimanje iz hotela i povratak",
+            "Večera s više sljedova",
+            "Zabavni program",
+            "Neograničena domaća alkoholna pića ili neograničena bezalkoholna pića (ovisno o opciji)"
+          ],
+          "notes": [
+            "Stranica organizatora spominje i jahtu na Bosporu i restoran: provjerite mjesto",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Akşam Yemekli Tekne ve Türk Gecesi Şovu",
@@ -13395,7 +16110,10 @@
       "title_nl": "Dinercruise & Turkse avondshow",
       "title_az": "Şam yeməyi kruizi və türk gecəsi şousu",
       "title_he": "שייט ארוחת ערב ומופע ערב טורקי",
-      "title_fa": "کروز شام و نمایش شب ترکی"
+      "title_fa": "کروز شام و نمایش شب ترکی",
+      "title_hr": "Krstarenje s večerom i turskom večeri",
+      "title_hu": "Vacsorás hajókirándulás török esttel",
+      "title_bs": "Krstarenje s večerom i turskom večeri"
     },
     {
       "id": "azure-city",
@@ -13636,6 +16354,54 @@
             "ایاصوفیه دوشنبه ← آب‌انبار باسیلیکا؛ توپکاپی سه‌شنبه ← خورا یا بیلربیی؛ بازار بزرگ یکشنبه ← مغازه‌ها",
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Cijeli dan, svakodnevno",
+          "highlights": [
+            "Aja Sofija, Plava džamija i Hipodrom",
+            "Veliki bazar",
+            "Palača Topkapı",
+            "Džamija Rüstem-paše ili Süleymaniye"
+          ],
+          "included": [
+            "Ručak"
+          ],
+          "notes": [
+            "Aja Sofija pon → Bazilikina cisterna; Topkapı uto → Chora ili Beylerbeyi; Veliki bazar ned → trgovine",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Egész nap, naponta",
+          "highlights": [
+            "Hagia Sophia, Kék mecset és Hippodrom",
+            "Nagy Bazár",
+            "Topkapı palota",
+            "Rüstem pasa vagy Szülejmán mecset"
+          ],
+          "included": [
+            "Ebéd"
+          ],
+          "notes": [
+            "Hagia Sophia hétfő → Bazilika-ciszterna; Topkapı kedd → Chora vagy Beylerbeyi; Nagy Bazár vasárnap → üzletek",
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Cijeli dan, svakodnevno",
+          "highlights": [
+            "Aja Sofija, Plava džamija i Hipodrom",
+            "Veliki bazar",
+            "Palata Topkapı",
+            "Džamija Rüstem-paše ili Süleymaniye"
+          ],
+          "included": [
+            "Ručak"
+          ],
+          "notes": [
+            "Aja Sofija pon → Bazilikina cisterna; Topkapı uto → Chora ili Beylerbeyi; Veliki bazar ned → trgovine",
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Tam Gün İstanbul Şehir Turu",
@@ -13650,7 +16416,10 @@
       "title_nl": "Istanbul-stadstour, hele dag",
       "title_az": "İstanbul şəhər turu, tam gün",
       "title_he": "סיור בעיר איסטנבול, יום מלא",
-      "title_fa": "تور شهر استانبول، یک روز کامل"
+      "title_fa": "تور شهر استانبول، یک روز کامل",
+      "title_hr": "Cjelodnevno razgledavanje Istanbula",
+      "title_hu": "Egész napos isztambuli városnézés",
+      "title_bs": "Cjelodnevno razgledavanje Istanbula"
     },
     {
       "id": "azure-halfbosphorus",
@@ -13821,6 +16590,39 @@
           "notes": [
             "قیمت‌ها در سایت شرکت به‌صورت پویا بارگذاری می‌شوند؛ قیمت نمایش‌داده از بررسی قبلی است."
           ]
+        },
+        "hr": {
+          "duration": "Pola dana",
+          "guide": "Vodič na engleskom ili arapskom",
+          "highlights": [
+            "Pogled s Bospora na oba kontinenta",
+            "Vile yalı, palače, džamije i crkve"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
+        },
+        "hu": {
+          "duration": "Fél nap",
+          "guide": "Angolul vagy arabul beszélő idegenvezető",
+          "highlights": [
+            "Boszporuszi kilátás mindkét kontinensre",
+            "Yalı-kúriák, paloták, mecsetek és templomok"
+          ],
+          "notes": [
+            "Az árak a szervező oldalán dinamikusan töltődnek be; a feltüntetett ár korábbi kutatásból származik."
+          ]
+        },
+        "bs": {
+          "duration": "Pola dana",
+          "guide": "Vodič na engleskom ili arapskom",
+          "highlights": [
+            "Pogled s Bospora na oba kontinenta",
+            "Vile yalı, palate, džamije i crkve"
+          ],
+          "notes": [
+            "Cijene se na stranici organizatora učitavaju dinamički; navedena cijena preuzeta je iz ranijeg istraživanja."
+          ]
         }
       },
       "title_tr": "Yarım Gün Boğaz Turu",
@@ -13835,7 +16637,10 @@
       "title_nl": "Bosporustour, halve dag",
       "title_az": "Boğaz turu, yarım gün",
       "title_he": "סיור בוספורוס, חצי יום",
-      "title_fa": "تور بسفر، نیم‌روز"
+      "title_fa": "تور بسفر، نیم‌روز",
+      "title_hr": "Poludnevna tura Bosporom",
+      "title_hu": "Félnapos boszporuszi túra",
+      "title_bs": "Poludnevna tura Bosporom"
     },
     {
       "id": "azure-triple-eurplane",
@@ -13859,7 +16664,10 @@
       "title_nl": "Cappadocië, Pamukkale & Efeze per vliegtuig",
       "title_az": "Kapadokya, Pamukkale və Efes təyyarə ilə",
       "title_he": "קפדוקיה, פמוקלה ואפסוס בטיסה",
-      "title_fa": "کاپادوکیه، پاموکاله و افسوس با هواپیما"
+      "title_fa": "کاپادوکیه، پاموکاله و افسوس با هواپیما",
+      "title_hr": "Kapadokija, Pamukkale i Efez zrakoplovom",
+      "title_hu": "Kappadókia, Pamukkale és Efezus repülővel",
+      "title_bs": "Kapadokija, Pamukkale i Efez avionom"
     },
     {
       "id": "azure-triple-eurbus",
@@ -13883,7 +16691,10 @@
       "title_nl": "Cappadocië, Pamukkale & Efeze per bus",
       "title_az": "Kapadokya, Pamukkale və Efes avtobusla",
       "title_he": "קפדוקיה, פמוקלה ואפסוס באוטובוס",
-      "title_fa": "کاپادوکیه، پاموکاله و افسوس با اتوبوس"
+      "title_fa": "کاپادوکیه، پاموکاله و افسوس با اتوبوس",
+      "title_hr": "Kapadokija, Pamukkale i Efez autobusom",
+      "title_hu": "Kappadókia, Pamukkale és Efezus busszal",
+      "title_bs": "Kapadokija, Pamukkale i Efez autobusom"
     }
   ],
   "detail_note": "details: tour contents summarised from each operator’s own page on the checked date. Fields are null where the operator does not say. Not Bosphorly promises; confirm with the operator before any request."

@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "tools" / "discover-src"
 OUT = ROOT / "data" / "discover"
-LANGS = ["en", "tr", "ru", "uk", "de", "fr", "nl", "ar", "he", "az", "fa", "es", "it", "pt"]
+LANGS = ["en", "tr", "ru", "uk", "de", "fr", "nl", "ar", "he", "az", "fa", "es", "it", "pt", "hr", "hu", "bs"]
 CHECKED = "2026-11-16"
 GUIDES = [
     ("en/istanbul-guide.html", "Istanbul travel guide", "en", "essentials tips first visit"),
