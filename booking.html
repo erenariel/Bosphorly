@@ -11,7 +11,7 @@
 <label class="wide" for="option" id="optionWrap" hidden><span id="labelOption">Massage type</span><select id="option"></select><small id="optionDesc" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label>
 <label for="duration" id="durationWrap" hidden><span id="labelDuration">Duration</span><select id="duration"></select></label>
 <label for="date"><span id="labelDate">Preferred date</span><input id="date" type="date" required></label>
-<label for="time"><span id="labelTime">Preferred time</span><select id="time"></select><small id="timeNote" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label>
+<label for="time"><span id="labelTime">Preferred time</span><select id="time"></select><small id="timeNote" class="muted" style="display:block;margin-top:4px;font-size:12px"></small></label><div id="dateWeather" class="wx-date" style="grid-column:1/-1" hidden aria-live="polite"></div>
 <label for="guests"><span id="labelGuests">Guests</span><input type="number" id="guests" min="1" max="16" step="1" value="2" inputmode="numeric" required></label>
 <label for="branch" id="branchWrap" hidden><span id="labelBranch">Branch</span><select id="branch"><option value="fatih">Fatih · Binbirdirek (Lady Diana Hotel)</option><option value="beyoglu">Beyoğlu · Grand Haliç Hotel (−1)</option></select></label>
 <label for="area" id="areaWrap"><span id="labelArea">Hotel area</span><select id="area"><option value="Sultanahmet">Sultanahmet / Fatih</option><option value="Sirkeci">Sirkeci / Eminönü</option><option value="Taksim">Taksim / Beyoğlu</option><option value="Kadıköy">Kadıköy</option><option value="Other">Other</option></select></label>
@@ -41,4 +41,4 @@
 <script src="account-store.js"></script>
 <script src="config/contact.js"></script>
 <script src="booking-adapter.js" defer></script>
-<script src="booking.js" defer></script></body></html>
+<script src="weather.js" defer></script><script src="booking.js" defer></script></body></html>
