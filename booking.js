@@ -1172,6 +1172,7 @@
   }
 
   function render() {
+    if (window.BosphorlyWeather) window.BosphorlyWeather.forDate($('dateWeather'), $('date').value, $('offer').value);
     const r = current();
     if (!r) return;
     renderOptions(r);

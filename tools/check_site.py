@@ -95,7 +95,7 @@ def assert_booking_safety():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "explore.js", "route.js", "search.js", "tools/build_discover.py"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "weather.js", "explore.js", "route.js", "search.js", "tools/build_discover.py"]
     for name in script_sources:
         if name.endswith(".py"):
             continue
