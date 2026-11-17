@@ -6,3 +6,4 @@
 @media(max-width:820px){.head-wrap{flex-wrap:wrap;gap:10px}.header nav{gap:12px;font-size:12px}}
 /* Hidden form rows must stay hidden even though labels are flex containers. */
 [hidden]{display:none!important}
+.check input{width:20px;height:20px;margin-top:1px;accent-color:#0a1550}

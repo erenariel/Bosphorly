@@ -43,6 +43,14 @@ a{color:#1352aa}
 .note a{color:#7a5300}
 .empty{padding:30px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
 .count{font-size:13px;color:var(--muted);margin:2px 0 8px}
+.ga{padding:8px 0 36px}
+.ga h2{font-size:22px;margin:0 0 12px}
+.ga-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.ga-card{display:flex;flex-direction:column;gap:6px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;text-decoration:none;color:#34465f;font-size:14px}
+.ga-card b{color:var(--ink);font-size:15px}
+.ga-card:hover,.ga-card:focus-visible{border-color:var(--cyan);outline:none}
+@media(min-width:700px){.ga-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:1040px){.ga-grid{grid-template-columns:repeat(4,1fr)}}
 /* Route */
 .rt-quote{margin:18px 0 0;padding:14px 16px;border-inline-start:4px solid var(--gold);background:#ffffff12;border-radius:0 12px 12px 0;max-width:760px}
 [dir=rtl] .rt-quote{border-radius:12px 0 0 12px}

@@ -1082,7 +1082,13 @@
    "homeDiscEyebrow": "PLAN YOUR DAYS",
    "homeDiscTitle": "Discover Istanbul, your way.",
    "homeDiscSub": "33 places to see, from palaces and bazaars to Isfanbul theme park and the Istanbul Aquarium, plus Prof. İlber Ortaylı's walking route.",
-   "homeDiscCta": "Discover Istanbul →"
+   "homeDiscCta": "Discover Istanbul →",
+   "gaTitle": "Getting around Istanbul",
+   "gaIst": "M11 metro links Istanbul Airport (IST) with Gayrettepe, where you change to the M2 metro for Taksim.",
+   "gaSaw": "M4 metro links Sabiha Gökçen Airport (SAW) on the Asian side with Kadıköy.",
+   "gaTram": "The T1 tram runs along the historic peninsula through Sultanahmet, Eminönü and Karaköy to Kabataş.",
+   "gaFerry": "City ferries cross between Europe and Asia. Pay for ferries, metro and trams with an İstanbulkart.",
+   "gaNote": "Lines and timetables change; check the official operators before you travel."
   },
   "tr": {
    "navDiscover": "Keşfet",
@@ -1143,7 +1149,13 @@
    "homeDiscEyebrow": "GÜNLERİNİ PLANLA",
    "homeDiscTitle": "İstanbul'u kendi tarzınla keşfet.",
    "homeDiscSub": "Saraylardan çarşılara, İsfanbul tema parkından İstanbul Akvaryum'a 33 gezilecek yer ve Prof. İlber Ortaylı'nın yürüyüş rotası.",
-   "homeDiscCta": "İstanbul'u keşfet →"
+   "homeDiscCta": "İstanbul'u keşfet →",
+   "gaTitle": "Şehirde ulaşım",
+   "gaIst": "M11 metrosu İstanbul Havalimanı'nı (IST) Gayrettepe'ye bağlar; Taksim için orada M2 metrosuna aktarma yapılır.",
+   "gaSaw": "M4 metrosu Anadolu yakasındaki Sabiha Gökçen Havalimanı'nı (SAW) Kadıköy'e bağlar.",
+   "gaTram": "T1 tramvayı tarihi yarımadada Sultanahmet, Eminönü ve Karaköy üzerinden Kabataş'a gider.",
+   "gaFerry": "Şehir Hatları vapurları Avrupa ile Asya arasında çalışır. Vapur, metro ve tramvay için İstanbulkart kullanılır.",
+   "gaNote": "Hatlar ve saatler değişebilir; yola çıkmadan resmî işletmelere bakın."
   }
  }
 }
