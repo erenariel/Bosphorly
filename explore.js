@@ -5,7 +5,7 @@
   let pack;
   try { pack = await D.load(); } catch { $('grid').append(el('div', 'empty', 'Could not load the list. Please reload.')); return; }
   const { data, t } = pack;
-  for (const k of ['exEyebrow', 'exTitle', 'exLead', 'routeCardEyebrow', 'routeCardTitle', 'routeCardText', 'routeOpen']) $(k).textContent = t(k);
+  for (const k of ['exEyebrow', 'exTitle', 'exLead', 'routeCardEyebrow', 'routeCardTitle', 'routeCardText', 'routeOpen', 'gaTitle', 'gaIst', 'gaSaw', 'gaTram', 'gaFerry', 'gaNote']) $(k).textContent = t(k);
   $('q').placeholder = t('searchPh');
   document.title = t('exTitle') + ' | Bosphorly';
 
@@ -80,7 +80,11 @@
       markers.set(p.id, m);
     }
     render();
-  }).catch(() => { $('mapFallback').textContent = '🗺️'; });
+  }).catch(() => {
+    // Offline or blocked map tiles: show the local schematic map instead, the list stays usable.
+    const img = el('img'); img.src = 'assets/maps/istanbul-schematic.svg'; img.alt = 'Istanbul'; img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    $('mapFallback').replaceChildren(img);
+  });
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); start(); } }, { rootMargin: '200px' });
     io.observe(mapNode);

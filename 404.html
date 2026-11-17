@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Page not found | Bosphorly</title>
+<style>
+:root{--navy:#0a1753}*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#0a1753,#10227a 70%,#0d5c8f);color:#fff;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding:24px;text-align:center}
+main{max-width:520px}
+.big{font-size:64px;line-height:1}
+h1{font-size:clamp(24px,5vw,34px);margin:14px 0 8px}
+p{color:#cfdcf3;margin:0 0 22px}
+nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+a{color:var(--navy);background:#ffbf62;border-radius:12px;padding:12px 18px;font-weight:800;text-decoration:none}
+a.alt{background:#ffffff1f;color:#fff;border:1px solid #ffffff40}
+a:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <div class="big" aria-hidden="true">🧭</div>
+  <h1 id="t">Page not found</h1>
+  <p id="s">The page may have moved. These will get you back on track:</p>
+  <nav><a href="index.html" id="h">Home</a><a class="alt" href="explore.html" id="d">Discover Istanbul</a><a class="alt" href="search.html" id="q">Search</a></nav>
+</main>
+<script>
+(() => {
+  const T = {
+    tr: ['Sayfa bulunamadı', 'Sayfa taşınmış olabilir. Buradan devam edebilirsin:', 'Ana sayfa', 'İstanbul’u keşfet', 'Ara'],
+    ru: ['Страница не найдена', 'Возможно, страница переехала. Продолжить можно здесь:', 'Главная', 'Что посмотреть', 'Поиск'],
+    uk: ['Сторінку не знайдено', 'Можливо, сторінку перенесено. Продовжити можна тут:', 'Головна', 'Що подивитися', 'Пошук'],
+    de: ['Seite nicht gefunden', 'Die Seite wurde vielleicht verschoben. Hier geht es weiter:', 'Startseite', 'Istanbul entdecken', 'Suche'],
+    fr: ['Page introuvable', 'La page a peut-être changé d’adresse. Pour continuer :', 'Accueil', 'Découvrir Istanbul', 'Rechercher'],
+    nl: ['Pagina niet gevonden', 'De pagina is misschien verplaatst. Hier kun je verder:', 'Home', 'Ontdek Istanbul', 'Zoeken'],
+    ar: ['الصفحة غير موجودة', 'ربما نُقلت الصفحة. يمكنك المتابعة من هنا:', 'الرئيسية', 'اكتشف إسطنبول', 'بحث'],
+    he: ['הדף לא נמצא', 'ייתכן שהדף הועבר. אפשר להמשיך מכאן:', 'דף הבית', 'גלו את איסטנבול', 'חיפוש'],
+    az: ['Səhifə tapılmadı', 'Səhifə köçürülmüş ola bilər. Buradan davam edin:', 'Ana səhifə', 'İstanbulu kəşf et', 'Axtar'],
+    fa: ['صفحه پیدا نشد', 'ممکن است صفحه جابه‌جا شده باشد. از اینجا ادامه دهید:', 'خانه', 'کشف استانبول', 'جست‌وجو'],
+    es: ['Página no encontrada', 'Puede que la página se haya movido. Sigue por aquí:', 'Inicio', 'Descubrir Estambul', 'Buscar'],
+    it: ['Pagina non trovata', 'La pagina potrebbe essere stata spostata. Continua da qui:', 'Home', 'Scopri Istanbul', 'Cerca'],
+    pt: ['Página não encontrada', 'A página pode ter mudado de endereço. Continue por aqui:', 'Início', 'Descobrir Istambul', 'Buscar']
+  };
+  let l = 'en';
+  try { l = localStorage.getItem('bosphorly.language') || ''; } catch {}
+  if (!T[l]) l = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  const x = T[l]; if (!x) return;
+  document.documentElement.lang = l;
+  if (['ar', 'he', 'fa'].includes(l)) document.documentElement.dir = 'rtl';
+  ['t', 's', 'h', 'd', 'q'].forEach((id, i) => { document.getElementById(id).textContent = x[i]; });
+  document.title = x[0] + ' | Bosphorly';
+})();
+</script>
+</body>
+</html>

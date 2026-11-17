@@ -1,69 +1,257 @@
 {
  "places": {
-  "hagia-sophia": ["Hagia Sophia", "1.500 jaar Byzantijnse en Ottomaanse geschiedenis onder één koepel. Bezoekers gaan via een aparte betaalde route naar de galerijen; voor gebed is de toegang gratis."],
-  "blue-mosque": ["Blauwe Moskee", "De Sultan Ahmet-moskee met zes minaretten en blauwe İznik-tegels. Gratis; tijdens gebedstijden gesloten voor bezoekers."],
-  "topkapi": ["Topkapı-paleis", "Bijna 400 jaar het thuis van de Ottomaanse sultans: binnenplaatsen, schatkamer, heilige relikwieën en de harem, met uitzicht op de Bosporus."],
-  "basilica-cistern": ["Basilica Cisterne", "Ondergronds waterpaleis uit de 6e eeuw met 336 zuilen en twee Medusahoofden; avondsessies zijn duurder."],
-  "archaeology": ["Archeologische Musea van Istanbul", "Drie musea naast Topkapı: de Alexandersarcofaag, schatten uit het Oude Nabije Oosten en het Tegelpaviljoen."],
-  "suleymaniye": ["Süleymaniye-moskee", "Het meesterwerk van Mimar Sinan op de derde heuvel, met een terras boven de Gouden Hoorn. Gratis; gesloten tijdens gebeden."],
-  "chora": ["Chora (Kariye)", "Enkele van de mooiste Byzantijnse mozaïeken en fresco’s ter wereld, bij de landmuren. Controleer de openingstijden vooraf."],
-  "galata-tower": ["Galatatoren", "De middeleeuwse Genuese toren met 360°-uitzicht over de Gouden Hoorn en de Bosporus; dag- en avondsessies."],
-  "dolmabahce": ["Dolmabahçe-paleis", "Negentiende-eeuws paleis in Europese stijl aan de Bosporus, met kristallen trap en enorme kroonluchter."],
-  "beylerbeyi": ["Beylerbeyi-paleis", "Een elegant zomerpaleis aan de Aziatische oever, onder de Bosporusbrug."],
-  "maidens-tower": ["Maagdentoren", "Het torentje op een eilandje voor Üsküdar, per boot bereikbaar; museum en uitkijkpunt."],
-  "rumeli-hisari": ["Fort Rumeli Hisarı", "Het fort dat Mehmet II in 1452 in vier maanden bouwde op het smalste punt van de Bosporus."],
-  "istanbul-modern": ["Istanbul Modern", "Moderne en hedendaagse Turkse kunst in een nieuw gebouw aan het water in Karaköy."],
-  "pera-museum": ["Pera Museum", "Oriëntalistische schilderkunst, waaronder „De schildpaddentrainer” van Osman Hamdi Bey, bij de İstiklal."],
-  "rahmi-koc": ["Rahmi M. Koç Museum", "Auto’s, treinen, schepen, vliegtuigen en een onderzeeër aan de Gouden Hoorn; geliefd bij gezinnen."],
-  "isfanbul": ["Pretpark Isfanbul (voorheen Vialand)", "Het grote themapark van Istanbul in Eyüpsultan: achtbanen, gezinsattracties en shows. Heette vroeger Vialand."],
-  "istanbul-aquarium": ["Istanbul Aquarium (Aqua Florya)", "Een van de grootste aquaria van Europa, in winkelcentrum Aqua Florya aan zee. Marmaray tot Florya Akvaryum."],
-  "sea-life": ["SEA LIFE Istanbul", "Onderwatertunnel met haaien en roggen in winkelcentrum Forum İstanbul; combitickets met LEGOLAND."],
-  "legoland": ["LEGOLAND Discovery Centre", "Overdekt LEGO-speelcentrum voor kinderen van ongeveer 3–10 jaar in Forum İstanbul; online goedkoper."],
-  "madame-tussauds": ["Madame Tussauds Istanbul", "Wassen beelden van Turkse en internationale beroemdheden aan de İstiklal."],
-  "miniaturk": ["Miniatürk", "Openluchtpark met maquettes van beroemde gebouwen uit Turkije en de Ottomaanse wereld, aan de Gouden Hoorn."],
-  "whirling-dervishes": ["Draaiende derwisjen (HodjaPasha)", "Een Sema-ceremonie van een uur in een gerestaureerde hamam uit de 15e eeuw in Sirkeci; avondsessies."],
-  "city-ferry": ["Openbare veerboot over de Bosporus", "De goedkoopste Bosporustocht: de stadsveerboot tussen Europa en Azië, betaald met de İstanbulkart."],
-  "grand-bazaar": ["Grote Bazaar", "Een van de oudste overdekte markten ter wereld: ruim 60 straatjes met tapijten, lampen, sieraden en leer. Zondag gesloten."],
-  "spice-bazaar": ["Kruidenbazaar", "Specerijen, Turks fruit, gedroogd fruit en thee naast de Nieuwe Moskee in Eminönü."],
-  "balat": ["Balat en Fener", "Kleurrijke huizen, kerken, synagogen en cafés in de oude Griekse, Joodse en Armeense wijken aan de Gouden Hoorn."],
-  "istiklal": ["İstiklal-straat en Taksim", "De drukste straat van Istanbul: winkels, passages, kerken en de rode nostalgische tram, van Taksim tot Galata."],
-  "ortakoy": ["Ortaköy", "De barokke Ortaköy-moskee onder de Bosporusbrug, met streetfood zoals kumpir en wafels."],
-  "kadikoy": ["Kadıköy en Moda", "De levendige Aziatische kant: markt, cafés, boekwinkels en een wandeling langs zee in Moda. Met de veerboot bereikbaar."],
-  "camlica": ["Çamlıca-heuvel en -moskee", "Het hoogste uitkijkpunt aan de Aziatische kant en de grootste moskee van Turkije."],
-  "pierre-loti": ["Eyüp Sultan en de Pierre Loti-heuvel", "Een heilige moskee, daarna met een korte kabelbaan naar een café met uitzicht over de Gouden Hoorn."],
-  "princes-islands": ["Prinseneilanden", "Autovrije eilanden in de Zee van Marmara met houten villa’s en dennenbossen; dagtocht per veerboot."],
-  "emirgan": ["Emirganpark", "Een groot park aan de Bosporus met paviljoens; beroemd om de tulpen elk jaar in april."]
+  "hagia-sophia": [
+   "Hagia Sophia",
+   "1.500 jaar Byzantijnse en Ottomaanse geschiedenis onder één koepel. Bezoekers gaan via een aparte betaalde route naar de galerijen; voor gebed is de toegang gratis."
+  ],
+  "blue-mosque": [
+   "Blauwe Moskee",
+   "De Sultan Ahmet-moskee met zes minaretten en blauwe İznik-tegels. Gratis; tijdens gebedstijden gesloten voor bezoekers."
+  ],
+  "topkapi": [
+   "Topkapı-paleis",
+   "Bijna 400 jaar het thuis van de Ottomaanse sultans: binnenplaatsen, schatkamer, heilige relikwieën en de harem, met uitzicht op de Bosporus."
+  ],
+  "basilica-cistern": [
+   "Basilica Cisterne",
+   "Ondergronds waterpaleis uit de 6e eeuw met 336 zuilen en twee Medusahoofden; avondsessies zijn duurder."
+  ],
+  "archaeology": [
+   "Archeologische Musea van Istanbul",
+   "Drie musea naast Topkapı: de Alexandersarcofaag, schatten uit het Oude Nabije Oosten en het Tegelpaviljoen."
+  ],
+  "suleymaniye": [
+   "Süleymaniye-moskee",
+   "Het meesterwerk van Mimar Sinan op de derde heuvel, met een terras boven de Gouden Hoorn. Gratis; gesloten tijdens gebeden."
+  ],
+  "chora": [
+   "Chora (Kariye)",
+   "Enkele van de mooiste Byzantijnse mozaïeken en fresco’s ter wereld, bij de landmuren. Controleer de openingstijden vooraf."
+  ],
+  "galata-tower": [
+   "Galatatoren",
+   "De middeleeuwse Genuese toren met 360°-uitzicht over de Gouden Hoorn en de Bosporus; dag- en avondsessies."
+  ],
+  "dolmabahce": [
+   "Dolmabahçe-paleis",
+   "Negentiende-eeuws paleis in Europese stijl aan de Bosporus, met kristallen trap en enorme kroonluchter."
+  ],
+  "beylerbeyi": [
+   "Beylerbeyi-paleis",
+   "Een elegant zomerpaleis aan de Aziatische oever, onder de Bosporusbrug."
+  ],
+  "maidens-tower": [
+   "Maagdentoren",
+   "Het torentje op een eilandje voor Üsküdar, per boot bereikbaar; museum en uitkijkpunt."
+  ],
+  "rumeli-hisari": [
+   "Fort Rumeli Hisarı",
+   "Het fort dat Mehmet II in 1452 in vier maanden bouwde op het smalste punt van de Bosporus."
+  ],
+  "istanbul-modern": [
+   "Istanbul Modern",
+   "Moderne en hedendaagse Turkse kunst in een nieuw gebouw aan het water in Karaköy."
+  ],
+  "pera-museum": [
+   "Pera Museum",
+   "Oriëntalistische schilderkunst, waaronder „De schildpaddentrainer” van Osman Hamdi Bey, bij de İstiklal."
+  ],
+  "rahmi-koc": [
+   "Rahmi M. Koç Museum",
+   "Auto’s, treinen, schepen, vliegtuigen en een onderzeeër aan de Gouden Hoorn; geliefd bij gezinnen."
+  ],
+  "isfanbul": [
+   "Pretpark Isfanbul (voorheen Vialand)",
+   "Het grote themapark van Istanbul in Eyüpsultan: achtbanen, gezinsattracties en shows. Heette vroeger Vialand."
+  ],
+  "istanbul-aquarium": [
+   "Istanbul Aquarium (Aqua Florya)",
+   "Een van de grootste aquaria van Europa, in winkelcentrum Aqua Florya aan zee. Marmaray tot Florya Akvaryum."
+  ],
+  "sea-life": [
+   "SEA LIFE Istanbul",
+   "Onderwatertunnel met haaien en roggen in winkelcentrum Forum İstanbul; combitickets met LEGOLAND."
+  ],
+  "legoland": [
+   "LEGOLAND Discovery Centre",
+   "Overdekt LEGO-speelcentrum voor kinderen van ongeveer 3–10 jaar in Forum İstanbul; online goedkoper."
+  ],
+  "madame-tussauds": [
+   "Madame Tussauds Istanbul",
+   "Wassen beelden van Turkse en internationale beroemdheden aan de İstiklal."
+  ],
+  "miniaturk": [
+   "Miniatürk",
+   "Openluchtpark met maquettes van beroemde gebouwen uit Turkije en de Ottomaanse wereld, aan de Gouden Hoorn."
+  ],
+  "whirling-dervishes": [
+   "Draaiende derwisjen (HodjaPasha)",
+   "Een Sema-ceremonie van een uur in een gerestaureerde hamam uit de 15e eeuw in Sirkeci; avondsessies."
+  ],
+  "city-ferry": [
+   "Openbare veerboot over de Bosporus",
+   "De goedkoopste Bosporustocht: de stadsveerboot tussen Europa en Azië, betaald met de İstanbulkart."
+  ],
+  "grand-bazaar": [
+   "Grote Bazaar",
+   "Een van de oudste overdekte markten ter wereld: ruim 60 straatjes met tapijten, lampen, sieraden en leer. Zondag gesloten."
+  ],
+  "spice-bazaar": [
+   "Kruidenbazaar",
+   "Specerijen, Turks fruit, gedroogd fruit en thee naast de Nieuwe Moskee in Eminönü."
+  ],
+  "balat": [
+   "Balat en Fener",
+   "Kleurrijke huizen, kerken, synagogen en cafés in de oude Griekse, Joodse en Armeense wijken aan de Gouden Hoorn."
+  ],
+  "istiklal": [
+   "İstiklal-straat en Taksim",
+   "De drukste straat van Istanbul: winkels, passages, kerken en de rode nostalgische tram, van Taksim tot Galata."
+  ],
+  "ortakoy": [
+   "Ortaköy",
+   "De barokke Ortaköy-moskee onder de Bosporusbrug, met streetfood zoals kumpir en wafels."
+  ],
+  "kadikoy": [
+   "Kadıköy en Moda",
+   "De levendige Aziatische kant: markt, cafés, boekwinkels en een wandeling langs zee in Moda. Met de veerboot bereikbaar."
+  ],
+  "camlica": [
+   "Çamlıca-heuvel en -moskee",
+   "Het hoogste uitkijkpunt aan de Aziatische kant en de grootste moskee van Turkije."
+  ],
+  "pierre-loti": [
+   "Eyüp Sultan en de Pierre Loti-heuvel",
+   "Een heilige moskee, daarna met een korte kabelbaan naar een café met uitzicht over de Gouden Hoorn."
+  ],
+  "princes-islands": [
+   "Prinseneilanden",
+   "Autovrije eilanden in de Zee van Marmara met houten villa’s en dennenbossen; dagtocht per veerboot."
+  ],
+  "emirgan": [
+   "Emirganpark",
+   "Een groot park aan de Bosporus met paviljoens; beroemd om de tulpen elk jaar in april."
+  ]
  },
  "stops": {
-  "eminonu": ["Eminönü en de Rızapaşa-helling", "Begin bij de Nieuwe Moskee en de Kruidenbazaar en loop dan omhoog door de drukke marktstraat Rızapaşa Yokuşu."],
-  "suleymaniye": ["Süleymaniye", "Het moskeecomplex van Mimar Sinan en het terras boven de Gouden Hoorn."],
-  "kucukpazar": ["Küçükpazar", "Loop naar beneden naar de oude marktwijk met houten huizen en ambachtslieden."],
-  "zeyrek": ["Zeyrek", "Het Byzantijnse Pantokratorklooster (Zeyrek-moskee) en de Zeyrek-cisterne."],
-  "carsamba": ["Fatih – Çarşamba", "Een conservatieve oude wijk rond de Fethiye-moskee (Pammakaristos)."],
-  "balat": ["Balat", "Kleurrijke huizen, de ijzeren Bulgaarse Sint-Stefanuskerk en oude synagogen."],
-  "ayvansaray": ["Ayvansaray", "Waar de landmuren de Gouden Hoorn bereiken: de wijk Blachernae en de kerkers van Anemas."],
-  "kariye": ["Kariye (Chora)", "Wereldberoemde Byzantijnse mozaïeken en fresco’s."],
-  "edirnekapi": ["Edirnekapı", "Een poort in de Theodosiaanse landmuren en Sinans Mihrimah Sultan-moskee."],
-  "yedikule": ["Fort Yedikule", "Volg de landmuren naar het zuiden tot het fort met zeven torens bij de Gouden Poort."],
-  "cerrahpasa": ["Cerrahpaşa", "Loop terug naar het oosten door de oude woonstraten van de zevende heuvel."],
-  "beyazit": ["Beyazıt", "Het Beyazıtplein, de universiteitspoort, de boekenmarkt Sahaflar en de Grote Bazaar."],
-  "sultanahmet": ["Sultanahmet", "Eindig bij de Hagia Sophia, de Blauwe Moskee en de Hippodroom."]
+  "eminonu": [
+   "Eminönü en de Rızapaşa-helling",
+   "Begin bij de Nieuwe Moskee en de Kruidenbazaar en loop dan omhoog door de drukke marktstraat Rızapaşa Yokuşu."
+  ],
+  "suleymaniye": [
+   "Süleymaniye",
+   "Het moskeecomplex van Mimar Sinan en het terras boven de Gouden Hoorn."
+  ],
+  "kucukpazar": [
+   "Küçükpazar",
+   "Loop naar beneden naar de oude marktwijk met houten huizen en ambachtslieden."
+  ],
+  "zeyrek": [
+   "Zeyrek",
+   "Het Byzantijnse Pantokratorklooster (Zeyrek-moskee) en de Zeyrek-cisterne."
+  ],
+  "carsamba": [
+   "Fatih – Çarşamba",
+   "Een conservatieve oude wijk rond de Fethiye-moskee (Pammakaristos)."
+  ],
+  "balat": [
+   "Balat",
+   "Kleurrijke huizen, de ijzeren Bulgaarse Sint-Stefanuskerk en oude synagogen."
+  ],
+  "ayvansaray": [
+   "Ayvansaray",
+   "Waar de landmuren de Gouden Hoorn bereiken: de wijk Blachernae en de kerkers van Anemas."
+  ],
+  "kariye": [
+   "Kariye (Chora)",
+   "Wereldberoemde Byzantijnse mozaïeken en fresco’s."
+  ],
+  "edirnekapi": [
+   "Edirnekapı",
+   "Een poort in de Theodosiaanse landmuren en Sinans Mihrimah Sultan-moskee."
+  ],
+  "yedikule": [
+   "Fort Yedikule",
+   "Volg de landmuren naar het zuiden tot het fort met zeven torens bij de Gouden Poort."
+  ],
+  "cerrahpasa": [
+   "Cerrahpaşa",
+   "Loop terug naar het oosten door de oude woonstraten van de zevende heuvel."
+  ],
+  "beyazit": [
+   "Beyazıt",
+   "Het Beyazıtplein, de universiteitspoort, de boekenmarkt Sahaflar en de Grote Bazaar."
+  ],
+  "sultanahmet": [
+   "Sultanahmet",
+   "Eindig bij de Hagia Sophia, de Blauwe Moskee en de Hippodroom."
+  ]
  },
  "ui": {
-  "navDiscover":"Ontdekken","navSearch":"Zoeken",
-  "exEyebrow":"ONTDEK ISTANBUL","exTitle":"Alles wat de moeite waard is in Istanbul.","exLead":"Paleizen, musea, bazaars, wijken, pretparken en shows, met sluitingsdagen, richtprijzen en routebeschrijving. Stuur ons een WhatsApp en we helpen met tickets of vervoer vanaf je hotel.",
-  "catAll":"Alles","catHistory":"Geschiedenis","catMuseum":"Musea","catFamily":"Gezin & plezier","catExperience":"Belevenissen","catWalk":"Wijken & uitzichten",
-  "free":"Gratis toegang","priceUnknown":"Prijs: zie officiële website","closedOn":"Gesloten: {days}","official":"Officiële website","directions":"Route","ask":"Vraag via WhatsApp","askMsg":"Hallo Bosphorly, ik wil graag {place} bezoeken. Kunnen jullie helpen met tickets of vervoer?",
-  "priceNote":"Richtprijzen (gecontroleerd op {date}); ze veranderen vaak en bronnen spreken elkaar tegen. Controleer altijd de officiële website voordat je gaat.","priceSource":"Prijsbron","approx":"ca.",
-  "searchPh":"Zoek plekken, tours, routes…","noResults":"Niets gevonden. Probeer een ander woord.","results":"resultaten",
-  "routeCardEyebrow":"WANDELROUTE","routeCardTitle":"De Istanbul-route van prof. İlber Ortaylı","routeCardText":"13 stops van Eminönü naar Sultanahmet, via Süleymaniye, Balat, de landmuren en Yedikule.","routeOpen":"Bekijk de route →",
-  "rtEyebrow":"HET HISTORISCHE SCHIEREILAND TE VOET","rtTitle":"De Istanbul-route van prof. İlber Ortaylı","rtLead":"Historicus İlber Ortaylı zei dat je Istanbul pas echt hebt gezien als je het te voet hebt doorkruist. Dit is de route die hij aanraadde, zoals de Turkse pers meldde: van Eminönü omhoog naar Süleymaniye, door de oude wijken naar de landmuren en Yedikule, en terug naar Sultanahmet.","rtQuote":"Zeg niet dat je de stad hebt gezien voordat je door deze straten hebt gelopen.","rtQuoteBy":"İlber Ortaylı, geciteerd door de Turkse pers",
-  "rtFactStops":"stops","rtFactKm":"≈ 19 km lopen (onze schatting)","rtFactDays":"het best over 2 dagen",
-  "rtDay1":"Dag 1 · Eminönü → Edirnekapı","rtDay2":"Dag 2 · Landmuren → Sultanahmet","rtDirections":"Looproute voor deze dag",
-  "rtTipsTitle":"Voor je vertrekt","rtTip1":"Draag comfortabele schoenen: de straten zijn steil en vaak geplaveid.","rtTip2":"Moskeeën: schouders en knieën bedekt, vrouwen bedekken hun haar; vermijd gebedstijden.","rtTip3":"De muren tussen Edirnekapı en Yedikule zijn lang en stil; loop ze overdag of neem voor dat stuk een taxi.",
-  "rtSources":"Bronnen","rtDisclaimer":"Bosphorly stelde deze route samen uit persberichten over het advies van prof. Ortaylı. Het is geen officiële route en is niet goedgekeurd door hem of zijn familie. Openingstijden veranderen; controleer vooraf.","rtMapNote":"Rechte lijnen tussen de stops, geen exacte looppaden.",
-  "rtAskGuide":"Een erkende gids voor deze route? Stuur ons een WhatsApp","rtAskMsg":"Hallo Bosphorly, ik wil graag een gids voor de İlber Ortaylı-route in Istanbul.","rtStop":"Stop",
-  "srTitle":"Zoeken op Bosphorly","srLead":"Tours, bezienswaardigheden, wandelroutes en gidsen in één zoekopdracht.","srTours":"Tours","srPlaces":"Bezienswaardigheden","srRoutes":"Routes","srGuides":"Gidsen",
-  "homeDiscEyebrow":"PLAN JE DAGEN","homeDiscTitle":"Ontdek Istanbul op jouw manier.","homeDiscSub":"33 plekken om te zien, van paleizen en bazaars tot pretpark Isfanbul en het Istanbul Aquarium, plus de wandelroute van prof. İlber Ortaylı.","homeDiscCta":"Ontdek Istanbul →"
+  "navDiscover": "Ontdekken",
+  "navSearch": "Zoeken",
+  "exEyebrow": "ONTDEK ISTANBUL",
+  "exTitle": "Alles wat de moeite waard is in Istanbul.",
+  "exLead": "Paleizen, musea, bazaars, wijken, pretparken en shows, met sluitingsdagen, richtprijzen en routebeschrijving. Stuur ons een WhatsApp en we helpen met tickets of vervoer vanaf je hotel.",
+  "catAll": "Alles",
+  "catHistory": "Geschiedenis",
+  "catMuseum": "Musea",
+  "catFamily": "Gezin & plezier",
+  "catExperience": "Belevenissen",
+  "catWalk": "Wijken & uitzichten",
+  "free": "Gratis toegang",
+  "priceUnknown": "Prijs: zie officiële website",
+  "closedOn": "Gesloten: {days}",
+  "official": "Officiële website",
+  "directions": "Route",
+  "ask": "Vraag via WhatsApp",
+  "askMsg": "Hallo Bosphorly, ik wil graag {place} bezoeken. Kunnen jullie helpen met tickets of vervoer?",
+  "priceNote": "Richtprijzen (gecontroleerd op {date}); ze veranderen vaak en bronnen spreken elkaar tegen. Controleer altijd de officiële website voordat je gaat.",
+  "priceSource": "Prijsbron",
+  "approx": "ca.",
+  "searchPh": "Zoek plekken, tours, routes…",
+  "noResults": "Niets gevonden. Probeer een ander woord.",
+  "results": "resultaten",
+  "routeCardEyebrow": "WANDELROUTE",
+  "routeCardTitle": "De Istanbul-route van prof. İlber Ortaylı",
+  "routeCardText": "13 stops van Eminönü naar Sultanahmet, via Süleymaniye, Balat, de landmuren en Yedikule.",
+  "routeOpen": "Bekijk de route →",
+  "rtEyebrow": "HET HISTORISCHE SCHIEREILAND TE VOET",
+  "rtTitle": "De Istanbul-route van prof. İlber Ortaylı",
+  "rtLead": "Historicus İlber Ortaylı zei dat je Istanbul pas echt hebt gezien als je het te voet hebt doorkruist. Dit is de route die hij aanraadde, zoals de Turkse pers meldde: van Eminönü omhoog naar Süleymaniye, door de oude wijken naar de landmuren en Yedikule, en terug naar Sultanahmet.",
+  "rtQuote": "Zeg niet dat je de stad hebt gezien voordat je door deze straten hebt gelopen.",
+  "rtQuoteBy": "İlber Ortaylı, geciteerd door de Turkse pers",
+  "rtFactStops": "stops",
+  "rtFactKm": "≈ 19 km lopen (onze schatting)",
+  "rtFactDays": "het best over 2 dagen",
+  "rtDay1": "Dag 1 · Eminönü → Edirnekapı",
+  "rtDay2": "Dag 2 · Landmuren → Sultanahmet",
+  "rtDirections": "Looproute voor deze dag",
+  "rtTipsTitle": "Voor je vertrekt",
+  "rtTip1": "Draag comfortabele schoenen: de straten zijn steil en vaak geplaveid.",
+  "rtTip2": "Moskeeën: schouders en knieën bedekt, vrouwen bedekken hun haar; vermijd gebedstijden.",
+  "rtTip3": "De muren tussen Edirnekapı en Yedikule zijn lang en stil; loop ze overdag of neem voor dat stuk een taxi.",
+  "rtSources": "Bronnen",
+  "rtDisclaimer": "Bosphorly stelde deze route samen uit persberichten over het advies van prof. Ortaylı. Het is geen officiële route en is niet goedgekeurd door hem of zijn familie. Openingstijden veranderen; controleer vooraf.",
+  "rtMapNote": "Rechte lijnen tussen de stops, geen exacte looppaden.",
+  "rtAskGuide": "Een erkende gids voor deze route? Stuur ons een WhatsApp",
+  "rtAskMsg": "Hallo Bosphorly, ik wil graag een gids voor de İlber Ortaylı-route in Istanbul.",
+  "rtStop": "Stop",
+  "srTitle": "Zoeken op Bosphorly",
+  "srLead": "Tours, bezienswaardigheden, wandelroutes en gidsen in één zoekopdracht.",
+  "srTours": "Tours",
+  "srPlaces": "Bezienswaardigheden",
+  "srRoutes": "Routes",
+  "srGuides": "Gidsen",
+  "homeDiscEyebrow": "PLAN JE DAGEN",
+  "homeDiscTitle": "Ontdek Istanbul op jouw manier.",
+  "homeDiscSub": "33 plekken om te zien, van paleizen en bazaars tot pretpark Isfanbul en het Istanbul Aquarium, plus de wandelroute van prof. İlber Ortaylı.",
+  "homeDiscCta": "Ontdek Istanbul →",
+  "gaTitle": "Vervoer in Istanbul",
+  "gaIst": "Metro M11 verbindt Istanbul Airport (IST) met Gayrettepe, waar je overstapt op metro M2 naar Taksim.",
+  "gaSaw": "Metro M4 verbindt Sabiha Gökçen Airport (SAW) aan de Aziatische kant met Kadıköy.",
+  "gaTram": "Tram T1 rijdt over het historische schiereiland via Sultanahmet, Eminönü en Karaköy naar Kabataş.",
+  "gaFerry": "Stadsveerboten varen tussen Europa en Azië. Veerboot, metro en tram betaal je met een İstanbulkart.",
+  "gaNote": "Lijnen en dienstregelingen veranderen; controleer de officiële vervoerders voor vertrek."
  }
 }

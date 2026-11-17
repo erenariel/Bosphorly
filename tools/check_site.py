@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html"]
+PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html"]
 
 
 class References(HTMLParser):
@@ -89,9 +89,9 @@ def assert_booking_safety():
     assert 'googleMapsBrowserKey: ""' in key, "Do not commit real Google credentials in the public template"
     assert (ROOT / "assets/brand/approved-icon.webp").stat().st_size > 1000
     assert (ROOT / "assets/maps/istanbul-schematic.svg").stat().st_size > 500
-    page = (ROOT / "map.html").read_text()
-    assert 'id="mapFallback"' in page
-    assert "tileload" in page
+    page = (ROOT / "explore.html").read_text()
+    assert 'id="mapFallback"' in page and 'id="getting-around"' in page
+    assert "explore.html" in (ROOT / "map.html").read_text(), "map.html must forward to Discover"
 
 
 def assert_js_parses():

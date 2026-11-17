@@ -19,7 +19,7 @@
   const links = [['home', 'index.html'], ['discover', 'explore.html'], ['prices', 'prices.html'], ['account', 'account.html']];
   const header = document.createElement('header');
   header.className = 'site-header';
-  header.innerHTML = '<div class="sh-inner"><a class="sh-brand" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
+  header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
     '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div></div>';
   const nav = header.querySelector('nav');
   for (const [key, href] of links) {

@@ -41,8 +41,12 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  expect(await page.context().cookies()).toHaveLength(0);
  expect(writes).toEqual([]);
  await page.route('https://**/*',r=>r.abort());
- await page.goto('/map.html');
- await expect(page.locator('#mapFallback')).toBeVisible();
+ // The old city map address now opens Discover; offline it still lists places and shows the local schematic map.
+ await page.goto('/map.html?lang=en');
+ await expect(page).toHaveURL(/explore\.html\?lang=en#getting-around/);
+ await expect(page.locator('.place')).toHaveCount(33);
+ await page.locator('#map').scrollIntoViewIfNeeded();
+ await expect(page.locator('#mapFallback img')).toBeVisible();
  expect(await page.locator('#mapFallback img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });
