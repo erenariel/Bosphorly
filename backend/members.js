@@ -13,7 +13,7 @@ const CODE_MINUTES = 10;
 const CODE_MAX_TRIES = 5;
 const CODES_PER_15_MIN = 3;
 const ONCE = new Set(['welcome', 'hotel', 'second_tour']);
-const LANGS = ['tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az', 'fa', 'es', 'it', 'pt', 'hr', 'hu', 'bs'];
+const LANGS = ['tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az', 'fa', 'es', 'it', 'pt', 'hr', 'hu', 'bs', 'zh', 'ja', 'ko', 'hi', 'bn', 'id'];
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O, 1/I
 
 const enc = new TextEncoder();

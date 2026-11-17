@@ -27,3 +27,6 @@
 }
 @media (max-width:440px){.sh-brand>span{display:none}.sh-tools{gap:5px}.sh-tools select{max-width:112px}}
 @media (max-width:360px){.sh-tools select{max-width:96px;padding-inline:8px 20px}}
+
+/* Korean breaks lines between words, not inside them. */
+html:lang(ko) body{word-break:keep-all;overflow-wrap:anywhere}

@@ -14,7 +14,13 @@
     it: ['Recensioni Google', 'Media di {r} su {n} recensioni Google'], pt: ['Avaliações no Google', 'Média {r} em {n} avaliações no Google'],
     hr: ["Google recenzije", "Prosjek {r} iz {n} Google recenzija"],
     hu: ["Google-értékelések", "{r} átlag {n} Google-értékelés alapján"],
-    bs: ["Google recenzije", "Prosjek {r} iz {n} Google recenzija"]
+    bs: ["Google recenzije", "Prosjek {r} iz {n} Google recenzija"],
+    zh: ["Google 评价", "{n} 条 Google 评价，平均 {r} 分"],
+    ja: ["Google のクチコミ", "Google のクチコミ {n} 件の平均 {r}"],
+    ko: ["Google 리뷰", "Google 리뷰 {n}개 평균 {r}"],
+    hi: ["Google समीक्षाएँ", "{n} Google समीक्षाओं का औसत {r}"],
+    bn: ["Google রিভিউ", "{n}টি Google রিভিউয়ের গড় {r}"],
+    id: ["Ulasan Google", "Rata-rata {r} dari {n} ulasan Google"]
   };
   const lang = () => (window.BosphorlyLang ? window.BosphorlyLang.pick() : (document.documentElement.lang || 'en').slice(0, 2));
   const txt = () => T[lang()] || T.en;
