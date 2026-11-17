@@ -3,8 +3,13 @@ on:
   push:
     branches: [main]
   schedule:
-    # TCMB publishes the day's rates around 15:30 Istanbul time (12:30 UTC) on working days.
-    - cron: '17 13 * * 1-5'
+    # Exchange rates (tools/fetch_rates.py). TCMB publishes around 15:30 Istanbul time (12:30 UTC) on
+    # working days: refresh soon after, retry an hour later, and every morning including weekends and
+    # holidays (market-rate fallback when the bulletin is old). GitHub may delay scheduled runs; the
+    # browser also falls back to live market rates if the file is more than 4 days old.
+    - cron: '47 12 * * 1-5'
+    - cron: '53 13 * * 1-5'
+    - cron: '11 5 * * *'
   workflow_dispatch:
 permissions:
   contents: read
