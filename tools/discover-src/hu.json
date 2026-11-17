@@ -1,0 +1,257 @@
+{
+ "places": {
+  "hagia-sophia": [
+   "Hagia Sophia",
+   "1500 év bizánci és oszmán történelem egyetlen kupola alatt. A látogatók külön, jegyköteles útvonalon jutnak fel a karzatokra; imádkozni ingyenesen lehet belépni."
+  ],
+  "blue-mosque": [
+   "Kék mecset",
+   "A hatminaretes Ahmed szultán mecset kék İznik-csempéivel. Ingyenes; imaidőben látogatók számára zárva."
+  ],
+  "topkapi": [
+   "Topkapı palota",
+   "Az oszmán szultánok otthona csaknem 400 évig: udvarok, kincstár, szent ereklyék és a hárem, kilátással a Boszporuszra."
+  ],
+  "basilica-cistern": [
+   "Bazilika-ciszterna",
+   "6. századi földalatti vízpalota 336 oszloppal és a két Medúza-fővel; az esti belépés drágább."
+  ],
+  "archaeology": [
+   "Isztambuli Régészeti Múzeumok",
+   "Három múzeum a Topkapı mellett: Nagy Sándor szarkofágja, az ókori Közel-Kelet kincsei és a Csempés kioszk."
+  ],
+  "suleymaniye": [
+   "Szülejmán mecset (Süleymaniye)",
+   "Mimar Szinán remekműve a harmadik dombon, terasszal az Aranyszarv-öböl fölött. Ingyenes; imaidőben látogatók számára zárva."
+  ],
+  "chora": [
+   "Chora (Kariye)",
+   "A világ legszebb bizánci mozaikjai és freskói közül néhány, a szárazföldi falak közelében. Látogatás előtt ellenőrizze a nyitvatartást."
+  ],
+  "galata-tower": [
+   "Galata-torony",
+   "A középkori genovai torony 360°-os kilátással az Aranyszarv-öbölre és a Boszporuszra; nappali és esti belépés."
+  ],
+  "dolmabahce": [
+   "Dolmabahçe palota",
+   "A 19. századi, európai stílusú palota a Boszporusz partján, kristálylépcsővel és óriási csillárral."
+  ],
+  "beylerbeyi": [
+   "Beylerbeyi palota",
+   "Elegáns nyári palota az ázsiai parton, a Boszporusz-híd alatt."
+  ],
+  "maidens-tower": [
+   "Leánytorony",
+   "Kis torony egy szigeten Üsküdar előtt, hajóval érhető el; múzeum és kilátóhely."
+  ],
+  "rumeli-hisari": [
+   "Rumeli erőd",
+   "Az erőd, amelyet II. Mehmed 1452-ben négy hónap alatt építtetett fel a Boszporusz legkeskenyebb pontján."
+  ],
+  "istanbul-modern": [
+   "Istanbul Modern",
+   "Modern és kortárs török művészet egy új épületben, a karaköyi vízparton."
+  ],
+  "pera-museum": [
+   "Pera Múzeum",
+   "Orientalista festészet, köztük Oszman Hamdi bej „A teknősidomár” című képe, az İstiklal sugárút közelében."
+  ],
+  "rahmi-koc": [
+   "Rahmi M. Koç Múzeum",
+   "Autók, vonatok, hajók, repülőgépek és egy tengeralattjáró az Aranyszarv-öbölnél; a családok kedvence."
+  ],
+  "isfanbul": [
+   "Isfanbul vidámpark (korábban Vialand)",
+   "Isztambul nagy vidámparkja Eyüpsultanban: hullámvasutak, családi játékok és előadások. Korábban Vialand volt a neve."
+  ],
+  "istanbul-aquarium": [
+   "Isztambuli Akvárium (Aqua Florya)",
+   "Európa egyik legnagyobb akváriuma az Aqua Florya bevásárlóközpontban, a tengerparton. Marmarayjel a Florya Akvaryum megállóig."
+  ],
+  "sea-life": [
+   "SEA LIFE Istanbul",
+   "Víz alatti alagút cápákkal és rájákkal a Forum İstanbul bevásárlóközpontban; kombinált jegy a LEGOLANDdel."
+  ],
+  "legoland": [
+   "LEGOLAND Discovery Centre",
+   "Fedett LEGO-játszóház nagyjából 3–10 éves gyerekeknek a Forum İstanbulban; online olcsóbb."
+  ],
+  "madame-tussauds": [
+   "Madame Tussauds Istanbul",
+   "Török és világhírű sztárok viaszfigurái az İstiklal sugárúton."
+  ],
+  "miniaturk": [
+   "Miniatürk",
+   "Szabadtéri park Törökország és az egykori oszmán területek híres épületeinek makettjeivel, az Aranyszarv-öbölnél."
+  ],
+  "whirling-dervishes": [
+   "Kerengő dervisek (HodjaPasha)",
+   "Egyórás szema-szertartás egy felújított, 15. századi hamamban Sirkeciben; esti előadások."
+  ],
+  "city-ferry": [
+   "Városi komp a Boszporuszon át",
+   "A legolcsóbb boszporuszi hajózás: városi komp Európa és Ázsia között, İstanbulkarttal fizetve."
+  ],
+  "grand-bazaar": [
+   "Nagy Bazár",
+   "A világ egyik legrégebbi fedett piaca: több mint 60 utca szőnyegekkel, lámpásokkal, ékszerekkel és bőráruval. Vasárnap zárva."
+  ],
+  "spice-bazaar": [
+   "Fűszerbazár",
+   "Fűszerek, lokum, aszalt gyümölcs és tea az eminönüi Új mecset mellett."
+  ],
+  "balat": [
+   "Balat és Fener",
+   "Színes házak, templomok, zsinagógák és kávézók a régi görög, zsidó és örmény negyedekben az Aranyszarv-öböl partján."
+  ],
+  "istiklal": [
+   "İstiklal sugárút és Taksim",
+   "Isztambul legforgalmasabb utcája: üzletek, passzázsok, templomok és a piros nosztalgiavillamos Taksimtól Galatáig."
+  ],
+  "ortakoy": [
+   "Ortaköy",
+   "A barokk Ortaköy mecset a Boszporusz-híd alatt, utcai ételekkel, például kumpirral és gofrival."
+  ],
+  "kadikoy": [
+   "Kadıköy és Moda",
+   "Az élénk ázsiai oldal: élelmiszerpiac, kávézók, könyvesboltok és tengerparti séta Modában. Komppal érhető el."
+  ],
+  "camlica": [
+   "Çamlıca-domb és mecset",
+   "Az ázsiai oldal legmagasabb kilátópontja és Törökország legnagyobb mecsete."
+  ],
+  "pierre-loti": [
+   "Eyüp szultán és a Pierre Loti-domb",
+   "Szent mecset, majd rövid kabinos felvonózás egy kávézóhoz, ahonnan az Aranyszarv-öbölre lát."
+  ],
+  "princes-islands": [
+   "Hercegek-szigetek",
+   "Autómentes szigetek a Márvány-tengeren fából épült kúriákkal és fenyvesekkel; egynapos kirándulás komppal."
+  ],
+  "emirgan": [
+   "Emirgan park",
+   "Nagy boszporuszi park pavilonokkal; minden áprilisban tulipánjairól híres."
+  ]
+ },
+ "stops": {
+  "eminonu": [
+   "Eminönü és a Rızapaşa-emelkedő",
+   "Induljon az Új mecsettől és a Fűszerbazártól, majd kapaszkodjon fel a nyüzsgő Rızapaşa Yokuşu piaci utcán."
+  ],
+  "suleymaniye": [
+   "Süleymaniye",
+   "Mimar Szinán mecsetegyüttese és a terasz az Aranyszarv-öböl fölött."
+  ],
+  "kucukpazar": [
+   "Küçükpazar",
+   "Ereszkedjen le a régi piacnegyedbe faházaival és kézműveseivel."
+  ],
+  "zeyrek": [
+   "Zeyrek",
+   "A bizánci Pantokratór-kolostor (Zeyrek mecset) és a Zeyrek-ciszterna."
+  ],
+  "carsamba": [
+   "Fatih – Çarşamba",
+   "Konzervatív régi negyed a Fethiye (Pammakaristos) mecset körül."
+  ],
+  "balat": [
+   "Balat",
+   "Színes házak, a vasból készült bolgár Szent István-templom és a régi zsinagógák."
+  ],
+  "ayvansaray": [
+   "Ayvansaray",
+   "Ahol a szárazföldi falak elérik az Aranyszarv-öblöt: a Blakhernai negyed és az Anemas-börtön."
+  ],
+  "kariye": [
+   "Kariye (Chora)",
+   "Világhírű bizánci mozaikok és freskók."
+  ],
+  "edirnekapi": [
+   "Edirnekapı",
+   "A theodosiusi szárazföldi falak egyik kapuja és Szinán Mihrimah szultána mecsete."
+  ],
+  "yedikule": [
+   "Yedikule erőd",
+   "Kövesse délre a szárazföldi falakat a hét toronyból álló erődig az Aranykapu mellett."
+  ],
+  "cerrahpasa": [
+   "Cerrahpaşa",
+   "Forduljon vissza kelet felé a hetedik domb régi lakóutcáin át."
+  ],
+  "beyazit": [
+   "Beyazıt",
+   "A Beyazıt tér, az egyetem kapuja, a Sahaflar könyvpiac és a Nagy Bazár."
+  ],
+  "sultanahmet": [
+   "Sultanahmet",
+   "Fejezze be a Hagia Sophiánál, a Kék mecsetnél és a Hippodromnál."
+  ]
+ },
+ "ui": {
+  "navDiscover": "Felfedezés",
+  "navSearch": "Keresés",
+  "exEyebrow": "ISZTAMBUL FELFEDEZÉSE",
+  "exTitle": "Minden, amit Isztambulban érdemes látni.",
+  "exLead": "Paloták, múzeumok, bazárok, negyedek, vidámparkok és előadások, szünnapokkal, tájékoztató árakkal és útbaigazítással. Írjon nekünk WhatsAppon, és segítünk a jegyekkel vagy a szállodából induló transzferrel.",
+  "catAll": "Összes",
+  "catHistory": "Történelem",
+  "catMuseum": "Múzeumok",
+  "catFamily": "Család és szórakozás",
+  "catExperience": "Élmények",
+  "catWalk": "Negyedek és kilátók",
+  "free": "Ingyenes belépés",
+  "priceUnknown": "Ár: lásd a hivatalos weboldalt",
+  "closedOn": "Zárva: {days}",
+  "official": "Hivatalos weboldal",
+  "directions": "Útvonal",
+  "ask": "Kérdezzen WhatsAppon",
+  "askMsg": "Szia Bosphorly, szeretném meglátogatni ezt: {place}. Tudnátok segíteni jegyekkel vagy transzferrel?",
+  "priceNote": "Az árak tájékoztató jellegűek (ellenőrizve: {date}); gyakran változnak, és a források eltérnek. Indulás előtt mindig nézze meg a hivatalos weboldalt.",
+  "priceSource": "Ár forrása",
+  "approx": "kb.",
+  "searchPh": "Helyek, túrák, útvonalak keresése…",
+  "noResults": "Nincs találat. Próbálkozzon más szóval.",
+  "results": "találat",
+  "routeCardEyebrow": "SÉTAÚTVONAL",
+  "routeCardTitle": "Prof. İlber Ortaylı isztambuli útvonala",
+  "routeCardText": "13 állomás Eminönütől Sultanahmetig, Süleymaniyén, Balaton, a szárazföldi falakon és Yedikulén át.",
+  "routeOpen": "Az útvonal megtekintése →",
+  "rtEyebrow": "A TÖRTÉNELMI-FÉLSZIGET GYALOG",
+  "rtTitle": "Prof. İlber Ortaylı isztambuli útvonala",
+  "rtLead": "İlber Ortaylı történész szerint addig nem mondhatjuk, hogy láttuk Isztambult, amíg be nem jártuk gyalog. A török sajtó beszámolói szerint ezt az útvonalat ajánlotta: Eminönütől fel Süleymaniyéig, a régi negyedeken át a szárazföldi falakig és Yedikuléig, majd vissza Sultanahmetbe.",
+  "rtQuote": "Ne mondja, hogy látta a várost, amíg végig nem járta ezeket az utcákat.",
+  "rtQuoteBy": "İlber Ortaylı, a török sajtó idézete szerint",
+  "rtFactStops": "állomás",
+  "rtFactKm": "≈ 19 km gyalog (saját becslésünk)",
+  "rtFactDays": "érdemes 2 napra osztani",
+  "rtDay1": "1. nap · Eminönü → Edirnekapı",
+  "rtDay2": "2. nap · Szárazföldi falak → Sultanahmet",
+  "rtDirections": "Gyalogos útvonal erre a napra",
+  "rtTipsTitle": "Indulás előtt",
+  "rtTip1": "Viseljen kényelmes cipőt: az utcák meredekek és gyakran macskakövesek.",
+  "rtTip2": "Mecsetek: takarja el a vállát és a térdét, a nők a hajukat is, és kerülje az imaidőket.",
+  "rtTip3": "Edirnekapı és Yedikule között a falak hosszúak és csendesek; nappal járja be őket, vagy azt a szakaszt tegye meg taxival.",
+  "rtSources": "Források",
+  "rtDisclaimer": "A Bosphorly Prof. Ortaylı ajánlásáról szóló sajtóbeszámolók alapján állította össze ezt az útvonalat. Nem hivatalos útvonal, és sem ő, sem a családja nem támogatja. A nyitvatartás változik; indulás előtt ellenőrizze.",
+  "rtMapNote": "Egyenes vonalak az állomások között, nem pontos gyalogos útvonalak.",
+  "rtAskGuide": "Engedéllyel rendelkező idegenvezetőt szeretne ehhez az útvonalhoz? Kérdezzen WhatsAppon",
+  "rtAskMsg": "Szia Bosphorly, idegenvezetőt szeretnék İlber Ortaylı isztambuli útvonalához.",
+  "rtStop": "Állomás",
+  "srTitle": "Keresés a Bosphorlyn",
+  "srLead": "Túrák, látnivalók, sétaútvonalak és útikalauzok egyetlen keresésben.",
+  "srTours": "Túrák",
+  "srPlaces": "Látnivalók",
+  "srRoutes": "Útvonalak",
+  "srGuides": "Útikalauzok",
+  "homeDiscEyebrow": "TERVEZZE MEG A NAPJAIT",
+  "homeDiscTitle": "Fedezze fel Isztambult a maga módján.",
+  "homeDiscSub": "33 látnivaló a palotáktól és bazároktól az Isfanbul vidámparkig és az Isztambuli Akváriumig, valamint Prof. İlber Ortaylı sétaútvonala.",
+  "homeDiscCta": "Isztambul felfedezése →",
+  "gaTitle": "Közlekedés Isztambulban",
+  "gaIst": "Az M11-es metró köti össze az Isztambuli repülőteret (IST) Gayrettepével, ahol az M2-es metróra kell átszállni Taksim felé.",
+  "gaSaw": "Az M4-es metró köti össze az ázsiai oldalon lévő Sabiha Gökçen repülőteret (SAW) Kadıköyjel.",
+  "gaTram": "A T1-es villamos a Történelmi-félszigeten halad végig Sultanahmeten, Eminönün és Karaköyön át Kabataşig.",
+  "gaFerry": "A városi kompok Európa és Ázsia között járnak. A kompot, a metrót és a villamost İstanbulkarttal fizesse.",
+  "gaNote": "A vonalak és a menetrendek változnak; utazás előtt ellenőrizze a hivatalos üzemeltetőknél."
+ }
+}

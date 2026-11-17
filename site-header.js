@@ -6,12 +6,12 @@
   const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const L = {
-    home: { en: 'Home', tr: 'Ana sayfa', ru: 'Главная', uk: 'Головна', de: 'Startseite', fr: 'Accueil', nl: 'Home', ar: 'الرئيسية', he: 'דף הבית', az: 'Ana səhifə', fa: 'خانه', es: 'Inicio', it: "Home", pt: "Início" },
-    discover: { en: 'Discover', tr: 'Keşfet', ru: 'Что посмотреть', uk: 'Що подивитися', de: 'Entdecken', fr: 'Découvrir', nl: 'Ontdekken', ar: 'اكتشف', he: 'לגלות', az: 'Kəşf et', fa: 'کشف کنید', es: 'Descubrir', it: 'Scopri', pt: 'Descobrir' },
-    search: { en: 'Search', tr: 'Ara', ru: 'Поиск', uk: 'Пошук', de: 'Suche', fr: 'Rechercher', nl: 'Zoeken', ar: 'بحث', he: 'חיפוש', az: 'Axtar', fa: 'جست‌وجو', es: 'Buscar', it: 'Cerca', pt: 'Buscar' },
-    prices: { en: 'Compare tours', tr: 'Tur karşılaştır', ru: 'Сравнить туры', uk: 'Порівняти тури', de: 'Touren vergleichen', fr: 'Comparer les visites', nl: 'Tours vergelijken', ar: 'قارن الجولات', he: 'השוואת סיורים', az: 'Turları müqayisə et', fa: 'مقایسه تورها', es: 'Comparar tours', it: "Confronta i tour", pt: "Comparar passeios" },
-    map: { en: 'City map', tr: 'Şehir haritası', ru: 'Карта города', uk: 'Мапа міста', de: 'Stadtplan', fr: 'Plan de la ville', nl: 'Stadskaart', ar: 'خريطة المدينة', he: 'מפת העיר', az: 'Şəhər xəritəsi', fa: 'نقشه شهر', es: 'Mapa de la ciudad', it: "Mappa della città", pt: "Mapa da cidade" },
-    account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta" }
+    home: { en: 'Home', tr: 'Ana sayfa', ru: 'Главная', uk: 'Головна', de: 'Startseite', fr: 'Accueil', nl: 'Home', ar: 'الرئيسية', he: 'דף הבית', az: 'Ana səhifə', fa: 'خانه', es: 'Inicio', it: "Home", pt: "Início", hr: "Početna", hu: "Főoldal", bs: "Početna" },
+    discover: { en: 'Discover', tr: 'Keşfet', ru: 'Что посмотреть', uk: 'Що подивитися', de: 'Entdecken', fr: 'Découvrir', nl: 'Ontdekken', ar: 'اكتشف', he: 'לגלות', az: 'Kəşf et', fa: 'کشف کنید', es: 'Descubrir', it: 'Scopri', pt: 'Descobrir', hr: "Otkrijte", hu: "Felfedezés", bs: "Otkrijte" },
+    search: { en: 'Search', tr: 'Ara', ru: 'Поиск', uk: 'Пошук', de: 'Suche', fr: 'Rechercher', nl: 'Zoeken', ar: 'بحث', he: 'חיפוש', az: 'Axtar', fa: 'جست‌وجو', es: 'Buscar', it: 'Cerca', pt: 'Buscar', hr: "Traži", hu: "Keresés", bs: "Traži" },
+    prices: { en: 'Compare tours', tr: 'Tur karşılaştır', ru: 'Сравнить туры', uk: 'Порівняти тури', de: 'Touren vergleichen', fr: 'Comparer les visites', nl: 'Tours vergelijken', ar: 'قارن الجولات', he: 'השוואת סיורים', az: 'Turları müqayisə et', fa: 'مقایسه تورها', es: 'Comparar tours', it: "Confronta i tour", pt: "Comparar passeios", hr: "Usporedite ture", hu: "Túrák összehasonlítása", bs: "Uporedite ture" },
+    map: { en: 'City map', tr: 'Şehir haritası', ru: 'Карта города', uk: 'Мапа міста', de: 'Stadtplan', fr: 'Plan de la ville', nl: 'Stadskaart', ar: 'خريطة المدينة', he: 'מפת העיר', az: 'Şəhər xəritəsi', fa: 'نقشه شهر', es: 'Mapa de la ciudad', it: "Mappa della città", pt: "Mapa da cidade", hr: "Karta grada", hu: "Várostérkép", bs: "Karta grada" },
+    account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta", hr: "Moj račun", hu: "Fiókom", bs: "Moj račun" }
   };
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder

@@ -11,7 +11,10 @@
     nl: ['Google-reviews', 'Gemiddeld {r} uit {n} Google-reviews'], ar: ['تقييمات Google', 'متوسط {r} من {n} تقييمًا على Google'],
     he: ['ביקורות בגוגל', 'ממוצע {r} מתוך {n} ביקורות בגוגל'], az: ['Google rəyləri', 'Google-da {n} rəydən orta {r}'],
     fa: ['نظرات گوگل', 'میانگین {r} از {n} نظر در گوگل'], es: ['Reseñas de Google', 'Media de {r} en {n} reseñas de Google'],
-    it: ['Recensioni Google', 'Media di {r} su {n} recensioni Google'], pt: ['Avaliações no Google', 'Média {r} em {n} avaliações no Google']
+    it: ['Recensioni Google', 'Media di {r} su {n} recensioni Google'], pt: ['Avaliações no Google', 'Média {r} em {n} avaliações no Google'],
+    hr: ["Google recenzije", "Prosjek {r} iz {n} Google recenzija"],
+    hu: ["Google-értékelések", "{r} átlag {n} Google-értékelés alapján"],
+    bs: ["Google recenzije", "Prosjek {r} iz {n} Google recenzija"]
   };
   const lang = () => (window.BosphorlyLang ? window.BosphorlyLang.pick() : (document.documentElement.lang || 'en').slice(0, 2));
   const txt = () => T[lang()] || T.en;
