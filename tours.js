@@ -45,13 +45,20 @@
     if (s.exc && s.exc.length) two.append(list(t('toExc'), s.exc, 'exc'));
     if (two.children.length) body.append(two);
     if (s.src && s.src.length) {
-      const b = el('div', 'td-block'); b.append(el('h4', null, t('toMarket')));
-      const ul = el('ul', 'td-market');
+      // Market range only: no company names or links, so the guest books through Bosphorly.
+      const b = el('div', 'td-block'); b.append(el('h4', null, t('toMarketRange')));
+      const groups = new Map();
       for (const x of s.src) {
+        const key = x.b + '|' + x.c + '|' + (x.max || '');
+        if (!groups.has(key)) groups.set(key, { b: x.b, c: x.c, max: x.max, ps: [], notes: new Set() });
+        const g = groups.get(key); g.ps.push(x.p); if (x.note) g.notes.add(x.note);
+      }
+      const ul = el('ul', 'td-market');
+      for (const g of groups.values()) {
+        const lo = Math.min(...g.ps), hi = Math.max(...g.ps);
         const li = el('li');
-        const a = el('a', null, x.op + ' ↗'); a.href = x.u; a.target = '_blank'; a.rel = 'noopener nofollow';
-        const extra = [basis(x), x.h ? t('toHours', { n: new Intl.NumberFormat(D.locale).format(x.h) }) : null, x.note ? t('toN_' + x.note) : null].filter(Boolean).join(' · ');
-        li.append(a, el('b', null, (x.from ? t('toFromWord') + ' ' : '') + D.money(x.p, x.c)), el('span', null, extra));
+        li.append(el('b', null, D.money(lo, g.c) + (hi > lo ? ' – ' + D.money(hi, g.c) : '')),
+          el('span', null, [basis(g), ...[...g.notes].map(n => t('toN_' + n))].join(' · ')));
         ul.append(li);
       }
       b.append(ul, el('p', 'td-fine', t('toMarketNote', { date: D.dateText(data.toursChecked || data.checked) }))); body.append(b);
@@ -59,6 +66,51 @@
     if (s.tip) body.append(el('p', 'td-tip', '💡 ' + t('toT_' + s.tip)));
     d.append(body);
     return d;
+  }
+
+  const account = window.BosphorlyAccount;
+  const refCode = () => { const a = new Uint8Array(4); crypto.getRandomValues(a); return 'BOS-' + [...a].map(b => b.toString(36).padStart(2, '0')).join('').toUpperCase().slice(0, 6); };
+  const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  function field(label, input) { const l = el('label', 'tf-field'); l.append(el('span', null, label), input); return l; }
+  function requestForm(s) {
+    const box = el('form', 'tf'); box.hidden = true; box.noValidate = true;
+    const saved = account ? account.profile() || {} : {};
+    const inp = (type, name, attrs = {}) => { const i = el('input'); i.type = type; i.name = name; Object.assign(i, attrs); return i; };
+    const date = inp('date', 'date', { min: today(), required: true });
+    const guests = inp('number', 'guests', { min: 1, max: 30, value: 2, required: true, inputMode: 'numeric' });
+    const hotel = inp('text', 'hotel', { value: saved.hotel || '', autocomplete: 'organization' });
+    const name = inp('text', 'name', { value: saved.name || '', autocomplete: 'name', required: true });
+    const phone = inp('tel', 'phone', { value: saved.phone || '', autocomplete: 'tel', required: true, placeholder: '+90 …' });
+    const notes = el('textarea'); notes.name = 'notes'; notes.rows = 2;
+    const ack = inp('checkbox', 'ack'); const ackL = el('label', 'tf-ack'); ackL.append(ack, el('span', null, t('toFAck')));
+    const row = el('div', 'tf-row'); row.append(field(t('toFDate'), date), field(t('toFGuests'), guests));
+    const err = el('p', 'tf-err'); err.hidden = true; err.setAttribute('role', 'alert');
+    const done = el('div', 'tf-done'); done.hidden = true; done.setAttribute('role', 'status');
+    const send = el('button', 'btn wa tf-send', t('toFSend')); send.type = 'submit';
+    box.append(row, field(t('toFHotel'), hotel), field(t('toFName'), name), field(t('toFPhone'), phone), field(t('toFNotes'), notes), ackL, err, send, done);
+    box.addEventListener('submit', e => {
+      e.preventDefault();
+      const ok = date.value && date.value >= today() && Number(guests.value) >= 1 && name.value.trim().length >= 2 && /^\+?[0-9 ()-]{8,}$/.test(phone.value.trim()) && ack.checked;
+      err.hidden = ok; if (!ok) { err.textContent = t('toFErr'); return; }
+      const ref = refCode();
+      const range = s.from ? t('toFrom', { price: D.money(s.from[0], s.from[1]) }) : '';
+      const lines = [t('toWaTitle') + ' · ' + ref, s.name + (range ? ' (' + range + ')' : ''),
+        t('toFDate') + ': ' + date.value, t('toFGuests') + ': ' + guests.value,
+        hotel.value.trim() ? t('toFHotel') + ': ' + hotel.value.trim() : null,
+        t('toFName') + ': ' + name.value.trim(), t('toFPhone').replace(/ \(.*\)$/, '') + ': ' + phone.value.trim(),
+        notes.value.trim() ? t('toFNotes').replace(/ \(.*\)$/, '') + ': ' + notes.value.trim() : null].filter(Boolean);
+      const url = D.waLink(lines.join('\n'));
+      if (account) {
+        account.saveProfile(Object.assign({}, saved, { name: name.value.trim(), phone: phone.value.trim(), hotel: hotel.value.trim() }));
+        account.addRequest({ ref, type: 'tour', title: s.name, operator: 'Bosphorly', date: date.value, guests: Number(guests.value), total: range || t('toPrice'), waUrl: url });
+      }
+      done.replaceChildren(el('p', null, '✅ ' + t('toFDone', { ref })));
+      const again = el('a', 'btn wa', 'WhatsApp →'); again.href = url; again.target = '_blank'; again.rel = 'noopener';
+      const mine = el('a', 'btn', t('toMyReq')); mine.href = 'account.html';
+      done.append(again, mine); done.hidden = false; send.hidden = true;
+      window.open(url, '_blank', 'noopener');
+    });
+    return box;
   }
 
   function card(s) {
@@ -69,9 +121,12 @@
     meta.append(el('span', null, '⏱ ' + durText(s.dur || ['flex'])));
     meta.append(s.from ? el('span', 'from-price', t('toFrom', { price: D.money(s.from[0], s.from[1]) })) : el('span', 'ask-price', '💬 ' + t('toPrice')));
     const act = el('div', 'actions');
-    const wa = el('a', 'btn wa', t('toAsk')); wa.href = D.waLink(t('toAskMsg', { tour: s.name })); wa.target = '_blank'; wa.rel = 'noopener';
-    act.append(wa);
-    c.append(top, el('p', null, s.desc), meta, details(s), act);
+    const form = requestForm(s);
+    const req = el('button', 'btn primary', '📝 ' + t('toReq')); req.type = 'button'; req.setAttribute('aria-expanded', 'false');
+    req.addEventListener('click', () => { form.hidden = !form.hidden; req.setAttribute('aria-expanded', String(!form.hidden)); if (!form.hidden) form.querySelector('input').focus(); });
+    const wa = el('a', 'btn', '💬 ' + t('toAsk')); wa.href = D.waLink(t('toAskMsg', { tour: s.name })); wa.target = '_blank'; wa.rel = 'noopener';
+    act.append(req, wa);
+    c.append(top, el('p', null, s.desc), meta, details(s), act, form);
     return c;
   }
   function render() {

@@ -283,7 +283,7 @@
   "toInc": "通常包含",
   "toExc": "通常不含",
   "toMarket": "其他公司公布的价格",
-  "toMarketNote": "各公司在官网公布的价格，核对于 {date}。并非 Bosphorly 报价：价格会变动，我们会在 WhatsApp 上确认最新价格。",
+  "toMarketNote": "伊斯坦布尔各公司同类游览的收费（截至 {date}）。通过 Bosphorly 提交申请，我们会在预订前通过 WhatsApp 确认你的价格。",
   "toB_pp": "每人",
   "toB_group": "每团",
   "toB_groupMax": "每团（最多 {n} 人）",
@@ -317,7 +317,22 @@
   "toI_tips": "小费",
   "toI_transport": "交通",
   "toI_vehicle": "含司机车辆",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "伊斯坦布尔市场价",
+  "toReq": "申请这个游览",
+  "toFDate": "日期",
+  "toFGuests": "人数",
+  "toFHotel": "酒店",
+  "toFName": "姓名",
+  "toFPhone": "手机 / WhatsApp（含国家代码）",
+  "toFNotes": "备注（选填）",
+  "toFAck": "我同意通过 WhatsApp 将我的申请和联系方式发送给 Bosphorly。预订前会确认价格和名额；本网站不收取任何费用。",
+  "toFSend": "通过 WhatsApp 发送申请 →",
+  "toFErr": "请填写日期、人数、姓名和含国家代码的电话，并勾选同意框。",
+  "toFDone": "申请 {ref} 已准备好。正在打开 WhatsApp：请点击发送，将申请发给 Bosphorly。",
+  "toWaTitle": "Bosphorly 游览申请",
+  "toWaRef": "参考编号",
+  "toMyReq": "查看我的申请 →"
  },
  "tours": {
   "jewish-heritage": [

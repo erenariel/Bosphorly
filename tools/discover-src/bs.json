@@ -283,7 +283,7 @@
   "toInc": "Obično uključeno",
   "toExc": "Obično nije uključeno",
   "toMarket": "Cijene koje objavljuju druge kompanije",
-  "toMarketNote": "Cijena koju svaka kompanija sama objavljuje, provjereno {date}. Nije ponuda Bosphorlyja: cijene se mijenjaju, a aktuelnu cijenu potvrđujemo na WhatsAppu.",
+  "toMarketNote": "Koliko istanbulske kompanije naplaćuju slične ture (na dan {date}). Pošaljite upit preko Bosphorlyja i potvrdit ćemo vašu cijenu na WhatsAppu prije rezervacije.",
   "toB_pp": "po osobi",
   "toB_group": "po grupi",
   "toB_groupMax": "po grupi (do {n} osoba)",
@@ -317,7 +317,22 @@
   "toI_tips": "Bakšiš",
   "toI_transport": "Prevoz",
   "toI_vehicle": "Vozilo s vozačem",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "Tržišna cijena u Istanbulu",
+  "toReq": "Zatražite ovu turu",
+  "toFDate": "Datum",
+  "toFGuests": "Broj osoba",
+  "toFHotel": "Hotel",
+  "toFName": "Ime i prezime",
+  "toFPhone": "Mobitel / WhatsApp (s pozivnim brojem)",
+  "toFNotes": "Napomena (neobavezno)",
+  "toFAck": "Slažem se da se moj upit i kontakt podaci šalju Bosphorlyju putem WhatsAppa. Cijena i dostupnost potvrđuju se prije rezervacije; na ovoj stranici ništa se ne plaća.",
+  "toFSend": "Pošalji upit putem WhatsAppa →",
+  "toFErr": "Upišite datum, broj osoba, ime i telefon s pozivnim brojem države te označite kućicu.",
+  "toFDone": "Upit {ref} je spreman. Otvara se WhatsApp: pritisnite Pošalji da stigne Bosphorlyju.",
+  "toWaTitle": "Bosphorly upit za turu",
+  "toWaRef": "Referenca",
+  "toMyReq": "Moji upiti →"
  },
  "tours": {
   "jewish-heritage": [

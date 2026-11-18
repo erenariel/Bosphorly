@@ -283,7 +283,7 @@
   "toInc": "Általában benne van",
   "toExc": "Általában nincs benne",
   "toMarket": "Más cégek által közzétett árak",
-  "toMarketNote": "Az egyes cégek saját közzétett ára, ellenőrizve: {date}. Nem a Bosphorly ajánlata: az árak változnak, az aktuális árat WhatsAppon erősítjük meg.",
+  "toMarketNote": "Ennyit kérnek az isztambuli cégek hasonló túrákért ({date} állapot). Kérjen ajánlatot a Bosphorlyn keresztül, és foglalás előtt WhatsAppon megerősítjük az árát.",
   "toB_pp": "személyenként",
   "toB_group": "csoportonként",
   "toB_groupMax": "csoportonként (legfeljebb {n} fő)",
@@ -317,7 +317,22 @@
   "toI_tips": "Borravaló",
   "toI_transport": "Szállítás",
   "toI_vehicle": "Jármű sofőrrel",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "Piaci ár Isztambulban",
+  "toReq": "Ajánlatkérés erre a túrára",
+  "toFDate": "Dátum",
+  "toFGuests": "Létszám",
+  "toFHotel": "Szálloda",
+  "toFName": "Teljes név",
+  "toFPhone": "Mobil / WhatsApp (országhívószámmal)",
+  "toFNotes": "Megjegyzés (nem kötelező)",
+  "toFAck": "Hozzájárulok, hogy ajánlatkérésem és elérhetőségeim WhatsAppon a Bosphorlyhoz kerüljenek. Az árat és a szabad helyet foglalás előtt megerősítjük; ezen az oldalon nem kell fizetni.",
+  "toFSend": "Ajánlatkérés küldése WhatsAppon →",
+  "toFErr": "Adja meg a dátumot, a létszámot, a nevét és a telefonszámát országhívószámmal, és jelölje be a négyzetet.",
+  "toFDone": "A(z) {ref} ajánlatkérés elkészült. Megnyílik a WhatsApp: nyomja meg a Küldés gombot, hogy eljusson a Bosphorlyhoz.",
+  "toWaTitle": "Bosphorly túra-ajánlatkérés",
+  "toWaRef": "Hivatkozás",
+  "toMyReq": "Ajánlatkéréseim →"
  },
  "tours": {
   "jewish-heritage": [

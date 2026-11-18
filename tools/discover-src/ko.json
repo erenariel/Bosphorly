@@ -283,7 +283,7 @@
   "toInc": "보통 포함",
   "toExc": "보통 불포함",
   "toMarket": "다른 업체가 공개한 가격",
-  "toMarketNote": "각 업체가 직접 공개한 가격({date} 확인). Bosphorly의 제안 가격이 아닙니다. 가격은 바뀔 수 있으며 최신 가격은 WhatsApp으로 확인해 드립니다.",
+  "toMarketNote": "이스탄불 업체들이 비슷한 투어에 받는 가격({date} 기준). Bosphorly로 요청하시면 예약 전에 WhatsApp으로 가격을 확인해 드립니다.",
   "toB_pp": "1인",
   "toB_group": "그룹당",
   "toB_groupMax": "그룹당(최대 {n}명)",
@@ -317,7 +317,22 @@
   "toI_tips": "팁",
   "toI_transport": "교통",
   "toI_vehicle": "기사 포함 차량",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "이스탄불 시세",
+  "toReq": "이 투어 요청하기",
+  "toFDate": "날짜",
+  "toFGuests": "인원",
+  "toFHotel": "호텔",
+  "toFName": "이름",
+  "toFPhone": "휴대전화 / WhatsApp(국가 번호 포함)",
+  "toFNotes": "메모(선택)",
+  "toFAck": "요청 내용과 연락처가 WhatsApp으로 Bosphorly에 전송되는 데 동의합니다. 예약 전에 가격과 예약 가능 여부를 확인하며, 이 사이트에서는 결제하지 않습니다.",
+  "toFSend": "WhatsApp으로 요청 보내기 →",
+  "toFErr": "날짜, 인원, 이름, 국가 번호를 포함한 전화번호를 입력하고 동의란에 체크해 주세요.",
+  "toFDone": "요청 {ref}이(가) 준비되었습니다. WhatsApp이 열리면 전송을 눌러 Bosphorly에 보내 주세요.",
+  "toWaTitle": "Bosphorly 투어 요청",
+  "toWaRef": "참조 코드",
+  "toMyReq": "내 요청 보기 →"
  },
  "tours": {
   "jewish-heritage": [

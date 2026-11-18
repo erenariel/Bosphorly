@@ -283,7 +283,7 @@
   "toInc": "Adətən daxildir",
   "toExc": "Adətən daxil deyil",
   "toMarket": "Digər şirkətlərin dərc etdiyi qiymətlər",
-  "toMarketNote": "Hər şirkətin özünün dərc etdiyi qiymət, {date} tarixində yoxlanılıb. Bosphorly təklifi deyil: qiymətlər dəyişir, cari qiyməti WhatsApp-da təsdiqləyirik.",
+  "toMarketNote": "İstanbul şirkətlərinin oxşar turlar üçün aldığı qiymət ({date} tarixinə). Bosphorly vasitəsilə sorğu göndərin, rezervasiyadan əvvəl qiymətinizi WhatsApp-da təsdiqləyək.",
   "toB_pp": "nəfər başına",
   "toB_group": "qrup başına",
   "toB_groupMax": "qrup başına ({n} nəfərədək)",
@@ -317,7 +317,22 @@
   "toI_tips": "Bəxşiş",
   "toI_transport": "Nəqliyyat",
   "toI_vehicle": "Sürücülü avtomobil",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "İstanbulda bazar qiyməti",
+  "toReq": "Bu turu sorğula",
+  "toFDate": "Tarix",
+  "toFGuests": "Qonaq sayı",
+  "toFHotel": "Otel",
+  "toFName": "Ad və soyad",
+  "toFPhone": "Mobil / WhatsApp (ölkə kodu ilə)",
+  "toFNotes": "Qeyd (istəyə bağlı)",
+  "toFAck": "Sorğumun və əlaqə məlumatlarımın WhatsApp ilə Bosphorly-yə göndərilməsinə razıyam. Qiymət və boş yer rezervasiyadan əvvəl təsdiqlənir; bu saytda ödəniş alınmır.",
+  "toFSend": "Sorğunu WhatsApp ilə göndər →",
+  "toFErr": "Tarixi, qonaq sayını, adınızı və ölkə kodu ilə telefonunuzu yazın, qutunu işarələyin.",
+  "toFDone": "{ref} sorğunuz hazırdır. WhatsApp açılır: Bosphorly-yə çatması üçün göndər düyməsini basın.",
+  "toWaTitle": "Bosphorly tur sorğusu",
+  "toWaRef": "İstinad",
+  "toMyReq": "Sorğularım →"
  },
  "tours": {
   "jewish-heritage": [

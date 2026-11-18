@@ -283,7 +283,7 @@
   "toInc": "通常含まれるもの",
   "toExc": "通常含まれないもの",
   "toMarket": "他社が公開している料金",
-  "toMarketNote": "各社が自社で公開している料金（{date} 確認）。Bosphorly の提示価格ではありません。料金は変わるため、最新料金は WhatsApp で確認します。",
+  "toMarketNote": "イスタンブールの各社が同様のツアーに設定している料金（{date} 時点）。Bosphorly からリクエストいただければ、予約前に WhatsApp で料金を確認します。",
   "toB_pp": "1 名",
   "toB_group": "1 グループ",
   "toB_groupMax": "1 グループ（最大 {n} 名）",
@@ -317,7 +317,22 @@
   "toI_tips": "チップ",
   "toI_transport": "移動",
   "toI_vehicle": "運転手付き車両",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "イスタンブールの相場",
+  "toReq": "このツアーをリクエスト",
+  "toFDate": "日付",
+  "toFGuests": "人数",
+  "toFHotel": "ホテル",
+  "toFName": "氏名",
+  "toFPhone": "携帯電話 / WhatsApp（国番号から）",
+  "toFNotes": "備考（任意）",
+  "toFAck": "リクエストと連絡先が WhatsApp で Bosphorly に送信されることに同意します。予約前に料金と空き状況を確認します。このサイトでの支払いはありません。",
+  "toFSend": "WhatsApp でリクエストを送る →",
+  "toFErr": "日付、人数、氏名、国番号付きの電話番号を入力し、チェックを入れてください。",
+  "toFDone": "リクエスト {ref} の準備ができました。WhatsApp が開きます。送信を押すと Bosphorly に届きます。",
+  "toWaTitle": "Bosphorly ツアーリクエスト",
+  "toWaRef": "参照コード",
+  "toMyReq": "リクエスト一覧 →"
  },
  "tours": {
   "jewish-heritage": [

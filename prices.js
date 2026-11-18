@@ -969,9 +969,7 @@
       if (L.not_included?.length) { more.append(el('p', 'list-title', T.excluded)); more.append(list(L.not_included, 'crosses')); }
       if (L.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
       const src = el('p', 'fine');
-      const a = el('a', null, T.source);
-      a.href = d.source_url; a.target = '_blank'; a.rel = 'noopener nofollow';
-      src.append(a, document.createTextNode(' · ' + T.checked + ': ' + d.checked));
+      src.append(document.createTextNode(T.source + ' · ' + T.checked + ': ' + d.checked));
       more.append(src);
       body.append(more);
     } else body.append(el('p', 'fine', T.noDetails));
@@ -1010,8 +1008,7 @@
       });
       const d = pk[0]?.details; const L = d ? Object.assign({}, d, d[lang] || {}) : null;
       if (L?.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
-      const src = el('p', 'fine'); const a = el('a', null, T.source); a.href = m.details?.source_url || m.source_url; a.target = '_blank'; a.rel = 'noopener nofollow';
-      src.append(a, document.createTextNode(' · ' + T.checked + ': ' + (m.details?.checked || ''))); more.append(src);
+      const src = el('p', 'fine'); src.textContent = T.source + ' · ' + T.checked + ': ' + (m.details?.checked || ''); more.append(src);
       body.append(more);
     }
     const a = el('a', 'button', T.hbBook); a.href = 'booking.html?service=alaturka&lang=' + encodeURIComponent(lang); body.append(a);
