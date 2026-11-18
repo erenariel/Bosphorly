@@ -19,6 +19,7 @@
     const ui = Object.assign({}, en.ui, own ? own.ui : {});
     data.places.forEach(p => { [p.name, p.desc] = pick('places', p.id); p.nameEn = en.places[p.id][0]; });
     data.stops.forEach(s => { [s.name, s.note] = pick('stops', s.id); s.nameEn = en.stops[s.id][0]; });
+    (data.tours || []).forEach(s => { [s.name, s.desc] = pick('tours', s.id); s.nameEn = en.tours[s.id][0]; });
     return { data, ui, t: (k, vars) => (ui[k] || k).replace(/\{(\w+)\}/g, (_, v) => (vars && vars[v] != null ? vars[v] : '')) };
   }
 

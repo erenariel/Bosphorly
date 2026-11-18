@@ -33,14 +33,16 @@ def main():
     # (Do not strip by LANGS: "id" is both Indonesian and the record id.)
     places = [{k: v for k, v in p.items() if k not in MASTER_LANGS} for p in master["places"]]
     stops = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master["stops"]]
+    tours = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master.get("tours", [])]
     guides = [{"href": h, "title": t, "lang": l, "keywords": k} for h, t, l, k in GUIDES]
-    base = {"checked": CHECKED, "places": places, "stops": stops, "guides": guides}
+    base = {"checked": CHECKED, "places": places, "stops": stops, "tours": tours, "guides": guides}
     (OUT / "places.json").write_text(json.dumps(base, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     en_ui = master["ui"]["en"]
     for lang in LANGS:
         if lang in ("en", "tr"):
             pack = {"places": {p["id"]: p[lang] for p in master["places"]},
                     "stops": {s["id"]: s[lang] for s in master["stops"]},
+                    "tours": {s["id"]: s[lang] for s in master.get("tours", [])},
                     "ui": master["ui"][lang]}
         else:
             f = SRC / f"{lang}.json"
@@ -48,10 +50,11 @@ def main():
                 continue
             pack = json.loads(f.read_text(encoding="utf-8"))
         missing = [p["id"] for p in places if p["id"] not in pack["places"]] + [s["id"] for s in stops if s["id"] not in pack["stops"]] \
+            + [s["id"] for s in tours if s["id"] not in pack.get("tours", {})] \
             + [k for k in en_ui if k not in pack["ui"]]
         assert not missing, (lang, missing)
         (OUT / f"{lang}.json").write_text(json.dumps(pack, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    print("discover data built:", len(places), "places,", len(stops), "stops")
+    print("discover data built:", len(places), "places,", len(stops), "stops,", len(tours), "tours on request")
 
 
 if __name__ == "__main__":

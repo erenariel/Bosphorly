@@ -252,6 +252,91 @@
   "gaSaw": "Az M4-es metró köti össze az ázsiai oldalon lévő Sabiha Gökçen repülőteret (SAW) Kadıköyjel.",
   "gaTram": "A T1-es villamos a Történelmi-félszigeten halad végig Sultanahmeten, Eminönün és Karaköyön át Kabataşig.",
   "gaFerry": "A városi kompok Európa és Ázsia között járnak. A kompot, a metrót és a villamost İstanbulkarttal fizesse.",
-  "gaNote": "A vonalak és a menetrendek változnak; utazás előtt ellenőrizze a hivatalos üzemeltetőknél."
+  "gaNote": "A vonalak és a menetrendek változnak; utazás előtt ellenőrizze a hivatalos üzemeltetőknél.",
+  "toEyebrow": "TÚRÁK KÉRÉSRE",
+  "toTitle": "Tematikus, magán- és többnapos túrák.",
+  "toLead": "Örökség- és hitéleti túrák, városnegyed-séták, panorámás buszos túra, magán idegenvezetők és autók, többnapos utak Törökországban. Írja meg a dátumot és a létszámot WhatsAppon; megkérdezzük az engedéllyel rendelkező cégeket, és még a döntése előtt elküldjük az árat.",
+  "toCatAll": "Összes",
+  "toCatThemed": "Örökség és hit",
+  "toCatHoods": "Városnegyedek",
+  "toCatPanoramic": "Panorámás busz",
+  "toCatPrivate": "Magán idegenvezető és autó",
+  "toCatMulti": "Többnapos Törökország",
+  "toPrice": "Ár kérésre",
+  "toAsk": "Kérdezzen WhatsAppon",
+  "toAskMsg": "Szia Bosphorly, ez érdekel: {tour}. Dátum: … Létszám: … Szálloda: …",
+  "toDurH": "Kb. {n} óra",
+  "toDurHalf": "Fél nap",
+  "toDurFull": "Egész nap",
+  "toDurD": "{n} nap",
+  "toDurFlex": "Fél nap, egész nap vagy óradíjas",
+  "toHowTitle": "Hogyan működik",
+  "toHow1": "Írja meg WhatsAppon a dátumot, a létszámot és a szállodát.",
+  "toHow2": "Megkérdezzük az engedéllyel rendelkező cégeket, és elküldjük az árat és a programot.",
+  "toHow3": "Ön dönt. Ezen a weboldalon nem kell fizetni.",
+  "toNote": "Ezeket a túrákat kérésre szervezzük. A Bosphorlynak még nincs rájuk aláírt szerződése, ezért az árat és a szabad helyeket WhatsAppon erősítjük meg.",
+  "toSeeAlso": "Kappadókia, Pamukkale és Efezus csomagok közzétett árakkal →"
+ },
+ "tours": {
+  "jewish-heritage": [
+   "Isztambul zsidó öröksége",
+   "Öt évszázad szefárd élet: Balat és Hasköy régi negyedei, az Ahrida-zsinagóga, Galata és a Kamondo-lépcső. A zsinagógalátogatást előre, útlevéladatokkal kell egyeztetni."
+  ],
+  "armenian-heritage": [
+   "Isztambul örmény öröksége",
+   "Kumkapı és az Örmény Patriarkátus a Szurp Asztvacacin-templommal, a régi Samatya negyed és a beyoğlui Üç Horan-templom."
+  ],
+  "christian-istanbul": [
+   "A korai kereszténység nyomában",
+   "Szent Iréné és a Hagia Sophia, a Chora mozaikjai, az Ökumenikus Patriarkátus Fenerben, a vasból épült bolgár Szent István-templom és a Pantokratór-kolostor."
+  ],
+  "ottoman-imperial": [
+   "A szultánok oszmán Isztambulja",
+   "A Topkapı palota, a Szülejmán és a Rüstem pasa mecset, a Nagy Bazár és a Szokollu Mehmed pasa mecset csempéi: a szultánok városa."
+  ],
+  "byzantine-ottoman": [
+   "Bizánc és az oszmánok legjava",
+   "A Hippodrom, a Hagia Sophia, a Bazilika-ciszterna, a Kék mecset, a Topkapı palota és a Nagy Bazár egyetlen idegenvezetett napon."
+  ],
+  "golden-horn": [
+   "Aranyszarv-öböl: Fener, Balat és Eyüp",
+   "A színes Balat és Fener, az Eyüp szultán mecset, kabinos felvonóval a Pierre Loti-dombra a kilátásért, majd vissza a víz mentén."
+  ],
+  "uskudar": [
+   "Üsküdar az ázsiai parton",
+   "Komppal a Boszporuszon át, a Mihrimah szultána és a Şemsi pasa mecset, a Leánytorony a partról és a kilátás a Çamlıca-dombról."
+  ],
+  "kadikoy-moda": [
+   "Gasztroséta Kadıköyben és Modában",
+   "Komppal az élénk ázsiai oldalra, kóstolók a kadıköyi piacon és séta a tengerparton Modában."
+  ],
+  "beykoz": [
+   "Beykoz és a felső Boszporusz",
+   "A Boszporusz zöld északi része: a Rumeli és az Anadolu erőd, Anadolu Kavağı halászfalu, Yoros vára és halebéd a vízparton."
+  ],
+  "panoramic-bus": [
+   "Panorámás városnéző busz (hop-on hop-off)",
+   "Nyitott tetejű busz a fő látnivalók mellett, többnyelvű hangos kalauzzal; szálljon le, ahol szeretne, és üljön fel egy későbbi buszra. Ideális, ha csak egy napja van."
+  ],
+  "private-guide": [
+   "Magán engedéllyel rendelkező idegenvezető",
+   "Hivatásos, engedéllyel rendelkező idegenvezető csak az Ön családjának vagy csoportjának, fél vagy egész napra, saját program szerint és az Ön nyelvén."
+  ],
+  "private-car": [
+   "Magánautó sofőrrel",
+   "Autó vagy kisbusz sofőrrel óradíjas vagy napi bérlésben, a kétszemélyes szedántól a nagycsaládos kisbuszig. Magán idegenvezetővel kombinálható."
+  ],
+  "vip-transfer": [
+   "VIP és limuzin transzfer",
+   "Reptéri vagy városi transzfer VIP kisbusszal vagy luxusszedánnal, fogadással az érkezési csarnokban."
+  ],
+  "anatolian-civilizations": [
+   "Anatólia civilizációi",
+   "Az Anatóliai Civilizációk Múzeuma és az Anıtkabir Ankarában, a hettita főváros, Hattuša, és Kappadókia tündérkéményei."
+  ],
+  "upper-mesopotamia": [
+   "Felső-Mezopotámia",
+   "Gaziantep és a zeugmai mozaikok, Şanlıurfa a Göbekli Tepével és a Balıklıgöllel, Mardin kővárosa és napfelkelte a Nemrut-hegyen."
+  ]
  }
 }

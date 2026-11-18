@@ -252,6 +252,91 @@
   "gaSaw": "Die Metro M4 verbindet den Flughafen Sabiha Gökçen (SAW) auf der asiatischen Seite mit Kadıköy.",
   "gaTram": "Die Tram T1 fährt über die historische Halbinsel durch Sultanahmet, Eminönü und Karaköy bis Kabataş.",
   "gaFerry": "Stadtfähren pendeln zwischen Europa und Asien. Fähre, Metro und Tram bezahlt man mit der İstanbulkart.",
-  "gaNote": "Linien und Fahrpläne ändern sich; prüfen Sie vor der Fahrt die offiziellen Betreiber."
+  "gaNote": "Linien und Fahrpläne ändern sich; prüfen Sie vor der Fahrt die offiziellen Betreiber.",
+  "toEyebrow": "TOUREN AUF ANFRAGE",
+  "toTitle": "Themen-, Privat- und Mehrtagestouren.",
+  "toLead": "Touren zu Erbe und Glauben, Spaziergänge durch Stadtviertel, eine Panorama-Busfahrt, private Guides und Fahrzeuge sowie Mehrtagesreisen durch die Türkei. Schreiben Sie uns Datum und Gruppengröße per WhatsApp; wir fragen lizenzierte Anbieter an und nennen Ihnen den Preis, bevor Sie sich entscheiden.",
+  "toCatAll": "Alle",
+  "toCatThemed": "Erbe & Glaube",
+  "toCatHoods": "Stadtviertel",
+  "toCatPanoramic": "Panorama-Bustour",
+  "toCatPrivate": "Privater Guide & Wagen",
+  "toCatMulti": "Mehrtägig in der Türkei",
+  "toPrice": "Preis auf Anfrage",
+  "toAsk": "Per WhatsApp fragen",
+  "toAskMsg": "Hallo Bosphorly, ich interessiere mich für: {tour}. Datum: … Anzahl Personen: … Hotel: …",
+  "toDurH": "Etwa {n} Std.",
+  "toDurHalf": "Halbtags",
+  "toDurFull": "Ganztags",
+  "toDurD": "{n} Tage",
+  "toDurFlex": "Halbtags, ganztags oder stundenweise",
+  "toHowTitle": "So funktioniert es",
+  "toHow1": "Schreiben Sie Datum, Gruppengröße und Hotel per WhatsApp.",
+  "toHow2": "Wir fragen lizenzierte Anbieter an und senden Ihnen Preis und Programm.",
+  "toHow3": "Sie entscheiden. Auf dieser Website wird nichts bezahlt.",
+  "toNote": "Diese Touren werden auf Anfrage organisiert. Bosphorly hat dafür noch keine unterschriebene Vereinbarung; Preis und Verfügbarkeit werden per WhatsApp bestätigt.",
+  "toSeeAlso": "Pakete Kappadokien, Pamukkale und Ephesos mit veröffentlichten Preisen →"
+ },
+ "tours": {
+  "jewish-heritage": [
+   "Jüdisches Erbe Istanbuls",
+   "Fünf Jahrhunderte sephardisches Leben: die alten Viertel Balat und Hasköy, die Ahrida-Synagoge, Galata und die Kamondo-Treppe. Synagogenbesuche werden vorab mit Passdaten angemeldet."
+  ],
+  "armenian-heritage": [
+   "Armenisches Erbe Istanbuls",
+   "Kumkapı und das Armenische Patriarchat mit der Kirche Surp Asdvadzadzin, das alte Viertel Samatya und die Üç-Horan-Kirche in Beyoğlu."
+  ],
+  "christian-istanbul": [
+   "Auf den Spuren des frühen Christentums",
+   "Hagia Irene und Hagia Sophia, die Mosaiken der Chora, das Ökumenische Patriarchat in Fener, die eiserne bulgarische Stephanskirche und das Pantokrator-Kloster."
+  ],
+  "ottoman-imperial": [
+   "Das osmanische Istanbul der Sultane",
+   "Topkapı-Palast, Süleymaniye- und Rüstem-Paşa-Moschee, Großer Basar und die Fliesen der Sokollu-Mehmed-Paşa-Moschee: die Stadt der Sultane."
+  ],
+  "byzantine-ottoman": [
+   "Byzantinische und osmanische Höhepunkte",
+   "Hippodrom, Hagia Sophia, Basilika-Zisterne, Blaue Moschee, Topkapı-Palast und Großer Basar an einem geführten Tag."
+  ],
+  "golden-horn": [
+   "Goldenes Horn: Fener, Balat und Eyüp",
+   "Das bunte Balat und Fener, die Eyüp-Sultan-Moschee, mit der Seilbahn zum Aussichtspunkt Pierre Loti und am Wasser zurück."
+  ],
+  "uskudar": [
+   "Üsküdar auf der asiatischen Seite",
+   "Mit der Fähre über den Bosporus, die Mihrimah-Sultan- und Şemsi-Paşa-Moschee, der Mädchenturm vom Ufer aus und der Blick vom Çamlıca-Hügel."
+  ],
+  "kadikoy-moda": [
+   "Genusstour durch Kadıköy und Moda",
+   "Mit der Fähre auf die lebendige asiatische Seite, Kostproben auf dem Markt von Kadıköy und ein Spaziergang am Meer in Moda."
+  ],
+  "beykoz": [
+   "Beykoz und der obere Bosporus",
+   "Der grüne Norden des Bosporus: die Festungen Rumeli und Anadolu, das Fischerdorf Anadolu Kavağı, die Burg Yoros und Fisch am Wasser."
+  ],
+  "panoramic-bus": [
+   "Panorama-Stadtrundfahrt (Hop-on Hop-off)",
+   "Im offenen Doppeldecker an den wichtigsten Sehenswürdigkeiten vorbei, mit Audiokommentar in mehreren Sprachen; aussteigen, wo Sie möchten, und später weiterfahren. Ideal, wenn Sie nur einen Tag haben."
+  ],
+  "private-guide": [
+   "Privater lizenzierter Reiseleiter",
+   "Ein professioneller lizenzierter Guide nur für Ihre Familie oder Gruppe, halb- oder ganztags, nach Ihrem Programm und in Ihrer Sprache."
+  ],
+  "private-car": [
+   "Privatwagen mit Fahrer",
+   "Auto oder Kleinbus mit Fahrer pro Stunde oder Tag, von der Limousine für zwei bis zum Kleinbus für große Familien. Mit privatem Guide kombinierbar."
+  ],
+  "vip-transfer": [
+   "VIP- und Limousinentransfer",
+   "Flughafen- oder Stadttransfers im VIP-Van oder in der Luxuslimousine, mit Empfang in der Ankunftshalle."
+  ],
+  "anatolian-civilizations": [
+   "Zivilisationen Anatoliens",
+   "Das Museum für anatolische Zivilisationen und Anıtkabir in Ankara, die Hethiterhauptstadt Hattuša und die Feenkamine Kappadokiens."
+  ],
+  "upper-mesopotamia": [
+   "Obermesopotamien",
+   "Gaziantep und die Mosaiken von Zeugma, Şanlıurfa mit Göbekli Tepe und Balıklıgöl, die Steinstadt Mardin und Sonnenaufgang auf dem Nemrut Dağı."
+  ]
  }
 }

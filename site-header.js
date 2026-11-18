@@ -6,6 +6,8 @@
   const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const L = {
+    transfer: { en: "Transfer", tr: "Transfer", ru: "Трансфер", uk: "Трансфер", de: "Transfer", fr: "Transfert", nl: "Transfer", ar: "النقل", he: "הסעות", az: "Transfer", fa: "ترانسفر", es: "Traslado", it: "Transfer", pt: "Traslado", hr: "Transfer", hu: "Transzfer", bs: "Transfer", zh: "接送", ja: "空港送迎", ko: "공항 픽업", hi: "ट्रांसफ़र", bn: "ট্রান্সফার", id: "Transfer" },
+    tours: { en: "Special tours", tr: "Özel turlar", ru: "Особые туры", uk: "Особливі тури", de: "Besondere Touren", fr: "Visites spéciales", nl: "Speciale tours", ar: "جولات خاصة", he: "סיורים מיוחדים", az: "Xüsusi turlar", fa: "تورهای ویژه", es: "Tours especiales", it: "Tour speciali", pt: "Passeios especiais", hr: "Posebne ture", hu: "Különleges túrák", bs: "Posebne ture", zh: "特色游览", ja: "特別ツアー", ko: "특별 투어", hi: "ख़ास टूर", bn: "বিশেষ ট্যুর", id: "Tur spesial" },
     home: { en: 'Home', tr: 'Ana sayfa', ru: 'Главная', uk: 'Головна', de: 'Startseite', fr: 'Accueil', nl: 'Home', ar: 'الرئيسية', he: 'דף הבית', az: 'Ana səhifə', fa: 'خانه', es: 'Inicio', it: "Home", pt: "Início", hr: "Početna", hu: "Főoldal", bs: "Početna", zh: "首页", ja: "ホーム", ko: "홈", hi: "होम", bn: "হোম", id: "Beranda" },
     discover: { en: 'Discover', tr: 'Keşfet', ru: 'Что посмотреть', uk: 'Що подивитися', de: 'Entdecken', fr: 'Découvrir', nl: 'Ontdekken', ar: 'اكتشف', he: 'לגלות', az: 'Kəşf et', fa: 'کشف کنید', es: 'Descubrir', it: 'Scopri', pt: 'Descobrir', hr: "Otkrijte", hu: "Felfedezés", bs: "Otkrijte", zh: "发现", ja: "見どころ", ko: "명소", hi: "घूमने की जगहें", bn: "দর্শনীয় স্থান", id: "Jelajahi" },
     search: { en: 'Search', tr: 'Ara', ru: 'Поиск', uk: 'Пошук', de: 'Suche', fr: 'Rechercher', nl: 'Zoeken', ar: 'بحث', he: 'חיפוש', az: 'Axtar', fa: 'جست‌وجو', es: 'Buscar', it: 'Cerca', pt: 'Buscar', hr: "Traži", hu: "Keresés", bs: "Traži", zh: "搜索", ja: "検索", ko: "검색", hi: "खोजें", bn: "খুঁজুন", id: "Cari" },
@@ -16,7 +18,7 @@
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder
   const withCurrency = host.dataset.currency !== 'off';
-  const links = [['home', 'index.html'], ['discover', 'explore.html'], ['prices', 'prices.html'], ['account', 'account.html']];
+  const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['account', 'account.html']];
   const header = document.createElement('header');
   header.className = 'site-header';
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt=""><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
