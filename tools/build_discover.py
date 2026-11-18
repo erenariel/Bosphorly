@@ -32,9 +32,13 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     # master.json carries only the English and Turkish texts; every other language has its own file.
     # (Do not strip by LANGS: "id" is both Indonesian and the record id.)
-    places = [{k: v for k, v in p.items() if k not in MASTER_LANGS} for p in master["places"]]
+    # "source" (where we checked the price) stays in master.json; the site does not link to ticket resellers.
+    places = [{k: v for k, v in p.items() if k not in MASTER_LANGS and k != "source"} for p in master["places"]]
     stops = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master["stops"]]
-    tours = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master.get("tours", [])]
+    # Company names and links of the published prices stay in master.json (our research record); the site shows only
+    # the market price range, so guests book through Bosphorly instead of following links to other companies.
+    tours = [{k: ([{f: x[f] for f in ("p", "c", "b", "max", "note") if f in x} for x in v] if k == "src" else v)
+              for k, v in s.items() if k not in MASTER_LANGS} for s in master.get("tours", [])]
     guides = [{"href": h, "title": t, "lang": l, "keywords": k} for h, t, l, k in GUIDES]
     base = {"checked": CHECKED, "toursChecked": TOURS_CHECKED, "places": places, "stops": stops, "tours": tours, "guides": guides}
     (OUT / "places.json").write_text(json.dumps(base, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")

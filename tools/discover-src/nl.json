@@ -283,7 +283,7 @@
   "toInc": "Meestal inbegrepen",
   "toExc": "Meestal niet inbegrepen",
   "toMarket": "Prijzen gepubliceerd door andere bedrijven",
-  "toMarketNote": "De eigen gepubliceerde prijs van elk bedrijf, gecontroleerd op {date}. Geen aanbod van Bosphorly: prijzen veranderen, de actuele prijs bevestigen we via WhatsApp.",
+  "toMarketNote": "Wat bedrijven in Istanbul vragen voor vergelijkbare tours (per {date}). Vraag aan via Bosphorly; we bevestigen je prijs via WhatsApp voordat er iets geboekt wordt.",
   "toB_pp": "per persoon",
   "toB_group": "per groep",
   "toB_groupMax": "per groep (tot {n} pers.)",
@@ -317,7 +317,22 @@
   "toI_tips": "Fooien",
   "toI_transport": "Vervoer",
   "toI_vehicle": "Voertuig met chauffeur",
-  "toI_wifi": "Wifi"
+  "toI_wifi": "Wifi",
+  "toMarketRange": "Marktprijs in Istanbul",
+  "toReq": "Deze tour aanvragen",
+  "toFDate": "Datum",
+  "toFGuests": "Personen",
+  "toFHotel": "Hotel",
+  "toFName": "Voor- en achternaam",
+  "toFPhone": "Mobiel / WhatsApp (met landcode)",
+  "toFNotes": "Opmerkingen (optioneel)",
+  "toFAck": "Ik ga ermee akkoord dat mijn aanvraag en contactgegevens via WhatsApp naar Bosphorly worden gestuurd. Prijs en beschikbaarheid worden bevestigd voordat er iets geboekt wordt; op deze website wordt niets betaald.",
+  "toFSend": "Aanvraag via WhatsApp versturen →",
+  "toFErr": "Vul de datum, het aantal personen, je naam en telefoonnummer met landcode in en vink het vakje aan.",
+  "toFDone": "Aanvraag {ref} is klaar. WhatsApp wordt geopend: druk op versturen zodat Bosphorly hem ontvangt.",
+  "toWaTitle": "Bosphorly touraanvraag",
+  "toWaRef": "Referentie",
+  "toMyReq": "Mijn aanvragen →"
  },
  "tours": {
   "jewish-heritage": [

@@ -283,7 +283,7 @@
   "toInc": "Généralement inclus",
   "toExc": "Généralement non inclus",
   "toMarket": "Prix publiés par d'autres entreprises",
-  "toMarketNote": "Le prix publié par chaque entreprise, vérifié le {date}. Ce n'est pas une offre Bosphorly : les prix changent, nous confirmons le prix actuel sur WhatsApp.",
+  "toMarketNote": "Ce que les entreprises d'Istanbul demandent pour des visites similaires (au {date}). Faites votre demande via Bosphorly : nous confirmons votre prix sur WhatsApp avant toute réservation.",
   "toB_pp": "par personne",
   "toB_group": "par groupe",
   "toB_groupMax": "par groupe (jusqu'à {n} pers.)",
@@ -317,7 +317,22 @@
   "toI_tips": "Pourboires",
   "toI_transport": "Transport",
   "toI_vehicle": "Véhicule avec chauffeur",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "Prix du marché à Istanbul",
+  "toReq": "Demander cette visite",
+  "toFDate": "Date",
+  "toFGuests": "Personnes",
+  "toFHotel": "Hôtel",
+  "toFName": "Nom et prénom",
+  "toFPhone": "Mobile / WhatsApp (avec indicatif)",
+  "toFNotes": "Remarques (facultatif)",
+  "toFAck": "J'accepte que ma demande et mes coordonnées soient envoyées à Bosphorly via WhatsApp. Le prix et la disponibilité sont confirmés avant toute réservation ; rien n'est payé sur ce site.",
+  "toFSend": "Envoyer la demande via WhatsApp →",
+  "toFErr": "Indiquez la date, le nombre de personnes, votre nom et votre numéro avec l'indicatif, et cochez la case.",
+  "toFDone": "La demande {ref} est prête. WhatsApp s'ouvre : appuyez sur Envoyer pour la transmettre à Bosphorly.",
+  "toWaTitle": "Demande de visite Bosphorly",
+  "toWaRef": "Référence",
+  "toMyReq": "Mes demandes →"
  },
  "tours": {
   "jewish-heritage": [

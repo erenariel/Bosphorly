@@ -283,7 +283,7 @@
   "toInc": "Biasanya termasuk",
   "toExc": "Biasanya tidak termasuk",
   "toMarket": "Harga yang dipublikasikan perusahaan lain",
-  "toMarketNote": "Harga yang dipublikasikan sendiri oleh tiap perusahaan, dicek {date}. Bukan penawaran Bosphorly: harga bisa berubah, dan kami konfirmasi harga terkini lewat WhatsApp.",
+  "toMarketNote": "Tarif perusahaan di Istanbul untuk tur serupa (per {date}). Ajukan lewat Bosphorly dan kami konfirmasi harga Anda di WhatsApp sebelum ada pemesanan.",
   "toB_pp": "per orang",
   "toB_group": "per grup",
   "toB_groupMax": "per grup (maks. {n} orang)",
@@ -317,7 +317,22 @@
   "toI_tips": "Tip",
   "toI_transport": "Transportasi",
   "toI_vehicle": "Kendaraan dengan sopir",
-  "toI_wifi": "Wi-Fi"
+  "toI_wifi": "Wi-Fi",
+  "toMarketRange": "Harga pasar di Istanbul",
+  "toReq": "Ajukan tur ini",
+  "toFDate": "Tanggal",
+  "toFGuests": "Jumlah orang",
+  "toFHotel": "Hotel",
+  "toFName": "Nama lengkap",
+  "toFPhone": "Ponsel / WhatsApp (dengan kode negara)",
+  "toFNotes": "Catatan (opsional)",
+  "toFAck": "Saya setuju permintaan dan kontak saya dikirim ke Bosphorly lewat WhatsApp. Harga dan ketersediaan dikonfirmasi sebelum pemesanan; tidak ada pembayaran di situs ini.",
+  "toFSend": "Kirim permintaan lewat WhatsApp →",
+  "toFErr": "Isi tanggal, jumlah orang, nama, dan nomor telepon dengan kode negara, lalu centang kotaknya.",
+  "toFDone": "Permintaan {ref} siap. WhatsApp sedang dibuka: tekan kirim agar sampai ke Bosphorly.",
+  "toWaTitle": "Permintaan tur Bosphorly",
+  "toWaRef": "Referensi",
+  "toMyReq": "Lihat permintaan saya →"
  },
  "tours": {
   "jewish-heritage": [

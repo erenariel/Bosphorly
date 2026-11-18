@@ -38,15 +38,25 @@
 .td-route li{counter-increment:r;background:#eef4ff;border-radius:999px;padding:4px 10px;font-size:13px}.td-route li::before{content:counter(r) '. ';font-weight:800;color:#16457d}
 .td-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.td-block.inc li::marker{content:'✓  ';color:#137148}.td-block.exc li::marker{content:'✕  ';color:#a12a2a}
 .td-market{list-style:none;padding:0!important;display:grid;gap:6px}
-.td-market li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
-.td-market a{font-weight:700;color:#16457d}.td-market b{color:#0a1753;text-align:end}.td-market span{grid-column:1/-1;font-size:12px;color:#5d6f8a}
+.td-market li{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.td-market b{color:#0a1753;font-size:15px}.td-market span{font-size:13px;color:#5d6f8a}
 .td-fine{font-size:12px;color:#5d6f8a;margin-top:6px!important}.td-tip{margin:0;background:#fff9ec;border:1px dashed #f0b44c;border-radius:12px;padding:8px 10px;font-size:13px}
 @media(max-width:420px){.td-two{grid-template-columns:1fr}}
+.tf{display:grid;gap:10px;border:1px solid #cfdcf3;border-radius:14px;background:#f8fbff;padding:14px}
+.tf[hidden]{display:none}
+.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tf-field{display:grid;gap:4px;font-size:13px;font-weight:700;color:#34465f}
+.tf input,.tf textarea{font:inherit;font-weight:400;font-size:15px;border:1px solid #cbd8eb;border-radius:10px;padding:9px 10px;min-height:42px;width:100%;box-sizing:border-box;background:#fff}
+.tf-ack{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#34465f}.tf-ack input{width:18px;min-height:18px;margin-top:2px;flex:none}
+.tf-err{margin:0;color:#a12a2a;font-size:13px;font-weight:700}
+.tf-send{justify-self:start}.tf-done{display:grid;gap:8px}.tf-done p{margin:0;font-weight:700;color:#137148}.tf-done .btn{justify-self:start}
+
 .see-also{display:inline-block;margin:14px 0 4px;font-weight:700;color:#16457d}
 </style>
 <script src="lang.js"></script>
 <script src="currency.js"></script>
 <script src="config/contact.js"></script>
+<script src="account-store.js"></script>
 </head>
 <body>
 <div id="siteHeader" data-page="tours"></div>

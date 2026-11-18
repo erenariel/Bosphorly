@@ -43,7 +43,6 @@
     const wa = el('a', 'btn wa', t('ask')); wa.href = D.waLink(t('askMsg', { place: p.name })); wa.target = '_blank'; wa.rel = 'noopener';
     act.append(wa);
     c.append(act);
-    if (p.source) { const s = el('a', null, t('priceSource') + ' ↗'); s.href = p.source; s.target = '_blank'; s.rel = 'noopener nofollow'; s.style.fontSize = '12px'; c.append(s); }
     return c;
   }
 

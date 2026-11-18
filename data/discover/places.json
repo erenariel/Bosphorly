@@ -13,7 +13,6 @@
     "cur": "EUR"
    },
    "official": null,
-   "source": "https://clevertourists.com/resources/hagia-sophia-tickets-2026-price-dress-code-guide",
    "aliases": [
     "Ayasofya",
     "Aya Sofya",
@@ -31,7 +30,6 @@
    "district": "Fatih · Sultanahmet",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Sultanahmet Camii",
     "Sultan Ahmed Mosque",
@@ -53,7 +51,6 @@
     2
    ],
    "official": "https://muze.gov.tr",
-   "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
    "aliases": [
     "Topkapı Sarayı",
     "Topkapi Palace",
@@ -72,7 +69,6 @@
     "cur": "EUR"
    },
    "official": "https://yerebatan.com",
-   "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
    "aliases": [
     "Yerebatan Sarnıcı",
     "Yerebatan Sarayı",
@@ -93,7 +89,6 @@
     1
    ],
    "official": "https://muze.gov.tr",
-   "source": "https://www.guidedistanbultours.com/en/blog/entrance-fees-of-istanbul-museums",
    "aliases": [
     "İstanbul Arkeoloji Müzeleri",
     "Archaeological Museum",
@@ -108,7 +103,6 @@
    "district": "Fatih · Süleymaniye",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Süleymaniye Camii",
     "Suleymaniye Mosque",
@@ -123,7 +117,6 @@
    "district": "Fatih · Edirnekapı",
    "price": null,
    "official": null,
-   "source": null,
    "aliases": [
     "Kariye",
     "Kariye Camii",
@@ -142,7 +135,6 @@
     "cur": "EUR"
    },
    "official": "https://muze.gov.tr",
-   "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
    "aliases": [
     "Galata Kulesi",
     "Galata Tower"
@@ -163,7 +155,6 @@
     1
    ],
    "official": "https://www.millisaraylar.gov.tr",
-   "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
    "aliases": [
     "Dolmabahçe Sarayı",
     "Dolmabahce Palace"
@@ -180,7 +171,6 @@
     1
    ],
    "official": "https://www.millisaraylar.gov.tr",
-   "source": null,
    "aliases": [
     "Beylerbeyi Sarayı",
     "Beylerbeyi Palace"
@@ -194,7 +184,6 @@
    "district": "Üsküdar",
    "price": null,
    "official": "https://kizkulesi.gov.tr",
-   "source": null,
    "aliases": [
     "Kız Kulesi",
     "Maiden's Tower",
@@ -209,7 +198,6 @@
    "district": "Sarıyer · Rumelihisarı",
    "price": null,
    "official": null,
-   "source": null,
    "aliases": [
     "Rumeli Hisarı",
     "Rumelian Castle",
@@ -227,7 +215,6 @@
     1
    ],
    "official": "https://www.istanbulmodern.org",
-   "source": null,
    "aliases": [
     "İstanbul Modern",
     "Istanbul Museum of Modern Art"
@@ -244,7 +231,6 @@
     1
    ],
    "official": "https://www.peramuzesi.org.tr",
-   "source": null,
    "aliases": [
     "Pera Müzesi",
     "Kaplumbağa Terbiyecisi",
@@ -262,7 +248,6 @@
     1
    ],
    "official": "https://www.rmk-museum.org.tr",
-   "source": null,
    "aliases": [
     "Rahmi M. Koç Müzesi",
     "Rahmi Koc Museum"
@@ -279,7 +264,6 @@
     "cur": "TRY"
    },
    "official": "https://www.isfanbul.com",
-   "source": "https://thebettervacation.com/istanbul/vialand-theme-park/",
    "aliases": [
     "Vialand",
     "İsfanbul",
@@ -302,7 +286,6 @@
     "cur": "TRY"
    },
    "official": "https://www.istanbulakvaryum.com",
-   "source": "https://istanbul.com/istanbul-aquarium",
    "aliases": [
     "İstanbul Akvaryum",
     "Istanbul Aquarium",
@@ -319,7 +302,6 @@
    "district": "Bayrampaşa · Forum İstanbul",
    "price": null,
    "official": "https://www.visitsealife.com/istanbul/",
-   "source": null,
    "aliases": [
     "SEA LIFE",
     "Turkuazoo",
@@ -338,7 +320,6 @@
     "cur": "TRY"
    },
    "official": "https://www.legolanddiscoverycentre.com/istanbul/",
-   "source": "https://www.legolanddiscoverycentre.com/istanbul/en/tickets-prices/qr-code/",
    "aliases": [
     "LEGOLAND Discovery Centre",
     "Lego"
@@ -352,7 +333,6 @@
    "district": "Beyoğlu · İstiklal",
    "price": null,
    "official": "https://www.madametussauds.com/istanbul/",
-   "source": null,
    "aliases": [
     "Madame Tussauds",
     "balmumu müzesi",
@@ -367,7 +347,6 @@
    "district": "Beyoğlu · Sütlüce",
    "price": null,
    "official": "https://www.miniaturk.com.tr",
-   "source": null,
    "aliases": [
     "Miniatürk",
     "Miniaturk"
@@ -384,7 +363,6 @@
     "cur": "TRY"
    },
    "official": "https://www.hodjapasha.com",
-   "source": "https://thebettervacation.com/istanbul/whirling-dervishes-show-istanbul/",
    "aliases": [
     "Hodjapasha",
     "HodjaPasha",
@@ -402,7 +380,6 @@
    "district": "Eminönü · Karaköy · Kadıköy · Üsküdar",
    "price": null,
    "official": "https://www.sehirhatlari.istanbul",
-   "source": null,
    "aliases": [
     "Şehir Hatları",
     "vapur",
@@ -422,7 +399,6 @@
     0
    ],
    "official": null,
-   "source": null,
    "aliases": [
     "Kapalıçarşı",
     "Kapali Carsi",
@@ -438,7 +414,6 @@
    "district": "Fatih · Eminönü",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Mısır Çarşısı",
     "Misir Carsisi",
@@ -454,7 +429,6 @@
    "district": "Fatih · Balat",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Balat",
     "Fener",
@@ -470,7 +444,6 @@
    "district": "Beyoğlu · Taksim",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "İstiklal Caddesi",
     "Istiklal Avenue",
@@ -486,7 +459,6 @@
    "district": "Beşiktaş · Ortaköy",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Ortaköy",
     "Ortakoy",
@@ -501,7 +473,6 @@
    "district": "Kadıköy · Moda",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Kadıköy",
     "Kadikoy",
@@ -517,7 +488,6 @@
    "district": "Üsküdar · Çamlıca",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Çamlıca",
     "Camlica",
@@ -533,7 +503,6 @@
    "district": "Eyüpsultan",
    "price": null,
    "official": null,
-   "source": null,
    "aliases": [
     "Pierre Loti",
     "Piyer Loti",
@@ -550,7 +519,6 @@
    "district": "Adalar",
    "price": null,
    "official": "https://www.sehirhatlari.istanbul",
-   "source": null,
    "aliases": [
     "Adalar",
     "Büyükada",
@@ -567,7 +535,6 @@
    "district": "Sarıyer · Emirgan",
    "price": "free",
    "official": null,
-   "source": null,
    "aliases": [
     "Emirgan Korusu",
     "Emirgan Park",
@@ -686,28 +653,19 @@
    ],
    "src": [
     {
-     "op": "ForeverVacation",
      "p": 179,
      "c": "USD",
-     "b": "private",
-     "from": true,
-     "u": "https://forevervacation.com/istanbul-jewish-heritage-tour"
+     "b": "private"
     },
     {
-     "op": "Les Arts Turcs",
      "p": 210,
      "c": "EUR",
-     "b": "private",
-     "h": 4,
-     "u": "https://www.lesartsturcs.com/product/jewish-heritage-and-synagogue-tour-in-istanbul/"
+     "b": "private"
     },
     {
-     "op": "Turco Travel",
      "p": 332,
      "c": "USD",
-     "b": "pp",
-     "h": 6,
-     "u": "https://turcotravel.com/tours/istanbul-jewish-heritage-private-tour"
+     "b": "pp"
     }
    ]
   },
@@ -738,28 +696,19 @@
    ],
    "src": [
     {
-     "op": "Bazaar Turkey",
      "p": 75,
      "c": "EUR",
-     "b": "pp",
-     "h": 4,
-     "u": "https://bazaarturkey.com/activities/greek-jewish-armenian-muslim-quarters-tour-in-istanbul/"
+     "b": "pp"
     },
     {
-     "op": "Fest Travel",
      "p": 125,
      "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "u": "https://fest.travel/tour/kumkapi-samatya/"
+     "b": "pp"
     },
     {
-     "op": "Walks in Istanbul",
      "p": 415,
      "c": "EUR",
-     "b": "group",
-     "h": 4,
-     "u": "https://walksinistanbul.com/istanbul-walking-tours/armenian-heritage-istanbul/"
+     "b": "group"
     }
    ]
   },
@@ -792,30 +741,21 @@
    ],
    "src": [
     {
-     "op": "Turkey Greece Tour",
      "p": 200,
      "c": "EUR",
      "b": "private",
-     "from": true,
-     "note": "guideOnly",
-     "u": "https://www.turkeygreecetour.com/tour/full-day-cross-continental-journey-through-istanbuls-orthodoxy-christian-heritage/"
+     "note": "guideOnly"
     },
     {
-     "op": "Viator",
      "p": 320,
      "c": "USD",
-     "b": "private",
-     "from": true,
-     "h": 7,
-     "u": "https://www.viator.com/Istanbul-tours/Religious-Tours/d585-tag21518"
+     "b": "private"
     },
     {
-     "op": "Tripadvisor",
      "p": 572,
      "c": "USD",
      "b": "group",
-     "max": 7,
-     "u": "https://www.tripadvisor.com/AttractionProductReview-g293974-d11462217-Christian_Heritage_Private_Tour_In_Istanbul_Byzantine_Churches-Istanbul.html"
+     "max": 7
     }
    ]
   },
@@ -847,21 +787,16 @@
    ],
    "src": [
     {
-     "op": "Istanbul Daily City Tours",
      "p": 140,
      "c": "EUR",
      "b": "day",
-     "h": 8,
-     "note": "guideOnly",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+     "note": "guideOnly"
     },
     {
-     "op": "Guide Istanbul",
      "p": 250,
      "c": "EUR",
      "b": "day",
-     "note": "guideOnly",
-     "u": "https://www.guideistanbul.com/istanbul-private-guide/"
+     "note": "guideOnly"
     }
    ]
   },
@@ -896,27 +831,20 @@
    ],
    "src": [
     {
-     "op": "Les Arts Turcs",
      "p": 120,
      "c": "EUR",
-     "b": "pp",
-     "u": "https://www.lesartsturcs.com/product/byzantine-ottoman-relics-full-day-tour/"
+     "b": "pp"
     },
     {
-     "op": "Turkey Travel Bazaar",
      "p": 130,
      "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "u": "https://turkeytravelbazaar.com/tour/istanbul-full-day-city-tour-byzantium-ottoman-relics/"
+     "b": "pp"
     },
     {
-     "op": "Efendi Travel",
      "p": 180,
      "c": "EUR",
      "b": "pp",
-     "note": "ticketsIncl",
-     "u": "https://www.efenditravel.com/tours/istanbul-byzantine-ottoman-relics-tour-9.html"
+     "note": "ticketsIncl"
     }
    ]
   },
@@ -947,31 +875,21 @@
    ],
    "src": [
     {
-     "op": "GetYourGuide",
      "p": 116,
      "c": "USD",
-     "b": "pp",
-     "from": true,
-     "h": 3.5,
-     "u": "https://www.getyourguide.com/istanbul-l56/istanbul-s-golden-horn-eyup-miniaturk-pierre-loti-tour-t18464/"
+     "b": "pp"
     },
     {
-     "op": "Walks of Istanbul",
      "p": 150,
      "c": "USD",
      "b": "group",
-     "max": 6,
-     "h": 4,
-     "u": "https://walksofistanbul.com/tour/half-day-private-golden-horn-cruise-with-eyup-fener-balat-tour/"
+     "max": 6
     },
     {
-     "op": "ToursByLocals",
      "p": 250,
      "c": "USD",
      "b": "group",
-     "max": 6,
-     "h": 4,
-     "u": "https://www.toursbylocals.com/privategoldenhorntouristanbul"
+     "max": 6
     }
    ]
   },
@@ -1003,21 +921,14 @@
    ],
    "src": [
     {
-     "op": "Colorido Tours",
      "p": 90,
      "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "h": 8,
-     "u": "https://coloridotours.com/en/tour/istanbul-asian-side-uskudar-kadikoy-day-tour"
+     "b": "pp"
     },
     {
-     "op": "Pelago",
      "p": 113,
      "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://www.pelago.com/en-US/activity/pizei-istanbul-europe--asian-tour-maidens-tower--mihrimah-sultan-mosque-istanbul/"
+     "b": "pp"
     }
    ]
   },
@@ -1047,20 +958,14 @@
    ],
    "src": [
     {
-     "op": "Secret Food Tours",
      "p": 85.99,
      "c": "EUR",
-     "b": "pp",
-     "h": 3.5,
-     "u": "https://www.secretfoodtours.com/istanbul/food-tours-istanbul/"
+     "b": "pp"
     },
     {
-     "op": "Yummy Istanbul",
      "p": 89,
      "c": "USD",
-     "b": "pp",
-     "h": 3,
-     "u": "https://yummyistanbul.com/istanbul-street-food-tour/"
+     "b": "pp"
     }
    ]
   },
@@ -1090,12 +995,9 @@
    ],
    "src": [
     {
-     "op": "Acetes Travel",
      "p": 55,
      "c": "EUR",
-     "b": "pp",
-     "h": 4.5,
-     "u": "https://acetestravel.com/bosphorus-lunch-cruise.html"
+     "b": "pp"
     }
    ],
    "tip": "publicFerry"
@@ -1122,20 +1024,16 @@
    ],
    "src": [
     {
-     "op": "Big Bus (TourScanner)",
      "p": 45,
      "c": "EUR",
      "b": "pp",
-     "note": "oneDay",
-     "u": "https://tourscanner.com/l/istanbul/i/hop-on-hop-off-bus-tours"
+     "note": "oneDay"
     },
     {
-     "op": "Big Bus (Viator)",
      "p": 57,
      "c": "USD",
      "b": "pp",
-     "note": "oneDay",
-     "u": "https://www.viator.com/tours/Istanbul/Big-Bus-Istanbul-Hop-On-Hop-Off-Tour/d585-6294ISTHOHO"
+     "note": "oneDay"
     }
    ]
   },
@@ -1160,39 +1058,28 @@
    ],
    "src": [
     {
-     "op": "Istanbul Daily City Tours",
      "p": 100,
      "c": "EUR",
      "b": "private",
-     "h": 4,
-     "note": "halfDay",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+     "note": "halfDay"
     },
     {
-     "op": "Istanbul Daily City Tours",
      "p": 140,
      "c": "EUR",
      "b": "day",
-     "h": 8,
-     "note": "guideOnly",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+     "note": "guideOnly"
     },
     {
-     "op": "Istanbul Tours by Locals",
      "p": 150,
      "c": "EUR",
      "b": "group",
-     "from": true,
-     "note": "carIncl",
-     "u": "https://www.istanbultoursbylocals.com/istanbul-tour-guide/"
+     "note": "carIncl"
     },
     {
-     "op": "Guide Istanbul",
      "p": 250,
      "c": "EUR",
      "b": "day",
-     "note": "guideOnly",
-     "u": "https://www.guideistanbul.com/istanbul-private-guide/"
+     "note": "guideOnly"
     }
    ]
   },
@@ -1216,30 +1103,21 @@
    ],
    "src": [
     {
-     "op": "Adore Tourism",
      "p": 150,
      "c": "EUR",
      "b": "day",
-     "h": 8,
-     "note": "vito100",
-     "u": "https://www.istanbulairportstransfer.net/rent-car-with-driver-in-istanbul.php"
+     "note": "vito100"
     },
     {
-     "op": "Rentotransfer",
      "p": 170,
      "c": "EUR",
-     "b": "day",
-     "from": true,
-     "u": "https://rentotransfer.com/blog/istanbul-chauffeur-car-service"
+     "b": "day"
     },
     {
-     "op": "Istanbul Daily City Tours",
      "p": 180,
      "c": "EUR",
      "b": "day",
-     "h": 8,
-     "note": "vito100",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/car-hire-with-driver"
+     "note": "vito100"
     }
    ],
    "tip": "carLimits"
@@ -1262,28 +1140,22 @@
    "exc": [],
    "src": [
     {
-     "op": "Merry Tourism",
      "p": 55,
      "c": "EUR",
      "b": "vehicle",
-     "note": "istSultanahmet",
-     "u": "https://www.merrytourism.com/en/istanbul-private-transfer"
+     "note": "istSultanahmet"
     },
     {
-     "op": "Kings World Transfer",
      "p": 60,
      "c": "EUR",
      "b": "vehicle",
-     "note": "istSultanahmet",
-     "u": "https://kingsworldtransfer.com/en/istanbul-airport-transfer"
+     "note": "istSultanahmet"
     },
     {
-     "op": "Vanvia",
      "p": 100,
      "c": "EUR",
      "b": "vehicle",
-     "note": "istSultanahmet",
-     "u": "https://vanvia.com.tr/en/routes/istanbul-airport-sultanahmet-transfer"
+     "note": "istSultanahmet"
     }
    ]
   },
@@ -1316,27 +1188,19 @@
    ],
    "src": [
     {
-     "op": "Greca",
      "p": 673,
      "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "u": "https://www.greca.co/en/excursion/4-days-cappadocia-ankara"
+     "b": "pp"
     },
     {
-     "op": "Eskapas",
      "p": 1100,
      "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://eskapas.com/tour/istanbul-ankara-cappadocia-4-days/"
+     "b": "pp"
     },
     {
-     "op": "On The Go Tours",
      "p": 1535,
      "c": "USD",
-     "b": "pp",
-     "u": "https://www.onthegotours.com/Turkey/Ankara-and-Cappadocia-Express-4-days"
+     "b": "pp"
     }
    ]
   },
@@ -1369,27 +1233,19 @@
    ],
    "src": [
     {
-     "op": "Turkey Escapades",
      "p": 816,
      "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://turkeyescapades.com/tour/5-days-cappadocia-mt-nemrut-gobeklitepe-gaziantep-tour-from-istanbul/"
+     "b": "pp"
     },
     {
-     "op": "Mardin Turkey Tours",
      "p": 1190,
      "c": "USD",
-     "b": "pp",
-     "u": "https://www.mardinturkeytours.com/package/southeast-turkey-tours/"
+     "b": "pp"
     },
     {
-     "op": "On The Go Tours",
      "p": 1944,
      "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://www.onthegotours.com/us/Turkey/Gobekli-Tepe-and-Mount-Nemrut-Explorer-5-days"
+     "b": "pp"
     }
    ]
   }
