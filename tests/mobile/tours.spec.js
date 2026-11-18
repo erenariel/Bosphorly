@@ -16,7 +16,14 @@ test('special tours page lists tours on request with a WhatsApp question and cat
   await page.goto('/tours.html?lang=tr');
   await expect(page.locator('h1')).toHaveText('Temalı, özel ve çok günlü turlar.');
   await expect(page.locator('.place')).toHaveCount(15);
-  await expect(page.locator('.place').first()).toContainText('Fiyat talep üzerine');
+  await expect(page.locator('#jewish-heritage .from-price')).toContainText('Başlangıç');
+  // Details: route, what is usually included and the prices other companies publish, with their sources.
+  await page.locator('#jewish-heritage summary').click();
+  await expect(page.locator('#jewish-heritage .td-route li')).toHaveCount(6);
+  await expect(page.locator('#jewish-heritage .td-block.inc li').first()).toHaveText('Lisanslı rehber');
+  await expect(page.locator('#jewish-heritage .td-market li')).toHaveCount(3);
+  await expect(page.locator('#jewish-heritage .td-market a').first()).toHaveAttribute('href', /^https:\/\//);
+  await expect(page.locator('#jewish-heritage .td-fine')).toContainText('Bosphorly teklifi değildir');
   const href = await page.locator('#jewish-heritage .btn.wa').getAttribute('href');
   expect(decodeURIComponent(href)).toContain("İstanbul'un Yahudi mirası");
   await page.locator('.chip[data-cat="private"]').click();
