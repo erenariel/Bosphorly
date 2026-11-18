@@ -252,6 +252,91 @@
   "gaSaw": "Metro M4 menghubungkan Bandara Sabiha Gökçen (SAW) di sisi Asia dengan Kadıköy.",
   "gaTram": "Trem T1 melintasi semenanjung bersejarah melalui Sultanahmet, Eminönü, dan Karaköy hingga Kabataş.",
   "gaFerry": "Feri kota menyeberang antara Eropa dan Asia. Bayar feri, metro, dan trem dengan İstanbulkart.",
-  "gaNote": "Jalur dan jadwal bisa berubah; periksa operator resmi sebelum bepergian."
+  "gaNote": "Jalur dan jadwal bisa berubah; periksa operator resmi sebelum bepergian.",
+  "toEyebrow": "TUR SESUAI PERMINTAAN",
+  "toTitle": "Tur tematik, pribadi, dan beberapa hari.",
+  "toLead": "Tur warisan dan iman, jalan-jalan kawasan, tur bus panorama, pemandu dan mobil pribadi, serta perjalanan beberapa hari di Türkiye. Kirim tanggal dan jumlah orang lewat WhatsApp; kami tanyakan ke perusahaan berlisensi dan kirimkan harganya sebelum Anda memutuskan.",
+  "toCatAll": "Semua",
+  "toCatThemed": "Warisan & iman",
+  "toCatHoods": "Kawasan",
+  "toCatPanoramic": "Bus panorama",
+  "toCatPrivate": "Pemandu & mobil pribadi",
+  "toCatMulti": "Beberapa hari di Türkiye",
+  "toPrice": "Tanyakan harga",
+  "toAsk": "Tanya di WhatsApp",
+  "toAskMsg": "Halo Bosphorly, saya tertarik dengan: {tour}. Tanggal: … Jumlah orang: … Hotel: …",
+  "toDurH": "Sekitar {n} jam",
+  "toDurHalf": "Setengah hari",
+  "toDurFull": "Seharian",
+  "toDurD": "{n} hari",
+  "toDurFlex": "Setengah hari, seharian, atau per jam",
+  "toHowTitle": "Cara kerjanya",
+  "toHow1": "Kirim tanggal, jumlah orang, dan hotel Anda lewat WhatsApp.",
+  "toHow2": "Kami tanyakan ke perusahaan berlisensi dan kirimkan harga serta programnya.",
+  "toHow3": "Anda yang memutuskan. Tidak ada pembayaran di situs ini.",
+  "toNote": "Tur ini diatur sesuai permintaan. Bosphorly belum memiliki perjanjian yang ditandatangani untuk tur ini, jadi harga dan ketersediaan dikonfirmasi lewat WhatsApp.",
+  "toSeeAlso": "Paket Cappadocia, Pamukkale, dan Efesus dengan harga yang dipublikasikan →"
+ },
+ "tours": {
+  "jewish-heritage": [
+   "Warisan Yahudi Istanbul",
+   "Lima abad kehidupan Sefardim: kawasan lama Balat dan Hasköy, Sinagoge Ahrida, Galata, dan Tangga Kamondo. Kunjungan ke sinagoge diatur lebih dulu dengan data paspor."
+  ],
+  "armenian-heritage": [
+   "Warisan Armenia Istanbul",
+   "Kumkapı dan Patriarkat Armenia dengan gereja Surp Asdvadzadzin, kawasan lama Samatya, dan gereja Üç Horan di Beyoğlu."
+  ],
+  "christian-istanbul": [
+   "Menapak jejak Kekristenan awal",
+   "Hagia Irene dan Hagia Sophia, mosaik Chora, Patriarkat Ekumenis di Fener, gereja besi Bulgaria St. Stefanus, dan biara Pantokrator."
+  ],
+  "ottoman-imperial": [
+   "Istanbul kekaisaran Utsmaniyah",
+   "Istana Topkapı, Masjid Süleymaniye dan Rüstem Paşa, Grand Bazaar, dan ubin Masjid Sokollu Mehmed Paşa: kota para sultan."
+  ],
+  "byzantine-ottoman": [
+   "Sorotan Bizantium dan Utsmaniyah",
+   "Hipodrom, Hagia Sophia, Basilica Cistern, Masjid Biru, Istana Topkapı, dan Grand Bazaar dalam satu hari berpemandu."
+  ],
+  "golden-horn": [
+   "Tanduk Emas: Fener, Balat, dan Eyüp",
+   "Balat dan Fener yang warna-warni, Masjid Eyüp Sultan, kereta gantung ke Bukit Pierre Loti untuk pemandangannya, lalu kembali menyusuri air."
+  ],
+  "uskudar": [
+   "Üsküdar di pantai Asia",
+   "Menyeberangi Bosporus dengan feri, Masjid Mihrimah Sultan dan Şemsi Paşa, Menara Gadis dari tepi pantai, dan pemandangan dari Bukit Çamlıca."
+  ],
+  "kadikoy-moda": [
+   "Jalan-jalan kuliner Kadıköy dan Moda",
+   "Naik feri ke sisi Asia yang ramai, cicipi aneka makanan di pasar Kadıköy, dan berjalan di tepi laut Moda."
+  ],
+  "beykoz": [
+   "Beykoz dan Bosporus utara",
+   "Bosporus utara yang hijau: Benteng Rumeli dan Anadolu, desa nelayan Anadolu Kavağı, Kastil Yoros, dan makan siang ikan di tepi air."
+  ],
+  "panoramic-bus": [
+   "Tur bus panorama kota (hop-on hop-off)",
+   "Bus atap terbuka melewati tempat-tempat utama dengan audio dalam beberapa bahasa; turun di mana saja dan naik bus berikutnya. Ideal jika Anda hanya punya satu hari."
+  ],
+  "private-guide": [
+   "Pemandu pribadi berlisensi",
+   "Pemandu profesional berlisensi khusus untuk keluarga atau grup Anda, setengah hari atau seharian, sesuai rencana Anda dan dalam bahasa Anda."
+  ],
+  "private-car": [
+   "Mobil pribadi dengan sopir",
+   "Mobil atau minibus dengan sopir per jam atau per hari, dari sedan untuk berdua hingga minibus untuk keluarga besar. Bisa digabung dengan pemandu pribadi."
+  ],
+  "vip-transfer": [
+   "Transfer VIP dan limusin",
+   "Transfer bandara atau dalam kota dengan van VIP atau sedan mewah, dengan penyambutan di aula kedatangan."
+  ],
+  "anatolian-civilizations": [
+   "Peradaban Anatolia",
+   "Museum Peradaban Anatolia dan Anıtkabir di Ankara, ibu kota Het Hattusa, dan cerobong peri Cappadocia."
+  ],
+  "upper-mesopotamia": [
+   "Mesopotamia Hulu",
+   "Gaziantep dan mosaik Zeugma, Şanlıurfa dengan Göbekli Tepe dan Balıklıgöl, kota batu Mardin, dan matahari terbit di Gunung Nemrut."
+  ]
  }
 }

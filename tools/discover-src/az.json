@@ -252,6 +252,91 @@
   "gaSaw": "M4 metrosu Asiya tərəfindəki Səbiha Gökçən Hava Limanını (SAW) Kadıköyə bağlayır.",
   "gaTram": "T1 tramvayı tarixi yarımadada Sultanəhməd, Eminönü və Qaraköy üzərindən Kabataşa gedir.",
   "gaFerry": "Şəhər bərələri Avropa ilə Asiya arasında işləyir. Bərə, metro və tramvay üçün İstanbulkart istifadə olunur.",
-  "gaNote": "Xətlər və cədvəllər dəyişə bilər; yola çıxmazdan əvvəl rəsmi operatorları yoxlayın."
+  "gaNote": "Xətlər və cədvəllər dəyişə bilər; yola çıxmazdan əvvəl rəsmi operatorları yoxlayın.",
+  "toEyebrow": "SORĞU ÜZRƏ TURLAR",
+  "toTitle": "Tematik, xüsusi və çoxgünlük turlar.",
+  "toLead": "İrs və inanc turları, məhəllə gəzintiləri, panoramik avtobus turu, xüsusi bələdçi və avtomobil, Türkiyədə çoxgünlük səfərlər. Tarixi və qrup sayını WhatsApp-da yazın; lisenziyalı şirkətlərdən soruşub qərar verməzdən əvvəl qiyməti sizə göndərək.",
+  "toCatAll": "Hamısı",
+  "toCatThemed": "İrs və inanc",
+  "toCatHoods": "Məhəllələr",
+  "toCatPanoramic": "Panoramik avtobus",
+  "toCatPrivate": "Xüsusi bələdçi və avtomobil",
+  "toCatMulti": "Türkiyədə çoxgünlük",
+  "toPrice": "Qiymət sorğu ilə",
+  "toAsk": "WhatsApp-da soruş",
+  "toAskMsg": "Salam Bosphorly, bu tur məni maraqlandırır: {tour}. Tarix: … Qonaq sayı: … Otel: …",
+  "toDurH": "Təxminən {n} saat",
+  "toDurHalf": "Yarım gün",
+  "toDurFull": "Tam gün",
+  "toDurD": "{n} gün",
+  "toDurFlex": "Yarım gün, tam gün və ya saatlıq",
+  "toHowTitle": "Necə işləyir",
+  "toHow1": "Tarixi, qonaq sayını və oteli WhatsApp-da yazın.",
+  "toHow2": "Lisenziyalı şirkətlərdən soruşub qiyməti və proqramı göndəririk.",
+  "toHow3": "Qərar sizindir. Bu saytda heç nə ödənilmir.",
+  "toNote": "Bu turlar sorğu ilə təşkil olunur. Bosphorly-nin hələ bunlar üçün imzalanmış müqaviləsi yoxdur, ona görə qiymət və boş yer WhatsApp-da təsdiqlənir.",
+  "toSeeAlso": "Dərc olunmuş qiymətli Kappadokiya, Pamukkale və Efes paketləri →"
+ },
+ "tours": {
+  "jewish-heritage": [
+   "İstanbulun yəhudi irsi",
+   "Beş əsrlik sefard həyatı: Balat və Hasköyün köhnə məhəllələri, Ahrida sinaqoqu, Qalata və Kamondo pilləkənləri. Sinaqoq ziyarətləri pasport məlumatı ilə əvvəlcədən razılaşdırılır."
+  ],
+  "armenian-heritage": [
+   "İstanbulun erməni irsi",
+   "Kumkapı və Surp Asdvadzadzin kilsəsi ilə Erməni Patriarxlığı, köhnə Samatya məhəlləsi və Bəyoğludakı Üç Horan kilsəsi."
+  ],
+  "christian-istanbul": [
+   "Erkən xristianlığın izi ilə",
+   "Aya İrini və Ayasofya, Xoranın mozaikaları, Fenerdəki Ekumenik Patriarxlıq, dəmir Bolqar Müqəddəs Stefan kilsəsi və Pantokrator monastırı."
+  ],
+  "ottoman-imperial": [
+   "Osmanlı paytaxtı İstanbul",
+   "Topqapı sarayı, Süleymaniyə və Rüstəm Paşa məscidləri, Qapalıçarşı və Sokollu Mehmed Paşanın çiniləri: sultanların şəhəri."
+  ],
+  "byzantine-ottoman": [
+   "Bizans və Osmanlının ən önəmliləri",
+   "Hipodrom, Ayasofya, Yerebatan sarnıcı, Sultanəhməd məscidi, Topqapı sarayı və Qapalıçarşı bir bələdçili gündə."
+  ],
+  "golden-horn": [
+   "Qızıl Buynuz: Fener, Balat və Eyüp",
+   "Rəngarəng Balat və Fener, Eyüp Sultan məscidi, mənzərə üçün kanat yolu ilə Pyer Loti təpəsi və su kənarı ilə geri dönüş."
+  ],
+  "uskudar": [
+   "Asiya sahilində Üsküdar",
+   "Bərə ilə Boğazdan keçid, Mehrimah Sultan və Şəmsi Paşa məscidləri, sahildən Qız qülləsi və Çamlıca təpəsindən mənzərə."
+  ],
+  "kadikoy-moda": [
+   "Kadıköy və Moda dad gəzintisi",
+   "Bərə ilə canlı Asiya tərəfinə keçin, Kadıköy bazarında dadın və Modada dəniz kənarında gəzin."
+  ],
+  "beykoz": [
+   "Beykoz və Yuxarı Boğaz",
+   "Boğazın yaşıl şimalı: Rumeli və Anadolu qalaları, balıqçı kəndi Anadolu Kavağı, Yoros qalası və su kənarında balıq naharı."
+  ],
+  "panoramic-bus": [
+   "Panoramik şəhər avtobus turu (hop-on hop-off)",
+   "Üstü açıq avtobusla əsas görməli yerlərin yanından keçin, bir neçə dildə səsli izahat dinləyin; istədiyiniz yerdə düşüb sonrakı avtobusa minin. Yalnız bir gününüz varsa idealdır."
+  ],
+  "private-guide": [
+   "Xüsusi lisenziyalı bələdçi",
+   "Yalnız ailəniz və ya qrupunuz üçün peşəkar lisenziyalı bələdçi; yarım və ya tam gün, öz proqramınızla və öz dilinizdə."
+  ],
+  "private-car": [
+   "Sürücülü xüsusi avtomobil",
+   "Saatlıq və ya günlük sürücülü avtomobil: iki nəfərlik sedandan böyük ailələr üçün mikroavtobusa qədər. Xüsusi bələdçi ilə birləşdirmək olar."
+  ],
+  "vip-transfer": [
+   "VIP və limuzin transfer",
+   "VIP mikroavtobus və ya lüks sedanla hava limanı və şəhərdaxili transfer, gəliş zalında qarşılama ilə."
+  ],
+  "anatolian-civilizations": [
+   "Anadolu sivilizasiyaları",
+   "Ankarada Anadolu Sivilizasiyaları Muzeyi və Anıtkabir, Het paytaxtı Hattuşa və Kappadokiyanın pəri bacaları."
+  ],
+  "upper-mesopotamia": [
+   "Yuxarı Mesopotamiya",
+   "Qaziantep və Zevqma mozaikaları, Göbəkli Təpə və Balıqlıgöl ilə Şanlıurfa, daş şəhər Mardin və Nemrut dağında gün doğumu."
+  ]
  }
 }

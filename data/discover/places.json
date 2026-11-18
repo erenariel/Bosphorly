@@ -655,6 +655,116 @@
    "day": 2
   }
  ],
+ "tours": [
+  {
+   "id": "jewish-heritage",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ]
+  },
+  {
+   "id": "armenian-heritage",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ]
+  },
+  {
+   "id": "christian-istanbul",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ]
+  },
+  {
+   "id": "ottoman-imperial",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ]
+  },
+  {
+   "id": "byzantine-ottoman",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ]
+  },
+  {
+   "id": "golden-horn",
+   "cat": "hoods",
+   "dur": [
+    "half"
+   ]
+  },
+  {
+   "id": "uskudar",
+   "cat": "hoods",
+   "dur": [
+    "half"
+   ]
+  },
+  {
+   "id": "kadikoy-moda",
+   "cat": "hoods",
+   "dur": [
+    "half"
+   ]
+  },
+  {
+   "id": "beykoz",
+   "cat": "hoods",
+   "dur": [
+    "full"
+   ]
+  },
+  {
+   "id": "panoramic-bus",
+   "cat": "panoramic",
+   "dur": [
+    "h",
+    "2.5"
+   ]
+  },
+  {
+   "id": "private-guide",
+   "cat": "private",
+   "dur": [
+    "flex"
+   ]
+  },
+  {
+   "id": "private-car",
+   "cat": "private",
+   "dur": [
+    "flex"
+   ]
+  },
+  {
+   "id": "vip-transfer",
+   "cat": "private",
+   "dur": [
+    "flex"
+   ]
+  },
+  {
+   "id": "anatolian-civilizations",
+   "cat": "multi",
+   "dur": [
+    "d",
+    "4"
+   ]
+  },
+  {
+   "id": "upper-mesopotamia",
+   "cat": "multi",
+   "dur": [
+    "d",
+    "5"
+   ]
+  }
+ ],
  "guides": [
   {
    "href": "en/istanbul-guide.html",

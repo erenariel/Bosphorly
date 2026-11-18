@@ -1088,7 +1088,30 @@
    "gaSaw": "M4 metro links Sabiha Gökçen Airport (SAW) on the Asian side with Kadıköy.",
    "gaTram": "The T1 tram runs along the historic peninsula through Sultanahmet, Eminönü and Karaköy to Kabataş.",
    "gaFerry": "City ferries cross between Europe and Asia. Pay for ferries, metro and trams with an İstanbulkart.",
-   "gaNote": "Lines and timetables change; check the official operators before you travel."
+   "gaNote": "Lines and timetables change; check the official operators before you travel.",
+   "toEyebrow": "TOURS ON REQUEST",
+   "toTitle": "Themed, private and multi-day tours.",
+   "toLead": "Heritage and faith tours, neighbourhood walks, a panoramic bus tour, private guides and cars, and multi-day trips across Türkiye. Send your date and group on WhatsApp; we ask licensed companies and send you the price before you decide.",
+   "toCatAll": "All",
+   "toCatThemed": "Heritage & faith",
+   "toCatHoods": "Neighbourhoods",
+   "toCatPanoramic": "Panoramic bus tour",
+   "toCatPrivate": "Private guide & car",
+   "toCatMulti": "Multi-day Türkiye",
+   "toPrice": "Price on request",
+   "toAsk": "Ask on WhatsApp",
+   "toAskMsg": "Hello Bosphorly, I am interested in: {tour}. Date: … Number of guests: … Hotel: …",
+   "toDurH": "About {n} hours",
+   "toDurHalf": "Half day",
+   "toDurFull": "Full day",
+   "toDurD": "{n} days",
+   "toDurFlex": "Half day, full day or by the hour",
+   "toHowTitle": "How it works",
+   "toHow1": "Send your date, group size and hotel on WhatsApp.",
+   "toHow2": "We ask licensed companies and send you the price and the programme.",
+   "toHow3": "You decide. Nothing is paid on this website.",
+   "toNote": "These tours are arranged on request. Bosphorly has no signed agreement for them yet, so the price and availability are confirmed on WhatsApp.",
+   "toSeeAlso": "Cappadocia, Pamukkale and Ephesus packages with published prices →"
   },
   "tr": {
    "navDiscover": "Keşfet",
@@ -1155,7 +1178,260 @@
    "gaSaw": "M4 metrosu Anadolu yakasındaki Sabiha Gökçen Havalimanı'nı (SAW) Kadıköy'e bağlar.",
    "gaTram": "T1 tramvayı tarihi yarımadada Sultanahmet, Eminönü ve Karaköy üzerinden Kabataş'a gider.",
    "gaFerry": "Şehir Hatları vapurları Avrupa ile Asya arasında çalışır. Vapur, metro ve tramvay için İstanbulkart kullanılır.",
-   "gaNote": "Hatlar ve saatler değişebilir; yola çıkmadan resmî işletmelere bakın."
+   "gaNote": "Hatlar ve saatler değişebilir; yola çıkmadan resmî işletmelere bakın.",
+   "toEyebrow": "TALEP ÜZERİNE TURLAR",
+   "toTitle": "Temalı, özel ve çok günlü turlar.",
+   "toLead": "İnanç ve miras turları, semt yürüyüşleri, panoramik otobüs turu, özel rehber ve araç, Türkiye'de çok günlü geziler. Tarihinizi ve kişi sayısını WhatsApp'tan yazın; lisanslı firmalara soralım, karar vermeden önce fiyatı size iletelim.",
+   "toCatAll": "Tümü",
+   "toCatThemed": "Miras ve inanç",
+   "toCatHoods": "Semtler",
+   "toCatPanoramic": "Panoramik otobüs turu",
+   "toCatPrivate": "Özel rehber ve araç",
+   "toCatMulti": "Çok günlü Türkiye",
+   "toPrice": "Fiyat talep üzerine",
+   "toAsk": "WhatsApp'tan sor",
+   "toAskMsg": "Merhaba Bosphorly, şu tur ilgimi çekiyor: {tour}. Tarih: … Kişi sayısı: … Otel: …",
+   "toDurH": "Yaklaşık {n} saat",
+   "toDurHalf": "Yarım gün",
+   "toDurFull": "Tam gün",
+   "toDurD": "{n} gün",
+   "toDurFlex": "Yarım gün, tam gün ya da saatlik",
+   "toHowTitle": "Nasıl işler?",
+   "toHow1": "Tarihinizi, kişi sayısını ve otelinizi WhatsApp'tan yazın.",
+   "toHow2": "Lisanslı firmalara soralım, fiyatı ve programı size gönderelim.",
+   "toHow3": "Karar sizin. Bu sitede hiçbir ödeme yapılmaz.",
+   "toNote": "Bu turlar talep üzerine ayarlanır. Bosphorly'nin bunlar için henüz imzalı bir anlaşması yok; fiyat ve uygunluk WhatsApp'ta teyit edilir.",
+   "toSeeAlso": "Yayınlanmış fiyatlı Kapadokya, Pamukkale ve Efes paketleri →"
   }
- }
+ },
+ "tours": [
+  {
+   "id": "jewish-heritage",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ],
+   "en": [
+    "Jewish heritage of Istanbul",
+    "Five centuries of Sephardic life: the old quarters of Balat and Hasköy, the Ahrida Synagogue, Galata and the Kamondo Stairs. Synagogue visits are arranged in advance with passport details."
+   ],
+   "tr": [
+    "İstanbul'un Yahudi mirası",
+    "Beş yüzyıllık Sefarad hayatı: Balat ve Hasköy'ün eski mahalleleri, Ahrida Sinagogu, Galata ve Kamondo Merdivenleri. Sinagog ziyaretleri pasaport bilgisiyle önceden ayarlanır."
+   ]
+  },
+  {
+   "id": "armenian-heritage",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ],
+   "en": [
+    "Armenian heritage of Istanbul",
+    "Kumkapı and the Armenian Patriarchate with the Surp Asdvadzadzin church, the old quarter of Samatya and the Üç Horan church in Beyoğlu."
+   ],
+   "tr": [
+    "İstanbul'un Ermeni mirası",
+    "Kumkapı'da Ermeni Patrikhanesi ve Surp Asdvadzadzin Kilisesi, eski Samatya mahallesi ve Beyoğlu'ndaki Üç Horan Kilisesi."
+   ]
+  },
+  {
+   "id": "christian-istanbul",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ],
+   "en": [
+    "In the footsteps of early Christianity",
+    "Hagia Irene and Hagia Sophia, the mosaics of Chora, the Ecumenical Patriarchate at Fener, the iron Bulgarian church of St Stephen and the Pantokrator monastery."
+   ],
+   "tr": [
+    "Erken Hristiyanlığın izinde",
+    "Aya İrini ve Ayasofya, Kariye'nin mozaikleri, Fener'deki Ekümenik Patrikhane, demir Bulgar Kilisesi (Sveti Stefan) ve Pantokrator Manastırı."
+   ]
+  },
+  {
+   "id": "ottoman-imperial",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ],
+   "en": [
+    "Ottoman imperial Istanbul",
+    "Topkapı Palace, the Süleymaniye and Rüstem Paşa mosques, the Grand Bazaar and the tiles of Sokollu Mehmed Paşa: the city of the sultans."
+   ],
+   "tr": [
+    "Osmanlı başkenti İstanbul",
+    "Topkapı Sarayı, Süleymaniye ve Rüstem Paşa camileri, Kapalıçarşı ve Sokollu Mehmed Paşa'nın çinileri: sultanların şehri."
+   ]
+  },
+  {
+   "id": "byzantine-ottoman",
+   "cat": "themed",
+   "dur": [
+    "full"
+   ],
+   "en": [
+    "Byzantine and Ottoman highlights",
+    "The Hippodrome, Hagia Sophia, the Basilica Cistern, the Blue Mosque, Topkapı Palace and the Grand Bazaar in one guided day."
+   ],
+   "tr": [
+    "Bizans ve Osmanlı'nın öne çıkanları",
+    "Hipodrom, Ayasofya, Yerebatan Sarnıcı, Sultanahmet Camii, Topkapı Sarayı ve Kapalıçarşı tek bir rehberli günde."
+   ]
+  },
+  {
+   "id": "golden-horn",
+   "cat": "hoods",
+   "dur": [
+    "half"
+   ],
+   "en": [
+    "Golden Horn: Fener, Balat and Eyüp",
+    "Colourful Balat and Fener, the Eyüp Sultan Mosque, the cable car up to Pierre Loti for the view, and back along the water."
+   ],
+   "tr": [
+    "Haliç: Fener, Balat ve Eyüp",
+    "Renkli Balat ve Fener, Eyüp Sultan Camii, manzara için teleferikle Pierre Loti ve su kenarından dönüş."
+   ]
+  },
+  {
+   "id": "uskudar",
+   "cat": "hoods",
+   "dur": [
+    "half"
+   ],
+   "en": [
+    "Üsküdar on the Asian shore",
+    "A ferry across the Bosphorus, the Mihrimah Sultan and Şemsi Paşa mosques, the Maiden's Tower from the shore and the view from Çamlıca Hill."
+   ],
+   "tr": [
+    "Asya yakasında Üsküdar",
+    "Vapurla Boğaz geçişi, Mihrimah Sultan ve Şemsi Paşa camileri, kıyıdan Kız Kulesi ve Çamlıca Tepesi'nden manzara."
+   ]
+  },
+  {
+   "id": "kadikoy-moda",
+   "cat": "hoods",
+   "dur": [
+    "half"
+   ],
+   "en": [
+    "Kadıköy and Moda food walk",
+    "Cross by ferry to the lively Asian side, taste your way through the Kadıköy market and walk along the sea in Moda."
+   ],
+   "tr": [
+    "Kadıköy ve Moda lezzet yürüyüşü",
+    "Vapurla canlı Asya yakasına geçin, Kadıköy çarşısında tadım yapın ve Moda'da deniz kenarında yürüyün."
+   ]
+  },
+  {
+   "id": "beykoz",
+   "cat": "hoods",
+   "dur": [
+    "full"
+   ],
+   "en": [
+    "Beykoz and the upper Bosphorus",
+    "The green northern Bosphorus: Rumeli and Anadolu fortresses, the fishing village of Anadolu Kavağı, Yoros Castle and a fish lunch by the water."
+   ],
+   "tr": [
+    "Beykoz ve Yukarı Boğaz",
+    "Boğaz'ın yeşil kuzeyi: Rumeli ve Anadolu hisarları, balıkçı köyü Anadolu Kavağı, Yoros Kalesi ve su kenarında balık yemeği."
+   ]
+  },
+  {
+   "id": "panoramic-bus",
+   "cat": "panoramic",
+   "dur": [
+    "h",
+    "2.5"
+   ],
+   "en": [
+    "Panoramic city bus tour (hop-on hop-off)",
+    "An open-top bus past the main sights with audio commentary in several languages; hop off where you like and take a later bus. Good if you only have a day."
+   ],
+   "tr": [
+    "Panoramik şehir turu (hop-on hop-off)",
+    "Üstü açık otobüsle başlıca yerleri dolaşın, birçok dilde sesli anlatım dinleyin; istediğiniz yerde inip sonraki otobüse binin. Tek günü olanlar için ideal."
+   ]
+  },
+  {
+   "id": "private-guide",
+   "cat": "private",
+   "dur": [
+    "flex"
+   ],
+   "en": [
+    "Private licensed guide",
+    "A professional licensed guide just for your family or group, half or full day, on your own itinerary and in your language."
+   ],
+   "tr": [
+    "Özel lisanslı rehber",
+    "Yalnızca aileniz ya da grubunuz için profesyonel lisanslı rehber; yarım veya tam gün, kendi programınıza göre ve kendi dilinizde."
+   ]
+  },
+  {
+   "id": "private-car",
+   "cat": "private",
+   "dur": [
+    "flex"
+   ],
+   "en": [
+    "Private car with driver",
+    "A car or minibus with a driver by the hour or the day, from a sedan for two to a minibus for large families. Combine it with a private guide."
+   ],
+   "tr": [
+    "Şoförlü özel araç",
+    "Saatlik ya da günlük şoförlü araç: iki kişilik sedandan kalabalık aileler için minibüse kadar. Özel rehberle birleştirilebilir."
+   ]
+  },
+  {
+   "id": "vip-transfer",
+   "cat": "private",
+   "dur": [
+    "flex"
+   ],
+   "en": [
+    "VIP and limousine transfer",
+    "Airport or city transfers in a VIP van or luxury sedan, with meet and greet at arrivals."
+   ],
+   "tr": [
+    "VIP ve limuzin transfer",
+    "VIP minibüs ya da lüks sedanla havalimanı veya şehir içi transfer; gelen yolcu salonunda karşılama."
+   ]
+  },
+  {
+   "id": "anatolian-civilizations",
+   "cat": "multi",
+   "dur": [
+    "d",
+    "4"
+   ],
+   "en": [
+    "Anatolian civilizations",
+    "Ankara's Museum of Anatolian Civilizations and Anıtkabir, the Hittite capital Hattusa, and the fairy chimneys of Cappadocia."
+   ],
+   "tr": [
+    "Anadolu medeniyetleri",
+    "Ankara'da Anadolu Medeniyetleri Müzesi ve Anıtkabir, Hitit başkenti Hattuşa ve Kapadokya'nın peri bacaları."
+   ]
+  },
+  {
+   "id": "upper-mesopotamia",
+   "cat": "multi",
+   "dur": [
+    "d",
+    "5"
+   ],
+   "en": [
+    "Upper Mesopotamia",
+    "Gaziantep and the Zeugma mosaics, Şanlıurfa with Göbeklitepe and Balıklıgöl, the stone city of Mardin and sunrise on Mount Nemrut."
+   ],
+   "tr": [
+    "Yukarı Mezopotamya",
+    "Gaziantep ve Zeugma mozaikleri, Göbeklitepe ve Balıklıgöl ile Şanlıurfa, taş şehir Mardin ve Nemrut Dağı'nda gün doğumu."
+   ]
+  }
+ ]
 }

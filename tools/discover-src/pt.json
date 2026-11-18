@@ -252,6 +252,91 @@
   "gaSaw": "O metrô M4 liga o Aeroporto Sabiha Gökçen (SAW), no lado asiático, a Kadıköy.",
   "gaTram": "O bonde T1 percorre a península histórica por Sultanahmet, Eminönü e Karaköy até Kabataş.",
   "gaFerry": "As balsas da cidade cruzam entre a Europa e a Ásia. Balsa, metrô e bonde se pagam com o İstanbulkart.",
-  "gaNote": "Linhas e horários mudam; confira os operadores oficiais antes de viajar."
+  "gaNote": "Linhas e horários mudam; confira os operadores oficiais antes de viajar.",
+  "toEyebrow": "PASSEIOS SOB CONSULTA",
+  "toTitle": "Passeios temáticos, particulares e de vários dias.",
+  "toLead": "Passeios de herança e fé, caminhadas por bairros, passeio panorâmico de ônibus, guias e carros particulares e viagens de vários dias pela Türkiye. Mande sua data e o tamanho do grupo pelo WhatsApp; consultamos empresas credenciadas e enviamos o preço antes de você decidir.",
+  "toCatAll": "Todos",
+  "toCatThemed": "Herança e fé",
+  "toCatHoods": "Bairros",
+  "toCatPanoramic": "Ônibus panorâmico",
+  "toCatPrivate": "Guia e carro particulares",
+  "toCatMulti": "Vários dias na Türkiye",
+  "toPrice": "Preço sob consulta",
+  "toAsk": "Perguntar no WhatsApp",
+  "toAskMsg": "Olá Bosphorly, tenho interesse em: {tour}. Data: … Número de pessoas: … Hotel: …",
+  "toDurH": "Cerca de {n} h",
+  "toDurHalf": "Meio dia",
+  "toDurFull": "Dia inteiro",
+  "toDurD": "{n} dias",
+  "toDurFlex": "Meio dia, dia inteiro ou por hora",
+  "toHowTitle": "Como funciona",
+  "toHow1": "Mande sua data, o número de pessoas e seu hotel pelo WhatsApp.",
+  "toHow2": "Consultamos empresas credenciadas e enviamos o preço e o roteiro.",
+  "toHow3": "Você decide. Nada é pago neste site.",
+  "toNote": "Estes passeios são organizados sob consulta. A Bosphorly ainda não tem acordo assinado para eles, então o preço e a disponibilidade são confirmados pelo WhatsApp.",
+  "toSeeAlso": "Pacotes Capadócia, Pamukkale e Éfeso com preços publicados →"
+ },
+ "tours": {
+  "jewish-heritage": [
+   "Herança judaica de Istambul",
+   "Cinco séculos de vida sefardita: os antigos bairros de Balat e Hasköy, a sinagoga Ahrida, Gálata e a escadaria Camondo. As visitas às sinagogas são agendadas com antecedência com os dados do passaporte."
+  ],
+  "armenian-heritage": [
+   "Herança armênia de Istambul",
+   "Kumkapı e o Patriarcado armênio com a igreja de Surp Asdvadzadzin, o antigo bairro de Samatya e a igreja Üç Horan em Beyoğlu."
+  ],
+  "christian-istanbul": [
+   "Nos passos do cristianismo primitivo",
+   "Santa Irene e Santa Sofia, os mosaicos de Chora, o Patriarcado Ecumênico no Fanar, a igreja búlgara de ferro de Santo Estêvão e o mosteiro do Pantocrator."
+  ],
+  "ottoman-imperial": [
+   "A Istambul imperial otomana",
+   "O palácio de Topkapı, as mesquitas Süleymaniye e Rüstem Paşa, o Grande Bazar e os azulejos de Sokollu Mehmed Paşa: a cidade dos sultões."
+  ],
+  "byzantine-ottoman": [
+   "O melhor de Bizâncio e dos otomanos",
+   "O Hipódromo, Santa Sofia, a Cisterna da Basílica, a Mesquita Azul, o palácio de Topkapı e o Grande Bazar em um dia com guia."
+  ],
+  "golden-horn": [
+   "Corno de Ouro: Fener, Balat e Eyüp",
+   "As ruas coloridas de Balat e Fener, a mesquita de Eyüp Sultan, o teleférico até a colina Pierre Loti pela vista e a volta à beira d'água."
+  ],
+  "uskudar": [
+   "Üsküdar, no lado asiático",
+   "Travessia do Bósforo de balsa, as mesquitas Mihrimah Sultan e Şemsi Paşa, a Torre da Donzela vista da orla e o panorama da colina de Çamlıca."
+  ],
+  "kadikoy-moda": [
+   "Passeio gastronômico em Kadıköy e Moda",
+   "Atravesse de balsa para o animado lado asiático, prove de tudo no mercado de Kadıköy e caminhe à beira-mar em Moda."
+  ],
+  "beykoz": [
+   "Beykoz e o alto Bósforo",
+   "O norte verde do Bósforo: as fortalezas de Rumeli e Anadolu, a vila de pescadores de Anadolu Kavağı, o castelo de Yoros e almoço de peixe à beira d'água."
+  ],
+  "panoramic-bus": [
+   "Passeio panorâmico de ônibus (hop-on hop-off)",
+   "Um ônibus aberto pelos principais pontos com áudio em vários idiomas; desça onde quiser e pegue um ônibus mais tarde. Ideal se você só tem um dia."
+  ],
+  "private-guide": [
+   "Guia particular credenciado",
+   "Um guia profissional credenciado só para sua família ou grupo, meio dia ou dia inteiro, com o seu roteiro e no seu idioma."
+  ],
+  "private-car": [
+   "Carro particular com motorista",
+   "Carro ou micro-ônibus com motorista por hora ou por dia, de um sedã para dois a um micro-ônibus para famílias grandes. Pode ser combinado com guia particular."
+  ],
+  "vip-transfer": [
+   "Traslado VIP e de limusine",
+   "Traslados do aeroporto ou pela cidade em van VIP ou sedã de luxo, com recepção no desembarque."
+  ],
+  "anatolian-civilizations": [
+   "Civilizações da Anatólia",
+   "O Museu das Civilizações da Anatólia e o Anıtkabir em Ancara, a capital hitita Hattusa e as chaminés de fada da Capadócia."
+  ],
+  "upper-mesopotamia": [
+   "Alta Mesopotâmia",
+   "Gaziantep e os mosaicos de Zeugma, Şanlıurfa com Göbekli Tepe e Balıklıgöl, a cidade de pedra de Mardin e o nascer do sol no monte Nemrut."
+  ]
  }
 }

@@ -252,6 +252,91 @@
   "gaSaw": "Metro M4 povezuje Aerodrom Sabiha Gökçen (SAW) na azijskoj strani s Kadıköyem.",
   "gaTram": "Tramvaj T1 vozi duž historijskog poluotoka kroz Sultanahmet, Eminönü i Karaköy do Kabataşa.",
   "gaFerry": "Gradski trajekti prevoze između Evrope i Azije. Trajekt, metro i tramvaj plaćajte İstanbulkartom.",
-  "gaNote": "Linije i vozni redovi se mijenjaju; prije putovanja provjerite službene prevoznike."
+  "gaNote": "Linije i vozni redovi se mijenjaju; prije putovanja provjerite službene prevoznike.",
+  "toEyebrow": "TURE NA UPIT",
+  "toTitle": "Tematske, privatne i višednevne ture.",
+  "toLead": "Ture naslijeđa i vjere, šetnje četvrtima, panoramska tura autobusom, privatni vodiči i automobili te višednevna putovanja po Turskoj. Pošaljite datum i veličinu grupe na WhatsApp; pitat ćemo licencirane kompanije i poslati vam cijenu prije nego što odlučite.",
+  "toCatAll": "Sve",
+  "toCatThemed": "Naslijeđe i vjera",
+  "toCatHoods": "Četvrti",
+  "toCatPanoramic": "Panoramski autobus",
+  "toCatPrivate": "Privatni vodič i automobil",
+  "toCatMulti": "Višednevno po Turskoj",
+  "toPrice": "Cijena na upit",
+  "toAsk": "Pitajte na WhatsAppu",
+  "toAskMsg": "Zdravo, Bosphorly, zanima me: {tour}. Datum: … Broj osoba: … Hotel: …",
+  "toDurH": "Oko {n} h",
+  "toDurHalf": "Pola dana",
+  "toDurFull": "Cijeli dan",
+  "toDurD": "{n} dana",
+  "toDurFlex": "Pola dana, cijeli dan ili na sat",
+  "toHowTitle": "Kako funkcioniše",
+  "toHow1": "Pošaljite datum, broj osoba i hotel na WhatsApp.",
+  "toHow2": "Pitamo licencirane kompanije i šaljemo vam cijenu i program.",
+  "toHow3": "Vi odlučujete. Na ovoj stranici ništa se ne plaća.",
+  "toNote": "Ove ture organizuju se na upit. Bosphorly za njih još nema potpisan ugovor, pa se cijena i dostupnost potvrđuju na WhatsAppu.",
+  "toSeeAlso": "Paketi Kapadokija, Pamukkale i Efes s objavljenim cijenama →"
+ },
+ "tours": {
+  "jewish-heritage": [
+   "Jevrejsko naslijeđe Istanbula",
+   "Pet stoljeća sefardskog života: stare četvrti Balat i Hasköy, sinagoga Ahrida, Galata i stepenice Kamondo. Posjete sinagogama dogovaraju se unaprijed s podacima iz pasoša."
+  ],
+  "armenian-heritage": [
+   "Armensko naslijeđe Istanbula",
+   "Kumkapı i Armenski patrijarhat s crkvom Surp Asdvadzadzin, stara četvrt Samatya i crkva Üç Horan u Beyoğluu."
+  ],
+  "christian-istanbul": [
+   "Tragom ranog kršćanstva",
+   "Sveta Irena i Aja Sofija, mozaici Hore, Ekumenski patrijarhat u Feneru, željezna bugarska crkva sv. Stefana i manastir Pantokratora."
+  ],
+  "ottoman-imperial": [
+   "Osmanski carski Istanbul",
+   "Palata Topkapı, džamije Süleymaniye i Rüstem-paše, Veliki bazar i pločice džamije Sokollu Mehmed-paše: grad sultana."
+  ],
+  "byzantine-ottoman": [
+   "Najbolje od Bizanta i Osmanlija",
+   "Hipodrom, Aja Sofija, Bazilikina cisterna, Plava džamija, palata Topkapı i Veliki bazar u jednom danu s vodičem."
+  ],
+  "golden-horn": [
+   "Zlatni rog: Fener, Balat i Eyüp",
+   "Šareni Balat i Fener, džamija Eyüp Sultan, žičarom do brda Pierre Loti zbog pogleda i povratak uz vodu."
+  ],
+  "uskudar": [
+   "Üsküdar na azijskoj obali",
+   "Trajektom preko Bosfora, džamije Mihrimah Sultan i Šemsi-paše, Djevojačka kula s obale i pogled s brda Çamlıca."
+  ],
+  "kadikoy-moda": [
+   "Gastro šetnja Kadıköyem i Modom",
+   "Trajektom na živahnu azijsku stranu, kušanje na pijaci u Kadıköyu i šetnja uz more u Modi."
+  ],
+  "beykoz": [
+   "Beykoz i gornji Bosfor",
+   "Zeleni sjever Bosfora: tvrđave Rumeli i Anadolu, ribarsko selo Anadolu Kavağı, tvrđava Yoros i riblji ručak uz vodu."
+  ],
+  "panoramic-bus": [
+   "Panoramska tura autobusom (hop-on hop-off)",
+   "Otvoreni autobus pored glavnih znamenitosti s audiovodičem na više jezika; siđite gdje želite i uhvatite sljedeći autobus. Idealno ako imate samo jedan dan."
+  ],
+  "private-guide": [
+   "Privatni licencirani vodič",
+   "Profesionalni licencirani vodič samo za vašu porodicu ili grupu, pola dana ili cijeli dan, po vašem programu i na vašem jeziku."
+  ],
+  "private-car": [
+   "Privatni automobil s vozačem",
+   "Automobil ili minibus s vozačem na sat ili na dan, od limuzine za dvoje do minibusa za velike porodice. Može se kombinovati s privatnim vodičem."
+  ],
+  "vip-transfer": [
+   "VIP i limuzinski transfer",
+   "Transferi s aerodroma ili po gradu VIP kombijem ili luksuznom limuzinom, s dočekom u dolaznoj sali."
+  ],
+  "anatolian-civilizations": [
+   "Civilizacije Anadolije",
+   "Muzej anadolskih civilizacija i Anıtkabir u Ankari, hetitska prijestolnica Hattuša i vilinski dimnjaci Kapadokije."
+  ],
+  "upper-mesopotamia": [
+   "Gornja Mezopotamija",
+   "Gaziantep i mozaici Zeugme, Şanlıurfa s Göbekli Tepeom i Balıklıgölom, kameni grad Mardin i izlazak sunca na planini Nemrut."
+  ]
  }
 }

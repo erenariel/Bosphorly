@@ -30,3 +30,6 @@
 
 /* Korean breaks lines between words, not inside them. */
 html:lang(ko) body{word-break:keep-all;overflow-wrap:anywhere}
+
+/* In-page links (Transfer, Guides…) stop below the sticky header instead of under it. */
+section[id]{scroll-margin-top:112px}
