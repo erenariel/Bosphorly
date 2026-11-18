@@ -28,7 +28,12 @@
     const ul = el('ul'); keys.forEach(k => ul.append(el('li', null, t('toI_' + k)))); box.append(ul); return box;
   };
   function details(s) {
-    const d = el('details', 'td'); d.append(el('summary', null, t('toDetails')));
+    const d = el('details', 'td');
+    const sum = el('summary');
+    sum.append(el('span', 'td-ico', '💶'), el('span', 'td-label', t('toDetails')));
+    if (s.src && s.src.length) { const n = el('span', 'td-count', String(s.src.length)); n.setAttribute('aria-hidden', 'true'); sum.append(n); }
+    const chev = el('span', 'td-chev', '▾'); chev.setAttribute('aria-hidden', 'true'); sum.append(chev);
+    d.append(sum);
     const body = el('div', 'td-body');
     if (s.time) { const b = el('div', 'td-block'); b.append(el('h4', null, t('toTimes')), el('p', null, s.time)); body.append(b); }
     if (s.route && s.route.length) {
