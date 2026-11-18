@@ -70,5 +70,5 @@
     return map;
   }
 
-  window.BosphorlyDiscover = Object.freeze({ lang, rtl, locale, load, el, priceText, closedText, dateText, waLink, mapsLink, walkLink, norm, leaflet, baseMap });
+  window.BosphorlyDiscover = Object.freeze({ lang, rtl, locale, load, el, money, priceText, closedText, dateText, waLink, mapsLink, walkLink, norm, leaflet, baseMap });
 })();

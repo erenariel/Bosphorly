@@ -12,6 +12,7 @@ OUT = ROOT / "data" / "discover"
 LANGS = ["en", "tr", "ru", "uk", "de", "fr", "nl", "ar", "he", "az", "fa", "es", "it", "pt", "hr", "hu", "bs", "zh", "ja", "ko", "hi", "bn", "id"]
 MASTER_LANGS = ("en", "tr")
 CHECKED = "2026-11-16"
+TOURS_CHECKED = "2026-11-18"  # prices published by other companies for the tours on request
 GUIDES = [
     ("en/istanbul-guide.html", "Istanbul travel guide", "en", "essentials tips first visit"),
     ("en/airport-transfer.html", "Istanbul airport transfer guide", "en", "IST SAW airport taxi transfer Sabiha Gökçen"),
@@ -35,7 +36,7 @@ def main():
     stops = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master["stops"]]
     tours = [{k: v for k, v in s.items() if k not in MASTER_LANGS} for s in master.get("tours", [])]
     guides = [{"href": h, "title": t, "lang": l, "keywords": k} for h, t, l, k in GUIDES]
-    base = {"checked": CHECKED, "places": places, "stops": stops, "tours": tours, "guides": guides}
+    base = {"checked": CHECKED, "toursChecked": TOURS_CHECKED, "places": places, "stops": stops, "tours": tours, "guides": guides}
     (OUT / "places.json").write_text(json.dumps(base, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     en_ui = master["ui"]["en"]
     for lang in LANGS:

@@ -19,6 +19,22 @@
 .how li::before{counter-increment:s;content:counter(s);position:absolute;left:14px;top:12px;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800}
 [dir=rtl] .how li{padding:14px 52px 14px 14px}[dir=rtl] .how li::before{left:auto;right:14px}
 .see-also[hidden]{display:none}
+.place .from-price{color:#0a1753;font-weight:800}
+.td{border-top:1px solid var(--line);padding-top:8px}
+.td summary{cursor:pointer;font-weight:800;color:#16457d;font-size:14px;list-style:none;display:flex;align-items:center;gap:6px;min-height:36px}
+.td summary::-webkit-details-marker{display:none}.td summary::before{content:'▸';transition:transform .15s}.td[open] summary::before{transform:rotate(90deg)}
+[dir=rtl] .td summary::before{content:'◂'}[dir=rtl] .td[open] summary::before{transform:rotate(-90deg)}
+.td-body{display:grid;gap:12px;padding:6px 0 4px;font-size:14px;color:#34465f}
+.td-block h4{margin:0 0 4px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#5d6f8a}
+.td-block p{margin:0}.td-block ul,.td-block ol{margin:0;padding-inline-start:20px}
+.td-route{display:flex;flex-wrap:wrap;gap:6px;padding:0!important;list-style:none;counter-reset:r}
+.td-route li{counter-increment:r;background:#eef4ff;border-radius:999px;padding:4px 10px;font-size:13px}.td-route li::before{content:counter(r) '. ';font-weight:800;color:#16457d}
+.td-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.td-block.inc li::marker{content:'✓  ';color:#137148}.td-block.exc li::marker{content:'✕  ';color:#a12a2a}
+.td-market{list-style:none;padding:0!important;display:grid;gap:6px}
+.td-market li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.td-market a{font-weight:700;color:#16457d}.td-market b{color:#0a1753;text-align:end}.td-market span{grid-column:1/-1;font-size:12px;color:#5d6f8a}
+.td-fine{font-size:12px;color:#5d6f8a;margin-top:6px!important}.td-tip{margin:0;background:#fff9ec;border:1px dashed #f0b44c;border-radius:12px;padding:8px 10px;font-size:13px}
+@media(max-width:420px){.td-two{grid-template-columns:1fr}}
 .see-also{display:inline-block;margin:14px 0 4px;font-weight:700;color:#16457d}
 </style>
 <script src="lang.js"></script>
