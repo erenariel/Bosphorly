@@ -1,6 +1,9 @@
 import {test,expect} from '@playwright/test';
 test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
+ // Sending a request opens WhatsApp in a new window. Stand in for WhatsApp so the test never loads the real site,
+ // whose own cookies (on whatsapp.com) would otherwise be counted below as if Bosphorly had set them.
+ await page.context().route(/^https:\/\/(wa\.me|([a-z0-9-]+\.)*whatsapp\.com)\//,r=>r.fulfill({status:200,contentType:'text/html',body:''}));
  await page.goto('/booking.html?lang=en');
  await expect(page.locator('#offer option')).toHaveCount(35);
  await page.locator('#offer').selectOption('bb-sunset');
