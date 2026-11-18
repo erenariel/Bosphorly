@@ -20,11 +20,18 @@
 [dir=rtl] .how li{padding:14px 52px 14px 14px}[dir=rtl] .how li::before{left:auto;right:14px}
 .see-also[hidden]{display:none}
 .place .from-price{color:#0a1753;font-weight:800}
-.td{border-top:1px solid var(--line);padding-top:8px}
-.td summary{cursor:pointer;font-weight:800;color:#16457d;font-size:14px;list-style:none;display:flex;align-items:center;gap:6px;min-height:36px}
-.td summary::-webkit-details-marker{display:none}.td summary::before{content:'▸';transition:transform .15s}.td[open] summary::before{transform:rotate(90deg)}
-[dir=rtl] .td summary::before{content:'◂'}[dir=rtl] .td[open] summary::before{transform:rotate(-90deg)}
-.td-body{display:grid;gap:12px;padding:6px 0 4px;font-size:14px;color:#34465f}
+.td{border:1px solid #cfdcf3;border-radius:14px;background:#f5f9ff;overflow:hidden;transition:box-shadow .15s}
+.td[open]{background:#fff;box-shadow:0 4px 14px rgba(10,23,83,.08)}
+.td summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;min-height:48px;padding:10px 14px;font-weight:800;font-size:15px;color:#0a1753;background:linear-gradient(90deg,#eaf2ff,#f5f9ff)}
+.td summary::-webkit-details-marker{display:none}
+.td summary:hover{background:#e2ecff}.td summary:focus-visible{outline:3px solid var(--cyan);outline-offset:-3px}
+.td summary .td-ico{font-size:18px;line-height:1}
+.td summary .td-label{flex:1}
+.td summary .td-count{min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:#0a1753;color:#fff;font-size:12px;display:inline-grid;place-items:center}
+.td summary .td-chev{width:28px;height:28px;border-radius:50%;background:#fff;border:1px solid #cfdcf3;display:grid;place-items:center;font-size:12px;transition:transform .2s}
+.td[open] summary .td-chev{transform:rotate(180deg)}
+.td[open] summary{border-bottom:1px solid #e3ebf7}
+.td-body{padding:12px 14px 14px;display:grid;gap:12px;font-size:14px;color:#34465f}
 .td-block h4{margin:0 0 4px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:#5d6f8a}
 .td-block p{margin:0}.td-block ul,.td-block ol{margin:0;padding-inline-start:20px}
 .td-route{display:flex;flex-wrap:wrap;gap:6px;padding:0!important;list-style:none;counter-reset:r}
