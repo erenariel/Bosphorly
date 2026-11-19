@@ -1,52 +1,55 @@
 {
+  "kind": "tcmb",
   "source": "TCMB (Türkiye Cumhuriyet Merkez Bankası) gösterge niteliğindeki kurlar",
+  "source_name": "TCMB",
   "source_url": "https://www.tcmb.gov.tr/kurlar/today.xml",
-  "date": "16.11.2026",
-  "bulletin": "2026/215",
+  "date": "19.11.2026",
+  "bulletin": "2026/218",
   "basis": "forex_selling",
-  "base": "TRY",
   "rates": {
     "USD": {
       "unit": 1,
-      "forex_selling": 50.3942,
-      "forex_buying": 50.3036,
-      "banknote_selling": 50.4698
+      "forex_selling": 50.4694,
+      "forex_buying": 50.3786,
+      "banknote_selling": 50.5451
     },
     "EUR": {
       "unit": 1,
-      "forex_selling": 55.4979,
-      "forex_buying": 55.3981,
-      "banknote_selling": 55.5812
+      "forex_selling": 55.4579,
+      "forex_buying": 55.3581,
+      "banknote_selling": 55.541
     },
     "GBP": {
       "unit": 1,
-      "forex_selling": 66.6258,
-      "forex_buying": 66.2803,
-      "banknote_selling": 66.7258
+      "forex_selling": 66.5006,
+      "forex_buying": 66.1557,
+      "banknote_selling": 66.6004
     },
     "SAR": {
       "unit": 1,
-      "forex_selling": 13.4279,
-      "forex_buying": 13.4037,
-      "banknote_selling": 13.5286
+      "forex_selling": 13.4542,
+      "forex_buying": 13.43,
+      "banknote_selling": 13.5551
     },
     "RUB": {
       "unit": 1,
-      "forex_selling": 0.61473,
-      "forex_buying": 0.60679,
+      "forex_selling": 0.61892,
+      "forex_buying": 0.61092,
       "banknote_selling": null
     },
     "AZN": {
       "unit": 1,
-      "forex_selling": 29.8095,
-      "forex_buying": 29.4245,
+      "forex_selling": 29.854,
+      "forex_buying": 29.4684,
       "banknote_selling": null
     },
     "AED": {
       "unit": 1,
-      "forex_selling": 13.7976,
-      "forex_buying": 13.6194,
+      "forex_selling": 13.818,
+      "forex_buying": 13.6395,
       "banknote_selling": null
     }
-  }
+  },
+  "base": "TRY",
+  "fetched_at": "2026-11-19T22:31:24Z"
 }

@@ -22,7 +22,7 @@ Official docs:
 - Latitude/longitude and Google Place ID allow later route, geocoding, and zone-based quote calculations; the current public page does not call a routing engine.
 - Google Maps Platform has billing and data-use terms. For mapping Google-sourced POIs, observe display and retention restrictions. Do not store or republish proprietary Google place data at scale without an appropriate license.
 - Do not use the public OpenStreetMap Nominatim service for client-side autocomplete at scale.
-- Do not assume all of Fatih costs €55/€65; **only Sultanahmet** is configured as a fixed-fare zone. Validated geofence/routing rules should replace the temporary address-text zone heuristic before live booking.
+- Do not assume all of Fatih costs €60/€65; **only Sultanahmet** is configured as a fixed-fare zone. Validated geofence/routing rules should replace the temporary address-text zone heuristic before live booking.
 - Hotel name and selected address must remain separate from any real passenger PII, and never be exposed in public logs.
 
 ## Google rating badges (tours, companies and places to visit)

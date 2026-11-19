@@ -74,7 +74,7 @@ def assert_booking_safety():
     assert all(item["price_type"].startswith("listed") or item["price_type"] == "not_publicly_listed" for item in market["records"])
     assert all(item.get("source_url", "").startswith("https://") for item in market["records"])
     rates = {x["airport"]: x for x in offers["transfers"]["rate_rules"]}
-    assert rates["IST"]["price_eur"] == 55
+    assert rates["IST"]["price_eur"] == 60
     assert rates["SAW"]["price_eur"] == 65
     assert offers["transfers"]["pricing_status"].startswith("FIXED_")
     homepage = (ROOT / "index.html").read_text(encoding="utf-8")

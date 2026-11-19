@@ -82,14 +82,14 @@
     "pricing_scope": "one-way airport to Sultanahmet",
     "pricing_status": "FIXED_BOSPHORLY_PUBLIC_FARE_PROVIDED_BY_OPERATOR",
     "currency": "EUR",
-    "source": "project_owner_confirmed_2026-11-16",
+    "source": "project_owner_confirmed_2026-11-19",
     "booking_enabled": false,
     "notice": "The below are fixed customer-facing Bosphorly rates for Sultanahmet, not hypothetical examples. Other zones require an individual quote. Real fulfillment and vehicle capacity remain unavailable until licensed suppliers are contracted.",
     "rate_rules": [
       {
         "airport": "IST",
         "zone": "sultanahmet",
-        "price_eur": 55,
+        "price_eur": 60,
         "fare_kind": "fixed_one_way",
         "approved_as_customer_fare": true
       },
