@@ -206,6 +206,8 @@ function hammamBanner(){
  const meta=document.createElement('div');meta.className='tour-provider';meta.textContent=tx('Her gün 09:30–23:00 · Fatih ve Beyoğlu şubeleri','Open daily 09:30–23:00 · Fatih and Beyoğlu branches')+' · '+tx('Resepsiyonda nakit','Cash at the hotel reception')+' · '+tx('Fiyatlar hamamın kendi sitesinden','Prices from the venue’s own website');
  const link=document.createElement('a');link.className='hb-cta';link.href='booking.html?service=alaturka&lang='+encodeURIComponent(state.lang);link.textContent=tx('Hamam veya masaj rezervasyonu yap →','Book hammam or massage →');
  const gRate=window.BosphorlyRatings?BosphorlyRatings.forOperator('Alaturka Hamam'):null;c.append(op,...(gRate?[gRate]:[]),h,p,cols,from,meta,link);a.append(art,c);return a}
+// Tour photos: freely licensed pictures from Wikimedia Commons, credited on each card (see assets/images/tours/CREDITS.md).
+const TOUR_PHOTOS={"bb-morning": {"f": "Ortaköy Mosque and Bosphorus Bridge, March 2024 03.jpg", "a": "Calistemon", "l": "CC BY-SA 4.0", "alt": "Ortaköy Mosque and the Bosphorus Bridge"}, "bb-sunset": {"f": "Istanbul ferry at sunset on the Bosphorus - Tarik Kaan Muslu.jpg", "a": "Tarık Kaan Muslu", "l": "CC BY-SA 4.0", "alt": "City ferry on the Bosphorus at sunset"}, "bb-oldcity": {"f": "Hagia Sophia Mars 2013.jpg", "a": "Arild Vågen", "l": "CC BY-SA 3.0", "alt": "Hagia Sophia, Istanbul"}, "orient-dinner": {"f": "Ortaköy Mosque (160990449).jpeg", "a": "Giuseppe Pinto", "l": "CC BY-SA 3.0", "alt": "Ortaköy Mosque and the illuminated Bosphorus Bridge at night"}, "sea-land": {"f": "Dolmabahce from boat @ Bosphorus Cruise to Anadolu Kavagi (8319926203).jpg", "a": "Guilhem Vellut", "l": "CC BY 2.0", "alt": "Dolmabahçe Palace seen from a Bosphorus boat"}};
 function renderTours(){
  const area=$('tourGrid');area.replaceChildren();
  const tr=state.lang==='tr';
@@ -215,8 +217,8 @@ function renderTours(){
  const article=document.createElement('article');article.className='tour-card';
  const art=document.createElement('div');art.className='tour-art '+x.artclass;
  const badge=document.createElement('small');badge.textContent=labels[x.category];
- const image=document.createElement('img');image.src='assets/images/'+(x.category==='city'?'istanbul-heritage.webp':x.category==='wellness'?'wellness.webp':'istanbul-galata-900.webp');image.alt='';image.width=900;image.height=600;image.loading='lazy';image.decoding='async';art.append(image,badge);
- const imageNote=document.createElement('div');imageNote.className='image-note';imageNote.textContent=tx('Temsili destinasyon / atmosfer görseli','Destination / mood photograph');
+ const ph=TOUR_PHOTOS[x.id];const image=document.createElement('img');if(ph){image.src='assets/images/tours/'+x.id+'-900.webp';image.srcset='assets/images/tours/'+x.id+'-600.webp 600w, assets/images/tours/'+x.id+'-900.webp 900w';image.sizes='(max-width:700px) 100vw, 420px'}else{image.src='assets/images/'+(x.category==='city'?'istanbul-heritage.webp':x.category==='wellness'?'wellness.webp':'istanbul-galata-900.webp')}image.alt=ph?ph.alt:'';image.width=900;image.height=562;image.loading='lazy';image.decoding='async';art.append(image,badge);
+ const imageNote=document.createElement('div');imageNote.className='image-note';if(ph){const cr=document.createElement('a');cr.href='https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(ph.f.replace(/ /g,'_'));cr.target='_blank';cr.rel='noopener license';cr.textContent='📷 '+ph.a+' · '+ph.l+' · Wikimedia Commons';imageNote.append(cr)}else imageNote.textContent=tx('Temsili destinasyon / atmosfer görseli','Destination / mood photograph');
  const content=document.createElement('div');content.className='tour-content';
  const translated={
  'bb-morning':['Sabah Boğaz Turu','Kahvaltılı Boğaz turu, Asya yakasında Beylerbeyi’nde 1 saat mola ve canlı rehber.'],
