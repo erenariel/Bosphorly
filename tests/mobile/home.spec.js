@@ -58,3 +58,19 @@ test('guest pages invite requests: no prototype labels, no partner pitch, no cou
  }
  expect(errors).toEqual([]);
 });
+test('FAQ page answers in the visitor language and asks on WhatsApp',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('/faq.html?lang=tr');
+ await expect(page.locator('h1')).toHaveText('Sıkça sorulan sorular');
+ await expect(page.locator('.qa')).toHaveCount(8);
+ await expect(page.locator('.qa').nth(2)).toContainText('60 €');
+ await expect(page.locator('#ask')).toHaveAttribute('href',/^https:\/\/wa\.me\/905333407776\?text=Merhaba/);
+ await expect(page.locator('.site-header a[href="faq.html"]')).toHaveAttribute('aria-current','page');
+ await page.goto('/faq.html?lang=ar');
+ await expect(page.locator('html')).toHaveAttribute('dir','rtl');
+ await expect(page.locator('h1')).toHaveText('الأسئلة الشائعة');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ await page.goto('/?lang=de');
+ await expect(page.locator('footer a[href="faq.html"]')).toHaveText('FAQ');
+ expect(errors).toEqual([]);
+});
