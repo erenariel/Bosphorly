@@ -32,3 +32,12 @@
   }
   host.replaceWith(header);
 })();
+
+// Footer privacy link in the visitor's language.
+(() => {
+  const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
+    : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
+  const P = {"en": "Privacy", "tr": "Gizlilik", "ru": "Конфиденциальность", "uk": "Конфіденційність", "de": "Datenschutz", "fr": "Confidentialité", "nl": "Privacy", "ar": "الخصوصية", "he": "פרטיות", "az": "Məxfilik", "fa": "حریم خصوصی", "es": "Privacidad", "it": "Privacy", "pt": "Privacidade", "hr": "Privatnost", "hu": "Adatvédelem", "bs": "Privatnost", "zh": "隐私", "ja": "プライバシー", "ko": "개인정보", "hi": "गोपनीयता", "bn": "গোপনীয়তা", "id": "Privasi"};
+  const run = () => document.querySelectorAll('a.privacy-link').forEach(a => { a.textContent = '🔒 ' + (P[lang] || P.en) + ' · KVKK'; });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+})();

@@ -82,7 +82,7 @@ def assert_booking_safety():
     assert "navigator.languages" in homepage
     assert "hotelPlacesMount" in homepage and "hotelVerification" in homepage
     assert "Illustrative transfer price" not in homepage
-    assert "data/public-market-prices.json" in homepage
+    assert "data/home-prices.json" in homepage
     assert "assets/brand/approved-icon.webp" in homepage
     assert "config/maps-public.js" in homepage
     key = (ROOT / "config/maps-public.js").read_text(encoding="utf-8")
@@ -92,6 +92,29 @@ def assert_booking_safety():
     page = (ROOT / "explore.html").read_text()
     assert 'id="mapFallback"' in page and 'id="getting-around"' in page
     assert "explore.html" in (ROOT / "map.html").read_text(), "map.html must forward to Discover"
+
+
+def assert_home_prices():
+    """The home page reads a small extract of the price catalogue; it must match the catalogue and cover its tour cards."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("build_home_prices", ROOT / "tools/build_home_prices.py")
+    tool = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tool)
+    current = (ROOT / "data/home-prices.json").read_text(encoding="utf-8")
+    assert current == tool.text(), "data/home-prices.json is out of date: run python3 tools/build_home_prices.py"
+    homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+    cards = re.findall(r"\{id:'([^']+)'", homepage[homepage.find("const tours=["):homepage.find("];", homepage.find("const tours=["))])
+    assert cards and set(cards) <= set(tool.HOME_IDS), ("Add the home page tour ids to HOME_IDS", set(cards) - set(tool.HOME_IDS))
+
+
+def assert_hreflang():
+    """Pages that switch language with ?lang= list every supported language for search engines."""
+    langs = re.findall(r"'(\w+)'", re.search(r"const supported = \[([^\]]+)\]", (ROOT / "lang.js").read_text(encoding="utf-8")).group(1))
+    for page in ["index.html", "tours.html", "prices.html", "explore.html", "route.html"]:
+        html = (ROOT / page).read_text(encoding="utf-8")
+        found = re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', html)
+        assert sorted(l for l, _ in found) == sorted(langs + ["x-default"]), (page, "hreflang list differs from lang.js")
+        assert all(h.endswith("?lang=" + l) for l, h in found if l != "x-default"), page
 
 
 def assert_js_parses():
@@ -139,5 +162,7 @@ if __name__ == "__main__":
     assert_local_links()
     assert_no_supplier_checkout_redirects()
     assert_booking_safety()
+    assert_home_prices()
+    assert_hreflang()
     assert_js_parses()
     print("Bosphorly: internal links, booking safety, logo, map and JS syntax OK.")

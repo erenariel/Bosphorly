@@ -36,12 +36,19 @@ test('site search finds places by old names and the route by the historian’s n
   await expect(page.locator('.sr-group')).not.toHaveCount(0);
 });
 
-test('Google rating badge links to Google without a key and shows average and count with one', async ({ page }) => {
+test('Google rating badge links places to Google; tour companies get an unlinked rating only when one is known', async ({ page }) => {
   await page.route('https://**/*', r => r.abort());
   await page.goto('/explore.html?lang=en&cat=family');
   const first = page.locator('.place .g-rating').first();
   await expect(first).toHaveText(/Google reviews/);
   await expect(first).toHaveAttribute('href', /google\.com\/maps\/search/);
+
+  // Tour companies: their Google page lists their own phone and website, so there is no link, and
+  // without a key (no rating to show) there is no badge at all.
+  await page.goto('/prices.html?lang=tr');
+  await expect(page.locator('article.item').first()).toBeVisible();
+  await expect(page.locator('.g-rating:visible')).toHaveCount(0);
+  await expect(page.locator('a.g-rating')).toHaveCount(0);
 
   // With a key, the live lookup fills the badge. Google is replaced by a stub, so no request leaves the test.
   await page.route('**/config/maps-public.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_PUBLIC_CONFIG=Object.freeze({googleMapsBrowserKey:"test-key"});' }));
@@ -51,8 +58,10 @@ test('Google rating badge links to Google without a key and shows average and co
   });
   await page.goto('/prices.html?lang=tr');
   const badge = page.locator('.g-rating').first();
-  await badge.scrollIntoViewIfNeeded();
+  await badge.evaluate(e => e.parentElement.scrollIntoView());
   await expect(badge).toHaveText(/4,7 \(12\.345\) · Google yorumları/);
-  await expect(badge).toHaveAttribute('href', 'https://search.google.com/local/reviews?placeid=ChIJtest');
-  await expect(badge).toHaveAttribute('aria-label', 'Google’da 12.345 yorumdan ortalama 4,7');
+  await expect(badge).toBeVisible();
+  await expect(badge).not.toHaveAttribute('href', /.+/);
+  await expect(badge).toHaveAttribute('title', 'Google’da 12.345 yorumdan ortalama 4,7');
+  await expect(page.locator('a.g-rating')).toHaveCount(0);
 });

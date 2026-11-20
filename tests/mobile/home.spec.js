@@ -35,3 +35,26 @@ test('homepage polish preserves local planning, language and reduced motion',asy
  await expect(page.locator('#heading')).toHaveText('حسابي');
  expect(errors).toEqual([]);
 });
+test('guest pages invite requests: no prototype labels, no partner pitch, no coupon promise while membership is off',async({page})=>{
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ for(const lang of ['tr','en','de','ar','zh']) {
+ await page.goto('/?lang='+lang);
+ await expect(page.locator('.tour-card')).toHaveCount(6);
+ const text=await page.locator('body').innerText();
+ expect(text).not.toMatch(/Prototype|Prototip|Prototyp|Прототип|نموذج أولي|原型|Concept MVP|aktif değil|not live|nicht aktiv|尚未正式开放/);
+ // Membership is not live (no API address), so its rewards block, coupon promise and the partner pitch stay off the page.
+ await expect(page.locator('#rewards')).toBeHidden();
+ await expect(page.locator('.partner-panel')).toHaveCount(0);
+ await expect(page.locator('a[href="dashboard.html"]')).toHaveCount(0);
+ }
+ await page.goto('/?lang=tr');
+ await expect(page.locator('footer .privacy-link')).toHaveText('🔒 Gizlilik · KVKK');
+ await expect(page.locator('[data-i18n="terms"]')).toContainText('iptal koşulları rezervasyon onayıyla birlikte WhatsApp’tan bildirilir');
+ // Other guest pages: no prototype wording, localized privacy link.
+ for(const p of ['booking.html','prices.html','tours.html','explore.html','account.html']) {
+ await page.goto('/'+p+'?lang=tr');
+ await expect(page.locator('.privacy-link').first()).toHaveText('🔒 Gizlilik · KVKK');
+ expect(await page.locator('body').innerText()).not.toMatch(/Prototype|Prototip|PROTOTİP|Yalnızca karşılaştırma/);
+ }
+ expect(errors).toEqual([]);
+});
