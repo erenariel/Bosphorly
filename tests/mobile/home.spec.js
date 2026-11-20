@@ -62,7 +62,8 @@ test('FAQ page answers in the visitor language and asks on WhatsApp',async({page
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/faq.html?lang=tr');
  await expect(page.locator('h1')).toHaveText('Sıkça sorulan sorular');
- await expect(page.locator('.qa')).toHaveCount(8);
+ await expect(page.locator('.qa')).toHaveCount(9);
+ await expect(page.locator('.qa').nth(8).locator('a.more')).toHaveAttribute('href','mailto:info@bosphorly.com');
  await expect(page.locator('.qa').nth(2)).toContainText('60 €');
  await expect(page.locator('#ask')).toHaveAttribute('href',/^https:\/\/wa\.me\/905333407776\?text=Merhaba/);
  await expect(page.locator('.site-header a[href="faq.html"]')).toHaveAttribute('aria-current','page');
@@ -72,5 +73,8 @@ test('FAQ page answers in the visitor language and asks on WhatsApp',async({page
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
  await page.goto('/?lang=de');
  await expect(page.locator('footer a[href="faq.html"]')).toHaveText('FAQ');
+ await expect(page.locator('footer a[href="mailto:info@bosphorly.com"]')).toHaveCount(1);
+ // Other pages get the corporate email next to the privacy link, once.
+ for(const p of ['tours.html','prices.html','booking.html']) { await page.goto('/'+p+'?lang=tr'); await expect(page.locator('a.mail-link')).toHaveCount(1); }
  expect(errors).toEqual([]);
 });
