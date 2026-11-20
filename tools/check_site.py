@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html", "partner.html"]
+PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html", "partner.html", "faq.html"]
 
 
 class References(HTMLParser):
@@ -110,11 +110,22 @@ def assert_home_prices():
 def assert_hreflang():
     """Pages that switch language with ?lang= list every supported language for search engines."""
     langs = re.findall(r"'(\w+)'", re.search(r"const supported = \[([^\]]+)\]", (ROOT / "lang.js").read_text(encoding="utf-8")).group(1))
-    for page in ["index.html", "tours.html", "prices.html", "explore.html", "route.html"]:
+    for page in ["index.html", "tours.html", "prices.html", "explore.html", "route.html", "faq.html"]:
         html = (ROOT / page).read_text(encoding="utf-8")
         found = re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', html)
         assert sorted(l for l, _ in found) == sorted(langs + ["x-default"]), (page, "hreflang list differs from lang.js")
         assert all(h.endswith("?lang=" + l) for l, h in found if l != "x-default"), page
+
+
+def assert_faq():
+    """Every language answers the same questions and names the same links."""
+    faq = json.loads((ROOT / "data/faq.json").read_text(encoding="utf-8"))
+    langs = re.findall(r"'(\w+)'", re.search(r"const supported = \[([^\]]+)\]", (ROOT / "lang.js").read_text(encoding="utf-8")).group(1))
+    assert sorted(faq) == sorted(langs)
+    for lang, f in faq.items():
+        assert len(f["qa"]) == len(faq["en"]["qa"]) and all(q and a for q, a in f["qa"]), lang
+        assert set(f["links"]) == set(faq["en"]["links"]) and all(f[k] for k in ("nav", "title", "intro", "cta", "wa")), lang
+        assert all("60" in a and "65" in a for q, a in [f["qa"][2]]) or lang in ("fa",), (lang, "transfer prices")
 
 
 def assert_js_parses():
@@ -164,5 +175,6 @@ if __name__ == "__main__":
     assert_booking_safety()
     assert_home_prices()
     assert_hreflang()
+    assert_faq()
     assert_js_parses()
     print("Bosphorly: internal links, booking safety, logo, map and JS syntax OK.")
