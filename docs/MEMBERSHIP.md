@@ -37,7 +37,7 @@ Built and tested, **not deployed**. Until the API is deployed and its address is
 ## Before launch (legal and business checklist)
 
 - **Partner agreement:** companies must agree to apply Bosphorly coupons at the reception and to deduct the discount from the commission they owe.
-- **KVKK:** add the membership data (above) to the privacy notice (`privacy.html`). Resend (USA) is a transfer abroad (Art. 9), alongside WhatsApp.
+- **KVKK:** the privacy notice (`privacy.html`) already describes the membership data, Cloudflare and Resend (USA). Before launch: fill in the data controller (the individual running the site), contact and retention period, and have a lawyer confirm the Art. 9 route for transfers abroad (WhatsApp, Resend).
 - **Commercial e-mails (Law 6563, İYS):** marketing e-mails need the separate, never pre-ticked consent (already in the form) and registration of the sender in İYS. Sign-in codes are not marketing.
 - **Discount display (Advertising Regulation):** when showing a "before" price, it must be the lowest price of the last 30 days. Bosphorly shows the company's own price and a percentage, so keep company prices up to date.
 - **Terms:** write short coupon terms (one per request, validity, not exchangeable for cash, not combinable) and link them from My account.
