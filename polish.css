@@ -9,3 +9,6 @@ body{line-height:1.65}a,button,input,select{-webkit-tap-highlight-color:transpar
 @media(max-width:560px){.topbar{padding-block:16px;gap:10px;min-height:76px}.nav{gap:6px}.nav select{max-width:115px}.brand small{letter-spacing:1.8px}.hero h1{font-size:48px;letter-spacing:-1.8px}.hero-photo img{height:280px}.hero-points{font-size:11px;margin:22px 0}.hero-map{display:flex;margin-inline-start:0}.hero-copy{padding-top:34px}.hero-caption{font-size:10px!important}.booking-section,.experiences{padding-block:44px}.tour-art{height:220px}.tour-content p{min-height:0}.section-heading{gap:12px;flex-wrap:wrap}.steps{flex-shrink:0}.form-actions{flex-wrap:wrap}.photo-caption{padding:10px 12px}.photo-caption b{font-size:13px}.hero-photo{margin-top:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .hero-photo picture{display:block}
+
+/* Photo credit on tour cards (Wikimedia Commons licences require the author and licence). */
+.image-note a{color:inherit;text-decoration:none;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.image-note a:hover{text-decoration:underline}
