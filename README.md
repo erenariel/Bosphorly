@@ -7,18 +7,18 @@
 
 *Mobile-first arrival planning · Istanbul discovery · Ethical travel intermediation*
 
-[▶ Canlı demo](https://erenariel.github.io/Bosphorly/) · [Traveler demo (English)](https://erenariel.github.io/Bosphorly/?lang=en) · [Tour comparison](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
+[▶ Canlı demo](https://bosphorly.com/) · [Traveler demo (English)](https://bosphorly.com/?lang=en) · [Tour comparison](prices.html) · [Interactive Istanbul map](map.html) · [Product presentation](presentation.html) · [Partner dashboard preview](dashboard.html) · [Roadmap](docs/ROADMAP.md)
 </div>
 
 ## ▶ Canlı demoyu aç
 
-**[Bosphorly ana sayfasını ve transfer formunu aç →](https://erenariel.github.io/Bosphorly/)**
+**[Bosphorly ana sayfasını ve transfer formunu aç →](https://bosphorly.com/)**
 
 Demo, bu deponun `main` dalından GitHub Pages ile otomatik yayınlanır; `main`e giren her değişiklik birkaç dakika içinde burada görünür. Site, ziyaretçinin cihaz dilinde açılır (23 dil); dil menüden değiştirilebilir. Giriş gerektirmez. Formlar talebi WhatsApp mesajı olarak hazırlar; misafir WhatsApp’ta “Gönder”e basınca talep Bosphorly WhatsApp hattına ulaşır. Sitede ödeme alınmaz. Bilgiler sunucuda saklanmaz; misafirin profili ve talepleri yalnızca kendi cihazında, [Hesabım](account.html) sayfasında tutulur. Fiyatlar istenirse TCMB günlük kuruyla başka para biriminde gösterilir.
 
-[![Bosphorly transfer formu ve İstanbul haritası](docs/review/desktop-home.jpg)](https://erenariel.github.io/Bosphorly/#booking)
+[![Bosphorly transfer formu ve İstanbul haritası](docs/review/desktop-home.jpg)](https://bosphorly.com/#booking)
 
-[Transfer formu](https://erenariel.github.io/Bosphorly/#booking) · [Tur karşılaştırma](https://erenariel.github.io/Bosphorly/prices.html) · [İstanbul haritası](https://erenariel.github.io/Bosphorly/map.html) · [English](https://erenariel.github.io/Bosphorly/?lang=en)
+[Transfer formu](https://bosphorly.com/#booking) · [Tur karşılaştırma](https://bosphorly.com/prices.html) · [İstanbul haritası](https://bosphorly.com/map.html) · [English](https://bosphorly.com/?lang=en)
 
 
 > **How Bosphorly works:** Bosphorly is a referral intermediary, the hotel reception's tour brochure desk moved online. Travelers compare licensed Istanbul tour and transfer companies and send a request through Bosphorly; the company confirms and delivers the service; in the current hotel pilot the guest pays in cash at the hotel reception (cash only; tour companies add 10% on card payments); Bosphorly earns a contracted commission from the company for each completed referral. Hotels can join as referral partners. Details: [business model](docs/BUSINESS-MODEL.md).
