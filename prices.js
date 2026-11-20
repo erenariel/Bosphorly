@@ -9,7 +9,7 @@
   const D = {
     tr: {
     hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Hamam paketleri', hbMassages: 'Masajlar', hbBook: 'Hamam veya masaj rezervasyonu yap →', hbHours: 'Her gün 09:30–23:00 · Fatih ve Beyoğlu şubeleri', 
-    home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', account: 'Hesabım', footer: 'Bosphorly · Yalnızca karşılaştırma · Talep gönderilmez, ödeme alınmaz.',
+    home: 'Ana sayfa', plan: 'Talep et', map: 'Harita', account: 'Hesabım',
     eyebrow: 'TUR KARŞILAŞTIRMA · İSTANBUL', heading: 'İstanbul turlarını karşılaştır.',
     lead: 'Lisanslı firmaların kendi sitelerinde yayımladığı fiyatlar ve tur içerikleri. Neyin dahil olduğunu yan yana gör.',
     noticeTitle: 'Bilgiler firmaların kendi sitelerinden derlenmiştir; Bosphorly teklifi değildir.',
@@ -39,7 +39,7 @@
     },
     ru: {
     hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Пакеты хаммама', hbMassages: 'Массажи', hbBook: 'Забронировать хаммам или массаж →', hbHours: 'Ежедневно 09:30–23:00 · филиалы в Фатихе и Бейоглу', 
-    home: 'Главная', plan: 'Заявка', map: 'Карта', account: 'Мой аккаунт', footer: 'Bosphorly · Только сравнение · Оплата здесь не принимается.',
+    home: 'Главная', plan: 'Заявка', map: 'Карта', account: 'Мой аккаунт',
     eyebrow: 'СРАВНЕНИЕ ТУРОВ · СТАМБУЛ', heading: 'Сравните туры по Стамбулу.',
     lead: 'Цены и программы, опубликованные лицензированными компаниями на их собственных сайтах. Сравните, что включено.',
     noticeTitle: 'Собрано с сайтов самих компаний; это не предложение Bosphorly.',
@@ -53,7 +53,7 @@
     },
     ar: {
     hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'باقات الحمام', hbMassages: 'التدليك', hbBook: 'احجز الحمام أو التدليك ←', hbHours: 'يوميًا 09:30–23:00 · فرعا الفاتح وبيوغلو', 
-    home: 'الرئيسية', plan: 'طلب', map: 'الخريطة', account: 'حسابي', footer: 'Bosphorly · للمقارنة فقط · لا يتم الدفع هنا.',
+    home: 'الرئيسية', plan: 'طلب', map: 'الخريطة', account: 'حسابي',
     eyebrow: 'مقارنة الجولات · إسطنبول', heading: 'قارن جولات إسطنبول.',
     lead: 'أسعار وبرامج نشرتها شركات مرخّصة على مواقعها. قارن ما هو مشمول جنبًا إلى جنب.',
     noticeTitle: 'مُلخّص من مواقع الشركات نفسها؛ ليس عرضًا من Bosphorly.',
@@ -67,7 +67,7 @@
     },
     de: {
     hbTitle: 'Alaturka Hamam & Spa', hbPackages: 'Hamam-Pakete', hbMassages: 'Massagen', hbBook: 'Hamam oder Massage buchen →', hbHours: 'Täglich 09:30–23:00 · Filialen Fatih und Beyoğlu',
-    home: 'Startseite', plan: 'Anfrage', map: 'Karte', account: 'Mein Konto', footer: 'Bosphorly · Nur Vergleich · Hier wird keine Zahlung angenommen.',
+    home: 'Startseite', plan: 'Anfrage', map: 'Karte', account: 'Mein Konto',
     eyebrow: 'TOURENVERGLEICH · ISTANBUL', heading: 'Istanbul-Touren vergleichen.',
     lead: 'Preise und Programme, die lizenzierte Anbieter auf ihren eigenen Websites veröffentlichen. Vergleichen Sie die Leistungen nebeneinander.',
     noticeTitle: 'Zusammengefasst von den Websites der Anbieter; kein Angebot von Bosphorly.',
@@ -874,10 +874,12 @@
     }
   };
   const T = D[lang] || D.en;
+  const FOOTER = {"en": "Bosphorly · Requests go via WhatsApp · No payment is taken on this website", "tr": "Bosphorly · Talepler WhatsApp ile iletilir · Bu sitede ödeme alınmaz", "ru": "Bosphorly · Заявки через WhatsApp · На сайте оплата не принимается", "uk": "Bosphorly · Заявки через WhatsApp · На цьому сайті оплата не приймається", "de": "Bosphorly · Anfragen per WhatsApp · Auf dieser Website wird keine Zahlung angenommen", "fr": "Bosphorly · Demandes via WhatsApp · Aucun paiement sur ce site", "nl": "Bosphorly · Aanvragen via WhatsApp · Op deze website wordt niets betaald", "ar": "Bosphorly · الطلبات عبر واتساب · لا يتم الدفع على هذا الموقع", "he": "Bosphorly · בקשות דרך WhatsApp · לא מתבצע תשלום באתר הזה", "az": "Bosphorly · Sorğular WhatsApp ilə · Bu saytda ödəniş alınmır", "fa": "Bosphorly · درخواست‌ها با واتس‌اپ · در این سایت پرداختی انجام نمی‌شود", "es": "Bosphorly · Solicitudes por WhatsApp · No se cobra nada en esta web", "it": "Bosphorly · Richieste via WhatsApp · Nessun pagamento su questo sito", "pt": "Bosphorly · Pedidos pelo WhatsApp · Nenhum pagamento neste site", "hr": "Bosphorly · Upiti idu putem WhatsAppa · Na ovoj stranici ništa se ne plaća", "hu": "Bosphorly · Az ajánlatkérés WhatsAppon megy · Ezen a weboldalon nem kell fizetni", "bs": "Bosphorly · Upiti idu putem WhatsAppa · Na ovoj stranici ništa se ne plaća", "zh": "Bosphorly · 申请通过 WhatsApp 发送 · 本网站不收取任何费用", "ja": "Bosphorly · リクエストは WhatsApp で送信 · このサイトでの支払いはありません", "ko": "Bosphorly · 요청은 WhatsApp으로 전송 · 이 웹사이트에서는 결제하지 않습니다", "hi": "Bosphorly · अनुरोध WhatsApp से जाते हैं · इस वेबसाइट पर कोई भुगतान नहीं लिया जाता", "bn": "Bosphorly · অনুরোধ WhatsApp-এ যায় · এই ওয়েবসাইটে কোনো পেমেন্ট নেওয়া হয় না", "id": "Bosphorly · Permintaan dikirim lewat WhatsApp · Tidak ada pembayaran di situs ini"};
   if (D[lang] && window.BosphorlyLang.rtl(lang)) document.documentElement.dir = 'rtl';
   const ICON = { cruise: '⛴️', dinner: '🍽️', city: '🕌', day: '🏞️', islands: '🏝️', hammam: '♨️', transfer: '🚐', multi: '🧭' };
 
   for (const [id, text] of Object.entries(T)) if (typeof text === 'string' && $(id)) $(id).textContent = text;
+  if ($('footer')) $('footer').textContent = FOOTER[lang] || FOOTER.en;
   $('operator').options[0].textContent = T.allCompanies; $('currency').options[0].textContent = T.allCurrencies;
   const Q = $('query');
   Q.placeholder = T.query;

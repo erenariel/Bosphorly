@@ -1,5 +1,7 @@
 'use strict';
 /* Google rating badge: "★ 4.7 (12,345) · Google reviews", linking straight to the place's Google reviews.
+   Tour companies get a plain badge instead: no link (their Google page lists their own phone and website,
+   and guests should book through Bosphorly), and it only appears once a real rating has been fetched.
    Rating and count are fetched live from Google (Places, via the Maps JavaScript API) only when the badge
    scrolls into view, and kept in memory for this page view only: Google's terms do not allow storing them.
    Without a browser key (config/maps-public.js) the badge is a plain link to the place on Google Maps. */
@@ -67,25 +69,27 @@
     return cache.get(k);
   }
 
-  // target: { query: 'Topkapı Palace, Istanbul', placeId?, lat?, lng? }
-  function badge(target) {
-    const a = document.createElement('a');
-    a.className = 'g-rating'; a.target = '_blank'; a.rel = 'noopener';
-    a.href = target.placeId ? reviewsUrl(target.placeId) : searchUrl(target.query);
+  // target: { query: 'Topkapı Palace, Istanbul', placeId?, lat?, lng? }; plain: no link, hidden until a rating is known
+  function badge(target, plain) {
+    const a = document.createElement(plain ? 'span' : 'a');
+    a.className = 'g-rating';
+    if (plain) a.hidden = true;
+    else { a.target = '_blank'; a.rel = 'noopener'; a.href = target.placeId ? reviewsUrl(target.placeId) : searchUrl(target.query); }
     a.innerHTML = '<span class="g-star" aria-hidden="true">★</span><span class="g-text"></span>';
     a.querySelector('.g-text').textContent = txt()[0];
-    if (!key()) return a;
+    if (!key()) return plain ? null : a;
     const fill = () => lookup(target).then(r => {
       if (!r) return;
       const nf = new Intl.NumberFormat(locale(), { maximumFractionDigits: 1, minimumFractionDigits: 1 });
       const cf = new Intl.NumberFormat(locale());
       a.querySelector('.g-text').textContent = nf.format(r.rating) + ' (' + cf.format(r.count) + ') · ' + txt()[0];
-      a.setAttribute('aria-label', txt()[1].replace('{r}', nf.format(r.rating)).replace('{n}', cf.format(r.count)));
-      a.href = reviewsUrl(r.id);
+      a.setAttribute(plain ? 'title' : 'aria-label', txt()[1].replace('{r}', nf.format(r.rating)).replace('{n}', cf.format(r.count)));
+      if (plain) a.hidden = false; else a.href = reviewsUrl(r.id);
     });
     if ('IntersectionObserver' in window) {
       const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); fill(); } }, { rootMargin: '150px' });
-      requestAnimationFrame(() => io.observe(a));
+      // A hidden badge has no size, so watch the card it sits in.
+      requestAnimationFrame(() => io.observe(plain ? (a.parentElement || a) : a));
     } else fill();
     return a;
   }
@@ -98,10 +102,10 @@
     'Azure Tour': { query: 'Azure Turizm, Istanbul' },
     'Alaturka Hamam': { query: 'Alaturka Hamam & Spa, Istanbul' }
   };
-  const forOperator = name => (OPERATORS[name] ? badge(OPERATORS[name]) : null);
+  const forOperator = name => (OPERATORS[name] ? badge(OPERATORS[name], true) : null);
 
   const css = document.createElement('style');
-  css.textContent = '.g-rating{display:inline-flex;align-items:center;gap:5px;font:700 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1f3b6e;background:#fff;border:1px solid #dfe6f3;border-radius:999px;padding:5px 10px 5px 8px;text-decoration:none;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.g-rating:hover{border-color:#fbbc04;background:#fffaf0}.g-rating:focus-visible{outline:3px solid #00bed9;outline-offset:2px}.g-star{color:#f4b400;font-size:14px;line-height:1}';
+  css.textContent = '.g-rating{display:inline-flex;align-items:center;gap:5px;font:700 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1f3b6e;background:#fff;border:1px solid #dfe6f3;border-radius:999px;padding:5px 10px 5px 8px;text-decoration:none;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}.g-rating:hover{border-color:#fbbc04;background:#fffaf0}.g-rating:focus-visible{outline:3px solid #00bed9;outline-offset:2px}.g-star{color:#f4b400;font-size:14px;line-height:1}.g-rating[hidden]{display:none}span.g-rating:hover{border-color:#dfe6f3;background:#fff}';
   document.head.append(css);
 
   window.BosphorlyRatings = Object.freeze({ badge, forOperator, OPERATORS });
