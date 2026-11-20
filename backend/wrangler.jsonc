@@ -2,7 +2,7 @@
  "name": "bosphorly-booking", "main": "worker.js", "compatibility_date": "2026-11-16",
  "workers_dev": false,
  "d1_databases": [{"binding":"DB","database_name":"bosphorly-booking","database_id":"REPLACE_BEFORE_DEPLOYMENT","migrations_dir":"migrations"}],
- "vars": {"PUBLIC_ORIGIN":"https://erenariel.github.io","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@bosphorly.com>"},
+ "vars": {"PUBLIC_ORIGIN":"https://bosphorly.com","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@bosphorly.com>"},
  // Secrets (wrangler secret put): ADMIN_TOKEN, PARTNER_TOKEN, CODE_PEPPER, RESEND_API_KEY
  "ratelimits": [{"name":"RATE_LIMITER","namespace_id":"1001","simple":{"limit":30,"period":60}}]
 }

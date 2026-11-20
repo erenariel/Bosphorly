@@ -7,7 +7,7 @@ Without a configured Google key, manual hotel and region entry stays available. 
 
 ## Configure Google Maps Platform
 1. Create a Google Cloud project with billing enabled and enable **Maps JavaScript API** and **Places API (New)**.
-2. Create a browser API key; restrict the key to website HTTP referrers, including `https://erenariel.github.io/Bosphorly/*`. If testing locally, add only your explicit localhost origin. Apply API restrictions to the relevant Maps and Places APIs.
+2. Create a browser API key; restrict the key to website HTTP referrers, including `https://bosphorly.com/*`. If testing locally, add only your explicit localhost origin. Apply API restrictions to the relevant Maps and Places APIs.
 3. Add that **browser-restricted key** to `config/maps-public.js`, in `googleMapsBrowserKey`. Browser keys are visible client-side by design and MUST be constrained; never put unrestricted API keys or backend secrets here.
 4. Open `index.html`, type a hotel in the Google autocomplete widget, select a suggestion, and verify the displayed street address, detected area and fare.
 5. Monitor Places usage and spending caps in Google Cloud.
