@@ -22,7 +22,7 @@
     addRequest(r) {
       const v = read();
       v.requests = v.requests.filter(x => x.ref !== r.ref);
-      v.requests.push(Object.assign({ status: 'sent_to_whatsapp', createdAt: new Date().toISOString() }, r));
+      v.requests.push(Object.assign({ status: 'email_draft_prepared', createdAt: new Date().toISOString() }, r));
       v.requests = v.requests.slice(-50);
       return write(v);
     },
