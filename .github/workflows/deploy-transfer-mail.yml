@@ -18,7 +18,7 @@ jobs:
         run: node --test tests/transfer-email.test.js
       - name: Deploy Worker and configure mail delivery
         env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CLAUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
