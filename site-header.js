@@ -14,7 +14,10 @@
     prices: { en: 'Compare tours', tr: 'Tur karşılaştır', ru: 'Сравнить туры', uk: 'Порівняти тури', de: 'Touren vergleichen', fr: 'Comparer les visites', nl: 'Tours vergelijken', ar: 'قارن الجولات', he: 'השוואת סיורים', az: 'Turları müqayisə et', fa: 'مقایسه تورها', es: 'Comparar tours', it: "Confronta i tour", pt: "Comparar passeios", hr: "Usporedite ture", hu: "Túrák összehasonlítása", bs: "Uporedite ture", zh: "比较游览", ja: "ツアー比較", ko: "투어 비교", hi: "टूर तुलना", bn: "ট্যুর তুলনা", id: "Bandingkan tur" },
     map: { en: 'City map', tr: 'Şehir haritası', ru: 'Карта города', uk: 'Мапа міста', de: 'Stadtplan', fr: 'Plan de la ville', nl: 'Stadskaart', ar: 'خريطة المدينة', he: 'מפת העיר', az: 'Şəhər xəritəsi', fa: 'نقشه شهر', es: 'Mapa de la ciudad', it: "Mappa della città", pt: "Mapa da cidade", hr: "Karta grada", hu: "Várostérkép", bs: "Karta grada", zh: "城市地图", ja: "市内地図", ko: "시내 지도", hi: "शहर का नक्शा", bn: "শহরের মানচিত্র", id: "Peta kota" },
     faq: {"tr": "SSS", "en": "FAQ", "ru": "Вопросы", "uk": "Питання", "de": "FAQ", "fr": "FAQ", "nl": "FAQ", "ar": "الأسئلة الشائعة", "he": "שאלות נפוצות", "az": "Suallar", "fa": "پرسش‌ها", "es": "Preguntas", "it": "FAQ", "pt": "Perguntas", "hr": "Pitanja", "hu": "GYIK", "bs": "Pitanja", "zh": "常见问题", "ja": "よくある質問", "ko": "자주 묻는 질문", "hi": "सवाल-जवाब", "bn": "প্রশ্নোত্তর", "id": "Tanya jawab"},
-    account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta", hr: "Moj račun", hu: "Fiókom", bs: "Moj račun", zh: "我的账户", ja: "マイアカウント", ko: "내 계정", hi: "मेरा खाता", bn: "আমার অ্যাকাউন্ট", id: "Akun saya" }
+    account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta", hr: "Moj račun", hu: "Fiókom", bs: "Moj račun", zh: "我的账户", ja: "マイアカウント", ko: "내 계정", hi: "मेरा खाता", bn: "আমার অ্যাকাউন্ট", id: "Akun saya" },
+    signin: { en: 'Sign in', tr: 'Giriş yap', ru: 'Войти', uk: 'Увійти', de: 'Anmelden', fr: 'Connexion', nl: 'Inloggen', ar: 'تسجيل الدخول', he: 'התחברות', az: 'Daxil ol', fa: 'ورود', es: 'Iniciar sesión', it: 'Accedi', pt: 'Entrar', hr: 'Prijava', hu: 'Belépés', bs: 'Prijava', zh: '登录', ja: 'ログイン', ko: '로그인', hi: 'साइन इन', bn: 'সাইন ইন', id: 'Masuk' },
+    signup: { en: 'Create account', tr: 'Hesap oluştur', ru: 'Создать аккаунт', uk: 'Створити акаунт', de: 'Konto erstellen', fr: 'Créer un compte', nl: 'Account aanmaken', ar: 'إنشاء حساب', he: 'יצירת חשבון', az: 'Hesab yarat', fa: 'ایجاد حساب', es: 'Crear cuenta', it: 'Crea account', pt: 'Criar conta', hr: 'Izradi račun', hu: 'Fiók létrehozása', bs: 'Kreiraj račun', zh: '创建账户', ja: 'アカウント作成', ko: '계정 만들기', hi: 'खाता बनाएँ', bn: 'অ্যাকাউন্ট খুলুন', id: 'Buat akun' },
+    perk: { en: '🎁 Free membership · 5% welcome coupon', tr: '🎁 Ücretsiz üyelik · %5 hoş geldin kuponu', ru: '🎁 Бесплатно · купон −5% при регистрации', uk: '🎁 Безкоштовно · купон −5% за реєстрацію', de: '🎁 Kostenlos · 5 % Willkommensgutschein', fr: '🎁 Gratuit · coupon de bienvenue −5 %', nl: '🎁 Gratis · 5% welkomstcoupon', ar: '🎁 عضوية مجانية · قسيمة ترحيب 5%', he: '🎁 חברות חינם · קופון 5% מתנה', az: '🎁 Pulsuz üzvlük · 5% xoş gəldin kuponu', fa: '🎁 عضویت رایگان · ۵٪ کوپن خوش‌آمد', es: '🎁 Gratis · cupón de bienvenida del 5 %', it: '🎁 Gratis · coupon di benvenuto del 5%', pt: '🎁 Grátis · cupom de boas-vindas de 5%', hr: '🎁 Besplatno · 5% kupon dobrodošlice', hu: '🎁 Ingyenes · 5% üdvözlő kupon', bs: '🎁 Besplatno · 5% kupon dobrodošlice', zh: '🎁 免费注册 · 享 95 折迎新优惠券', ja: '🎁 無料会員登録 · 5%OFFウェルカムクーポン', ko: '🎁 무료 회원가입 · 5% 웰컴 쿠폰', hi: '🎁 मुफ़्त सदस्यता · 5% वेलकम कूपन', bn: '🎁 বিনামূল্যে সদস্যপদ · ৫% স্বাগত কুপন', id: '🎁 Gratis · kupon selamat datang 5%' }
   };
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder
@@ -23,7 +26,8 @@
   const header = document.createElement('header');
   header.className = 'site-header';
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
-    '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div></div>';
+    '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div>' +
+    '<div class="sh-auth" hidden><span class="sh-auth-perk">' + (L.perk[lang] || L.perk.en) + '</span><a class="sh-auth-btn in" href="' + base + 'account.html">👤 ' + (L.signin[lang] || L.signin.en) + '</a><a class="sh-auth-btn up" href="' + base + 'account.html#signup">🎁 ' + (L.signup[lang] || L.signup.en) + '</a></div></div>';
   const nav = header.querySelector('nav');
   for (const [key, href] of links) {
     const a = document.createElement('a');
@@ -31,6 +35,12 @@
     if (key === page) a.setAttribute('aria-current', 'page');
     nav.append(a);
   }
+  const authBar = header.querySelector('.sh-auth');
+  const checkAuthBar = () => {
+    const apiLive = !!(window.BOSPHORLY_API && window.BOSPHORLY_API.base);
+    if (authBar && page !== 'account' && apiLive) authBar.hidden = false;
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkAuthBar); else checkAuthBar();
   host.replaceWith(header);
 })();
 
