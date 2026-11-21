@@ -14,23 +14,34 @@
     prices: { en: 'Compare tours', tr: 'Tur karşılaştır', ru: 'Сравнить туры', uk: 'Порівняти тури', de: 'Touren vergleichen', fr: 'Comparer les visites', nl: 'Tours vergelijken', ar: 'قارن الجولات', he: 'השוואת סיורים', az: 'Turları müqayisə et', fa: 'مقایسه تورها', es: 'Comparar tours', it: "Confronta i tour", pt: "Comparar passeios", hr: "Usporedite ture", hu: "Túrák összehasonlítása", bs: "Uporedite ture", zh: "比较游览", ja: "ツアー比較", ko: "투어 비교", hi: "टूर तुलना", bn: "ট্যুর তুলনা", id: "Bandingkan tur" },
     map: { en: 'City map', tr: 'Şehir haritası', ru: 'Карта города', uk: 'Мапа міста', de: 'Stadtplan', fr: 'Plan de la ville', nl: 'Stadskaart', ar: 'خريطة المدينة', he: 'מפת העיר', az: 'Şəhər xəritəsi', fa: 'نقشه شهر', es: 'Mapa de la ciudad', it: "Mappa della città", pt: "Mapa da cidade", hr: "Karta grada", hu: "Várostérkép", bs: "Karta grada", zh: "城市地图", ja: "市内地図", ko: "시내 지도", hi: "शहर का नक्शा", bn: "শহরের মানচিত্র", id: "Peta kota" },
     faq: {"tr": "SSS", "en": "FAQ", "ru": "Вопросы", "uk": "Питання", "de": "FAQ", "fr": "FAQ", "nl": "FAQ", "ar": "الأسئلة الشائعة", "he": "שאלות נפוצות", "az": "Suallar", "fa": "پرسش‌ها", "es": "Preguntas", "it": "FAQ", "pt": "Perguntas", "hr": "Pitanja", "hu": "GYIK", "bs": "Pitanja", "zh": "常见问题", "ja": "よくある質問", "ko": "자주 묻는 질문", "hi": "सवाल-जवाब", "bn": "প্রশ্নোত্তর", "id": "Tanya jawab"},
-    account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta", hr: "Moj račun", hu: "Fiókom", bs: "Moj račun", zh: "我的账户", ja: "マイアカウント", ko: "내 계정", hi: "मेरा खाता", bn: "আমার অ্যাকাউন্ট", id: "Akun saya" }
+    account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta", hr: "Moj račun", hu: "Fiókom", bs: "Moj račun", zh: "我的账户", ja: "マイアカウント", ko: "내 계정", hi: "मेरा खाता", bn: "আমার অ্যাকাউন্ট", id: "Akun saya" },
+    signup: { en: 'Create account', tr: 'Hesap oluştur', ru: 'Создать аккаунт', uk: 'Створити акаунт', de: 'Konto erstellen', fr: 'Créer un compte', nl: 'Account aanmaken', ar: 'إنشاء حساب', he: 'יצירת חשבון', az: 'Hesab yarat', fa: 'ایجاد حساب', es: 'Crear cuenta', it: 'Crea account', pt: 'Criar conta', hr: 'Izradi račun', hu: 'Fiók létrehozása', bs: 'Kreiraj račun', zh: '创建账户', ja: 'アカウント作成', ko: '계정 만들기', hi: 'खाता बनाएँ', bn: 'অ্যাকাউন্ট খুলুন', id: 'Buat akun' }
   };
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder
   const withCurrency = host.dataset.currency !== 'off';
-  const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['faq', 'faq.html'], ['account', 'account.html']];
+  const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['faq', 'faq.html'], ['account', 'account.html'], ['signup', 'account.html#signup']];
   const header = document.createElement('header');
   header.className = 'site-header';
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
     '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div></div>';
   const nav = header.querySelector('nav');
+  const syncActive = () => {
+    const isSignup = page === 'account' && location.hash === '#signup';
+    nav.querySelectorAll('a[data-nav]').forEach(a => {
+      const k = a.dataset.nav;
+      const active = (k === 'signup' && isSignup) || (k === page && !isSignup);
+      if (active) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+  };
   for (const [key, href] of links) {
     const a = document.createElement('a');
+    a.dataset.nav = key;
     a.href = base + href; a.textContent = L[key][lang] || L[key].en;
-    if (key === page) a.setAttribute('aria-current', 'page');
     nav.append(a);
   }
+  syncActive();
+  addEventListener('hashchange', syncActive);
   host.replaceWith(header);
 })();
 
