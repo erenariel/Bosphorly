@@ -923,30 +923,21 @@
       meeting_point: pick('meeting_point'), translated: Boolean(t.highlights) };
   }
 
-  // Card photos: free-licensed files from Wikimedia Commons (credits: assets/images/tours/CREDITS.md).
-  // The licences require the author and licence next to the photo, linked to the file page.
-  const PHOTOS = {"bb-morning": {"f": "Ortaköy Mosque and Bosphorus Bridge, March 2024 03.jpg", "a": "Calistemon", "l": "CC BY-SA 4.0", "alt": "Ortaköy Mosque and the Bosphorus Bridge"}, "bb-sunset": {"f": "Istanbul ferry at sunset on the Bosphorus - Tarik Kaan Muslu.jpg", "a": "Tarık Kaan Muslu", "l": "CC BY-SA 4.0", "alt": "City ferry on the Bosphorus at sunset"}, "bb-oldcity": {"f": "Hagia Sophia Mars 2013.jpg", "a": "Arild Vågen", "l": "CC BY-SA 3.0", "alt": "Hagia Sophia, Istanbul"}, "orient-dinner": {"f": "Ortaköy Mosque (160990449).jpeg", "a": "Giuseppe Pinto", "l": "CC BY-SA 3.0", "alt": "Ortaköy Mosque and the illuminated Bosphorus Bridge at night"}, "sea-land": {"f": "Dolmabahce from boat @ Bosphorus Cruise to Anadolu Kavagi (8319926203).jpg", "a": "Guilhem Vellut", "l": "CC BY 2.0", "alt": "Dolmabahçe Palace seen from a Bosphorus boat"}, "alaturka": {"f": "Alaaddin Hamamı, Avanos - hot room with göbek taşı.jpg", "a": "DiliyaKhazigalievaGul", "l": "CC BY-SA 4.0", "alt": "Hot room of a traditional Turkish hammam"}};
-  // Tour id -> photo; anything not listed falls back to its category.
-  const PICK = {"bb-afternoon": "sea-land", "sl-sunset": "bb-sunset", "sl-generic-cruise": "sea-land", "sl-turkish-breakfast": "bb-morning", "azure-halfbosphorus": "bb-morning",
-    "sl-privateyacht": "bb-sunset", "orient-classic": "orient-dinner", "orient-alacarte": "orient-dinner", "orient-private-newyear": "orient-dinner", "orient-newyear-special": "orient-dinner",
-    "sl-dinner": "orient-dinner", "azure-dinner": "orient-dinner", "bb-europeasia": "bb-morning", "sl-two-continents": "sea-land", "azure-two-continents": "sea-land", "azure-bosphorus": "sea-land",
-    "sl-oldcity": "bb-oldcity", "sl-asia-half": "bb-morning", "sl-asia-afternoon": "bb-oldcity", "azure-city": "bb-oldcity"};
-  const CAT_PHOTO = { cruise: 'bb-morning', dinner: 'orient-dinner', city: 'bb-oldcity', hammam: 'alaturka' };
-  function tourPhoto(r, cat) {
-    const key = PHOTOS[r.id] ? r.id : PICK[r.id] || CAT_PHOTO[cat];
-    const ph = key && PHOTOS[key];
-    if (!ph) return null;
+  // Card photos come from each tour company's own website, used with the company's permission;
+  // the caption names the company as the source. Files: assets/images/partners/<id>-600|900.webp.
+  const PHOTO_SAME = { 'orient-private-newyear': 'orient-classic', 'orient-newyear-special': 'orient-alacarte', 'alaturka-sultan': 'alaturka' };
+  const PHOTO_IDS = new Set(["alaturka", "alaturka-massage", "alaturka-peeling", "azure-bosphorus", "azure-bursa", "azure-city", "azure-dinner", "azure-halfbosphorus", "azure-islands", "azure-sapanca", "azure-sileagva", "azure-transfer", "azure-triple-eurbus", "azure-triple-eurplane", "azure-two-continents", "azure-yalova", "bb-afternoon", "bb-europeasia", "bb-morning", "bb-oldcity", "bb-sunset", "orient-alacarte", "orient-classic", "orient-dinner", "sea-land", "sl-afternoon", "sl-asia-afternoon", "sl-asia-half", "sl-dinner", "sl-generic-cruise", "sl-islands", "sl-oldcity", "sl-privateyacht", "sl-sunset", "sl-turkish-breakfast", "sl-two-continents"]);
+  const PHOTO_WORD = {"tr": "Fotoğraf", "en": "Photo", "ru": "Фото", "uk": "Фото", "de": "Foto", "fr": "Photo", "nl": "Foto", "ar": "الصورة", "he": "צילום", "az": "Foto", "fa": "عکس", "es": "Foto", "it": "Foto", "pt": "Foto", "hr": "Fotografija", "hu": "Fotó", "bs": "Fotografija", "zh": "图片", "ja": "写真", "ko": "사진", "hi": "फ़ोटो", "bn": "ছবি", "id": "Foto"};
+  function tourPhoto(r) {
+    const key = PHOTO_IDS.has(r.id) ? r.id : PHOTO_SAME[r.id];
+    if (!key) return null;
     const fig = el('figure', 'item-photo');
     const img = el('img');
-    img.src = 'assets/images/tours/' + key + '-600.webp';
-    img.srcset = 'assets/images/tours/' + key + '-600.webp 600w, assets/images/tours/' + key + '-900.webp 900w';
+    img.src = 'assets/images/partners/' + key + '-600.webp';
+    img.srcset = 'assets/images/partners/' + key + '-600.webp 600w, assets/images/partners/' + key + '-900.webp 900w';
     img.sizes = '(max-width: 700px) 100vw, 380px'; img.loading = 'lazy'; img.decoding = 'async';
-    img.width = 600; img.height = 375; img.alt = ph.alt;
-    const cap = el('figcaption');
-    const a = el('a', null, '📷 ' + ph.a + ' · ' + ph.l);
-    a.href = 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(ph.f.replace(/ /g, '_'));
-    a.target = '_blank'; a.rel = 'noopener';
-    cap.append(a); fig.append(img, cap);
+    img.width = 600; img.height = 375; img.alt = (r['title_' + lang] || r.title) + ' · ' + r.operator;
+    fig.append(img, el('figcaption', null, '📷 ' + (PHOTO_WORD[lang] || PHOTO_WORD.en) + ': ' + r.operator));
     return fig;
   }
 
@@ -1014,7 +1005,7 @@
     const a = el('a', 'button', T.request);
     a.href = 'booking.html?service=' + encodeURIComponent(r.id) + '&lang=' + encodeURIComponent(lang);
     body.append(a);
-    const photo = tourPhoto(r, cat);
+    const photo = tourPhoto(r);
     article.append(head, ...(photo ? [photo] : []), body);
     return article;
   }
@@ -1050,7 +1041,8 @@
       body.append(more);
     }
     const a = el('a', 'button', T.hbBook); a.href = 'booking.html?service=alaturka&lang=' + encodeURIComponent(lang); body.append(a);
-    article.append(head, body);
+    const photo = tourPhoto({ id: 'alaturka', operator: 'Alaturka Hamam', title: T.hbTitle });
+    article.append(head, ...(photo ? [photo] : []), body);
     return article;
   }
 
