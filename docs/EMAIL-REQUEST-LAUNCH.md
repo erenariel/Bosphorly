@@ -7,9 +7,9 @@
 1. Deploy the existing Cloudflare Worker with a managed `RATE_LIMITER` binding and `PUBLIC_ORIGIN=https://bosphorly.com`.
 2. Verify the sender domain in Resend. Store `RESEND_API_KEY`, `REQUEST_FROM_EMAIL`, and `TURNSTILE_SECRET` as Worker secrets, not GitHub Pages assets. Configure a public Turnstile site key on the client.
 3. Confirm the `info@bosphorly.com` inbox can receive mail, including a real delivery test from the Worker. Provider acceptance alone is not proof of inbox delivery.
-4. Set `config/api.js` to the deployed HTTPS API origin and implement a real client POST to `/v1/requests` with Turnstile response. Show success only on HTTP 202; show actionable error otherwise.
-5. Review privacy policy, retention and lawful basis before sending visitor PII to the email provider. Never submit card/passport data.
-6. Enable `ENABLE_EMAIL_REQUESTS=true` only after staging end-to-end tests, then merge PR #45 after CI is green.
+4. Set `config/api.js` to the deployed HTTPS API origin and set the public turnstileSiteKey for the transfer form, which posts to `/v1/requests` with Turnstile response. Show success only on HTTP 202; show actionable error otherwise.
+5. Review privacy policy, retention and lawful basis before sending visitor PII to the email provider. Do not request payment card data. Transfer passenger manifests include passport numbers and are kept out of compose URLs and device request history.
+6. Enable `ENABLE_EMAIL_REQUESTS=true` only after staging end-to-end tests.
 
 ## Acceptance tests (must run before production)
 
