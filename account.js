@@ -43,7 +43,7 @@
     navHome: 'الرئيسية', navCompare: 'قارن الجولات', navAccount: 'حسابي', eyebrow: 'حسابي في BOSPHORLY', heading: 'حسابي',
     lead: 'بياناتك والطلبات التي أرسلتها عبر Bosphorly.',
     deviceNote: 'محفوظة على هذا الجهاز فقط. إذا فتحت Bosphorly على هاتف أو حاسوب آخر فلن تظهر هذه الطلبات حاليًا.',
-    reqTitle: 'طلباتي', tabUpcoming: 'القادمة', tabPast: 'السابقة', profileTitle: 'بياناتي', lName: 'الاسم الكامل', lPhone: 'الجوال / واتساب',
+    reqTitle: 'طلباتي', tabUpcoming: 'القادمة', tabPast: 'السابقة', profileTitle: 'بياناتي', lName: 'الاسم الكامل', lPhone: 'الجوال',
     lEmail: 'البريد الإلكتروني (اختياري)', lHotel: 'الفندق', lRoom: 'رقم الغرفة', saveBtn: 'حفظ', clearBtn: 'احذف كل شيء على هذا الجهاز',
     profileNote: 'تُملأ نماذج الطلب تلقائيًا من بياناتك المحفوظة.', footer: 'Bosphorly · لا تُرسل أي معلومات من هذه الصفحة إلى خادم.',
     msgSaved: 'تم الحفظ.', confirmClear: 'هل تريد حذف ملفك وكل سجل الطلبات على هذا الجهاز؟', cleared: 'تم الحذف.',
