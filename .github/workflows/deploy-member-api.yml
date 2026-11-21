@@ -1,0 +1,40 @@
+name: Deploy member API
+on: workflow_dispatch
+permissions:
+  contents: read
+concurrency:
+  group: member-api-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Test member API
+        run: node --test tests/members.test.js tests/booking.test.js && python3 tests/schema.py
+      - name: Apply D1 migrations, deploy Worker and configure secrets
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CLAUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          CODE_PEPPER: ${{ secrets.CODE_PEPPER }}
+          PARTNER_TOKEN: ${{ secrets.PARTNER_TOKEN }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+        run: |
+          set -euo pipefail
+          for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN RESEND_API_KEY CODE_PEPPER PARTNER_TOKEN ADMIN_TOKEN; do
+            if [[ -z "${!key:-}" ]]; then echo "::error::Configure repository secret $key"; exit 1; fi
+          done
+          config=backend/wrangler.jsonc
+          if grep -q 'REPLACE_BEFORE_DEPLOYMENT' "$config"; then
+            echo "::error::Create the D1 database and replace REPLACE_BEFORE_DEPLOYMENT with its database_id in $config before deploying"
+            exit 1
+          fi
+          npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
+          npx --yes wrangler@4.166.0 deploy --config "$config"
+          node -e 'process.stdout.write(JSON.stringify({ADMIN_TOKEN:process.env.ADMIN_TOKEN,PARTNER_TOKEN:process.env.PARTNER_TOKEN,CODE_PEPPER:process.env.CODE_PEPPER,RESEND_API_KEY:process.env.RESEND_API_KEY}))' |
+            npx --yes wrangler@4.166.0 secret bulk --config "$config"

@@ -95,7 +95,8 @@ Then visit `http://localhost:8000/`. Interactive map tiles need access to OpenSt
 
 ## Deploy
 
-Go to **Settings → Pages → Build and deployment** on this repository, select **GitHub Actions** as the source, and check the `Deploy Bosphorly public prototype` workflow. Publishing is only complete when GitHub Pages reports a live URL.
+- **Public site (GitHub Pages):** Go to **Settings → Pages → Build and deployment** on this repository, select **GitHub Actions** as the source, and check the `Deploy Bosphorly public prototype` workflow. Publishing is only complete when GitHub Pages reports a live URL.
+- **Membership & coupon API (Cloudflare Workers + D1):** D1 oluştur → id'yi gir (`wrangler d1 create bosphorly-booking` ile D1 veritabanını oluşturup `database_id` değerini `backend/wrangler.jsonc` içindeki `REPLACE_BEFORE_DEPLOYMENT` yerine yaz) → GitHub Secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` veya `CLAUDFLARE_ACCOUNT_ID`, `RESEND_API_KEY`, `CODE_PEPPER`, `PARTNER_TOKEN`, `ADMIN_TOKEN`) tanımla → GitHub Actions **Deploy member API** (`workflow_dispatch`) iş akışını çalıştır. Yayın kararına kadar `config/api.js` içindeki `base` alanı boş (`''`) bırakılır. Ayrıntılar: [docs/MEMBERSHIP.md](docs/MEMBERSHIP.md).
 
 ## Planned next milestones
 
