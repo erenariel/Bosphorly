@@ -1,0 +1,33 @@
+name: Deploy transfer mail
+on: workflow_dispatch
+permissions:
+  contents: read
+concurrency:
+  group: transfer-mail-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Test transfer mail
+        run: node --test tests/transfer-email.test.js
+      - name: Deploy Worker and configure mail delivery
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
+        run: |
+          set -euo pipefail
+          for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN RESEND_API_KEY TURNSTILE_SECRET; do
+            if [[ -z "${!key:-}" ]]; then echo "::error::Configure repository secret $key"; exit 1; fi
+          done
+          config=backend/mail/wrangler.jsonc
+          npx --yes wrangler@4.166.0 deploy --config "$config"
+          node -e 'process.stdout.write(JSON.stringify({RESEND_API_KEY:process.env.RESEND_API_KEY,TURNSTILE_SECRET:process.env.TURNSTILE_SECRET}))' |
+            npx --yes wrangler@4.166.0 secret bulk --config "$config"
