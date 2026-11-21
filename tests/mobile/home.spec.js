@@ -49,7 +49,7 @@ test('guest pages invite requests: no prototype labels, no partner pitch, no cou
  }
  await page.goto('/?lang=tr');
  await expect(page.locator('footer .privacy-link')).toHaveText('🔒 Gizlilik · KVKK');
- await expect(page.locator('[data-i18n="terms"]')).toContainText('iptal koşulları rezervasyon onayıyla birlikte WhatsApp’tan bildirilir');
+ await expect(page.locator('[data-i18n="terms"]')).toContainText('iptal koşulları rezervasyon onayıyla birlikte e-posta ile bildirilir');
  // Other guest pages: no prototype wording, localized privacy link.
  for(const p of ['booking.html','prices.html','tours.html','explore.html','account.html']) {
  await page.goto('/'+p+'?lang=tr');
@@ -58,14 +58,14 @@ test('guest pages invite requests: no prototype labels, no partner pitch, no cou
  }
  expect(errors).toEqual([]);
 });
-test('FAQ page answers in the visitor language and asks on WhatsApp',async({page})=>{
+test('FAQ page answers in the visitor language and asks by email',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/faq.html?lang=tr');
  await expect(page.locator('h1')).toHaveText('Sıkça sorulan sorular');
  await expect(page.locator('.qa')).toHaveCount(9);
  await expect(page.locator('.qa').nth(8).locator('a.more')).toHaveAttribute('href','mailto:info@bosphorly.com');
  await expect(page.locator('.qa').nth(2)).toContainText('60 €');
- await expect(page.locator('#ask')).toHaveAttribute('href',/^https:\/\/wa\.me\/905333407776\?text=Merhaba/);
+ await expect(page.locator('#ask')).toHaveAttribute('href',/^mailto:info@bosphorly.com\?subject=/);
  await expect(page.locator('.site-header a[href="faq.html"]')).toHaveAttribute('aria-current','page');
  await page.goto('/faq.html?lang=ar');
  await expect(page.locator('html')).toHaveAttribute('dir','rtl');
