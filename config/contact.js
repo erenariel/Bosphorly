@@ -1,3 +1,3 @@
-// Public business contact. Tour requests use the corporate email address.
-// Email links open a draft in the visitor's email app; they do not send automatically.
-window.BOSPHORLY_CONTACT = Object.freeze({ whatsapp: '905333407776', whatsappDisplay: '+90 533 340 77 76', email: 'info@bosphorly.com' });
+// Public inbox for Bosphorly inquiries. Do not publish the retired WhatsApp contact.
+// mailto: links open an email draft; sending requires the customer's email application.
+window.BOSPHORLY_CONTACT = Object.freeze({ email: 'info@bosphorly.com' });
