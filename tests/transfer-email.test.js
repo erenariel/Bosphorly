@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import worker from '../backend/worker.js';
+import worker from '../backend/mail/worker.js';
 
 test('transfer notification goes to Bosphorly with the guest as Reply-To', async t => {
   const origin = 'https://bosphorly.com';
@@ -25,4 +25,9 @@ test('transfer notification goes to Bosphorly with the guest as Reply-To', async
   assert.equal(sent.reply_to,body.email);
   assert.equal(sent.subject,'Bosphorly transfer inquiry · BOS-TEST');
   assert.ok(sent.text.includes('\nExample itinerary'));
+});
+
+test('mail deployment does not expose the booking or membership API', async () => {
+  const response = await worker.fetch(new Request('https://example.org/v1/quotes', {method:'POST'}), {});
+  assert.equal(response.status,404);
 });

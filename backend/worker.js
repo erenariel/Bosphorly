@@ -41,7 +41,7 @@ export default {async fetch(request,env) {
       !validText(b.date,20) || !/^\d{4}-\d{2}-\d{2}$/.test(b.date) ||
       !Number.isInteger(b.guests) || b.guests < 1 || b.guests > 30 ||
       !validText(b.message,12000) || !validText(b.turnstileToken,2048) ||
-      b.consent !== true || (b.email && (typeof b.email !== 'string' || b.email.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)))) return requestJson({error:'Invalid request'},400);
+      b.consent !== true || (b.kind === 'transfer' && !validText(b.email,160)) || (b.email && (typeof b.email !== 'string' || b.email.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)))) return requestJson({error:'Invalid request'},400);
   const verification = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method:'POST', body:new URLSearchParams({secret:env.TURNSTILE_SECRET,response:b.turnstileToken,remoteip:request.headers.get('CF-Connecting-IP') || ''})
   });
