@@ -19,6 +19,7 @@ async function mockApi(page, calls) {
     const url = new URL(r.request().url()); const body = r.request().postDataJSON?.() ?? null;
     calls.push({ path: url.pathname, body, auth: r.request().headers().authorization || null });
     const json = (data, status = 200) => r.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(data) });
+    if (url.pathname === '/v1/auth/providers') return json({ google: true, yandex: true, facebook: false, apple: false, microsoft: false, telegram: false });
     if (url.pathname === '/v1/auth/start') return json({ sent: true });
     if (url.pathname === '/v1/auth/verify') return body.code === '123456' ? json({ token: 'tok', created: true, member: me }) : json({ error: 'Invalid or expired code' }, 400);
     if (url.pathname === '/v1/me') return json(me);
@@ -34,7 +35,7 @@ test('sign in with an e-mailed code, see coupons and stamps, then use a coupon o
   await page.goto('/index.html?lang=en&ref=friend123&h=hotel-a');
   await page.goto('/account.html?lang=en#signup');
   await expect(page.locator('#tabSignUp')).toHaveAttribute('aria-selected', 'true');
-  await expect(page.locator('.m-provider')).toHaveCount(4);
+  await expect(page.locator('.m-provider')).toHaveCount(2);
   await expect(page.locator('#mName')).toBeVisible();
   await expect(page.locator('#mPhone')).toBeVisible();
   await expect(page.locator('#mCountry')).toBeVisible();
