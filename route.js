@@ -11,7 +11,7 @@
   $('facts').append(el('span', null, stops.length + ' ' + t('rtFactStops')), el('span', null, t('rtFactKm')), el('span', null, t('rtFactDays')));
   for (const k of ['rtTip1', 'rtTip2', 'rtTip3']) $('tips').append(el('li', null, t(k)));
   $('askGuide').textContent = t('rtAskGuide') + ' →';
-  $('askGuide').href = D.waLink(t('rtAskMsg'));
+  $('askGuide').href = D.emailLink(t('rtAskMsg'), 'Bosphorly guide inquiry');
 
   for (const day of [1, 2]) {
     const box = el('section', 'rt-day');
