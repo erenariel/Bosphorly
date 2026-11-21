@@ -171,3 +171,69 @@ test('signed-in member persists in top-right header across pages, hides Create a
   await expect(page.locator('#headerAuth')).toBeVisible();
 });
 
+test('signed-in member sees cloud-synced details and cart/requests on another device (clean localStorage) and can remove open items', async ({ page }) => {
+  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
+  const reqs = [
+    {
+      ref: 'BOS-XDEV01',
+      serviceId: 'airport-transfer-ist',
+      type: 'transfer',
+      title: 'Havalimanı transferi · IST → Sultanahmet',
+      operator: 'Sultanahmet Palace',
+      date: '2099-09-12',
+      time: '15:30',
+      guests: 3,
+      total: '€60 · araç başı',
+      state: 'requested',
+      couponCode: 'BOS-WELC-OME2',
+      percentBps: 500
+    }
+  ];
+  let me = {
+    email: 'mehmet@example.com', name: 'Mehmet Demir', phone: '+90 555 222 33 44',
+    hotel: 'Sultanahmet Palace', room: '412', lang: 'tr', country: 'Türkiye',
+    interests: ['transfer'], referralCode: 'MEHMET26', marketing: false,
+    stamps: 0, stampsGoal: 5, fulfilledCount: 0, tier: 'silver', nextTier: 'gold',
+    toursToNextTier: 2, vipPriorityDiscountBps: 0, freeUpgrade: 'none',
+    coupons: [], requests: reqs
+  };
+  await page.route('https://api.test/**', async r => {
+    const url = new URL(r.request().url()); const body = r.request().postDataJSON?.() ?? null;
+    const json = (data, status = 200) => r.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(data) });
+    if (url.pathname === '/v1/auth/start') return json({ sent: true });
+    if (url.pathname === '/v1/auth/verify') return json({ token: 'tok-xdev', created: false, member: me });
+    if (url.pathname === '/v1/me' && r.request().method() === 'GET') return json(me);
+    if (url.pathname === '/v1/me' && r.request().method() === 'POST') {
+      me = { ...me, ...body };
+      return json(me);
+    }
+    if (url.pathname === '/v1/me/requests/delete') {
+      me = { ...me, requests: me.requests.filter(x => x.ref !== body.ref) };
+      return json({ removed: true, member: me });
+    }
+    return json({ error: 'Not found' }, 404);
+  });
+
+  // Simulate signing in from a completely clean second device (empty localStorage.account).
+  await page.goto('/account.html?lang=tr');
+  await page.fill('#mEmail', 'mehmet@example.com');
+  await page.getByRole('button', { name: 'Kod gönder' }).click();
+  await page.fill('#mCode', '123456');
+  await page.getByRole('button', { name: 'Giriş yap' }).click();
+
+  await expect(page.locator('#deviceNote')).toHaveClass(/synced/);
+  await expect(page.locator('#deviceNote')).toContainText('Hesabınla eşitleniyor');
+  await expect(page.locator('#pPhone')).toHaveValue('+90 555 222 33 44');
+  await expect(page.locator('#pHotel')).toHaveValue('Sultanahmet Palace');
+  await expect(page.locator('#pRoom')).toHaveValue('412');
+  await expect(page.locator('.req')).toHaveCount(1);
+  await expect(page.locator('.req')).toContainText('BOS-XDEV01');
+  await expect(page.locator('.req')).toContainText('Havalimanı transferi · IST → Sultanahmet');
+  await expect(page.locator('.req a[href^="mailto:"]')).toHaveAttribute('href', /BOS-XDEV01/);
+
+  // Removing synced open request clears it across sessions.
+  await page.locator('.req button', { hasText: 'Listeden kaldır' }).click();
+  await expect(page.locator('.req')).toHaveCount(0);
+});
+
+

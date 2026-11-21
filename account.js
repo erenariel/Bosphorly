@@ -660,14 +660,107 @@
   if (D[lang] && window.BosphorlyLang.rtl(lang)) document.documentElement.dir = 'rtl';
   for (const [id, v] of Object.entries(T)) { const e = $(id); if (e) e.textContent = v; }
   const A = window.BosphorlyAccount;
+  const M = () => window.BosphorlyMember;
   let tab = 'upcoming';
   const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   const dateText = d => { try { return new Intl.DateTimeFormat(lang === 'ar' ? 'ar-u-nu-latn' : lang, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(d + 'T12:00')); } catch { return d; } };
 
   function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
 
+  function syncNotice() {
+    const m = M();
+    const signedIn = !!(m && m.signedIn());
+    const enabled = !!(m && m.enabled());
+    const note = $('deviceNote'), foot = $('footer');
+    if (note) {
+      note.classList.toggle('synced', signedIn);
+      if (signedIn) {
+        note.textContent = tr
+          ? '☁️ Hesabınla eşitleniyor: Bilgilerin ve sepetteki / taleplerim listendeki kayıtlar aynı hesapla giriş yaptığın her telefon ve bilgisayarda görünür.'
+          : '☁️ Synced to your Bosphorly account: Your details and saved requests appear across every phone or computer where you sign in.';
+      } else if (enabled) {
+        note.textContent = tr
+          ? 'Şimdilik yalnızca bu cihazda saklanır. Yukarıdan giriş yaptığında veya hesap oluşturduğunda bilgilerin ve taleplerin başka telefon veya bilgisayarda da görünür.'
+          : (T.deviceNote + ' Sign in or create an account above to sync across devices.');
+      } else {
+        note.textContent = T.deviceNote;
+      }
+    }
+    if (foot) {
+      foot.textContent = signedIn
+        ? (tr ? 'Bosphorly · Hesap bilgilerin ve taleplerin oturum açıkken hesabınla güvenli biçimde eşitlenir.' : 'Bosphorly · Your details and requests sync securely with your signed-in account.')
+        : T.footer;
+    }
+  }
+
+  function mergedProfile() {
+    const localP = (A && A.profile()) || {};
+    const m = M();
+    const mp = (m && m.signedIn() ? m.cachedProfile() : null) || {};
+    return {
+      name: mp.name || localP.name || '',
+      phone: mp.phone || localP.phone || '',
+      email: mp.email || localP.email || '',
+      hotel: mp.hotel || localP.hotel || '',
+      room: mp.room || localP.room || ''
+    };
+  }
+
+  function fillProfileInputs() {
+    const p = mergedProfile();
+    if (!$('pName').value && p.name) $('pName').value = p.name;
+    if (!$('pPhone').value && p.phone) $('pPhone').value = p.phone;
+    if (!$('pEmail').value && p.email) $('pEmail').value = p.email;
+    if (!$('pHotel').value && p.hotel) $('pHotel').value = p.hotel;
+    if (!$('pRoom').value && p.room) $('pRoom').value = p.room;
+  }
+
+  function buildDraftMailto(r, prof) {
+    const title = r.title || r.serviceId || T.transfer;
+    const sub = (tr ? 'Bosphorly talebi' : 'Bosphorly request') + ' · ' + r.ref + ' · ' + title;
+    const lines = [
+      title + ' · ' + r.ref,
+      r.date ? (tr ? 'Tarih' : 'Date') + ': ' + r.date : null,
+      r.time ? (tr ? 'Saat' : 'Time') + ': ' + r.time : null,
+      r.guests ? (tr ? 'Kişi' : 'Guests') + ': ' + r.guests : null,
+      r.total ? (tr ? 'Fiyat' : 'Price') + ': ' + r.total : null,
+      r.couponCode ? (tr ? 'Kupon' : 'Coupon') + ': ' + r.couponCode : null,
+      r.operator ? (tr ? 'Firma / Otel' : 'Operator / Hotel') + ': ' + r.operator : null,
+      prof.name ? (tr ? 'Ad soyad' : 'Name') + ': ' + prof.name : null,
+      prof.phone ? (tr ? 'Telefon' : 'Phone') + ': ' + prof.phone : null,
+      prof.email ? 'E-mail: ' + prof.email : null,
+      prof.hotel ? (tr ? 'Otel' : 'Hotel') + ': ' + prof.hotel : null,
+      r.notes ? (tr ? 'Notlar' : 'Notes') + ': ' + r.notes : null
+    ].filter(Boolean);
+    return 'mailto:info@bosphorly.com?subject=' + encodeURIComponent(sub) + '&body=' + encodeURIComponent(lines.join('\n'));
+  }
+
+  function mergedRequests() {
+    const byRef = new Map();
+    const localReqs = A ? A.requests() : [];
+    const m = M();
+    const serverReqs = (m && m.signedIn() && m.cachedProfile()?.requests) || [];
+    for (const r of localReqs) {
+      if (r && r.ref) byRef.set(r.ref, { ...r });
+    }
+    for (const sr of serverReqs) {
+      if (!sr || !sr.ref) continue;
+      const prev = byRef.get(sr.ref) || {};
+      byRef.set(sr.ref, {
+        ...prev,
+        ...sr,
+        title: sr.title || prev.title || sr.serviceId || T.transfer,
+        operator: sr.operator || prev.operator || null,
+        time: sr.time || prev.time || null,
+        total: sr.total || prev.total || null,
+        emailDraftUrl: prev.emailDraftUrl || null
+      });
+    }
+    return [...byRef.values()].sort((a, b) => String(b.createdAt || b.date || '').localeCompare(String(a.createdAt || a.date || '')));
+  }
+
   function renderRequests() {
-    const all = A.requests();
+    const all = mergedRequests();
     const list = all.filter(r => (tab === 'upcoming') === (!r.date || r.date >= today));
     if (tab === 'past') list.reverse();
     const wrap = $('requests'); wrap.replaceChildren();
@@ -675,6 +768,7 @@
       const e = el('div', 'empty', tab === 'upcoming' ? T.emptyUpcoming : T.emptyPast);
       const a = el('a', null, T.browse); a.href = 'prices.html'; e.append(document.createElement('br'), a); wrap.append(e); return;
     }
+    const prof = mergedProfile();
     for (const r of list) {
       const card = el('article', 'req');
       const top = el('div', 'req-top');
@@ -682,12 +776,34 @@
       const meta = el('div', 'meta', [r.operator, r.date ? dateText(r.date) : null, r.time, r.guests ? r.guests + ' ' + T.guests : null].filter(Boolean).join(' · '));
       card.append(top, meta);
       if (r.total) card.append(el('div', 'meta', r.total));
-      if (r.emailDraftUrl) card.append(el('span', 'status', T.status));
+      if (r.couponCode) card.append(el('div', 'meta', '🎟️ ' + r.couponCode));
+      if (r.state === 'fulfilled') {
+        const st = el('span', 'status', tr ? 'Tamamlandı ✓' : 'Completed ✓');
+        st.style.background = '#e6f6ec'; st.style.color = '#145c36';
+        card.append(st);
+      } else if (r.state === 'cancelled') {
+        const st = el('span', 'status', tr ? 'İptal edildi' : 'Cancelled');
+        st.style.background = '#fdecec'; st.style.color = '#a12a2a';
+        card.append(st);
+      } else if (r.emailDraftUrl || r.state === 'requested') {
+        card.append(el('span', 'status', T.status));
+      }
       const actions = el('div', 'actions');
-      if (r.emailDraftUrl && r.emailDraftUrl.startsWith('mailto:')) { const a = el('a', 'btn', T.reopen); a.href = r.emailDraftUrl; actions.append(a); }
-      const del = el('button', 'btn ghost', T.remove); del.type = 'button';
-      del.addEventListener('click', () => { A.removeRequest(r.ref); renderRequests(); });
-      actions.append(del); card.append(actions); wrap.append(card);
+      const mailHref = (r.emailDraftUrl && r.emailDraftUrl.startsWith('mailto:')) ? r.emailDraftUrl : (r.state !== 'fulfilled' && r.state !== 'cancelled' ? buildDraftMailto(r, prof) : null);
+      if (mailHref) { const a = el('a', 'btn', T.reopen); a.href = mailHref; actions.append(a); }
+      if (r.state !== 'fulfilled') {
+        const del = el('button', 'btn ghost', T.remove); del.type = 'button';
+        del.addEventListener('click', async () => {
+          A.removeRequest(r.ref);
+          const m = M();
+          if (m && m.signedIn() && m.removeRequest) {
+            try { await m.removeRequest(r.ref); } catch {}
+          }
+          renderRequests();
+        });
+        actions.append(del);
+      }
+      card.append(actions); wrap.append(card);
     }
   }
 
@@ -700,14 +816,22 @@
   $('tabUpcoming').addEventListener('click', () => setTab('upcoming'));
   $('tabPast').addEventListener('click', () => setTab('past'));
 
-  const p = A.profile() || {};
-  $('pName').value = p.name || ''; $('pPhone').value = p.phone || ''; $('pEmail').value = p.email || ''; $('pHotel').value = p.hotel || ''; $('pRoom').value = p.room || '';
-  $('profileForm').addEventListener('submit', e => {
+  fillProfileInputs();
+  $('profileForm').addEventListener('submit', async e => {
     e.preventDefault();
     const cleanName = $('pName').value.trim();
-    A.saveProfile({ name: cleanName, phone: $('pPhone').value, email: $('pEmail').value, hotel: $('pHotel').value, room: $('pRoom').value });
-    if (window.BosphorlyMember && window.BosphorlyMember.signedIn()) {
-      window.BosphorlyMember.update({ name: cleanName }).catch(() => {});
+    const cleanPhone = $('pPhone').value.trim();
+    const cleanEmail = $('pEmail').value.trim();
+    const cleanHotel = $('pHotel').value.trim();
+    const cleanRoom = $('pRoom').value.trim();
+    A.saveProfile({ name: cleanName, phone: cleanPhone, email: cleanEmail, hotel: cleanHotel, room: cleanRoom });
+    const m = M();
+    if (m && m.signedIn()) {
+      try {
+        await m.update({ name: cleanName, phone: cleanPhone, hotel: cleanHotel, room: cleanRoom });
+        $('saved').textContent = tr ? 'Kaydedildi · Hesabınla eşitlendi ✓' : 'Saved · Synced to your account ✓';
+        return;
+      } catch {}
     }
     $('saved').textContent = T.msgSaved;
   });
@@ -717,5 +841,12 @@
     ['pName', 'pPhone', 'pEmail', 'pHotel', 'pRoom'].forEach(id => { $(id).value = ''; });
     $('saved').textContent = T.cleared; renderRequests();
   });
-  renderRequests();
+
+  const refreshAll = () => {
+    syncNotice();
+    fillProfileInputs();
+    renderRequests();
+  };
+  window.addEventListener('bosphorly:member-changed', refreshAll);
+  refreshAll();
 })();
