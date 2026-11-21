@@ -31,8 +31,14 @@ jobs:
           done
           config=backend/wrangler.jsonc
           if grep -q 'REPLACE_BEFORE_DEPLOYMENT' "$config"; then
-            echo "::error::Create the D1 database and replace REPLACE_BEFORE_DEPLOYMENT with its database_id in $config before deploying"
-            exit 1
+            db_id=$(npx --yes wrangler@4.166.0 d1 list --json | node -e 'const list=JSON.parse(require("fs").readFileSync(0,"utf8")); const db=list.find(d=>d.name==="bosphorly-booking"); if(db) process.stdout.write(db.uuid);')
+            if [[ -z "$db_id" ]]; then
+              npx --yes wrangler@4.166.0 d1 create bosphorly-booking --location weur
+              db_id=$(npx --yes wrangler@4.166.0 d1 list --json | node -e 'const list=JSON.parse(require("fs").readFileSync(0,"utf8")); const db=list.find(d=>d.name==="bosphorly-booking"); if(db) process.stdout.write(db.uuid);')
+            fi
+            if [[ -z "$db_id" ]]; then echo "::error::Could not resolve D1 database_id for bosphorly-booking"; exit 1; fi
+            echo "Resolved D1 database_id: $db_id"
+            DB_ID="$db_id" CONFIG="$config" node -e 'const fs=require("fs"); const p=process.env.CONFIG; fs.writeFileSync(p, fs.readFileSync(p,"utf8").replace("REPLACE_BEFORE_DEPLOYMENT", process.env.DB_ID));'
           fi
           npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
           npx --yes wrangler@4.166.0 deploy --config "$config"
