@@ -36,11 +36,13 @@ jobs:
           MICROSOFT_CLIENT_ID: ${{ secrets.MICROSOFT_CLIENT_ID }}
           MICROSOFT_CLIENT_SECRET: ${{ secrets.MICROSOFT_CLIENT_SECRET }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
         run: |
           set -euo pipefail
           for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN RESEND_API_KEY CODE_PEPPER PARTNER_TOKEN ADMIN_TOKEN; do
             if [[ -z "${!key:-}" ]]; then echo "::error::Configure repository secret $key"; exit 1; fi
           done
+          python3 tools/build_knowledge.py
           config=backend/wrangler.jsonc
           if grep -q 'REPLACE_BEFORE_DEPLOYMENT' "$config"; then
             db_id=$(npx --yes wrangler@4.166.0 d1 list --json | node -e 'const list=JSON.parse(require("fs").readFileSync(0,"utf8")); const db=list.find(d=>d.name==="bosphorly-booking"); if(db) process.stdout.write(db.uuid);')
@@ -54,5 +56,24 @@ jobs:
           fi
           npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
           npx --yes wrangler@4.166.0 deploy --config "$config"
-          node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
+          node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN","TURNSTILE_SECRET"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
             npx --yes wrangler@4.166.0 secret bulk --config "$config"
+      - name: Set Telegram webhook
+        if: env.TELEGRAM_BOT_TOKEN != ''
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CODE_PEPPER: ${{ secrets.CODE_PEPPER }}
+        run: |
+          set -euo pipefail
+          node -e '
+            const crypto = require("crypto");
+            const secret = crypto.createHmac("sha256", process.env.CODE_PEPPER).update("tg-webhook").digest("hex");
+            process.stdout.write(JSON.stringify({
+              url: "https://bosphorly-booking.erennkirazz98.workers.dev/v1/telegram/webhook",
+              secret_token: secret,
+              allowed_updates: ["message"],
+              drop_pending_updates: true
+            }));
+          ' | curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/setWebhook" \
+            -H "Content-Type: application/json" --data-binary @- \
+            | node -e 'const r=JSON.parse(require("fs").readFileSync(0,"utf8")); console.log("setWebhook ok:", Boolean(r && r.ok)); if (!r || !r.ok) process.exit(1);'

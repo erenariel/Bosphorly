@@ -1,5 +1,7 @@
 import {plan, publicQuote} from './domain.js';
 import {handleMembers, isMemberRoute} from './members.js';
+import {handleAssistantRoutes} from './assistant.js';
+import {handleTelegramWebhook} from './telegram.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export default {async fetch(request,env) {
  const url=new URL(request.url);
@@ -14,6 +16,13 @@ export default {async fetch(request,env) {
  const r=await handleMembers(request,env,url);
  if(origin===env.PUBLIC_ORIGIN) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
  return r;
+ }
+ if (url.pathname==='/v1/telegram/webhook') {
+ return handleTelegramWebhook(request,env);
+ }
+ if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff') {
+ if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
+ return handleAssistantRoutes(request,env,url);
  }
  let response;
  try {

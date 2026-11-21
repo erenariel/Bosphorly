@@ -215,8 +215,23 @@ def assert_faq():
         assert q in faq_html and a in faq_html
 
 
+def assert_knowledge():
+    """The assistant knowledge extract must match tools/build_knowledge.py and carry bosphorly.com URLs."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("build_knowledge", ROOT / "tools/build_knowledge.py")
+    tool = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(tool)
+    current = (ROOT / "backend/knowledge.json").read_text(encoding="utf-8")
+    assert current == tool.text(), "backend/knowledge.json is out of date: run python3 tools/build_knowledge.py"
+    chunks = json.loads(current)
+    assert len(chunks) >= 20
+    for c in chunks:
+        assert c.get("id") and c.get("title") and c.get("text")
+        assert c.get("url", "").startswith("https://bosphorly.com/"), c
+
+
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "assistant-chat.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "backend/assistant.js", "backend/telegram.js", "backend/worker.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
     for name in script_sources:
         if name.endswith(".py"):
             continue
@@ -261,6 +276,7 @@ if __name__ == "__main__":
     assert_no_supplier_checkout_redirects()
     assert_booking_safety()
     assert_home_prices()
+    assert_knowledge()
     assert_hreflang()
     assert_seo()
     assert_faq()
