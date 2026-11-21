@@ -920,8 +920,27 @@
     const pick = k => t[k] ?? d[k];
     return { duration: pick('duration'), pickup: pick('pickup'), guide: pick('guide'), highlights: pick('highlights'), included: pick('included'),
       not_included: pick('not_included'), cancellation: pick('cancellation'), notes: pick('notes'), schedule: pick('schedule'),
-      meeting_point: pick('meeting_point'), translated: Boolean(t.highlights) };
+      meeting_point: pick('meeting_point'), translated: Boolean(t.highlights),
+      // Longer texts added later (summary, route, menu, show) appear only in English, Turkish or a language that has them,
+      // so a card in another language never mixes in an English paragraph.
+      summary: own('summary'), itinerary: own('itinerary'), menu: own('menu'), show: own('show') };
+    function own(k) { return t[k] ?? (lang === 'en' || !d[lang] ? d[k] : null); }
   }
+
+  // Labels for the route, menu and show lists.
+  const EXTRA_T = {
+    tr: ['Program ve duraklar', 'Menü', 'Şov programı'], en: ['Programme and stops', 'Menu', 'Show programme'],
+    ru: ['Программа и остановки', 'Меню', 'Шоу-программа'], uk: ['Програма і зупинки', 'Меню', 'Шоу-програма'],
+    de: ['Programm und Stationen', 'Menü', 'Showprogramm'], fr: ['Programme et étapes', 'Menu', 'Programme du spectacle'],
+    nl: ['Programma en stops', 'Menu', 'Showprogramma'], ar: ['البرنامج والمحطات', 'قائمة الطعام', 'برنامج العرض'],
+    he: ['תוכנית ותחנות', 'תפריט', 'תוכנית המופע'], az: ['Proqram və dayanacaqlar', 'Menyu', 'Şou proqramı'],
+    fa: ['برنامه و توقف‌ها', 'منو', 'برنامهٔ نمایش'], es: ['Programa y paradas', 'Menú', 'Programa del espectáculo'],
+    it: ['Programma e tappe', 'Menù', 'Programma dello spettacolo'], pt: ['Programa e paragens', 'Menu', 'Programa do espetáculo'],
+    hr: ['Program i stanice', 'Jelovnik', 'Program nastupa'], hu: ['Program és megállók', 'Menü', 'Műsor'],
+    bs: ['Program i stanice', 'Meni', 'Program nastupa'], zh: ['行程与站点', '菜单', '演出节目'], ja: ['行程と立ち寄り先', 'メニュー', 'ショーの内容'],
+    ko: ['일정과 방문지', '메뉴', '공연 프로그램'], hi: ['कार्यक्रम और पड़ाव', 'मेन्यू', 'शो कार्यक्रम'], bn: ['কর্মসূচি ও যাত্রাবিরতি', 'মেনু', 'শো কর্মসূচি'],
+    id: ['Program dan perhentian', 'Menu', 'Program pertunjukan'] };
+  const [T_ROUTE, T_MENU, T_SHOW] = EXTRA_T[lang] || EXTRA_T.en;
 
   // Card photos come from each tour company's own website, used with the company's permission;
   // the caption names the company as the source. Files: assets/images/partners/<id>-600|900.webp.
@@ -969,6 +988,7 @@
       if (L.pickup) chips.append(el('span', 'chip', '🚐 ' + L.pickup));
       if (L.guide) chips.append(el('span', 'chip', '🗣 ' + L.guide));
       if (chips.children.length) body.append(chips);
+      if (L.summary) body.append(el('p', 'summary', L.summary));
       // What the tour is, visible on the card: times, meeting point, all highlights, included and not included.
       const facts = el('div', 'facts');
       const fact = (icon, label, value) => { if (value) { const p = el('p', 'fact'); p.append(el('span', 'fact-i', icon), el('b', null, label + ': '), document.createTextNode(value)); facts.append(p); } };
@@ -988,6 +1008,9 @@
       more.append(el('summary', null, T.more));
       const add = (label, value) => { if (value) { const p = el('p', 'kv'); p.append(el('b', null, label + ': '), document.createTextNode(value)); more.append(p); } };
       add(T.cancel, L.cancellation);
+      if (L.itinerary?.length) { more.append(el('p', 'list-title', T_ROUTE)); more.append(list(L.itinerary, 'route', null)); }
+      if (L.menu?.length) { more.append(el('p', 'list-title', T_MENU)); more.append(list(L.menu, 'notes')); }
+      if (L.show?.length) { more.append(el('p', 'list-title', T_SHOW)); more.append(list(L.show, 'notes')); }
       if (L.highlights?.length > 6) { more.append(list(L.highlights.slice(6), 'highlights')); }
       if (L.included?.length > 8) { more.append(el('p', 'list-title', T.included)); more.append(list(L.included.slice(8), 'ticks')); }
       if (r.options?.length) {
@@ -1050,7 +1073,7 @@
     const q = Q.value.toLocaleLowerCase();
     const op = $('operator').value, cur = $('currency').value;
     const data = rows.filter(x => (op === 'all' || x.operator === op) && (cur === 'all' || x.currency === cur) &&
-      (x.title + ' ' + (x['title_' + lang] || '') + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ') + ' ' + (x.details?.[lang]?.highlights || []).join(' ')).toLocaleLowerCase().includes(q));
+      (x.title + ' ' + (x['title_' + lang] || '') + ' ' + x.operator + ' ' + (x.details?.highlights || []).join(' ') + ' ' + (x.details?.[lang]?.highlights || []).join(' ') + ' ' + (x.details?.summary || '') + ' ' + (x.details?.[lang]?.summary || '') + ' ' + (x.details?.itinerary || []).join(' ') + ' ' + (x.details?.[lang]?.itinerary || []).join(' ')).toLocaleLowerCase().includes(q));
     const wrap = $('catalog');
     wrap.replaceChildren();
     $('summary').textContent = (data.filter(r => r.operator !== 'Alaturka Hamam').length + (data.some(r => r.operator === 'Alaturka Hamam') ? 1 : 0)) + ' ' + T.records;
