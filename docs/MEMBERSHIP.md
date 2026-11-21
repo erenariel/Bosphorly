@@ -24,20 +24,34 @@ Built and tested, **not deployed**. Until the API is deployed and its address is
 
 ## Deploy (Cloudflare Workers + D1, free tier)
 
-1. Create a Cloudflare account, install `wrangler`, then run `wrangler d1 create bosphorly-booking`. Put the database id in `backend/wrangler.jsonc`.
-2. Apply the migrations: `wrangler d1 migrations apply bosphorly-booking --remote` (0001 booking, 0002 members).
-3. Set the secrets: `wrangler secret put ADMIN_TOKEN`, `PARTNER_TOKEN`, `CODE_PEPPER` (a long random string), `RESEND_API_KEY`.
-4. In Resend, verify the sending domain (e.g. `bosphorly.com`, needs DNS records at the domain registrar). Set `MAIL_FROM`.
-5. Set `PUBLIC_ORIGIN` in `wrangler.jsonc` to the site's exact origin (e.g. `https://bosphorly.com`). Requests from other origins are refused.
-6. Run `wrangler deploy` from `backend/`. Put the worker URL (or `https://api.bosphorly.com`) in `config/api.js`.
-7. Optional: change percentages with `POST /v1/admin/campaigns` (Bearer `ADMIN_TOKEN`). Add a hotel campaign with `{"id":"hotel-x-2027","kind":"hotel","hotelId":"hotel-x","percentBps":500,"validDays":60}` after adding the hotel (status `verified`) to the `hotels` table.
+1. **D1 oluştur → id'yi gir (Create D1 → enter id):** Create a Cloudflare account and create the D1 database (`npx --yes wrangler@4.166.0 d1 create bosphorly-booking` or via the Cloudflare dashboard). Replace the `REPLACE_BEFORE_DEPLOYMENT` placeholder in `backend/wrangler.jsonc` (`d1_databases[0].database_id`) with the generated `database_id`.
+2. **Verify sending domain in Resend:** In Resend, verify the sending domain (e.g. `bosphorly.com` or a verified sending subdomain, using DNS records at the domain registrar) and check `MAIL_FROM` and `PUBLIC_ORIGIN` (`https://bosphorly.com`) in `backend/wrangler.jsonc`. Requests from other origins are refused.
+3. **Configure GitHub Secrets (for automated deployment):** In the repository **Settings → Secrets and variables → Actions**, add:
+   - `CLOUDFLARE_API_TOKEN` (with Workers Scripts + D1 edit permissions)
+   - `CLOUDFLARE_ACCOUNT_ID` (or `CLAUDFLARE_ACCOUNT_ID`)
+   - `RESEND_API_KEY`
+   - `CODE_PEPPER` (a long random secret for HMAC-hashing one-time sign-in codes)
+   - `PARTNER_TOKEN` (shared bearer key for `partner.html` lookup/fulfil/cancel)
+   - `ADMIN_TOKEN` (bearer key for `/v1/admin/*` endpoints)
+4. **Deploy via GitHub Actions (`Deploy member API`):** Trigger the **Deploy member API** workflow (`.github/workflows/deploy-member-api.yml`, `workflow_dispatch` on `main`). It runs the member API and schema tests, applies remote D1 migrations (`wrangler d1 migrations apply bosphorly-booking --remote --config backend/wrangler.jsonc`), deploys the Worker (`wrangler deploy --config backend/wrangler.jsonc`), and uploads `ADMIN_TOKEN`, `PARTNER_TOKEN`, `CODE_PEPPER`, and `RESEND_API_KEY` via `wrangler secret bulk`.
+   - *Manual CLI alternative:*
+     ```sh
+     npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config backend/wrangler.jsonc
+     npx --yes wrangler@4.166.0 deploy --config backend/wrangler.jsonc
+     npx --yes wrangler@4.166.0 secret put ADMIN_TOKEN --config backend/wrangler.jsonc
+     npx --yes wrangler@4.166.0 secret put PARTNER_TOKEN --config backend/wrangler.jsonc
+     npx --yes wrangler@4.166.0 secret put CODE_PEPPER --config backend/wrangler.jsonc
+     npx --yes wrangler@4.166.0 secret put RESEND_API_KEY --config backend/wrangler.jsonc
+     ```
+5. **Enable on the public site (when ready to launch):** Leave `base: ''` empty in `config/api.js` until you decide to go live. Once the Worker, D1 database, and legal gates are ready, set `base` in `config/api.js` to the Worker URL (or `https://api.bosphorly.com`).
+6. **Optional campaigns:** Change percentages with `POST /v1/admin/campaigns` (Bearer `ADMIN_TOKEN`). Add a hotel campaign with `{"id":"hotel-x-2027","kind":"hotel","hotelId":"hotel-x","percentBps":500,"validDays":60}` after adding the hotel (status `verified`) to the `hotels` table.
 
 `DEV_RETURN_CODE=1` returns the sign-in code in the API response when no e-mail provider is set. Use it **only** for local testing, never in production.
 
 ## Before launch (legal and business checklist)
 
 - **Partner agreement:** companies must agree to apply Bosphorly coupons at the reception and to deduct the discount from the commission they owe.
-- **KVKK:** the privacy notice (`privacy.html`) already describes the membership data, Cloudflare and Resend (USA). Before launch: fill in the data controller (the individual running the site), contact and retention period, and have a lawyer confirm the Art. 9 route for transfers abroad (WhatsApp, Resend).
+- **KVKK:** the privacy notice (`privacy.html`) includes a draft KVKK disclosure section for membership data (what data is collected, why, retention periods, and how to delete an account or request deletion), Cloudflare D1 and Resend (USA). Before launch: fill in the data controller (the individual running the site), contact and retention period, and have a lawyer confirm the Art. 9 route for transfers abroad (WhatsApp, Resend, Cloudflare).
 - **Commercial e-mails (Law 6563, İYS):** marketing e-mails need the separate, never pre-ticked consent (already in the form) and registration of the sender in İYS. Sign-in codes are not marketing.
 - **Discount display (Advertising Regulation):** when showing a "before" price, it must be the lowest price of the last 30 days. Bosphorly shows the company's own price and a percentage, so keep company prices up to date.
 - **Terms:** write short coupon terms (one per request, validity, not exchangeable for cash, not combinable) and link them from My account.

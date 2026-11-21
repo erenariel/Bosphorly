@@ -170,3 +170,30 @@ test('member routes keep the origin check, rate limit and size limit', async () 
   assert.equal((await call({ ...env, RATE_LIMITER: { limit: async () => ({ success: false }) } }, '/v1/auth/start', { email: 'a@example.com' })).status, 429);
   assert.equal((await call(env, '/v1/auth/start', { email: 'a@example.com', pad: 'x'.repeat(5000) })).status, 413);
 });
+
+test('deployment config keeps D1 placeholder, empty api base, secret-only workflow and TR/EN KVKK draft notice', () => {
+  const wrangler = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
+  assert.match(wrangler, /"database_id"\s*:\s*"REPLACE_BEFORE_DEPLOYMENT"/);
+  const apiConfig = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
+  assert.match(apiConfig, /\bbase:\s*''/);
+  const workflow = readFileSync(new URL('../.github/workflows/deploy-member-api.yml', import.meta.url), 'utf8');
+  assert.match(workflow, /name:\s*Deploy member API/);
+  assert.match(workflow, /on:\s*workflow_dispatch/);
+  assert.match(workflow, /secrets\.CLOUDFLARE_ACCOUNT_ID\s*\|\|\s*secrets\.CLAUDFLARE_ACCOUNT_ID/);
+  assert.match(workflow, /secrets\.CLOUDFLARE_API_TOKEN/);
+  assert.match(workflow, /secrets\.RESEND_API_KEY/);
+  assert.match(workflow, /secrets\.CODE_PEPPER/);
+  assert.match(workflow, /secrets\.PARTNER_TOKEN/);
+  assert.match(workflow, /secrets\.ADMIN_TOKEN/);
+  assert.match(workflow, /config=backend\/wrangler\.jsonc/);
+  assert.match(workflow, /wrangler@\S+\s+d1 migrations apply bosphorly-booking --remote --config "\$config"/);
+  assert.match(workflow, /wrangler@\S+\s+deploy --config "\$config"/);
+  const privacy = readFileSync(new URL('../privacy.html', import.meta.url), 'utf8');
+  assert.match(privacy, /TASLAK \(Üyelik Aydınlatma Bölümü\)/);
+  assert.match(privacy, /DRAFT \(Membership Disclosure Section\)/);
+  assert.match(privacy, /Hangi veriler işlenir\?/);
+  assert.match(privacy, /What data we process:/);
+  assert.match(privacy, /Silme talebi nasıl yapılır\?/);
+  assert.match(privacy, /How to delete your account or request erasure:/);
+});
+
