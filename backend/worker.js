@@ -3,15 +3,16 @@ import {handleMembers, isMemberRoute} from './members.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export default {async fetch(request,env) {
  const url=new URL(request.url);
- // Deny browser cross-origin writes unless the exact deployment origin is configured.
  const origin=request.headers.get('Origin');
- if (origin && origin!==env.PUBLIC_ORIGIN) return json({error:'Origin denied'},403);
- if (request.method==='OPTIONS') return new Response(null,{status:204,headers:origin?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization','Vary':'Origin'}:{}});
- // Membership, coupons and partner check-in (backend/members.js), behind the same origin check and rate limit.
+ const isOauth=url.pathname.startsWith('/v1/auth/oauth/');
+ // Deny browser cross-origin writes unless the exact deployment origin is configured (except OAuth form_post callbacks).
+ if (!isOauth && origin && origin!==env.PUBLIC_ORIGIN) return json({error:'Origin denied'},403);
+ if (request.method==='OPTIONS') return new Response(null,{status:204,headers:origin===env.PUBLIC_ORIGIN?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization','Vary':'Origin'}:{}});
+ // Membership, coupons, OAuth and partner check-in (backend/members.js), behind the same rate limit.
  if (isMemberRoute(url.pathname)) {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  const r=await handleMembers(request,env,url);
- if(origin) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
+ if(origin===env.PUBLIC_ORIGIN) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
  return r;
  }
  let response;

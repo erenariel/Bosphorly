@@ -1,6 +1,6 @@
 'use strict';
-/* Membership card on My account: "coming soon" without an API, sign-in / create account by e-mailed code
-   or quick provider connect (Google, Apple, Facebook, Yandex), traveler preferences, coupons, stamps,
+/* Membership card on My account: "coming soon" without an API, sign-in / create account by OAuth
+   (Google, Apple, Facebook, Yandex) or e-mailed code, traveler preferences, coupons, stamps,
    invite link, offers consent, sign-out and account deletion. */
 (async () => {
   const M = window.BosphorlyMember, box = document.getElementById('member');
@@ -19,9 +19,13 @@
   const UI = {
     continueWith: tr ? '{p} ile devam et' : 'Continue with {p}',
     orEmail: tr ? 'veya e-posta ve seyahat bilgilerinle' : 'or with your email & travel details',
-    providerHint: tr
-      ? '{p} hesabına bağlı e-posta adresini aşağıya yaz ({d}); şifre gerekmeden 6 haneli doğrulama kodu gönderilir.'
-      : 'Enter the email address linked to your {p} account below ({d}); we will send a 6-digit verification code without a password.',
+    oauthTitle: tr ? '{p} ile bağlan' : 'Connect with {p}',
+    oauthSub: tr ? 'Bosphorly hesabınıza erişim izni istiyor' : 'Bosphorly is requesting access to your account',
+    oauthPerm1: tr ? 'E-posta adresiniz ve adınız (üyelik hesabınızı oluşturmak ve %5 hoş geldin kuponunuzu tanımlamak için)' : 'Your email address and name (to create your membership account and issue your 5% welcome coupon)',
+    oauthPerm2: tr ? 'Seyahat ve iletişim tercihleriniz (tur ve transfer taleplerinizi otomatik doldurmak için)' : 'Your travel and contact preferences (to pre-fill your tour and transfer requests)',
+    oauthEmailLabel: tr ? '{p} e-posta adresiniz' : 'Your {p} email address',
+    oauthAllow: tr ? 'İzin ver ve devam et' : 'Allow and continue',
+    oauthCancel: tr ? 'İptal' : 'Cancel',
     phone: tr ? 'Cep telefonu / WhatsApp' : 'Mobile phone / WhatsApp',
     phonePh: tr ? '+90 555 000 00 00' : '+44 7700 900123',
     country: tr ? 'Ülke / Uyruk (isteğe bağlı)' : 'Country / Nationality (optional)',
@@ -55,6 +59,13 @@
       svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#FC3F1D"/><path fill="#fff" d="M13.5 18h2V6h-2.9C9.8 6 8.3 7.4 8.3 9.7c0 1.7.8 2.9 2.2 3.6L8 18h2.2l2.3-4.2h1V18zm0-5.8h-.8c-1.4 0-2.3-.8-2.3-2.4 0-1.5.8-2.3 2.2-2.3h.9v4.7z"/></svg>'
     }
   ];
+
+  let remoteProviders = null;
+  async function getRemoteProviders() {
+    if (remoteProviders) return remoteProviders;
+    remoteProviders = (M.providers ? await M.providers() : {}) || {};
+    return remoteProviders;
+  }
 
   const errorText = e => (e && e.status === 429 ? T.mTooMany : e && e.status === 400 ? T.mBadCode : T.mError);
 
@@ -95,6 +106,79 @@
     }
   }
 
+  function openOAuthModal(p, initialEmail = '', initialName = '') {
+    const existing = document.getElementById('oauthBackdrop');
+    if (existing) existing.remove();
+    const localProf = (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
+    const backdrop = el('div', 'm-oauth-backdrop');
+    backdrop.id = 'oauthBackdrop';
+    const modal = el('div', 'm-oauth-modal');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+
+    const headRow = el('div', 'm-oauth-head');
+    const iconWrap = el('span'); iconWrap.innerHTML = p.svg;
+    const titleWrap = el('div');
+    const h3 = el('h3', null, f(UI.oauthTitle, { p: p.name }));
+    h3.append(el('small', null, UI.oauthSub));
+    titleWrap.append(h3);
+    headRow.append(iconWrap, titleWrap);
+
+    const perms = el('ul', 'm-oauth-perms');
+    [UI.oauthPerm1, UI.oauthPerm2].forEach(txt => {
+      const li = el('li');
+      li.append(el('b', null, '✓'), el('span', null, txt));
+      perms.append(li);
+    });
+
+    const form = el('form', 'm-form'); form.noValidate = true;
+    const emailInput = el('input'); emailInput.type = 'email'; emailInput.required = true; emailInput.autocomplete = 'email';
+    emailInput.placeholder = 'name' + p.domain;
+    const seedEmail = initialEmail || localProf.email || '';
+    if (seedEmail) emailInput.value = seedEmail.includes('@') ? seedEmail : seedEmail + p.domain;
+    const labEmail = el('label'); labEmail.append(el('span', null, f(UI.oauthEmailLabel, { p: p.name })), emailInput);
+
+    const nameInput = el('input'); nameInput.autocomplete = 'name'; nameInput.maxLength = 100;
+    nameInput.value = initialName || localProf.name || '';
+    const labName = el('label'); labName.append(el('span', null, T.mName), nameInput);
+
+    const consentInput = el('input'); consentInput.type = 'checkbox';
+    const cl = el('label', 'm-check'); cl.append(consentInput, el('span', null, T.mMarketing));
+
+    const actions = el('div', 'actions');
+    const allowBtn = el('button', 'btn primary', UI.oauthAllow); allowBtn.type = 'submit';
+    const cancelBtn = el('button', 'btn ghost', UI.oauthCancel); cancelBtn.type = 'button';
+    const close = () => backdrop.remove();
+    cancelBtn.addEventListener('click', close);
+    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
+    actions.append(allowBtn, cancelBtn);
+
+    const msg = el('p', 'm-msg'); msg.setAttribute('role', 'status');
+    form.append(labEmail, labName, cl, actions, msg);
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      let addr = emailInput.value.trim();
+      if (addr && !addr.includes('@')) { addr += p.domain; emailInput.value = addr; }
+      if (!addr || !emailInput.checkValidity()) { msg.textContent = T.mError; emailInput.focus(); return; }
+      allowBtn.disabled = true;
+      const prefill = { mode: 'signup', name: nameInput.value.trim(), marketing: consentInput.checked };
+      try {
+        const r = await M.start(addr);
+        close();
+        codeForm(addr, r.devCode, prefill);
+      } catch (err) {
+        msg.textContent = errorText(err);
+        allowBtn.disabled = false;
+      }
+    });
+
+    modal.append(headRow, perms, form);
+    backdrop.append(modal);
+    document.body.append(backdrop);
+    emailInput.focus();
+  }
+
   function authTabs(activeMode) {
     const tabs = el('div', 'm-tabs');
     tabs.setAttribute('role', 'tablist');
@@ -125,9 +209,11 @@
     email.placeholder = 'name@gmail.com';
     if (localProf.email) email.value = localProf.email;
 
+    let nameInput = null, phoneInput = null, countryInput = null, hotelInput = null, consentInput = null;
+    const selectedInterests = new Set(Array.isArray(localProf.interests) ? localProf.interests : []);
+
     // Quick provider buttons (Google, Apple, Facebook, Yandex) like Hotels.com.
     const provWrap = el('div', 'm-providers');
-    const provNote = el('p', 'm-provider-note'); provNote.hidden = true;
     const form = el('form', 'm-form'); form.noValidate = true;
 
     PROVIDERS.forEach(p => {
@@ -137,18 +223,13 @@
       btn.setAttribute('aria-pressed', 'false');
       btn.innerHTML = p.svg;
       btn.append(el('span', null, f(UI.continueWith, { p: p.name })));
-      btn.addEventListener('click', () => {
-        provWrap.querySelectorAll('.m-provider').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
-        provNote.textContent = f(UI.providerHint, { p: p.name, d: p.domain });
-        provNote.hidden = false;
-        const cur = email.value.trim();
-        if (cur && !cur.includes('@')) email.value = cur + p.domain;
-        else if (!cur) email.placeholder = 'name' + p.domain;
-        if (email.value.trim() && email.checkValidity()) {
-          form.requestSubmit();
-        } else {
-          email.focus();
+      btn.addEventListener('click', async () => {
+        const avail = await getRemoteProviders();
+        if (avail && avail[p.id] && M.oauthUrl) {
+          location.href = M.oauthUrl(p.id);
+          return;
         }
+        openOAuthModal(p, email.value.trim(), nameInput ? nameInput.value.trim() : '');
       });
       provWrap.append(btn);
     });
@@ -163,9 +244,6 @@
       chip.addEventListener('click', () => applyDomain(email, dom));
       domainRow.append(chip);
     });
-
-    let nameInput = null, phoneInput = null, countryInput = null, hotelInput = null, consentInput = null;
-    const selectedInterests = new Set(Array.isArray(localProf.interests) ? localProf.interests : []);
 
     if (isSignup) {
       nameInput = el('input'); nameInput.autocomplete = 'name'; nameInput.maxLength = 100; nameInput.id = 'mName';
@@ -256,8 +334,20 @@
       catch (err) { msg.textContent = errorText(err); send.disabled = false; }
     });
 
-    shell.append(authTabs(mode), provWrap, provNote, divider, form);
+    shell.append(authTabs(mode), provWrap, divider, form);
     box.replaceChildren(head(mode), perks(), shell, privacy());
+
+    const modalParam = new URLSearchParams(location.search).get('oauth_modal');
+    if (modalParam) {
+      const found = PROVIDERS.find(x => x.id === modalParam);
+      if (found) {
+        const cleanSearch = new URLSearchParams(location.search);
+        cleanSearch.delete('oauth_modal');
+        const qs = cleanSearch.toString();
+        history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+        openOAuthModal(found);
+      }
+    }
   }
 
   function codeForm(address, devCode, prefill = {}) {
