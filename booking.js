@@ -16,10 +16,10 @@
       labelService: 'Service', labelBranch: 'Branch', r_branch: 'Branch', headingHammam: 'Book your hammam or massage.', subHammam: 'Choose a package or massage, the date and a start time. Your request goes to Alaturka Hamam via email; you pay in cash at the hotel reception.', areaOther: 'Other', phHotel: 'e.g. Sultanahmet Palace', phRoom: 'e.g. 214', phName: 'e.g. Jane Smith', phPhone: '+44 7700 900123', phEmail: 'name@example.com', r_rate: 'Rate', rateBasis: 'forex selling',
       navAccount: 'My account', seeRequests: 'See my requests →', noSlots: 'No start times left today. Please choose another date.', invalidTime: 'Choose a start time.', labelOption: 'Massage type', labelDuration: 'Duration', minutes: 'min', openHours: 'Open daily {open}–{close}. Choose a start time.', r_option: 'Option', r_duration: 'Duration', r_fx: 'Approx. in',
       payNote: 'Payment: cash only, at the hotel reception. Tour companies such as Blue Brothers charge an extra 10% commission on credit card payments, so please pay in cash at reception.', r_pay: 'Payment', r_cash: 'Cash at the hotel reception',
-      labelHotel: 'Hotel name', labelRoom: 'Room number (optional)', invalidHotel: 'Please enter your hotel name so the company knows where to pick you up.', r_hotel: 'Hotel', r_room: 'Room', openWa: 'Open email', waTitle: 'Bosphorly booking request',
+      labelHotel: 'Hotel name', labelRoom: 'Room number (optional)', invalidHotel: 'Please enter your hotel name so the company knows where to pick you up.', r_hotel: 'Hotel', r_room: 'Room', openWa: 'Open email draft', waTitle: 'Bosphorly booking request',
       eyebrow: 'YOUR ISTANBUL · YOUR WAY', heading: 'Request your experience through Bosphorly.',
       subheading: 'Choose a tour, date and hotel area. Your request goes from Bosphorly to the licensed company that runs it; you pay in cash at the hotel reception.',
-      stepName: 'Request details', formTitle: 'Your request', formIntro: 'Fill in the details; your request is sent via email when you press send.',
+      stepName: 'Request details', formTitle: 'Your request', formIntro: 'Complete the form, then send the prepared draft in your email application.',
       labelOffer: 'Tour', labelDate: 'Date', labelTime: 'Time', labelGuests: 'Guests', labelArea: 'Hotel area',
       labelStatus: 'Price per person', labelAvailability: 'Estimated total',
       priceNote: 'Prices are the company’s own published prices on the date shown. The company confirms the final price and availability when it accepts your request.',
@@ -30,10 +30,10 @@
       mapTitle: 'Explore before you request', mapLink: 'Open Istanbul city map →',
       invalidDate: 'Choose a future date.', invalidGuests: 'Select 1–16 guests.', invalidOffer: 'Select a tour.', invalidConsent: 'Please confirm you have checked the tour, time and price.',
       resultTitle: 'Your request is ready', resultNotice: 'email is opening with your request written out; press Send in your email app to deliver it to Bosphorly. If it does not open, use the button below.',
-      notAvailable: 'Catalog not available. Please reload.', protoText: 'Requests go via email · No payment is taken on this website',
-      labelName: 'Full name', labelPhone: 'Mobile / email', labelEmail: 'Email (optional)',
+      notAvailable: 'Catalog not available. Please reload.', protoText: 'Requests are prepared by email · No payment is taken on this website',
+      labelName: 'Full name', labelPhone: 'Mobile phone', labelEmail: 'Email (optional)',
       contactNote: 'When you press Send in your email app, your details go to the Bosphorly email line to arrange your request. Bosphorly does not store them on a server; a copy stays only on this device, under My account.',
-      invalidName: 'Please enter your full name.', invalidPhone: 'Enter a valid phone/email number with country code (e.g. +44…) so the company can confirm.', invalidEmail: 'The email address does not look valid.',
+      invalidName: 'Please enter your full name.', invalidPhone: 'Enter a valid phone number with country code (e.g. +44…) so the company can confirm.', invalidEmail: 'The email address does not look valid.',
       navHome: 'Home', navCompare: 'Compare tours', navMap: 'City map',
       footerText: 'Bosphorly · Nothing you type is stored on a server.', backHome: '← Back to homepage',
       fixedSlot: 'Fixed time for this tour', flexible: ['Morning', 'Afternoon', 'Evening', 'Flexible'], askPrice: 'Ask for price', from: 'From',
@@ -44,10 +44,10 @@
       labelService: 'Hizmet', labelBranch: 'Şube', r_branch: 'Şube', headingHammam: 'Hamam veya masaj rezervasyonu yap.', subHammam: 'Paketi veya masajı, tarihi ve başlangıç saatini seç. Talebin email ile Alaturka Hamam’a iletilir; ödemeyi otel resepsiyonuna nakit yaparsın.', areaOther: 'Diğer', phHotel: 'örn. Sultanahmet Palace', phRoom: 'örn. 214', phName: 'örn. Ayşe Yılmaz', phPhone: '+90 5xx xxx xx xx', phEmail: 'ornek@eposta.com', r_rate: 'Kur', rateBasis: 'döviz satış',
       navAccount: 'Hesabım', seeRequests: 'Taleplerimi gör →', noSlots: 'Bugün için uygun saat kalmadı. Lütfen başka bir tarih seç.', invalidTime: 'Bir başlangıç saati seç.', labelOption: 'Masaj türü', labelDuration: 'Süre', minutes: 'dk', openHours: 'Her gün {open}–{close} açık. Başlangıç saatini seç.', r_option: 'Seçenek', r_duration: 'Süre', r_fx: 'Yaklaşık',
       payNote: 'Ödeme: yalnızca nakit, otel resepsiyonuna. Blue Brothers gibi tur firmaları kredi kartı ödemelerinde %10 ek komisyon alır; bu yüzden ödemeyi resepsiyona nakit yapman gerekir.', r_pay: 'Ödeme', r_cash: 'Otel resepsiyonuna nakit',
-      labelHotel: 'Otel adı', labelRoom: 'Oda numarası (isteğe bağlı)', invalidHotel: 'Firmanın seni nereden alacağını bilmesi için otel adını yaz.', r_hotel: 'Otel', r_room: 'Oda', openWa: 'email’ı aç', waTitle: 'Bosphorly rezervasyon talebi',
+      labelHotel: 'Otel adı', labelRoom: 'Oda numarası (isteğe bağlı)', invalidHotel: 'Firmanın seni nereden alacağını bilmesi için otel adını yaz.', r_hotel: 'Otel', r_room: 'Oda', openWa: 'E-posta taslağını aç', waTitle: 'Bosphorly rezervasyon talebi',
       eyebrow: 'İSTANBUL · SENİN PLANIN', heading: 'Deneyimini Bosphorly üzerinden talep et.',
       subheading: 'Turu, tarihi ve otel bölgeni seç. Talebin Bosphorly’den turu düzenleyen lisanslı firmaya iletilir; ödemeyi otel resepsiyonuna nakit yaparsın.',
-      stepName: 'Talep detayları', formTitle: 'Talebin', formIntro: 'Bilgileri doldur; talebin, email’ta gönder’e bastığında iletilir.',
+      stepName: 'Talep detayları', formTitle: 'Talebin', formIntro: 'Bilgileri doldur; hazırlanan e-postayı kendi e-posta uygulamandan gönder.',
       labelOffer: 'Tur', labelDate: 'Tarih', labelTime: 'Saat', labelGuests: 'Kişi sayısı', labelArea: 'Otel bölgesi',
       labelStatus: 'Kişi başı fiyat', labelAvailability: 'Tahmini toplam',
       priceNote: 'Fiyatlar, firmanın belirtilen tarihte kendi sitesinde yayımladığı fiyatlardır. Kesin fiyatı ve müsaitliği firma, talebini kabul ederken teyit eder.',
@@ -59,9 +59,9 @@
       invalidDate: 'İleri bir tarih seç.', invalidGuests: '1–16 kişi seç.', invalidOffer: 'Bir tur seç.', invalidConsent: 'Tur, saat ve fiyatı kontrol ettiğini onayla.',
       resultTitle: 'Talebin hazır', resultNotice: 'email, talebin yazılı olarak açılıyor; Bosphorly’ye iletmek için email’ta “Gönder”e bas. Açılmazsa aşağıdaki butonu kullan.',
       notAvailable: 'Katalog açılamadı. Sayfayı yenile.', protoText: 'Talepler email ile iletilir · Bu sitede ödeme alınmaz',
-      labelName: 'Ad soyad', labelPhone: 'Cep telefonu / email', labelEmail: 'E-posta (isteğe bağlı)',
+      labelName: 'Ad soyad', labelPhone: 'Cep telefonu', labelEmail: 'E-posta (isteğe bağlı)',
       contactNote: 'email’ta gönder’e bastığında bilgilerin, talebini ayarlamak için Bosphorly email hattına iletilir. Bosphorly bunları sunucuda saklamaz; bir kopyası yalnızca bu cihazda, Hesabım sayfasında kalır.',
-      invalidName: 'Adını ve soyadını yaz.', invalidPhone: 'Firmanın teyit edebilmesi için ülke koduyla geçerli bir telefon/email numarası yaz (örn. +90…).', invalidEmail: 'E-posta adresi geçerli görünmüyor.',
+      invalidName: 'Adını ve soyadını yaz.', invalidPhone: 'Firmanın teyit edebilmesi için ülke koduyla geçerli bir telefon numarası yaz (örn. +90…).', invalidEmail: 'E-posta adresi geçerli görünmüyor.',
       navHome: 'Ana sayfa', navCompare: 'Tur karşılaştır', navMap: 'Şehir haritası',
       footerText: 'Bosphorly · Yazdıkların sunucuda saklanmaz.', backHome: '← Ana sayfaya dön',
       fixedSlot: 'Bu turun saati sabittir', flexible: ['Sabah', 'Öğleden sonra', 'Akşam', 'Esnek'], askPrice: 'Fiyat sor', from: 'Başlangıç',
@@ -2222,9 +2222,8 @@
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
     const lines = [t.waTitle + ' · ' + snapshot.reference, ...rows.filter(([k]) => k !== t.r_ref).map(([k, v]) => k + ': ' + v)];
     const c = window.BOSPHORLY_CONTACT || {};
-    const url = 'mailto:' + encodeURIComponent(c.email || 'info@bosphorly.com') + '?subject=' + encodeURIComponent(t.waTitle + ' · ' + snapshot.reference) + '&body=' + encodeURIComponent(lines.join('
-'));
-    const a = document.createElement('a'); a.className = 'primary wa-button'; a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    const url = 'mailto:' + (c.email || 'info@bosphorly.com') + '?subject=' + encodeURIComponent(t.waTitle + ' · ' + snapshot.reference) + '&body=' + encodeURIComponent(lines.join('\n'));
+    const a = document.createElement('a'); a.className = 'primary'; a.href = url;
     a.textContent = t.openWa + ' · ' + (c.email || 'info@bosphorly.com');
     const mine = document.createElement('a'); mine.href = 'account.html'; mine.textContent = t.seeRequests; mine.style.cssText = 'display:inline-block;margin:12px 0 0 12px;font-weight:800';
     box.append(h, p, d, a, mine); box.hidden = false; box.focus();
