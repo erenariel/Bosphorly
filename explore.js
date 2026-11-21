@@ -81,7 +81,7 @@
     render();
   }).catch(() => {
     // Offline or blocked map tiles: show the local schematic map instead, the list stays usable.
-    const img = el('img'); img.src = 'assets/maps/istanbul-schematic.svg'; img.alt = 'Istanbul'; img.style.cssText = 'width:100%;height:100%;object-fit:contain';
+    const img = el('img'); img.src = 'assets/maps/istanbul-schematic.svg'; img.alt = 'Schematic Istanbul map showing both airports and important neighborhoods'; img.width = 900; img.height = 570; img.loading = 'lazy'; img.decoding = 'async'; img.style.cssText = 'width:100%;height:100%;object-fit:contain';
     $('mapFallback').replaceChildren(img);
   });
   if ('IntersectionObserver' in window) {
