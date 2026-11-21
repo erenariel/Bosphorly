@@ -38,9 +38,32 @@ footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12
 @media(max-width:780px){.grid{grid-template-columns:1fr}}
 .lang-select{border:1px solid #4a5a90;border-radius:9px;padding:5px 7px;font-size:12px;font-weight:700;background:#16236b;color:#fff;margin-left:6px;max-width:130px}.member{margin-bottom:20px;background:linear-gradient(160deg,#fff,#f6faff)}
 .m-head h2{margin:0 0 4px}.m-lead{color:var(--muted);margin:0 0 12px}
-.m-perks{margin:0 0 14px;padding-inline-start:20px;display:grid;gap:4px}.m-perks li::marker{content:'🎁  '}
+.m-perks{margin:0 0 16px;padding-inline-start:20px;display:grid;gap:4px}.m-perks li::marker{content:'🎁  '}
 .m-soon{background:#eef5ff;border:1px solid #cfe0f7;border-radius:12px;padding:10px 12px;font-size:13px;margin:0}
-.m-form{display:grid;gap:4px;max-width:420px}.m-form .btn{justify-self:start;min-height:44px;padding:10px 18px}
+.m-auth-shell{max-width:580px}
+.m-tabs{display:inline-grid;grid-template-columns:1fr 1fr;gap:6px;background:#eaf0f8;padding:5px;border-radius:14px;width:100%;max-width:380px;margin:0 0 16px}
+.m-tabs button{border:0;background:transparent;border-radius:10px;padding:10px 16px;font-weight:800;font-size:14px;color:var(--muted);cursor:pointer;transition:background .15s,color .15s,box-shadow .15s}
+.m-tabs button[aria-selected=true]{background:var(--navy);color:#fff;box-shadow:0 4px 12px rgba(10,23,83,.18)}
+.m-providers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.m-provider{display:flex;align-items:center;justify-content:center;gap:9px;border:1.5px solid #cfdced;background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font:700 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:44px;cursor:pointer;transition:border-color .15s,background .15s,box-shadow .15s}
+.m-provider:hover{border-color:#8aa7cf;background:#f8fbff}
+.m-provider[aria-pressed=true]{border-color:var(--navy);background:#eef4ff;box-shadow:0 0 0 2px rgba(10,23,83,.12)}
+.m-provider svg{width:18px;height:18px;flex:none;display:block}
+.m-provider-note{background:#eef5ff;border:1px solid #cfe0f7;color:#15366b;border-radius:11px;padding:9px 12px;font-size:12.5px;margin:0 0 12px}
+.m-divider{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;font-weight:700;margin:10px 0 14px}
+.m-divider::before,.m-divider::after{content:'';flex:1;height:1px;background:var(--line)}
+.m-form{display:grid;gap:6px;max-width:580px}.m-form .btn{justify-self:start;min-height:44px;padding:11px 20px}
+.m-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m-domains{display:flex;flex-wrap:wrap;gap:6px;margin:-4px 0 8px}
+.m-domain{border:1px solid #cfdced;background:#f7faff;color:#1c3d72;border-radius:999px;padding:4px 10px;font:700 11.5px/1.2 ui-monospace,Menlo,Consolas,monospace;cursor:pointer}
+.m-domain:hover{background:#e7f0ff;border-color:#94b3de}
+.m-interests-wrap{margin:2px 0 8px}
+.m-interests-title{display:block;font-size:12px;font-weight:800;margin-bottom:6px}
+.m-interests{display:flex;flex-wrap:wrap;gap:7px}
+.m-chip{border:1px solid #cbd8eb;background:#fff;color:var(--ink);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.m-chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.m-inbox-btn{display:inline-flex;align-items:center;gap:6px;background:#eef5ff;border:1px solid #b9d2f5;color:#0e3a7a;border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:800;margin:0 0 8px;width:fit-content}
+@media(max-width:560px){.m-providers,.m-form-grid{grid-template-columns:1fr}}
 .m-check{display:flex;gap:8px;align-items:flex-start;font-weight:600;font-size:13px}.m-check input{min-height:auto;width:20px;height:20px;margin:1px 0 0;flex:none}
 .m-msg{color:#a12a2a;font-size:13px;min-height:18px;margin:4px 0 0}.m-sent{font-size:13px;color:var(--muted);margin:0 0 6px}
 .m-fine{font-size:12.5px;color:var(--muted);margin:6px 0}.m-fine a{text-decoration:underline;color:var(--teal)}
