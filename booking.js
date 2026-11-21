@@ -2234,7 +2234,7 @@
     }
     // Email drafts require the visitor to press Send in their own email application.
     // Do not mark the request as delivered until a real mail backend confirms it.
-    if (!held) window.location.href = url;
+    window.location.href = url;
   });
   load();
 })();
