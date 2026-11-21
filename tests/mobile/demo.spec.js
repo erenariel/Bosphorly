@@ -22,11 +22,12 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect.poll(()=>page.locator('.sh-brand img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
  await expect(page.locator('#error')).toBeVisible();
- await page.locator('#hotelName').fill('Test Hotel');await page.locator('#room').fill('214');await page.locator('#fullName').fill('Test Guest');await page.locator('#phone').fill('+90 555 000 00 00');await page.locator('#submit').click();
+ await page.locator('#hotelName').fill('Test Hotel');await expect(page.locator('#room')).toHaveCount(0);await page.locator('#fullName').fill('Test Guest');await page.locator('#phone').fill('+90 555 000 00 00');await page.locator('#submit').click();
  await expect(page.locator('#error')).toBeHidden();
  await expect(page.locator('#result')).toHaveAttribute('data-state','draft');
  await expect(page.locator('#result')).toContainText('BOS-');
- await expect(page.locator('#result a[href^="mailto:"]')).toHaveAttribute('href',/^mailto:info@bosphorly\.com\?subject=.*&body=.*Test%20Hotel.*214/);
+ await expect(page.locator('#result a[href^="mailto:"]')).toHaveAttribute('href',/^mailto:info@bosphorly\.com\?subject=.*&body=.*Test%20Hotel/);
+ await expect(page.locator('#result a[href^="https://mail.google.com/"]')).toHaveCount(1);
  for(const dir of ['ltr','rtl']) {
  await page.locator('html').evaluate((e,d)=>e.dir=d,dir);
  expect(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth||e.getBoundingClientRect().left<0).map(e=>e.tagName+'.'+e.className)}))).toMatchObject({scroll:page.viewportSize().width});

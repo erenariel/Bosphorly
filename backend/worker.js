@@ -20,41 +20,42 @@ export default {async fetch(request,env) {
  // A missing managed rate limiter fails closed, before reading any body.
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  if (url.pathname==='/v1/requests') {
+  const requestJson=(body,status)=>{const result=json(body,status); if(origin){result.headers.set('Access-Control-Allow-Origin',origin);result.headers.set('Vary','Origin')}return result};
   // Explicit deployment gate: no delivery without verified provider credentials and rate limiter.
-  if (env.ENABLE_EMAIL_REQUESTS !== 'true' || !env.RESEND_API_KEY || !env.REQUEST_FROM_EMAIL || !env.TURNSTILE_SECRET) return json({error:'Email requests are not configured'},503);
-  if (!request.headers.get('Content-Type')?.startsWith('application/json')) return json({error:'JSON required'},415);
+  if (env.ENABLE_EMAIL_REQUESTS !== 'true' || !env.RESEND_API_KEY || !env.REQUEST_FROM_EMAIL || !env.TURNSTILE_SECRET) return requestJson({error:'Email requests are not configured'},503);
+  if (!request.headers.get('Content-Type')?.startsWith('application/json')) return requestJson({error:'JSON required'},415);
   let raw = '';
   const reader = request.body?.getReader();
   if (reader) {
     const decoder = new TextDecoder(); let size = 0;
     while (true) { const {done,value} = await reader.read(); if (done) break;
-      size += value.byteLength; if (size > 8192) { await reader.cancel(); return json({error:'Payload too large'},413); }
+      size += value.byteLength; if (size > 65536) { await reader.cancel(); return requestJson({error:'Payload too large'},413); }
       raw += decoder.decode(value,{stream:true});
     }
     raw += decoder.decode();
   }
-  let b; try { b = JSON.parse(raw); } catch { return json({error:'Invalid JSON'},400); }
+  let b; try { b = JSON.parse(raw); } catch { return requestJson({error:'Invalid JSON'},400); }
   const validText = (v,max) => typeof v === 'string' && v.trim().length > 0 && v.length <= max;
   if (!b || !validText(b.reference,80) || !/^[A-Za-z0-9_-]+$/.test(b.reference) ||
       !validText(b.name,120) || !validText(b.phone,40) || !validText(b.service,160) ||
-      !validText(b.date,20) || !/^\\d{4}-\\d{2}-\\d{2}$/.test(b.date) ||
+      !validText(b.date,20) || !/^\d{4}-\d{2}-\d{2}$/.test(b.date) ||
       !Number.isInteger(b.guests) || b.guests < 1 || b.guests > 30 ||
-      !validText(b.message,4000) || !validText(b.turnstileToken,2048) ||
-      b.consent !== true || (b.email && (typeof b.email !== 'string' || b.email.length > 160 || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(b.email)))) return json({error:'Invalid request'},400);
+      !validText(b.message,12000) || !validText(b.turnstileToken,2048) ||
+      b.consent !== true || (b.email && (typeof b.email !== 'string' || b.email.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)))) return requestJson({error:'Invalid request'},400);
   const verification = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method:'POST', body:new URLSearchParams({secret:env.TURNSTILE_SECRET,response:b.turnstileToken,remoteip:request.headers.get('CF-Connecting-IP') || ''})
   });
-  if (!verification.ok || !(await verification.json()).success) return json({error:'Bot verification failed'},403);
-  const subject = 'Bosphorly tour inquiry · ' + b.reference;
+  if (!verification.ok || !(await verification.json()).success) return requestJson({error:'Bot verification failed'},403);
+  const subject = 'Bosphorly ' + (b.kind === 'transfer' ? 'transfer' : 'tour') + ' inquiry · ' + b.reference;
   const content = [subject,'Service: '+b.service,'Date: '+b.date,'Guests: '+b.guests,'Name: '+b.name,'Phone: '+b.phone,
-    b.email ? 'Email: '+b.email : '', '', b.message].filter(Boolean).join('\\n');
+    b.email ? 'Email: '+b.email : '', '', b.message].filter(Boolean).join('\n');
   const delivered = await fetch('https://api.resend.com/emails', {
     method:'POST', headers:{Authorization:'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':b.reference},
     body:JSON.stringify({from:env.REQUEST_FROM_EMAIL,to:['info@bosphorly.com'],subject,text:content,reply_to:b.email || undefined})
   });
-  if (!delivered.ok) return json({error:'Email delivery provider rejected request'},502);
+  if (!delivered.ok) return requestJson({error:'Email delivery provider rejected request'},502);
   const result = await delivered.json();
-  return json({accepted:true,reference:b.reference,providerId:result.id},202);
+  return requestJson({accepted:true,reference:b.reference,providerId:result.id},202);
 }
  if (!['/v1/quotes','/v1/admin/providers/verify','/v1/admin/prices'].includes(url.pathname)) return json({error:'Not found'},404);
  const admin=url.pathname.startsWith('/v1/admin/');

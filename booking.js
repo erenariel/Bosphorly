@@ -1985,9 +1985,9 @@
   for (const [id, val] of Object.entries(t)) { const e = $(id); if (e && typeof val === 'string') e.textContent = val; }
   const area = $('area');
   [...area.options].at(-1).textContent = t.areaOther;
-  $('hotelName').placeholder = t.phHotel; $('room').placeholder = t.phRoom; $('fullName').placeholder = t.phName; $('phone').placeholder = t.phPhone; $('email').placeholder = t.phEmail;
+  $('hotelName').placeholder = t.phHotel; $('fullName').placeholder = t.phName; $('phone').placeholder = t.phPhone; $('email').placeholder = t.phEmail;
   const saved = window.BosphorlyAccount?.profile();
-  if (saved) { $('hotelName').value = saved.hotel || ''; $('room').value = saved.room || ''; $('fullName').value = saved.name || ''; $('phone').value = saved.phone || ''; $('email').value = saved.email || ''; }
+  if (saved) { $('hotelName').value = saved.hotel || ''; $('fullName').value = saved.name || ''; $('phone').value = saved.phone || ''; $('email').value = saved.email || ''; }
   const now = new Date();
   const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $('date').min = local; $('date').value = local;
@@ -2185,7 +2185,7 @@
   $('bookingForm').addEventListener('submit', async event => {
     event.preventDefault();
     const r = current(); const num = $('guests').valueAsNumber;
-    const hotel = $('hotelName').value.trim(), room = $('room').value.trim(), name = $('fullName').value.trim(), phone = $('phone').value.trim(), email = $('email').value.trim();
+    const hotel = $('hotelName').value.trim(), name = $('fullName').value.trim(), phone = $('phone').value.trim(), email = $('email').value.trim();
     const phoneOk = /^\+?[0-9 ()-]{7,20}$/.test(phone) && phone.replace(/\D/g, '').length >= 7;
     const msg = !r ? t.invalidOffer : !$('date').value || $('date').value < local ? t.invalidDate : !Number.isInteger(num) || num < 1 || num > 16 ? t.invalidGuests : !$('time').value ? t.invalidTime :
       !hammamMode && hotel.length < 2 ? t.invalidHotel : name.length < 2 ? t.invalidName : !phoneOk ? t.invalidPhone : email && !$('email').checkValidity() ? t.invalidEmail : !$('ack').checked ? t.invalidConsent : null;
@@ -2212,11 +2212,11 @@
     const preview = window.BosphorlyBooking.preview({ experienceId: r.id, date: snapshot.date, guests: num });
     const box = $('result'); box.dataset.state = preview.state; box.replaceChildren();
     const h = document.createElement('h3'); h.textContent = t.resultTitle + ' · ' + snapshot.reference;
-    const p = document.createElement('p'); p.textContent = t.resultNotice;
+    const p = document.createElement('p'); p.textContent = lang === "tr" ? "Gmail veya e-posta uygulamanızı seçip taslağı gönderin." : "Choose Gmail or your email app and send the draft.";
     const d = document.createElement('dl'); d.className = 'draft';
     const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
     const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], ...(selOption(r) ? [[t.r_option, optName(selOption(r))]] : []), ...(selDuration(r) ? [[t.r_duration, selDuration(r).min + ' ' + t.minutes]] : []), [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
-      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), ...(room ? [[t.r_room, room]] : []), [t.r_name, name], [t.r_phone, phone],
+      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), [t.r_name, name], [t.r_phone, phone],
       ...(email ? [[t.r_email, email]] : []), [t.r_source, r.operator + ' · ' + t.r_checked + ' ' + (snapshot.priceChecked || '')],
       [t.r_shownAt, new Intl.DateTimeFormat(loc, { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
@@ -2226,15 +2226,15 @@
     const a = document.createElement('a'); a.className = 'primary'; a.href = url;
     a.textContent = t.openWa + ' · ' + (c.email || 'info@bosphorly.com');
     const mine = document.createElement('a'); mine.href = 'account.html'; mine.textContent = t.seeRequests; mine.style.cssText = 'display:inline-block;margin:12px 0 0 12px;font-weight:800';
-    box.append(h, p, d, a, mine); box.hidden = false; box.focus();
+    box.append(h, p, d, BosphorlyGmailLink(url), a, mine); box.hidden = false; box.focus();
     if (window.BosphorlyAccount) {
-      window.BosphorlyAccount.saveProfile({ name, phone, email, hotel, room });
+      window.BosphorlyAccount.saveProfile({ name, phone, email, hotel });
       window.BosphorlyAccount.addRequest({ ref: snapshot.reference, type: 'tour', title: title(r) + (selOption(r) ? ' · ' + optName(selOption(r)) : ''), operator: r.operator,
         date: snapshot.date, time: $('time').selectedOptions[0]?.textContent || '', guests: num, total: q.total, emailDraftUrl: url, snapshot });
     }
     // Email drafts require the visitor to press Send in their own email application.
     // Do not mark the request as delivered until a real mail backend confirms it.
-    window.location.href = url;
+
   });
   load();
 })();
