@@ -171,11 +171,11 @@ test('member routes keep the origin check, rate limit and size limit', async () 
   assert.equal((await call(env, '/v1/auth/start', { email: 'a@example.com', pad: 'x'.repeat(5000) })).status, 413);
 });
 
-test('deployment config keeps D1 placeholder, empty api base, secret-only workflow and TR/EN KVKK draft notice', () => {
+test('deployment config has D1 database_id, live api base, secret-only workflow and TR/EN KVKK draft notice', () => {
   const wrangler = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
-  assert.match(wrangler, /"database_id"\s*:\s*"REPLACE_BEFORE_DEPLOYMENT"/);
+  assert.match(wrangler, /"database_id"\s*:\s*"[0-9a-f-]{36}"/);
   const apiConfig = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
-  assert.match(apiConfig, /\bbase:\s*''/);
+  assert.match(apiConfig, /\bbase:\s*'https:\/\/bosphorly-booking\.erennkirazz98\.workers\.dev'/);
   const workflow = readFileSync(new URL('../.github/workflows/deploy-member-api.yml', import.meta.url), 'utf8');
   assert.match(workflow, /name:\s*Deploy member API/);
   assert.match(workflow, /on:\s*workflow_dispatch/);
