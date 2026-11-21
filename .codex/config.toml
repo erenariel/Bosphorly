@@ -1,0 +1,5 @@
+# Cloudflare's official remote MCP server.
+# Each developer authorizes their own Cloudflare account via OAuth.
+# No credentials or API tokens are stored in this repository.
+[mcp_servers.cloudflare]
+url = "https://mcp.cloudflare.com/mcp"
