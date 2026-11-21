@@ -59,7 +59,7 @@ test('sign in with an e-mailed code, see coupons and stamps, then use a coupon o
   await page.fill('#hotelName', 'Sultanahmet Palace'); await page.fill('#fullName', 'Jane Smith'); await page.fill('#phone', '+44 7700 900123');
   await page.check('#ack');
   await page.locator('#bookingForm').evaluate(f => f.requestSubmit());
-  const wa = page.locator('#result a.wa-button');
+  const wa = page.locator('#result a[href^="mailto:"]');
   await expect(wa).toBeVisible();
   const reg = calls.find(c => c.path === '/v1/me/requests');
   expect(reg.auth).toBe('Bearer tok');
