@@ -2222,7 +2222,8 @@
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
     const lines = [t.waTitle + ' · ' + snapshot.reference, ...rows.filter(([k]) => k !== t.r_ref).map(([k, v]) => k + ': ' + v)];
     const c = window.BOSPHORLY_CONTACT || {};
-    const url = 'mailto:' + encodeURIComponent(c.email || 'info@bosphorly.com') + '?subject=' + encodeURIComponent(t.waTitle + ' · ' + snapshot.reference) + '&body=' + encodeURIComponent(lines.join('\n'));
+    const url = 'mailto:' + encodeURIComponent(c.email || 'info@bosphorly.com') + '?subject=' + encodeURIComponent(t.waTitle + ' · ' + snapshot.reference) + '&body=' + encodeURIComponent(lines.join('
+'));
     const a = document.createElement('a'); a.className = 'primary wa-button'; a.href = url; a.target = '_blank'; a.rel = 'noopener';
     a.textContent = t.openWa + ' · ' + (c.email || 'info@bosphorly.com');
     const mine = document.createElement('a'); mine.href = 'account.html'; mine.textContent = t.seeRequests; mine.style.cssText = 'display:inline-block;margin:12px 0 0 12px;font-weight:800';
@@ -2232,7 +2233,9 @@
       window.BosphorlyAccount.addRequest({ ref: snapshot.reference, type: 'tour', title: title(r) + (selOption(r) ? ' · ' + optName(selOption(r)) : ''), operator: r.operator,
         date: snapshot.date, time: $('time').selectedOptions[0]?.textContent || '', guests: num, total: q.total, emailDraftUrl: url, snapshot });
     }
-    // Email drafts require the visitor to press Send in their own email application.\n    // Do not mark the request as delivered until a real mail backend confirms it.\n    if (!held) window.location.href = url;
+    // Email drafts require the visitor to press Send in their own email application.
+    // Do not mark the request as delivered until a real mail backend confirms it.
+    if (!held) window.location.href = url;
   });
   load();
 })();
