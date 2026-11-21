@@ -4,6 +4,7 @@ import worker from '../backend/worker.js';
 import {
   ASSISTANT_MODEL,
   detectLanguage,
+  parseModelOutput,
   redactSensitive,
   retrieveChunks,
   runAssistant,
@@ -287,5 +288,80 @@ test('telegram webhook uses linked member email without asking and omits Telegra
   assert.ok(sentEmail.text.includes('Telegram: @eren_guest'));
   assert.ok(!sentEmail.text.includes('Telegram chat ID'));
   assert.ok(tgReply && tgReply.text.includes('info@bosphorly.com'));
+});
+
+test('parseModelOutput handles object response, result.response, and string outputs', async () => {
+  assert.deepEqual(
+    parseModelOutput({ response: { handoff: false, reply: '  IST transfer is €60.  ' } }),
+    { handoff: false, reply: 'IST transfer is €60.' }
+  );
+  assert.deepEqual(
+    parseModelOutput({ result: { response: { handoff: true, reply: 'Forwarding to team.' } } }),
+    { handoff: true, reply: 'Forwarding to team.' }
+  );
+  assert.deepEqual(
+    parseModelOutput({ result: { response: '{"handoff":false,"reply":"Cruise departs at 19:00."}' } }),
+    { handoff: false, reply: 'Cruise departs at 19:00.' }
+  );
+  assert.deepEqual(
+    parseModelOutput('{"handoff":true,"reply":"Checking with our team."}'),
+    { handoff: true, reply: 'Checking with our team.' }
+  );
+  assert.deepEqual(
+    parseModelOutput('Please contact us [HANDOFF]'),
+    { handoff: true, reply: 'Please contact us' }
+  );
+
+  const resObj = await runAssistant({
+    message: 'IST airport transfer price?',
+    pageLang: 'en',
+    env: {
+      AI: {
+        run: async () => ({ response: { handoff: false, reply: 'IST to Sultanahmet is €60.' } }),
+      },
+    },
+    actorKey: 'test-obj-resp',
+  });
+  assert.equal(resObj.handoff, false);
+  assert.ok(resObj.reply.includes('IST to Sultanahmet is €60.'));
+
+  const resNested = await runAssistant({
+    message: 'Bosphorus cruise price?',
+    pageLang: 'tr',
+    env: {
+      AI: {
+        run: async () => ({ result: { response: { handoff: false, reply: 'Boğaz turu yaklaşıktır.' } } }),
+      },
+    },
+    actorKey: 'test-nested-resp',
+  });
+  assert.equal(resNested.handoff, false);
+  assert.ok(resNested.reply.includes('Boğaz turu yaklaşıktır.'));
+});
+
+test('AI error and parse failure log only error type without message content', async (t) => {
+  const logged = [];
+  t.mock.method(console, 'error', (...args) => {
+    logged.push(args.join(' '));
+  });
+
+  await runAssistant({
+    message: 'Secret user question about Sultanahmet transfer',
+    pageLang: 'en',
+    env: { AI: { run: async () => { throw new TypeError('Sensitive upstream failure'); } } },
+    actorKey: 'test-log-ai-err',
+  });
+
+  const parseFailRes = await runAssistant({
+    message: 'Secret user question about Bosphorus cruise',
+    pageLang: 'tr',
+    env: { AI: { run: async () => ({ response: '' }) } },
+    actorKey: 'test-log-parse-fail',
+  });
+
+  assert.equal(parseFailRes.handoff, true);
+  assert.ok(logged.some((line) => line.includes('assistant: ai_error') && line.includes('TypeError')));
+  assert.ok(logged.some((line) => line.includes('assistant: parse_fail')));
+  assert.ok(logged.every((line) => !line.includes('Secret user question')));
 });
 

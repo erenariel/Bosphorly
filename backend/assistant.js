@@ -1,6 +1,6 @@
 import knowledge from './knowledge.json' with { type: 'json' };
 
-export const ASSISTANT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+export const ASSISTANT_MODEL = '@cf/meta/llama-3.1-8b-instruct-fp8-fast';
 export const SUPPORTED_LANGS = new Set([
   'tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az',
   'fa', 'es', 'it', 'pt', 'hr', 'hu', 'bs', 'zh', 'ja', 'ko', 'hi', 'bn', 'id'
@@ -252,9 +252,21 @@ function capWords(text, maxWords = 120) {
   return words.slice(0, maxWords).join(' ') + '…';
 }
 
-function parseModelOutput(raw) {
-  const text = typeof raw === 'string' ? raw : (raw && typeof raw.response === 'string' ? raw.response : '');
-  const trimmed = text.trim();
+export function parseModelOutput(raw) {
+  const payload = typeof raw === 'string'
+    ? raw
+    : (raw && typeof raw === 'object'
+      ? (raw.response ?? raw.result?.response ?? (typeof raw.reply === 'string' ? raw : ''))
+      : '');
+
+  if (payload && typeof payload === 'object') {
+    if (typeof payload.reply === 'string') {
+      return { handoff: Boolean(payload.handoff), reply: payload.reply.trim() };
+    }
+    return { handoff: false, reply: '' };
+  }
+
+  const trimmed = String(payload || '').trim();
   const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
     try {
@@ -358,6 +370,7 @@ export async function runAssistant({ message, pageLang = '', telegramLang = '', 
     const parsed = parseModelOutput(aiResult);
     let reply = stripExternalLinks(redactSensitive(parsed.reply).text);
     if (!reply) {
+      console.error('assistant: parse_fail');
       return { ok: true, handoff: true, lang, reply: `${warnPrefix}${msg('unknownHandoff', lang)}` };
     }
     reply = capWords(reply, 120);
@@ -365,7 +378,8 @@ export async function runAssistant({ message, pageLang = '', telegramLang = '', 
       reply = `${reply}\n${chunks[0].url}`;
     }
     return { ok: true, handoff: parsed.handoff, lang, reply: `${warnPrefix}${reply}` };
-  } catch {
+  } catch (err) {
+    console.error('assistant: ai_error', err && err.name ? err.name : 'Error');
     return {
       ok: true,
       handoff: true,
