@@ -27,7 +27,12 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect(page.locator('#result')).toHaveAttribute('data-state','draft');
  await expect(page.locator('#result')).toContainText('BOS-');
  await expect(page.locator('#result a[href^="mailto:"]')).toHaveAttribute('href',/^mailto:info@bosphorly\.com\?subject=.*&body=.*Test%20Hotel/);
- await expect(page.locator('#result a[href^="https://mail.google.com/"]')).toHaveCount(1);
+ await page.locator('#result a[href^="mailto:"]').click();
+ const picker = page.getByRole('dialog');
+ await expect(picker.getByRole('link',{name:'Gmail'})).toHaveAttribute('href',/mail.google.com.*Test\+Hotel/);
+ await expect(picker.getByRole('link',{name:'Default email app'})).toHaveAttribute('href',/^mailto:info@bosphorly/);
+ await page.keyboard.press('Escape');
+ await expect(picker).toHaveCount(0);
  for(const dir of ['ltr','rtl']) {
  await page.locator('html').evaluate((e,d)=>e.dir=d,dir);
  expect(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth||e.getBoundingClientRect().left<0).map(e=>e.tagName+'.'+e.className)}))).toMatchObject({scroll:page.viewportSize().width});
