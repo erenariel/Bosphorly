@@ -138,7 +138,7 @@
     if (prof.tier === 'gold' || prof.tier === 'platinum') {
       box.append(el('div', 'tf-vip', tierText(prof.tier)));
     }
-    box.append(row, field(t('toFHotel'), hotel), field(t('toFName'), name), field(t('toFPhone'), phone), field(tr ? 'E-posta (isteğe bağlı)' : 'Email (optional)', emailInput));
+    box.append(row, field(t('toFHotel'), hotel), field(t('toFName'), name), field(t('toFPhone'), phone), field(t('toFEmail'), emailInput));
 
     let couponSel = null;
     if (M && M.signedIn() && usableCoupons.length && memberTexts) {
@@ -217,7 +217,11 @@
       done.replaceChildren(el('p', null, '✅ ' + t('toFDone', { ref })));
       const again = el('a', 'btn wa', tr ? 'Gmail / e-posta taslağını aç' : 'Open Gmail / email draft'); again.href = url;
       const mine = el('a', 'btn', t('toMyReq')); mine.href = 'account.html';
-      done.append(again, mine); done.hidden = false; send.hidden = true;
+      done.append(again, mine);
+      // Optional direct delivery (mail Worker), no email account needed; the guest's email is the Reply-To.
+      if (window.addDirectDelivery) window.addDirectDelivery(done, { reference: ref, kind: 'tour', service: s.name.slice(0, 160), name: name.value.trim(),
+        phone: phone.value.trim(), email: emailVal, date: date.value, guests: Number(guests.value), message: lines.join('\n'), consent: true }, D.lang);
+      done.hidden = false; send.hidden = true;
     });
     return box;
   }

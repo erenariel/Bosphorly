@@ -42,17 +42,20 @@ export default {async fetch(request,env) {
       !validText(b.date,20) || !/^\d{4}-\d{2}-\d{2}$/.test(b.date) ||
       !Number.isInteger(b.guests) || b.guests < 1 || b.guests > 30 ||
       !validText(b.message,12000) || !validText(b.turnstileToken,2048) ||
-      b.consent !== true || (b.kind === 'transfer' && !validText(b.email,160)) || (b.email && (typeof b.email !== 'string' || b.email.length > 160 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email)))) return requestJson({error:'Invalid request'},400);
+      b.consent !== true || !['transfer','tour','hammam'].includes(b.kind) ||
+      // Every kind needs the guest's email: it becomes Reply-To, otherwise replies would go to the no-inbox sender.
+      !validText(b.email,160) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(b.email.trim())) return requestJson({error:'Invalid request'},400);
   const verification = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
     method:'POST', body:new URLSearchParams({secret:env.TURNSTILE_SECRET,response:b.turnstileToken,remoteip:request.headers.get('CF-Connecting-IP') || ''})
   });
   if (!verification.ok || !(await verification.json()).success) return requestJson({error:'Bot verification failed'},403);
-  const subject = 'Bosphorly ' + (b.kind === 'transfer' ? 'transfer' : 'tour') + ' inquiry · ' + b.reference;
+  const subject = 'Bosphorly ' + b.kind + ' inquiry · ' + b.reference;
+  const replyTo = b.email.trim();
   const content = [subject,'Service: '+b.service,'Date: '+b.date,'Guests: '+b.guests,'Name: '+b.name,'Phone: '+b.phone,
-    b.email ? 'Email: '+b.email : '', '', b.message].filter(Boolean).join('\n');
+    'Email: '+replyTo, '', b.message].filter(Boolean).join('\n');
   const delivered = await fetch('https://api.resend.com/emails', {
     method:'POST', headers:{Authorization:'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':b.reference},
-    body:JSON.stringify({from:env.REQUEST_FROM_EMAIL,to:['info@bosphorly.com'],subject,text:content,reply_to:b.email || undefined})
+    body:JSON.stringify({from:env.REQUEST_FROM_EMAIL,to:['info@bosphorly.com'],subject,text:content,reply_to:replyTo})
   });
   if (!delivered.ok) return requestJson({error:'Email delivery provider rejected request'},502);
   const result = await delivered.json();

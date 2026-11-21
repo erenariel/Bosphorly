@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 
 const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 const langs = ['tr','en','ru','uk','de','fr','nl','ar','he','az','fa','es','it','pt','hr','hu','bs','zh','ja','ko','hi','bn','id'];
-const retired = /WhatsApp|wa\.me|api\.whatsapp\.com|واتساب|וואטסאפ|ווטסאפ/i;
+const retired = /WhatsApp|wa\.me|api\.whatsapp\.com|واتساب|واتساپ|واتس‌اپ|וואטסאפ|ווטסאפ/i;
 
 test('all public inquiry pages avoid retired WhatsApp links', () => {
   const pages = ['index.html','booking.html','tours.html','explore.html','route.html','faq.html','prices.html','account.html'];
@@ -28,4 +28,15 @@ test('all 23 discover and membership locales offer email rather than WhatsApp', 
     assert.ok(discover.ui.toFSend && discover.ui.toFDone && member.mShareWa, lang);
   }
   assert.doesNotMatch(read('data/faq.json'), retired);
+});
+
+test('no page or request text names a payment method (cash at reception)', () => {
+  const cash = /pay in cash|cash only|cash at (the )?hotel|nakit|resepsiyonda|Barzahlung|bar an der|наличными|готівкою|en efectivo|en espèces|in contanti|contant bij|em dinheiro|gotovinom|készpénzben|nağd|نقدًا|במזומן|现金|現金|현금|नकद|নগদে|tunai/i;
+  for (const file of ['index.html','booking.html','booking.js','tours.js','prices.html','prices.js','currency.js','faq.html','data/faq.json'])
+    assert.doesNotMatch(read(file), cash, file);
+});
+
+test('phone fields are labelled as phone, not "phone / email"', () => {
+  for (const file of ['index.html','booking.js','account.js'])
+    assert.doesNotMatch(read(file), /[\p{L}\p{N}] ?\/ ?(email|e-mail)\b|telefon-\/email|phone\/email/iu, file);
 });

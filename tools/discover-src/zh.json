@@ -324,7 +324,7 @@
   "toFGuests": "人数",
   "toFHotel": "酒店",
   "toFName": "姓名",
-  "toFPhone": "手机 / 电子邮件（含国家代码）",
+  "toFPhone": "手机（含国家代码）",
   "toFNotes": "备注（选填）",
   "toFAck": "我同意通过 电子邮件 将我的申请和联系方式发送给 Bosphorly。预订前会确认价格和名额；本网站不收取任何费用。",
   "toFSend": "通过 电子邮件 发送申请 →",
@@ -332,7 +332,8 @@
   "toFDone": "申请 {ref} 已准备好。正在打开 电子邮件：请点击发送，将申请发给 Bosphorly。",
   "toWaTitle": "Bosphorly 游览申请",
   "toWaRef": "参考编号",
-  "toMyReq": "查看我的申请 →"
+  "toMyReq": "查看我的申请 →",
+  "toFEmail": "电子邮箱（选填）"
  },
  "tours": {
   "jewish-heritage": [

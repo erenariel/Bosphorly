@@ -50,7 +50,7 @@ test('guest pages invite requests: no prototype labels, no partner pitch, no cou
  }
  await page.goto('/?lang=tr');
  await expect(page.locator('footer .privacy-link')).toHaveText('🔒 Gizlilik · KVKK');
- await expect(page.locator('[data-i18n="terms"]')).toContainText('iptal koşulları rezervasyon onayıyla birlikte e-posta ile bildirilir');
+ await expect(page.locator('[data-i18n="terms"]')).toContainText('ödeme yönteminin, talebim alındıktan sonra benimle iletişime geçildiğinde paylaşılacağını');
  // Other guest pages: no prototype wording, localized privacy link.
  for(const p of ['booking.html','prices.html','tours.html','explore.html','account.html']) {
  await page.goto('/'+p+'?lang=tr');

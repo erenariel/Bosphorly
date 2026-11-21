@@ -46,7 +46,7 @@
   "mTooMany": "Demasiados intentos. Espera unos minutos.",
   "bCoupon": "Cupón",
   "bNoCoupon": "Sin cupón",
-  "bCouponNote": "La empresa aplica el descuento en la recepción del hotel el día del tour. Un cupón por solicitud.",
+  "bCouponNote": "El descuento se aplica al precio que confirmamos contigo. Un cupón por solicitud.",
   "bAfter": "Total estimado con cupón",
   "bCouponFail": "No se pudo reservar este cupón. Elige otro o continúa sin cupón.",
   "bSignInHint": "Los miembros tienen un cupón de bienvenida. Iniciar sesión →"

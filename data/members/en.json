@@ -46,7 +46,7 @@
   "mTooMany": "Too many tries. Please wait a few minutes.",
   "bCoupon": "Coupon",
   "bNoCoupon": "No coupon",
-  "bCouponNote": "The company applies the discount at the hotel reception when your tour takes place. One coupon per request.",
+  "bCouponNote": "The discount is applied to the price we confirm with you. One coupon per request.",
   "bAfter": "Estimated total with coupon",
   "bCouponFail": "This coupon could not be reserved. Choose another one or continue without a coupon.",
   "bSignInHint": "Members get a welcome coupon. Sign in →"

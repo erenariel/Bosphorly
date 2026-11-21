@@ -54,9 +54,9 @@ The traveler stays on Bosphorly until the request is sent. There is no
 redirect to a supplier's own checkout: a redirect loses the attribution that
 the commission depends on.
 
-### Current payment rule (hotel reception)
+### Current payment rule
 
-In the current hotel pilot, guests pay **in cash at the hotel reception**, both for airport transfers and for tours. The reception accepts cash only. Tour companies such as Blue Brothers add a 10% commission on credit card payments, which is why guests are asked to pay cash. Both request forms and the WhatsApp message state this. How the reception settles with each company, and how this fits the referral model's "company collects payment" description, must be written into each company agreement.
+The site does not name a payment method. Every page, request email and draft says: "We share the payment method when we contact you about your request." (TR: "Ödeme yöntemi, talebiniz alındıktan sonra sizinle iletişime geçtiğimizde paylaşılır."). Bosphorly tells the guest how to pay when it confirms the request by email. How payment is settled with each company must be written into each company agreement.
 
 ### Currency display
 
