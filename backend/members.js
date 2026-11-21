@@ -130,20 +130,29 @@ async function profile(env, m) {
     .map(c => ({ code: c.code, kind: c.kind, percentBps: c.percent_bps, expiresAt: c.expires_at, heldFor: c.held_ref,
       status: c.status === 'issued' && c.expires_at <= now ? 'expired' : c.status }));
   const requests = (await env.DB.prepare(
-    `SELECT ref, service_id, service_date, guests, state FROM member_requests WHERE member_id=? ORDER BY created_at DESC LIMIT 50`).bind(m.id).all()).results
-    .map(r => ({ ref: r.ref, serviceId: r.service_id, date: r.service_date, guests: r.guests, state: r.state }));
+    `SELECT r.ref, r.service_id, r.service_date, r.guests, r.state, r.req_type, r.title, r.operator, r.service_time, r.total_text, r.notes, r.created_at, c.code AS coupon_code, c.percent_bps
+     FROM member_requests r LEFT JOIN coupons c ON c.id=r.coupon_id
+     WHERE r.member_id=? ORDER BY r.created_at DESC LIMIT 50`).bind(m.id).all()).results
+    .map(r => ({
+      ref: r.ref, serviceId: r.service_id, date: r.service_date, guests: r.guests, state: r.state,
+      type: r.req_type || null, title: r.title || null, operator: r.operator || null,
+      time: r.service_time || null, total: r.total_text || null, notes: r.notes || null,
+      createdAt: r.created_at || null,
+      couponCode: r.coupon_code || null, percentBps: r.percent_bps || null
+    }));
   const doneRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
   const fulfilledCount = Number(doneRow?.n || 0);
   const ti = tierInfo(env, fulfilledCount);
   return {
-    email: m.email, name: m.name, lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
+    email: m.email, name: m.name, phone: m.phone || null, hotel: m.hotel || null, room: m.room || null,
+    lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
     referralCode: m.referral_code, marketing: !!m.marketing_consent,
     stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, ...ti, coupons, requests
   };
 }
 
 // --- routes -------------------------------------------------------------------------------------------
-const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/me', '/v1/me/requests', '/v1/me/delete',
+const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/me', '/v1/me/requests', '/v1/me/requests/delete', '/v1/me/delete',
   '/v1/newsletter/subscribe', '/v1/newsletter/unsubscribe', '/v1/admin/newsletter/send',
   '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns']);
 const OAUTH_PROVIDERS = new Set(['google', 'yandex', 'facebook', 'apple']);
@@ -204,6 +213,9 @@ async function createOrLoadMemberSession(env, rawEmail, body = {}) {
   const cleanInterests = sanitizeInterests(body.interests);
   const cleanCountry = str(body.country, 80);
   const cleanName = str(body.name, 100);
+  const cleanPhone = str(body.phone, 40);
+  const cleanHotelName = str(body.hotelName, 140);
+  const cleanRoom = str(body.room, 24);
   const lang = LANGS.includes(body.lang) ? body.lang : 'en';
   if (!m) {
     const referrer = str(body.ref, 20) ? await env.DB.prepare(`SELECT id FROM members WHERE referral_code=?`).bind(body.ref.trim().toUpperCase()).first() : null;
@@ -212,19 +224,23 @@ async function createOrLoadMemberSession(env, rawEmail, body = {}) {
     const mid = id();
     let code = randomString(8);
     for (let i = 0; i < 3 && await env.DB.prepare(`SELECT 1 AS x FROM members WHERE referral_code=?`).bind(code).first(); i++) code = randomString(8);
-    await env.DB.prepare(`INSERT INTO members (id, email, name, lang, country, interests, referral_code, referred_by, hotel_id, marketing_consent, marketing_consent_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
-      .bind(mid, email, cleanName, lang, cleanCountry, cleanInterests.length ? JSON.stringify(cleanInterests) : null, code, referrer ? referrer.id : null, hotel ? hotel.id : null, marketing ? 1 : 0, marketing ? now : null).run();
+    await env.DB.prepare(`INSERT INTO members (id, email, name, phone, hotel, room, lang, country, interests, referral_code, referred_by, hotel_id, marketing_consent, marketing_consent_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`)
+      .bind(mid, email, cleanName, cleanPhone, cleanHotelName, cleanRoom, lang, cleanCountry, cleanInterests.length ? JSON.stringify(cleanInterests) : null, code, referrer ? referrer.id : null, hotel ? hotel.id : null, marketing ? 1 : 0, marketing ? now : null).run();
     if (marketing) await syncNewsletterRow(env, email, lang, cleanInterests, true, 'signup');
     await issue(env, mid, 'welcome');
     if (hotel) await issue(env, mid, 'hotel', hotel.id);
     m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(mid).first();
   } else {
     const nextName = !m.name && cleanName ? cleanName : m.name;
+    const nextPhone = !m.phone && cleanPhone ? cleanPhone : m.phone;
+    const nextHotel = !m.hotel && cleanHotelName ? cleanHotelName : m.hotel;
+    const nextRoom = !m.room && cleanRoom ? cleanRoom : m.room;
     const nextCountry = !m.country && cleanCountry ? cleanCountry : m.country;
     const nextInterests = !m.interests && cleanInterests.length ? JSON.stringify(cleanInterests) : m.interests;
-    if (nextName !== m.name || nextCountry !== m.country || nextInterests !== m.interests) {
-      await env.DB.prepare(`UPDATE members SET name=?, country=?, interests=? WHERE id=?`).bind(nextName, nextCountry, nextInterests, m.id).run();
-      m = { ...m, name: nextName, country: nextCountry, interests: nextInterests };
+    if (nextName !== m.name || nextPhone !== m.phone || nextHotel !== m.hotel || nextRoom !== m.room || nextCountry !== m.country || nextInterests !== m.interests) {
+      await env.DB.prepare(`UPDATE members SET name=?, phone=?, hotel=?, room=?, country=?, interests=? WHERE id=?`)
+        .bind(nextName, nextPhone, nextHotel, nextRoom, nextCountry, nextInterests, m.id).run();
+      m = { ...m, name: nextName, phone: nextPhone, hotel: nextHotel, room: nextRoom, country: nextCountry, interests: nextInterests };
     }
   }
   const t = token();
@@ -267,6 +283,8 @@ async function handleOAuth(request, env, url) {
     const lang = LANGS.includes(url.searchParams.get('lang')) ? url.searchParams.get('lang') : 'en';
     const ref = str(url.searchParams.get('ref'), 20);
     const hotel = str(url.searchParams.get('hotel'), 60);
+    const phone = str(url.searchParams.get('phone'), 40);
+    const hotelName = str(url.searchParams.get('hotelName'), 140);
     const country = str(url.searchParams.get('country'), 80);
     const interests = sanitizeInterests((url.searchParams.get('interests') || '').split(',').map(x => x.trim()).filter(Boolean));
     const marketing = url.searchParams.get('marketing') === '1';
@@ -274,7 +292,7 @@ async function handleOAuth(request, env, url) {
       return redirect(`${pubOrigin}/account.html?lang=${encodeURIComponent(lang)}&oauth_modal=${encodeURIComponent(provider)}#signup`);
     }
     const nonce = randomString(16);
-    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, country, interests, marketing, nonce });
+    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, phone, hotelName, country, interests, marketing, nonce });
     if (provider === 'google') {
       const q = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'openid email profile', state, prompt: 'select_account' });
       return redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q);
@@ -351,6 +369,7 @@ async function handleOAuth(request, env, url) {
     if (!validEmail(email)) throw 0;
     const session = await createOrLoadMemberSession(env, email, {
       name, lang: st.lang, ref: st.ref, hotel: st.hotel,
+      phone: st.phone, hotelName: st.hotelName,
       country: st.country, interests: st.interests, marketing: !!st.marketing
     });
     return redirect(`${pubOrigin}/account.html#oauth_token=${encodeURIComponent(session.token)}&oauth_provider=${encodeURIComponent(provider)}`);
@@ -418,17 +437,20 @@ export async function handleMembers(request, env, url) {
     if (p === '/v1/me') {
       const m = await memberFromSession(request, env);
       const name = body.name === undefined ? m.name : str(body.name, 100);
+      const phone = body.phone === undefined ? m.phone : str(body.phone, 40);
+      const hotel = (body.hotel === undefined && body.hotelName === undefined) ? m.hotel : str(body.hotel !== undefined ? body.hotel : body.hotelName, 140);
+      const room = body.room === undefined ? m.room : str(body.room, 24);
       const lang = LANGS.includes(body.lang) ? body.lang : m.lang;
       const country = body.country === undefined ? m.country : str(body.country, 80);
       const nextInterestsArr = body.interests === undefined ? parseInterests(m.interests) : sanitizeInterests(body.interests);
       const interests = nextInterestsArr.length ? JSON.stringify(nextInterestsArr) : null;
       const marketing = body.marketing === undefined ? m.marketing_consent : (body.marketing === true ? 1 : 0);
       const consentAt = marketing ? (m.marketing_consent ? m.marketing_consent_at : sqlTime(new Date())) : null;
-      await env.DB.prepare(`UPDATE members SET name=?, lang=?, country=?, interests=?, marketing_consent=?, marketing_consent_at=? WHERE id=?`)
-        .bind(name, lang, country, interests, marketing, consentAt, m.id).run();
+      await env.DB.prepare(`UPDATE members SET name=?, phone=?, hotel=?, room=?, lang=?, country=?, interests=?, marketing_consent=?, marketing_consent_at=? WHERE id=?`)
+        .bind(name, phone, hotel, room, lang, country, interests, marketing, consentAt, m.id).run();
       if (marketing) await syncNewsletterRow(env, m.email, lang, nextInterestsArr, true, 'member');
       else if (body.marketing === false) await syncNewsletterRow(env, m.email, lang, [], false);
-      return json(await profile(env, { ...m, name, lang, country, interests, marketing_consent: marketing, marketing_consent_at: consentAt }));
+      return json(await profile(env, { ...m, name, phone, hotel, room, lang, country, interests, marketing_consent: marketing, marketing_consent_at: consentAt }));
     }
 
     if (p === '/v1/me/requests') {
@@ -440,10 +462,29 @@ export async function handleMembers(request, env, url) {
         coupon = await env.DB.prepare(`SELECT * FROM coupons WHERE code=? AND member_id=?`).bind(String(body.couponCode).toUpperCase(), m.id).first();
         if (!coupon || coupon.status !== 'issued' || coupon.expires_at <= sqlTime(new Date())) fail(409, 'Coupon not usable');
       }
-      const stmts = [env.DB.prepare(`INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, coupon_id) VALUES (?,?,?,?,?,?)`).bind(ref, m.id, serviceId, body.date, body.guests, coupon ? coupon.id : null)];
+      const reqType = str(body.type, 24), title = str(body.title, 160), operator = str(body.operator, 120);
+      const serviceTime = str(body.time, 24), totalText = str(body.total, 80), notes = str(body.notes, 500);
+      const stmts = [env.DB.prepare(
+        `INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, coupon_id, req_type, title, operator, service_time, total_text, notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`
+      ).bind(ref, m.id, serviceId, body.date, body.guests, coupon ? coupon.id : null, reqType, title, operator, serviceTime, totalText, notes)];
       if (coupon) stmts.push(env.DB.prepare(`UPDATE coupons SET status='held', held_ref=? WHERE id=? AND status='issued'`).bind(ref, coupon.id));
       try { await env.DB.batch(stmts); } catch { fail(409, 'Request already registered'); }
       return json({ ref, coupon: coupon ? { code: coupon.code, percentBps: coupon.percent_bps } : null });
+    }
+
+    if (p === '/v1/me/requests/delete') {
+      const m = await memberFromSession(request, env);
+      const ref = str(body.ref, 40);
+      if (!ref || !/^[A-Z0-9-]{6,40}$/.test(ref)) fail(400, 'Invalid reference');
+      const existing = await env.DB.prepare(`SELECT ref, state FROM member_requests WHERE ref=? AND member_id=?`).bind(ref, m.id).first();
+      if (existing && existing.state === 'fulfilled') fail(409, 'Completed request cannot be removed');
+      if (existing) {
+        await env.DB.batch([
+          env.DB.prepare(`UPDATE coupons SET status='issued', held_ref=NULL WHERE held_ref=? AND member_id=? AND status='held'`).bind(ref, m.id),
+          env.DB.prepare(`DELETE FROM member_requests WHERE ref=? AND member_id=? AND state!='fulfilled'`).bind(ref, m.id)
+        ]);
+      }
+      return json({ removed: true, member: await profile(env, m) });
     }
 
     if (p === '/v1/me/delete') {

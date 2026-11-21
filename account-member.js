@@ -331,6 +331,7 @@
           phone: phoneInput ? phoneInput.value.trim() : (localProf.phone || ''),
           country: countryInput ? countryInput.value.trim() : (localProf.country || ''),
           hotel: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
+          hotelName: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
           interests: [...selectedInterests],
           marketing: consentInput ? consentInput.checked : false
         };
@@ -471,6 +472,8 @@
         const cleanName = name.value.trim();
         await M.verify(address, code.value.trim(), {
           ...(cleanName ? { name: cleanName } : {}),
+          ...(prefill.phone ? { phone: prefill.phone } : {}),
+          ...(prefill.hotel ? { hotelName: prefill.hotel } : {}),
           ...(prefill.country ? { country: prefill.country } : {}),
           ...(Array.isArray(prefill.interests) && prefill.interests.length ? { interests: prefill.interests } : {}),
           marketing: consent.checked
@@ -577,14 +580,20 @@
       const next = {
         ...cur,
         name: p.name || cur.name || '',
+        phone: p.phone || cur.phone || '',
         email: p.email || cur.email || '',
+        hotel: p.hotel || cur.hotel || '',
+        room: p.room || cur.room || '',
         country: p.country || cur.country || '',
         interests: Array.isArray(p.interests) && p.interests.length ? p.interests : (cur.interests || [])
       };
       window.BosphorlyAccount.saveProfile(next);
-      const pName = document.getElementById('pName'), pEmail = document.getElementById('pEmail');
+      const pName = document.getElementById('pName'), pPhone = document.getElementById('pPhone'), pEmail = document.getElementById('pEmail'), pHotel = document.getElementById('pHotel'), pRoom = document.getElementById('pRoom');
       if (pName && !pName.value && p.name) pName.value = p.name;
+      if (pPhone && !pPhone.value && p.phone) pPhone.value = p.phone;
       if (pEmail && !pEmail.value && p.email) pEmail.value = p.email;
+      if (pHotel && !pHotel.value && p.hotel) pHotel.value = p.hotel;
+      if (pRoom && !pRoom.value && p.room) pRoom.value = p.room;
     }
 
     const hello = el('h2', null, p.name ? f(T.mHello, { name: p.name.split(/\s+/)[0] }) : T.mHelloNoName);

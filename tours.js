@@ -103,8 +103,8 @@
     return {
       name: live.name || local.name || '',
       email: live.email || local.email || '',
-      phone: local.phone || '',
-      hotel: local.hotel || '',
+      phone: live.phone || local.phone || '',
+      hotel: live.hotel || local.hotel || '',
       tier: live.tier || null
     };
   };
@@ -164,13 +164,17 @@
       err.hidden = ok; if (!ok) { err.textContent = t('toFErr'); return; }
       const ref = refCode();
 
+      const range = s.from ? t('toFrom', { price: D.money(s.from[0], s.from[1]) }) : '';
       let heldCoupon = null;
       const pickedCode = couponSel ? couponSel.value : '';
       if (M && M.signedIn()) {
         const reg = M.registerRequest({
           ref, serviceId: s.id, date: date.value,
           guests: Math.min(16, Math.max(1, Number(guests.value))),
-          ...(pickedCode ? { couponCode: pickedCode } : {})
+          ...(pickedCode ? { couponCode: pickedCode } : {}),
+          type: 'tour', title: s.name, operator: 'Bosphorly',
+          total: range || t('toPrice'),
+          ...(notes.value.trim() ? { notes: notes.value.trim().slice(0, 500) } : {})
         });
         if (pickedCode) {
           try {
@@ -184,9 +188,13 @@
         } else {
           reg.catch(() => {});
         }
+        M.update({
+          name: name.value.trim(),
+          phone: phone.value.trim(),
+          ...(hotel.value.trim() ? { hotel: hotel.value.trim() } : {})
+        }).catch(() => {});
       }
 
-      const range = s.from ? t('toFrom', { price: D.money(s.from[0], s.from[1]) }) : '';
       const lines = [
         t('toWaTitle') + ' · ' + ref,
         s.name + (range ? ' (' + range + ')' : ''),

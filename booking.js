@@ -1986,8 +1986,16 @@
   const area = $('area');
   [...area.options].at(-1).textContent = t.areaOther;
   $('hotelName').placeholder = t.phHotel; $('fullName').placeholder = t.phName; $('phone').placeholder = t.phPhone; $('email').placeholder = t.phEmail;
-  const saved = window.BosphorlyAccount?.profile();
-  if (saved) { $('hotelName').value = saved.hotel || ''; $('fullName').value = saved.name || ''; $('phone').value = saved.phone || ''; $('email').value = saved.email || ''; }
+  const fillBookingContact = () => {
+    const saved = window.BosphorlyAccount?.profile() || {};
+    const mp = (window.BosphorlyMember?.signedIn() ? window.BosphorlyMember.cachedProfile() : null) || {};
+    if (!$('hotelName').value && (mp.hotel || saved.hotel)) $('hotelName').value = mp.hotel || saved.hotel;
+    if (!$('fullName').value && (mp.name || saved.name)) $('fullName').value = mp.name || saved.name;
+    if (!$('phone').value && (mp.phone || saved.phone)) $('phone').value = mp.phone || saved.phone;
+    if (!$('email').value && (mp.email || saved.email)) $('email').value = mp.email || saved.email;
+  };
+  fillBookingContact();
+  window.addEventListener('bosphorly:member-changed', fillBookingContact);
   const now = new Date();
   const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   $('date').min = local; $('date').value = local;
@@ -2210,11 +2218,21 @@
     const coupon = MB && MB.signedIn() ? chosenCoupon() : null;
     let held = null;
     if (MB && MB.signedIn()) {
-      const reg = MB.registerRequest({ ref: reference, serviceId: r.id, date: $('date').value, guests: num, ...(coupon ? { couponCode: coupon.code } : {}) });
+      const reqTitle = title(r) + (selOption(r) ? ' · ' + optName(selOption(r)) : '');
+      const reqTime = $('time').selectedOptions[0]?.textContent || '';
+      const reg = MB.registerRequest({
+        ref: reference, serviceId: r.id, date: $('date').value, guests: num,
+        ...(coupon ? { couponCode: coupon.code } : {}),
+        type: 'tour', title: reqTitle, operator: r.operator, time: reqTime, total: q.total
+      });
       if (coupon) {
         try { held = (await reg).coupon; } catch { $('error').hidden = false; $('error').textContent = MT.bCouponFail; return; }
         coupons = coupons.filter(c => c.code !== coupon.code);
       } else reg.catch(() => {});
+      const curMp = MB.cachedProfile();
+      if (!curMp || curMp.name !== name || curMp.phone !== phone || (hotel && curMp.hotel !== hotel)) {
+        MB.update({ name, phone, ...(hotel ? { hotel } : {}) }).catch(() => {});
+      }
     }
     const memProf = MB && MB.signedIn() ? MB.cachedProfile() : null;
     const vipNote = memProf && memProf.tier === 'platinum'

@@ -11,6 +11,7 @@ function d1() {
   db.exec(readFileSync(new URL('../backend/migrations/0001.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0002_members.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0003_member_preferences_newsletter.sql', import.meta.url), 'utf8'));
+  db.exec(readFileSync(new URL('../backend/migrations/0004_member_sync_requests_details.sql', import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) ?? null,
@@ -310,6 +311,57 @@ test('newsletter subscription, admin filtered broadcast, and unsubscribe endpoin
   const dryAfter = await call(env, '/v1/admin/newsletter/send', { subject: 'VIP Gold Offer', text: 'Hi', tier: 'gold', dryRun: true }, 'admin-secret');
   assert.equal(dryAfter.body.count, 0);
 });
+
+test('cross-device sync saves phone/hotel/room, cart/request metadata, and releases coupons on delete', async () => {
+  const env = setup();
+  const up = await signUp(env, 'sync@example.com', {
+    name: 'Zeynep Acar',
+    phone: '+90 555 111 22 33',
+    hotelName: 'Four Seasons',
+    room: '305'
+  });
+  const code = up.member.coupons[0].code;
+  const reg = await call(env, '/v1/me/requests', {
+    ref: 'BOS-CART01',
+    serviceId: 'airport-transfer-ist',
+    date: '2099-09-01',
+    guests: 3,
+    couponCode: code,
+    type: 'transfer',
+    title: 'Havalimanı transferi · IST → Sultanahmet',
+    operator: 'Four Seasons',
+    time: '14:30',
+    total: '€60 · araç başı',
+    notes: '2 large suitcases'
+  }, up.token);
+  assert.equal(reg.status, 200);
+
+  // Signing in from a second device returns full details and cart/request metadata.
+  const secondDevice = await signUp(env, 'sync@example.com');
+  assert.equal(secondDevice.member.phone, '+90 555 111 22 33');
+  assert.equal(secondDevice.member.hotel, 'Four Seasons');
+  assert.equal(secondDevice.member.room, '305');
+  assert.equal(secondDevice.member.requests.length, 1);
+  assert.equal(secondDevice.member.requests[0].title, 'Havalimanı transferi · IST → Sultanahmet');
+  assert.equal(secondDevice.member.requests[0].time, '14:30');
+  assert.equal(secondDevice.member.requests[0].total, '€60 · araç başı');
+  assert.equal(secondDevice.member.requests[0].couponCode, code);
+
+  // Update contact info via /v1/me.
+  const upd = await call(env, '/v1/me', { phone: '+90 555 999 88 77', hotel: 'Ciragan Palace', room: '501' }, up.token);
+  assert.equal(upd.body.phone, '+90 555 999 88 77');
+  assert.equal(upd.body.hotel, 'Ciragan Palace');
+  assert.equal(upd.body.room, '501');
+
+  // Deleting an open request removes it and releases the held coupon back to issued.
+  const del = await call(env, '/v1/me/requests/delete', { ref: 'BOS-CART01' }, secondDevice.token);
+  assert.equal(del.status, 200);
+  assert.equal(del.body.removed, true);
+  assert.equal(del.body.member.requests.length, 0);
+  assert.equal(del.body.member.coupons[0].status, 'issued');
+  assert.equal(del.body.member.coupons[0].heldFor, null);
+});
+
 
 
 
