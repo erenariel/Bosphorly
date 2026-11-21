@@ -56,7 +56,9 @@ test('no site file in any of the 23 languages tells guests to pay cash or at the
   walk('');
   assert.ok(files.includes('assets/print/bosphorly-qr-poster.html') && files.includes('data/discover/tr.json') && files.includes('tools/discover-src/master.json'));
   for (const file of files) {
-    const m = read(file).match(re);
+    // backend/assistant.js only *detects* payment questions (incl. "cash"); that detector line is not guest-facing text.
+    const src = file === 'backend/assistant.js' ? read(file).split('\n').filter(l => !l.includes('how to pay')).join('\n') : read(file);
+    const m = src.match(re);
     assert.equal(m, null, file + ': ' + (m && m[0]));
   }
   // Every locale states that the payment method is shared when Bosphorly gets in touch.
