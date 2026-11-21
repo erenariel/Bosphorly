@@ -37,7 +37,7 @@ a{color:#1352aa}
 .facts .closed{color:#9b3b3b}
 .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:4px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:8px 13px;border-radius:12px;font:700 13px/1.2 inherit;font-family:inherit;text-decoration:none;border:1px solid var(--line);background:#fff;color:#16457d;cursor:pointer}
-.btn.wa{background:#1fa855;border-color:#1fa855;color:#fff}
+.btn.wa{background:#164DA3;border-color:#164DA3;color:#fff}
 .btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
 .note{font-size:12px;color:#6d5638;background:#fffbf1;border:1px solid #f1dfbd;border-radius:12px;padding:12px 14px}
 .note a{color:#7a5300}

@@ -99,16 +99,16 @@
         hotel.value.trim() ? t('toFHotel') + ': ' + hotel.value.trim() : null,
         t('toFName') + ': ' + name.value.trim(), t('toFPhone').replace(/ \(.*\)$/, '') + ': ' + phone.value.trim(),
         notes.value.trim() ? t('toFNotes').replace(/ \(.*\)$/, '') + ': ' + notes.value.trim() : null].filter(Boolean);
-      const url = D.waLink(lines.join('\n'));
+      const url = D.emailLink(lines.join('\n'), t('toWaTitle') + ' · ' + ref);
       if (account) {
         account.saveProfile(Object.assign({}, saved, { name: name.value.trim(), phone: phone.value.trim(), hotel: hotel.value.trim() }));
-        account.addRequest({ ref, type: 'tour', title: s.name, operator: 'Bosphorly', date: date.value, guests: Number(guests.value), total: range || t('toPrice'), waUrl: url });
+        account.addRequest({ ref, type: 'tour', title: s.name, operator: 'Bosphorly', date: date.value, guests: Number(guests.value), total: range || t('toPrice'), emailDraftUrl: url });
       }
       done.replaceChildren(el('p', null, '✅ ' + t('toFDone', { ref })));
-      const again = el('a', 'btn wa', 'WhatsApp →'); again.href = url; again.target = '_blank'; again.rel = 'noopener';
+      const again = el('a', 'btn', 'Email →'); again.href = url; again.target = '_blank'; again.rel = 'noopener';
       const mine = el('a', 'btn', t('toMyReq')); mine.href = 'account.html';
       done.append(again, mine); done.hidden = false; send.hidden = true;
-      window.open(url, '_blank', 'noopener');
+      window.location.href = url;
     });
     return box;
   }
@@ -124,7 +124,7 @@
     const form = requestForm(s);
     const req = el('button', 'btn primary', '📝 ' + t('toReq')); req.type = 'button'; req.setAttribute('aria-expanded', 'false');
     req.addEventListener('click', () => { form.hidden = !form.hidden; req.setAttribute('aria-expanded', String(!form.hidden)); if (!form.hidden) form.querySelector('input').focus(); });
-    const wa = el('a', 'btn', '💬 ' + t('toAsk')); wa.href = D.waLink(t('toAskMsg', { tour: s.name })); wa.target = '_blank'; wa.rel = 'noopener';
+    const wa = el('a', 'btn', '✉ ' + t('toAsk')); wa.href = D.emailLink(t('toAskMsg', { tour: s.name }), 'Bosphorly tour inquiry'); 
     act.append(req, wa);
     c.append(top, el('p', null, s.desc), meta, details(s), act, form);
     return c;

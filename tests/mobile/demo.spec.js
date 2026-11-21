@@ -1,9 +1,7 @@
 import {test,expect} from '@playwright/test';
 test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  const writes=[];page.on('request',r=>{if(r.method()!=='GET')writes.push(r.url());});
- // Sending a request opens WhatsApp in a new window. Stand in for WhatsApp so the test never loads the real site,
- // whose own cookies (on whatsapp.com) would otherwise be counted below as if Bosphorly had set them.
- await page.context().route(/^https:\/\/(wa\.me|([a-z0-9-]+\.)*whatsapp\.com)\//,r=>r.fulfill({status:200,contentType:'text/html',body:''}));
+ // The form prepares an email draft; an email client must send it. No remote request is made by Bosphorly.
  await page.goto('/booking.html?lang=en');
  await expect(page.locator('#offer option')).toHaveCount(35);
  await page.locator('#offer').selectOption('bb-sunset');
@@ -28,7 +26,7 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect(page.locator('#error')).toBeHidden();
  await expect(page.locator('#result')).toHaveAttribute('data-state','draft');
  await expect(page.locator('#result')).toContainText('BOS-');
- await expect(page.locator('#result a.wa-button')).toHaveAttribute('href',/^https:\/\/wa\.me\/905333407776\?text=.*Test%20Hotel.*214/);
+ await expect(page.locator('#result a[href^="mailto:"]')).toHaveAttribute('href',/^mailto:info@bosphorly\.com\?subject=.*&body=.*Test%20Hotel.*214/);
  for(const dir of ['ltr','rtl']) {
  await page.locator('html').evaluate((e,d)=>e.dir=d,dir);
  expect(await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,overflow:[...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth||e.getBoundingClientRect().left<0).map(e=>e.tagName+'.'+e.className)}))).toMatchObject({scroll:page.viewportSize().width});

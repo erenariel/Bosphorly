@@ -40,7 +40,7 @@
     const dir = el('a', 'btn', '📍 ' + t('directions')); dir.href = D.mapsLink(p.lat, p.lng); dir.target = '_blank'; dir.rel = 'noopener';
     act.append(dir);
     if (p.official) { const o = el('a', 'btn', t('official') + ' ↗'); o.href = p.official; o.target = '_blank'; o.rel = 'noopener'; act.append(o); }
-    const wa = el('a', 'btn wa', t('ask')); wa.href = D.waLink(t('askMsg', { place: p.name })); wa.target = '_blank'; wa.rel = 'noopener';
+    const wa = el('a', 'btn wa', t('ask')); wa.href = D.emailLink(t('askMsg', { place: p.name }), 'Bosphorly Istanbul inquiry'); wa.target = '_blank'; wa.rel = 'noopener';
     act.append(wa);
     c.append(act);
     return c;
