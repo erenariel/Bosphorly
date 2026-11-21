@@ -294,8 +294,8 @@
         btn.type = 'button';
         btn.dataset.provider = p.id;
         btn.innerHTML = p.svg;
-        btn.append(el('span', null, f(T.mContinueWith || UI.continueWith, { p: p.name })));
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
           const extra = {
             phone: phoneInput ? phoneInput.value.trim() : (localProf.phone || ''),
             country: countryInput ? countryInput.value.trim() : (localProf.country || ''),
@@ -304,7 +304,12 @@
             interests: [...selectedInterests],
             marketing: consentInput ? consentInput.checked : false
           };
-          location.href = M.oauthUrl(p.id, extra);
+          let pendingId = null;
+          try {
+            const prep = await M.prepareOAuth(extra);
+            if (prep && prep.id) pendingId = prep.id;
+          } catch {}
+          location.href = M.oauthUrl(p.id, { pendingId });
         });
         provWrap.append(btn);
       });

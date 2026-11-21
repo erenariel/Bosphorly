@@ -177,7 +177,7 @@ async function profile(env, m) {
 }
 
 // --- routes -------------------------------------------------------------------------------------------
-const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/me', '/v1/me/requests', '/v1/me/requests/delete', '/v1/me/delete',
+const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/auth/oauth/prepare', '/v1/me', '/v1/me/requests', '/v1/me/requests/delete', '/v1/me/delete',
   '/v1/newsletter/subscribe', '/v1/newsletter/unsubscribe', '/v1/admin/newsletter/send',
   '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns',
   '/v1/passkeys', '/v1/passkeys/register/options', '/v1/passkeys/register/verify',
@@ -307,8 +307,10 @@ export async function verifyMicrosoftIdToken(idToken, clientId, expectedNonce) {
   if (!header.kid || claims.aud !== clientId) return null;
   if (!claims.exp || claims.exp * 1000 < Date.now()) return null;
   if (expectedNonce && claims.nonce !== expectedNonce) return null;
-  if (!claims.tid || typeof claims.iss !== 'string' || claims.iss !== `https://login.microsoftonline.com/${claims.tid}/v2.0`) return null;
-  const jwksRes = await fetch('https://login.microsoftonline.com/common/discovery/v2.0/keys');
+  const PERSONAL_MS_TID = '9188040d-6c67-4c5b-b112-36a304b66dad';
+  if (claims.tid !== PERSONAL_MS_TID) return null;
+  if (typeof claims.iss !== 'string' || claims.iss !== `https://login.microsoftonline.com/${PERSONAL_MS_TID}/v2.0`) return null;
+  const jwksRes = await fetch('https://login.microsoftonline.com/consumers/discovery/v2.0/keys');
   if (!jwksRes.ok) return null;
   const { keys } = await jwksRes.json();
   const jwk = (keys || []).find(k => k.kid === header.kid);
@@ -324,6 +326,24 @@ export async function verifyMicrosoftIdToken(idToken, clientId, expectedNonce) {
 
 async function handleOAuth(request, env, url) {
   const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
+  if (url.pathname === '/v1/auth/oauth/prepare') {
+    if (request.method !== 'POST') fail(405, 'Method not allowed');
+    const body = await readJson(request, 4096);
+    const pendingId = id();
+    const data = JSON.stringify({
+      phone: str(body.phone, 40) || null,
+      hotel: str(body.hotel, 60) || null,
+      hotelName: str(body.hotelName, 140) || null,
+      country: str(body.country, 80) || null,
+      interests: sanitizeInterests(Array.isArray(body.interests) ? body.interests : []),
+      marketing: !!body.marketing,
+      ref: str(body.ref, 20) || null
+    });
+    await env.DB.prepare(`INSERT INTO oauth_pending (id, data, expires_at, created_at) VALUES (?,?,?,?)`)
+      .bind(pendingId, data, later(10 * 60 * 1000), sqlTime(new Date())).run();
+    return json({ id: pendingId });
+  }
+
   const m = url.pathname.match(/^\/v1\/auth\/oauth\/([a-z]+)(\/callback)?$/);
   if (!m || !OAUTH_PROVIDERS.has(m[1])) fail(404, 'Not found');
   const provider = m[1], isCallback = !!m[2];
@@ -333,18 +353,12 @@ async function handleOAuth(request, env, url) {
   if (!isCallback) {
     if (request.method !== 'GET') fail(405, 'Method not allowed');
     const lang = LANGS.includes(url.searchParams.get('lang')) ? url.searchParams.get('lang') : 'en';
-    const ref = str(url.searchParams.get('ref'), 20);
-    const hotel = str(url.searchParams.get('hotel'), 60);
-    const phone = str(url.searchParams.get('phone'), 40);
-    const hotelName = str(url.searchParams.get('hotelName'), 140);
-    const country = str(url.searchParams.get('country'), 80);
-    const interests = sanitizeInterests((url.searchParams.get('interests') || '').split(',').map(x => x.trim()).filter(Boolean));
-    const marketing = url.searchParams.get('marketing') === '1';
+    const pendingId = str(url.searchParams.get('p') || url.searchParams.get('pending') || '', 40) || null;
     if (!avail[provider] || !env.CODE_PEPPER) {
       return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
     }
     const nonce = randomString(16);
-    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, phone, hotelName, country, interests, marketing, nonce });
+    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, pendingId, nonce });
     if (provider === 'google') {
       const q = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'openid email profile', state, prompt: 'select_account' });
       return redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q);
@@ -363,7 +377,7 @@ async function handleOAuth(request, env, url) {
     }
     if (provider === 'microsoft') {
       const q = new URLSearchParams({ client_id: env.MICROSOFT_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'openid email profile', state, nonce });
-      return redirect('https://login.microsoftonline.com/common/oauth2/v2.0/authorize?' + q);
+      return redirect('https://login.microsoftonline.com/consumers/oauth2/v2.0/authorize?' + q);
     }
     if (provider === 'telegram') {
       return redirect(`${pubOrigin}/account.html?oauth_error=telegram#signup`);
@@ -412,6 +426,15 @@ async function handleOAuth(request, env, url) {
   if (!st || st.p !== provider || params.get('error')) {
     return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
   }
+  let pendingData = null;
+  if (st.pendingId) {
+    const now = sqlTime(new Date());
+    const pRow = await env.DB.prepare(`SELECT data FROM oauth_pending WHERE id=? AND expires_at>?`).bind(st.pendingId, now).first();
+    if (pRow) {
+      await env.DB.prepare(`DELETE FROM oauth_pending WHERE id=?`).bind(st.pendingId).run();
+      try { pendingData = JSON.parse(pRow.data); } catch {}
+    }
+  }
   try {
     let email = '', name = '';
     if (provider === 'google') {
@@ -458,7 +481,7 @@ async function handleOAuth(request, env, url) {
         } catch {}
       }
     } else if (provider === 'microsoft') {
-      const tokRes = await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+      const tokRes = await fetch('https://login.microsoftonline.com/consumers/oauth2/v2.0/token', {
         method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ code: params.get('code') || '', client_id: env.MICROSOFT_CLIENT_ID, client_secret: env.MICROSOFT_CLIENT_SECRET, redirect_uri: callbackUrl, grant_type: 'authorization_code' })
       });
@@ -478,9 +501,9 @@ async function handleOAuth(request, env, url) {
     }
     if (!validEmail(email)) throw 0;
     const session = await createOrLoadMemberSession(env, email, {
-      name, lang: st.lang, ref: st.ref, hotel: st.hotel,
-      phone: st.phone, hotelName: st.hotelName,
-      country: st.country, interests: st.interests, marketing: !!st.marketing
+      name, lang: st.lang, ref: pendingData?.ref, hotel: pendingData?.hotel,
+      phone: pendingData?.phone, hotelName: pendingData?.hotelName,
+      country: pendingData?.country, interests: pendingData?.interests || [], marketing: !!pendingData?.marketing
     });
     return redirect(`${pubOrigin}/account.html#oauth_token=${encodeURIComponent(session.token)}&oauth_provider=${encodeURIComponent(provider)}`);
   } catch {
@@ -557,7 +580,7 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/register/options') {
       const m = await memberFromSession(request, env);
-      const rpID = env.PASSKEY_RP_ID || 'bosphorly.com';
+      const rpID = 'bosphorly.com';
       const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(m.id).all()).results;
       const excludeCredentials = existing.map(k => ({
         id: k.credential_id,
@@ -580,9 +603,8 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/register/verify') {
       const m = await memberFromSession(request, env);
-      const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
-      const rpID = Array.from(new Set([env.PASSKEY_RP_ID || 'bosphorly.com', 'bosphorly.com', url.hostname]));
-      const originList = Array.from(new Set(['https://bosphorly.com', 'https://www.bosphorly.com', pubOrigin, url.origin].filter(Boolean)));
+      const rpID = 'bosphorly.com';
+      const originList = ['https://bosphorly.com', 'https://www.bosphorly.com'];
 
       const clientDataRaw = body?.response?.clientDataJSON;
       if (!clientDataRaw) fail(400, 'Invalid passkey response');
@@ -613,7 +635,7 @@ export async function handleMembers(request, env, url) {
     }
 
     if (p === '/v1/passkeys/login/options') {
-      const rpID = env.PASSKEY_RP_ID || 'bosphorly.com';
+      const rpID = 'bosphorly.com';
       const options = await generateAuthenticationOptions({
         rpID,
         timeout: 60000,
@@ -625,9 +647,8 @@ export async function handleMembers(request, env, url) {
     }
 
     if (p === '/v1/passkeys/login/verify') {
-      const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
-      const rpID = Array.from(new Set([env.PASSKEY_RP_ID || 'bosphorly.com', 'bosphorly.com', url.hostname]));
-      const originList = Array.from(new Set(['https://bosphorly.com', 'https://www.bosphorly.com', pubOrigin, url.origin].filter(Boolean)));
+      const rpID = 'bosphorly.com';
+      const originList = ['https://bosphorly.com', 'https://www.bosphorly.com'];
 
       const clientDataRaw = body?.response?.clientDataJSON;
       if (!clientDataRaw) fail(400, 'Invalid passkey response');

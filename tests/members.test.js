@@ -14,6 +14,7 @@ function d1() {
   db.exec(readFileSync(new URL('../backend/migrations/0003_member_preferences_newsletter.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0004_member_sync_requests_details.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0005_identities_passkeys.sql', import.meta.url), 'utf8'));
+  db.exec(readFileSync(new URL('../backend/migrations/0006_oauth_pending.sql', import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) ?? null,
@@ -228,6 +229,11 @@ test('OAuth endpoints report configured providers and redirect to Google, Yandex
   const aRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/apple?lang=tr'), env);
   assert.equal(aRes.status, 302);
   assert.match(aRes.headers.get('Location'), /^https:\/\/appleid\.apple\.com\/auth\/authorize\?.*client_id=com\.bosphorly\.web/);
+
+  const envWithMs = { ...env, MICROSOFT_CLIENT_ID: 'ms-client', MICROSOFT_CLIENT_SECRET: 'ms-secret' };
+  const msRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/microsoft?lang=tr'), envWithMs);
+  assert.equal(msRes.status, 302);
+  assert.match(msRes.headers.get('Location'), /^https:\/\/login\.microsoftonline\.com\/consumers\/oauth2\/v2\.0\/authorize\?.*client_id=ms-client/);
 });
 
 test('country, interests and progressive tiers (silver -> gold -> platinum) with VIP priority & free upgrade', async () => {
@@ -416,16 +422,17 @@ test('Google callback rejects when email_verified is false', async () => {
   }
 });
 
-test('Microsoft rejects wrong aud, expired token and iss/tid mismatch', async () => {
+test('Microsoft rejects wrong aud, expired token, non-personal tid, and iss/tid mismatch', async () => {
   const { verifyMicrosoftIdToken } = await import('../backend/members.js');
   const b64 = obj => Buffer.from(JSON.stringify(obj)).toString('base64url');
+  const PERSONAL_MS_TID = '9188040d-6c67-4c5b-b112-36a304b66dad';
 
   // Wrong aud
   const wrongAudToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
     aud: 'wrong-client',
     exp: Math.floor(Date.now() / 1000) + 3600,
-    tid: 'tid-1',
-    iss: 'https://login.microsoftonline.com/tid-1/v2.0',
+    tid: PERSONAL_MS_TID,
+    iss: `https://login.microsoftonline.com/${PERSONAL_MS_TID}/v2.0`,
     email: 'user@outlook.com'
   })}.fakesig`;
   assert.equal(await verifyMicrosoftIdToken(wrongAudToken, 'correct-client', 'nonce-1'), null);
@@ -434,17 +441,36 @@ test('Microsoft rejects wrong aud, expired token and iss/tid mismatch', async ()
   const expiredToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
     aud: 'correct-client',
     exp: Math.floor(Date.now() / 1000) - 300,
-    tid: 'tid-1',
-    iss: 'https://login.microsoftonline.com/tid-1/v2.0',
+    tid: PERSONAL_MS_TID,
+    iss: `https://login.microsoftonline.com/${PERSONAL_MS_TID}/v2.0`,
     email: 'user@outlook.com'
   })}.fakesig`;
   assert.equal(await verifyMicrosoftIdToken(expiredToken, 'correct-client', 'nonce-1'), null);
+
+  // Non-personal Microsoft account tenant (e.g. work/school 'organizations' or company GUID) - nOAuth defense
+  const workTenantToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
+    aud: 'correct-client',
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    tid: 'organizations',
+    iss: 'https://login.microsoftonline.com/organizations/v2.0',
+    email: 'victim@company.com'
+  })}.fakesig`;
+  assert.equal(await verifyMicrosoftIdToken(workTenantToken, 'correct-client', 'nonce-1'), null);
+
+  const customTenantToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
+    aud: 'correct-client',
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    tid: 'a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d',
+    iss: 'https://login.microsoftonline.com/a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d/v2.0',
+    email: 'victim@company.com'
+  })}.fakesig`;
+  assert.equal(await verifyMicrosoftIdToken(customTenantToken, 'correct-client', 'nonce-1'), null);
 
   // iss / tid mismatch
   const mismatchedIssToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
     aud: 'correct-client',
     exp: Math.floor(Date.now() / 1000) + 3600,
-    tid: 'tid-1',
+    tid: PERSONAL_MS_TID,
     iss: 'https://login.microsoftonline.com/tid-OTHER/v2.0',
     email: 'user@outlook.com'
   })}.fakesig`;
@@ -454,12 +480,105 @@ test('Microsoft rejects wrong aud, expired token and iss/tid mismatch', async ()
   const wrongNonceToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
     aud: 'correct-client',
     exp: Math.floor(Date.now() / 1000) + 3600,
-    tid: 'tid-1',
-    iss: 'https://login.microsoftonline.com/tid-1/v2.0',
+    tid: PERSONAL_MS_TID,
+    iss: `https://login.microsoftonline.com/${PERSONAL_MS_TID}/v2.0`,
     nonce: 'bad-nonce',
     email: 'user@outlook.com'
   })}.fakesig`;
   assert.equal(await verifyMicrosoftIdToken(wrongNonceToken, 'correct-client', 'expected-nonce'), null);
+});
+
+test('OAuth initiation strips PII from URLs and signed state via single-use oauth_pending', async () => {
+  const env = {
+    ...setup(),
+    GOOGLE_CLIENT_ID: 'g-client', GOOGLE_CLIENT_SECRET: 'g-secret',
+    MICROSOFT_CLIENT_ID: 'ms-client', MICROSOFT_CLIENT_SECRET: 'ms-secret'
+  };
+
+  // 1. Prepare OAuth prefill data
+  const prepRes = await call(env, '/v1/auth/oauth/prepare', {
+    phone: '+90 555 123 4567',
+    hotel: 'Four Seasons Bosphorus',
+    hotelName: 'Four Seasons Bosphorus',
+    country: 'TR',
+    interests: ['cruise', 'private'],
+    marketing: true
+  });
+  assert.equal(prepRes.status, 200);
+  assert.ok(prepRes.body.id);
+  const pendingId = prepRes.body.id;
+
+  // Verify stored in D1 oauth_pending table with 10m expiry
+  const row = env.DB.raw.prepare('SELECT * FROM oauth_pending WHERE id=?').get(pendingId);
+  assert.ok(row);
+  const parsedData = JSON.parse(row.data);
+  assert.equal(parsedData.phone, '+90 555 123 4567');
+  assert.equal(parsedData.hotelName, 'Four Seasons Bosphorus');
+  assert.equal(parsedData.country, 'TR');
+
+  // 2. Start OAuth redirect with pendingId parameter
+  const startRes = await worker.fetch(new Request(`https://api.example/v1/auth/oauth/google?p=${encodeURIComponent(pendingId)}&lang=tr`), env);
+  assert.equal(startRes.status, 302);
+  const location = startRes.headers.get('Location');
+  assert.ok(location);
+
+  // Assert NO PII in the Google OAuth redirect URL or query parameters
+  assert.doesNotMatch(location, /phone/i);
+  assert.doesNotMatch(location, /555/);
+  assert.doesNotMatch(location, /hotel/i);
+  assert.doesNotMatch(location, /Four%20Seasons/i);
+  assert.doesNotMatch(location, /country/i);
+  assert.doesNotMatch(location, /interests/i);
+  assert.doesNotMatch(location, /cruise/i);
+
+  // Extract state param and verify its payload has no PII
+  const targetUrl = new URL(location);
+  const stateParam = targetUrl.searchParams.get('state');
+  assert.ok(stateParam);
+  const statePayloadRaw = stateParam.split('.')[0];
+  const stateObj = JSON.parse(Buffer.from(statePayloadRaw, 'base64url').toString('utf8'));
+  assert.equal(stateObj.p, 'google');
+  assert.equal(stateObj.lang, 'tr');
+  assert.equal(stateObj.pendingId, pendingId);
+  assert.equal(stateObj.phone, undefined);
+  assert.equal(stateObj.hotel, undefined);
+  assert.equal(stateObj.country, undefined);
+  assert.equal(stateObj.interests, undefined);
+  assert.equal(stateObj.marketing, undefined);
+
+  // 3. Callback consumes the pending data and deletes the single-use record
+  const origFetch = globalThis.fetch;
+  try {
+    globalThis.fetch = async (url, opts) => {
+      const u = String(url);
+      if (u.includes('oauth2.googleapis.com/token')) {
+        return new Response(JSON.stringify({ access_token: 'valid-google-tok' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (u.includes('openidconnect.googleapis.com/v1/userinfo')) {
+        return new Response(JSON.stringify({ email: 'newoauthuser@example.com', email_verified: true, name: 'OAuth Guest' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      return origFetch(url, opts);
+    };
+
+    const cbRes = await worker.fetch(new Request(`https://api.example/v1/auth/oauth/google/callback?code=good-code&state=${encodeURIComponent(stateParam)}`), env);
+    assert.equal(cbRes.status, 302);
+    assert.match(cbRes.headers.get('Location'), /account\.html#oauth_token=/);
+
+    // oauth_pending record is deleted (single-use)
+    const afterRow = env.DB.raw.prepare('SELECT * FROM oauth_pending WHERE id=?').get(pendingId);
+    assert.equal(afterRow, undefined);
+
+    // New member created with prefill data
+    const member = env.DB.raw.prepare('SELECT * FROM members WHERE email=?').get('newoauthuser@example.com');
+    assert.ok(member);
+    assert.equal(member.phone, '+90 555 123 4567');
+    assert.equal(member.hotel, 'Four Seasons Bosphorus');
+    assert.equal(member.country, 'TR');
+    assert.deepEqual(JSON.parse(member.interests), ['cruise', 'private']);
+    assert.equal(member.marketing_consent, 1);
+  } finally {
+    globalThis.fetch = origFetch;
+  }
 });
 
 function computeTelegramHash(params, botToken) {
