@@ -2,8 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
+import crypto from 'node:crypto';
 import worker from '../backend/worker.js';
-import { STAMPS_GOAL } from '../backend/members.js';
+import { STAMPS_GOAL, signState } from '../backend/members.js';
 
 // A minimal Cloudflare D1 stand-in over real SQLite, so the SQL and constraints run for real.
 function d1() {
@@ -12,6 +13,7 @@ function d1() {
   db.exec(readFileSync(new URL('../backend/migrations/0002_members.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0003_member_preferences_newsletter.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0004_member_sync_requests_details.sql', import.meta.url), 'utf8'));
+  db.exec(readFileSync(new URL('../backend/migrations/0005_identities_passkeys.sql', import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) ?? null,
@@ -161,7 +163,7 @@ test('deleting the account removes the member, sessions, coupons, requests and n
   const { token } = await signUp(env, 'a@example.com', { marketing: true });
   await call(env, '/v1/me/requests', { ref: 'BOS-DEL001', serviceId: 'bb-sunset', date: '2099-08-01', guests: 2 }, token);
   assert.equal((await call(env, '/v1/me/delete', {}, token)).body.deleted, true);
-  for (const t of ['members', 'sessions', 'coupons', 'member_requests', 'login_codes', 'newsletter_subscribers']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM ${t}`).get().n, 0, t);
+  for (const t of ['members', 'sessions', 'coupons', 'member_requests', 'login_codes', 'newsletter_subscribers', 'passkeys', 'passkey_challenges', 'member_identities']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM ${t}`).get().n, 0, t);
   assert.equal((await call(env, '/v1/me', null, token, 'GET')).status, 401);
 });
 
@@ -209,7 +211,7 @@ test('OAuth endpoints report configured providers and redirect to Google, Yandex
   };
   const prov = await call(env, '/v1/auth/providers', null, null, 'GET');
   assert.equal(prov.status, 200);
-  assert.deepEqual(prov.body, { google: true, yandex: true, facebook: true, apple: true });
+  assert.deepEqual(prov.body, { google: true, yandex: true, facebook: true, apple: true, microsoft: false, telegram: false });
 
   const gRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/google?lang=tr'), env);
   assert.equal(gRes.status, 302);
@@ -360,6 +362,254 @@ test('cross-device sync saves phone/hotel/room, cart/request metadata, and relea
   assert.equal(del.body.member.requests.length, 0);
   assert.equal(del.body.member.coupons[0].status, 'issued');
   assert.equal(del.body.member.coupons[0].heldFor, null);
+});
+
+test('disabled provider redirects to oauth_error and oauth_modal is not returned', async () => {
+  const env = setup();
+  // Disabled Google
+  const gRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/google?lang=tr'), env);
+  assert.equal(gRes.status, 302);
+  const gLoc = gRes.headers.get('Location');
+  assert.match(gLoc, /account\.html\?oauth_error=google#signup/);
+  assert.doesNotMatch(gLoc, /oauth_modal/);
+
+  // Disabled Microsoft
+  const msRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/microsoft?lang=tr'), env);
+  assert.equal(msRes.status, 302);
+  const msLoc = msRes.headers.get('Location');
+  assert.match(msLoc, /account\.html\?oauth_error=microsoft#signup/);
+  assert.doesNotMatch(msLoc, /oauth_modal/);
+
+  // Disabled Telegram
+  const tgRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/telegram?lang=tr'), env);
+  assert.equal(tgRes.status, 302);
+  const tgLoc = tgRes.headers.get('Location');
+  assert.match(tgLoc, /account\.html\?oauth_error=telegram#signup/);
+  assert.doesNotMatch(tgLoc, /oauth_modal/);
+});
+
+test('Google callback rejects when email_verified is false', async () => {
+  const env = {
+    ...setup(),
+    GOOGLE_CLIENT_ID: 'g-client',
+    GOOGLE_CLIENT_SECRET: 'g-secret'
+  };
+  const origFetch = globalThis.fetch;
+  try {
+    globalThis.fetch = async (url, opts) => {
+      const u = String(url);
+      if (u.includes('oauth2.googleapis.com/token')) {
+        return new Response(JSON.stringify({ access_token: 'fake-google-token' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      if (u.includes('openidconnect.googleapis.com/v1/userinfo')) {
+        return new Response(JSON.stringify({ email: 'fake@example.com', email_verified: false, name: 'Fake User' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      }
+      return origFetch(url, opts);
+    };
+
+    const st = await signState(env.CODE_PEPPER, { p: 'google', t: Date.now(), lang: 'en', nonce: 'nonce-g' });
+    const res = await worker.fetch(new Request(`https://api.example/v1/auth/oauth/google/callback?code=mock-code&state=${encodeURIComponent(st)}`), env);
+    assert.equal(res.status, 302);
+    assert.match(res.headers.get('Location'), /account\.html\?oauth_error=google#signup/);
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test('Microsoft rejects wrong aud, expired token and iss/tid mismatch', async () => {
+  const { verifyMicrosoftIdToken } = await import('../backend/members.js');
+  const b64 = obj => Buffer.from(JSON.stringify(obj)).toString('base64url');
+
+  // Wrong aud
+  const wrongAudToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
+    aud: 'wrong-client',
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    tid: 'tid-1',
+    iss: 'https://login.microsoftonline.com/tid-1/v2.0',
+    email: 'user@outlook.com'
+  })}.fakesig`;
+  assert.equal(await verifyMicrosoftIdToken(wrongAudToken, 'correct-client', 'nonce-1'), null);
+
+  // Expired token
+  const expiredToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
+    aud: 'correct-client',
+    exp: Math.floor(Date.now() / 1000) - 300,
+    tid: 'tid-1',
+    iss: 'https://login.microsoftonline.com/tid-1/v2.0',
+    email: 'user@outlook.com'
+  })}.fakesig`;
+  assert.equal(await verifyMicrosoftIdToken(expiredToken, 'correct-client', 'nonce-1'), null);
+
+  // iss / tid mismatch
+  const mismatchedIssToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
+    aud: 'correct-client',
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    tid: 'tid-1',
+    iss: 'https://login.microsoftonline.com/tid-OTHER/v2.0',
+    email: 'user@outlook.com'
+  })}.fakesig`;
+  assert.equal(await verifyMicrosoftIdToken(mismatchedIssToken, 'correct-client', 'nonce-1'), null);
+
+  // Mismatched nonce
+  const wrongNonceToken = `${b64({ kid: 'k1', alg: 'RS256' })}.${b64({
+    aud: 'correct-client',
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    tid: 'tid-1',
+    iss: 'https://login.microsoftonline.com/tid-1/v2.0',
+    nonce: 'bad-nonce',
+    email: 'user@outlook.com'
+  })}.fakesig`;
+  assert.equal(await verifyMicrosoftIdToken(wrongNonceToken, 'correct-client', 'expected-nonce'), null);
+});
+
+function computeTelegramHash(params, botToken) {
+  const secretKey = crypto.createHash('sha256').update(botToken).digest();
+  const checkKeys = Object.keys(params).filter(k => k !== 'hash').sort();
+  const dataCheckString = checkKeys.map(k => `${k}=${params[k]}`).join('\n');
+  return crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
+}
+
+test('Telegram callback rejects invalid hash and auth_date older than 10m; handles unlinked and linked users', async () => {
+  const botToken = '123456789:ABCdefGHIjklMNOpqrSTUvwxYZ';
+  const env = {
+    ...setup(),
+    TELEGRAM_BOT_TOKEN: botToken
+  };
+
+  const nowSec = Math.floor(Date.now() / 1000);
+
+  // 1. Invalid hash is rejected
+  const p1 = { id: '998877', first_name: 'Ahmet', auth_date: String(nowSec), hash: 'invalidhash123' };
+  const resBadHash = await worker.fetch(new Request('https://api.example/v1/auth/oauth/telegram/callback?' + new URLSearchParams(p1)), env);
+  assert.equal(resBadHash.status, 302);
+  assert.match(resBadHash.headers.get('Location'), /account\.html\?oauth_error=telegram#signup/);
+
+  // 2. auth_date older than 10 minutes (600s) is rejected
+  const oldDate = String(nowSec - 700);
+  const p2 = { id: '998877', first_name: 'Ahmet', auth_date: oldDate };
+  p2.hash = computeTelegramHash(p2, botToken);
+  const resOldDate = await worker.fetch(new Request('https://api.example/v1/auth/oauth/telegram/callback?' + new URLSearchParams(p2)), env);
+  assert.equal(resOldDate.status, 302);
+  assert.match(resOldDate.headers.get('Location'), /account\.html\?oauth_error=telegram#signup/);
+
+  // 3. Valid hash for unlinked user redirects to account.html#link-telegram&state=...
+  // Must NOT include telegram id, name or username in redirect URL!
+  const p3 = { id: '7770001', first_name: 'SecretGuest', username: 'secretguest', auth_date: String(nowSec) };
+  p3.hash = computeTelegramHash(p3, botToken);
+  const resUnlinked = await worker.fetch(new Request('https://api.example/v1/auth/oauth/telegram/callback?' + new URLSearchParams(p3)), env);
+  assert.equal(resUnlinked.status, 302);
+  const locUnlinked = resUnlinked.headers.get('Location');
+  assert.match(locUnlinked, /account\.html#link-telegram&state=/);
+  assert.doesNotMatch(locUnlinked, /7770001/);
+  assert.doesNotMatch(locUnlinked, /SecretGuest/);
+  assert.doesNotMatch(locUnlinked, /secretguest/);
+
+  // Extract linkToken and verify email linking
+  const hashPart = locUnlinked.split('#')[1];
+  const linkState = new URLSearchParams(hashPart).get('state');
+  assert.ok(linkState);
+
+  // Sign up / verify with email and the linkToken
+  const verified = await signUp(env, 'telegramuser@example.com', { linkToken: linkState });
+  assert.equal(verified.member.email, 'telegramuser@example.com');
+
+  // Verify member_identities table has the link
+  const memberRow = env.DB.raw.prepare('SELECT id FROM members WHERE email=?').get('telegramuser@example.com');
+  const ident = env.DB.raw.prepare(`SELECT * FROM member_identities WHERE provider='telegram' AND subject='7770001'`).get();
+  assert.ok(ident);
+  assert.equal(ident.member_id, memberRow.id);
+
+  // 4. Valid hash for linked user now directly creates session and redirects with oauth_token
+  const p4 = { id: '7770001', first_name: 'SecretGuest', auth_date: String(nowSec) };
+  p4.hash = computeTelegramHash(p4, botToken);
+  const resLinked = await worker.fetch(new Request('https://api.example/v1/auth/oauth/telegram/callback?' + new URLSearchParams(p4)), env);
+  assert.equal(resLinked.status, 302);
+  const locLinked = resLinked.headers.get('Location');
+  assert.match(locLinked, /account\.html#oauth_token=[A-Za-z0-9_-]+&oauth_provider=telegram/);
+});
+
+test('Passkey: unauthenticated user cannot get registration options, challenge is single-use and expires in 5m', async () => {
+  const env = setup();
+
+  // 1. Unauthenticated user cannot get registration options
+  const unauthRes = await call(env, '/v1/passkeys/register/options', {});
+  assert.equal(unauthRes.status, 401);
+
+  // 2. Authenticated user can get registration options
+  const user = await signUp(env, 'passkeyuser@example.com');
+  const regOpts = await call(env, '/v1/passkeys/register/options', {}, user.token);
+  assert.equal(regOpts.status, 200);
+  assert.ok(regOpts.body.challenge);
+
+  // Verify challenge saved in DB with 5-minute expiry
+  const passkeyMember = env.DB.raw.prepare('SELECT id FROM members WHERE email=?').get('passkeyuser@example.com');
+  const chRow = env.DB.raw.prepare(`SELECT * FROM passkey_challenges WHERE challenge=?`).get(regOpts.body.challenge);
+  assert.ok(chRow);
+  assert.equal(chRow.purpose, 'registration');
+  assert.equal(chRow.member_id, passkeyMember.id);
+
+  // 3. Login options can be requested without authentication (discoverable credentials)
+  const loginOpts = await call(env, '/v1/passkeys/login/options', {});
+  assert.equal(loginOpts.status, 200);
+  assert.ok(loginOpts.body.challenge);
+
+  const loginChRow = env.DB.raw.prepare(`SELECT * FROM passkey_challenges WHERE challenge=?`).get(loginOpts.body.challenge);
+  assert.ok(loginChRow);
+  assert.equal(loginChRow.purpose, 'authentication');
+
+  // 4. Challenge reuse: if challenge is deleted or expired, verification fails
+  // Manually delete the challenge to simulate it being already used
+  env.DB.raw.exec(`DELETE FROM passkey_challenges WHERE challenge='${loginOpts.body.challenge}'`);
+
+  const fakeClientDataJSON = Buffer.from(JSON.stringify({
+    type: 'webauthn.get',
+    challenge: loginOpts.body.challenge,
+    origin: ORIGIN
+  })).toString('base64url');
+
+  const reuseRes = await call(env, '/v1/passkeys/login/verify', {
+    id: 'cred-1',
+    response: { clientDataJSON: fakeClientDataJSON }
+  });
+  assert.equal(reuseRes.status, 400);
+  assert.equal(reuseRes.body.error, 'Invalid or expired challenge');
+});
+
+test('/v1/auth/providers returns microsoft and telegram keys', async () => {
+  const env = {
+    ...setup(),
+    MICROSOFT_CLIENT_ID: 'ms-id',
+    MICROSOFT_CLIENT_SECRET: 'ms-sec',
+    TELEGRAM_BOT_TOKEN: 'tg-token'
+  };
+  const prov = await call(env, '/v1/auth/providers', null, null, 'GET');
+  assert.equal(prov.status, 200);
+  assert.equal(prov.body.microsoft, true);
+  assert.equal(prov.body.telegram, true);
+  assert.equal(prov.body.google, false);
+});
+
+test('account deletion deletes passkeys, passkey_challenges, and member_identities', async () => {
+  const env = setup();
+  const user = await signUp(env, 'fullclean@example.com');
+  const cleanMember = env.DB.raw.prepare('SELECT id FROM members WHERE email=?').get('fullclean@example.com');
+
+  // Insert a passkey, a challenge, and an identity
+  env.DB.raw.exec(`INSERT INTO passkeys (credential_id, member_id, public_key, counter, created_at) VALUES ('pk-clean-1', '${cleanMember.id}', 'pubkey-b64', 0, datetime('now'))`);
+  env.DB.raw.exec(`INSERT INTO passkey_challenges (id, challenge, member_id, purpose, expires_at, created_at) VALUES ('ch-clean-1', 'ch-val-1', '${cleanMember.id}', 'registration', datetime('now', '+5 minutes'), datetime('now'))`);
+  env.DB.raw.exec(`INSERT INTO member_identities (provider, subject, member_id, created_at) VALUES ('telegram', 'tg-clean-1', '${cleanMember.id}', datetime('now'))`);
+
+  assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id=?`).get(cleanMember.id).n, 1);
+  assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM passkey_challenges WHERE member_id=?`).get(cleanMember.id).n, 1);
+  assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM member_identities WHERE member_id=?`).get(cleanMember.id).n, 1);
+
+  const delRes = await call(env, '/v1/me/delete', {}, user.token);
+  assert.equal(delRes.status, 200);
+  assert.equal(delRes.body.deleted, true);
+
+  assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id=?`).get(cleanMember.id).n, 0);
+  assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM passkey_challenges WHERE member_id=?`).get(cleanMember.id).n, 0);
+  assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM member_identities WHERE member_id=?`).get(cleanMember.id).n, 0);
 });
 
 

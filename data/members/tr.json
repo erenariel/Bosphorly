@@ -49,5 +49,12 @@
   "bCouponNote": "İndirim, sizinle teyit ettiğimiz fiyata uygulanır. Her talepte bir kupon.",
   "bAfter": "Kuponla tahmini toplam",
   "bCouponFail": "Bu kupon ayrılamadı. Başka bir kupon seç ya da kuponsuz devam et.",
-  "bSignInHint": "Üyelere hoş geldin kuponu var. Giriş yap →"
+  "bSignInHint": "Üyelere hoş geldin kuponu var. Giriş yap →",
+  "mOAuthUnavailable": "Bu giriş yöntemi şu an kullanılamıyor, e-posta koduyla devam edebilirsin.",
+  "mContinueWith": "{p} ile devam et",
+  "mPasskeySignIn": "Passkey ile giriş",
+  "mPasskeyAdd": "Bu cihaza passkey ekle",
+  "mPasskeys": "Kayıtlı passkey'ler",
+  "mPasskeyDelete": "Sil",
+  "mTelegramLinkNote": "Telegram hesabını Bosphorly üyeliğine bağlamak için e-posta kodunla doğrula."
 }

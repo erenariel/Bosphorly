@@ -49,5 +49,12 @@
   "bCouponNote": "De korting geldt voor de prijs die we met je bevestigen. Eén coupon per aanvraag.",
   "bAfter": "Geschat totaal met coupon",
   "bCouponFail": "Deze coupon kon niet worden gereserveerd. Kies een andere of ga verder zonder coupon.",
-  "bSignInHint": "Leden krijgen een welkomstcoupon. Inloggen →"
+  "bSignInHint": "Leden krijgen een welkomstcoupon. Inloggen →",
+  "mOAuthUnavailable": "Deze inlogmethode is momenteel niet beschikbaar; u kunt doorgaan met een e-mailcode.",
+  "mContinueWith": "Doorgaan met {p}",
+  "mPasskeySignIn": "Inloggen met passkey",
+  "mPasskeyAdd": "Passkey toevoegen aan dit apparaat",
+  "mPasskeys": "Geregistreerde passkeys",
+  "mPasskeyDelete": "Verwijderen",
+  "mTelegramLinkNote": "Bevestig met een e-mailcode om uw Telegram-account te koppelen aan Bosphorly."
 }

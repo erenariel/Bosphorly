@@ -49,5 +49,12 @@
   "bCouponNote": "割引は、お客様と確認した料金に適用されます。クーポンは1件のリクエストにつき1枚です。",
   "bAfter": "クーポン適用後の合計の目安",
   "bCouponFail": "このクーポンを確保できませんでした。別のクーポンを選ぶか、クーポンなしで続けてください。",
-  "bSignInHint": "会員はウェルカムクーポンがもらえます。ログイン →"
+  "bSignInHint": "会員はウェルカムクーポンがもらえます。ログイン →",
+  "mOAuthUnavailable": "このログイン方法は現在ご利用いただけません。メールコードで続行できます。",
+  "mContinueWith": "{p} で続行",
+  "mPasskeySignIn": "パスキーでログイン",
+  "mPasskeyAdd": "このデバイスにパスキーを追加",
+  "mPasskeys": "登録済みパスキー",
+  "mPasskeyDelete": "削除",
+  "mTelegramLinkNote": "メールコードで認証し、TelegramアカウントをBosphorlyメンバーシップに連携してください。"
 }

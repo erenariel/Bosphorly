@@ -49,5 +49,12 @@
   "bCouponNote": "折扣适用于我们与你确认的价格。每个申请限用一张优惠券。",
   "bAfter": "使用优惠券后的预计总价",
   "bCouponFail": "无法预留这张优惠券。请选择其他优惠券，或不使用优惠券继续。",
-  "bSignInHint": "会员可获得新人优惠券。登录 →"
+  "bSignInHint": "会员可获得新人优惠券。登录 →",
+  "mOAuthUnavailable": "此登录方式当前不可用，您可以使用邮箱验证码继续。",
+  "mContinueWith": "通过 {p} 继续",
+  "mPasskeySignIn": "使用通行密钥登录",
+  "mPasskeyAdd": "为此设备添加通行密钥",
+  "mPasskeys": "已注册的通行密钥",
+  "mPasskeyDelete": "删除",
+  "mTelegramLinkNote": "使用邮箱验证码验证，将您的 Telegram 账号绑定至 Bosphorly 会员。"
 }

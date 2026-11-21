@@ -64,15 +64,10 @@ footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12
 .m-chip{border:1px solid #cbd8eb;background:#fff;color:var(--ink);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
 .m-chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
 .m-inbox-btn{display:inline-flex;align-items:center;gap:6px;background:#eef5ff;border:1px solid #b9d2f5;color:#0e3a7a;border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:800;margin:0 0 8px;width:fit-content}
-.m-oauth-backdrop{position:fixed;inset:0;background:rgba(10,23,83,.55);backdrop-filter:blur(3px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:16px}
-.m-oauth-modal{background:#fff;border:1px solid var(--line);border-radius:20px;max-width:440px;width:100%;padding:22px;box-shadow:0 22px 60px rgba(10,23,83,.28);display:grid;gap:12px}
-.m-oauth-head{display:flex;align-items:center;gap:12px}
-.m-oauth-head svg{width:32px;height:32px;flex:none}
-.m-oauth-head h3{margin:0;font-size:18px;line-height:1.25}
-.m-oauth-head small{display:block;color:var(--muted);font-size:12.5px;font-weight:600;margin-top:2px}
-.m-oauth-perms{background:#f5f8fc;border:1px solid var(--line);border-radius:12px;padding:11px 13px;margin:0;list-style:none;display:grid;gap:6px;font-size:12.5px;color:#274066}
-.m-oauth-perms li{display:flex;gap:8px;align-items:flex-start}
-.m-oauth-perms b{color:#0f9d58}
+.m-passkey-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;background:#f8fbff;border:1px solid var(--line);border-radius:10px;margin-bottom:6px}
+.m-passkey-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;min-height:44px;font-weight:800}
+.m-telegram-widget{display:flex;justify-content:center;margin:8px 0 12px}
+.m-alert-box{background:#fff8ee;border:1px solid #f6d8a7;color:#7e4300;border-radius:12px;padding:12px 14px;font-size:13px;margin:0 0 14px;line-height:1.4}
 @media(max-width:560px){.m-providers,.m-form-grid{grid-template-columns:1fr}}
 .m-check{display:flex;gap:8px;align-items:flex-start;font-weight:600;font-size:13px}.m-check input{min-height:auto;width:20px;height:20px;margin:1px 0 0;flex:none}
 .m-msg{color:#a12a2a;font-size:13px;min-height:18px;margin:4px 0 0}.m-msg.ok{color:#0f7b45}.m-sent{font-size:13px;color:var(--muted);margin:0 0 6px}
@@ -145,5 +140,5 @@ footer{border-top:1px solid #dfe7f2;padding:24px 20px;color:#71849d;font-size:12
 </div>
 </main>
 <footer><span id="footer">Bosphorly · Nothing on this page is sent to a server.</span> · <a href="privacy.html" class="privacy-link" style="text-decoration:underline">🔒 Privacy · KVKK</a></footer>
-<script src="account-store.js"></script><script src="config/api.js"></script><script src="member.js"></script><script src="account.js" defer></script><script src="account-member.js" defer></script>
+<script src="account-store.js"></script><script src="config/api.js"></script><script src="assets/vendor/simplewebauthn-browser.min.js"></script><script src="member.js"></script><script src="account.js" defer></script><script src="account-member.js" defer></script>
 </body></html>

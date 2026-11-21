@@ -48,7 +48,8 @@
       fulfilledCount: m.fulfilledCount || 0,
       usableCouponCount: coupons.filter(c => c.status === 'issued').length,
       marketing: !!m.marketing,
-      requests: requests.slice(0, 50)
+      requests: requests.slice(0, 50),
+      passkeys: Array.isArray(m.passkeys) ? m.passkeys : []
     };
   }
   function mirrorToLocal(m) {
@@ -225,6 +226,50 @@
       if (!this.signedIn()) return [];
       try { const p = await this.profile(); return (p.coupons || []).filter(c => c.status === 'issued').sort((a, b) => b.percentBps - a.percentBps || a.expiresAt.localeCompare(b.expiresAt)); }
       catch { return []; }
+    },
+    supportsPasskey: () => {
+      try {
+        const s = window.SimpleWebAuthnBrowser;
+        return !!(s && typeof s.browserSupportsWebAuthn === 'function' && s.browserSupportsWebAuthn());
+      } catch {
+        return false;
+      }
+    },
+    async passkeyLogin() {
+      const swa = window.SimpleWebAuthnBrowser;
+      if (!swa || typeof swa.startAuthentication !== 'function') throw new ApiError(400, 'Passkey not supported');
+      const options = await api('/v1/passkeys/login/options');
+      const asseResp = await swa.startAuthentication({ optionsJSON: options });
+      const r = await api('/v1/passkeys/login/verify', asseResp);
+      store.set(SESSION, r.token);
+      store.set(REF, null);
+      syncedOnce = false;
+      saveMember(r.member);
+      r.member = await syncLocalToServer(r.member);
+      return r;
+    },
+    async passkeyRegister() {
+      const swa = window.SimpleWebAuthnBrowser;
+      if (!swa || typeof swa.startRegistration !== 'function') throw new ApiError(400, 'Passkey not supported');
+      const options = await api('/v1/passkeys/register/options');
+      const attResp = await swa.startRegistration({ optionsJSON: options });
+      const r = await api('/v1/passkeys/register/verify', attResp);
+      if (me && r.passkey) {
+        const cur = Array.isArray(me.passkeys) ? me.passkeys : [];
+        saveMember({ ...me, passkeys: [r.passkey, ...cur.filter(x => x.id !== r.passkey.id)] });
+      }
+      return r;
+    },
+    async passkeys() {
+      const r = await api('/v1/passkeys');
+      return Array.isArray(r) ? r : (r.passkeys || []);
+    },
+    async removePasskey(id) {
+      const res = await api('/v1/passkeys/delete', { id });
+      if (me && Array.isArray(me.passkeys)) {
+        saveMember({ ...me, passkeys: me.passkeys.filter(x => x.id !== id) });
+      }
+      return res;
     },
     ApiError
   });

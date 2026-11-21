@@ -49,5 +49,12 @@
   "bCouponNote": "Popust se primjenjuje na cijenu koju s vama potvrdimo. Jedan kupon po upitu.",
   "bAfter": "Procijenjeni ukupni iznos s kuponom",
   "bCouponFail": "Ovaj kupon nije bilo moguće rezervisati. Odaberite drugi ili nastavite bez kupona.",
-  "bSignInHint": "Članovi dobivaju kupon dobrodošlice. Prijavite se →"
+  "bSignInHint": "Članovi dobivaju kupon dobrodošlice. Prijavite se →",
+  "mOAuthUnavailable": "Ovaj način prijave trenutno nije dostupan; možete nastaviti s kodom poslanim na e-poštu.",
+  "mContinueWith": "Nastavi s {p}",
+  "mPasskeySignIn": "Prijava s passkeyem",
+  "mPasskeyAdd": "Dodaj passkey na ovaj uređaj",
+  "mPasskeys": "Registrovani passkeyevi",
+  "mPasskeyDelete": "Obriši",
+  "mTelegramLinkNote": "Potvrdite kodom iz e-pošte kako biste povezali Telegram račun s Bosphorlyjem."
 }

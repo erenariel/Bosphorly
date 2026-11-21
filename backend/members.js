@@ -7,6 +7,13 @@
 // Rewards follow completed tours, not sign-ups: the referral, second-tour and loyalty coupons are issued
 // only when a partner marks a member's request as fulfilled.
 
+import {
+  generateRegistrationOptions,
+  verifyRegistrationResponse,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse
+} from '@simplewebauthn/server';
+
 export const STAMPS_GOAL = 5;
 const SESSION_DAYS = 90;
 const CODE_MINUTES = 10;
@@ -21,6 +28,19 @@ export const sqlTime = d => d.toISOString().replace('T', ' ').slice(0, 19); // s
 const later = (ms, from = new Date()) => sqlTime(new Date(from.getTime() + ms));
 const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
 const sha256 = async s => hex(await crypto.subtle.digest('SHA-256', enc.encode(s)));
+
+function b64ToUint8Array(b64) {
+  const pad = b64.replace(/-/g, '+').replace(/_/g, '/');
+  const bin = atob(pad + '='.repeat((4 - (pad.length % 4)) % 4));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+function uint8ArrayToB64(bytes) {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin);
+}
 async function hmac(secret, s) {
   const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   return hex(await crypto.subtle.sign('HMAC', key, enc.encode(s)));
@@ -143,20 +163,27 @@ async function profile(env, m) {
   const doneRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
   const fulfilledCount = Number(doneRow?.n || 0);
   const ti = tierInfo(env, fulfilledCount);
+  let passkeys = [];
+  try {
+    passkeys = (await env.DB.prepare(
+      `SELECT credential_id AS id, created_at AS createdAt, last_used_at AS lastUsedAt FROM passkeys WHERE member_id=? ORDER BY created_at DESC`).bind(m.id).all()).results;
+  } catch {}
   return {
     email: m.email, name: m.name, phone: m.phone || null, hotel: m.hotel || null, room: m.room || null,
     lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
     referralCode: m.referral_code, marketing: !!m.marketing_consent,
-    stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, ...ti, coupons, requests
+    stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, ...ti, coupons, requests, passkeys
   };
 }
 
 // --- routes -------------------------------------------------------------------------------------------
 const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/me', '/v1/me/requests', '/v1/me/requests/delete', '/v1/me/delete',
   '/v1/newsletter/subscribe', '/v1/newsletter/unsubscribe', '/v1/admin/newsletter/send',
-  '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns']);
-const OAUTH_PROVIDERS = new Set(['google', 'yandex', 'facebook', 'apple']);
-export const isMemberRoute = path => ROUTES.has(path) || path.startsWith('/v1/auth/oauth/');
+  '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns',
+  '/v1/passkeys', '/v1/passkeys/register/options', '/v1/passkeys/register/verify',
+  '/v1/passkeys/login/options', '/v1/passkeys/login/verify', '/v1/passkeys/delete']);
+const OAUTH_PROVIDERS = new Set(['google', 'yandex', 'facebook', 'apple', 'microsoft', 'telegram']);
+export const isMemberRoute = path => ROUTES.has(path) || path.startsWith('/v1/auth/oauth/') || path.startsWith('/v1/passkeys');
 
 const redirect = location => new Response(null, { status: 302, headers: { Location: location, 'Cache-Control': 'no-store' } });
 const b64urlEncode = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -170,17 +197,19 @@ function enabledProviders(env) {
     google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
     yandex: !!(env.YANDEX_CLIENT_ID && env.YANDEX_CLIENT_SECRET),
     facebook: !!(env.FACEBOOK_CLIENT_ID && env.FACEBOOK_CLIENT_SECRET),
-    apple: !!env.APPLE_CLIENT_ID
+    apple: !!env.APPLE_CLIENT_ID,
+    microsoft: !!(env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET),
+    telegram: !!env.TELEGRAM_BOT_TOKEN
   };
 }
 
-async function signState(pepper, obj) {
+export async function signState(pepper, obj) {
   const payload = b64urlEncode(JSON.stringify(obj));
   const sig = await hmac(pepper, payload);
   return payload + '.' + sig;
 }
 
-async function verifyState(pepper, stateStr) {
+export async function verifyState(pepper, stateStr) {
   if (typeof stateStr !== 'string' || !stateStr.includes('.')) return null;
   const [payload, sig] = stateStr.split('.');
   if (!payload || !sig || !equal(sig, await hmac(pepper, payload))) return null;
@@ -270,6 +299,29 @@ async function verifyAppleIdToken(idToken, clientId, expectedNonce) {
   return valid ? claims : null;
 }
 
+export async function verifyMicrosoftIdToken(idToken, clientId, expectedNonce) {
+  const parts = String(idToken || '').split('.');
+  if (parts.length !== 3) return null;
+  let header, claims;
+  try { header = JSON.parse(b64urlDecode(parts[0])); claims = JSON.parse(b64urlDecode(parts[1])); } catch { return null; }
+  if (!header.kid || claims.aud !== clientId) return null;
+  if (!claims.exp || claims.exp * 1000 < Date.now()) return null;
+  if (expectedNonce && claims.nonce !== expectedNonce) return null;
+  if (!claims.tid || typeof claims.iss !== 'string' || claims.iss !== `https://login.microsoftonline.com/${claims.tid}/v2.0`) return null;
+  const jwksRes = await fetch('https://login.microsoftonline.com/common/discovery/v2.0/keys');
+  if (!jwksRes.ok) return null;
+  const { keys } = await jwksRes.json();
+  const jwk = (keys || []).find(k => k.kid === header.kid);
+  if (!jwk) return null;
+  const pubKey = await crypto.subtle.importKey('jwk', jwk, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
+  const sigStr = parts[2].replace(/-/g, '+').replace(/_/g, '/');
+  const sigBin = atob(sigStr + '='.repeat((4 - (sigStr.length % 4)) % 4));
+  const sigBytes = new Uint8Array(sigBin.length);
+  for (let i = 0; i < sigBin.length; i++) sigBytes[i] = sigBin.charCodeAt(i);
+  const valid = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', pubKey, sigBytes, enc.encode(parts[0] + '.' + parts[1]));
+  return valid ? claims : null;
+}
+
 async function handleOAuth(request, env, url) {
   const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
   const m = url.pathname.match(/^\/v1\/auth\/oauth\/([a-z]+)(\/callback)?$/);
@@ -289,7 +341,7 @@ async function handleOAuth(request, env, url) {
     const interests = sanitizeInterests((url.searchParams.get('interests') || '').split(',').map(x => x.trim()).filter(Boolean));
     const marketing = url.searchParams.get('marketing') === '1';
     if (!avail[provider] || !env.CODE_PEPPER) {
-      return redirect(`${pubOrigin}/account.html?lang=${encodeURIComponent(lang)}&oauth_modal=${encodeURIComponent(provider)}#signup`);
+      return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
     }
     const nonce = randomString(16);
     const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, phone, hotelName, country, interests, marketing, nonce });
@@ -309,14 +361,53 @@ async function handleOAuth(request, env, url) {
       const q = new URLSearchParams({ client_id: env.APPLE_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code id_token', response_mode: 'form_post', scope: 'name email', state, nonce });
       return redirect('https://appleid.apple.com/auth/authorize?' + q);
     }
+    if (provider === 'microsoft') {
+      const q = new URLSearchParams({ client_id: env.MICROSOFT_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'openid email profile', state, nonce });
+      return redirect('https://login.microsoftonline.com/common/oauth2/v2.0/authorize?' + q);
+    }
+    if (provider === 'telegram') {
+      return redirect(`${pubOrigin}/account.html?oauth_error=telegram#signup`);
+    }
   }
 
-  // OAuth callback: exchange authorization code (or verify Apple id_token) and create a session.
+  // OAuth callback: exchange authorization code (or verify Apple/Microsoft id_token / Telegram HMAC) and create a session.
   let params = url.searchParams;
   if (request.method === 'POST') {
     const formText = await request.text();
     params = new URLSearchParams(formText);
   }
+
+  if (provider === 'telegram') {
+    if (!isCallback || request.method !== 'GET') fail(405, 'Method not allowed');
+    if (!env.TELEGRAM_BOT_TOKEN) return redirect(`${pubOrigin}/account.html?oauth_error=telegram#signup`);
+    const authDate = parseInt(params.get('auth_date') || '0', 10);
+    const nowSec = Math.floor(Date.now() / 1000);
+    if (!authDate || Math.abs(nowSec - authDate) > 600) {
+      return redirect(`${pubOrigin}/account.html?oauth_error=telegram#signup`);
+    }
+    const checkKeys = [...params.keys()].filter(k => k !== 'hash').sort();
+    const dataCheckString = checkKeys.map(k => `${k}=${params.get(k)}`).join('\n');
+    const secretKey = await crypto.subtle.digest('SHA-256', enc.encode(env.TELEGRAM_BOT_TOKEN));
+    const hmacKey = await crypto.subtle.importKey('raw', secretKey, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const sig = hex(await crypto.subtle.sign('HMAC', hmacKey, enc.encode(dataCheckString)));
+    if (!equal(sig, params.get('hash') || '')) {
+      return redirect(`${pubOrigin}/account.html?oauth_error=telegram#signup`);
+    }
+    const telegramId = String(params.get('id') || '');
+    if (!telegramId) return redirect(`${pubOrigin}/account.html?oauth_error=telegram#signup`);
+    const ident = await env.DB.prepare(`SELECT member_id FROM member_identities WHERE provider='telegram' AND subject=?`).bind(telegramId).first();
+    if (ident) {
+      const m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(ident.member_id).first();
+      if (m) {
+        const t = token();
+        await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
+        return redirect(`${pubOrigin}/account.html#oauth_token=${encodeURIComponent(t)}&oauth_provider=telegram`);
+      }
+    }
+    const linkState = await signState(env.CODE_PEPPER, { p: 'telegram_link', sub: telegramId, t: Date.now() });
+    return redirect(`${pubOrigin}/account.html#link-telegram&state=${encodeURIComponent(linkState)}`);
+  }
+
   const st = env.CODE_PEPPER ? await verifyState(env.CODE_PEPPER, params.get('state') || '') : null;
   if (!st || st.p !== provider || params.get('error')) {
     return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
@@ -333,6 +424,7 @@ async function handleOAuth(request, env, url) {
       const uRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', { headers: { Authorization: 'Bearer ' + tok.access_token } });
       if (!uRes.ok) throw 0;
       const u = await uRes.json();
+      if (u.email_verified !== true) throw 0;
       email = u.email || ''; name = u.name || '';
     } else if (provider === 'yandex') {
       const tokRes = await fetch('https://oauth.yandex.com/token', {
@@ -365,6 +457,24 @@ async function handleOAuth(request, env, url) {
           name = [u?.name?.firstName, u?.name?.lastName].filter(Boolean).join(' ');
         } catch {}
       }
+    } else if (provider === 'microsoft') {
+      const tokRes = await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ code: params.get('code') || '', client_id: env.MICROSOFT_CLIENT_ID, client_secret: env.MICROSOFT_CLIENT_SECRET, redirect_uri: callbackUrl, grant_type: 'authorization_code' })
+      });
+      if (!tokRes.ok) throw 0;
+      const tok = await tokRes.json();
+      const claims = await verifyMicrosoftIdToken(tok.id_token, env.MICROSOFT_CLIENT_ID, st.nonce);
+      if (!claims) throw 0;
+      if (claims.email_verified !== undefined && claims.email_verified !== true) throw 0;
+      if (typeof claims.email === 'string' && claims.email.trim()) {
+        email = claims.email.trim();
+      } else if (typeof claims.preferred_username === 'string' && claims.preferred_username.includes('@')) {
+        email = claims.preferred_username.trim();
+      } else {
+        throw 0;
+      }
+      name = claims.name || '';
     }
     if (!validEmail(email)) throw 0;
     const session = await createOrLoadMemberSession(env, email, {
@@ -385,6 +495,11 @@ export async function handleMembers(request, env, url) {
     if (p === '/v1/auth/providers' && request.method === 'GET') return json(enabledProviders(env));
     if (p.startsWith('/v1/auth/oauth/')) return await handleOAuth(request, env, url);
     if (request.method === 'GET' && p === '/v1/me') return json(await profile(env, await memberFromSession(request, env)));
+    if (request.method === 'GET' && p === '/v1/passkeys') {
+      const m = await memberFromSession(request, env);
+      const list = (await env.DB.prepare(`SELECT credential_id AS id, created_at AS createdAt, last_used_at AS lastUsedAt, transports FROM passkeys WHERE member_id=? ORDER BY created_at DESC`).bind(m.id).all()).results;
+      return json({ passkeys: list });
+    }
     if (request.method === 'GET' && p === '/v1/newsletter/unsubscribe') {
       const email = (url.searchParams.get('email') || '').trim().toLowerCase();
       const sig = url.searchParams.get('sig') || '';
@@ -425,7 +540,141 @@ export async function handleMembers(request, env, url) {
         fail(400, 'Invalid or expired code');
       }
       await env.DB.prepare(`UPDATE login_codes SET used=1 WHERE id=?`).bind(row.id).run();
-      return json(await createOrLoadMemberSession(env, email, body));
+      const sessionResult = await createOrLoadMemberSession(env, email, body);
+      const linkTok = body.linkToken || body.linkState || body.telegramLinkToken;
+      if (linkTok && env.CODE_PEPPER) {
+        const st = await verifyState(env.CODE_PEPPER, linkTok);
+        if (st && st.p === 'telegram_link' && st.sub && Math.abs(Date.now() - st.t) <= 10 * 60 * 1000) {
+          const mid = (await env.DB.prepare(`SELECT id FROM members WHERE email=?`).bind(email).first())?.id;
+          if (mid) {
+            await env.DB.prepare(`INSERT OR REPLACE INTO member_identities (provider, subject, member_id, created_at) VALUES (?,?,?,?)`)
+              .bind('telegram', String(st.sub), mid, sqlTime(new Date())).run();
+          }
+        }
+      }
+      return json(sessionResult);
+    }
+
+    if (p === '/v1/passkeys/register/options') {
+      const m = await memberFromSession(request, env);
+      const rpID = env.PASSKEY_RP_ID || 'bosphorly.com';
+      const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(m.id).all()).results;
+      const excludeCredentials = existing.map(k => ({
+        id: k.credential_id,
+        transports: k.transports ? JSON.parse(k.transports) : undefined
+      }));
+      const options = await generateRegistrationOptions({
+        rpName: 'Bosphorly',
+        rpID,
+        userName: m.email,
+        userID: new TextEncoder().encode(m.id),
+        excludeCredentials,
+        timeout: 60000,
+        attestationType: 'none',
+        authenticatorSelection: { residentKey: 'preferred', userVerification: 'preferred' }
+      });
+      await env.DB.prepare(`INSERT OR REPLACE INTO passkey_challenges (id, challenge, member_id, purpose, expires_at, created_at) VALUES (?,?,?,?,?,?)`)
+        .bind(id(), options.challenge, m.id, 'registration', later(5 * 60 * 1000), sqlTime(new Date())).run();
+      return json(options);
+    }
+
+    if (p === '/v1/passkeys/register/verify') {
+      const m = await memberFromSession(request, env);
+      const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
+      const rpID = Array.from(new Set([env.PASSKEY_RP_ID || 'bosphorly.com', 'bosphorly.com', url.hostname]));
+      const originList = Array.from(new Set(['https://bosphorly.com', 'https://www.bosphorly.com', pubOrigin, url.origin].filter(Boolean)));
+
+      const clientDataRaw = body?.response?.clientDataJSON;
+      if (!clientDataRaw) fail(400, 'Invalid passkey response');
+      let clientData;
+      try { clientData = JSON.parse(b64urlDecode(clientDataRaw)); } catch { fail(400, 'Invalid clientDataJSON'); }
+      const ch = clientData.challenge;
+      if (!ch) fail(400, 'Challenge missing');
+
+      const chRow = await env.DB.prepare(`SELECT * FROM passkey_challenges WHERE challenge=? AND member_id=? AND purpose='registration' AND expires_at>?`).bind(ch, m.id, sqlTime(new Date())).first();
+      if (!chRow) fail(400, 'Invalid or expired challenge');
+      await env.DB.prepare(`DELETE FROM passkey_challenges WHERE id=?`).bind(chRow.id).run();
+
+      const verification = await verifyRegistrationResponse({
+        response: body,
+        expectedChallenge: ch,
+        expectedOrigin: originList,
+        expectedRPID: rpID
+      });
+      if (!verification.verified || !verification.registrationInfo) fail(400, 'Registration verification failed');
+      const { credential } = verification.registrationInfo;
+      const credentialID = credential.id;
+      const publicKey = uint8ArrayToB64(credential.publicKey);
+      const counter = credential.counter || 0;
+      const now = sqlTime(new Date());
+      await env.DB.prepare(`INSERT OR REPLACE INTO passkeys (credential_id, member_id, public_key, counter, transports, created_at) VALUES (?,?,?,?,?,?)`)
+        .bind(credentialID, m.id, publicKey, counter, transports, now).run();
+      return json({ verified: true, passkey: { id: credentialID, createdAt: now, lastUsedAt: null } });
+    }
+
+    if (p === '/v1/passkeys/login/options') {
+      const rpID = env.PASSKEY_RP_ID || 'bosphorly.com';
+      const options = await generateAuthenticationOptions({
+        rpID,
+        timeout: 60000,
+        userVerification: 'preferred'
+      });
+      await env.DB.prepare(`INSERT OR REPLACE INTO passkey_challenges (id, challenge, member_id, purpose, expires_at, created_at) VALUES (?,?,NULL,'authentication',?,?)`)
+        .bind(id(), options.challenge, later(5 * 60 * 1000), sqlTime(new Date())).run();
+      return json(options);
+    }
+
+    if (p === '/v1/passkeys/login/verify') {
+      const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
+      const rpID = Array.from(new Set([env.PASSKEY_RP_ID || 'bosphorly.com', 'bosphorly.com', url.hostname]));
+      const originList = Array.from(new Set(['https://bosphorly.com', 'https://www.bosphorly.com', pubOrigin, url.origin].filter(Boolean)));
+
+      const clientDataRaw = body?.response?.clientDataJSON;
+      if (!clientDataRaw) fail(400, 'Invalid passkey response');
+      let clientData;
+      try { clientData = JSON.parse(b64urlDecode(clientDataRaw)); } catch { fail(400, 'Invalid clientDataJSON'); }
+      const ch = clientData.challenge;
+      if (!ch) fail(400, 'Challenge missing');
+
+      const chRow = await env.DB.prepare(`SELECT * FROM passkey_challenges WHERE challenge=? AND purpose='authentication' AND expires_at>?`).bind(ch, sqlTime(new Date())).first();
+      if (!chRow) fail(400, 'Invalid or expired challenge');
+      await env.DB.prepare(`DELETE FROM passkey_challenges WHERE id=?`).bind(chRow.id).run();
+
+      const credId = body.id || body.rawId;
+      if (!credId) fail(400, 'Missing credential id');
+      const passkey = await env.DB.prepare(`SELECT * FROM passkeys WHERE credential_id=?`).bind(credId).first();
+      if (!passkey) fail(400, 'Passkey not recognized');
+
+      const m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(passkey.member_id).first();
+      if (!m) fail(400, 'Member not found');
+
+      const verification = await verifyAuthenticationResponse({
+        response: body,
+        expectedChallenge: ch,
+        expectedOrigin: originList,
+        expectedRPID: rpID,
+        credential: {
+          id: passkey.credential_id,
+          publicKey: b64ToUint8Array(passkey.public_key),
+          counter: passkey.counter || 0,
+          transports: passkey.transports ? JSON.parse(passkey.transports) : undefined
+        }
+      });
+      if (!verification.verified) fail(400, 'Authentication verification failed');
+      await env.DB.prepare(`UPDATE passkeys SET counter=?, last_used_at=? WHERE credential_id=?`)
+        .bind(verification.authenticationInfo.newCounter, sqlTime(new Date()), passkey.credential_id).run();
+
+      const t = token();
+      await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
+      return json({ token: t, member: await profile(env, m) });
+    }
+
+    if (p === '/v1/passkeys/delete') {
+      const m = await memberFromSession(request, env);
+      const credId = str(body?.id, 255);
+      if (!credId) fail(400, 'Invalid credential id');
+      await env.DB.prepare(`DELETE FROM passkeys WHERE credential_id=? AND member_id=?`).bind(credId, m.id).run();
+      return json({ deleted: true });
     }
 
     if (p === '/v1/auth/logout') {
@@ -497,6 +746,9 @@ export async function handleMembers(request, env, url) {
         env.DB.prepare(`DELETE FROM sessions WHERE member_id=?`).bind(m.id),
         env.DB.prepare(`DELETE FROM login_codes WHERE email=?`).bind(m.email),
         env.DB.prepare(`DELETE FROM newsletter_subscribers WHERE email=?`).bind(m.email),
+        env.DB.prepare(`DELETE FROM passkeys WHERE member_id=?`).bind(m.id),
+        env.DB.prepare(`DELETE FROM passkey_challenges WHERE member_id=?`).bind(m.id),
+        env.DB.prepare(`DELETE FROM member_identities WHERE member_id=?`).bind(m.id),
         env.DB.prepare(`DELETE FROM members WHERE id=?`).bind(m.id)
       ]);
       return json({ deleted: true });

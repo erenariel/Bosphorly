@@ -49,5 +49,12 @@
   "bCouponNote": "The discount is applied to the price we confirm with you. One coupon per request.",
   "bAfter": "Estimated total with coupon",
   "bCouponFail": "This coupon could not be reserved. Choose another one or continue without a coupon.",
-  "bSignInHint": "Members get a welcome coupon. Sign in →"
+  "bSignInHint": "Members get a welcome coupon. Sign in →",
+  "mOAuthUnavailable": "This sign-in method is currently unavailable; you can continue with an email code.",
+  "mContinueWith": "Continue with {p}",
+  "mPasskeySignIn": "Sign in with passkey",
+  "mPasskeyAdd": "Add passkey to this device",
+  "mPasskeys": "Registered passkeys",
+  "mPasskeyDelete": "Delete",
+  "mTelegramLinkNote": "Verify with an email code to link your Telegram account to your Bosphorly membership."
 }
