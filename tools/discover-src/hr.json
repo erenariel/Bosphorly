@@ -324,7 +324,7 @@
     "toFGuests": "Broj osoba",
     "toFHotel": "Hotel",
     "toFName": "Ime i prezime",
-    "toFPhone": "Mobitel / e-poštu (s pozivnim brojem)",
+    "toFPhone": "Mobitel (s pozivnim brojem)",
     "toFNotes": "Napomena (neobavezno)",
     "toFAck": "Slažem se da se moj upit i kontakt podaci šalju Bosphorlyju putem e-poštua. Cijena i dostupnost potvrđuju se prije rezervacije; na ovoj stranici ništa se ne plaća.",
     "toFSend": "Pošalji upit putem e-poštua →",
@@ -332,7 +332,8 @@
     "toFDone": "Upit {ref} je spreman. Otvara se e-poštu: pritisnite Pošalji da stigne Bosphorlyju.",
     "toWaTitle": "Bosphorly upit za turu",
     "toWaRef": "Referenca",
-    "toMyReq": "Moji upiti →"
+    "toMyReq": "Moji upiti →",
+    "toFEmail": "E-pošta (neobavezno)"
   },
   "tours": {
     "jewish-heritage": [

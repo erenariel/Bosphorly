@@ -324,7 +324,7 @@
   "toFGuests": "Jumlah orang",
   "toFHotel": "Hotel",
   "toFName": "Nama lengkap",
-  "toFPhone": "Ponsel / email (dengan kode negara)",
+  "toFPhone": "Ponsel (dengan kode negara)",
   "toFNotes": "Catatan (opsional)",
   "toFAck": "Saya setuju permintaan dan kontak saya dikirim ke Bosphorly lewat email. Harga dan ketersediaan dikonfirmasi sebelum pemesanan; tidak ada pembayaran di situs ini.",
   "toFSend": "Kirim permintaan lewat email →",
@@ -332,7 +332,8 @@
   "toFDone": "Permintaan {ref} siap. email sedang dibuka: tekan kirim agar sampai ke Bosphorly.",
   "toWaTitle": "Permintaan tur Bosphorly",
   "toWaRef": "Referensi",
-  "toMyReq": "Lihat permintaan saya →"
+  "toMyReq": "Lihat permintaan saya →",
+  "toFEmail": "Email (opsional)"
  },
  "tours": {
   "jewish-heritage": [

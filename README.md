@@ -21,7 +21,7 @@ Demo, bu deponun `main` dalından GitHub Pages ile otomatik yayınlanır; `main`
 [Transfer formu](https://bosphorly.com/#booking) · [Tur karşılaştırma](https://bosphorly.com/prices.html) · [İstanbul haritası](https://bosphorly.com/map.html) · [English](https://bosphorly.com/?lang=en)
 
 
-> **How Bosphorly works:** Bosphorly is a referral intermediary, the hotel reception's tour brochure desk moved online. Travelers compare licensed Istanbul tour and transfer companies and send a request through Bosphorly; the company confirms and delivers the service; in the current hotel pilot the guest pays in cash at the hotel reception (cash only; tour companies add 10% on card payments); Bosphorly earns a contracted commission from the company for each completed referral. Hotels can join as referral partners. Details: [business model](docs/BUSINESS-MODEL.md).
+> **How Bosphorly works:** Bosphorly is a referral intermediary, the hotel reception's tour brochure desk moved online. Travelers compare licensed Istanbul tour and transfer companies and send a request through Bosphorly; the company confirms and delivers the service; the payment method is shared with the guest when Bosphorly confirms the request; Bosphorly earns a contracted commission from the company for each completed referral. Hotels can join as referral partners. Details: [business model](docs/BUSINESS-MODEL.md).
 
 > **Public prototype · 16 November 2026.** This is not a live agency, payment service, reservation engine, or partner portal. No bookings or charges are made. All demo prices, provider cards, referral KPIs, commissions and sample transactions are illustrative or third-party research, **not confirmed commercial offers**.
 

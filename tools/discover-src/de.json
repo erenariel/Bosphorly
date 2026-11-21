@@ -324,7 +324,7 @@
   "toFGuests": "Personen",
   "toFHotel": "Hotel",
   "toFName": "Vor- und Nachname",
-  "toFPhone": "Handy / E-Mail (mit Ländervorwahl)",
+  "toFPhone": "Handy (mit Ländervorwahl)",
   "toFNotes": "Anmerkungen (optional)",
   "toFAck": "Ich bin einverstanden, dass meine Anfrage und Kontaktdaten per E-Mail an Bosphorly gesendet werden. Preis und Verfügbarkeit werden vor jeder Buchung bestätigt; auf dieser Website wird nichts bezahlt.",
   "toFSend": "Anfrage per E-Mail senden →",
@@ -332,7 +332,8 @@
   "toFDone": "Anfrage {ref} ist bereit. E-Mail öffnet sich: Tippen Sie auf Senden, damit sie Bosphorly erreicht.",
   "toWaTitle": "Bosphorly Touranfrage",
   "toWaRef": "Referenz",
-  "toMyReq": "Meine Anfragen →"
+  "toMyReq": "Meine Anfragen →",
+  "toFEmail": "E-Mail (optional)"
  },
  "tours": {
   "jewish-heritage": [

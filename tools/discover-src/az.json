@@ -324,7 +324,7 @@
   "toFGuests": "Qonaq sayı",
   "toFHotel": "Otel",
   "toFName": "Ad və soyad",
-  "toFPhone": "Mobil / e-poçt (ölkə kodu ilə)",
+  "toFPhone": "Mobil (ölkə kodu ilə)",
   "toFNotes": "Qeyd (istəyə bağlı)",
   "toFAck": "Sorğumun və əlaqə məlumatlarımın e-poçt ilə Bosphorly-yə göndərilməsinə razıyam. Qiymət və boş yer rezervasiyadan əvvəl təsdiqlənir; bu saytda ödəniş alınmır.",
   "toFSend": "Sorğunu e-poçt ilə göndər →",
@@ -332,7 +332,8 @@
   "toFDone": "{ref} sorğunuz hazırdır. e-poçt açılır: Bosphorly-yə çatması üçün göndər düyməsini basın.",
   "toWaTitle": "Bosphorly tur sorğusu",
   "toWaRef": "İstinad",
-  "toMyReq": "Sorğularım →"
+  "toMyReq": "Sorğularım →",
+  "toFEmail": "E-poçt (istəyə bağlı)"
  },
  "tours": {
   "jewish-heritage": [

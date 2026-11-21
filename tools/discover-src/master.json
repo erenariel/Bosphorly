@@ -1168,7 +1168,8 @@
       "toFDone": "Email draft {ref} is ready. Open Gmail or your email app and press Send to deliver it to Bosphorly.",
       "toWaTitle": "Bosphorly tour request",
       "toWaRef": "Reference",
-      "toMyReq": "See my requests →"
+      "toMyReq": "See my requests →",
+      "toFEmail": "Email (optional)"
     },
     "tr": {
       "navDiscover": "Keşfet",
@@ -1315,7 +1316,8 @@
       "toFDone": "{ref} numaralı e-posta taslağın hazır. Talebini iletmek için Gmail veya e-posta uygulamanda Gönder’e bas.",
       "toWaTitle": "Bosphorly tur talebi",
       "toWaRef": "Referans",
-      "toMyReq": "Taleplerimi gör →"
+      "toMyReq": "Taleplerimi gör →",
+      "toFEmail": "E-posta (isteğe bağlı)"
     }
   },
   "tours": [

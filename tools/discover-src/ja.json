@@ -324,7 +324,7 @@
   "toFGuests": "人数",
   "toFHotel": "ホテル",
   "toFName": "氏名",
-  "toFPhone": "携帯電話 / メール（国番号から）",
+  "toFPhone": "携帯電話（国番号から）",
   "toFNotes": "備考（任意）",
   "toFAck": "リクエストと連絡先が メール で Bosphorly に送信されることに同意します。予約前に料金と空き状況を確認します。このサイトでの支払いはありません。",
   "toFSend": "メール でリクエストを送る →",
@@ -332,7 +332,8 @@
   "toFDone": "リクエスト {ref} の準備ができました。メール が開きます。送信を押すと Bosphorly に届きます。",
   "toWaTitle": "Bosphorly ツアーリクエスト",
   "toWaRef": "参照コード",
-  "toMyReq": "リクエスト一覧 →"
+  "toMyReq": "リクエスト一覧 →",
+  "toFEmail": "メールアドレス（任意）"
  },
  "tours": {
   "jewish-heritage": [

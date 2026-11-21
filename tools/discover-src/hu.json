@@ -324,7 +324,7 @@
   "toFGuests": "Létszám",
   "toFHotel": "Szálloda",
   "toFName": "Teljes név",
-  "toFPhone": "Mobil / e-mail (országhívószámmal)",
+  "toFPhone": "Mobil (országhívószámmal)",
   "toFNotes": "Megjegyzés (nem kötelező)",
   "toFAck": "Hozzájárulok, hogy ajánlatkérésem és elérhetőségeim e-mailon a Bosphorlyhoz kerüljenek. Az árat és a szabad helyet foglalás előtt megerősítjük; ezen az oldalon nem kell fizetni.",
   "toFSend": "Ajánlatkérés küldése e-mailon →",
@@ -332,7 +332,8 @@
   "toFDone": "A(z) {ref} ajánlatkérés elkészült. Megnyílik a e-mail: nyomja meg a Küldés gombot, hogy eljusson a Bosphorlyhoz.",
   "toWaTitle": "Bosphorly túra-ajánlatkérés",
   "toWaRef": "Hivatkozás",
-  "toMyReq": "Ajánlatkéréseim →"
+  "toMyReq": "Ajánlatkéréseim →",
+  "toFEmail": "E-mail (nem kötelező)"
  },
  "tours": {
   "jewish-heritage": [

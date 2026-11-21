@@ -324,7 +324,7 @@
   "toFGuests": "Personen",
   "toFHotel": "Hotel",
   "toFName": "Voor- en achternaam",
-  "toFPhone": "Mobiel / e-mail (met landcode)",
+  "toFPhone": "Mobiel (met landcode)",
   "toFNotes": "Opmerkingen (optioneel)",
   "toFAck": "Ik ga ermee akkoord dat mijn aanvraag en contactgegevens via e-mail naar Bosphorly worden gestuurd. Prijs en beschikbaarheid worden bevestigd voordat er iets geboekt wordt; op deze website wordt niets betaald.",
   "toFSend": "Aanvraag via e-mail versturen →",
@@ -332,7 +332,8 @@
   "toFDone": "Aanvraag {ref} is klaar. e-mail wordt geopend: druk op versturen zodat Bosphorly hem ontvangt.",
   "toWaTitle": "Bosphorly touraanvraag",
   "toWaRef": "Referentie",
-  "toMyReq": "Mijn aanvragen →"
+  "toMyReq": "Mijn aanvragen →",
+  "toFEmail": "E-mail (optioneel)"
  },
  "tours": {
   "jewish-heritage": [

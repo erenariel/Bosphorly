@@ -46,7 +46,7 @@
   "mTooMany": "Túl sok próbálkozás. Várjon néhány percet.",
   "bCoupon": "Kupon",
   "bNoCoupon": "Kupon nélkül",
-  "bCouponNote": "A kedvezményt a cég a szálloda recepcióján érvényesíti, amikor a túra megvalósul. Ajánlatkérésenként egy kupon.",
+  "bCouponNote": "A kedvezményt az Önnel egyeztetett árra számítjuk. Ajánlatkérésenként egy kupon.",
   "bAfter": "Becsült végösszeg kuponnal",
   "bCouponFail": "Ezt a kupont nem sikerült lefoglalni. Válasszon másikat, vagy folytassa kupon nélkül.",
   "bSignInHint": "A tagok üdvözlő kupont kapnak. Bejelentkezés →"

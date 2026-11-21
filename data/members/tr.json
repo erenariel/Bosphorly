@@ -46,7 +46,7 @@
   "mTooMany": "Çok fazla deneme yapıldı. Lütfen birkaç dakika bekle.",
   "bCoupon": "Kupon",
   "bNoCoupon": "Kupon kullanma",
-  "bCouponNote": "İndirimi firma, tur günü otel resepsiyonunda uygular. Her talepte bir kupon kullanılabilir.",
+  "bCouponNote": "İndirim, sizinle teyit ettiğimiz fiyata uygulanır. Her talepte bir kupon.",
   "bAfter": "Kuponla tahmini toplam",
   "bCouponFail": "Bu kupon ayrılamadı. Başka bir kupon seç ya da kuponsuz devam et.",
   "bSignInHint": "Üyelere hoş geldin kuponu var. Giriş yap →"
