@@ -294,6 +294,7 @@
         btn.type = 'button';
         btn.dataset.provider = p.id;
         btn.innerHTML = p.svg;
+        btn.append(el('span', null, f(T.mContinueWith || UI.continueWith, { p: p.name })));
         btn.addEventListener('click', async () => {
           btn.disabled = true;
           const extra = {

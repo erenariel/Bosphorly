@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
@@ -34,6 +34,34 @@ test('no page or request text names a payment method (cash at reception)', () =>
   const cash = /pay in cash|cash only|cash at (the )?hotel|nakit|resepsiyonda|Barzahlung|bar an der|наличными|готівкою|en efectivo|en espèces|in contanti|contant bij|em dinheiro|gotovinom|készpénzben|nağd|نقدًا|במזומן|现金|現金|현금|नकद|নগদে|tunai/i;
   for (const file of ['index.html','booking.html','booking.js','tours.js','prices.html','prices.js','currency.js','faq.html','data/faq.json'])
     assert.doesNotMatch(read(file), cash, file);
+});
+
+test('no site file in any of the 23 languages tells guests to pay cash or at the hotel reception', () => {
+  // Word-bounded so that e.g. Bosnian/Croatian "nakitom" (jewellery) or Italian "in barca" (by boat) do not match.
+  const B = '(?<![\\p{L}\\p{N}_])', E = '(?![\\p{L}\\p{N}_])';
+  const terms = ['cash','nakit','nakden','resepsiyonda','resepsiyonunda','Barzahlung','bar bezahlen','наличн\\p{L}*','готівк\\p{L}*',
+    'efectivo','espèces','contanti','contant','em dinheiro','gotovin\\p{L}*','készpénz\\p{L}*','nağd\\p{L}*','نقد[اًا]?','نقدی','מזומן','במזומן',
+    '现金','現金','현금','नकद','নগদ\\p{L}*','tunai'];
+  const re = new RegExp(B + '(?:' + terms.join('|') + ')' + E, 'iu');
+  const skip = new Set(['node_modules', '.git', 'tests', 'docs', 'test-results', 'playwright-report']);
+  const files = [];
+  const walk = dir => {
+    for (const e of readdirSync(new URL('../' + dir, import.meta.url), { withFileTypes: true })) {
+      if (skip.has(e.name)) continue;
+      const p = (dir ? dir + '/' : '') + e.name;
+      if (e.isDirectory()) walk(p);
+      else if (/\.(html|js|json|webmanifest)$/.test(e.name)) files.push(p);
+    }
+  };
+  walk('');
+  assert.ok(files.includes('assets/print/bosphorly-qr-poster.html') && files.includes('data/discover/tr.json') && files.includes('tools/discover-src/master.json'));
+  for (const file of files) {
+    const m = read(file).match(re);
+    assert.equal(m, null, file + ': ' + (m && m[0]));
+  }
+  // Every locale states that the payment method is shared when Bosphorly gets in touch.
+  const booking = read('booking.js');
+  assert.equal((booking.match(/r_payWhen\s*:/g) || []).length, langs.length);
 });
 
 test('phone fields are labelled as phone, not "phone / email"', () => {
