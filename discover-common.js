@@ -37,8 +37,8 @@
   const closedText = (p, t) => (p.closed && p.closed.length ? t('closedOn', { days: p.closed.map(dayName).join(', ') }) : '');
   const dateText = d => { try { return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(d + 'T12:00')); } catch { return d; } };
 
-  const contact = window.BOSPHORLY_CONTACT || { whatsapp: '905333407776' };
-  const waLink = msg => 'https://wa.me/' + contact.whatsapp + '?text=' + encodeURIComponent(msg);
+  const contact = window.BOSPHORLY_CONTACT || { email: 'info@bosphorly.com' };
+  const emailLink = (msg, subject = 'Bosphorly inquiry') => 'mailto:' + (contact.email || 'info@bosphorly.com') + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(msg);
   const mapsLink = (lat, lng) => 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng;
   const walkLink = pts => 'https://www.google.com/maps/dir/?api=1&travelmode=walking&origin=' + pts[0].lat + ',' + pts[0].lng +
     '&destination=' + pts[pts.length - 1].lat + ',' + pts[pts.length - 1].lng +
@@ -70,5 +70,5 @@
     return map;
   }
 
-  window.BosphorlyDiscover = Object.freeze({ lang, rtl, locale, load, el, money, priceText, closedText, dateText, waLink, mapsLink, walkLink, norm, leaflet, baseMap });
+  window.BosphorlyDiscover = Object.freeze({ lang, rtl, locale, load, el, money, priceText, closedText, dateText, emailLink, mapsLink, walkLink, norm, leaflet, baseMap });
 })();
