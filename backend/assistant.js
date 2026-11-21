@@ -8,7 +8,7 @@ export const SUPPORTED_LANGS = new Set([
 
 const PER_MIN_LIMIT = 6;
 const PER_DAY_LIMIT = 40;
-const DEFAULT_GLOBAL_DAILY_LIMIT = 1500;
+const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
 const AI_TIMEOUT_MS = 15000;
 
 const memoryLimits = new Map();
@@ -398,7 +398,6 @@ export async function forwardConversationEmail({ env, email, lang = 'en', histor
     `Language: ${lang}`,
     `Guest email: ${cleanEmail}`,
     meta.telegramUser ? `Telegram: ${meta.telegramUser}` : '',
-    meta.chatId ? `Telegram chat ID: ${meta.chatId}` : '',
     '',
     'Recent conversation:',
     ...(safeHistory.length ? safeHistory : ['(no prior turns)']),

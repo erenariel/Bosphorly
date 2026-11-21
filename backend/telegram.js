@@ -37,6 +37,26 @@ function t(key, lang) {
   return (TG_TEXT[key] && (TG_TEXT[key][lang] || TG_TEXT[key].en)) || '';
 }
 
+export async function computeTelegramWebhookSecret(pepper) {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(String(pepper)),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode('tg-webhook'));
+  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function constantTimeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 async function sendTelegramMessage(env, chatId, text) {
   if (!env.TELEGRAM_BOT_TOKEN) return;
   await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -44,6 +64,20 @@ async function sendTelegramMessage(env, chatId, text) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: chatId, text }),
   });
+}
+
+async function findLinkedMemberEmail(env, telegramId) {
+  if (!env || !env.DB || !telegramId) return null;
+  try {
+    const row = await env.DB.prepare(
+      `SELECT m.email FROM member_identities mi
+       JOIN members m ON m.id = mi.member_id
+       WHERE mi.provider = 'telegram' AND mi.subject = ?`
+    ).bind(String(telegramId)).first();
+    return row && row.email ? String(row.email) : null;
+  } catch {
+    return null;
+  }
 }
 
 async function getState(env, chatId) {
@@ -81,12 +115,15 @@ export async function handleTelegramWebhook(request, env) {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
-  if (env.TELEGRAM_WEBHOOK_SECRET) {
-    const sig = request.headers.get('X-Telegram-Bot-Api-Secret-Token');
-    if (sig !== env.TELEGRAM_WEBHOOK_SECRET) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
-    }
+  if (!env || !env.CODE_PEPPER) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
+  const sig = request.headers.get('X-Telegram-Bot-Api-Secret-Token') || '';
+  const expected = await computeTelegramWebhookSecret(env.CODE_PEPPER);
+  if (!sig || !constantTimeEqual(sig, expected)) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  }
+
   let update;
   try {
     update = await request.json();
@@ -95,11 +132,13 @@ export async function handleTelegramWebhook(request, env) {
   }
 
   const msg = update && update.message;
-  if (!msg || !msg.chat || typeof msg.text !== 'string' || !msg.text.trim()) {
+  if (!msg || !msg.chat || msg.chat.type !== 'private' || typeof msg.text !== 'string' || !msg.text.trim()) {
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   }
 
   const chatId = String(msg.chat.id);
+  const telegramId = String((msg.from && msg.from.id) || chatId);
+  const tgUser = msg.from && msg.from.username ? `@${msg.from.username}` : '';
   const text = msg.text.trim();
   const telegramLang = (msg.from && msg.from.language_code) || '';
   const lang = detectLanguage({ message: text, telegramLang });
@@ -125,7 +164,6 @@ export async function handleTelegramWebhook(request, env) {
       return new Response(JSON.stringify({ ok: true }), { status: 200 });
     }
     const guestEmail = emailMatch[0];
-    const tgUser = msg.from && msg.from.username ? `@${msg.from.username}` : '';
     const forwarded = await forwardConversationEmail({
       env,
       email: guestEmail,
@@ -133,7 +171,7 @@ export async function handleTelegramWebhook(request, env) {
       history: state.history,
       message: text,
       source: 'telegram',
-      meta: { chatId, telegramUser: tgUser },
+      meta: { telegramUser: tgUser },
     });
     await clearState(env, chatId);
     await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', state.lang || lang) : t('forwardFailed', state.lang || lang));
@@ -157,6 +195,21 @@ export async function handleTelegramWebhook(request, env) {
   ].slice(-6);
 
   if (res.handoff) {
+    const linkedEmail = await findLinkedMemberEmail(env, telegramId);
+    if (linkedEmail) {
+      const forwarded = await forwardConversationEmail({
+        env,
+        email: linkedEmail,
+        lang: res.lang || lang,
+        history,
+        message: cleanUser,
+        source: 'telegram',
+        meta: { telegramUser: tgUser },
+      });
+      await clearState(env, chatId);
+      await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', res.lang || lang) : t('forwardFailed', res.lang || lang));
+      return new Response(JSON.stringify({ ok: true, handoff: true, forwarded: forwarded.ok }), { status: 200 });
+    }
     await saveState(env, chatId, true, res.lang || lang, nextHistory);
     await sendTelegramMessage(env, chatId, `${res.reply}\n\n${t('askEmail', res.lang || lang)}`);
   } else {

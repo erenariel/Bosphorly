@@ -198,3 +198,94 @@ test('retrieveChunks returns 5-8 relevant chunks for Istanbul queries', () => {
   assert.ok(chunks.length >= 5 && chunks.length <= 8);
   assert.ok(chunks.every((c) => c.url.startsWith('https://bosphorly.com/')));
 });
+
+test('telegram webhook requires valid HMAC-SHA256(CODE_PEPPER, "tg-webhook") header (fail-closed)', async () => {
+  const { computeTelegramWebhookSecret } = await import('../backend/telegram.js');
+  const pepper = 'test-pepper-123';
+  const reqNoHeader = new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: { chat: { id: 1, type: 'private' }, text: 'hi' } }),
+  });
+  assert.equal((await worker.fetch(reqNoHeader, baseEnv({ CODE_PEPPER: pepper }))).status, 401);
+  assert.equal((await worker.fetch(reqNoHeader, baseEnv({ CODE_PEPPER: '' }))).status, 401);
+
+  const reqWrong = new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': 'wrong' },
+    body: JSON.stringify({ message: { chat: { id: 1, type: 'private' }, text: 'hi' } }),
+  });
+  assert.equal((await worker.fetch(reqWrong, baseEnv({ CODE_PEPPER: pepper }))).status, 401);
+
+  const validSecret = await computeTelegramWebhookSecret(pepper);
+  assert.equal(validSecret.length, 64);
+});
+
+test('telegram webhook ignores non-private chats with 200', async t => {
+  const { computeTelegramWebhookSecret } = await import('../backend/telegram.js');
+  const pepper = 'test-pepper-123';
+  const secret = await computeTelegramWebhookSecret(pepper);
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url) => { calls.push(url); return Response.json({ ok: true }); });
+  const req = new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+    body: JSON.stringify({ message: { chat: { id: -100123, type: 'group' }, from: { id: 42 }, text: 'hello group' } }),
+  });
+  const res = await worker.fetch(req, baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok' }));
+  assert.equal(res.status, 200);
+  assert.deepEqual(calls, []);
+});
+
+test('telegram webhook uses linked member email without asking and omits Telegram chat ID from email', async t => {
+  const { computeTelegramWebhookSecret } = await import('../backend/telegram.js');
+  const pepper = 'test-pepper-123';
+  const secret = await computeTelegramWebhookSecret(pepper);
+  let sentEmail;
+  let tgReply;
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    if (String(url).includes('api.resend.com')) {
+      sentEmail = JSON.parse(init.body);
+      return Response.json({ id: 'e-tg-1' });
+    }
+    if (String(url).includes('api.telegram.org')) {
+      tgReply = JSON.parse(init.body);
+      return Response.json({ ok: true });
+    }
+    return Response.json({ ok: true });
+  });
+
+  const mockDb = {
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        first: async () => {
+          if (sql.includes('member_identities') && args[0] === '998877') {
+            return { email: 'linked-member@example.org' };
+          }
+          return null;
+        },
+        run: async () => ({ success: true }),
+      }),
+    }),
+  };
+
+  const req = new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+    body: JSON.stringify({
+      message: {
+        chat: { id: 998877, type: 'private' },
+        from: { id: 998877, username: 'eren_guest', language_code: 'tr' },
+        text: 'insanla konuşmak istiyorum',
+      },
+    }),
+  });
+  const res = await worker.fetch(req, baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: mockDb }));
+  assert.equal(res.status, 200);
+  assert.ok(sentEmail, 'email should be forwarded immediately for linked member');
+  assert.equal(sentEmail.reply_to, 'linked-member@example.org');
+  assert.ok(sentEmail.text.includes('Telegram: @eren_guest'));
+  assert.ok(!sentEmail.text.includes('Telegram chat ID'));
+  assert.ok(tgReply && tgReply.text.includes('info@bosphorly.com'));
+});
+
