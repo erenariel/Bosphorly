@@ -1,4 +1,1 @@
-// Public business contact used by request forms. The WhatsApp number receives guest requests
-// through a pre-filled click-to-chat message (https://wa.me/...); the email is the corporate mailbox.
-// Both are meant to be public.
-window.BOSPHORLY_CONTACT = Object.freeze({ whatsapp: '905333407776', whatsappDisplay: '+90 533 340 77 76', email: 'info@bosphorly.com' });
+// Public business contact. Tour requests use the corporate email address.\n// Email links open a draft in the visitor's email app; they do not send automatically.\nwindow.BOSPHORLY_CONTACT = Object.freeze({ whatsapp: '905333407776', whatsappDisplay: '+90 533 340 77 76', email: 'info@bosphorly.com' });
