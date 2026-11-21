@@ -1,4 +1,4 @@
 // Address of the Bosphorly API (backend/worker.js on Cloudflare Workers), e.g. "https://api.bosphorly.com".
 // Leave empty until the API is deployed: membership and coupons then show as "coming soon" and the site
 // keeps working with device-only requests.
-window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkirazz98.workers.dev', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: '' });
+window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkirazz98.workers.dev', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
