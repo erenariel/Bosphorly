@@ -43,14 +43,16 @@
 .td-market b{color:#0a1753;font-size:15px}.td-market span{font-size:13px;color:#5d6f8a}
 .td-fine{font-size:12px;color:#5d6f8a;margin-top:6px!important}.td-tip{margin:0;background:#fff9ec;border:1px dashed #f0b44c;border-radius:12px;padding:8px 10px;font-size:13px}
 @media(max-width:420px){.td-two{grid-template-columns:1fr}}
-.tf{display:grid;gap:10px;border:1px solid #cfdcf3;border-radius:14px;background:#f8fbff;padding:14px}
+.tf{display:grid;gap:10px;border:1px solid #cfdcf3;border-radius:14px;background:#f8fbff;padding:14px;min-width:0}
 .tf[hidden]{display:none}
-.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tf-field{display:grid;gap:4px;font-size:13px;font-weight:700;color:#34465f}
-.tf input,.tf textarea{font:inherit;font-weight:400;font-size:15px;border:1px solid #cbd8eb;border-radius:10px;padding:9px 10px;min-height:42px;width:100%;box-sizing:border-box;background:#fff}
+.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;min-width:0}
+.tf-field{display:grid;gap:4px;font-size:13px;font-weight:700;color:#34465f;min-width:0}
+.tf input,.tf textarea,.tf select{font:inherit;font-weight:400;font-size:15px;border:1px solid #cbd8eb;border-radius:10px;padding:9px 10px;min-height:42px;width:100%;max-width:100%;min-width:0;box-sizing:border-box;background:#fff}
+.tf-vip{background:#f5f2ff;border:1px solid #c9bdf5;border-radius:10px;padding:8px 11px;font-size:12.5px;color:#2f1e78;font-weight:700}
 .tf-ack{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:#34465f}.tf-ack input{width:18px;min-height:18px;margin-top:2px;flex:none}
 .tf-err{margin:0;color:#a12a2a;font-size:13px;font-weight:700}
 .tf-send{justify-self:start}.tf-done{display:grid;gap:8px}.tf-done p{margin:0;font-weight:700;color:#137148}.tf-done .btn{justify-self:start}
+@media(max-width:480px){.tf-row{grid-template-columns:1fr}}
 
 .see-also{display:inline-block;margin:14px 0 4px;font-weight:700;color:#16457d}
 </style>
@@ -86,6 +88,8 @@
 <link rel="stylesheet" href="inquiry-email.css"><script defer src="inquiry-email.js"></script></head>
 <body>
 <div id="siteHeader" data-page="tours"></div>
+<script src="config/api.js"></script>
+<script src="member.js"></script>
 <script src="site-header.js"></script>
 <section class="dc-hero">
   <div class="dc-wrap">

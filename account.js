@@ -704,7 +704,11 @@
   $('pName').value = p.name || ''; $('pPhone').value = p.phone || ''; $('pEmail').value = p.email || ''; $('pHotel').value = p.hotel || ''; $('pRoom').value = p.room || '';
   $('profileForm').addEventListener('submit', e => {
     e.preventDefault();
-    A.saveProfile({ name: $('pName').value, phone: $('pPhone').value, email: $('pEmail').value, hotel: $('pHotel').value, room: $('pRoom').value });
+    const cleanName = $('pName').value.trim();
+    A.saveProfile({ name: cleanName, phone: $('pPhone').value, email: $('pEmail').value, hotel: $('pHotel').value, room: $('pRoom').value });
+    if (window.BosphorlyMember && window.BosphorlyMember.signedIn()) {
+      window.BosphorlyMember.update({ name: cleanName }).catch(() => {});
+    }
     $('saved').textContent = T.msgSaved;
   });
   $('clearBtn').addEventListener('click', () => {

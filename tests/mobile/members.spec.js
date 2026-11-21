@@ -104,3 +104,70 @@ test('partner check-in looks up a request, shows the coupon and marks the tour c
   await expect(page.locator('#result .coupon')).toContainText('kullanıldı');
   expect(calls.at(-1).path).toBe('/v1/partner/fulfil');
 });
+
+test('signed-in member persists in top-right header across pages, hides Create account, and sends localized Special Tours email & newsletter', async ({ page }) => {
+  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
+  const calls = [];
+  const coupon = { code: 'BOS-PLAT-9999', kind: 'loyalty', percentBps: 1000, status: 'issued', expiresAt: '2099-03-01 00:00:00', heldFor: null };
+  const me = {
+    email: 'ayse@example.com', name: 'Ayşe Yılmaz', lang: 'tr', country: 'Türkiye',
+    interests: ['cruise', 'private'], referralCode: 'AYSE2026', marketing: true,
+    stamps: 1, stampsGoal: 5, fulfilledCount: 5, tier: 'platinum', nextTier: null,
+    toursToNextTier: 0, vipPriorityDiscountBps: 1000, freeUpgrade: 'priority',
+    coupons: [coupon], requests: []
+  };
+  await page.route('https://api.test/**', async r => {
+    const url = new URL(r.request().url()); const body = r.request().postDataJSON?.() ?? null;
+    calls.push({ path: url.pathname, body });
+    const json = (data, status = 200) => r.fulfill({ status, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(data) });
+    if (url.pathname === '/v1/auth/start') return json({ sent: true });
+    if (url.pathname === '/v1/auth/verify') return json({ token: 'tok-ayse', created: false, member: me });
+    if (url.pathname === '/v1/me') return json(me);
+    if (url.pathname === '/v1/me/requests') return json({ ref: body.ref, coupon: body.couponCode ? { code: body.couponCode, percentBps: 1000 } : null });
+    if (url.pathname === '/v1/newsletter/subscribe') return json({ subscribed: true, email: body.email });
+    if (url.pathname === '/v1/auth/logout') return json({ signedOut: true });
+    return json({ error: 'Not found' }, 404);
+  });
+
+  // Sign in on account.html.
+  await page.goto('/account.html?lang=tr');
+  await page.fill('#mEmail', 'ayse@example.com');
+  await page.getByRole('button', { name: 'Kod gönder' }).click();
+  await page.fill('#mCode', '123456');
+  await page.getByRole('button', { name: 'Giriş yap' }).click();
+  await expect(page.locator('#member .m-tier-badge')).toContainText('Platinum VIP');
+  await expect(page.locator('#member .m-coupon')).toHaveCount(2); // VIP priority card + BOS-PLAT-9999
+  await expect(page.locator('.sh-member')).toBeVisible();
+  await expect(page.locator('.sh-member-name')).toContainText('Ayşe Yılmaz');
+  await expect(page.locator('.sh-auth')).toBeHidden();
+
+  // Navigate to Special Tours: signed-in member stays visible in top-right and Create account stays hidden.
+  await page.goto('/tours.html?lang=tr');
+  await expect(page.locator('.sh-member')).toBeVisible();
+  await expect(page.locator('.sh-member-name')).toContainText('Ayşe Yılmaz');
+  await expect(page.locator('.sh-member-tier')).toContainText('Platinum');
+  await expect(page.locator('.sh-auth')).toBeHidden();
+
+  // Ask on email on a special tour includes info@bosphorly.com, localized subject and opens Gmail dialog with to=info@bosphorly.com.
+  await page.locator('#jewish-heritage .actions a[href^="mailto:"]').click();
+  const picker = page.getByRole('dialog');
+  await expect(picker).toContainText('info@bosphorly.com');
+  await expect(picker.getByRole('link', { name: 'Gmail' })).toHaveAttribute('href', /mail\.google\.com.*to=info%40bosphorly\.com/);
+  await page.keyboard.press('Escape');
+
+  // Homepage also persists signed-in member and allows newsletter subscription.
+  await page.goto('/index.html?lang=tr');
+  await expect(page.locator('#headerMember')).toBeVisible();
+  await expect(page.locator('#hmName')).toContainText('Ayşe Yılmaz');
+  await expect(page.locator('#headerAuth')).toBeHidden();
+  await page.fill('#nlEmail', 'ayse@example.com');
+  await page.click('#nlSubmit');
+  await expect(page.locator('#nlStatus')).toContainText('✓');
+  expect(calls.some(c => c.path === '/v1/newsletter/subscribe')).toBeTruthy();
+
+  // Sign out restores signed-out state cleanly.
+  await page.click('#hmSignOut');
+  await expect(page.locator('#headerMember')).toBeHidden();
+  await expect(page.locator('#headerAuth')).toBeVisible();
+});
+

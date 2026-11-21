@@ -29,6 +29,7 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}dt{color:#5
 <body>
 <div id="siteHeader" data-page="partner" data-currency="off"></div>
 <script src="lang.js"></script>
+<script src="member.js"></script>
 <script src="site-header.js"></script>
 <main>
   <h1 data-tr="İş ortağı girişi" data-en="Partner check-in">İş ortağı girişi</h1>
@@ -48,8 +49,8 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}dt{color:#5
   document.documentElement.lang = tr ? 'tr' : 'en';
   document.querySelectorAll('[data-tr]').forEach(e => { e.textContent = tr ? e.dataset.tr : e.dataset.en; });
   const L = tr
-    ? { service: 'Hizmet', date: 'Tarih', guests: 'Kişi', guest: 'Misafir', state: 'Durum', coupon: 'Kupon', off: 'indirim', fulfil: 'Tur tamamlandı', cancel: 'İptal edildi', done: 'Kaydedildi.', noApi: 'API henüz yapılandırılmadı (config/api.js).', fail: 'Bulunamadı ya da anahtar hatalı.', closed: 'Bu talep zaten kapatılmış.', states: { requested: 'Bekliyor', fulfilled: 'Tamamlandı', cancelled: 'İptal' }, cs: { held: 'ayrıldı, tur tamamlanınca kullanılmış sayılır', redeemed: 'kullanıldı', issued: 'serbest' }, confirm: 'Tur tamamlandı olarak işaretlensin mi? Kupon kullanılmış sayılacak.' }
-    : { service: 'Service', date: 'Date', guests: 'Guests', guest: 'Guest', state: 'Status', coupon: 'Coupon', off: 'off', fulfil: 'Tour completed', cancel: 'Cancelled', done: 'Saved.', noApi: 'The API is not configured yet (config/api.js).', fail: 'Not found, or the key is wrong.', closed: 'This request is already closed.', states: { requested: 'Open', fulfilled: 'Completed', cancelled: 'Cancelled' }, cs: { held: 'reserved; counts as used when the tour is completed', redeemed: 'used', issued: 'free' }, confirm: 'Mark the tour as completed? The coupon will count as used.' };
+    ? { service: 'Hizmet', date: 'Tarih', guests: 'Kişi', guest: 'Misafir', tier: 'Üye seviyesi', tiers: { silver: '🥈 Silver', gold: '🥇 Gold · Free Upgrade (müsaitlik) · VIP %5', platinum: '💎 Platinum VIP · Öncelikli Free Upgrade · VIP %10' }, state: 'Durum', coupon: 'Kupon', off: 'indirim', fulfil: 'Tur tamamlandı', cancel: 'İptal edildi', done: 'Kaydedildi.', noApi: 'API henüz yapılandırılmadı (config/api.js).', fail: 'Bulunamadı ya da anahtar hatalı.', closed: 'Bu talep zaten kapatılmış.', states: { requested: 'Bekliyor', fulfilled: 'Tamamlandı', cancelled: 'İptal' }, cs: { held: 'ayrıldı, tur tamamlanınca kullanılmış sayılır', redeemed: 'kullanıldı', issued: 'serbest' }, confirm: 'Tur tamamlandı olarak işaretlensin mi? Kupon kullanılmış sayılacak.' }
+    : { service: 'Service', date: 'Date', guests: 'Guests', guest: 'Guest', tier: 'Member tier', tiers: { silver: '🥈 Silver', gold: '🥇 Gold · Free Upgrade (availability) · VIP 5%', platinum: '💎 Platinum VIP · Priority Free Upgrade · VIP 10%' }, state: 'Status', coupon: 'Coupon', off: 'off', fulfil: 'Tour completed', cancel: 'Cancelled', done: 'Saved.', noApi: 'The API is not configured yet (config/api.js).', fail: 'Not found, or the key is wrong.', closed: 'This request is already closed.', states: { requested: 'Open', fulfilled: 'Completed', cancelled: 'Cancelled' }, cs: { held: 'reserved; counts as used when the tour is completed', redeemed: 'used', issued: 'free' }, confirm: 'Mark the tour as completed? The coupon will count as used.' };
   const $ = id => document.getElementById(id);
   const base = ((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '');
   try { $('key').value = sessionStorage.getItem('bosphorly.partner') || ''; } catch {}
@@ -66,7 +67,7 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}dt{color:#5
   function show(d) {
     const box = $('result'); box.replaceChildren(); box.hidden = false;
     const dl = document.createElement('dl');
-    [[L.service, d.serviceId], [L.date, d.date], [L.guests, String(d.guests)], [L.guest, d.firstName || '—'], [L.state, L.states[d.state] || d.state]]
+    [[L.service, d.serviceId], [L.date, d.date], [L.guests, String(d.guests)], [L.guest, d.firstName || '—'], ...(d.tier ? [[L.tier, L.tiers[d.tier] || d.tier]] : []), [L.state, L.states[d.state] || d.state]]
       .forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; dl.append(dt, dd); });
     box.append(dl);
     if (d.coupon) { const c = document.createElement('div'); c.className = 'coupon'; c.textContent = L.coupon + ': ' + d.coupon.code + ' · ' + pct(d.coupon.percentBps) + ' ' + L.off + ' · ' + (L.cs[d.coupon.status] || d.coupon.status); box.append(c); }

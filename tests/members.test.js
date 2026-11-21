@@ -10,6 +10,7 @@ function d1() {
   const db = new DatabaseSync(':memory:');
   db.exec(readFileSync(new URL('../backend/migrations/0001.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0002_members.sql', import.meta.url), 'utf8'));
+  db.exec(readFileSync(new URL('../backend/migrations/0003_member_preferences_newsletter.sql', import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) ?? null,
@@ -154,12 +155,12 @@ test('discounts are capped by the commission limit and campaigns are admin-only'
   assert.equal((await signUp(env, 'c@example.com')).member.coupons.length, 0);
 });
 
-test('deleting the account removes the member, sessions, coupons and requests', async () => {
+test('deleting the account removes the member, sessions, coupons, requests and newsletter row', async () => {
   const env = setup();
-  const { token } = await signUp(env, 'a@example.com');
+  const { token } = await signUp(env, 'a@example.com', { marketing: true });
   await call(env, '/v1/me/requests', { ref: 'BOS-DEL001', serviceId: 'bb-sunset', date: '2099-08-01', guests: 2 }, token);
   assert.equal((await call(env, '/v1/me/delete', {}, token)).body.deleted, true);
-  for (const t of ['members', 'sessions', 'coupons', 'member_requests', 'login_codes']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM ${t}`).get().n, 0, t);
+  for (const t of ['members', 'sessions', 'coupons', 'member_requests', 'login_codes', 'newsletter_subscribers']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM ${t}`).get().n, 0, t);
   assert.equal((await call(env, '/v1/me', null, token, 'GET')).status, 401);
 });
 
@@ -225,5 +226,90 @@ test('OAuth endpoints report configured providers and redirect to Google, Yandex
   assert.equal(aRes.status, 302);
   assert.match(aRes.headers.get('Location'), /^https:\/\/appleid\.apple\.com\/auth\/authorize\?.*client_id=com\.bosphorly\.web/);
 });
+
+test('country, interests and progressive tiers (silver -> gold -> platinum) with VIP priority & free upgrade', async () => {
+  const env = setup();
+  const up = await signUp(env, 'vip@example.com', {
+    name: 'Deniz Kaya',
+    country: 'Türkiye',
+    interests: ['cruise', 'private', 'invalid-ignored'],
+    marketing: true
+  });
+  assert.equal(up.member.country, 'Türkiye');
+  assert.deepEqual(up.member.interests, ['cruise', 'private']);
+  assert.equal(up.member.tier, 'silver');
+  assert.equal(up.member.freeUpgrade, 'none');
+  assert.equal(up.member.nextTier, 'gold');
+  assert.equal(up.member.toursToNextTier, 2);
+
+  // Fulfil 2 tours -> Gold (eligible Free Upgrade + 5% VIP priority).
+  for (let i = 1; i <= 2; i++) {
+    await call(env, '/v1/me/requests', { ref: 'BOS-GOLD0' + i, serviceId: 'bb-sunset', date: '2099-06-0' + i, guests: 2 }, up.token);
+    await call(env, '/v1/partner/fulfil', { ref: 'BOS-GOLD0' + i }, 'partner-secret');
+  }
+  const goldMe = (await call(env, '/v1/me', null, up.token, 'GET')).body;
+  assert.equal(goldMe.tier, 'gold');
+  assert.equal(goldMe.freeUpgrade, 'eligible');
+  assert.equal(goldMe.vipPriorityDiscountBps, 500);
+  assert.equal(goldMe.toursToNextTier, 3);
+
+  // Fulfil 3 more tours (5 total) -> Platinum (priority Free Upgrade + max 10% always-on VIP priority discount).
+  for (let i = 3; i <= 5; i++) {
+    await call(env, '/v1/me/requests', { ref: 'BOS-PLAT0' + i, serviceId: 'bb-morning', date: '2099-06-0' + i, guests: 2 }, up.token);
+    await call(env, '/v1/partner/fulfil', { ref: 'BOS-PLAT0' + i }, 'partner-secret');
+  }
+  const platMe = (await call(env, '/v1/me', null, up.token, 'GET')).body;
+  assert.equal(platMe.tier, 'platinum');
+  assert.equal(platMe.freeUpgrade, 'priority');
+  assert.equal(platMe.vipPriorityDiscountBps, 1000);
+  assert.equal(platMe.nextTier, null);
+
+  // Partner lookup exposes the member's tier and free upgrade eligibility.
+  await call(env, '/v1/me/requests', { ref: 'BOS-VIPCHK', serviceId: 'jewish-heritage', date: '2099-07-01', guests: 2 }, up.token);
+  const lk = await call(env, '/v1/partner/lookup', { ref: 'BOS-VIPCHK' }, 'partner-secret');
+  assert.equal(lk.body.tier, 'platinum');
+  assert.equal(lk.body.freeUpgrade, 'priority');
+
+  // Updating profile preferences syncs country & interests.
+  const upd = await call(env, '/v1/me', { country: 'Germany', interests: ['transfer', 'oldcity'], marketing: false }, up.token);
+  assert.equal(upd.body.country, 'Germany');
+  assert.deepEqual(upd.body.interests, ['transfer', 'oldcity']);
+  assert.equal(upd.body.marketing, false);
+});
+
+test('newsletter subscription, admin filtered broadcast, and unsubscribe endpoints', async () => {
+  const env = setup();
+  const m1 = await signUp(env, 'gold@example.com', { name: 'Ali Demir', interests: ['cruise', 'private'], marketing: true });
+  for (let i = 1; i <= 2; i++) {
+    await call(env, '/v1/me/requests', { ref: 'BOS-NLG0' + i, serviceId: 'bb-sunset', date: '2099-08-0' + i, guests: 2 }, m1.token);
+    await call(env, '/v1/partner/fulfil', { ref: 'BOS-NLG0' + i }, 'partner-secret');
+  }
+  const sub = await call(env, '/v1/newsletter/subscribe', { email: 'Visitor@Example.com', lang: 'en', interests: ['cruise'], source: 'home' });
+  assert.equal(sub.status, 200);
+  assert.equal(sub.body.subscribed, true);
+
+  // Admin auth required for broadcasts.
+  assert.equal((await call(env, '/v1/admin/newsletter/send', { subject: 'Hi', text: 'Test' }, 'wrong')).status, 401);
+
+  // Dry run all active subscribers -> 2 (gold member + visitor).
+  const dryAll = await call(env, '/v1/admin/newsletter/send', { subject: 'Bosphorly News', text: 'Hello {name}', dryRun: true }, 'admin-secret');
+  assert.equal(dryAll.body.count, 2);
+
+  // Filter by tier=gold -> only gold member.
+  const dryGold = await call(env, '/v1/admin/newsletter/send', { subject: 'VIP Gold Offer', text: 'Hi {name} ({tier})', tier: 'gold', dryRun: true }, 'admin-secret');
+  assert.equal(dryGold.body.count, 1);
+  assert.deepEqual(dryGold.body.recipients, ['gold@example.com']);
+
+  // Live send in dev mode counts sent cleanly.
+  const sent = await call(env, '/v1/admin/newsletter/send', { subject: 'VIP Gold Offer', text: 'Hi {name}', tier: 'gold' }, 'admin-secret');
+  assert.equal(sent.body.sent, 1);
+
+  // Member unsubscribes via authenticated endpoint.
+  const unsub = await call(env, '/v1/newsletter/unsubscribe', {}, m1.token);
+  assert.equal(unsub.body.unsubscribed, true);
+  const dryAfter = await call(env, '/v1/admin/newsletter/send', { subject: 'VIP Gold Offer', text: 'Hi', tier: 'gold', dryRun: true }, 'admin-secret');
+  assert.equal(dryAfter.body.count, 0);
+});
+
 
 

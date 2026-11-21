@@ -1,2179 +1,2179 @@
 {
- "places": [
-  {
-   "id": "hagia-sophia",
-   "cat": "history",
-   "lat": 41.0086,
-   "lng": 28.9802,
-   "district": "Fatih · Sultanahmet",
-   "price": {
-    "min": 25,
-    "cur": "EUR"
-   },
-   "official": null,
-   "source": "https://clevertourists.com/resources/hagia-sophia-tickets-2026-price-dress-code-guide",
-   "aliases": [
-    "Ayasofya",
-    "Aya Sofya",
-    "Hagia Sofia",
-    "Santa Sofia",
-    "Sainte-Sophie",
-    "Айя-София"
-   ],
-   "en": [
-    "Hagia Sophia",
-    "1,500 years of Byzantine and Ottoman history under one dome. Visitors enter the upper galleries on a separate ticketed route; worshippers enter free."
-   ],
-   "tr": [
-    "Ayasofya",
-    "Tek kubbe altında 1.500 yıllık Bizans ve Osmanlı tarihi. Ziyaretçiler ücretli ayrı bir rotayla üst galerilere çıkar; ibadet için giriş ücretsizdir."
-   ]
-  },
-  {
-   "id": "blue-mosque",
-   "cat": "history",
-   "lat": 41.0054,
-   "lng": 28.9768,
-   "district": "Fatih · Sultanahmet",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Sultanahmet Camii",
-    "Sultan Ahmed Mosque",
-    "Mavi Cami"
-   ],
-   "en": [
-    "Blue Mosque",
-    "The six-minaret Sultan Ahmed Mosque with its blue İznik tiles. Free; closed to visitors during prayer times."
-   ],
-   "tr": [
-    "Sultanahmet Camii",
-    "Altı minaresi ve mavi İznik çinileriyle Sultanahmet Camii. Ücretsiz; namaz vakitlerinde ziyarete kapalıdır."
-   ]
-  },
-  {
-   "id": "topkapi",
-   "cat": "history",
-   "lat": 41.0115,
-   "lng": 28.9834,
-   "district": "Fatih · Sultanahmet",
-   "price": {
-    "min": 50,
-    "max": 55,
-    "cur": "EUR"
-   },
-   "closed": [
-    2
-   ],
-   "official": "https://muze.gov.tr",
-   "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
-   "aliases": [
-    "Topkapı Sarayı",
-    "Topkapi Palace",
-    "Harem"
-   ],
-   "en": [
-    "Topkapı Palace",
-    "Home of the Ottoman sultans for almost 400 years: courtyards, treasury, sacred relics and the Harem, with views over the Bosphorus."
-   ],
-   "tr": [
-    "Topkapı Sarayı",
-    "Osmanlı padişahlarının yaklaşık 400 yıllık evi: avlular, hazine, kutsal emanetler ve Harem; Boğaz manzarasıyla."
-   ]
-  },
-  {
-   "id": "basilica-cistern",
-   "cat": "history",
-   "lat": 41.0084,
-   "lng": 28.9779,
-   "district": "Fatih · Sultanahmet",
-   "price": {
-    "min": 30,
-    "max": 38,
-    "cur": "EUR"
-   },
-   "official": "https://yerebatan.com",
-   "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
-   "aliases": [
-    "Yerebatan Sarnıcı",
-    "Yerebatan Sarayı",
-    "Medusa"
-   ],
-   "en": [
-    "Basilica Cistern",
-    "A 6th-century underground water palace with 336 columns and the two Medusa heads; evening sessions cost more."
-   ],
-   "tr": [
-    "Yerebatan Sarnıcı",
-    "336 sütunu ve iki Medusa başıyla 6. yüzyıldan kalma yeraltı su sarayı; akşam seansları daha pahalıdır."
-   ]
-  },
-  {
-   "id": "archaeology",
-   "cat": "museum",
-   "lat": 41.0117,
-   "lng": 28.9813,
-   "district": "Fatih · Gülhane",
-   "price": {
-    "min": 15,
-    "cur": "EUR"
-   },
-   "closed": [
-    1
-   ],
-   "official": "https://muze.gov.tr",
-   "source": "https://www.guidedistanbultours.com/en/blog/entrance-fees-of-istanbul-museums",
-   "aliases": [
-    "İstanbul Arkeoloji Müzeleri",
-    "Archaeological Museum",
-    "Alexander Sarcophagus"
-   ],
-   "en": [
-    "Istanbul Archaeology Museums",
-    "Three museums next to Topkapı: the Alexander Sarcophagus, ancient Near East treasures and the Tiled Kiosk."
-   ],
-   "tr": [
-    "İstanbul Arkeoloji Müzeleri",
-    "Topkapı'nın yanında üç müze: İskender Lahdi, Eski Şark eserleri ve Çinili Köşk."
-   ]
-  },
-  {
-   "id": "suleymaniye",
-   "cat": "history",
-   "lat": 41.0162,
-   "lng": 28.9639,
-   "district": "Fatih · Süleymaniye",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Süleymaniye Camii",
-    "Suleymaniye Mosque",
-    "Mimar Sinan"
-   ],
-   "en": [
-    "Süleymaniye Mosque",
-    "Mimar Sinan's masterpiece on the third hill, with a terrace over the Golden Horn. Free; closed to visitors during prayers."
-   ],
-   "tr": [
-    "Süleymaniye Camii",
-    "Mimar Sinan'ın üçüncü tepedeki şaheseri; Haliç'e bakan terasıyla. Ücretsiz; namaz vakitlerinde ziyarete kapalı."
-   ]
-  },
-  {
-   "id": "chora",
-   "cat": "history",
-   "lat": 41.0312,
-   "lng": 28.939,
-   "district": "Fatih · Edirnekapı",
-   "price": null,
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Kariye",
-    "Kariye Camii",
-    "Chora Church",
-    "Kariye Müzesi"
-   ],
-   "en": [
-    "Chora (Kariye)",
-    "Some of the finest Byzantine mosaics and frescoes in the world, near the land walls. Check visiting hours before you go."
-   ],
-   "tr": [
-    "Kariye (Khora)",
-    "Kara surlarının yakınında, dünyanın en güzel Bizans mozaik ve fresklerinden bazıları. Gitmeden ziyaret saatlerine bakın."
-   ]
-  },
-  {
-   "id": "galata-tower",
-   "cat": "history",
-   "lat": 41.0256,
-   "lng": 28.9744,
-   "district": "Beyoğlu · Galata",
-   "price": {
-    "min": 30,
-    "cur": "EUR"
-   },
-   "official": "https://muze.gov.tr",
-   "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
-   "aliases": [
-    "Galata Kulesi",
-    "Galata Tower"
-   ],
-   "en": [
-    "Galata Tower",
-    "The medieval Genoese tower with a 360° view over the Golden Horn and the Bosphorus; day and night sessions."
-   ],
-   "tr": [
-    "Galata Kulesi",
-    "Haliç ve Boğaz'a 360° manzaralı Ceneviz kulesi; gündüz ve gece seansları var."
-   ]
-  },
-  {
-   "id": "dolmabahce",
-   "cat": "history",
-   "lat": 41.0391,
-   "lng": 29.0004,
-   "district": "Beşiktaş",
-   "price": {
-    "min": 40,
-    "max": 60,
-    "cur": "EUR"
-   },
-   "closed": [
-    1
-   ],
-   "official": "https://www.millisaraylar.gov.tr",
-   "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
-   "aliases": [
-    "Dolmabahçe Sarayı",
-    "Dolmabahce Palace"
-   ],
-   "en": [
-    "Dolmabahçe Palace",
-    "The 19th-century European-style palace on the Bosphorus, with its crystal staircase and giant chandelier."
-   ],
-   "tr": [
-    "Dolmabahçe Sarayı",
-    "Boğaz kıyısında 19. yüzyıldan Avrupa üslubunda saray; kristal merdiveni ve dev avizesiyle."
-   ]
-  },
-  {
-   "id": "beylerbeyi",
-   "cat": "history",
-   "lat": 41.0422,
-   "lng": 29.0398,
-   "district": "Üsküdar · Beylerbeyi",
-   "price": null,
-   "closed": [
-    1
-   ],
-   "official": "https://www.millisaraylar.gov.tr",
-   "source": null,
-   "aliases": [
-    "Beylerbeyi Sarayı",
-    "Beylerbeyi Palace"
-   ],
-   "en": [
-    "Beylerbeyi Palace",
-    "An elegant summer palace on the Asian shore, under the Bosphorus Bridge."
-   ],
-   "tr": [
-    "Beylerbeyi Sarayı",
-    "Asya yakasında, Boğaz Köprüsü'nün altında zarif bir yazlık saray."
-   ]
-  },
-  {
-   "id": "maidens-tower",
-   "cat": "history",
-   "lat": 41.0211,
-   "lng": 29.0041,
-   "district": "Üsküdar",
-   "price": null,
-   "official": "https://kizkulesi.gov.tr",
-   "source": null,
-   "aliases": [
-    "Kız Kulesi",
-    "Maiden's Tower",
-    "Leander's Tower"
-   ],
-   "en": [
-    "Maiden's Tower",
-    "The little tower on an islet off Üsküdar, reached by boat; a museum and viewpoint."
-   ],
-   "tr": [
-    "Kız Kulesi",
-    "Üsküdar açığındaki adacıkta, tekneyle ulaşılan küçük kule; müze ve seyir noktası."
-   ]
-  },
-  {
-   "id": "rumeli-hisari",
-   "cat": "history",
-   "lat": 41.0846,
-   "lng": 29.0567,
-   "district": "Sarıyer · Rumelihisarı",
-   "price": null,
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Rumeli Hisarı",
-    "Rumelian Castle",
-    "Rumeli Fortress"
-   ],
-   "en": [
-    "Rumeli Fortress",
-    "The fortress Mehmed II built in four months in 1452, on the narrowest point of the Bosphorus."
-   ],
-   "tr": [
-    "Rumeli Hisarı",
-    "II. Mehmed'in 1452'de dört ayda yaptırdığı, Boğaz'ın en dar yerindeki hisar."
-   ]
-  },
-  {
-   "id": "istanbul-modern",
-   "cat": "museum",
-   "lat": 41.0262,
-   "lng": 28.9834,
-   "district": "Beyoğlu · Karaköy",
-   "price": null,
-   "closed": [
-    1
-   ],
-   "official": "https://www.istanbulmodern.org",
-   "source": null,
-   "aliases": [
-    "İstanbul Modern",
-    "Istanbul Museum of Modern Art"
-   ],
-   "en": [
-    "Istanbul Modern",
-    "Modern and contemporary Turkish art in a new building on the Karaköy waterfront."
-   ],
-   "tr": [
-    "İstanbul Modern",
-    "Karaköy sahilindeki yeni binasında modern ve çağdaş Türk sanatı."
-   ]
-  },
-  {
-   "id": "pera-museum",
-   "cat": "museum",
-   "lat": 41.0319,
-   "lng": 28.975,
-   "district": "Beyoğlu · Tepebaşı",
-   "price": null,
-   "closed": [
-    1
-   ],
-   "official": "https://www.peramuzesi.org.tr",
-   "source": null,
-   "aliases": [
-    "Pera Müzesi",
-    "Kaplumbağa Terbiyecisi",
-    "Tortoise Trainer"
-   ],
-   "en": [
-    "Pera Museum",
-    "Orientalist paintings, including Osman Hamdi Bey's \"The Tortoise Trainer\", near İstiklal Avenue."
-   ],
-   "tr": [
-    "Pera Müzesi",
-    "İstiklal Caddesi yakınında, Osman Hamdi Bey'in \"Kaplumbağa Terbiyecisi\" dahil oryantalist resimler."
-   ]
-  },
-  {
-   "id": "rahmi-koc",
-   "cat": "museum",
-   "lat": 41.0423,
-   "lng": 28.949,
-   "district": "Beyoğlu · Hasköy",
-   "price": null,
-   "closed": [
-    1
-   ],
-   "official": "https://www.rmk-museum.org.tr",
-   "source": null,
-   "aliases": [
-    "Rahmi M. Koç Müzesi",
-    "Rahmi Koc Museum"
-   ],
-   "en": [
-    "Rahmi M. Koç Museum",
-    "Cars, trains, ships, planes and a submarine on the Golden Horn; a favourite with families."
-   ],
-   "tr": [
-    "Rahmi M. Koç Müzesi",
-    "Haliç kıyısında otomobiller, trenler, gemiler, uçaklar ve bir denizaltı; ailelerin favorisi."
-   ]
-  },
-  {
-   "id": "isfanbul",
-   "cat": "family",
-   "lat": 41.0659,
-   "lng": 28.9282,
-   "district": "Eyüpsultan",
-   "price": {
-    "min": 2075,
-    "cur": "TRY"
-   },
-   "official": "https://www.isfanbul.com",
-   "source": "https://thebettervacation.com/istanbul/vialand-theme-park/",
-   "aliases": [
-    "Vialand",
-    "İsfanbul",
-    "Isfanbul",
-    "Viaport",
-    "tema parkı",
-    "theme park",
-    "lunapark"
-   ],
-   "en": [
-    "Isfanbul (ex-Vialand) theme park",
-    "Istanbul's big theme park in Eyüpsultan: roller coasters, family rides and shows. Formerly called Vialand."
-   ],
-   "tr": [
-    "İsfanbul (eski Vialand) tema parkı",
-    "Eyüpsultan'daki büyük tema parkı: hız trenleri, aile oyuncakları ve gösteriler. Eski adı Vialand."
-   ]
-  },
-  {
-   "id": "istanbul-aquarium",
-   "cat": "family",
-   "lat": 40.964,
-   "lng": 28.7986,
-   "district": "Bakırköy · Florya",
-   "price": {
-    "min": 1000,
-    "max": 1100,
-    "cur": "TRY"
-   },
-   "official": "https://www.istanbulakvaryum.com",
-   "source": "https://istanbul.com/istanbul-aquarium",
-   "aliases": [
-    "İstanbul Akvaryum",
-    "Istanbul Aquarium",
-    "Aqua Florya",
-    "Florya Akvaryum",
-    "akvaryum"
-   ],
-   "en": [
-    "Istanbul Aquarium (Aqua Florya)",
-    "One of Europe's largest aquariums, at the Aqua Florya mall by the sea. Marmaray to Florya Akvaryum station."
-   ],
-   "tr": [
-    "İstanbul Akvaryum (Aqua Florya)",
-    "Avrupa'nın en büyük akvaryumlarından biri; deniz kıyısındaki Aqua Florya AVM'de. Marmaray ile Florya Akvaryum durağı."
-   ]
-  },
-  {
-   "id": "sea-life",
-   "cat": "family",
-   "lat": 41.0465,
-   "lng": 28.897,
-   "district": "Bayrampaşa · Forum İstanbul",
-   "price": null,
-   "official": "https://www.visitsealife.com/istanbul/",
-   "source": null,
-   "aliases": [
-    "SEA LIFE",
-    "Turkuazoo",
-    "Forum İstanbul akvaryum"
-   ],
-   "en": [
-    "SEA LIFE Istanbul",
-    "Underwater tunnel with sharks and rays at Forum İstanbul mall; combo tickets with LEGOLAND."
-   ],
-   "tr": [
-    "SEA LIFE İstanbul",
-    "Forum İstanbul AVM'de köpekbalıkları ve vatozlarla sualtı tüneli; LEGOLAND ile kombine bilet."
-   ]
-  },
-  {
-   "id": "legoland",
-   "cat": "family",
-   "lat": 41.0467,
-   "lng": 28.8966,
-   "district": "Bayrampaşa · Forum İstanbul",
-   "price": {
-    "min": 851,
-    "max": 945,
-    "cur": "TRY"
-   },
-   "official": "https://www.legolanddiscoverycentre.com/istanbul/",
-   "source": "https://www.legolanddiscoverycentre.com/istanbul/en/tickets-prices/qr-code/",
-   "aliases": [
-    "LEGOLAND Discovery Centre",
-    "Lego"
-   ],
-   "en": [
-    "LEGOLAND Discovery Centre",
-    "Indoor LEGO play centre for children aged about 3–10, at Forum İstanbul; cheaper online."
-   ],
-   "tr": [
-    "LEGOLAND Discovery Centre",
-    "Forum İstanbul'da yaklaşık 3–10 yaş çocuklar için kapalı LEGO oyun merkezi; internetten daha ucuz."
-   ]
-  },
-  {
-   "id": "madame-tussauds",
-   "cat": "family",
-   "lat": 41.0335,
-   "lng": 28.9777,
-   "district": "Beyoğlu · İstiklal",
-   "price": null,
-   "official": "https://www.madametussauds.com/istanbul/",
-   "source": null,
-   "aliases": [
-    "Madame Tussauds",
-    "balmumu müzesi",
-    "wax museum"
-   ],
-   "en": [
-    "Madame Tussauds Istanbul",
-    "Wax figures of Turkish and world celebrities, on İstiklal Avenue."
-   ],
-   "tr": [
-    "Madame Tussauds İstanbul",
-    "İstiklal Caddesi'nde Türk ve dünya ünlülerinin balmumu heykelleri."
-   ]
-  },
-  {
-   "id": "miniaturk",
-   "cat": "family",
-   "lat": 41.0603,
-   "lng": 28.9493,
-   "district": "Beyoğlu · Sütlüce",
-   "price": null,
-   "official": "https://www.miniaturk.com.tr",
-   "source": null,
-   "aliases": [
-    "Miniatürk",
-    "Miniaturk"
-   ],
-   "en": [
-    "Miniatürk",
-    "Open-air park with scale models of famous buildings from Turkey and the Ottoman lands, on the Golden Horn."
-   ],
-   "tr": [
-    "Miniatürk",
-    "Haliç kıyısında Türkiye ve Osmanlı topraklarındaki ünlü yapıların maketleriyle açık hava parkı."
-   ]
-  },
-  {
-   "id": "whirling-dervishes",
-   "cat": "experience",
-   "lat": 41.0146,
-   "lng": 28.9757,
-   "district": "Fatih · Sirkeci",
-   "price": {
-    "min": 1183,
-    "cur": "TRY"
-   },
-   "official": "https://www.hodjapasha.com",
-   "source": "https://thebettervacation.com/istanbul/whirling-dervishes-show-istanbul/",
-   "aliases": [
-    "Hodjapasha",
-    "HodjaPasha",
-    "Sema",
-    "semazen",
-    "dervish",
-    "Mevlevi"
-   ],
-   "en": [
-    "Whirling dervishes (HodjaPasha)",
-    "An hour-long Sema ceremony in a restored 15th-century hammam in Sirkeci; evening sessions."
-   ],
-   "tr": [
-    "Semazenler (HodjaPasha)",
-    "Sirkeci'de restore edilmiş 15. yüzyıl hamamında bir saatlik sema gösterisi; akşam seansları."
-   ]
-  },
-  {
-   "id": "city-ferry",
-   "cat": "experience",
-   "lat": 41.0175,
-   "lng": 28.9745,
-   "district": "Eminönü · Karaköy · Kadıköy · Üsküdar",
-   "price": null,
-   "official": "https://www.sehirhatlari.istanbul",
-   "source": null,
-   "aliases": [
-    "Şehir Hatları",
-    "vapur",
-    "ferry",
-    "Istanbulkart",
-    "İstanbulkart"
-   ],
-   "en": [
-    "Public ferry across the Bosphorus",
-    "The cheapest Bosphorus cruise: a city ferry between Europe and Asia, paid with an İstanbulkart."
-   ],
-   "tr": [
-    "Şehir Hatları vapuru",
-    "En ucuz Boğaz turu: Avrupa ile Asya arasında İstanbulkart'la binilen vapur."
-   ]
-  },
-  {
-   "id": "grand-bazaar",
-   "cat": "walk",
-   "lat": 41.0107,
-   "lng": 28.9681,
-   "district": "Fatih · Beyazıt",
-   "price": "free",
-   "closed": [
-    0
-   ],
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Kapalıçarşı",
-    "Kapali Carsi",
-    "Grand Bazaar",
-    "Covered Bazaar"
-   ],
-   "en": [
-    "Grand Bazaar",
-    "One of the world's oldest covered markets: 60+ streets of carpets, lamps, jewellery and leather. Closed on Sundays."
-   ],
-   "tr": [
-    "Kapalıçarşı",
-    "Dünyanın en eski kapalı çarşılarından biri: halı, lamba, mücevher ve deriyle 60'tan fazla sokak. Pazar kapalı."
-   ]
-  },
-  {
-   "id": "spice-bazaar",
-   "cat": "walk",
-   "lat": 41.0166,
-   "lng": 28.9706,
-   "district": "Fatih · Eminönü",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Mısır Çarşısı",
-    "Misir Carsisi",
-    "Egyptian Bazaar",
-    "Spice Market"
-   ],
-   "en": [
-    "Spice Bazaar",
-    "Spices, Turkish delight, dried fruit and tea next to the New Mosque in Eminönü."
-   ],
-   "tr": [
-    "Mısır Çarşısı",
-    "Eminönü'nde Yeni Cami'nin yanında baharat, lokum, kuru meyve ve çay."
-   ]
-  },
-  {
-   "id": "balat",
-   "cat": "walk",
-   "lat": 41.0301,
-   "lng": 28.9482,
-   "district": "Fatih · Balat",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Balat",
-    "Fener",
-    "renkli evler",
-    "colourful houses"
-   ],
-   "en": [
-    "Balat and Fener",
-    "Colourful houses, churches, synagogues and cafés in the old Greek, Jewish and Armenian quarters on the Golden Horn."
-   ],
-   "tr": [
-    "Balat ve Fener",
-    "Haliç kıyısındaki eski Rum, Yahudi ve Ermeni mahallelerinde renkli evler, kiliseler, sinagoglar ve kafeler."
-   ]
-  },
-  {
-   "id": "istiklal",
-   "cat": "walk",
-   "lat": 41.034,
-   "lng": 28.979,
-   "district": "Beyoğlu · Taksim",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "İstiklal Caddesi",
-    "Istiklal Avenue",
-    "Taksim",
-    "nostaljik tramvay"
-   ],
-   "en": [
-    "İstiklal Avenue and Taksim",
-    "Istanbul's busiest street: shops, passages, churches and the red nostalgic tram, from Taksim to Galata."
-   ],
-   "tr": [
-    "İstiklal Caddesi ve Taksim",
-    "İstanbul'un en kalabalık caddesi: dükkânlar, pasajlar, kiliseler ve kırmızı nostaljik tramvay; Taksim'den Galata'ya."
-   ]
-  },
-  {
-   "id": "ortakoy",
-   "cat": "walk",
-   "lat": 41.0474,
-   "lng": 29.0268,
-   "district": "Beşiktaş · Ortaköy",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Ortaköy",
-    "Ortakoy",
-    "kumpir"
-   ],
-   "en": [
-    "Ortaköy",
-    "The baroque Ortaköy Mosque under the Bosphorus Bridge, with street food like kumpir and waffles."
-   ],
-   "tr": [
-    "Ortaköy",
-    "Boğaz Köprüsü'nün altında barok Ortaköy Camii; kumpir ve waffle gibi sokak lezzetleriyle."
-   ]
-  },
-  {
-   "id": "kadikoy",
-   "cat": "walk",
-   "lat": 40.99,
-   "lng": 29.027,
-   "district": "Kadıköy · Moda",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Kadıköy",
-    "Kadikoy",
-    "Moda",
-    "Asian side"
-   ],
-   "en": [
-    "Kadıköy and Moda",
-    "The lively Asian side: food market, cafés, bookshops and a seaside walk in Moda. Reach it by ferry."
-   ],
-   "tr": [
-    "Kadıköy ve Moda",
-    "Hareketli Anadolu yakası: çarşı, kafeler, kitapçılar ve Moda'da sahil yürüyüşü. Vapurla gidilir."
-   ]
-  },
-  {
-   "id": "camlica",
-   "cat": "walk",
-   "lat": 41.0274,
-   "lng": 29.0679,
-   "district": "Üsküdar · Çamlıca",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Çamlıca",
-    "Camlica",
-    "Çamlıca Camii",
-    "Camlica Mosque"
-   ],
-   "en": [
-    "Çamlıca Hill and Mosque",
-    "The highest viewpoint on the Asian side and Turkey's largest mosque."
-   ],
-   "tr": [
-    "Çamlıca Tepesi ve Camii",
-    "Anadolu yakasının en yüksek seyir noktası ve Türkiye'nin en büyük camisi."
-   ]
-  },
-  {
-   "id": "pierre-loti",
-   "cat": "walk",
-   "lat": 41.0539,
-   "lng": 28.9338,
-   "district": "Eyüpsultan",
-   "price": null,
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Pierre Loti",
-    "Piyer Loti",
-    "Eyüp Sultan",
-    "teleferik",
-    "cable car"
-   ],
-   "en": [
-    "Eyüp Sultan and Pierre Loti Hill",
-    "A holy mosque, then a short cable car up to a café with a view down the Golden Horn."
-   ],
-   "tr": [
-    "Eyüp Sultan ve Piyer Loti",
-    "Kutsal Eyüp Sultan Camii, ardından kısa bir teleferikle Haliç manzaralı kafeye."
-   ]
-  },
-  {
-   "id": "princes-islands",
-   "cat": "walk",
-   "lat": 40.874,
-   "lng": 29.129,
-   "district": "Adalar",
-   "price": null,
-   "official": "https://www.sehirhatlari.istanbul",
-   "source": null,
-   "aliases": [
-    "Adalar",
-    "Büyükada",
-    "Princes' Islands",
-    "Heybeliada",
-    "Kınalıada"
-   ],
-   "en": [
-    "Princes' Islands",
-    "Car-free islands in the Sea of Marmara with wooden mansions and pine woods; a day trip by ferry."
-   ],
-   "tr": [
-    "Adalar",
-    "Marmara Denizi'nde arabasız adalar; ahşap köşkler ve çam ormanları. Vapurla günübirlik gezi."
-   ]
-  },
-  {
-   "id": "emirgan",
-   "cat": "walk",
-   "lat": 41.1086,
-   "lng": 29.053,
-   "district": "Sarıyer · Emirgan",
-   "price": "free",
-   "official": null,
-   "source": null,
-   "aliases": [
-    "Emirgan Korusu",
-    "Emirgan Park",
-    "lale",
-    "tulips"
-   ],
-   "en": [
-    "Emirgan Park",
-    "A large Bosphorus park with pavilions; famous for its tulips every April."
-   ],
-   "tr": [
-    "Emirgan Korusu",
-    "Köşkleriyle büyük bir Boğaz parkı; her nisan lale festivaliyle ünlü."
-   ]
-  }
- ],
- "stops": [
-  {
-   "id": "eminonu",
-   "lat": 41.017,
-   "lng": 28.9707,
-   "day": 1,
-   "en": [
-    "Eminönü and Rızapaşa Slope",
-    "Start at the New Mosque and the Spice Bazaar, then climb the busy market street of Rızapaşa Yokuşu."
-   ],
-   "tr": [
-    "Eminönü ve Rızapaşa Yokuşu",
-    "Yeni Cami ve Mısır Çarşısı'ndan başlayın, ardından hareketli çarşı sokağı Rızapaşa Yokuşu'nu tırmanın."
-   ]
-  },
-  {
-   "id": "suleymaniye",
-   "lat": 41.0162,
-   "lng": 28.9639,
-   "day": 1,
-   "en": [
-    "Süleymaniye",
-    "Mimar Sinan's mosque complex and the terrace above the Golden Horn."
-   ],
-   "tr": [
-    "Süleymaniye",
-    "Mimar Sinan'ın külliyesi ve Haliç'e bakan teras."
-   ]
-  },
-  {
-   "id": "kucukpazar",
-   "lat": 41.0185,
-   "lng": 28.9615,
-   "day": 1,
-   "en": [
-    "Küçükpazar",
-    "Walk down to the old market quarter with its wooden houses and craftsmen."
-   ],
-   "tr": [
-    "Küçükpazar",
-    "Ahşap evleri ve zanaatkârlarıyla eski çarşı mahallesine inin."
-   ]
-  },
-  {
-   "id": "zeyrek",
-   "lat": 41.0198,
-   "lng": 28.9567,
-   "day": 1,
-   "en": [
-    "Zeyrek",
-    "The Byzantine Pantokrator monastery (Zeyrek Mosque) and the Zeyrek Cistern."
-   ],
-   "tr": [
-    "Zeyrek",
-    "Bizans'tan kalma Pantokrator manastırı (Zeyrek Camii) ve Zeyrek Sarnıcı."
-   ]
-  },
-  {
-   "id": "carsamba",
-   "lat": 41.0262,
-   "lng": 28.9462,
-   "day": 1,
-   "en": [
-    "Fatih – Çarşamba",
-    "A conservative old neighbourhood around the Fethiye (Pammakaristos) Mosque."
-   ],
-   "tr": [
-    "Fatih – Çarşamba",
-    "Fethiye (Pammakaristos) Camii çevresinde muhafazakâr, eski bir mahalle."
-   ]
-  },
-  {
-   "id": "balat",
-   "lat": 41.0301,
-   "lng": 28.9482,
-   "day": 1,
-   "en": [
-    "Balat",
-    "Colourful houses, the iron Bulgarian Church of St Stephen and the old synagogues."
-   ],
-   "tr": [
-    "Balat",
-    "Renkli evler, demir Bulgar Kilisesi (Sveti Stefan) ve eski sinagoglar."
-   ]
-  },
-  {
-   "id": "ayvansaray",
-   "lat": 41.0405,
-   "lng": 28.9425,
-   "day": 1,
-   "en": [
-    "Ayvansaray",
-    "Where the land walls meet the Golden Horn: the Blachernae quarter and the Anemas dungeons."
-   ],
-   "tr": [
-    "Ayvansaray",
-    "Kara surlarının Haliç'e ulaştığı yer: Blahernai bölgesi ve Anemas zindanları."
-   ]
-  },
-  {
-   "id": "kariye",
-   "lat": 41.0312,
-   "lng": 28.939,
-   "day": 1,
-   "en": [
-    "Kariye (Chora)",
-    "World-famous Byzantine mosaics and frescoes."
-   ],
-   "tr": [
-    "Kariye (Khora)",
-    "Dünyaca ünlü Bizans mozaikleri ve freskleri."
-   ]
-  },
-  {
-   "id": "edirnekapi",
-   "lat": 41.0306,
-   "lng": 28.9335,
-   "day": 1,
-   "en": [
-    "Edirnekapı",
-    "A gate of the Theodosian land walls and Sinan's Mihrimah Sultan Mosque."
-   ],
-   "tr": [
-    "Edirnekapı",
-    "Theodosius kara surlarının kapılarından biri ve Sinan'ın Mihrimah Sultan Camii."
-   ]
-  },
-  {
-   "id": "yedikule",
-   "lat": 40.994,
-   "lng": 28.9228,
-   "day": 2,
-   "en": [
-    "Yedikule Fortress",
-    "Follow the land walls south to the seven-towered fortress by the Golden Gate."
-   ],
-   "tr": [
-    "Yedikule Hisarı",
-    "Kara surlarını güneye izleyip Altın Kapı yanındaki yedi kuleli hisara varın."
-   ]
-  },
-  {
-   "id": "cerrahpasa",
-   "lat": 41.004,
-   "lng": 28.943,
-   "day": 2,
-   "en": [
-    "Cerrahpaşa",
-    "Turn back east through the old residential streets of the seventh hill."
-   ],
-   "tr": [
-    "Cerrahpaşa",
-    "Yedinci tepenin eski mahalle sokaklarından doğuya dönün."
-   ]
-  },
-  {
-   "id": "beyazit",
-   "lat": 41.0105,
-   "lng": 28.964,
-   "day": 2,
-   "en": [
-    "Beyazıt",
-    "Beyazıt Square, the university gate, the Sahaflar book market and the Grand Bazaar."
-   ],
-   "tr": [
-    "Beyazıt",
-    "Beyazıt Meydanı, üniversite kapısı, Sahaflar Çarşısı ve Kapalıçarşı."
-   ]
-  },
-  {
-   "id": "sultanahmet",
-   "lat": 41.0055,
-   "lng": 28.9768,
-   "day": 2,
-   "en": [
-    "Sultanahmet",
-    "Finish at Hagia Sophia, the Blue Mosque and the Hippodrome."
-   ],
-   "tr": [
-    "Sultanahmet",
-    "Ayasofya, Sultanahmet Camii ve Hipodrom'da bitirin."
-   ]
-  }
- ],
- "ui": {
-  "en": {
-   "navDiscover": "Discover",
-   "navSearch": "Search",
-   "exEyebrow": "DISCOVER ISTANBUL",
-   "exTitle": "Everything worth seeing in Istanbul.",
-   "exLead": "Palaces, museums, bazaars, neighbourhoods, theme parks and shows, with closing days, indicative prices and directions. Ask us on email and we will help with tickets or a transfer from your hotel.",
-   "catAll": "All",
-   "catHistory": "History",
-   "catMuseum": "Museums",
-   "catFamily": "Family & fun",
-   "catExperience": "Experiences",
-   "catWalk": "Neighbourhoods & views",
-   "free": "Free entry",
-   "priceUnknown": "Price: see official website",
-   "closedOn": "Closed: {days}",
-   "official": "Official website",
-   "directions": "Directions",
-   "ask": "Ask on email",
-   "askMsg": "Hello Bosphorly, I would like to visit {place}. Can you help with tickets or a transfer?",
-   "priceNote": "Prices are indicative (checked {date}); they change often and sources disagree. Always check the official website before you go.",
-   "priceSource": "Price source",
-   "approx": "approx.",
-   "searchPh": "Search places, tours, routes…",
-   "noResults": "Nothing found. Try another word.",
-   "results": "results",
-   "routeCardEyebrow": "WALKING ROUTE",
-   "routeCardTitle": "Prof. İlber Ortaylı's Istanbul route",
-   "routeCardText": "13 stops from Eminönü to Sultanahmet, through Süleymaniye, Balat, the land walls and Yedikule.",
-   "routeOpen": "See the route →",
-   "rtEyebrow": "THE HISTORIC PENINSULA ON FOOT",
-   "rtTitle": "Prof. İlber Ortaylı's Istanbul route",
-   "rtLead": "The historian İlber Ortaylı said you cannot claim to have seen Istanbul until you have walked it. This is the route he recommended, as reported in the Turkish press: from Eminönü up to Süleymaniye, through the old neighbourhoods to the land walls and Yedikule, and back to Sultanahmet.",
-   "rtQuote": "Don't say you have seen the city until you have walked these streets.",
-   "rtQuoteBy": "İlber Ortaylı, as quoted by the Turkish press",
-   "rtFactStops": "stops",
-   "rtFactKm": "≈ 19 km on foot (our estimate)",
-   "rtFactDays": "best split into 2 days",
-   "rtDay1": "Day 1 · Eminönü → Edirnekapı",
-   "rtDay2": "Day 2 · Land walls → Sultanahmet",
-   "rtDirections": "Walking directions for this day",
-   "rtTipsTitle": "Before you go",
-   "rtTip1": "Wear comfortable shoes: the streets are steep and often cobbled.",
-   "rtTip2": "Mosques: cover shoulders and knees, women cover their hair, and avoid prayer times.",
-   "rtTip3": "The walls between Edirnekapı and Yedikule are long and quiet; walk them in daylight or take a taxi for that part.",
-   "rtSources": "Sources",
-   "rtDisclaimer": "Bosphorly compiled this route from press reports of Prof. Ortaylı's recommendation. It is not an official route and is not endorsed by him or his family. Opening hours change; check before you go.",
-   "rtMapNote": "Straight lines between stops, not exact walking paths.",
-   "rtAskGuide": "Want a licensed guide for this route? Ask us on email",
-   "rtAskMsg": "Hello Bosphorly, I would like a guide for the İlber Ortaylı Istanbul route.",
-   "rtStop": "Stop",
-   "srTitle": "Search Bosphorly",
-   "srLead": "Tours, places to visit, walking routes and guides, in one search.",
-   "srTours": "Tours",
-   "srPlaces": "Places to visit",
-   "srRoutes": "Routes",
-   "srGuides": "Guides",
-   "homeDiscEyebrow": "PLAN YOUR DAYS",
-   "homeDiscTitle": "Discover Istanbul, your way.",
-   "homeDiscSub": "33 places to see, from palaces and bazaars to Isfanbul theme park and the Istanbul Aquarium, plus Prof. İlber Ortaylı's walking route.",
-   "homeDiscCta": "Discover Istanbul →",
-   "gaTitle": "Getting around Istanbul",
-   "gaIst": "M11 metro links Istanbul Airport (IST) with Gayrettepe, where you change to the M2 metro for Taksim.",
-   "gaSaw": "M4 metro links Sabiha Gökçen Airport (SAW) on the Asian side with Kadıköy.",
-   "gaTram": "The T1 tram runs along the historic peninsula through Sultanahmet, Eminönü and Karaköy to Kabataş.",
-   "gaFerry": "City ferries cross between Europe and Asia. Pay for ferries, metro and trams with an İstanbulkart.",
-   "gaNote": "Lines and timetables change; check the official operators before you travel.",
-   "toEyebrow": "TOURS ON REQUEST",
-   "toTitle": "Themed, private and multi-day tours.",
-   "toLead": "Heritage and faith tours, neighbourhood walks, a panoramic bus tour, private guides and cars, and multi-day trips across Türkiye. Send your date and group on email; we ask licensed companies and send you the price before you decide.",
-   "toCatAll": "All",
-   "toCatThemed": "Heritage & faith",
-   "toCatHoods": "Neighbourhoods",
-   "toCatPanoramic": "Panoramic bus tour",
-   "toCatPrivate": "Private guide & car",
-   "toCatMulti": "Multi-day Türkiye",
-   "toPrice": "Price on request",
-   "toAsk": "Ask on email",
-   "toAskMsg": "Hello Bosphorly, I am interested in: {tour}. Date: … Number of guests: … Hotel: …",
-   "toDurH": "About {n} hours",
-   "toDurHalf": "Half day",
-   "toDurFull": "Full day",
-   "toDurD": "{n} days",
-   "toDurFlex": "Half day, full day or by the hour",
-   "toHowTitle": "How it works",
-   "toHow1": "Send your date, group size and hotel on email.",
-   "toHow2": "We ask licensed companies and send you the price and the programme.",
-   "toHow3": "You decide. Nothing is paid on this website.",
-   "toNote": "These tours are arranged on request. Bosphorly has no signed agreement for them yet, so the price and availability are confirmed on email.",
-   "toSeeAlso": "Cappadocia, Pamukkale and Ephesus packages with published prices →",
-   "toFrom": "From {price}",
-   "toDetails": "Details and prices",
-   "toTimes": "Times",
-   "toRoute": "Route",
-   "toInc": "Usually included",
-   "toExc": "Usually not included",
-   "toMarket": "Prices published by other companies",
-   "toMarketNote": "What Istanbul companies charge for similar tours (checked {date}). Request through Bosphorly and we confirm your price on email before anything is booked.",
-   "toB_pp": "per person",
-   "toB_group": "per group",
-   "toB_groupMax": "per group (up to {n})",
-   "toB_private": "private tour",
-   "toB_vehicle": "per vehicle",
-   "toB_day": "per day",
-   "toHours": "{n} h",
-   "toFromWord": "from",
-   "toN_carIncl": "with car and driver",
-   "toN_guideOnly": "guide only",
-   "toN_halfDay": "half day",
-   "toN_istSultanahmet": "IST → Sultanahmet",
-   "toN_oneDay": "1-day ticket",
-   "toN_ticketsIncl": "entrance tickets included",
-   "toN_vito100": "Mercedes Vito, 100 km",
-   "toT_carLimits": "Usually 8 hours and 100 km a day; extra hours and kilometres cost more.",
-   "toT_publicFerry": "Cheaper option: the public long Bosphorus ferry (Şehir Hatları) from Eminönü stops about 2.5 hours at Anadolu Kavağı; pay with an İstanbulkart.",
-   "toI_audio": "Audio commentary",
-   "toI_cablecar": "Cable car",
-   "toI_drinks": "Drinks",
-   "toI_ferry": "Ferry",
-   "toI_flights": "Domestic flights",
-   "toI_fuel": "Fuel and tolls",
-   "toI_guide": "Licensed guide",
-   "toI_hotels": "Hotels",
-   "toI_lunch": "Lunch",
-   "toI_meet": "Meet and greet with a name sign",
-   "toI_pickup": "Hotel pickup",
-   "toI_tastings": "Food tastings",
-   "toI_tickets": "Entrance tickets",
-   "toI_tips": "Tips",
-   "toI_transport": "Transport",
-   "toI_vehicle": "Vehicle with driver",
-   "toI_wifi": "Wi-Fi",
-   "toMarketRange": "Market price in Istanbul",
-   "toReq": "Request this tour",
-   "toFDate": "Date",
-   "toFGuests": "Guests",
-   "toFHotel": "Hotel",
-   "toFName": "Full name",
-   "toFPhone": "Mobile / email (with country code)",
-   "toFNotes": "Notes (optional)",
-   "toFAck": "I agree that my request and contact details are sent to Bosphorly via email. Price and availability are confirmed before anything is booked; nothing is paid on this website.",
-   "toFSend": "Send request via email →",
-   "toFErr": "Please fill in the date, guests, your name and phone number with country code, and tick the box.",
-   "toFDone": "Request {ref} is ready. email is opening: press send to deliver it to Bosphorly.",
-   "toWaTitle": "Bosphorly tour request",
-   "toWaRef": "Reference",
-   "toMyReq": "See my requests →"
-  },
-  "tr": {
-   "navDiscover": "Keşfet",
-   "navSearch": "Ara",
-   "exEyebrow": "İSTANBUL'U KEŞFET",
-   "exTitle": "İstanbul'da görülmeye değer her şey.",
-   "exLead": "Saraylar, müzeler, çarşılar, semtler, tema parkları ve gösteriler; kapalı günleri, yaklaşık fiyatları ve yol tarifleriyle. e-posta ile yaz, bilet veya otelden transfer için yardımcı olalım.",
-   "catAll": "Tümü",
-   "catHistory": "Tarih",
-   "catMuseum": "Müzeler",
-   "catFamily": "Aile ve eğlence",
-   "catExperience": "Deneyimler",
-   "catWalk": "Semtler ve manzaralar",
-   "free": "Giriş ücretsiz",
-   "priceUnknown": "Fiyat: resmî siteye bakın",
-   "closedOn": "Kapalı: {days}",
-   "official": "Resmî site",
-   "directions": "Yol tarifi",
-   "ask": "e-posta ile sor",
-   "askMsg": "Merhaba Bosphorly, {place} gezmek istiyorum. Bilet veya transfer için yardımcı olabilir misiniz?",
-   "priceNote": "Fiyatlar yaklaşıktır ({date} itibarıyla); sık değişir ve kaynaklar farklı rakamlar verir. Gitmeden önce mutlaka resmî siteye bakın.",
-   "priceSource": "Fiyat kaynağı",
-   "approx": "yaklaşık",
-   "searchPh": "Yer, tur, rota ara…",
-   "noResults": "Sonuç yok. Başka bir kelime dene.",
-   "results": "sonuç",
-   "routeCardEyebrow": "YÜRÜYÜŞ ROTASI",
-   "routeCardTitle": "Prof. İlber Ortaylı'nın İstanbul rotası",
-   "routeCardText": "Eminönü'nden Sultanahmet'e 13 durak: Süleymaniye, Balat, kara surları ve Yedikule üzerinden.",
-   "routeOpen": "Rotayı gör →",
-   "rtEyebrow": "TARİHİ YARIMADA YÜRÜYEREK",
-   "rtTitle": "Prof. İlber Ortaylı'nın İstanbul rotası",
-   "rtLead": "Tarihçi İlber Ortaylı, İstanbul'u yürümeden görmüş sayılmayacağınızı söylerdi. Basında aktarıldığı şekliyle önerdiği rota: Eminönü'nden Süleymaniye'ye çıkıp eski mahallelerden kara surlarına ve Yedikule'ye, oradan Sultanahmet'e dönüş.",
-   "rtQuote": "Buraları yürümeden şehri gördüm demeyin.",
-   "rtQuoteBy": "İlber Ortaylı, basında aktarıldığı şekliyle",
-   "rtFactStops": "durak",
-   "rtFactKm": "≈ 19 km yürüyüş (bizim tahminimiz)",
-   "rtFactDays": "2 güne bölmek en iyisi",
-   "rtDay1": "1. gün · Eminönü → Edirnekapı",
-   "rtDay2": "2. gün · Kara surları → Sultanahmet",
-   "rtDirections": "Bu günün yürüyüş yol tarifi",
-   "rtTipsTitle": "Yola çıkmadan",
-   "rtTip1": "Rahat ayakkabı giyin: sokaklar dik ve çoğu yerde parke taşlı.",
-   "rtTip2": "Camiler: omuz ve dizler kapalı olmalı, kadınlar başını örtmeli; namaz vakitlerinden kaçının.",
-   "rtTip3": "Edirnekapı ile Yedikule arasındaki surlar uzun ve tenhadır; gündüz yürüyün ya da bu kısmı taksiyle geçin.",
-   "rtSources": "Kaynaklar",
-   "rtDisclaimer": "Bosphorly bu rotayı Prof. Ortaylı'nın önerisini aktaran basın haberlerinden derledi. Resmî bir rota değildir; kendisi veya ailesi tarafından onaylanmamıştır. Ziyaret saatleri değişebilir; gitmeden kontrol edin.",
-   "rtMapNote": "Duraklar arası düz çizgiler; gerçek yürüyüş yolu değildir.",
-   "rtAskGuide": "Bu rota için lisanslı rehber ister misin? e-posta ile yaz",
-   "rtAskMsg": "Merhaba Bosphorly, İlber Ortaylı İstanbul rotası için rehber istiyorum.",
-   "rtStop": "Durak",
-   "srTitle": "Bosphorly'de ara",
-   "srLead": "Turlar, gezilecek yerler, yürüyüş rotaları ve rehberler tek aramada.",
-   "srTours": "Turlar",
-   "srPlaces": "Gezilecek yerler",
-   "srRoutes": "Rotalar",
-   "srGuides": "Rehberler",
-   "homeDiscEyebrow": "GÜNLERİNİ PLANLA",
-   "homeDiscTitle": "İstanbul'u kendi tarzınla keşfet.",
-   "homeDiscSub": "Saraylardan çarşılara, İsfanbul tema parkından İstanbul Akvaryum'a 33 gezilecek yer ve Prof. İlber Ortaylı'nın yürüyüş rotası.",
-   "homeDiscCta": "İstanbul'u keşfet →",
-   "gaTitle": "Şehirde ulaşım",
-   "gaIst": "M11 metrosu İstanbul Havalimanı'nı (IST) Gayrettepe'ye bağlar; Taksim için orada M2 metrosuna aktarma yapılır.",
-   "gaSaw": "M4 metrosu Anadolu yakasındaki Sabiha Gökçen Havalimanı'nı (SAW) Kadıköy'e bağlar.",
-   "gaTram": "T1 tramvayı tarihi yarımadada Sultanahmet, Eminönü ve Karaköy üzerinden Kabataş'a gider.",
-   "gaFerry": "Şehir Hatları vapurları Avrupa ile Asya arasında çalışır. Vapur, metro ve tramvay için İstanbulkart kullanılır.",
-   "gaNote": "Hatlar ve saatler değişebilir; yola çıkmadan resmî işletmelere bakın.",
-   "toEyebrow": "TALEP ÜZERİNE TURLAR",
-   "toTitle": "Temalı, özel ve çok günlü turlar.",
-   "toLead": "İnanç ve miras turları, semt yürüyüşleri, panoramik otobüs turu, özel rehber ve araç, Türkiye'de çok günlü geziler. Tarihinizi ve kişi sayısını e-posta ile yazın; lisanslı firmalara soralım, karar vermeden önce fiyatı size iletelim.",
-   "toCatAll": "Tümü",
-   "toCatThemed": "Miras ve inanç",
-   "toCatHoods": "Semtler",
-   "toCatPanoramic": "Panoramik otobüs turu",
-   "toCatPrivate": "Özel rehber ve araç",
-   "toCatMulti": "Çok günlü Türkiye",
-   "toPrice": "Fiyat talep üzerine",
-   "toAsk": "e-posta ile sor",
-   "toAskMsg": "Merhaba Bosphorly, şu tur ilgimi çekiyor: {tour}. Tarih: … Kişi sayısı: … Otel: …",
-   "toDurH": "Yaklaşık {n} saat",
-   "toDurHalf": "Yarım gün",
-   "toDurFull": "Tam gün",
-   "toDurD": "{n} gün",
-   "toDurFlex": "Yarım gün, tam gün ya da saatlik",
-   "toHowTitle": "Nasıl işler?",
-   "toHow1": "Tarihinizi, kişi sayısını ve otelinizi e-posta ile yazın.",
-   "toHow2": "Lisanslı firmalara soralım, fiyatı ve programı size gönderelim.",
-   "toHow3": "Karar sizin. Bu sitede hiçbir ödeme yapılmaz.",
-   "toNote": "Bu turlar talep üzerine ayarlanır. Bosphorly'nin bunlar için henüz imzalı bir anlaşması yok; fiyat ve uygunluk e-posta uygulamasında teyit edilir.",
-   "toSeeAlso": "Yayınlanmış fiyatlı Kapadokya, Pamukkale ve Efes paketleri →",
-   "toFrom": "Başlangıç {price}",
-   "toDetails": "Detaylar ve fiyatlar",
-   "toTimes": "Saatler",
-   "toRoute": "Güzergâh",
-   "toInc": "Genelde dahil",
-   "toExc": "Genelde dahil değil",
-   "toMarket": "Diğer firmaların yayınladığı fiyatlar",
-   "toMarketNote": "İstanbul'daki firmaların benzer turlar için aldığı ücretler ({date} itibarıyla). Bosphorly üzerinden talep edin; rezervasyondan önce fiyatınızı e-posta uygulamasında teyit edelim.",
-   "toB_pp": "kişi başı",
-   "toB_group": "grup başı",
-   "toB_groupMax": "grup başı (en fazla {n} kişi)",
-   "toB_private": "özel tur",
-   "toB_vehicle": "araç başı",
-   "toB_day": "günlük",
-   "toHours": "{n} sa",
-   "toFromWord": "başlayan",
-   "toN_carIncl": "araç ve şoför dahil",
-   "toN_guideOnly": "yalnızca rehber",
-   "toN_halfDay": "yarım gün",
-   "toN_istSultanahmet": "IST → Sultanahmet",
-   "toN_oneDay": "1 günlük bilet",
-   "toN_ticketsIncl": "giriş biletleri dahil",
-   "toN_vito100": "Mercedes Vito, 100 km",
-   "toT_carLimits": "Genelde günde 8 saat ve 100 km; fazla saat ve kilometre ücretlidir.",
-   "toT_publicFerry": "Daha ucuz seçenek: Eminönü'nden kalkan Şehir Hatları uzun Boğaz vapuru Anadolu Kavağı'nda yaklaşık 2,5 saat bekler; İstanbulkart ile ödenir.",
-   "toI_audio": "Sesli anlatım",
-   "toI_cablecar": "Teleferik",
-   "toI_drinks": "İçecekler",
-   "toI_ferry": "Vapur",
-   "toI_flights": "İç hat uçuşları",
-   "toI_fuel": "Yakıt ve geçiş ücretleri",
-   "toI_guide": "Lisanslı rehber",
-   "toI_hotels": "Oteller",
-   "toI_lunch": "Öğle yemeği",
-   "toI_meet": "İsim tabelasıyla karşılama",
-   "toI_pickup": "Otelden alış",
-   "toI_tastings": "Yemek tadımları",
-   "toI_tickets": "Giriş biletleri",
-   "toI_tips": "Bahşiş",
-   "toI_transport": "Ulaşım",
-   "toI_vehicle": "Şoförlü araç",
-   "toI_wifi": "Wi-Fi",
-   "toMarketRange": "İstanbul'da piyasa fiyatı",
-   "toReq": "Bu turu talep et",
-   "toFDate": "Tarih",
-   "toFGuests": "Kişi sayısı",
-   "toFHotel": "Otel",
-   "toFName": "Ad soyad",
-   "toFPhone": "Cep / email (ülke koduyla)",
-   "toFNotes": "Not (isteğe bağlı)",
-   "toFAck": "Talebimin ve iletişim bilgilerimin email üzerinden Bosphorly'ye gönderilmesini kabul ediyorum. Rezervasyondan önce fiyat ve uygunluk teyit edilir; bu sitede ödeme alınmaz.",
-   "toFSend": "Talebi email ile gönder →",
-   "toFErr": "Lütfen tarihi, kişi sayısını, adınızı ve ülke koduyla telefonunuzu yazın, kutuyu işaretleyin.",
-   "toFDone": "{ref} numaralı talebiniz hazır. email açılıyor: Bosphorly'ye ulaşması için gönder'e basın.",
-   "toWaTitle": "Bosphorly tur talebi",
-   "toWaRef": "Referans",
-   "toMyReq": "Taleplerimi gör →"
-  }
- },
- "tours": [
-  {
-   "id": "jewish-heritage",
-   "cat": "themed",
-   "dur": [
-    "full"
-   ],
-   "en": [
-    "Jewish heritage of Istanbul",
-    "Five centuries of Sephardic life: the old quarters of Balat and Hasköy, the Ahrida Synagogue, Galata and the Kamondo Stairs. Synagogue visits are arranged in advance with passport details."
-   ],
-   "tr": [
-    "İstanbul'un Yahudi mirası",
-    "Beş yüzyıllık Sefarad hayatı: Balat ve Hasköy'ün eski mahalleleri, Ahrida Sinagogu, Galata ve Kamondo Merdivenleri. Sinagog ziyaretleri pasaport bilgisiyle önceden ayarlanır."
-   ],
-   "from": [
-    179,
-    "USD"
-   ],
-   "route": [
-    "Aşkenaz Sinagogu",
-    "Kamondo Merdivenleri",
-    "Neve Şalom Sinagogu",
-    "@balat",
-    "Ahrida Sinagogu",
-    "Yanbol Sinagogu"
-   ],
-   "inc": [
-    "guide",
-    "tickets",
-    "pickup"
-   ],
-   "exc": [
-    "lunch",
-    "tips"
-   ],
-   "src": [
+  "places": [
     {
-     "op": "ForeverVacation",
-     "p": 179,
-     "c": "USD",
-     "b": "private",
-     "from": true,
-     "u": "https://forevervacation.com/istanbul-jewish-heritage-tour"
+      "id": "hagia-sophia",
+      "cat": "history",
+      "lat": 41.0086,
+      "lng": 28.9802,
+      "district": "Fatih · Sultanahmet",
+      "price": {
+        "min": 25,
+        "cur": "EUR"
+      },
+      "official": null,
+      "source": "https://clevertourists.com/resources/hagia-sophia-tickets-2026-price-dress-code-guide",
+      "aliases": [
+        "Ayasofya",
+        "Aya Sofya",
+        "Hagia Sofia",
+        "Santa Sofia",
+        "Sainte-Sophie",
+        "Айя-София"
+      ],
+      "en": [
+        "Hagia Sophia",
+        "1,500 years of Byzantine and Ottoman history under one dome. Visitors enter the upper galleries on a separate ticketed route; worshippers enter free."
+      ],
+      "tr": [
+        "Ayasofya",
+        "Tek kubbe altında 1.500 yıllık Bizans ve Osmanlı tarihi. Ziyaretçiler ücretli ayrı bir rotayla üst galerilere çıkar; ibadet için giriş ücretsizdir."
+      ]
     },
     {
-     "op": "Les Arts Turcs",
-     "p": 210,
-     "c": "EUR",
-     "b": "private",
-     "h": 4,
-     "u": "https://www.lesartsturcs.com/product/jewish-heritage-and-synagogue-tour-in-istanbul/"
+      "id": "blue-mosque",
+      "cat": "history",
+      "lat": 41.0054,
+      "lng": 28.9768,
+      "district": "Fatih · Sultanahmet",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Sultanahmet Camii",
+        "Sultan Ahmed Mosque",
+        "Mavi Cami"
+      ],
+      "en": [
+        "Blue Mosque",
+        "The six-minaret Sultan Ahmed Mosque with its blue İznik tiles. Free; closed to visitors during prayer times."
+      ],
+      "tr": [
+        "Sultanahmet Camii",
+        "Altı minaresi ve mavi İznik çinileriyle Sultanahmet Camii. Ücretsiz; namaz vakitlerinde ziyarete kapalıdır."
+      ]
     },
     {
-     "op": "Turco Travel",
-     "p": 332,
-     "c": "USD",
-     "b": "pp",
-     "h": 6,
-     "u": "https://turcotravel.com/tours/istanbul-jewish-heritage-private-tour"
+      "id": "topkapi",
+      "cat": "history",
+      "lat": 41.0115,
+      "lng": 28.9834,
+      "district": "Fatih · Sultanahmet",
+      "price": {
+        "min": 50,
+        "max": 55,
+        "cur": "EUR"
+      },
+      "closed": [
+        2
+      ],
+      "official": "https://muze.gov.tr",
+      "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
+      "aliases": [
+        "Topkapı Sarayı",
+        "Topkapi Palace",
+        "Harem"
+      ],
+      "en": [
+        "Topkapı Palace",
+        "Home of the Ottoman sultans for almost 400 years: courtyards, treasury, sacred relics and the Harem, with views over the Bosphorus."
+      ],
+      "tr": [
+        "Topkapı Sarayı",
+        "Osmanlı padişahlarının yaklaşık 400 yıllık evi: avlular, hazine, kutsal emanetler ve Harem; Boğaz manzarasıyla."
+      ]
+    },
+    {
+      "id": "basilica-cistern",
+      "cat": "history",
+      "lat": 41.0084,
+      "lng": 28.9779,
+      "district": "Fatih · Sultanahmet",
+      "price": {
+        "min": 30,
+        "max": 38,
+        "cur": "EUR"
+      },
+      "official": "https://yerebatan.com",
+      "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
+      "aliases": [
+        "Yerebatan Sarnıcı",
+        "Yerebatan Sarayı",
+        "Medusa"
+      ],
+      "en": [
+        "Basilica Cistern",
+        "A 6th-century underground water palace with 336 columns and the two Medusa heads; evening sessions cost more."
+      ],
+      "tr": [
+        "Yerebatan Sarnıcı",
+        "336 sütunu ve iki Medusa başıyla 6. yüzyıldan kalma yeraltı su sarayı; akşam seansları daha pahalıdır."
+      ]
+    },
+    {
+      "id": "archaeology",
+      "cat": "museum",
+      "lat": 41.0117,
+      "lng": 28.9813,
+      "district": "Fatih · Gülhane",
+      "price": {
+        "min": 15,
+        "cur": "EUR"
+      },
+      "closed": [
+        1
+      ],
+      "official": "https://muze.gov.tr",
+      "source": "https://www.guidedistanbultours.com/en/blog/entrance-fees-of-istanbul-museums",
+      "aliases": [
+        "İstanbul Arkeoloji Müzeleri",
+        "Archaeological Museum",
+        "Alexander Sarcophagus"
+      ],
+      "en": [
+        "Istanbul Archaeology Museums",
+        "Three museums next to Topkapı: the Alexander Sarcophagus, ancient Near East treasures and the Tiled Kiosk."
+      ],
+      "tr": [
+        "İstanbul Arkeoloji Müzeleri",
+        "Topkapı'nın yanında üç müze: İskender Lahdi, Eski Şark eserleri ve Çinili Köşk."
+      ]
+    },
+    {
+      "id": "suleymaniye",
+      "cat": "history",
+      "lat": 41.0162,
+      "lng": 28.9639,
+      "district": "Fatih · Süleymaniye",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Süleymaniye Camii",
+        "Suleymaniye Mosque",
+        "Mimar Sinan"
+      ],
+      "en": [
+        "Süleymaniye Mosque",
+        "Mimar Sinan's masterpiece on the third hill, with a terrace over the Golden Horn. Free; closed to visitors during prayers."
+      ],
+      "tr": [
+        "Süleymaniye Camii",
+        "Mimar Sinan'ın üçüncü tepedeki şaheseri; Haliç'e bakan terasıyla. Ücretsiz; namaz vakitlerinde ziyarete kapalı."
+      ]
+    },
+    {
+      "id": "chora",
+      "cat": "history",
+      "lat": 41.0312,
+      "lng": 28.939,
+      "district": "Fatih · Edirnekapı",
+      "price": null,
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Kariye",
+        "Kariye Camii",
+        "Chora Church",
+        "Kariye Müzesi"
+      ],
+      "en": [
+        "Chora (Kariye)",
+        "Some of the finest Byzantine mosaics and frescoes in the world, near the land walls. Check visiting hours before you go."
+      ],
+      "tr": [
+        "Kariye (Khora)",
+        "Kara surlarının yakınında, dünyanın en güzel Bizans mozaik ve fresklerinden bazıları. Gitmeden ziyaret saatlerine bakın."
+      ]
+    },
+    {
+      "id": "galata-tower",
+      "cat": "history",
+      "lat": 41.0256,
+      "lng": 28.9744,
+      "district": "Beyoğlu · Galata",
+      "price": {
+        "min": 30,
+        "cur": "EUR"
+      },
+      "official": "https://muze.gov.tr",
+      "source": "https://istanbultouristpass.com/blog/tips-guides/istanbul-museum-ticket-prices-2026-pass-savings",
+      "aliases": [
+        "Galata Kulesi",
+        "Galata Tower"
+      ],
+      "en": [
+        "Galata Tower",
+        "The medieval Genoese tower with a 360° view over the Golden Horn and the Bosphorus; day and night sessions."
+      ],
+      "tr": [
+        "Galata Kulesi",
+        "Haliç ve Boğaz'a 360° manzaralı Ceneviz kulesi; gündüz ve gece seansları var."
+      ]
+    },
+    {
+      "id": "dolmabahce",
+      "cat": "history",
+      "lat": 41.0391,
+      "lng": 29.0004,
+      "district": "Beşiktaş",
+      "price": {
+        "min": 40,
+        "max": 60,
+        "cur": "EUR"
+      },
+      "closed": [
+        1
+      ],
+      "official": "https://www.millisaraylar.gov.tr",
+      "source": "https://theothertour.com/2026-entrance-fees-istanbul/",
+      "aliases": [
+        "Dolmabahçe Sarayı",
+        "Dolmabahce Palace"
+      ],
+      "en": [
+        "Dolmabahçe Palace",
+        "The 19th-century European-style palace on the Bosphorus, with its crystal staircase and giant chandelier."
+      ],
+      "tr": [
+        "Dolmabahçe Sarayı",
+        "Boğaz kıyısında 19. yüzyıldan Avrupa üslubunda saray; kristal merdiveni ve dev avizesiyle."
+      ]
+    },
+    {
+      "id": "beylerbeyi",
+      "cat": "history",
+      "lat": 41.0422,
+      "lng": 29.0398,
+      "district": "Üsküdar · Beylerbeyi",
+      "price": null,
+      "closed": [
+        1
+      ],
+      "official": "https://www.millisaraylar.gov.tr",
+      "source": null,
+      "aliases": [
+        "Beylerbeyi Sarayı",
+        "Beylerbeyi Palace"
+      ],
+      "en": [
+        "Beylerbeyi Palace",
+        "An elegant summer palace on the Asian shore, under the Bosphorus Bridge."
+      ],
+      "tr": [
+        "Beylerbeyi Sarayı",
+        "Asya yakasında, Boğaz Köprüsü'nün altında zarif bir yazlık saray."
+      ]
+    },
+    {
+      "id": "maidens-tower",
+      "cat": "history",
+      "lat": 41.0211,
+      "lng": 29.0041,
+      "district": "Üsküdar",
+      "price": null,
+      "official": "https://kizkulesi.gov.tr",
+      "source": null,
+      "aliases": [
+        "Kız Kulesi",
+        "Maiden's Tower",
+        "Leander's Tower"
+      ],
+      "en": [
+        "Maiden's Tower",
+        "The little tower on an islet off Üsküdar, reached by boat; a museum and viewpoint."
+      ],
+      "tr": [
+        "Kız Kulesi",
+        "Üsküdar açığındaki adacıkta, tekneyle ulaşılan küçük kule; müze ve seyir noktası."
+      ]
+    },
+    {
+      "id": "rumeli-hisari",
+      "cat": "history",
+      "lat": 41.0846,
+      "lng": 29.0567,
+      "district": "Sarıyer · Rumelihisarı",
+      "price": null,
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Rumeli Hisarı",
+        "Rumelian Castle",
+        "Rumeli Fortress"
+      ],
+      "en": [
+        "Rumeli Fortress",
+        "The fortress Mehmed II built in four months in 1452, on the narrowest point of the Bosphorus."
+      ],
+      "tr": [
+        "Rumeli Hisarı",
+        "II. Mehmed'in 1452'de dört ayda yaptırdığı, Boğaz'ın en dar yerindeki hisar."
+      ]
+    },
+    {
+      "id": "istanbul-modern",
+      "cat": "museum",
+      "lat": 41.0262,
+      "lng": 28.9834,
+      "district": "Beyoğlu · Karaköy",
+      "price": null,
+      "closed": [
+        1
+      ],
+      "official": "https://www.istanbulmodern.org",
+      "source": null,
+      "aliases": [
+        "İstanbul Modern",
+        "Istanbul Museum of Modern Art"
+      ],
+      "en": [
+        "Istanbul Modern",
+        "Modern and contemporary Turkish art in a new building on the Karaköy waterfront."
+      ],
+      "tr": [
+        "İstanbul Modern",
+        "Karaköy sahilindeki yeni binasında modern ve çağdaş Türk sanatı."
+      ]
+    },
+    {
+      "id": "pera-museum",
+      "cat": "museum",
+      "lat": 41.0319,
+      "lng": 28.975,
+      "district": "Beyoğlu · Tepebaşı",
+      "price": null,
+      "closed": [
+        1
+      ],
+      "official": "https://www.peramuzesi.org.tr",
+      "source": null,
+      "aliases": [
+        "Pera Müzesi",
+        "Kaplumbağa Terbiyecisi",
+        "Tortoise Trainer"
+      ],
+      "en": [
+        "Pera Museum",
+        "Orientalist paintings, including Osman Hamdi Bey's \"The Tortoise Trainer\", near İstiklal Avenue."
+      ],
+      "tr": [
+        "Pera Müzesi",
+        "İstiklal Caddesi yakınında, Osman Hamdi Bey'in \"Kaplumbağa Terbiyecisi\" dahil oryantalist resimler."
+      ]
+    },
+    {
+      "id": "rahmi-koc",
+      "cat": "museum",
+      "lat": 41.0423,
+      "lng": 28.949,
+      "district": "Beyoğlu · Hasköy",
+      "price": null,
+      "closed": [
+        1
+      ],
+      "official": "https://www.rmk-museum.org.tr",
+      "source": null,
+      "aliases": [
+        "Rahmi M. Koç Müzesi",
+        "Rahmi Koc Museum"
+      ],
+      "en": [
+        "Rahmi M. Koç Museum",
+        "Cars, trains, ships, planes and a submarine on the Golden Horn; a favourite with families."
+      ],
+      "tr": [
+        "Rahmi M. Koç Müzesi",
+        "Haliç kıyısında otomobiller, trenler, gemiler, uçaklar ve bir denizaltı; ailelerin favorisi."
+      ]
+    },
+    {
+      "id": "isfanbul",
+      "cat": "family",
+      "lat": 41.0659,
+      "lng": 28.9282,
+      "district": "Eyüpsultan",
+      "price": {
+        "min": 2075,
+        "cur": "TRY"
+      },
+      "official": "https://www.isfanbul.com",
+      "source": "https://thebettervacation.com/istanbul/vialand-theme-park/",
+      "aliases": [
+        "Vialand",
+        "İsfanbul",
+        "Isfanbul",
+        "Viaport",
+        "tema parkı",
+        "theme park",
+        "lunapark"
+      ],
+      "en": [
+        "Isfanbul (ex-Vialand) theme park",
+        "Istanbul's big theme park in Eyüpsultan: roller coasters, family rides and shows. Formerly called Vialand."
+      ],
+      "tr": [
+        "İsfanbul (eski Vialand) tema parkı",
+        "Eyüpsultan'daki büyük tema parkı: hız trenleri, aile oyuncakları ve gösteriler. Eski adı Vialand."
+      ]
+    },
+    {
+      "id": "istanbul-aquarium",
+      "cat": "family",
+      "lat": 40.964,
+      "lng": 28.7986,
+      "district": "Bakırköy · Florya",
+      "price": {
+        "min": 1000,
+        "max": 1100,
+        "cur": "TRY"
+      },
+      "official": "https://www.istanbulakvaryum.com",
+      "source": "https://istanbul.com/istanbul-aquarium",
+      "aliases": [
+        "İstanbul Akvaryum",
+        "Istanbul Aquarium",
+        "Aqua Florya",
+        "Florya Akvaryum",
+        "akvaryum"
+      ],
+      "en": [
+        "Istanbul Aquarium (Aqua Florya)",
+        "One of Europe's largest aquariums, at the Aqua Florya mall by the sea. Marmaray to Florya Akvaryum station."
+      ],
+      "tr": [
+        "İstanbul Akvaryum (Aqua Florya)",
+        "Avrupa'nın en büyük akvaryumlarından biri; deniz kıyısındaki Aqua Florya AVM'de. Marmaray ile Florya Akvaryum durağı."
+      ]
+    },
+    {
+      "id": "sea-life",
+      "cat": "family",
+      "lat": 41.0465,
+      "lng": 28.897,
+      "district": "Bayrampaşa · Forum İstanbul",
+      "price": null,
+      "official": "https://www.visitsealife.com/istanbul/",
+      "source": null,
+      "aliases": [
+        "SEA LIFE",
+        "Turkuazoo",
+        "Forum İstanbul akvaryum"
+      ],
+      "en": [
+        "SEA LIFE Istanbul",
+        "Underwater tunnel with sharks and rays at Forum İstanbul mall; combo tickets with LEGOLAND."
+      ],
+      "tr": [
+        "SEA LIFE İstanbul",
+        "Forum İstanbul AVM'de köpekbalıkları ve vatozlarla sualtı tüneli; LEGOLAND ile kombine bilet."
+      ]
+    },
+    {
+      "id": "legoland",
+      "cat": "family",
+      "lat": 41.0467,
+      "lng": 28.8966,
+      "district": "Bayrampaşa · Forum İstanbul",
+      "price": {
+        "min": 851,
+        "max": 945,
+        "cur": "TRY"
+      },
+      "official": "https://www.legolanddiscoverycentre.com/istanbul/",
+      "source": "https://www.legolanddiscoverycentre.com/istanbul/en/tickets-prices/qr-code/",
+      "aliases": [
+        "LEGOLAND Discovery Centre",
+        "Lego"
+      ],
+      "en": [
+        "LEGOLAND Discovery Centre",
+        "Indoor LEGO play centre for children aged about 3–10, at Forum İstanbul; cheaper online."
+      ],
+      "tr": [
+        "LEGOLAND Discovery Centre",
+        "Forum İstanbul'da yaklaşık 3–10 yaş çocuklar için kapalı LEGO oyun merkezi; internetten daha ucuz."
+      ]
+    },
+    {
+      "id": "madame-tussauds",
+      "cat": "family",
+      "lat": 41.0335,
+      "lng": 28.9777,
+      "district": "Beyoğlu · İstiklal",
+      "price": null,
+      "official": "https://www.madametussauds.com/istanbul/",
+      "source": null,
+      "aliases": [
+        "Madame Tussauds",
+        "balmumu müzesi",
+        "wax museum"
+      ],
+      "en": [
+        "Madame Tussauds Istanbul",
+        "Wax figures of Turkish and world celebrities, on İstiklal Avenue."
+      ],
+      "tr": [
+        "Madame Tussauds İstanbul",
+        "İstiklal Caddesi'nde Türk ve dünya ünlülerinin balmumu heykelleri."
+      ]
+    },
+    {
+      "id": "miniaturk",
+      "cat": "family",
+      "lat": 41.0603,
+      "lng": 28.9493,
+      "district": "Beyoğlu · Sütlüce",
+      "price": null,
+      "official": "https://www.miniaturk.com.tr",
+      "source": null,
+      "aliases": [
+        "Miniatürk",
+        "Miniaturk"
+      ],
+      "en": [
+        "Miniatürk",
+        "Open-air park with scale models of famous buildings from Turkey and the Ottoman lands, on the Golden Horn."
+      ],
+      "tr": [
+        "Miniatürk",
+        "Haliç kıyısında Türkiye ve Osmanlı topraklarındaki ünlü yapıların maketleriyle açık hava parkı."
+      ]
+    },
+    {
+      "id": "whirling-dervishes",
+      "cat": "experience",
+      "lat": 41.0146,
+      "lng": 28.9757,
+      "district": "Fatih · Sirkeci",
+      "price": {
+        "min": 1183,
+        "cur": "TRY"
+      },
+      "official": "https://www.hodjapasha.com",
+      "source": "https://thebettervacation.com/istanbul/whirling-dervishes-show-istanbul/",
+      "aliases": [
+        "Hodjapasha",
+        "HodjaPasha",
+        "Sema",
+        "semazen",
+        "dervish",
+        "Mevlevi"
+      ],
+      "en": [
+        "Whirling dervishes (HodjaPasha)",
+        "An hour-long Sema ceremony in a restored 15th-century hammam in Sirkeci; evening sessions."
+      ],
+      "tr": [
+        "Semazenler (HodjaPasha)",
+        "Sirkeci'de restore edilmiş 15. yüzyıl hamamında bir saatlik sema gösterisi; akşam seansları."
+      ]
+    },
+    {
+      "id": "city-ferry",
+      "cat": "experience",
+      "lat": 41.0175,
+      "lng": 28.9745,
+      "district": "Eminönü · Karaköy · Kadıköy · Üsküdar",
+      "price": null,
+      "official": "https://www.sehirhatlari.istanbul",
+      "source": null,
+      "aliases": [
+        "Şehir Hatları",
+        "vapur",
+        "ferry",
+        "Istanbulkart",
+        "İstanbulkart"
+      ],
+      "en": [
+        "Public ferry across the Bosphorus",
+        "The cheapest Bosphorus cruise: a city ferry between Europe and Asia, paid with an İstanbulkart."
+      ],
+      "tr": [
+        "Şehir Hatları vapuru",
+        "En ucuz Boğaz turu: Avrupa ile Asya arasında İstanbulkart'la binilen vapur."
+      ]
+    },
+    {
+      "id": "grand-bazaar",
+      "cat": "walk",
+      "lat": 41.0107,
+      "lng": 28.9681,
+      "district": "Fatih · Beyazıt",
+      "price": "free",
+      "closed": [
+        0
+      ],
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Kapalıçarşı",
+        "Kapali Carsi",
+        "Grand Bazaar",
+        "Covered Bazaar"
+      ],
+      "en": [
+        "Grand Bazaar",
+        "One of the world's oldest covered markets: 60+ streets of carpets, lamps, jewellery and leather. Closed on Sundays."
+      ],
+      "tr": [
+        "Kapalıçarşı",
+        "Dünyanın en eski kapalı çarşılarından biri: halı, lamba, mücevher ve deriyle 60'tan fazla sokak. Pazar kapalı."
+      ]
+    },
+    {
+      "id": "spice-bazaar",
+      "cat": "walk",
+      "lat": 41.0166,
+      "lng": 28.9706,
+      "district": "Fatih · Eminönü",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Mısır Çarşısı",
+        "Misir Carsisi",
+        "Egyptian Bazaar",
+        "Spice Market"
+      ],
+      "en": [
+        "Spice Bazaar",
+        "Spices, Turkish delight, dried fruit and tea next to the New Mosque in Eminönü."
+      ],
+      "tr": [
+        "Mısır Çarşısı",
+        "Eminönü'nde Yeni Cami'nin yanında baharat, lokum, kuru meyve ve çay."
+      ]
+    },
+    {
+      "id": "balat",
+      "cat": "walk",
+      "lat": 41.0301,
+      "lng": 28.9482,
+      "district": "Fatih · Balat",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Balat",
+        "Fener",
+        "renkli evler",
+        "colourful houses"
+      ],
+      "en": [
+        "Balat and Fener",
+        "Colourful houses, churches, synagogues and cafés in the old Greek, Jewish and Armenian quarters on the Golden Horn."
+      ],
+      "tr": [
+        "Balat ve Fener",
+        "Haliç kıyısındaki eski Rum, Yahudi ve Ermeni mahallelerinde renkli evler, kiliseler, sinagoglar ve kafeler."
+      ]
+    },
+    {
+      "id": "istiklal",
+      "cat": "walk",
+      "lat": 41.034,
+      "lng": 28.979,
+      "district": "Beyoğlu · Taksim",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "İstiklal Caddesi",
+        "Istiklal Avenue",
+        "Taksim",
+        "nostaljik tramvay"
+      ],
+      "en": [
+        "İstiklal Avenue and Taksim",
+        "Istanbul's busiest street: shops, passages, churches and the red nostalgic tram, from Taksim to Galata."
+      ],
+      "tr": [
+        "İstiklal Caddesi ve Taksim",
+        "İstanbul'un en kalabalık caddesi: dükkânlar, pasajlar, kiliseler ve kırmızı nostaljik tramvay; Taksim'den Galata'ya."
+      ]
+    },
+    {
+      "id": "ortakoy",
+      "cat": "walk",
+      "lat": 41.0474,
+      "lng": 29.0268,
+      "district": "Beşiktaş · Ortaköy",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Ortaköy",
+        "Ortakoy",
+        "kumpir"
+      ],
+      "en": [
+        "Ortaköy",
+        "The baroque Ortaköy Mosque under the Bosphorus Bridge, with street food like kumpir and waffles."
+      ],
+      "tr": [
+        "Ortaköy",
+        "Boğaz Köprüsü'nün altında barok Ortaköy Camii; kumpir ve waffle gibi sokak lezzetleriyle."
+      ]
+    },
+    {
+      "id": "kadikoy",
+      "cat": "walk",
+      "lat": 40.99,
+      "lng": 29.027,
+      "district": "Kadıköy · Moda",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Kadıköy",
+        "Kadikoy",
+        "Moda",
+        "Asian side"
+      ],
+      "en": [
+        "Kadıköy and Moda",
+        "The lively Asian side: food market, cafés, bookshops and a seaside walk in Moda. Reach it by ferry."
+      ],
+      "tr": [
+        "Kadıköy ve Moda",
+        "Hareketli Anadolu yakası: çarşı, kafeler, kitapçılar ve Moda'da sahil yürüyüşü. Vapurla gidilir."
+      ]
+    },
+    {
+      "id": "camlica",
+      "cat": "walk",
+      "lat": 41.0274,
+      "lng": 29.0679,
+      "district": "Üsküdar · Çamlıca",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Çamlıca",
+        "Camlica",
+        "Çamlıca Camii",
+        "Camlica Mosque"
+      ],
+      "en": [
+        "Çamlıca Hill and Mosque",
+        "The highest viewpoint on the Asian side and Turkey's largest mosque."
+      ],
+      "tr": [
+        "Çamlıca Tepesi ve Camii",
+        "Anadolu yakasının en yüksek seyir noktası ve Türkiye'nin en büyük camisi."
+      ]
+    },
+    {
+      "id": "pierre-loti",
+      "cat": "walk",
+      "lat": 41.0539,
+      "lng": 28.9338,
+      "district": "Eyüpsultan",
+      "price": null,
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Pierre Loti",
+        "Piyer Loti",
+        "Eyüp Sultan",
+        "teleferik",
+        "cable car"
+      ],
+      "en": [
+        "Eyüp Sultan and Pierre Loti Hill",
+        "A holy mosque, then a short cable car up to a café with a view down the Golden Horn."
+      ],
+      "tr": [
+        "Eyüp Sultan ve Piyer Loti",
+        "Kutsal Eyüp Sultan Camii, ardından kısa bir teleferikle Haliç manzaralı kafeye."
+      ]
+    },
+    {
+      "id": "princes-islands",
+      "cat": "walk",
+      "lat": 40.874,
+      "lng": 29.129,
+      "district": "Adalar",
+      "price": null,
+      "official": "https://www.sehirhatlari.istanbul",
+      "source": null,
+      "aliases": [
+        "Adalar",
+        "Büyükada",
+        "Princes' Islands",
+        "Heybeliada",
+        "Kınalıada"
+      ],
+      "en": [
+        "Princes' Islands",
+        "Car-free islands in the Sea of Marmara with wooden mansions and pine woods; a day trip by ferry."
+      ],
+      "tr": [
+        "Adalar",
+        "Marmara Denizi'nde arabasız adalar; ahşap köşkler ve çam ormanları. Vapurla günübirlik gezi."
+      ]
+    },
+    {
+      "id": "emirgan",
+      "cat": "walk",
+      "lat": 41.1086,
+      "lng": 29.053,
+      "district": "Sarıyer · Emirgan",
+      "price": "free",
+      "official": null,
+      "source": null,
+      "aliases": [
+        "Emirgan Korusu",
+        "Emirgan Park",
+        "lale",
+        "tulips"
+      ],
+      "en": [
+        "Emirgan Park",
+        "A large Bosphorus park with pavilions; famous for its tulips every April."
+      ],
+      "tr": [
+        "Emirgan Korusu",
+        "Köşkleriyle büyük bir Boğaz parkı; her nisan lale festivaliyle ünlü."
+      ]
     }
-   ]
-  },
-  {
-   "id": "armenian-heritage",
-   "cat": "themed",
-   "dur": [
-    "full"
-   ],
-   "en": [
-    "Armenian heritage of Istanbul",
-    "Kumkapı and the Armenian Patriarchate with the Surp Asdvadzadzin church, the old quarter of Samatya and the Üç Horan church in Beyoğlu."
-   ],
-   "tr": [
-    "İstanbul'un Ermeni mirası",
-    "Kumkapı'da Ermeni Patrikhanesi ve Surp Asdvadzadzin Kilisesi, eski Samatya mahallesi ve Beyoğlu'ndaki Üç Horan Kilisesi."
-   ],
-   "from": [
-    75,
-    "EUR"
-   ],
-   "route": [
-    "Kumkapı",
-    "Ermeni Patrikhanesi",
-    "Surp Asdvadzadzin Kilisesi",
-    "Samatya",
-    "Üç Horan Kilisesi"
-   ],
-   "inc": [
-    "guide"
-   ],
-   "exc": [
-    "pickup",
-    "lunch",
-    "tips"
-   ],
-   "src": [
+  ],
+  "stops": [
     {
-     "op": "Bazaar Turkey",
-     "p": 75,
-     "c": "EUR",
-     "b": "pp",
-     "h": 4,
-     "u": "https://bazaarturkey.com/activities/greek-jewish-armenian-muslim-quarters-tour-in-istanbul/"
+      "id": "eminonu",
+      "lat": 41.017,
+      "lng": 28.9707,
+      "day": 1,
+      "en": [
+        "Eminönü and Rızapaşa Slope",
+        "Start at the New Mosque and the Spice Bazaar, then climb the busy market street of Rızapaşa Yokuşu."
+      ],
+      "tr": [
+        "Eminönü ve Rızapaşa Yokuşu",
+        "Yeni Cami ve Mısır Çarşısı'ndan başlayın, ardından hareketli çarşı sokağı Rızapaşa Yokuşu'nu tırmanın."
+      ]
     },
     {
-     "op": "Fest Travel",
-     "p": 125,
-     "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "u": "https://fest.travel/tour/kumkapi-samatya/"
+      "id": "suleymaniye",
+      "lat": 41.0162,
+      "lng": 28.9639,
+      "day": 1,
+      "en": [
+        "Süleymaniye",
+        "Mimar Sinan's mosque complex and the terrace above the Golden Horn."
+      ],
+      "tr": [
+        "Süleymaniye",
+        "Mimar Sinan'ın külliyesi ve Haliç'e bakan teras."
+      ]
     },
     {
-     "op": "Walks in Istanbul",
-     "p": 415,
-     "c": "EUR",
-     "b": "group",
-     "h": 4,
-     "u": "https://walksinistanbul.com/istanbul-walking-tours/armenian-heritage-istanbul/"
+      "id": "kucukpazar",
+      "lat": 41.0185,
+      "lng": 28.9615,
+      "day": 1,
+      "en": [
+        "Küçükpazar",
+        "Walk down to the old market quarter with its wooden houses and craftsmen."
+      ],
+      "tr": [
+        "Küçükpazar",
+        "Ahşap evleri ve zanaatkârlarıyla eski çarşı mahallesine inin."
+      ]
+    },
+    {
+      "id": "zeyrek",
+      "lat": 41.0198,
+      "lng": 28.9567,
+      "day": 1,
+      "en": [
+        "Zeyrek",
+        "The Byzantine Pantokrator monastery (Zeyrek Mosque) and the Zeyrek Cistern."
+      ],
+      "tr": [
+        "Zeyrek",
+        "Bizans'tan kalma Pantokrator manastırı (Zeyrek Camii) ve Zeyrek Sarnıcı."
+      ]
+    },
+    {
+      "id": "carsamba",
+      "lat": 41.0262,
+      "lng": 28.9462,
+      "day": 1,
+      "en": [
+        "Fatih – Çarşamba",
+        "A conservative old neighbourhood around the Fethiye (Pammakaristos) Mosque."
+      ],
+      "tr": [
+        "Fatih – Çarşamba",
+        "Fethiye (Pammakaristos) Camii çevresinde muhafazakâr, eski bir mahalle."
+      ]
+    },
+    {
+      "id": "balat",
+      "lat": 41.0301,
+      "lng": 28.9482,
+      "day": 1,
+      "en": [
+        "Balat",
+        "Colourful houses, the iron Bulgarian Church of St Stephen and the old synagogues."
+      ],
+      "tr": [
+        "Balat",
+        "Renkli evler, demir Bulgar Kilisesi (Sveti Stefan) ve eski sinagoglar."
+      ]
+    },
+    {
+      "id": "ayvansaray",
+      "lat": 41.0405,
+      "lng": 28.9425,
+      "day": 1,
+      "en": [
+        "Ayvansaray",
+        "Where the land walls meet the Golden Horn: the Blachernae quarter and the Anemas dungeons."
+      ],
+      "tr": [
+        "Ayvansaray",
+        "Kara surlarının Haliç'e ulaştığı yer: Blahernai bölgesi ve Anemas zindanları."
+      ]
+    },
+    {
+      "id": "kariye",
+      "lat": 41.0312,
+      "lng": 28.939,
+      "day": 1,
+      "en": [
+        "Kariye (Chora)",
+        "World-famous Byzantine mosaics and frescoes."
+      ],
+      "tr": [
+        "Kariye (Khora)",
+        "Dünyaca ünlü Bizans mozaikleri ve freskleri."
+      ]
+    },
+    {
+      "id": "edirnekapi",
+      "lat": 41.0306,
+      "lng": 28.9335,
+      "day": 1,
+      "en": [
+        "Edirnekapı",
+        "A gate of the Theodosian land walls and Sinan's Mihrimah Sultan Mosque."
+      ],
+      "tr": [
+        "Edirnekapı",
+        "Theodosius kara surlarının kapılarından biri ve Sinan'ın Mihrimah Sultan Camii."
+      ]
+    },
+    {
+      "id": "yedikule",
+      "lat": 40.994,
+      "lng": 28.9228,
+      "day": 2,
+      "en": [
+        "Yedikule Fortress",
+        "Follow the land walls south to the seven-towered fortress by the Golden Gate."
+      ],
+      "tr": [
+        "Yedikule Hisarı",
+        "Kara surlarını güneye izleyip Altın Kapı yanındaki yedi kuleli hisara varın."
+      ]
+    },
+    {
+      "id": "cerrahpasa",
+      "lat": 41.004,
+      "lng": 28.943,
+      "day": 2,
+      "en": [
+        "Cerrahpaşa",
+        "Turn back east through the old residential streets of the seventh hill."
+      ],
+      "tr": [
+        "Cerrahpaşa",
+        "Yedinci tepenin eski mahalle sokaklarından doğuya dönün."
+      ]
+    },
+    {
+      "id": "beyazit",
+      "lat": 41.0105,
+      "lng": 28.964,
+      "day": 2,
+      "en": [
+        "Beyazıt",
+        "Beyazıt Square, the university gate, the Sahaflar book market and the Grand Bazaar."
+      ],
+      "tr": [
+        "Beyazıt",
+        "Beyazıt Meydanı, üniversite kapısı, Sahaflar Çarşısı ve Kapalıçarşı."
+      ]
+    },
+    {
+      "id": "sultanahmet",
+      "lat": 41.0055,
+      "lng": 28.9768,
+      "day": 2,
+      "en": [
+        "Sultanahmet",
+        "Finish at Hagia Sophia, the Blue Mosque and the Hippodrome."
+      ],
+      "tr": [
+        "Sultanahmet",
+        "Ayasofya, Sultanahmet Camii ve Hipodrom'da bitirin."
+      ]
     }
-   ]
-  },
-  {
-   "id": "christian-istanbul",
-   "cat": "themed",
-   "dur": [
-    "full"
-   ],
-   "en": [
-    "In the footsteps of early Christianity",
-    "Hagia Irene and Hagia Sophia, the mosaics of Chora, the Ecumenical Patriarchate at Fener, the iron Bulgarian church of St Stephen and the Pantokrator monastery."
-   ],
-   "tr": [
-    "Erken Hristiyanlığın izinde",
-    "Aya İrini ve Ayasofya, Kariye'nin mozaikleri, Fener'deki Ekümenik Patrikhane, demir Bulgar Kilisesi (Sveti Stefan) ve Pantokrator Manastırı."
-   ],
-   "from": [
-    200,
-    "EUR"
-   ],
-   "route": [
-    "Aya İrini",
-    "@hagia-sophia",
-    "@chora",
-    "Fener Rum Patrikhanesi",
-    "Sveti Stefan Kilisesi",
-    "Zeyrek (Pantokrator)"
-   ],
-   "inc": [
-    "guide",
-    "vehicle"
-   ],
-   "exc": [
-    "tickets",
-    "lunch",
-    "tips"
-   ],
-   "src": [
-    {
-     "op": "Turkey Greece Tour",
-     "p": 200,
-     "c": "EUR",
-     "b": "private",
-     "from": true,
-     "note": "guideOnly",
-     "u": "https://www.turkeygreecetour.com/tour/full-day-cross-continental-journey-through-istanbuls-orthodoxy-christian-heritage/"
+  ],
+  "ui": {
+    "en": {
+      "navDiscover": "Discover",
+      "navSearch": "Search",
+      "exEyebrow": "DISCOVER ISTANBUL",
+      "exTitle": "Everything worth seeing in Istanbul.",
+      "exLead": "Palaces, museums, bazaars, neighbourhoods, theme parks and shows, with closing days, indicative prices and directions. Ask us on email and we will help with tickets or a transfer from your hotel.",
+      "catAll": "All",
+      "catHistory": "History",
+      "catMuseum": "Museums",
+      "catFamily": "Family & fun",
+      "catExperience": "Experiences",
+      "catWalk": "Neighbourhoods & views",
+      "free": "Free entry",
+      "priceUnknown": "Price: see official website",
+      "closedOn": "Closed: {days}",
+      "official": "Official website",
+      "directions": "Directions",
+      "ask": "Ask on email",
+      "askMsg": "Hello Bosphorly, I would like to visit {place}. Can you help with tickets or a transfer?",
+      "priceNote": "Prices are indicative (checked {date}); they change often and sources disagree. Always check the official website before you go.",
+      "priceSource": "Price source",
+      "approx": "approx.",
+      "searchPh": "Search places, tours, routes…",
+      "noResults": "Nothing found. Try another word.",
+      "results": "results",
+      "routeCardEyebrow": "WALKING ROUTE",
+      "routeCardTitle": "Prof. İlber Ortaylı's Istanbul route",
+      "routeCardText": "13 stops from Eminönü to Sultanahmet, through Süleymaniye, Balat, the land walls and Yedikule.",
+      "routeOpen": "See the route →",
+      "rtEyebrow": "THE HISTORIC PENINSULA ON FOOT",
+      "rtTitle": "Prof. İlber Ortaylı's Istanbul route",
+      "rtLead": "The historian İlber Ortaylı said you cannot claim to have seen Istanbul until you have walked it. This is the route he recommended, as reported in the Turkish press: from Eminönü up to Süleymaniye, through the old neighbourhoods to the land walls and Yedikule, and back to Sultanahmet.",
+      "rtQuote": "Don't say you have seen the city until you have walked these streets.",
+      "rtQuoteBy": "İlber Ortaylı, as quoted by the Turkish press",
+      "rtFactStops": "stops",
+      "rtFactKm": "≈ 19 km on foot (our estimate)",
+      "rtFactDays": "best split into 2 days",
+      "rtDay1": "Day 1 · Eminönü → Edirnekapı",
+      "rtDay2": "Day 2 · Land walls → Sultanahmet",
+      "rtDirections": "Walking directions for this day",
+      "rtTipsTitle": "Before you go",
+      "rtTip1": "Wear comfortable shoes: the streets are steep and often cobbled.",
+      "rtTip2": "Mosques: cover shoulders and knees, women cover their hair, and avoid prayer times.",
+      "rtTip3": "The walls between Edirnekapı and Yedikule are long and quiet; walk them in daylight or take a taxi for that part.",
+      "rtSources": "Sources",
+      "rtDisclaimer": "Bosphorly compiled this route from press reports of Prof. Ortaylı's recommendation. It is not an official route and is not endorsed by him or his family. Opening hours change; check before you go.",
+      "rtMapNote": "Straight lines between stops, not exact walking paths.",
+      "rtAskGuide": "Want a licensed guide for this route? Ask us on email",
+      "rtAskMsg": "Hello Bosphorly, I would like a guide for the İlber Ortaylı Istanbul route.",
+      "rtStop": "Stop",
+      "srTitle": "Search Bosphorly",
+      "srLead": "Tours, places to visit, walking routes and guides, in one search.",
+      "srTours": "Tours",
+      "srPlaces": "Places to visit",
+      "srRoutes": "Routes",
+      "srGuides": "Guides",
+      "homeDiscEyebrow": "PLAN YOUR DAYS",
+      "homeDiscTitle": "Discover Istanbul, your way.",
+      "homeDiscSub": "33 places to see, from palaces and bazaars to Isfanbul theme park and the Istanbul Aquarium, plus Prof. İlber Ortaylı's walking route.",
+      "homeDiscCta": "Discover Istanbul →",
+      "gaTitle": "Getting around Istanbul",
+      "gaIst": "M11 metro links Istanbul Airport (IST) with Gayrettepe, where you change to the M2 metro for Taksim.",
+      "gaSaw": "M4 metro links Sabiha Gökçen Airport (SAW) on the Asian side with Kadıköy.",
+      "gaTram": "The T1 tram runs along the historic peninsula through Sultanahmet, Eminönü and Karaköy to Kabataş.",
+      "gaFerry": "City ferries cross between Europe and Asia. Pay for ferries, metro and trams with an İstanbulkart.",
+      "gaNote": "Lines and timetables change; check the official operators before you travel.",
+      "toEyebrow": "TOURS ON REQUEST",
+      "toTitle": "Themed, private and multi-day tours.",
+      "toLead": "Heritage and faith tours, neighbourhood walks, a panoramic bus tour, private guides and cars, and multi-day trips across Türkiye. Send your date and group on email; we ask licensed companies and send you the price before you decide.",
+      "toCatAll": "All",
+      "toCatThemed": "Heritage & faith",
+      "toCatHoods": "Neighbourhoods",
+      "toCatPanoramic": "Panoramic bus tour",
+      "toCatPrivate": "Private guide & car",
+      "toCatMulti": "Multi-day Türkiye",
+      "toPrice": "Price on request",
+      "toAsk": "Ask on email",
+      "toAskMsg": "Hello Bosphorly, I am interested in: {tour}. Date: … Number of guests: … Hotel: …",
+      "toDurH": "About {n} hours",
+      "toDurHalf": "Half day",
+      "toDurFull": "Full day",
+      "toDurD": "{n} days",
+      "toDurFlex": "Half day, full day or by the hour",
+      "toHowTitle": "How it works",
+      "toHow1": "Send your date, group size and hotel on email.",
+      "toHow2": "We ask licensed companies and send you the price and the programme.",
+      "toHow3": "You decide. Nothing is paid on this website.",
+      "toNote": "These tours are arranged on request. Bosphorly has no signed agreement for them yet, so the price and availability are confirmed on email.",
+      "toSeeAlso": "Cappadocia, Pamukkale and Ephesus packages with published prices →",
+      "toFrom": "From {price}",
+      "toDetails": "Details and prices",
+      "toTimes": "Times",
+      "toRoute": "Route",
+      "toInc": "Usually included",
+      "toExc": "Usually not included",
+      "toMarket": "Prices published by other companies",
+      "toMarketNote": "What Istanbul companies charge for similar tours (checked {date}). Request through Bosphorly and we confirm your price on email before anything is booked.",
+      "toB_pp": "per person",
+      "toB_group": "per group",
+      "toB_groupMax": "per group (up to {n})",
+      "toB_private": "private tour",
+      "toB_vehicle": "per vehicle",
+      "toB_day": "per day",
+      "toHours": "{n} h",
+      "toFromWord": "from",
+      "toN_carIncl": "with car and driver",
+      "toN_guideOnly": "guide only",
+      "toN_halfDay": "half day",
+      "toN_istSultanahmet": "IST → Sultanahmet",
+      "toN_oneDay": "1-day ticket",
+      "toN_ticketsIncl": "entrance tickets included",
+      "toN_vito100": "Mercedes Vito, 100 km",
+      "toT_carLimits": "Usually 8 hours and 100 km a day; extra hours and kilometres cost more.",
+      "toT_publicFerry": "Cheaper option: the public long Bosphorus ferry (Şehir Hatları) from Eminönü stops about 2.5 hours at Anadolu Kavağı; pay with an İstanbulkart.",
+      "toI_audio": "Audio commentary",
+      "toI_cablecar": "Cable car",
+      "toI_drinks": "Drinks",
+      "toI_ferry": "Ferry",
+      "toI_flights": "Domestic flights",
+      "toI_fuel": "Fuel and tolls",
+      "toI_guide": "Licensed guide",
+      "toI_hotels": "Hotels",
+      "toI_lunch": "Lunch",
+      "toI_meet": "Meet and greet with a name sign",
+      "toI_pickup": "Hotel pickup",
+      "toI_tastings": "Food tastings",
+      "toI_tickets": "Entrance tickets",
+      "toI_tips": "Tips",
+      "toI_transport": "Transport",
+      "toI_vehicle": "Vehicle with driver",
+      "toI_wifi": "Wi-Fi",
+      "toMarketRange": "Market price in Istanbul",
+      "toReq": "Request this tour",
+      "toFDate": "Date",
+      "toFGuests": "Guests",
+      "toFHotel": "Hotel",
+      "toFName": "Full name",
+      "toFPhone": "Mobile phone (with country code)",
+      "toFNotes": "Notes (optional)",
+      "toFAck": "I agree that my request and contact details are sent to Bosphorly via email. Price and availability are confirmed before anything is booked; nothing is paid on this website.",
+      "toFSend": "Prepare email request →",
+      "toFErr": "Please fill in the date, guests, your name and phone number with country code, and tick the box.",
+      "toFDone": "Email draft {ref} is ready. Open Gmail or your email app and press Send to deliver it to Bosphorly.",
+      "toWaTitle": "Bosphorly tour request",
+      "toWaRef": "Reference",
+      "toMyReq": "See my requests →"
     },
-    {
-     "op": "Viator",
-     "p": 320,
-     "c": "USD",
-     "b": "private",
-     "from": true,
-     "h": 7,
-     "u": "https://www.viator.com/Istanbul-tours/Religious-Tours/d585-tag21518"
-    },
-    {
-     "op": "Tripadvisor",
-     "p": 572,
-     "c": "USD",
-     "b": "group",
-     "max": 7,
-     "u": "https://www.tripadvisor.com/AttractionProductReview-g293974-d11462217-Christian_Heritage_Private_Tour_In_Istanbul_Byzantine_Churches-Istanbul.html"
+    "tr": {
+      "navDiscover": "Keşfet",
+      "navSearch": "Ara",
+      "exEyebrow": "İSTANBUL'U KEŞFET",
+      "exTitle": "İstanbul'da görülmeye değer her şey.",
+      "exLead": "Saraylar, müzeler, çarşılar, semtler, tema parkları ve gösteriler; kapalı günleri, yaklaşık fiyatları ve yol tarifleriyle. e-posta ile yaz, bilet veya otelden transfer için yardımcı olalım.",
+      "catAll": "Tümü",
+      "catHistory": "Tarih",
+      "catMuseum": "Müzeler",
+      "catFamily": "Aile ve eğlence",
+      "catExperience": "Deneyimler",
+      "catWalk": "Semtler ve manzaralar",
+      "free": "Giriş ücretsiz",
+      "priceUnknown": "Fiyat: resmî siteye bakın",
+      "closedOn": "Kapalı: {days}",
+      "official": "Resmî site",
+      "directions": "Yol tarifi",
+      "ask": "E-posta ile sor",
+      "askMsg": "Merhaba Bosphorly, {place} gezmek istiyorum. Bilet veya transfer için yardımcı olabilir misiniz?",
+      "priceNote": "Fiyatlar yaklaşıktır ({date} itibarıyla); sık değişir ve kaynaklar farklı rakamlar verir. Gitmeden önce mutlaka resmî siteye bakın.",
+      "priceSource": "Fiyat kaynağı",
+      "approx": "yaklaşık",
+      "searchPh": "Yer, tur, rota ara…",
+      "noResults": "Sonuç yok. Başka bir kelime dene.",
+      "results": "sonuç",
+      "routeCardEyebrow": "YÜRÜYÜŞ ROTASI",
+      "routeCardTitle": "Prof. İlber Ortaylı'nın İstanbul rotası",
+      "routeCardText": "Eminönü'nden Sultanahmet'e 13 durak: Süleymaniye, Balat, kara surları ve Yedikule üzerinden.",
+      "routeOpen": "Rotayı gör →",
+      "rtEyebrow": "TARİHİ YARIMADA YÜRÜYEREK",
+      "rtTitle": "Prof. İlber Ortaylı'nın İstanbul rotası",
+      "rtLead": "Tarihçi İlber Ortaylı, İstanbul'u yürümeden görmüş sayılmayacağınızı söylerdi. Basında aktarıldığı şekliyle önerdiği rota: Eminönü'nden Süleymaniye'ye çıkıp eski mahallelerden kara surlarına ve Yedikule'ye, oradan Sultanahmet'e dönüş.",
+      "rtQuote": "Buraları yürümeden şehri gördüm demeyin.",
+      "rtQuoteBy": "İlber Ortaylı, basında aktarıldığı şekliyle",
+      "rtFactStops": "durak",
+      "rtFactKm": "≈ 19 km yürüyüş (bizim tahminimiz)",
+      "rtFactDays": "2 güne bölmek en iyisi",
+      "rtDay1": "1. gün · Eminönü → Edirnekapı",
+      "rtDay2": "2. gün · Kara surları → Sultanahmet",
+      "rtDirections": "Bu günün yürüyüş yol tarifi",
+      "rtTipsTitle": "Yola çıkmadan",
+      "rtTip1": "Rahat ayakkabı giyin: sokaklar dik ve çoğu yerde parke taşlı.",
+      "rtTip2": "Camiler: omuz ve dizler kapalı olmalı, kadınlar başını örtmeli; namaz vakitlerinden kaçının.",
+      "rtTip3": "Edirnekapı ile Yedikule arasındaki surlar uzun ve tenhadır; gündüz yürüyün ya da bu kısmı taksiyle geçin.",
+      "rtSources": "Kaynaklar",
+      "rtDisclaimer": "Bosphorly bu rotayı Prof. Ortaylı'nın önerisini aktaran basın haberlerinden derledi. Resmî bir rota değildir; kendisi veya ailesi tarafından onaylanmamıştır. Ziyaret saatleri değişebilir; gitmeden kontrol edin.",
+      "rtMapNote": "Duraklar arası düz çizgiler; gerçek yürüyüş yolu değildir.",
+      "rtAskGuide": "Bu rota için lisanslı rehber ister misin? E-posta ile yaz",
+      "rtAskMsg": "Merhaba Bosphorly, İlber Ortaylı İstanbul rotası için rehber istiyorum.",
+      "rtStop": "Durak",
+      "srTitle": "Bosphorly'de ara",
+      "srLead": "Turlar, gezilecek yerler, yürüyüş rotaları ve rehberler tek aramada.",
+      "srTours": "Turlar",
+      "srPlaces": "Gezilecek yerler",
+      "srRoutes": "Rotalar",
+      "srGuides": "Rehberler",
+      "homeDiscEyebrow": "GÜNLERİNİ PLANLA",
+      "homeDiscTitle": "İstanbul'u kendi tarzınla keşfet.",
+      "homeDiscSub": "Saraylardan çarşılara, İsfanbul tema parkından İstanbul Akvaryum'a 33 gezilecek yer ve Prof. İlber Ortaylı'nın yürüyüş rotası.",
+      "homeDiscCta": "İstanbul'u keşfet →",
+      "gaTitle": "Şehirde ulaşım",
+      "gaIst": "M11 metrosu İstanbul Havalimanı'nı (IST) Gayrettepe'ye bağlar; Taksim için orada M2 metrosuna aktarma yapılır.",
+      "gaSaw": "M4 metrosu Anadolu yakasındaki Sabiha Gökçen Havalimanı'nı (SAW) Kadıköy'e bağlar.",
+      "gaTram": "T1 tramvayı tarihi yarımadada Sultanahmet, Eminönü ve Karaköy üzerinden Kabataş'a gider.",
+      "gaFerry": "Şehir Hatları vapurları Avrupa ile Asya arasında çalışır. Vapur, metro ve tramvay için İstanbulkart kullanılır.",
+      "gaNote": "Hatlar ve saatler değişebilir; yola çıkmadan resmî işletmelere bakın.",
+      "toEyebrow": "TALEP ÜZERİNE TURLAR",
+      "toTitle": "Temalı, özel ve çok günlü turlar.",
+      "toLead": "İnanç ve miras turları, semt yürüyüşleri, panoramik otobüs turu, özel rehber ve araç, Türkiye'de çok günlü geziler. Tarihinizi ve kişi sayısını e-posta ile yazın; lisanslı firmalara soralım, karar vermeden önce fiyatı size iletelim.",
+      "toCatAll": "Tümü",
+      "toCatThemed": "Miras ve inanç",
+      "toCatHoods": "Semtler",
+      "toCatPanoramic": "Panoramik otobüs turu",
+      "toCatPrivate": "Özel rehber ve araç",
+      "toCatMulti": "Çok günlü Türkiye",
+      "toPrice": "Fiyat talep üzerine",
+      "toAsk": "E-posta ile sor",
+      "toAskMsg": "Merhaba Bosphorly, şu tur ilgimi çekiyor: {tour}. Tarih: … Kişi sayısı: … Otel: …",
+      "toDurH": "Yaklaşık {n} saat",
+      "toDurHalf": "Yarım gün",
+      "toDurFull": "Tam gün",
+      "toDurD": "{n} gün",
+      "toDurFlex": "Yarım gün, tam gün ya da saatlik",
+      "toHowTitle": "Nasıl işler?",
+      "toHow1": "Tarihinizi, kişi sayısını ve otelinizi e-posta ile yazın.",
+      "toHow2": "Lisanslı firmalara soralım, fiyatı ve programı size gönderelim.",
+      "toHow3": "Karar sizin. Bu sitede hiçbir ödeme yapılmaz.",
+      "toNote": "Bu turlar talep üzerine ayarlanır. Bosphorly'nin bunlar için henüz imzalı bir anlaşması yok; fiyat ve uygunluk e-posta üzerinden teyit edilir.",
+      "toSeeAlso": "Yayınlanmış fiyatlı Kapadokya, Pamukkale ve Efes paketleri →",
+      "toFrom": "Başlangıç {price}",
+      "toDetails": "Detaylar ve fiyatlar",
+      "toTimes": "Saatler",
+      "toRoute": "Güzergâh",
+      "toInc": "Genelde dahil",
+      "toExc": "Genelde dahil değil",
+      "toMarket": "Diğer firmaların yayınladığı fiyatlar",
+      "toMarketNote": "İstanbul'daki firmaların benzer turlar için aldığı ücretler ({date} itibarıyla). Bosphorly üzerinden talep edin; rezervasyondan önce fiyatınızı e-posta üzerinden teyit edelim.",
+      "toB_pp": "kişi başı",
+      "toB_group": "grup başı",
+      "toB_groupMax": "grup başı (en fazla {n} kişi)",
+      "toB_private": "özel tur",
+      "toB_vehicle": "araç başı",
+      "toB_day": "günlük",
+      "toHours": "{n} sa",
+      "toFromWord": "başlayan",
+      "toN_carIncl": "araç ve şoför dahil",
+      "toN_guideOnly": "yalnızca rehber",
+      "toN_halfDay": "yarım gün",
+      "toN_istSultanahmet": "IST → Sultanahmet",
+      "toN_oneDay": "1 günlük bilet",
+      "toN_ticketsIncl": "giriş biletleri dahil",
+      "toN_vito100": "Mercedes Vito, 100 km",
+      "toT_carLimits": "Genelde günde 8 saat ve 100 km; fazla saat ve kilometre ücretlidir.",
+      "toT_publicFerry": "Daha ucuz seçenek: Eminönü'nden kalkan Şehir Hatları uzun Boğaz vapuru Anadolu Kavağı'nda yaklaşık 2,5 saat bekler; İstanbulkart ile ödenir.",
+      "toI_audio": "Sesli anlatım",
+      "toI_cablecar": "Teleferik",
+      "toI_drinks": "İçecekler",
+      "toI_ferry": "Vapur",
+      "toI_flights": "İç hat uçuşları",
+      "toI_fuel": "Yakıt ve geçiş ücretleri",
+      "toI_guide": "Lisanslı rehber",
+      "toI_hotels": "Oteller",
+      "toI_lunch": "Öğle yemeği",
+      "toI_meet": "İsim tabelasıyla karşılama",
+      "toI_pickup": "Otelden alış",
+      "toI_tastings": "Yemek tadımları",
+      "toI_tickets": "Giriş biletleri",
+      "toI_tips": "Bahşiş",
+      "toI_transport": "Ulaşım",
+      "toI_vehicle": "Şoförlü araç",
+      "toI_wifi": "Wi-Fi",
+      "toMarketRange": "İstanbul'da piyasa fiyatı",
+      "toReq": "Bu turu talep et",
+      "toFDate": "Tarih",
+      "toFGuests": "Kişi sayısı",
+      "toFHotel": "Otel",
+      "toFName": "Ad soyad",
+      "toFPhone": "Cep telefonu (ülke koduyla)",
+      "toFNotes": "Not (isteğe bağlı)",
+      "toFAck": "Talebimin ve iletişim bilgilerimin e-posta üzerinden Bosphorly'ye gönderilmesini kabul ediyorum. Rezervasyondan önce fiyat ve uygunluk teyit edilir; bu sitede ödeme alınmaz.",
+      "toFSend": "E-posta talebi hazırla →",
+      "toFErr": "Lütfen tarihi, kişi sayısını, adınızı ve ülke koduyla telefonunuzu yazın, kutuyu işaretleyin.",
+      "toFDone": "{ref} numaralı e-posta taslağın hazır. Talebini iletmek için Gmail veya e-posta uygulamanda Gönder’e bas.",
+      "toWaTitle": "Bosphorly tur talebi",
+      "toWaRef": "Referans",
+      "toMyReq": "Taleplerimi gör →"
     }
-   ]
   },
-  {
-   "id": "ottoman-imperial",
-   "cat": "themed",
-   "dur": [
-    "full"
-   ],
-   "en": [
-    "Ottoman imperial Istanbul",
-    "Topkapı Palace, the Süleymaniye and Rüstem Paşa mosques, the Grand Bazaar and the tiles of Sokollu Mehmed Paşa: the city of the sultans."
-   ],
-   "tr": [
-    "Osmanlı başkenti İstanbul",
-    "Topkapı Sarayı, Süleymaniye ve Rüstem Paşa camileri, Kapalıçarşı ve Sokollu Mehmed Paşa'nın çinileri: sultanların şehri."
-   ],
-   "from": [
-    140,
-    "EUR"
-   ],
-   "route": [
-    "@topkapi",
-    "@suleymaniye",
-    "Rüstem Paşa Camii",
-    "@grand-bazaar",
-    "Sokollu Mehmed Paşa Camii"
-   ],
-   "inc": [
-    "guide"
-   ],
-   "exc": [
-    "tickets",
-    "pickup",
-    "lunch",
-    "tips"
-   ],
-   "src": [
+  "tours": [
     {
-     "op": "Istanbul Daily City Tours",
-     "p": 140,
-     "c": "EUR",
-     "b": "day",
-     "h": 8,
-     "note": "guideOnly",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+      "id": "jewish-heritage",
+      "cat": "themed",
+      "dur": [
+        "full"
+      ],
+      "en": [
+        "Jewish heritage of Istanbul",
+        "Five centuries of Sephardic life: the old quarters of Balat and Hasköy, the Ahrida Synagogue, Galata and the Kamondo Stairs. Synagogue visits are arranged in advance with passport details."
+      ],
+      "tr": [
+        "İstanbul'un Yahudi mirası",
+        "Beş yüzyıllık Sefarad hayatı: Balat ve Hasköy'ün eski mahalleleri, Ahrida Sinagogu, Galata ve Kamondo Merdivenleri. Sinagog ziyaretleri pasaport bilgisiyle önceden ayarlanır."
+      ],
+      "from": [
+        179,
+        "USD"
+      ],
+      "route": [
+        "Aşkenaz Sinagogu",
+        "Kamondo Merdivenleri",
+        "Neve Şalom Sinagogu",
+        "@balat",
+        "Ahrida Sinagogu",
+        "Yanbol Sinagogu"
+      ],
+      "inc": [
+        "guide",
+        "tickets",
+        "pickup"
+      ],
+      "exc": [
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "ForeverVacation",
+          "p": 179,
+          "c": "USD",
+          "b": "private",
+          "from": true,
+          "u": "https://forevervacation.com/istanbul-jewish-heritage-tour"
+        },
+        {
+          "op": "Les Arts Turcs",
+          "p": 210,
+          "c": "EUR",
+          "b": "private",
+          "h": 4,
+          "u": "https://www.lesartsturcs.com/product/jewish-heritage-and-synagogue-tour-in-istanbul/"
+        },
+        {
+          "op": "Turco Travel",
+          "p": 332,
+          "c": "USD",
+          "b": "pp",
+          "h": 6,
+          "u": "https://turcotravel.com/tours/istanbul-jewish-heritage-private-tour"
+        }
+      ]
     },
     {
-     "op": "Guide Istanbul",
-     "p": 250,
-     "c": "EUR",
-     "b": "day",
-     "note": "guideOnly",
-     "u": "https://www.guideistanbul.com/istanbul-private-guide/"
+      "id": "armenian-heritage",
+      "cat": "themed",
+      "dur": [
+        "full"
+      ],
+      "en": [
+        "Armenian heritage of Istanbul",
+        "Kumkapı and the Armenian Patriarchate with the Surp Asdvadzadzin church, the old quarter of Samatya and the Üç Horan church in Beyoğlu."
+      ],
+      "tr": [
+        "İstanbul'un Ermeni mirası",
+        "Kumkapı'da Ermeni Patrikhanesi ve Surp Asdvadzadzin Kilisesi, eski Samatya mahallesi ve Beyoğlu'ndaki Üç Horan Kilisesi."
+      ],
+      "from": [
+        75,
+        "EUR"
+      ],
+      "route": [
+        "Kumkapı",
+        "Ermeni Patrikhanesi",
+        "Surp Asdvadzadzin Kilisesi",
+        "Samatya",
+        "Üç Horan Kilisesi"
+      ],
+      "inc": [
+        "guide"
+      ],
+      "exc": [
+        "pickup",
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Bazaar Turkey",
+          "p": 75,
+          "c": "EUR",
+          "b": "pp",
+          "h": 4,
+          "u": "https://bazaarturkey.com/activities/greek-jewish-armenian-muslim-quarters-tour-in-istanbul/"
+        },
+        {
+          "op": "Fest Travel",
+          "p": 125,
+          "c": "EUR",
+          "b": "pp",
+          "from": true,
+          "u": "https://fest.travel/tour/kumkapi-samatya/"
+        },
+        {
+          "op": "Walks in Istanbul",
+          "p": 415,
+          "c": "EUR",
+          "b": "group",
+          "h": 4,
+          "u": "https://walksinistanbul.com/istanbul-walking-tours/armenian-heritage-istanbul/"
+        }
+      ]
+    },
+    {
+      "id": "christian-istanbul",
+      "cat": "themed",
+      "dur": [
+        "full"
+      ],
+      "en": [
+        "In the footsteps of early Christianity",
+        "Hagia Irene and Hagia Sophia, the mosaics of Chora, the Ecumenical Patriarchate at Fener, the iron Bulgarian church of St Stephen and the Pantokrator monastery."
+      ],
+      "tr": [
+        "Erken Hristiyanlığın izinde",
+        "Aya İrini ve Ayasofya, Kariye'nin mozaikleri, Fener'deki Ekümenik Patrikhane, demir Bulgar Kilisesi (Sveti Stefan) ve Pantokrator Manastırı."
+      ],
+      "from": [
+        200,
+        "EUR"
+      ],
+      "route": [
+        "Aya İrini",
+        "@hagia-sophia",
+        "@chora",
+        "Fener Rum Patrikhanesi",
+        "Sveti Stefan Kilisesi",
+        "Zeyrek (Pantokrator)"
+      ],
+      "inc": [
+        "guide",
+        "vehicle"
+      ],
+      "exc": [
+        "tickets",
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Turkey Greece Tour",
+          "p": 200,
+          "c": "EUR",
+          "b": "private",
+          "from": true,
+          "note": "guideOnly",
+          "u": "https://www.turkeygreecetour.com/tour/full-day-cross-continental-journey-through-istanbuls-orthodoxy-christian-heritage/"
+        },
+        {
+          "op": "Viator",
+          "p": 320,
+          "c": "USD",
+          "b": "private",
+          "from": true,
+          "h": 7,
+          "u": "https://www.viator.com/Istanbul-tours/Religious-Tours/d585-tag21518"
+        },
+        {
+          "op": "Tripadvisor",
+          "p": 572,
+          "c": "USD",
+          "b": "group",
+          "max": 7,
+          "u": "https://www.tripadvisor.com/AttractionProductReview-g293974-d11462217-Christian_Heritage_Private_Tour_In_Istanbul_Byzantine_Churches-Istanbul.html"
+        }
+      ]
+    },
+    {
+      "id": "ottoman-imperial",
+      "cat": "themed",
+      "dur": [
+        "full"
+      ],
+      "en": [
+        "Ottoman imperial Istanbul",
+        "Topkapı Palace, the Süleymaniye and Rüstem Paşa mosques, the Grand Bazaar and the tiles of Sokollu Mehmed Paşa: the city of the sultans."
+      ],
+      "tr": [
+        "Osmanlı başkenti İstanbul",
+        "Topkapı Sarayı, Süleymaniye ve Rüstem Paşa camileri, Kapalıçarşı ve Sokollu Mehmed Paşa'nın çinileri: sultanların şehri."
+      ],
+      "from": [
+        140,
+        "EUR"
+      ],
+      "route": [
+        "@topkapi",
+        "@suleymaniye",
+        "Rüstem Paşa Camii",
+        "@grand-bazaar",
+        "Sokollu Mehmed Paşa Camii"
+      ],
+      "inc": [
+        "guide"
+      ],
+      "exc": [
+        "tickets",
+        "pickup",
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Istanbul Daily City Tours",
+          "p": 140,
+          "c": "EUR",
+          "b": "day",
+          "h": 8,
+          "note": "guideOnly",
+          "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+        },
+        {
+          "op": "Guide Istanbul",
+          "p": 250,
+          "c": "EUR",
+          "b": "day",
+          "note": "guideOnly",
+          "u": "https://www.guideistanbul.com/istanbul-private-guide/"
+        }
+      ]
+    },
+    {
+      "id": "byzantine-ottoman",
+      "cat": "themed",
+      "dur": [
+        "full"
+      ],
+      "en": [
+        "Byzantine and Ottoman highlights",
+        "The Hippodrome, Hagia Sophia, the Basilica Cistern, the Blue Mosque, Topkapı Palace and the Grand Bazaar in one guided day."
+      ],
+      "tr": [
+        "Bizans ve Osmanlı'nın öne çıkanları",
+        "Hipodrom, Ayasofya, Yerebatan Sarnıcı, Sultanahmet Camii, Topkapı Sarayı ve Kapalıçarşı tek bir rehberli günde."
+      ],
+      "from": [
+        120,
+        "EUR"
+      ],
+      "time": "08:30–17:00",
+      "route": [
+        "Hipodrom",
+        "@hagia-sophia",
+        "@basilica-cistern",
+        "@blue-mosque",
+        "@topkapi",
+        "@grand-bazaar"
+      ],
+      "inc": [
+        "guide",
+        "lunch",
+        "pickup"
+      ],
+      "exc": [
+        "tickets",
+        "drinks",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Les Arts Turcs",
+          "p": 120,
+          "c": "EUR",
+          "b": "pp",
+          "u": "https://www.lesartsturcs.com/product/byzantine-ottoman-relics-full-day-tour/"
+        },
+        {
+          "op": "Turkey Travel Bazaar",
+          "p": 130,
+          "c": "EUR",
+          "b": "pp",
+          "from": true,
+          "u": "https://turkeytravelbazaar.com/tour/istanbul-full-day-city-tour-byzantium-ottoman-relics/"
+        },
+        {
+          "op": "Efendi Travel",
+          "p": 180,
+          "c": "EUR",
+          "b": "pp",
+          "note": "ticketsIncl",
+          "u": "https://www.efenditravel.com/tours/istanbul-byzantine-ottoman-relics-tour-9.html"
+        }
+      ]
+    },
+    {
+      "id": "golden-horn",
+      "cat": "hoods",
+      "dur": [
+        "half"
+      ],
+      "en": [
+        "Golden Horn: Fener, Balat and Eyüp",
+        "Colourful Balat and Fener, the Eyüp Sultan Mosque, the cable car up to Pierre Loti for the view, and back along the water."
+      ],
+      "tr": [
+        "Haliç: Fener, Balat ve Eyüp",
+        "Renkli Balat ve Fener, Eyüp Sultan Camii, manzara için teleferikle Pierre Loti ve su kenarından dönüş."
+      ],
+      "from": [
+        116,
+        "USD"
+      ],
+      "route": [
+        "@balat",
+        "Fener",
+        "Eyüp Sultan Camii",
+        "@pierre-loti"
+      ],
+      "inc": [
+        "guide",
+        "cablecar",
+        "pickup"
+      ],
+      "exc": [
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "GetYourGuide",
+          "p": 116,
+          "c": "USD",
+          "b": "pp",
+          "from": true,
+          "h": 3.5,
+          "u": "https://www.getyourguide.com/istanbul-l56/istanbul-s-golden-horn-eyup-miniaturk-pierre-loti-tour-t18464/"
+        },
+        {
+          "op": "Walks of Istanbul",
+          "p": 150,
+          "c": "USD",
+          "b": "group",
+          "max": 6,
+          "h": 4,
+          "u": "https://walksofistanbul.com/tour/half-day-private-golden-horn-cruise-with-eyup-fener-balat-tour/"
+        },
+        {
+          "op": "ToursByLocals",
+          "p": 250,
+          "c": "USD",
+          "b": "group",
+          "max": 6,
+          "h": 4,
+          "u": "https://www.toursbylocals.com/privategoldenhorntouristanbul"
+        }
+      ]
+    },
+    {
+      "id": "uskudar",
+      "cat": "hoods",
+      "dur": [
+        "half"
+      ],
+      "en": [
+        "Üsküdar on the Asian shore",
+        "A ferry across the Bosphorus, the Mihrimah Sultan and Şemsi Paşa mosques, the Maiden's Tower from the shore and the view from Çamlıca Hill."
+      ],
+      "tr": [
+        "Asya yakasında Üsküdar",
+        "Vapurla Boğaz geçişi, Mihrimah Sultan ve Şemsi Paşa camileri, kıyıdan Kız Kulesi ve Çamlıca Tepesi'nden manzara."
+      ],
+      "from": [
+        90,
+        "EUR"
+      ],
+      "route": [
+        "Mihrimah Sultan Camii",
+        "Şemsi Paşa Camii",
+        "@maidens-tower",
+        "@camlica",
+        "Kuzguncuk"
+      ],
+      "inc": [
+        "guide",
+        "ferry"
+      ],
+      "exc": [
+        "pickup",
+        "tickets",
+        "lunch"
+      ],
+      "src": [
+        {
+          "op": "Colorido Tours",
+          "p": 90,
+          "c": "EUR",
+          "b": "pp",
+          "from": true,
+          "h": 8,
+          "u": "https://coloridotours.com/en/tour/istanbul-asian-side-uskudar-kadikoy-day-tour"
+        },
+        {
+          "op": "Pelago",
+          "p": 113,
+          "c": "USD",
+          "b": "pp",
+          "from": true,
+          "u": "https://www.pelago.com/en-US/activity/pizei-istanbul-europe--asian-tour-maidens-tower--mihrimah-sultan-mosque-istanbul/"
+        }
+      ]
+    },
+    {
+      "id": "kadikoy-moda",
+      "cat": "hoods",
+      "dur": [
+        "half"
+      ],
+      "en": [
+        "Kadıköy and Moda food walk",
+        "Cross by ferry to the lively Asian side, taste your way through the Kadıköy market and walk along the sea in Moda."
+      ],
+      "tr": [
+        "Kadıköy ve Moda lezzet yürüyüşü",
+        "Vapurla canlı Asya yakasına geçin, Kadıköy çarşısında tadım yapın ve Moda'da deniz kenarında yürüyün."
+      ],
+      "from": [
+        85.99,
+        "EUR"
+      ],
+      "time": "18:00–21:00",
+      "route": [
+        "@kadikoy",
+        "Kadıköy Çarşısı",
+        "Moda Sahili"
+      ],
+      "inc": [
+        "guide",
+        "tastings"
+      ],
+      "exc": [
+        "pickup",
+        "ferry"
+      ],
+      "src": [
+        {
+          "op": "Secret Food Tours",
+          "p": 85.99,
+          "c": "EUR",
+          "b": "pp",
+          "h": 3.5,
+          "u": "https://www.secretfoodtours.com/istanbul/food-tours-istanbul/"
+        },
+        {
+          "op": "Yummy Istanbul",
+          "p": 89,
+          "c": "USD",
+          "b": "pp",
+          "h": 3,
+          "u": "https://yummyistanbul.com/istanbul-street-food-tour/"
+        }
+      ]
+    },
+    {
+      "id": "beykoz",
+      "cat": "hoods",
+      "dur": [
+        "full"
+      ],
+      "en": [
+        "Beykoz and the upper Bosphorus",
+        "The green northern Bosphorus: Rumeli and Anadolu fortresses, the fishing village of Anadolu Kavağı, Yoros Castle and a fish lunch by the water."
+      ],
+      "tr": [
+        "Beykoz ve Yukarı Boğaz",
+        "Boğaz'ın yeşil kuzeyi: Rumeli ve Anadolu hisarları, balıkçı köyü Anadolu Kavağı, Yoros Kalesi ve su kenarında balık yemeği."
+      ],
+      "from": [
+        55,
+        "EUR"
+      ],
+      "route": [
+        "@rumeli-hisari",
+        "Anadolu Hisarı",
+        "Anadolu Kavağı",
+        "Yoros Kalesi"
+      ],
+      "inc": [
+        "lunch",
+        "pickup"
+      ],
+      "exc": [
+        "guide",
+        "drinks"
+      ],
+      "src": [
+        {
+          "op": "Acetes Travel",
+          "p": 55,
+          "c": "EUR",
+          "b": "pp",
+          "h": 4.5,
+          "u": "https://acetestravel.com/bosphorus-lunch-cruise.html"
+        }
+      ],
+      "tip": "publicFerry"
+    },
+    {
+      "id": "panoramic-bus",
+      "cat": "panoramic",
+      "dur": [
+        "h",
+        "2.5"
+      ],
+      "en": [
+        "Panoramic city bus tour (hop-on hop-off)",
+        "An open-top bus past the main sights with audio commentary in several languages; hop off where you like and take a later bus. Good if you only have a day."
+      ],
+      "tr": [
+        "Panoramik şehir turu (hop-on hop-off)",
+        "Üstü açık otobüsle başlıca yerleri dolaşın, birçok dilde sesli anlatım dinleyin; istediğiniz yerde inip sonraki otobüse binin. Tek günü olanlar için ideal."
+      ],
+      "from": [
+        45,
+        "EUR"
+      ],
+      "time": "11:00–17:00",
+      "inc": [
+        "audio",
+        "wifi"
+      ],
+      "exc": [
+        "pickup",
+        "guide"
+      ],
+      "src": [
+        {
+          "op": "Big Bus (TourScanner)",
+          "p": 45,
+          "c": "EUR",
+          "b": "pp",
+          "note": "oneDay",
+          "u": "https://tourscanner.com/l/istanbul/i/hop-on-hop-off-bus-tours"
+        },
+        {
+          "op": "Big Bus (Viator)",
+          "p": 57,
+          "c": "USD",
+          "b": "pp",
+          "note": "oneDay",
+          "u": "https://www.viator.com/tours/Istanbul/Big-Bus-Istanbul-Hop-On-Hop-Off-Tour/d585-6294ISTHOHO"
+        }
+      ]
+    },
+    {
+      "id": "private-guide",
+      "cat": "private",
+      "dur": [
+        "flex"
+      ],
+      "en": [
+        "Private licensed guide",
+        "A professional licensed guide just for your family or group, half or full day, on your own itinerary and in your language."
+      ],
+      "tr": [
+        "Özel lisanslı rehber",
+        "Yalnızca aileniz ya da grubunuz için profesyonel lisanslı rehber; yarım veya tam gün, kendi programınıza göre ve kendi dilinizde."
+      ],
+      "from": [
+        100,
+        "EUR"
+      ],
+      "inc": [
+        "guide"
+      ],
+      "exc": [
+        "tickets",
+        "vehicle",
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Istanbul Daily City Tours",
+          "p": 100,
+          "c": "EUR",
+          "b": "private",
+          "h": 4,
+          "note": "halfDay",
+          "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+        },
+        {
+          "op": "Istanbul Daily City Tours",
+          "p": 140,
+          "c": "EUR",
+          "b": "day",
+          "h": 8,
+          "note": "guideOnly",
+          "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
+        },
+        {
+          "op": "Istanbul Tours by Locals",
+          "p": 150,
+          "c": "EUR",
+          "b": "group",
+          "from": true,
+          "note": "carIncl",
+          "u": "https://www.istanbultoursbylocals.com/istanbul-tour-guide/"
+        },
+        {
+          "op": "Guide Istanbul",
+          "p": 250,
+          "c": "EUR",
+          "b": "day",
+          "note": "guideOnly",
+          "u": "https://www.guideistanbul.com/istanbul-private-guide/"
+        }
+      ]
+    },
+    {
+      "id": "private-car",
+      "cat": "private",
+      "dur": [
+        "flex"
+      ],
+      "en": [
+        "Private car with driver",
+        "A car or minibus with a driver by the hour or the day, from a sedan for two to a minibus for large families. Combine it with a private guide."
+      ],
+      "tr": [
+        "Şoförlü özel araç",
+        "Saatlik ya da günlük şoförlü araç: iki kişilik sedandan kalabalık aileler için minibüse kadar. Özel rehberle birleştirilebilir."
+      ],
+      "from": [
+        150,
+        "EUR"
+      ],
+      "inc": [
+        "vehicle",
+        "fuel"
+      ],
+      "exc": [
+        "guide",
+        "tickets"
+      ],
+      "src": [
+        {
+          "op": "Adore Tourism",
+          "p": 150,
+          "c": "EUR",
+          "b": "day",
+          "h": 8,
+          "note": "vito100",
+          "u": "https://www.istanbulairportstransfer.net/rent-car-with-driver-in-istanbul.php"
+        },
+        {
+          "op": "Rentotransfer",
+          "p": 170,
+          "c": "EUR",
+          "b": "day",
+          "from": true,
+          "u": "https://rentotransfer.com/blog/istanbul-chauffeur-car-service"
+        },
+        {
+          "op": "Istanbul Daily City Tours",
+          "p": 180,
+          "c": "EUR",
+          "b": "day",
+          "h": 8,
+          "note": "vito100",
+          "u": "https://www.istanbuldaily-citytours.com/private-tours/car-hire-with-driver"
+        }
+      ],
+      "tip": "carLimits"
+    },
+    {
+      "id": "vip-transfer",
+      "cat": "private",
+      "dur": [
+        "flex"
+      ],
+      "en": [
+        "VIP and limousine transfer",
+        "Airport or city transfers in a VIP van or luxury sedan, with meet and greet at arrivals."
+      ],
+      "tr": [
+        "VIP ve limuzin transfer",
+        "VIP minibüs ya da lüks sedanla havalimanı veya şehir içi transfer; gelen yolcu salonunda karşılama."
+      ],
+      "from": [
+        55,
+        "EUR"
+      ],
+      "inc": [
+        "vehicle",
+        "meet",
+        "fuel"
+      ],
+      "exc": [],
+      "src": [
+        {
+          "op": "Merry Tourism",
+          "p": 55,
+          "c": "EUR",
+          "b": "vehicle",
+          "note": "istSultanahmet",
+          "u": "https://www.merrytourism.com/en/istanbul-private-transfer"
+        },
+        {
+          "op": "Kings World Transfer",
+          "p": 60,
+          "c": "EUR",
+          "b": "vehicle",
+          "note": "istSultanahmet",
+          "u": "https://kingsworldtransfer.com/en/istanbul-airport-transfer"
+        },
+        {
+          "op": "Vanvia",
+          "p": 100,
+          "c": "EUR",
+          "b": "vehicle",
+          "note": "istSultanahmet",
+          "u": "https://vanvia.com.tr/en/routes/istanbul-airport-sultanahmet-transfer"
+        }
+      ]
+    },
+    {
+      "id": "anatolian-civilizations",
+      "cat": "multi",
+      "dur": [
+        "d",
+        "4"
+      ],
+      "en": [
+        "Anatolian civilizations",
+        "Ankara's Museum of Anatolian Civilizations and Anıtkabir, the Hittite capital Hattusa, and the fairy chimneys of Cappadocia."
+      ],
+      "tr": [
+        "Anadolu medeniyetleri",
+        "Ankara'da Anadolu Medeniyetleri Müzesi ve Anıtkabir, Hitit başkenti Hattuşa ve Kapadokya'nın peri bacaları."
+      ],
+      "from": [
+        673,
+        "EUR"
+      ],
+      "route": [
+        "Ankara",
+        "Anıtkabir",
+        "Hattuşa",
+        "Kapadokya"
+      ],
+      "inc": [
+        "guide",
+        "hotels",
+        "flights",
+        "transport"
+      ],
+      "exc": [
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Greca",
+          "p": 673,
+          "c": "EUR",
+          "b": "pp",
+          "from": true,
+          "u": "https://www.greca.co/en/excursion/4-days-cappadocia-ankara"
+        },
+        {
+          "op": "Eskapas",
+          "p": 1100,
+          "c": "USD",
+          "b": "pp",
+          "from": true,
+          "u": "https://eskapas.com/tour/istanbul-ankara-cappadocia-4-days/"
+        },
+        {
+          "op": "On The Go Tours",
+          "p": 1535,
+          "c": "USD",
+          "b": "pp",
+          "u": "https://www.onthegotours.com/Turkey/Ankara-and-Cappadocia-Express-4-days"
+        }
+      ]
+    },
+    {
+      "id": "upper-mesopotamia",
+      "cat": "multi",
+      "dur": [
+        "d",
+        "5"
+      ],
+      "en": [
+        "Upper Mesopotamia",
+        "Gaziantep and the Zeugma mosaics, Şanlıurfa with Göbeklitepe and Balıklıgöl, the stone city of Mardin and sunrise on Mount Nemrut."
+      ],
+      "tr": [
+        "Yukarı Mezopotamya",
+        "Gaziantep ve Zeugma mozaikleri, Göbeklitepe ve Balıklıgöl ile Şanlıurfa, taş şehir Mardin ve Nemrut Dağı'nda gün doğumu."
+      ],
+      "from": [
+        816,
+        "USD"
+      ],
+      "route": [
+        "Gaziantep (Zeugma)",
+        "Şanlıurfa (Göbeklitepe, Balıklıgöl)",
+        "Mardin",
+        "Nemrut Dağı"
+      ],
+      "inc": [
+        "guide",
+        "hotels",
+        "flights",
+        "transport"
+      ],
+      "exc": [
+        "lunch",
+        "tips"
+      ],
+      "src": [
+        {
+          "op": "Turkey Escapades",
+          "p": 816,
+          "c": "USD",
+          "b": "pp",
+          "from": true,
+          "u": "https://turkeyescapades.com/tour/5-days-cappadocia-mt-nemrut-gobeklitepe-gaziantep-tour-from-istanbul/"
+        },
+        {
+          "op": "Mardin Turkey Tours",
+          "p": 1190,
+          "c": "USD",
+          "b": "pp",
+          "u": "https://www.mardinturkeytours.com/package/southeast-turkey-tours/"
+        },
+        {
+          "op": "On The Go Tours",
+          "p": 1944,
+          "c": "USD",
+          "b": "pp",
+          "from": true,
+          "u": "https://www.onthegotours.com/us/Turkey/Gobekli-Tepe-and-Mount-Nemrut-Explorer-5-days"
+        }
+      ]
     }
-   ]
-  },
-  {
-   "id": "byzantine-ottoman",
-   "cat": "themed",
-   "dur": [
-    "full"
-   ],
-   "en": [
-    "Byzantine and Ottoman highlights",
-    "The Hippodrome, Hagia Sophia, the Basilica Cistern, the Blue Mosque, Topkapı Palace and the Grand Bazaar in one guided day."
-   ],
-   "tr": [
-    "Bizans ve Osmanlı'nın öne çıkanları",
-    "Hipodrom, Ayasofya, Yerebatan Sarnıcı, Sultanahmet Camii, Topkapı Sarayı ve Kapalıçarşı tek bir rehberli günde."
-   ],
-   "from": [
-    120,
-    "EUR"
-   ],
-   "time": "08:30–17:00",
-   "route": [
-    "Hipodrom",
-    "@hagia-sophia",
-    "@basilica-cistern",
-    "@blue-mosque",
-    "@topkapi",
-    "@grand-bazaar"
-   ],
-   "inc": [
-    "guide",
-    "lunch",
-    "pickup"
-   ],
-   "exc": [
-    "tickets",
-    "drinks",
-    "tips"
-   ],
-   "src": [
-    {
-     "op": "Les Arts Turcs",
-     "p": 120,
-     "c": "EUR",
-     "b": "pp",
-     "u": "https://www.lesartsturcs.com/product/byzantine-ottoman-relics-full-day-tour/"
-    },
-    {
-     "op": "Turkey Travel Bazaar",
-     "p": 130,
-     "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "u": "https://turkeytravelbazaar.com/tour/istanbul-full-day-city-tour-byzantium-ottoman-relics/"
-    },
-    {
-     "op": "Efendi Travel",
-     "p": 180,
-     "c": "EUR",
-     "b": "pp",
-     "note": "ticketsIncl",
-     "u": "https://www.efenditravel.com/tours/istanbul-byzantine-ottoman-relics-tour-9.html"
-    }
-   ]
-  },
-  {
-   "id": "golden-horn",
-   "cat": "hoods",
-   "dur": [
-    "half"
-   ],
-   "en": [
-    "Golden Horn: Fener, Balat and Eyüp",
-    "Colourful Balat and Fener, the Eyüp Sultan Mosque, the cable car up to Pierre Loti for the view, and back along the water."
-   ],
-   "tr": [
-    "Haliç: Fener, Balat ve Eyüp",
-    "Renkli Balat ve Fener, Eyüp Sultan Camii, manzara için teleferikle Pierre Loti ve su kenarından dönüş."
-   ],
-   "from": [
-    116,
-    "USD"
-   ],
-   "route": [
-    "@balat",
-    "Fener",
-    "Eyüp Sultan Camii",
-    "@pierre-loti"
-   ],
-   "inc": [
-    "guide",
-    "cablecar",
-    "pickup"
-   ],
-   "exc": [
-    "lunch",
-    "tips"
-   ],
-   "src": [
-    {
-     "op": "GetYourGuide",
-     "p": 116,
-     "c": "USD",
-     "b": "pp",
-     "from": true,
-     "h": 3.5,
-     "u": "https://www.getyourguide.com/istanbul-l56/istanbul-s-golden-horn-eyup-miniaturk-pierre-loti-tour-t18464/"
-    },
-    {
-     "op": "Walks of Istanbul",
-     "p": 150,
-     "c": "USD",
-     "b": "group",
-     "max": 6,
-     "h": 4,
-     "u": "https://walksofistanbul.com/tour/half-day-private-golden-horn-cruise-with-eyup-fener-balat-tour/"
-    },
-    {
-     "op": "ToursByLocals",
-     "p": 250,
-     "c": "USD",
-     "b": "group",
-     "max": 6,
-     "h": 4,
-     "u": "https://www.toursbylocals.com/privategoldenhorntouristanbul"
-    }
-   ]
-  },
-  {
-   "id": "uskudar",
-   "cat": "hoods",
-   "dur": [
-    "half"
-   ],
-   "en": [
-    "Üsküdar on the Asian shore",
-    "A ferry across the Bosphorus, the Mihrimah Sultan and Şemsi Paşa mosques, the Maiden's Tower from the shore and the view from Çamlıca Hill."
-   ],
-   "tr": [
-    "Asya yakasında Üsküdar",
-    "Vapurla Boğaz geçişi, Mihrimah Sultan ve Şemsi Paşa camileri, kıyıdan Kız Kulesi ve Çamlıca Tepesi'nden manzara."
-   ],
-   "from": [
-    90,
-    "EUR"
-   ],
-   "route": [
-    "Mihrimah Sultan Camii",
-    "Şemsi Paşa Camii",
-    "@maidens-tower",
-    "@camlica",
-    "Kuzguncuk"
-   ],
-   "inc": [
-    "guide",
-    "ferry"
-   ],
-   "exc": [
-    "pickup",
-    "tickets",
-    "lunch"
-   ],
-   "src": [
-    {
-     "op": "Colorido Tours",
-     "p": 90,
-     "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "h": 8,
-     "u": "https://coloridotours.com/en/tour/istanbul-asian-side-uskudar-kadikoy-day-tour"
-    },
-    {
-     "op": "Pelago",
-     "p": 113,
-     "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://www.pelago.com/en-US/activity/pizei-istanbul-europe--asian-tour-maidens-tower--mihrimah-sultan-mosque-istanbul/"
-    }
-   ]
-  },
-  {
-   "id": "kadikoy-moda",
-   "cat": "hoods",
-   "dur": [
-    "half"
-   ],
-   "en": [
-    "Kadıköy and Moda food walk",
-    "Cross by ferry to the lively Asian side, taste your way through the Kadıköy market and walk along the sea in Moda."
-   ],
-   "tr": [
-    "Kadıköy ve Moda lezzet yürüyüşü",
-    "Vapurla canlı Asya yakasına geçin, Kadıköy çarşısında tadım yapın ve Moda'da deniz kenarında yürüyün."
-   ],
-   "from": [
-    85.99,
-    "EUR"
-   ],
-   "time": "18:00–21:00",
-   "route": [
-    "@kadikoy",
-    "Kadıköy Çarşısı",
-    "Moda Sahili"
-   ],
-   "inc": [
-    "guide",
-    "tastings"
-   ],
-   "exc": [
-    "pickup",
-    "ferry"
-   ],
-   "src": [
-    {
-     "op": "Secret Food Tours",
-     "p": 85.99,
-     "c": "EUR",
-     "b": "pp",
-     "h": 3.5,
-     "u": "https://www.secretfoodtours.com/istanbul/food-tours-istanbul/"
-    },
-    {
-     "op": "Yummy Istanbul",
-     "p": 89,
-     "c": "USD",
-     "b": "pp",
-     "h": 3,
-     "u": "https://yummyistanbul.com/istanbul-street-food-tour/"
-    }
-   ]
-  },
-  {
-   "id": "beykoz",
-   "cat": "hoods",
-   "dur": [
-    "full"
-   ],
-   "en": [
-    "Beykoz and the upper Bosphorus",
-    "The green northern Bosphorus: Rumeli and Anadolu fortresses, the fishing village of Anadolu Kavağı, Yoros Castle and a fish lunch by the water."
-   ],
-   "tr": [
-    "Beykoz ve Yukarı Boğaz",
-    "Boğaz'ın yeşil kuzeyi: Rumeli ve Anadolu hisarları, balıkçı köyü Anadolu Kavağı, Yoros Kalesi ve su kenarında balık yemeği."
-   ],
-   "from": [
-    55,
-    "EUR"
-   ],
-   "route": [
-    "@rumeli-hisari",
-    "Anadolu Hisarı",
-    "Anadolu Kavağı",
-    "Yoros Kalesi"
-   ],
-   "inc": [
-    "lunch",
-    "pickup"
-   ],
-   "exc": [
-    "guide",
-    "drinks"
-   ],
-   "src": [
-    {
-     "op": "Acetes Travel",
-     "p": 55,
-     "c": "EUR",
-     "b": "pp",
-     "h": 4.5,
-     "u": "https://acetestravel.com/bosphorus-lunch-cruise.html"
-    }
-   ],
-   "tip": "publicFerry"
-  },
-  {
-   "id": "panoramic-bus",
-   "cat": "panoramic",
-   "dur": [
-    "h",
-    "2.5"
-   ],
-   "en": [
-    "Panoramic city bus tour (hop-on hop-off)",
-    "An open-top bus past the main sights with audio commentary in several languages; hop off where you like and take a later bus. Good if you only have a day."
-   ],
-   "tr": [
-    "Panoramik şehir turu (hop-on hop-off)",
-    "Üstü açık otobüsle başlıca yerleri dolaşın, birçok dilde sesli anlatım dinleyin; istediğiniz yerde inip sonraki otobüse binin. Tek günü olanlar için ideal."
-   ],
-   "from": [
-    45,
-    "EUR"
-   ],
-   "time": "11:00–17:00",
-   "inc": [
-    "audio",
-    "wifi"
-   ],
-   "exc": [
-    "pickup",
-    "guide"
-   ],
-   "src": [
-    {
-     "op": "Big Bus (TourScanner)",
-     "p": 45,
-     "c": "EUR",
-     "b": "pp",
-     "note": "oneDay",
-     "u": "https://tourscanner.com/l/istanbul/i/hop-on-hop-off-bus-tours"
-    },
-    {
-     "op": "Big Bus (Viator)",
-     "p": 57,
-     "c": "USD",
-     "b": "pp",
-     "note": "oneDay",
-     "u": "https://www.viator.com/tours/Istanbul/Big-Bus-Istanbul-Hop-On-Hop-Off-Tour/d585-6294ISTHOHO"
-    }
-   ]
-  },
-  {
-   "id": "private-guide",
-   "cat": "private",
-   "dur": [
-    "flex"
-   ],
-   "en": [
-    "Private licensed guide",
-    "A professional licensed guide just for your family or group, half or full day, on your own itinerary and in your language."
-   ],
-   "tr": [
-    "Özel lisanslı rehber",
-    "Yalnızca aileniz ya da grubunuz için profesyonel lisanslı rehber; yarım veya tam gün, kendi programınıza göre ve kendi dilinizde."
-   ],
-   "from": [
-    100,
-    "EUR"
-   ],
-   "inc": [
-    "guide"
-   ],
-   "exc": [
-    "tickets",
-    "vehicle",
-    "lunch",
-    "tips"
-   ],
-   "src": [
-    {
-     "op": "Istanbul Daily City Tours",
-     "p": 100,
-     "c": "EUR",
-     "b": "private",
-     "h": 4,
-     "note": "halfDay",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
-    },
-    {
-     "op": "Istanbul Daily City Tours",
-     "p": 140,
-     "c": "EUR",
-     "b": "day",
-     "h": 8,
-     "note": "guideOnly",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/private-tour-guide-in-istanbul"
-    },
-    {
-     "op": "Istanbul Tours by Locals",
-     "p": 150,
-     "c": "EUR",
-     "b": "group",
-     "from": true,
-     "note": "carIncl",
-     "u": "https://www.istanbultoursbylocals.com/istanbul-tour-guide/"
-    },
-    {
-     "op": "Guide Istanbul",
-     "p": 250,
-     "c": "EUR",
-     "b": "day",
-     "note": "guideOnly",
-     "u": "https://www.guideistanbul.com/istanbul-private-guide/"
-    }
-   ]
-  },
-  {
-   "id": "private-car",
-   "cat": "private",
-   "dur": [
-    "flex"
-   ],
-   "en": [
-    "Private car with driver",
-    "A car or minibus with a driver by the hour or the day, from a sedan for two to a minibus for large families. Combine it with a private guide."
-   ],
-   "tr": [
-    "Şoförlü özel araç",
-    "Saatlik ya da günlük şoförlü araç: iki kişilik sedandan kalabalık aileler için minibüse kadar. Özel rehberle birleştirilebilir."
-   ],
-   "from": [
-    150,
-    "EUR"
-   ],
-   "inc": [
-    "vehicle",
-    "fuel"
-   ],
-   "exc": [
-    "guide",
-    "tickets"
-   ],
-   "src": [
-    {
-     "op": "Adore Tourism",
-     "p": 150,
-     "c": "EUR",
-     "b": "day",
-     "h": 8,
-     "note": "vito100",
-     "u": "https://www.istanbulairportstransfer.net/rent-car-with-driver-in-istanbul.php"
-    },
-    {
-     "op": "Rentotransfer",
-     "p": 170,
-     "c": "EUR",
-     "b": "day",
-     "from": true,
-     "u": "https://rentotransfer.com/blog/istanbul-chauffeur-car-service"
-    },
-    {
-     "op": "Istanbul Daily City Tours",
-     "p": 180,
-     "c": "EUR",
-     "b": "day",
-     "h": 8,
-     "note": "vito100",
-     "u": "https://www.istanbuldaily-citytours.com/private-tours/car-hire-with-driver"
-    }
-   ],
-   "tip": "carLimits"
-  },
-  {
-   "id": "vip-transfer",
-   "cat": "private",
-   "dur": [
-    "flex"
-   ],
-   "en": [
-    "VIP and limousine transfer",
-    "Airport or city transfers in a VIP van or luxury sedan, with meet and greet at arrivals."
-   ],
-   "tr": [
-    "VIP ve limuzin transfer",
-    "VIP minibüs ya da lüks sedanla havalimanı veya şehir içi transfer; gelen yolcu salonunda karşılama."
-   ],
-   "from": [
-    55,
-    "EUR"
-   ],
-   "inc": [
-    "vehicle",
-    "meet",
-    "fuel"
-   ],
-   "exc": [],
-   "src": [
-    {
-     "op": "Merry Tourism",
-     "p": 55,
-     "c": "EUR",
-     "b": "vehicle",
-     "note": "istSultanahmet",
-     "u": "https://www.merrytourism.com/en/istanbul-private-transfer"
-    },
-    {
-     "op": "Kings World Transfer",
-     "p": 60,
-     "c": "EUR",
-     "b": "vehicle",
-     "note": "istSultanahmet",
-     "u": "https://kingsworldtransfer.com/en/istanbul-airport-transfer"
-    },
-    {
-     "op": "Vanvia",
-     "p": 100,
-     "c": "EUR",
-     "b": "vehicle",
-     "note": "istSultanahmet",
-     "u": "https://vanvia.com.tr/en/routes/istanbul-airport-sultanahmet-transfer"
-    }
-   ]
-  },
-  {
-   "id": "anatolian-civilizations",
-   "cat": "multi",
-   "dur": [
-    "d",
-    "4"
-   ],
-   "en": [
-    "Anatolian civilizations",
-    "Ankara's Museum of Anatolian Civilizations and Anıtkabir, the Hittite capital Hattusa, and the fairy chimneys of Cappadocia."
-   ],
-   "tr": [
-    "Anadolu medeniyetleri",
-    "Ankara'da Anadolu Medeniyetleri Müzesi ve Anıtkabir, Hitit başkenti Hattuşa ve Kapadokya'nın peri bacaları."
-   ],
-   "from": [
-    673,
-    "EUR"
-   ],
-   "route": [
-    "Ankara",
-    "Anıtkabir",
-    "Hattuşa",
-    "Kapadokya"
-   ],
-   "inc": [
-    "guide",
-    "hotels",
-    "flights",
-    "transport"
-   ],
-   "exc": [
-    "lunch",
-    "tips"
-   ],
-   "src": [
-    {
-     "op": "Greca",
-     "p": 673,
-     "c": "EUR",
-     "b": "pp",
-     "from": true,
-     "u": "https://www.greca.co/en/excursion/4-days-cappadocia-ankara"
-    },
-    {
-     "op": "Eskapas",
-     "p": 1100,
-     "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://eskapas.com/tour/istanbul-ankara-cappadocia-4-days/"
-    },
-    {
-     "op": "On The Go Tours",
-     "p": 1535,
-     "c": "USD",
-     "b": "pp",
-     "u": "https://www.onthegotours.com/Turkey/Ankara-and-Cappadocia-Express-4-days"
-    }
-   ]
-  },
-  {
-   "id": "upper-mesopotamia",
-   "cat": "multi",
-   "dur": [
-    "d",
-    "5"
-   ],
-   "en": [
-    "Upper Mesopotamia",
-    "Gaziantep and the Zeugma mosaics, Şanlıurfa with Göbeklitepe and Balıklıgöl, the stone city of Mardin and sunrise on Mount Nemrut."
-   ],
-   "tr": [
-    "Yukarı Mezopotamya",
-    "Gaziantep ve Zeugma mozaikleri, Göbeklitepe ve Balıklıgöl ile Şanlıurfa, taş şehir Mardin ve Nemrut Dağı'nda gün doğumu."
-   ],
-   "from": [
-    816,
-    "USD"
-   ],
-   "route": [
-    "Gaziantep (Zeugma)",
-    "Şanlıurfa (Göbeklitepe, Balıklıgöl)",
-    "Mardin",
-    "Nemrut Dağı"
-   ],
-   "inc": [
-    "guide",
-    "hotels",
-    "flights",
-    "transport"
-   ],
-   "exc": [
-    "lunch",
-    "tips"
-   ],
-   "src": [
-    {
-     "op": "Turkey Escapades",
-     "p": 816,
-     "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://turkeyescapades.com/tour/5-days-cappadocia-mt-nemrut-gobeklitepe-gaziantep-tour-from-istanbul/"
-    },
-    {
-     "op": "Mardin Turkey Tours",
-     "p": 1190,
-     "c": "USD",
-     "b": "pp",
-     "u": "https://www.mardinturkeytours.com/package/southeast-turkey-tours/"
-    },
-    {
-     "op": "On The Go Tours",
-     "p": 1944,
-     "c": "USD",
-     "b": "pp",
-     "from": true,
-     "u": "https://www.onthegotours.com/us/Turkey/Gobekli-Tepe-and-Mount-Nemrut-Explorer-5-days"
-    }
-   ]
-  }
- ]
+  ]
 }

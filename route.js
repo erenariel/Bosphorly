@@ -10,8 +10,23 @@
   const stops = data.stops;
   $('facts').append(el('span', null, stops.length + ' ' + t('rtFactStops')), el('span', null, t('rtFactKm')), el('span', null, t('rtFactDays')));
   for (const k of ['rtTip1', 'rtTip2', 'rtTip3']) $('tips').append(el('li', null, t(k)));
+  const GUIDE_SUB = {
+    en: 'Bosphorly guide inquiry', tr: 'Bosphorly rehber talebi', ru: 'Запрос гида · Bosphorly', uk: 'Запит гіда · Bosphorly',
+    de: 'Bosphorly Reiseführer-Anfrage', fr: 'Demande de guide · Bosphorly', nl: 'Vraag over gids · Bosphorly', ar: 'طلب مرشد سياحي · Bosphorly',
+    he: 'שאלה על מדריך · Bosphorly', az: 'Bosphorly bələdçi sorğusu', fa: 'درخواست راهنما · Bosphorly', es: 'Consulta de guía · Bosphorly',
+    it: 'Richiesta guida · Bosphorly', pt: 'Pedido de guia · Bosphorly', hr: 'Upit za vodiča · Bosphorly', hu: 'Bosphorly idegenvezető kérdés',
+    bs: 'Upit za vodiča · Bosphorly', zh: 'Bosphorly 导游咨询', ja: 'Bosphorly ガイドのお問い合わせ', ko: 'Bosphorly 가이드 문의',
+    hi: 'Bosphorly गाइड पूछताछ', bn: 'Bosphorly গাইড জিজ্ঞাসা', id: 'Pertanyaan pemandu · Bosphorly'
+  };
+  const M = window.BosphorlyMember;
+  const mp = M && M.signedIn() ? M.cachedProfile() : null;
+  const rtLines = [
+    t('rtAskMsg'),
+    mp && (mp.name || mp.email) ? [mp.name, mp.email, mp.tier ? mp.tier.toUpperCase() : null].filter(Boolean).join(' · ') : null,
+    'Language: ' + D.lang.toUpperCase()
+  ].filter(Boolean);
   $('askGuide').textContent = t('rtAskGuide') + ' →';
-  $('askGuide').href = D.emailLink(t('rtAskMsg'), 'Bosphorly guide inquiry');
+  $('askGuide').href = D.emailLink(rtLines.join('\n'), GUIDE_SUB[D.lang] || GUIDE_SUB.en);
 
   for (const day of [1, 2]) {
     const box = el('section', 'rt-day');
