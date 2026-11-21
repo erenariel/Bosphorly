@@ -923,6 +923,33 @@
       meeting_point: pick('meeting_point'), translated: Boolean(t.highlights) };
   }
 
+  // Card photos: free-licensed files from Wikimedia Commons (credits: assets/images/tours/CREDITS.md).
+  // The licences require the author and licence next to the photo, linked to the file page.
+  const PHOTOS = {"bb-morning": {"f": "Ortaköy Mosque and Bosphorus Bridge, March 2024 03.jpg", "a": "Calistemon", "l": "CC BY-SA 4.0", "alt": "Ortaköy Mosque and the Bosphorus Bridge"}, "bb-sunset": {"f": "Istanbul ferry at sunset on the Bosphorus - Tarik Kaan Muslu.jpg", "a": "Tarık Kaan Muslu", "l": "CC BY-SA 4.0", "alt": "City ferry on the Bosphorus at sunset"}, "bb-oldcity": {"f": "Hagia Sophia Mars 2013.jpg", "a": "Arild Vågen", "l": "CC BY-SA 3.0", "alt": "Hagia Sophia, Istanbul"}, "orient-dinner": {"f": "Ortaköy Mosque (160990449).jpeg", "a": "Giuseppe Pinto", "l": "CC BY-SA 3.0", "alt": "Ortaköy Mosque and the illuminated Bosphorus Bridge at night"}, "sea-land": {"f": "Dolmabahce from boat @ Bosphorus Cruise to Anadolu Kavagi (8319926203).jpg", "a": "Guilhem Vellut", "l": "CC BY 2.0", "alt": "Dolmabahçe Palace seen from a Bosphorus boat"}, "alaturka": {"f": "Alaaddin Hamamı, Avanos - hot room with göbek taşı.jpg", "a": "DiliyaKhazigalievaGul", "l": "CC BY-SA 4.0", "alt": "Hot room of a traditional Turkish hammam"}};
+  // Tour id -> photo; anything not listed falls back to its category.
+  const PICK = {"bb-afternoon": "sea-land", "sl-sunset": "bb-sunset", "sl-generic-cruise": "sea-land", "sl-turkish-breakfast": "bb-morning", "azure-halfbosphorus": "bb-morning",
+    "sl-privateyacht": "bb-sunset", "orient-classic": "orient-dinner", "orient-alacarte": "orient-dinner", "orient-private-newyear": "orient-dinner", "orient-newyear-special": "orient-dinner",
+    "sl-dinner": "orient-dinner", "azure-dinner": "orient-dinner", "bb-europeasia": "bb-morning", "sl-two-continents": "sea-land", "azure-two-continents": "sea-land", "azure-bosphorus": "sea-land",
+    "sl-oldcity": "bb-oldcity", "sl-asia-half": "bb-morning", "sl-asia-afternoon": "bb-oldcity", "azure-city": "bb-oldcity"};
+  const CAT_PHOTO = { cruise: 'bb-morning', dinner: 'orient-dinner', city: 'bb-oldcity', hammam: 'alaturka' };
+  function tourPhoto(r, cat) {
+    const key = PHOTOS[r.id] ? r.id : PICK[r.id] || CAT_PHOTO[cat];
+    const ph = key && PHOTOS[key];
+    if (!ph) return null;
+    const fig = el('figure', 'item-photo');
+    const img = el('img');
+    img.src = 'assets/images/tours/' + key + '-600.webp';
+    img.srcset = 'assets/images/tours/' + key + '-600.webp 600w, assets/images/tours/' + key + '-900.webp 900w';
+    img.sizes = '(max-width: 700px) 100vw, 380px'; img.loading = 'lazy'; img.decoding = 'async';
+    img.width = 600; img.height = 375; img.alt = ph.alt;
+    const cap = el('figcaption');
+    const a = el('a', null, '📷 ' + ph.a + ' · ' + ph.l);
+    a.href = 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(ph.f.replace(/ /g, '_'));
+    a.target = '_blank'; a.rel = 'noopener';
+    cap.append(a); fig.append(img, cap);
+    return fig;
+  }
+
   function card(r) {
     const cat = category(r);
     const article = el('article', 'item cat-' + cat);
@@ -951,24 +978,32 @@
       if (L.pickup) chips.append(el('span', 'chip', '🚐 ' + L.pickup));
       if (L.guide) chips.append(el('span', 'chip', '🗣 ' + L.guide));
       if (chips.children.length) body.append(chips);
-      if (L.highlights?.length) body.append(list(L.highlights, 'highlights', 3));
+      // What the tour is, visible on the card: times, meeting point, all highlights, included and not included.
+      const facts = el('div', 'facts');
+      const fact = (icon, label, value) => { if (value) { const p = el('p', 'fact'); p.append(el('span', 'fact-i', icon), el('b', null, label + ': '), document.createTextNode(value)); facts.append(p); } };
+      fact('🕘', T.schedule, L.schedule);
+      fact('📍', T.meeting, L.meeting_point);
+      if (facts.children.length) body.append(facts);
+      if (L.highlights?.length) body.append(list(L.highlights, 'highlights', 6));
       if (L.included?.length) {
         body.append(el('p', 'list-title', T.included));
-        body.append(list(L.included, 'ticks', 5));
+        body.append(list(L.included, 'ticks', 8));
+      }
+      if (L.not_included?.length) {
+        body.append(el('p', 'list-title', T.excluded));
+        body.append(list(L.not_included, 'crosses', 4));
       }
       const more = el('details', 'more');
       more.append(el('summary', null, T.more));
       const add = (label, value) => { if (value) { const p = el('p', 'kv'); p.append(el('b', null, label + ': '), document.createTextNode(value)); more.append(p); } };
-      add(T.schedule, L.schedule);
-      add(T.meeting, L.meeting_point);
       add(T.cancel, L.cancellation);
-      if (L.highlights?.length > 3) { more.append(list(L.highlights.slice(3), 'highlights')); }
-      if (L.included?.length > 5) { more.append(el('p', 'list-title', T.included)); more.append(list(L.included.slice(5), 'ticks')); }
+      if (L.highlights?.length > 6) { more.append(list(L.highlights.slice(6), 'highlights')); }
+      if (L.included?.length > 8) { more.append(el('p', 'list-title', T.included)); more.append(list(L.included.slice(8), 'ticks')); }
       if (r.options?.length) {
         more.append(el('p', 'list-title', T.massageTitle));
         more.append(list(r.options.map(o => (o['name_' + lang] || o.name) + ': ' + o.durations.map(x => x.min + ' ' + T.min + ' ' + fmt(x.price, r.currency)).join(' · ')), 'notes'));
       }
-      if (L.not_included?.length) { more.append(el('p', 'list-title', T.excluded)); more.append(list(L.not_included, 'crosses')); }
+      if (L.not_included?.length > 4) { more.append(el('p', 'list-title', T.excluded)); more.append(list(L.not_included.slice(4), 'crosses')); }
       if (L.notes?.length) { more.append(el('p', 'list-title', T.notes)); more.append(list(L.notes, 'notes')); }
       const src = el('p', 'fine');
       src.append(document.createTextNode(T.source + ' · ' + T.checked + ': ' + d.checked));
@@ -979,7 +1014,8 @@
     const a = el('a', 'button', T.request);
     a.href = 'booking.html?service=' + encodeURIComponent(r.id) + '&lang=' + encodeURIComponent(lang);
     body.append(a);
-    article.append(head, body);
+    const photo = tourPhoto(r, cat);
+    article.append(head, ...(photo ? [photo] : []), body);
     return article;
   }
 

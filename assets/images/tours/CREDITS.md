@@ -1,6 +1,6 @@
 # Tour photo credits
 
-Photos on the home page tour cards come from Wikimedia Commons under free licences that allow commercial use.
+Photos on the home page tour cards and the tour comparison cards (prices.html) come from Wikimedia Commons under free licences that allow commercial use.
 Each card shows the author and licence and links to the file page, as the licences require. Images were resized
 and cropped to 16:10 (900 px and 600 px WebP); no other changes.
 
