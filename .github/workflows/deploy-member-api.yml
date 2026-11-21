@@ -24,6 +24,13 @@ jobs:
           CODE_PEPPER: ${{ secrets.CODE_PEPPER }}
           PARTNER_TOKEN: ${{ secrets.PARTNER_TOKEN }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          YANDEX_CLIENT_ID: ${{ secrets.YANDEX_CLIENT_ID }}
+          YANDEX_CLIENT_SECRET: ${{ secrets.YANDEX_CLIENT_SECRET }}
+          FACEBOOK_CLIENT_ID: ${{ secrets.FACEBOOK_CLIENT_ID }}
+          FACEBOOK_CLIENT_SECRET: ${{ secrets.FACEBOOK_CLIENT_SECRET }}
+          APPLE_CLIENT_ID: ${{ secrets.APPLE_CLIENT_ID }}
         run: |
           set -euo pipefail
           for key in CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_API_TOKEN RESEND_API_KEY CODE_PEPPER PARTNER_TOKEN ADMIN_TOKEN; do
@@ -42,5 +49,5 @@ jobs:
           fi
           npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
           npx --yes wrangler@4.166.0 deploy --config "$config"
-          node -e 'process.stdout.write(JSON.stringify({ADMIN_TOKEN:process.env.ADMIN_TOKEN,PARTNER_TOKEN:process.env.PARTNER_TOKEN,CODE_PEPPER:process.env.CODE_PEPPER,RESEND_API_KEY:process.env.RESEND_API_KEY}))' |
+          node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
             npx --yes wrangler@4.166.0 secret bulk --config "$config"

@@ -197,3 +197,33 @@ test('deployment config has D1 database_id, live api base, secret-only workflow 
   assert.match(privacy, /How to delete your account or request erasure:/);
 });
 
+test('OAuth endpoints report configured providers and redirect to Google, Yandex, Facebook and Apple consent screens', async () => {
+  const env = {
+    ...setup(),
+    GOOGLE_CLIENT_ID: 'g-client', GOOGLE_CLIENT_SECRET: 'g-secret',
+    YANDEX_CLIENT_ID: 'y-client', YANDEX_CLIENT_SECRET: 'y-secret',
+    FACEBOOK_CLIENT_ID: 'fb-client', FACEBOOK_CLIENT_SECRET: 'fb-secret',
+    APPLE_CLIENT_ID: 'com.bosphorly.web'
+  };
+  const prov = await call(env, '/v1/auth/providers', null, null, 'GET');
+  assert.equal(prov.status, 200);
+  assert.deepEqual(prov.body, { google: true, yandex: true, facebook: true, apple: true });
+
+  const gRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/google?lang=tr'), env);
+  assert.equal(gRes.status, 302);
+  assert.match(gRes.headers.get('Location'), /^https:\/\/accounts\.google\.com\/o\/oauth2\/v2\/auth\?.*client_id=g-client/);
+
+  const yRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/yandex?lang=tr'), env);
+  assert.equal(yRes.status, 302);
+  assert.match(yRes.headers.get('Location'), /^https:\/\/oauth\.yandex\.com\/authorize\?.*client_id=y-client/);
+
+  const fbRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/facebook?lang=tr'), env);
+  assert.equal(fbRes.status, 302);
+  assert.match(fbRes.headers.get('Location'), /^https:\/\/www\.facebook\.com\/v19\.0\/dialog\/oauth\?.*client_id=fb-client/);
+
+  const aRes = await worker.fetch(new Request('https://api.example/v1/auth/oauth/apple?lang=tr'), env);
+  assert.equal(aRes.status, 302);
+  assert.match(aRes.headers.get('Location'), /^https:\/\/appleid\.apple\.com\/auth\/authorize\?.*client_id=com\.bosphorly\.web/);
+});
+
+

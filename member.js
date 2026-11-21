@@ -13,6 +13,15 @@
   const q = new URLSearchParams(location.search);
   if (/^[A-Za-z0-9]{6,12}$/.test(q.get('ref') || '')) store.set(REF, q.get('ref').toUpperCase());
   if (/^[a-z0-9-]{2,60}$/.test(q.get('h') || '')) store.set(HOTEL, q.get('h'));
+  if (location.hash && location.hash.includes('oauth_token=')) {
+    const hp = new URLSearchParams(location.hash.replace(/^#/, ''));
+    const ot = hp.get('oauth_token');
+    if (ot && ot.length <= 100) {
+      store.set(SESSION, ot);
+      store.set(REF, null);
+    }
+    try { history.replaceState(null, '', location.pathname + location.search); } catch {}
+  }
 
   const base = ((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '');
   const lang = () => (window.BosphorlyLang ? window.BosphorlyLang.pick() : (document.documentElement.lang || 'en').slice(0, 2));
@@ -46,6 +55,12 @@
     signedIn: () => !!(base && store.get(SESSION)),
     texts: t, fill,
     pending: () => ({ ref: store.get(REF), hotel: store.get(HOTEL) }),
+    providers: () => api('/v1/auth/providers').catch(() => ({})),
+    oauthUrl(provider) {
+      const p = { ref: store.get(REF), hotel: store.get(HOTEL) };
+      const qs = new URLSearchParams({ lang: lang(), ...(p.ref ? { ref: p.ref } : {}), ...(p.hotel ? { hotel: p.hotel } : {}) });
+      return base + '/v1/auth/oauth/' + encodeURIComponent(provider) + '?' + qs;
+    },
     start: email => api('/v1/auth/start', { email, lang: lang() }),
     async verify(email, code, extra = {}) {
       const p = { ref: store.get(REF), hotel: store.get(HOTEL) };

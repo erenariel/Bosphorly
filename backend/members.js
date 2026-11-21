@@ -112,14 +112,199 @@ async function profile(env, m) {
 }
 
 // --- routes -------------------------------------------------------------------------------------------
-const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/me', '/v1/me/requests', '/v1/me/delete',
+const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/me', '/v1/me/requests', '/v1/me/delete',
   '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns']);
-export const isMemberRoute = path => ROUTES.has(path);
+const OAUTH_PROVIDERS = new Set(['google', 'yandex', 'facebook', 'apple']);
+export const isMemberRoute = path => ROUTES.has(path) || path.startsWith('/v1/auth/oauth/');
+
+const redirect = location => new Response(null, { status: 302, headers: { Location: location, 'Cache-Control': 'no-store' } });
+const b64urlEncode = s => btoa(unescape(encodeURIComponent(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+const b64urlDecode = s => {
+  const pad = s.replace(/-/g, '+').replace(/_/g, '/');
+  return decodeURIComponent(escape(atob(pad + '='.repeat((4 - (pad.length % 4)) % 4))));
+};
+
+function enabledProviders(env) {
+  return {
+    google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
+    yandex: !!(env.YANDEX_CLIENT_ID && env.YANDEX_CLIENT_SECRET),
+    facebook: !!(env.FACEBOOK_CLIENT_ID && env.FACEBOOK_CLIENT_SECRET),
+    apple: !!env.APPLE_CLIENT_ID
+  };
+}
+
+async function signState(pepper, obj) {
+  const payload = b64urlEncode(JSON.stringify(obj));
+  const sig = await hmac(pepper, payload);
+  return payload + '.' + sig;
+}
+
+async function verifyState(pepper, stateStr) {
+  if (typeof stateStr !== 'string' || !stateStr.includes('.')) return null;
+  const [payload, sig] = stateStr.split('.');
+  if (!payload || !sig || !equal(sig, await hmac(pepper, payload))) return null;
+  try {
+    const data = JSON.parse(b64urlDecode(payload));
+    if (!data || typeof data.t !== 'number' || Math.abs(Date.now() - data.t) > 15 * 60 * 1000) return null;
+    return data;
+  } catch { return null; }
+}
+
+async function createOrLoadMemberSession(env, rawEmail, body = {}) {
+  const email = typeof rawEmail === 'string' ? rawEmail.trim().toLowerCase() : '';
+  if (!validEmail(email)) fail(400, 'Invalid e-mail');
+  const now = sqlTime(new Date());
+  let m = await env.DB.prepare(`SELECT * FROM members WHERE email=?`).bind(email).first();
+  const created = !m;
+  if (!m) {
+    const referrer = str(body.ref, 20) ? await env.DB.prepare(`SELECT id FROM members WHERE referral_code=?`).bind(body.ref.trim().toUpperCase()).first() : null;
+    const hotel = str(body.hotel, 60) ? await env.DB.prepare(`SELECT id FROM hotels WHERE id=? AND status='verified'`).bind(body.hotel.trim()).first() : null;
+    const marketing = body.marketing === true;
+    const mid = id();
+    let code = randomString(8);
+    for (let i = 0; i < 3 && await env.DB.prepare(`SELECT 1 AS x FROM members WHERE referral_code=?`).bind(code).first(); i++) code = randomString(8);
+    await env.DB.prepare(`INSERT INTO members (id, email, name, lang, referral_code, referred_by, hotel_id, marketing_consent, marketing_consent_at) VALUES (?,?,?,?,?,?,?,?,?)`)
+      .bind(mid, email, str(body.name, 100), LANGS.includes(body.lang) ? body.lang : 'en', code, referrer ? referrer.id : null, hotel ? hotel.id : null, marketing ? 1 : 0, marketing ? now : null).run();
+    await issue(env, mid, 'welcome');
+    if (hotel) await issue(env, mid, 'hotel', hotel.id);
+    m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(mid).first();
+  } else if (!m.name && str(body.name, 100)) {
+    const cleanName = str(body.name, 100);
+    await env.DB.prepare(`UPDATE members SET name=? WHERE id=?`).bind(cleanName, m.id).run();
+    m = { ...m, name: cleanName };
+  }
+  const t = token();
+  await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
+  return { token: t, created, member: await profile(env, m) };
+}
+
+async function verifyAppleIdToken(idToken, clientId, expectedNonce) {
+  const parts = String(idToken || '').split('.');
+  if (parts.length !== 3) return null;
+  let header, claims;
+  try { header = JSON.parse(b64urlDecode(parts[0])); claims = JSON.parse(b64urlDecode(parts[1])); } catch { return null; }
+  if (!header.kid || claims.iss !== 'https://appleid.apple.com' || claims.aud !== clientId) return null;
+  if (claims.exp && claims.exp * 1000 < Date.now()) return null;
+  if (expectedNonce && claims.nonce && claims.nonce !== expectedNonce) return null;
+  const jwksRes = await fetch('https://appleid.apple.com/auth/keys');
+  if (!jwksRes.ok) return null;
+  const { keys } = await jwksRes.json();
+  const jwk = (keys || []).find(k => k.kid === header.kid);
+  if (!jwk) return null;
+  const pubKey = await crypto.subtle.importKey('jwk', jwk, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['verify']);
+  const sigStr = parts[2].replace(/-/g, '+').replace(/_/g, '/');
+  const sigBin = atob(sigStr + '='.repeat((4 - (sigStr.length % 4)) % 4));
+  const sigBytes = new Uint8Array(sigBin.length);
+  for (let i = 0; i < sigBin.length; i++) sigBytes[i] = sigBin.charCodeAt(i);
+  const valid = await crypto.subtle.verify('RSASSA-PKCS1-v1_5', pubKey, sigBytes, enc.encode(parts[0] + '.' + parts[1]));
+  return valid ? claims : null;
+}
+
+async function handleOAuth(request, env, url) {
+  const pubOrigin = (env.PUBLIC_ORIGIN || 'https://bosphorly.com').replace(/\/+$/, '');
+  const m = url.pathname.match(/^\/v1\/auth\/oauth\/([a-z]+)(\/callback)?$/);
+  if (!m || !OAUTH_PROVIDERS.has(m[1])) fail(404, 'Not found');
+  const provider = m[1], isCallback = !!m[2];
+  const callbackUrl = url.origin + `/v1/auth/oauth/${provider}/callback`;
+  const avail = enabledProviders(env);
+
+  if (!isCallback) {
+    if (request.method !== 'GET') fail(405, 'Method not allowed');
+    const lang = LANGS.includes(url.searchParams.get('lang')) ? url.searchParams.get('lang') : 'en';
+    const ref = str(url.searchParams.get('ref'), 20);
+    const hotel = str(url.searchParams.get('hotel'), 60);
+    if (!avail[provider] || !env.CODE_PEPPER) {
+      return redirect(`${pubOrigin}/account.html?lang=${encodeURIComponent(lang)}&oauth_modal=${encodeURIComponent(provider)}#signup`);
+    }
+    const nonce = randomString(16);
+    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, nonce });
+    if (provider === 'google') {
+      const q = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'openid email profile', state, prompt: 'select_account' });
+      return redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q);
+    }
+    if (provider === 'yandex') {
+      const q = new URLSearchParams({ client_id: env.YANDEX_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', state, force_confirm: 'yes' });
+      return redirect('https://oauth.yandex.com/authorize?' + q);
+    }
+    if (provider === 'facebook') {
+      const q = new URLSearchParams({ client_id: env.FACEBOOK_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'email,public_profile', state });
+      return redirect('https://www.facebook.com/v19.0/dialog/oauth?' + q);
+    }
+    if (provider === 'apple') {
+      const q = new URLSearchParams({ client_id: env.APPLE_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code id_token', response_mode: 'form_post', scope: 'name email', state, nonce });
+      return redirect('https://appleid.apple.com/auth/authorize?' + q);
+    }
+  }
+
+  // OAuth callback: exchange authorization code (or verify Apple id_token) and create a session.
+  let params = url.searchParams;
+  if (request.method === 'POST') {
+    const formText = await request.text();
+    params = new URLSearchParams(formText);
+  }
+  const st = env.CODE_PEPPER ? await verifyState(env.CODE_PEPPER, params.get('state') || '') : null;
+  if (!st || st.p !== provider || params.get('error')) {
+    return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
+  }
+  try {
+    let email = '', name = '';
+    if (provider === 'google') {
+      const tokRes = await fetch('https://oauth2.googleapis.com/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ code: params.get('code') || '', client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, redirect_uri: callbackUrl, grant_type: 'authorization_code' })
+      });
+      if (!tokRes.ok) throw 0;
+      const tok = await tokRes.json();
+      const uRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', { headers: { Authorization: 'Bearer ' + tok.access_token } });
+      if (!uRes.ok) throw 0;
+      const u = await uRes.json();
+      email = u.email || ''; name = u.name || '';
+    } else if (provider === 'yandex') {
+      const tokRes = await fetch('https://oauth.yandex.com/token', {
+        method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ code: params.get('code') || '', client_id: env.YANDEX_CLIENT_ID, client_secret: env.YANDEX_CLIENT_SECRET, grant_type: 'authorization_code' })
+      });
+      if (!tokRes.ok) throw 0;
+      const tok = await tokRes.json();
+      const uRes = await fetch('https://login.yandex.ru/info?format=json', { headers: { Authorization: 'OAuth ' + tok.access_token } });
+      if (!uRes.ok) throw 0;
+      const u = await uRes.json();
+      email = u.default_email || (Array.isArray(u.emails) && u.emails[0]) || '';
+      name = u.real_name || u.display_name || '';
+    } else if (provider === 'facebook') {
+      const tUrl = 'https://graph.facebook.com/v19.0/oauth/access_token?' + new URLSearchParams({ client_id: env.FACEBOOK_CLIENT_ID, client_secret: env.FACEBOOK_CLIENT_SECRET, redirect_uri: callbackUrl, code: params.get('code') || '' });
+      const tokRes = await fetch(tUrl);
+      if (!tokRes.ok) throw 0;
+      const tok = await tokRes.json();
+      const uRes = await fetch('https://graph.facebook.com/me?fields=id,name,email&access_token=' + encodeURIComponent(tok.access_token));
+      if (!uRes.ok) throw 0;
+      const u = await uRes.json();
+      email = u.email || ''; name = u.name || '';
+    } else if (provider === 'apple') {
+      const claims = await verifyAppleIdToken(params.get('id_token'), env.APPLE_CLIENT_ID, st.nonce);
+      if (!claims || !claims.email) throw 0;
+      email = claims.email;
+      if (params.get('user')) {
+        try {
+          const u = JSON.parse(params.get('user'));
+          name = [u?.name?.firstName, u?.name?.lastName].filter(Boolean).join(' ');
+        } catch {}
+      }
+    }
+    if (!validEmail(email)) throw 0;
+    const session = await createOrLoadMemberSession(env, email, { name, lang: st.lang, ref: st.ref, hotel: st.hotel });
+    return redirect(`${pubOrigin}/account.html#oauth_token=${encodeURIComponent(session.token)}&oauth_provider=${encodeURIComponent(provider)}`);
+  } catch {
+    return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
+  }
+}
 
 export async function handleMembers(request, env, url) {
   try {
     if (!env.DB) fail(503, 'Service unavailable');
     const p = url.pathname;
+    if (p === '/v1/auth/providers' && request.method === 'GET') return json(enabledProviders(env));
+    if (p.startsWith('/v1/auth/oauth/')) return await handleOAuth(request, env, url);
     if (request.method === 'GET' && p === '/v1/me') return json(await profile(env, await memberFromSession(request, env)));
     if (request.method !== 'POST') fail(405, 'Method not allowed');
     const body = await readJson(request);
@@ -151,25 +336,7 @@ export async function handleMembers(request, env, url) {
         fail(400, 'Invalid or expired code');
       }
       await env.DB.prepare(`UPDATE login_codes SET used=1 WHERE id=?`).bind(row.id).run();
-
-      let m = await env.DB.prepare(`SELECT * FROM members WHERE email=?`).bind(email).first();
-      const created = !m;
-      if (!m) {
-        const referrer = str(body.ref, 20) ? await env.DB.prepare(`SELECT id FROM members WHERE referral_code=?`).bind(body.ref.trim().toUpperCase()).first() : null;
-        const hotel = str(body.hotel, 60) ? await env.DB.prepare(`SELECT id FROM hotels WHERE id=? AND status='verified'`).bind(body.hotel.trim()).first() : null;
-        const marketing = body.marketing === true;
-        const mid = id();
-        let code = randomString(8);
-        for (let i = 0; i < 3 && await env.DB.prepare(`SELECT 1 AS x FROM members WHERE referral_code=?`).bind(code).first(); i++) code = randomString(8);
-        await env.DB.prepare(`INSERT INTO members (id, email, name, lang, referral_code, referred_by, hotel_id, marketing_consent, marketing_consent_at) VALUES (?,?,?,?,?,?,?,?,?)`)
-          .bind(mid, email, str(body.name, 100), LANGS.includes(body.lang) ? body.lang : 'en', code, referrer ? referrer.id : null, hotel ? hotel.id : null, marketing ? 1 : 0, marketing ? now : null).run();
-        await issue(env, mid, 'welcome');
-        if (hotel) await issue(env, mid, 'hotel', hotel.id);
-        m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(mid).first();
-      }
-      const t = token();
-      await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
-      return json({ token: t, created, member: await profile(env, m) });
+      return json(await createOrLoadMemberSession(env, email, body));
     }
 
     if (p === '/v1/auth/logout') {
