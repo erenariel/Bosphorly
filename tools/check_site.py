@@ -10,7 +10,15 @@ from pathlib import Path
 from urllib.parse import urlsplit, unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ["index.html", "map.html", "booking.html", "prices.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html", "partner.html", "faq.html"]
+PAGES = ["index.html", "map.html", "booking.html", "prices.html", "tours.html", "presentation.html", "dashboard.html", "account.html", "explore.html", "route.html", "search.html", "privacy.html", "404.html", "partner.html", "faq.html"]
+GUIDE_PAIRS = [
+    ("en/istanbul-guide.html", "tr/istanbul-rehberi.html"),
+    ("en/airport-transfer.html", "tr/havalimani-transferi.html"),
+    ("en/public-transport.html", "tr/toplu-tasima.html"),
+    ("en/old-city.html", "tr/tarihi-yarimada.html"),
+    ("en/bosphorus-cruises.html", "tr/bogaz-turlari.html"),
+]
+ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair]
 
 
 class References(HTMLParser):
@@ -26,8 +34,9 @@ class References(HTMLParser):
 
 
 def assert_local_links():
-    for filename in PAGES:
-        html = (ROOT / filename).read_text(encoding="utf-8")
+    for filename in ALL_PAGES:
+        page_path = ROOT / filename
+        html = page_path.read_text(encoding="utf-8")
         parser = References()
         parser.feed(html)
         for url in parser.paths:
@@ -39,7 +48,7 @@ def assert_local_links():
             path = unquote(parsed.path)
             if not path or path.startswith("/"):
                 continue
-            destination = (ROOT / path).resolve()
+            destination = (page_path.parent / path).resolve()
             assert destination.is_relative_to(ROOT), (filename, path)
             assert destination.exists(), f"Broken internal path: {filename} → {path}"
 
@@ -108,13 +117,84 @@ def assert_home_prices():
 
 
 def assert_hreflang():
-    """Pages that switch language with ?lang= list every supported language for search engines."""
+    """Pages that switch language with ?lang= list every supported language; verified EN/TR pairs cross-reference each other."""
     langs = re.findall(r"'(\w+)'", re.search(r"const supported = \[([^\]]+)\]", (ROOT / "lang.js").read_text(encoding="utf-8")).group(1))
-    for page in ["index.html", "tours.html", "prices.html", "explore.html", "route.html", "faq.html"]:
+    for page in ["index.html", "tours.html", "prices.html", "explore.html", "route.html", "faq.html", "booking.html", "search.html"]:
         html = (ROOT / page).read_text(encoding="utf-8")
         found = re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', html)
         assert sorted(l for l, _ in found) == sorted(langs + ["x-default"]), (page, "hreflang list differs from lang.js")
         assert all(h.endswith("?lang=" + l) for l, h in found if l != "x-default"), page
+    priv = dict(re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', (ROOT / "privacy.html").read_text(encoding="utf-8")))
+    assert priv == {
+        "tr": "https://bosphorly.com/privacy.html?lang=tr",
+        "en": "https://bosphorly.com/privacy.html?lang=en",
+        "x-default": "https://bosphorly.com/privacy.html",
+    }, priv
+    for en_page, tr_page in GUIDE_PAIRS:
+        expected = {
+            "en": f"https://bosphorly.com/{en_page}",
+            "tr": f"https://bosphorly.com/{tr_page}",
+            "x-default": f"https://bosphorly.com/{en_page}",
+        }
+        for page in (en_page, tr_page):
+            found = dict(re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', (ROOT / page).read_text(encoding="utf-8")))
+            assert found == expected, (page, found)
+
+
+def assert_seo():
+    """Verify robots.txt, sitemap.xml, unique titles/descriptions, canonicals, visible-only JSON-LD and image attributes."""
+    robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+    assert "User-agent: *" in robots and "Allow: /" in robots
+    assert "Sitemap: https://bosphorly.com/sitemap.xml" in robots
+
+    sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+    entries = re.findall(r"<url><loc>([^<]+)</loc><lastmod>(\d{4}-\d{2}-\d{2})</lastmod></url>", sitemap)
+    assert entries, "sitemap.xml has no valid <url> entries"
+    locs = [loc for loc, _ in entries]
+    assert len(locs) == len(set(locs)), "Duplicate URLs in sitemap.xml"
+    assert all(loc.startswith("https://bosphorly.com/") for loc in locs), locs
+    expected_public = {
+        "https://bosphorly.com/" if p == "index.html" else f"https://bosphorly.com/{p}"
+        for p in ALL_PAGES
+        if p not in {"404.html", "account.html", "dashboard.html", "partner.html", "presentation.html", "map.html"}
+    }
+    assert set(locs) == expected_public, (set(locs) ^ expected_public)
+
+    titles, descs = {}, {}
+    forbidden_ld_keys = {"aggregateRating", "review", "reviews", "ratingValue", "reviewCount", "availability"}
+    ld_types_by_page = {}
+    for page in ALL_PAGES:
+        html = (ROOT / page).read_text(encoding="utf-8")
+        t_match = re.search(r"<title>([^<]+)</title>", html)
+        d_match = re.search(r'<meta name="description" content="([^"]+)"', html)
+        c_match = re.search(r'<link rel="canonical" href="([^"]+)"', html)
+        assert t_match and t_match.group(1).strip(), f"Missing <title> in {page}"
+        assert d_match and d_match.group(1).strip(), f"Missing meta description in {page}"
+        assert c_match and c_match.group(1).startswith("https://bosphorly.com/"), f"Missing/invalid canonical in {page}"
+        expected_canon = "https://bosphorly.com/explore.html" if page == "map.html" else (
+            "https://bosphorly.com/" if page == "index.html" else f"https://bosphorly.com/{page}"
+        )
+        assert c_match.group(1) == expected_canon, (page, c_match.group(1), expected_canon)
+        titles.setdefault(t_match.group(1).strip(), []).append(page)
+        descs.setdefault(d_match.group(1).strip(), []).append(page)
+
+        for raw_ld in re.findall(r'<script type="application/ld\+json"[^>]*>([\s\S]*?)</script>', html):
+            data = json.loads(raw_ld)
+            assert not (forbidden_ld_keys & set(re.findall(r'"(\w+)"\s*:', raw_ld))), (page, "Forbidden fake review/rating/availability key in JSON-LD")
+            ld_types_by_page.setdefault(page, []).append(data.get("@type"))
+
+        for img_tag in re.findall(r"<img\b[^>]*>", html):
+            alt_m = re.search(r'\balt="([^"]*)"', img_tag)
+            w_m = re.search(r'\bwidth="(\d+)"', img_tag)
+            h_m = re.search(r'\bheight="(\d+)"', img_tag)
+            l_m = re.search(r'\bloading="lazy"', img_tag)
+            assert alt_m and alt_m.group(1).strip(), (page, "Missing/empty alt on img", img_tag)
+            assert w_m and h_m and l_m, (page, "Missing width/height/loading=lazy on img", img_tag)
+
+    assert all(len(v) == 1 for v in titles.values()), {k: v for k, v in titles.items() if len(v) > 1}
+    assert all(len(v) == 1 for v in descs.values()), {k: v for k, v in descs.items() if len(v) > 1}
+    assert "TravelAgency" in ld_types_by_page.get("index.html", []), ld_types_by_page
+    assert "FAQPage" in ld_types_by_page.get("faq.html", []), ld_types_by_page
 
 
 def assert_faq():
@@ -126,16 +206,23 @@ def assert_faq():
         assert len(f["qa"]) == len(faq["en"]["qa"]) and all(q and a for q, a in f["qa"]), lang
         assert set(f["links"]) == set(faq["en"]["links"]) and all(f[k] for k in ("nav", "title", "intro", "cta", "wa")), lang
         assert all("60" in a and "65" in a for q, a in [f["qa"][2]]) or lang in ("fa",), (lang, "transfer prices")
+    faq_html = (ROOT / "faq.html").read_text(encoding="utf-8")
+    ld_raw = re.search(r'<script type="application/ld\+json" id="faqLd">([\s\S]*?)</script>', faq_html).group(1)
+    ld = json.loads(ld_raw)
+    assert ld["@type"] == "FAQPage" and len(ld["mainEntity"]) == len(faq["en"]["qa"])
+    for (q, a), entity in zip(faq["en"]["qa"], ld["mainEntity"]):
+        assert entity["name"] == q and entity["acceptedAnswer"]["text"] == a
+        assert q in faq_html and a in faq_html
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "explore.js", "route.js", "search.js", "tools/build_discover.py"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
     for name in script_sources:
         if name.endswith(".py"):
             continue
         subprocess.run(["node", "--check", str(ROOT / name)], check=True)
     assert_discover_data()
-    for page in PAGES:
+    for page in ALL_PAGES:
         html = (ROOT / page).read_text(encoding="utf-8")
         inline = re.findall(r"<script(?:\s(?![^>]*application/ld\+json)[^>]*)?>([\s\S]*?)</script>", html, re.I)
         for content in inline:
@@ -175,6 +262,7 @@ if __name__ == "__main__":
     assert_booking_safety()
     assert_home_prices()
     assert_hreflang()
+    assert_seo()
     assert_faq()
     assert_js_parses()
-    print("Bosphorly: internal links, booking safety, logo, map and JS syntax OK.")
+    print("Bosphorly: internal links, booking safety, SEO metadata, logo, map and JS syntax OK.")
