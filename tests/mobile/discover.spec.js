@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // The Discover, Route and Search pages work from local data, even when the map tiles cannot load.
-test('discover catalogue filters, searches and links to WhatsApp', async ({ page }) => {
+test('discover catalogue filters, searches and links to corporate email', async ({ page }) => {
   await page.route('https://**/*', r => r.abort());
   await page.goto('/explore.html?lang=en');
   await expect(page.locator('.place')).toHaveCount(33);
@@ -11,7 +11,7 @@ test('discover catalogue filters, searches and links to WhatsApp', async ({ page
   await expect(page.locator('.place')).toHaveCount(1);
   await expect(page.locator('.place h3')).toContainText('Isfanbul');
   const wa = await page.locator('.place .btn.wa').getAttribute('href');
-  expect(wa).toContain('https://wa.me/905333407776?text=');
+  expect(wa).toContain('mailto:info@bosphorly.com?subject=');
   expect(decodeURIComponent(wa)).toContain('Isfanbul');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
