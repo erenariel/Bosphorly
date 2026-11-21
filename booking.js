@@ -2212,7 +2212,6 @@
     const preview = window.BosphorlyBooking.preview({ experienceId: r.id, date: snapshot.date, guests: num });
     const box = $('result'); box.dataset.state = preview.state; box.replaceChildren();
     const h = document.createElement('h3'); h.textContent = t.resultTitle + ' · ' + snapshot.reference;
-    const p = document.createElement('p'); p.textContent = lang === "tr" ? "Gmail veya e-posta uygulamanızı seçip taslağı gönderin." : "Choose Gmail or your email app and send the draft.";
     const d = document.createElement('dl'); d.className = 'draft';
     const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
     const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], ...(selOption(r) ? [[t.r_option, optName(selOption(r))]] : []), ...(selDuration(r) ? [[t.r_duration, selDuration(r).min + ' ' + t.minutes]] : []), [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
@@ -2224,9 +2223,9 @@
     const c = window.BOSPHORLY_CONTACT || {};
     const url = 'mailto:' + (c.email || 'info@bosphorly.com') + '?subject=' + encodeURIComponent(t.waTitle + ' · ' + snapshot.reference) + '&body=' + encodeURIComponent(lines.join('\n'));
     const a = document.createElement('a'); a.className = 'primary'; a.href = url;
-    a.textContent = t.openWa + ' · ' + (c.email || 'info@bosphorly.com');
+    a.textContent = lang === 'tr' ? 'E-posta taslağını aç' : t.openWa;
     const mine = document.createElement('a'); mine.href = 'account.html'; mine.textContent = t.seeRequests; mine.style.cssText = 'display:inline-block;margin:12px 0 0 12px;font-weight:800';
-    box.append(h, p, d, BosphorlyGmailLink(url), a, mine); box.hidden = false; box.focus();
+    box.append(h, d, a, mine); box.hidden = false; box.focus();
     if (window.BosphorlyAccount) {
       window.BosphorlyAccount.saveProfile({ name, phone, email, hotel });
       window.BosphorlyAccount.addRequest({ ref: snapshot.reference, type: 'tour', title: title(r) + (selOption(r) ? ' · ' + optName(selOption(r)) : ''), operator: r.operator,

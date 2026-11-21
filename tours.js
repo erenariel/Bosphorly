@@ -105,9 +105,9 @@
         account.addRequest({ ref, type: 'tour', title: s.name, operator: 'Bosphorly', date: date.value, guests: Number(guests.value), total: range || t('toPrice'), emailDraftUrl: url });
       }
       done.replaceChildren(el('p', null, '✅ ' + t('toFDone', { ref })));
-      const again = el('a', 'btn', 'Email →'); again.href = url; again.target = '_blank'; again.rel = 'noopener';
+      const again = el('a', 'btn', document.documentElement.lang === 'tr' ? 'E-posta taslağını aç' : 'Open email draft'); again.href = url; again.target = '_blank'; again.rel = 'noopener';
       const mine = el('a', 'btn', t('toMyReq')); mine.href = 'account.html';
-      done.append(BosphorlyGmailLink(url), again, mine); done.hidden = false; send.hidden = true;
+      done.append(again, mine); done.hidden = false; send.hidden = true;
 
     });
     return box;
