@@ -60,7 +60,7 @@
       resultTitle: 'Talebin hazır', resultNotice: 'email, talebin yazılı olarak açılıyor; Bosphorly’ye iletmek için email’ta “Gönder”e bas. Açılmazsa aşağıdaki butonu kullan.',
       notAvailable: 'Katalog açılamadı. Sayfayı yenile.', protoText: 'Talepler email ile iletilir · Bu sitede ödeme alınmaz',
       labelName: 'Ad soyad', labelPhone:'Cep telefonu', labelEmail: 'E-posta (isteğe bağlı)',
-      contactNote: 'email’ta gönder’e bastığında bilgilerin, talebini ayarlamak için Bosphorly email hattına iletilir. Bosphorly bunları sunucuda saklamaz; bir kopyası yalnızca bu cihazda, Hesabım sayfasında kalır.',
+      contactNote: 'E-posta uygulamanda Gönder’e bastığında bilgilerin, talebini ayarlamak için Bosphorly’nin e-posta adresine iletilir. Bosphorly bunları sunucuda saklamaz; bir kopyası yalnızca bu cihazda, Hesabım sayfasında kalır.',
       invalidName: 'Adını ve soyadını yaz.', invalidPhone:'Firmanın teyit edebilmesi için ülke koduyla geçerli bir telefon numarası yaz (örn. +90…).', invalidEmail: 'E-posta adresi geçerli görünmüyor.',
       navHome: 'Ana sayfa', navCompare: 'Tur karşılaştır', navMap: 'Şehir haritası',
       footerText: 'Bosphorly · Yazdıkların sunucuda saklanmaz.', backHome: '← Ana sayfaya dön',
@@ -2113,9 +2113,21 @@
   // Hammam bookings list only Alaturka services and ask for the branch instead of the hotel area.
   let hammamMode = false;
   const isHammam = r => r.operator === 'Alaturka Hamam';
+  // Hotel address: optional, but required when the area is not on the list. Hammam bookings have no pickup, so no address.
+  const A = k => window.BOS_ADDR ? window.BOS_ADDR(lang, k) : k;
+  function syncAddress() {
+    const other = area.value === 'Other';
+    $('labelAddress').textContent = A(other ? 'addr' : 'addrOpt');
+    $('hotelAddress').placeholder = A('addrPh');
+    $('hotelAddress').required = other && !hammamMode;
+    $('addressWrap').hidden = hammamMode;
+  }
+  area.addEventListener('change', syncAddress);
+  syncAddress();
   function applyMode() {
     $('branchWrap').hidden = !hammamMode;
     $('areaWrap').hidden = hammamMode;
+    syncAddress();
     if (!hammamMode) return;
     $('labelOffer').textContent = t.labelService;
     $('heading').textContent = t.headingHammam;
@@ -2204,10 +2216,11 @@
   $('bookingForm').addEventListener('submit', async event => {
     event.preventDefault();
     const r = current(); const num = $('guests').valueAsNumber;
+    const addr = hammamMode ? '' : $('hotelAddress').value.trim();
     const hotel = $('hotelName').value.trim(), name = $('fullName').value.trim(), phone = $('phone').value.trim(), email = $('email').value.trim();
     const phoneOk = /^\+?[0-9 ()-]{7,20}$/.test(phone) && phone.replace(/\D/g, '').length >= 7;
     const msg = !r ? t.invalidOffer : !$('date').value || $('date').value < local ? t.invalidDate : !Number.isInteger(num) || num < 1 || num > 16 ? t.invalidGuests : !$('time').value ? t.invalidTime :
-      !hammamMode && hotel.length < 2 ? t.invalidHotel : name.length < 2 ? t.invalidName : !phoneOk ? t.invalidPhone : email && !$('email').checkValidity() ? t.invalidEmail : !$('ack').checked ? t.invalidConsent : null;
+      !hammamMode && hotel.length < 2 ? t.invalidHotel : !hammamMode && area.value === 'Other' && addr.length < 4 ? A('needAddr') : name.length < 2 ? t.invalidName : !phoneOk ? t.invalidPhone : email && !$('email').checkValidity() ? t.invalidEmail : !$('ack').checked ? t.invalidConsent : null;
     $('error').hidden = !msg; $('error').textContent = msg || '';
     if (msg) return;
     const q = quote(r);
@@ -2250,7 +2263,7 @@
     const d = document.createElement('dl'); d.className = 'draft';
     const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
     const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], ...(selOption(r) ? [[t.r_option, optName(selOption(r))]] : []), ...(selDuration(r) ? [[t.r_duration, selDuration(r).min + ' ' + t.minutes]] : []), [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
-      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), ...(vipNote ? [[lang === 'tr' ? 'Üye ayrıcalığı' : 'Member privilege', vipNote]] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), [t.r_name, name], [t.r_phone, phone],
+      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), ...(vipNote ? [[lang === 'tr' ? 'Üye ayrıcalığı' : 'Member privilege', vipNote]] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), ...(addr ? [[A('wAddr'), addr]] : []), [t.r_name, name], [t.r_phone, phone],
       ...(email ? [[t.r_email, email]] : []), [t.r_source, r.operator + ' · ' + t.r_checked + ' ' + (snapshot.priceChecked || '')],
       [t.r_shownAt, new Intl.DateTimeFormat(loc, { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });
