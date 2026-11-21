@@ -894,7 +894,7 @@
     if (/dinner|new year|à la carte|turkish night/.test(t)) return 'dinner';
     if (/island/.test(t)) return 'islands';
     if (/bursa|sapanca|yalova|şile|sile/.test(t)) return 'day';
-    if (/cruise|bosphorus/.test(t) && !/old city|city tour|asia|europe|continent/.test(t)) return 'cruise';
+    if (/cruise|bosphorus|yacht/.test(t) && !/old city|city tour|asia|europe|continent/.test(t)) return 'cruise';
     return 'city';
   }
 
