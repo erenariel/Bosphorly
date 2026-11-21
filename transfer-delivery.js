@@ -12,7 +12,7 @@ function loadTransferChallenge() {
 }
 function addTransferDelivery(box, request, tr) {
   const config = window.BOSPHORLY_API;
-  if (!config?.base || !config.turnstileSiteKey) return;
+  if (!config?.transferMailBase || !config.turnstileSiteKey) return;
   const button = document.createElement('button');
   button.type = 'button';
   button.textContent = tr ? 'E-posta hesabı açmadan gönder' : 'Send without opening email';
@@ -29,7 +29,7 @@ function addTransferDelivery(box, request, tr) {
         widget = api.render(challenge, {sitekey: config.turnstileSiteKey, callback: resolve,
           'error-callback': reject, 'expired-callback': reject});
       });
-      const response = await fetch(config.base.replace(/\/$/, '') + '/v1/requests', {
+      const response = await fetch(config.transferMailBase.replace(/\/$/, '') + '/v1/requests', {
         method: 'POST', headers: {'Content-Type':'application/json'},
         body: JSON.stringify({...request, turnstileToken:token})
       });
