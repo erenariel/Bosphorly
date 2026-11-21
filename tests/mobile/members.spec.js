@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('without an API, My account shows membership as coming soon', async ({ page }) => {
+  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:""});' }));
   await page.goto('/account.html?lang=tr');
   await expect(page.locator('#member h2')).toContainText('Bosphorly üyeliği');
   await expect(page.locator('#member .m-soon')).toBeVisible();
@@ -31,7 +32,11 @@ test('sign in with an e-mailed code, see coupons and stamps, then use a coupon o
   await mockApi(page, calls);
   // Arriving through a friend's invite link and a partner hotel's QR code.
   await page.goto('/index.html?lang=en&ref=friend123&h=hotel-a');
-  await page.goto('/account.html?lang=en');
+  await page.goto('/account.html?lang=en#signup');
+  await expect(page.locator('#tabSignUp')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#mName')).toBeVisible();
+  await page.locator('#tabSignIn').click();
+  await expect(page.locator('#tabSignIn')).toHaveAttribute('aria-selected', 'true');
   await page.fill('#mEmail', 'guest@example.com');
   await page.getByRole('button', { name: 'Send code' }).click();
   await expect(page.locator('.m-sent')).toContainText('guest@example.com');
