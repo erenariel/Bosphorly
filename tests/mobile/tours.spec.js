@@ -12,7 +12,7 @@ test('header Transfer opens the airport transfer form on the home page', async (
   expect(gap).toBeGreaterThanOrEqual(0);
 });
 
-test('special tours page lists tours on request with a WhatsApp question and category filters', async ({ page }) => {
+test('special tours page lists tours on request with an email question and category filters', async ({ page }) => {
   await page.goto('/tours.html?lang=tr');
   await expect(page.locator('h1')).toHaveText('Temalı, özel ve çok günlü turlar.');
   await expect(page.locator('.place')).toHaveCount(15);
@@ -25,10 +25,10 @@ test('special tours page lists tours on request with a WhatsApp question and cat
   await expect(page.locator('#jewish-heritage .td-market li')).toHaveCount(3);
   await expect(page.locator('#jewish-heritage .td-market li').first()).toContainText('özel tur');
   await expect(page.locator('#jewish-heritage .td-fine')).toContainText('Bosphorly üzerinden talep edin');
-  const outside = await page.locator('main a[href^="http"]').evaluateAll(as => as.map(a => a.href).filter(h => !/^https:\/\/wa\.me\//.test(h)));
+  const outside = await page.locator('main a[href^="http"]').evaluateAll(as => as.map(a => a.href));
   expect(outside).toEqual([]);
   expect(await page.locator('main').innerText()).not.toContain('Les Arts Turcs');
-  const href = await page.locator('#jewish-heritage .actions a[href*="wa.me"]').getAttribute('href');
+  const href = await page.locator('#jewish-heritage .actions a[href^="mailto:"]').getAttribute('href');
   expect(decodeURIComponent(href)).toContain("İstanbul'un Yahudi mirası");
   await page.locator('.chip[data-cat="private"]').click();
   await expect(page.locator('.place')).toHaveCount(3);
@@ -39,7 +39,7 @@ test('special tours page lists tours on request with a WhatsApp question and cat
 });
 
 test('a special tour is requested through Bosphorly with a reference code and kept in My account', async ({ page }) => {
-  await page.context().route(/^https:\/\/(wa\.me|([a-z0-9-]+\.)*whatsapp\.com)\//, r => r.fulfill({ status: 200, contentType: 'text/html', body: '' }));
+  
   await page.goto('/tours.html?lang=tr&cat=hoods');
   const card = page.locator('#kadikoy-moda');
   await card.getByRole('button', { name: /Bu turu talep et/ }).click();
@@ -53,16 +53,16 @@ test('a special tour is requested through Bosphorly with a reference code and ke
   await card.locator('input[name=name]').fill('Ayşe Yılmaz');
   await card.locator('input[name=phone]').fill('+90 555 000 00 00');
   await card.locator('input[name=ack]').check();
-  const popup = page.waitForEvent('popup');
   await card.locator('.tf-send').click();
-  const wa = await (await popup).url();
-  const text = decodeURIComponent(wa.split('text=')[1]);
+  const emailHref = await card.locator('.tf-done a[href^="mailto:"]').getAttribute('href');
+  expect(emailHref).toContain('info@bosphorly.com');
+  const text = decodeURIComponent(emailHref.split('&body=')[1]);
   expect(text).toMatch(/^Bosphorly tur talebi · BOS-[A-Z0-9]{6}/);
   expect(text).toContain('Kadıköy ve Moda lezzet yürüyüşü');
   expect(text).toContain('Kişi sayısı: 3');
   await expect(card.locator('.tf-done')).toContainText('BOS-');
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('bosphorly.account')));
   expect(saved.requests).toHaveLength(1);
-  expect(saved.requests[0]).toMatchObject({ type: 'tour', title: 'Kadıköy ve Moda lezzet yürüyüşü', guests: 3 });
+  expect(saved.requests[0]).toMatchObject({ type: 'tour', title: 'Kadıköy ve Moda lezzet yürüyüşü', guests: 3, status: 'email_draft_prepared' });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });
