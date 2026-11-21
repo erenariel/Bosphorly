@@ -48,7 +48,8 @@
       fulfilledCount: m.fulfilledCount || 0,
       usableCouponCount: coupons.filter(c => c.status === 'issued').length,
       marketing: !!m.marketing,
-      requests: requests.slice(0, 50)
+      requests: requests.slice(0, 50),
+      passkeys: Array.isArray(m.passkeys) ? m.passkeys : []
     };
   }
   function mirrorToLocal(m) {
@@ -160,19 +161,29 @@
     texts: t, fill,
     pending: () => ({ ref: store.get(REF), hotel: store.get(HOTEL) }),
     providers: () => (apiBase() ? api('/v1/auth/providers').catch(() => ({})) : Promise.resolve({})),
-    oauthUrl(provider, extra = {}) {
+    async prepareOAuth(extra = {}) {
+      if (!apiBase()) return { id: null };
       const p = { ref: store.get(REF), hotel: store.get(HOTEL) };
-      const ints = Array.isArray(extra.interests) ? extra.interests.filter(Boolean).join(',') : '';
-      const qs = new URLSearchParams({
-        lang: lang(),
-        ...(p.ref ? { ref: p.ref } : {}),
-        ...(p.hotel ? { hotel: p.hotel } : {}),
-        ...(extra.phone ? { phone: String(extra.phone).trim().slice(0, 40) } : {}),
-        ...(extra.hotelName ? { hotelName: String(extra.hotelName).trim().slice(0, 140) } : {}),
-        ...(extra.country ? { country: String(extra.country).trim().slice(0, 80) } : {}),
-        ...(ints ? { interests: ints } : {}),
-        ...(extra.marketing ? { marketing: '1' } : {})
-      });
+      const payload = {
+        phone: extra.phone ? String(extra.phone).trim().slice(0, 40) : null,
+        hotel: extra.hotel ? String(extra.hotel).trim().slice(0, 60) : (p.hotel || null),
+        hotelName: extra.hotelName ? String(extra.hotelName).trim().slice(0, 140) : (p.hotel || null),
+        country: extra.country ? String(extra.country).trim().slice(0, 80) : null,
+        interests: Array.isArray(extra.interests) ? extra.interests : [],
+        marketing: !!extra.marketing,
+        ref: p.ref || null
+      };
+      try {
+        const res = await api('/v1/auth/oauth/prepare', payload);
+        return res && res.id ? res : { id: null };
+      } catch {
+        return { id: null };
+      }
+    },
+    oauthUrl(provider, extra = {}) {
+      const pendingId = typeof extra === 'string' ? extra : (extra.pendingId || extra.id || extra.p || null);
+      const qs = new URLSearchParams({ lang: lang() });
+      if (pendingId) qs.set('p', pendingId);
       return apiBase() + '/v1/auth/oauth/' + encodeURIComponent(provider) + '?' + qs;
     },
     start: email => api('/v1/auth/start', { email, lang: lang() }),
@@ -225,6 +236,50 @@
       if (!this.signedIn()) return [];
       try { const p = await this.profile(); return (p.coupons || []).filter(c => c.status === 'issued').sort((a, b) => b.percentBps - a.percentBps || a.expiresAt.localeCompare(b.expiresAt)); }
       catch { return []; }
+    },
+    supportsPasskey: () => {
+      try {
+        const s = window.SimpleWebAuthnBrowser;
+        return !!(s && typeof s.browserSupportsWebAuthn === 'function' && s.browserSupportsWebAuthn());
+      } catch {
+        return false;
+      }
+    },
+    async passkeyLogin() {
+      const swa = window.SimpleWebAuthnBrowser;
+      if (!swa || typeof swa.startAuthentication !== 'function') throw new ApiError(400, 'Passkey not supported');
+      const options = await api('/v1/passkeys/login/options');
+      const asseResp = await swa.startAuthentication({ optionsJSON: options });
+      const r = await api('/v1/passkeys/login/verify', asseResp);
+      store.set(SESSION, r.token);
+      store.set(REF, null);
+      syncedOnce = false;
+      saveMember(r.member);
+      r.member = await syncLocalToServer(r.member);
+      return r;
+    },
+    async passkeyRegister() {
+      const swa = window.SimpleWebAuthnBrowser;
+      if (!swa || typeof swa.startRegistration !== 'function') throw new ApiError(400, 'Passkey not supported');
+      const options = await api('/v1/passkeys/register/options');
+      const attResp = await swa.startRegistration({ optionsJSON: options });
+      const r = await api('/v1/passkeys/register/verify', attResp);
+      if (me && r.passkey) {
+        const cur = Array.isArray(me.passkeys) ? me.passkeys : [];
+        saveMember({ ...me, passkeys: [r.passkey, ...cur.filter(x => x.id !== r.passkey.id)] });
+      }
+      return r;
+    },
+    async passkeys() {
+      const r = await api('/v1/passkeys');
+      return Array.isArray(r) ? r : (r.passkeys || []);
+    },
+    async removePasskey(id) {
+      const res = await api('/v1/passkeys/delete', { id });
+      if (me && Array.isArray(me.passkeys)) {
+        saveMember({ ...me, passkeys: me.passkeys.filter(x => x.id !== id) });
+      }
+      return res;
     },
     ApiError
   });

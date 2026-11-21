@@ -123,6 +123,10 @@
       svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.3-1.6 3.8-5.5 3.8-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.2.8 3.9 1.5l2.7-2.6C16.9 3 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.8 0 9.6-4.1 9.6-9.8 0-.7-.1-1.2-.2-1.8H12z"/><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.2-.2-1.8H12v3.9h5.5c-.3 1.4-1.6 3.8-5.5 3.8v4c5.8 0 9.6-4.1 9.6-9.9z"/><path fill="#FBBC05" d="M6 11.8c0-.7.1-1.4.4-2L3 7.2C2.3 8.6 2 10.3 2 12s.3 3.4 1 4.8l3.4-2.6c-.3-.7-.4-1.4-.4-2.4z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.2L3 16.5C4.7 19.8 8.1 22 12 22z"/></svg>'
     },
     {
+      id: 'microsoft', name: 'Microsoft', domain: '@outlook.com', inbox: 'https://outlook.live.com/mail/',
+      svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1" y="1" width="10" height="10" fill="#f25022"/><rect x="13" y="1" width="10" height="10" fill="#7fba00"/><rect x="1" y="13" width="10" height="10" fill="#00a4ef"/><rect x="13" y="13" width="10" height="10" fill="#ffb900"/></svg>'
+    },
+    {
       id: 'apple', name: 'Apple', domain: '@icloud.com', inbox: 'https://www.icloud.com/mail/',
       svg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#111" d="M16.4 12.7c0-2.1 1.7-3.2 1.8-3.2-1-1.4-2.5-1.6-3.1-1.7-1.3-.1-2.6.8-3.2.8-.7 0-1.7-.8-2.8-.7-1.4 0-2.7.8-3.5 2.1-1.5 2.6-.4 6.4 1.1 8.5.7 1 1.6 2.2 2.7 2.1 1.1 0 1.5-.7 2.8-.7 1.3 0 1.7.7 2.8.7 1.2 0 1.9-1 2.6-2.1.8-1.2 1.2-2.4 1.2-2.4-.1 0-2.4-.9-2.4-3.4zm-2.1-6.2c.6-.7 1-1.7.9-2.7-.9 0-2 .6-2.6 1.3-.6.7-1.1 1.7-.9 2.7 1 .1 2-.5 2.6-1.3z"/></svg>'
     },
@@ -201,88 +205,6 @@
     return wrap;
   }
 
-  function openOAuthModal(p, initialEmail = '', initialName = '', initialExtra = {}) {
-    const existing = document.getElementById('oauthBackdrop');
-    if (existing) existing.remove();
-    const localProf = (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
-    const backdrop = el('div', 'm-oauth-backdrop');
-    backdrop.id = 'oauthBackdrop';
-    const modal = el('div', 'm-oauth-modal');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-
-    const headRow = el('div', 'm-oauth-head');
-    const iconWrap = el('span'); iconWrap.innerHTML = p.svg;
-    const titleWrap = el('div');
-    const h3 = el('h3', null, f(UI.oauthTitle, { p: p.name }));
-    h3.append(el('small', null, UI.oauthSub));
-    titleWrap.append(h3);
-    headRow.append(iconWrap, titleWrap);
-
-    const perms = el('ul', 'm-oauth-perms');
-    [UI.oauthPerm1, UI.oauthPerm2].forEach(txt => {
-      const li = el('li');
-      li.append(el('b', null, '✓'), el('span', null, txt));
-      perms.append(li);
-    });
-
-    const form = el('form', 'm-form'); form.noValidate = true;
-    const emailInput = el('input'); emailInput.type = 'email'; emailInput.required = true; emailInput.autocomplete = 'email';
-    emailInput.placeholder = 'name' + p.domain;
-    const seedEmail = initialEmail || localProf.email || '';
-    if (seedEmail) emailInput.value = seedEmail.includes('@') ? seedEmail : seedEmail + p.domain;
-    const labEmail = el('label'); labEmail.append(el('span', null, f(UI.oauthEmailLabel, { p: p.name })), emailInput);
-
-    const nameInput = el('input'); nameInput.autocomplete = 'name'; nameInput.maxLength = 100;
-    nameInput.value = initialName || localProf.name || '';
-    const labName = el('label'); labName.append(el('span', null, T.mName), nameInput);
-
-    const consentInput = el('input'); consentInput.type = 'checkbox';
-    consentInput.checked = !!initialExtra.marketing;
-    const cl = el('label', 'm-check'); cl.append(consentInput, el('span', null, T.mMarketing));
-
-    const actions = el('div', 'actions');
-    const allowBtn = el('button', 'btn primary', UI.oauthAllow); allowBtn.type = 'submit';
-    const cancelBtn = el('button', 'btn ghost', UI.oauthCancel); cancelBtn.type = 'button';
-    const close = () => backdrop.remove();
-    cancelBtn.addEventListener('click', close);
-    backdrop.addEventListener('click', e => { if (e.target === backdrop) close(); });
-    actions.append(allowBtn, cancelBtn);
-
-    const msg = el('p', 'm-msg'); msg.setAttribute('role', 'status');
-    form.append(labEmail, labName, cl, actions, msg);
-
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      let addr = emailInput.value.trim();
-      if (addr && !addr.includes('@')) { addr += p.domain; emailInput.value = addr; }
-      if (!addr || !emailInput.checkValidity()) { msg.textContent = T.mError; emailInput.focus(); return; }
-      allowBtn.disabled = true;
-      const prefill = {
-        mode: 'signup',
-        name: nameInput.value.trim(),
-        phone: initialExtra.phone || localProf.phone || '',
-        country: initialExtra.country || localProf.country || '',
-        hotel: initialExtra.hotel || localProf.hotel || '',
-        interests: Array.isArray(initialExtra.interests) ? initialExtra.interests : (localProf.interests || []),
-        marketing: consentInput.checked
-      };
-      try {
-        const r = await M.start(addr);
-        close();
-        codeForm(addr, r.devCode, prefill);
-      } catch (err) {
-        msg.textContent = errorText(err);
-        allowBtn.disabled = false;
-      }
-    });
-
-    modal.append(headRow, perms, form);
-    backdrop.append(modal);
-    document.body.append(backdrop);
-    emailInput.focus();
-  }
-
   function authTabs(activeMode) {
     const tabs = el('div', 'm-tabs');
     tabs.setAttribute('role', 'tablist');
@@ -306,8 +228,29 @@
 
   function signInForm(mode = location.hash === '#signup' ? 'signup' : 'signin') {
     const isSignup = mode === 'signup';
-    const localProf = (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
+    const localProf = (window.BOSPHORLY_API && window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
     const shell = el('div', 'm-auth-shell');
+
+    // Handle oauth_error redirect
+    const urlParams = new URLSearchParams(location.search);
+    const oauthError = urlParams.get('oauth_error');
+    if (oauthError) {
+      urlParams.delete('oauth_error');
+      const qs = urlParams.toString();
+      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
+      const alertBox = el('div', 'm-alert-box', T.mOAuthUnavailable || 'Bu giriş yöntemi şu an kullanılamıyor, e-posta koduyla devam edebilirsin.');
+      shell.append(alertBox);
+    }
+
+    // Handle Telegram link flow
+    const hashStr = (location.hash || '').replace(/^#/, '');
+    const hashParams = new URLSearchParams(hashStr.includes('&') ? hashStr : hashStr + '&');
+    const linkToken = hashParams.get('state') || urlParams.get('state') || urlParams.get('link_token');
+    const isTelegramLink = location.hash.includes('link-telegram');
+    if (isTelegramLink && linkToken) {
+      const linkNote = el('div', 'm-alert-box', T.mTelegramLinkNote || 'Telegram hesabınızı bağlamak için lütfen e-posta adresinizi girin ve onay kodunu yazın.');
+      shell.append(linkNote);
+    }
 
     const email = el('input'); email.type = 'email'; email.autocomplete = 'email'; email.required = true; email.id = 'mEmail';
     email.placeholder = 'name@gmail.com';
@@ -316,39 +259,85 @@
     let nameInput = null, phoneInput = null, countryInput = null, hotelInput = null, consentInput = null;
     const selectedInterests = new Set(Array.isArray(localProf.interests) ? localProf.interests : []);
 
+    // Passkey sign-in option for login mode
+    let passkeyBtn = null;
+    if (!isSignup && M.supportsPasskey && M.supportsPasskey()) {
+      passkeyBtn = el('button', 'btn ghost m-passkey-btn');
+      passkeyBtn.type = 'button';
+      passkeyBtn.id = 'passkeySignInBtn';
+      passkeyBtn.textContent = '🔑 ' + (T.mPasskeySignIn || 'Passkey ile giriş');
+      passkeyBtn.addEventListener('click', async () => {
+        passkeyBtn.disabled = true;
+        msg.textContent = '';
+        try {
+          await M.passkeyLogin();
+          await member();
+        } catch (err) {
+          msg.textContent = (err && err.message) || T.mError;
+          passkeyBtn.disabled = false;
+        }
+      });
+    }
+
     const provWrap = el('div', 'm-providers');
+    provWrap.hidden = true;
+    const divider = el('div', 'm-divider', UI.orEmail);
+    divider.hidden = true;
     const form = el('form', 'm-form'); form.noValidate = true;
 
-    PROVIDERS.forEach(p => {
-      const btn = el('button', 'm-provider');
-      btn.type = 'button';
-      btn.dataset.provider = p.id;
-      btn.setAttribute('aria-pressed', 'false');
-      btn.innerHTML = p.svg;
-      btn.append(el('span', null, f(UI.continueWith, { p: p.name })));
-      btn.addEventListener('click', async () => {
-        const extra = {
-          phone: phoneInput ? phoneInput.value.trim() : (localProf.phone || ''),
-          country: countryInput ? countryInput.value.trim() : (localProf.country || ''),
-          hotel: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
-          hotelName: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
-          interests: [...selectedInterests],
-          marketing: consentInput ? consentInput.checked : false
-        };
-        const avail = await getRemoteProviders();
-        if (avail && avail[p.id] && M.oauthUrl) {
-          location.href = M.oauthUrl(p.id, extra);
-          return;
-        }
-        openOAuthModal(p, email.value.trim(), nameInput ? nameInput.value.trim() : '', extra);
+    getRemoteProviders().then(avail => {
+      let activeCount = 0;
+      PROVIDERS.forEach(p => {
+        if (!avail || !avail[p.id]) return;
+        activeCount++;
+        const btn = el('button', 'm-provider');
+        btn.type = 'button';
+        btn.dataset.provider = p.id;
+        btn.innerHTML = p.svg;
+        btn.addEventListener('click', async () => {
+          btn.disabled = true;
+          const extra = {
+            phone: phoneInput ? phoneInput.value.trim() : (localProf.phone || ''),
+            country: countryInput ? countryInput.value.trim() : (localProf.country || ''),
+            hotel: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
+            hotelName: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
+            interests: [...selectedInterests],
+            marketing: consentInput ? consentInput.checked : false
+          };
+          let pendingId = null;
+          try {
+            const prep = await M.prepareOAuth(extra);
+            if (prep && prep.id) pendingId = prep.id;
+          } catch {}
+          location.href = M.oauthUrl(p.id, { pendingId });
+        });
+        provWrap.append(btn);
       });
-      provWrap.append(btn);
-    });
 
-    const divider = el('div', 'm-divider', UI.orEmail);
+      if (avail && avail.telegram && window.BOSPHORLY_API && window.BOSPHORLY_API.telegramBot) {
+        activeCount++;
+        const tgBox = el('div', 'm-telegram-widget');
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.setAttribute('data-telegram-login', window.BOSPHORLY_API.telegramBot);
+        script.setAttribute('data-size', 'large');
+        const callbackUrl = ((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '') + '/v1/auth/oauth/telegram/callback';
+        script.setAttribute('data-auth-url', callbackUrl);
+        script.setAttribute('data-request-access', 'write');
+        tgBox.append(script);
+        provWrap.append(tgBox);
+      }
+
+      if (activeCount > 0) {
+        provWrap.hidden = false;
+        divider.hidden = false;
+      }
+    }).catch(() => {});
+
     const labEmail = el('label'); labEmail.append(el('span', null, T.mEmail), email);
     const domainRow = el('div', 'm-domains');
-    ['@gmail.com', '@yandex.com', '@icloud.com', '@outlook.com'].forEach(dom => {
+    ['@gmail.com', '@outlook.com', '@yandex.com', '@icloud.com'].forEach(dom => {
       const chip = el('button', 'm-domain', dom);
       chip.type = 'button';
       chip.addEventListener('click', () => applyDomain(email, dom));
@@ -405,7 +394,8 @@
         country: countryInput ? countryInput.value.trim() : (localProf.country || ''),
         hotel: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
         interests: [...selectedInterests],
-        marketing: consentInput ? consentInput.checked : false
+        marketing: consentInput ? consentInput.checked : false,
+        ...(linkToken ? { linkToken } : {})
       };
       if (window.BosphorlyAccount && window.BosphorlyAccount.saveProfile) {
         const cur = window.BosphorlyAccount.profile() || {};
@@ -423,20 +413,10 @@
       catch (err) { msg.textContent = errorText(err); send.disabled = false; }
     });
 
-    shell.append(authTabs(mode), provWrap, divider, form);
+    shell.append(authTabs(mode));
+    if (passkeyBtn) shell.append(passkeyBtn);
+    shell.append(provWrap, divider, form);
     box.replaceChildren(head(mode), perks(), shell, privacy());
-
-    const modalParam = new URLSearchParams(location.search).get('oauth_modal');
-    if (modalParam) {
-      const found = PROVIDERS.find(x => x.id === modalParam);
-      if (found) {
-        const cleanSearch = new URLSearchParams(location.search);
-        cleanSearch.delete('oauth_modal');
-        const qs = cleanSearch.toString();
-        history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
-        openOAuthModal(found);
-      }
-    }
   }
 
   function codeForm(address, devCode, prefill = {}) {
@@ -476,6 +456,7 @@
           ...(prefill.hotel ? { hotelName: prefill.hotel } : {}),
           ...(prefill.country ? { country: prefill.country } : {}),
           ...(Array.isArray(prefill.interests) && prefill.interests.length ? { interests: prefill.interests } : {}),
+          ...(prefill.linkToken ? { linkToken: prefill.linkToken } : {}),
           marketing: consent.checked
         });
         if (window.BosphorlyAccount && window.BosphorlyAccount.saveProfile) {
@@ -495,7 +476,7 @@
           if (pEmail) pEmail.value = address;
           if (pHotel && prefill.hotel) pHotel.value = prefill.hotel;
         }
-        if (location.hash === '#signup') history.replaceState(null, '', location.pathname + location.search);
+        if (location.hash === '#signup' || location.hash.includes('link-telegram')) history.replaceState(null, '', location.pathname + location.search);
         await member();
       }
       catch (err) { msg.textContent = errorText(err); go.disabled = false; }
@@ -661,6 +642,69 @@
       }
     });
 
+    // Passkeys (parmak izi / Face ID)
+    const passkeySec = el('div', 'm-prefs');
+    passkeySec.style.marginTop = '14px';
+    const pkHead = el('h3', null, '🔑 ' + (T.mPasskeys || 'Passkeys'));
+    pkHead.style.margin = '0 0 8px';
+    passkeySec.append(pkHead);
+    const pkList = el('div', 'm-passkey-list');
+    const renderPasskeys = (keys) => {
+      pkList.replaceChildren();
+      if (!keys || !keys.length) return;
+      keys.forEach(k => {
+        const row = el('div', 'm-passkey-row');
+        const info = el('div');
+        const title = el('strong', null, 'Passkey');
+        const dateStr = el('small', 'm-fine', ' · ' + day(k.createdAt) + (k.lastUsedAt ? (' · ' + day(k.lastUsedAt)) : ''));
+        info.append(title, dateStr);
+        const delBtn = el('button', 'btn danger', T.mPasskeyDelete || 'Sil');
+        delBtn.type = 'button';
+        delBtn.style.padding = '5px 10px';
+        delBtn.style.fontSize = '12px';
+        delBtn.addEventListener('click', async () => {
+          if (!confirm((T.mPasskeyDelete || 'Sil') + '?')) return;
+          delBtn.disabled = true;
+          try {
+            await M.removePasskey(k.id);
+            row.remove();
+          } catch {
+            delBtn.disabled = false;
+            alert(T.mError);
+          }
+        });
+        row.append(info, delBtn);
+        pkList.append(row);
+      });
+    };
+    renderPasskeys(p.passkeys);
+    passkeySec.append(pkList);
+
+    if (M.supportsPasskey && M.supportsPasskey()) {
+      const addBtn = el('button', 'btn ghost', '➕ ' + (T.mPasskeyAdd || 'Bu cihaza passkey ekle'));
+      addBtn.type = 'button';
+      const pkMsg = el('p', 'm-msg');
+      addBtn.addEventListener('click', async () => {
+        addBtn.disabled = true;
+        pkMsg.textContent = '';
+        try {
+          const r = await M.passkeyRegister();
+          if (r && r.passkey) {
+            p.passkeys = [r.passkey, ...(p.passkeys || []).filter(x => x.id !== r.passkey.id)];
+            renderPasskeys(p.passkeys);
+          } else {
+            const updated = await M.passkeys();
+            renderPasskeys(updated);
+          }
+        } catch (err) {
+          pkMsg.textContent = (err && err.message) || T.mError;
+        } finally {
+          addBtn.disabled = false;
+        }
+      });
+      passkeySec.append(addBtn, pkMsg);
+    }
+
     // Stamps.
     const st = el('div', 'm-stamps');
     const dots = el('div', 'm-dots'); dots.setAttribute('aria-hidden', 'true');
@@ -686,7 +730,7 @@
     const acts = el('div', 'actions'); acts.append(out, del);
     set.append(acts);
 
-    box.replaceChildren(hello, sub, tierEl, h3, list, campHead, campSub, campGrid, prefs, st, inv, set);
+    box.replaceChildren(hello, sub, tierEl, h3, list, campHead, campSub, campGrid, prefs, passkeySec, st, inv, set);
   }
 
   window.addEventListener('bosphorly:member-changed', e => {

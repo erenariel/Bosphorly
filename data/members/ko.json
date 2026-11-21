@@ -49,5 +49,12 @@
   "bCouponNote": "할인은 함께 확인한 가격에 적용됩니다. 요청 1건당 쿠폰 1장입니다.",
   "bAfter": "쿠폰 적용 예상 총액",
   "bCouponFail": "이 쿠폰을 예약할 수 없습니다. 다른 쿠폰을 선택하거나 쿠폰 없이 진행하세요.",
-  "bSignInHint": "회원은 웰컴 쿠폰을 받습니다. 로그인 →"
+  "bSignInHint": "회원은 웰컴 쿠폰을 받습니다. 로그인 →",
+  "mOAuthUnavailable": "이 로그인 방법은 현재 사용할 수 없습니다. 이메일 코드로 계속할 수 있습니다.",
+  "mContinueWith": "{p}로 계속하기",
+  "mPasskeySignIn": "패스키로 로그인",
+  "mPasskeyAdd": "이 기기에 패스키 추가",
+  "mPasskeys": "등록된 패스키",
+  "mPasskeyDelete": "삭제",
+  "mTelegramLinkNote": "이메일 코드로 인증하여 Telegram 계정을 Bosphorly 멤버십에 연결하세요."
 }

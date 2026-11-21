@@ -49,5 +49,12 @@
   "bCouponNote": "A kedvezményt az Önnel egyeztetett árra számítjuk. Ajánlatkérésenként egy kupon.",
   "bAfter": "Becsült végösszeg kuponnal",
   "bCouponFail": "Ezt a kupont nem sikerült lefoglalni. Válasszon másikat, vagy folytassa kupon nélkül.",
-  "bSignInHint": "A tagok üdvözlő kupont kapnak. Bejelentkezés →"
+  "bSignInHint": "A tagok üdvözlő kupont kapnak. Bejelentkezés →",
+  "mOAuthUnavailable": "Ez a bejelentkezési mód jelenleg nem érhető el; folytathatja e-mailes kóddal.",
+  "mContinueWith": "Folytatás ezzel: {p}",
+  "mPasskeySignIn": "Bejelentkezés passkey-vel",
+  "mPasskeyAdd": "Passkey hozzáadása ehhez az eszközhöz",
+  "mPasskeys": "Regisztrált passkey-k",
+  "mPasskeyDelete": "Törlés",
+  "mTelegramLinkNote": "Erősítse meg e-mailes kóddal a Telegram-fiók és a Bosphorly-tagság összekapcsolásához."
 }

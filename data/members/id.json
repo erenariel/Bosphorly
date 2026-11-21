@@ -49,5 +49,12 @@
   "bCouponNote": "Diskon berlaku untuk harga yang kami konfirmasi dengan Anda. Satu kupon per permintaan.",
   "bAfter": "Perkiraan total dengan kupon",
   "bCouponFail": "Kupon ini tidak dapat disisihkan. Pilih kupon lain atau lanjutkan tanpa kupon.",
-  "bSignInHint": "Anggota mendapat kupon selamat datang. Masuk →"
+  "bSignInHint": "Anggota mendapat kupon selamat datang. Masuk →",
+  "mOAuthUnavailable": "Metode masuk ini saat ini tidak tersedia; Anda dapat melanjutkan dengan kode email.",
+  "mContinueWith": "Lanjutkan dengan {p}",
+  "mPasskeySignIn": "Masuk dengan passkey",
+  "mPasskeyAdd": "Tambahkan passkey ke perangkat ini",
+  "mPasskeys": "Passkey terdaftar",
+  "mPasskeyDelete": "Hapus",
+  "mTelegramLinkNote": "Verifikasi dengan kode email untuk menautkan akun Telegram Anda ke keanggotaan Bosphorly."
 }
