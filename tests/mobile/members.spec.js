@@ -34,7 +34,12 @@ test('sign in with an e-mailed code, see coupons and stamps, then use a coupon o
   await page.goto('/index.html?lang=en&ref=friend123&h=hotel-a');
   await page.goto('/account.html?lang=en#signup');
   await expect(page.locator('#tabSignUp')).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('.m-provider')).toHaveCount(4);
   await expect(page.locator('#mName')).toBeVisible();
+  await expect(page.locator('#mPhone')).toBeVisible();
+  await expect(page.locator('#mCountry')).toBeVisible();
+  await expect(page.locator('#mHotel')).toBeVisible();
+  await expect(page.locator('.m-chip')).toHaveCount(5);
   await page.locator('#tabSignIn').click();
   await expect(page.locator('#tabSignIn')).toHaveAttribute('aria-selected', 'true');
   await page.fill('#mEmail', 'guest@example.com');
