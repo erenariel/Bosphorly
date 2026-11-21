@@ -13,8 +13,15 @@
     profile: () => read().profile,
     saveProfile(p) {
       const v = read();
+      const prev = v.profile || {};
       const clean = {};
       for (const k of ['name', 'phone', 'email', 'hotel', 'room']) clean[k] = String(p?.[k] || '').trim().slice(0, 140);
+      const rawCountry = p && p.country !== undefined ? p.country : prev.country;
+      clean.country = String(rawCountry || '').trim().slice(0, 80);
+      const rawInterests = p && p.interests !== undefined ? p.interests : prev.interests;
+      clean.interests = Array.isArray(rawInterests)
+        ? rawInterests.map(x => String(x || '').trim().slice(0, 24)).filter((x, i, a) => x && a.indexOf(x) === i).slice(0, 5)
+        : [];
       v.profile = clean;
       return write(v);
     },

@@ -1,7 +1,7 @@
 'use strict';
-/* Membership card on My account: "coming soon" without an API, sign-in / create account by OAuth
-   (Google, Apple, Facebook, Yandex) or e-mailed code, traveler preferences, coupons, stamps,
-   invite link, offers consent, sign-out and account deletion. */
+/* Membership card on My account: sign-in / create account (Google, Apple, Facebook, Yandex OAuth or e-mailed code),
+   loyalty tiers (Silver / Gold / Platinum), clear coupons grid, personalized package campaigns, stamps,
+   referral invite, preferences & newsletter controls. */
 (async () => {
   const M = window.BosphorlyMember, box = document.getElementById('member');
   if (!M || !box) return;
@@ -38,7 +38,83 @@
     intOldCity: tr ? '🏛️ Tarihî Yarımada & kültür' : '🏛️ Old City & heritage',
     intHammam: tr ? '🫧 Türk hamamı & spa' : '🫧 Turkish hammam & spa',
     intPrivate: tr ? '🚐 Özel / VIP tur' : '🚐 Private & VIP tours',
-    openInbox: tr ? '✉ {p} gelen kutusunu aç ↗' : '✉ Open {p} inbox ↗'
+    openInbox: tr ? '✉ {p} gelen kutusunu aç ↗' : '✉ Open {p} inbox ↗',
+    tierNames: {
+      silver: tr ? '🥈 Silver Üye' : '🥈 Silver Member',
+      gold: tr ? '🥇 Gold Üye' : '🥇 Gold Member',
+      platinum: tr ? '💎 Platinum VIP' : '💎 Platinum VIP'
+    },
+    completedCount: tr ? '{n} tamamlanan tur' : '{n} completed tours',
+    toGold: tr ? 'Gold ayrıcalıkları (Free Upgrade & %5 VIP öncelik) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Gold (Free Upgrade & 5% VIP priority)',
+    toPlatinum: tr ? 'Platinum VIP (her zaman öncelikli VIP indirim & Free Upgrade) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Platinum VIP (always-on VIP priority discount & Free Upgrade)',
+    atPlatinum: tr ? 'En yüksek üye seviyesi! Tüm VIP servislerde öncelikli indirim ve Free Upgrade aktif.' : 'Highest tier unlocked! Always-on VIP priority discount & Free Upgrade active on all services.',
+    tierPerkSilver: tr ? 'Silver: Hoş geldin kuponu (%5), damga kartı ve ilgi alanına özel paket kampanyaları' : 'Silver: 5% welcome coupon, stamp card & personalized package campaigns',
+    tierPerkGold: tr ? 'Gold (2+ tur): Müsaitliğe göre Free Upgrade + VIP servislerde %5 öncelikli indirim' : 'Gold (2+ tours): Free Upgrade (subject to availability) + 5% VIP service priority',
+    tierPerkPlatinum: tr ? 'Platinum (5+ tur): Öncelikli Free Upgrade + VIP servislerde her zaman maks. %10 öncelikli indirim' : 'Platinum (5+ tours): Priority Free Upgrade + always-on max 10% VIP service priority discount',
+    usableBadge: tr ? '{n} kullanılabilir' : '{n} available',
+    copyCode: tr ? 'Kopyala' : 'Copy',
+    copiedCode: tr ? 'Kopyalandı ✓' : 'Copied ✓',
+    useTransfer: tr ? 'Transferde kullan →' : 'Use on transfer →',
+    useTours: tr ? 'Özel turlarda kullan →' : 'Use on special tours →',
+    vipCardBadge: tr ? 'ÖNCELİKLİ VIP' : 'VIP PRIORITY',
+    vipCardTitleGold: tr ? 'Free Upgrade · %5 VIP öncelik' : 'Free Upgrade · 5% VIP priority',
+    vipCardTitlePlat: tr ? 'Öncelikli Free Upgrade + %10 VIP indirim' : 'Priority Free Upgrade + 10% VIP discount',
+    vipCardDesc: tr ? 'VIP havalimanı transferi ve özel şoförlü / VIP turlarda geçerlidir.' : 'Automatically applies to VIP airport transfers and private VIP tours.',
+    campaignsTitle: tr ? 'Sana özel paket kampanyaları' : 'Personalized package campaigns',
+    campaignsSub: tr ? 'Seçtiğin ilgi alanlarına ve üyelik seviyene göre önerilen fırsatlar:' : 'Curated packages tailored to your selected interests and tier:',
+    campaignsPickHint: tr ? 'İlgi alanlarını aşağıdan seç; seyahat tarzına özel kampanyalar hemen burada güncellensin.' : 'Select your interests below to tailor package campaigns to your trip.',
+    prefsTitle: tr ? 'Kişisel tercihler & haber bülteni' : 'Personal preferences & newsletter',
+    newsletterLabel: tr ? 'Bosphorly Haber Bülteni: Sezonluk turlar, özel VIP kampanyalar ve kupon hatırlatmaları e-postama gelsin.' : 'Bosphorly Newsletter: Send me seasonal tours, VIP offers and personalized campaign updates.',
+    savePrefs: tr ? 'Tercihleri ve bülteni kaydet' : 'Save preferences & newsletter',
+    savedPrefs: tr ? 'Tercihler ve haber bülteni güncellendi ✓' : 'Preferences and newsletter saved ✓',
+    newsletterActive: tr ? 'Haber bülteni aktif ✓' : 'Newsletter active ✓',
+    newsletterOff: tr ? 'Haber bülteni kapalı' : 'Newsletter off'
+  };
+
+  const INTEREST_OPTIONS = [
+    ['cruise', UI.intCruise],
+    ['transfer', UI.intTransfer],
+    ['oldcity', UI.intOldCity],
+    ['hammam', UI.intHammam],
+    ['private', UI.intPrivate]
+  ];
+
+  const CAMPAIGNS = {
+    cruise: {
+      tag: tr ? 'BOĞAZ PAKETİ' : 'BOSPHORUS BUNDLE',
+      title: tr ? 'Boğaz Gün Batımı + Akşam Yemeği Turu' : 'Bosphorus Sunset & Dinner Cruise Package',
+      desc: tr ? 'Kuponunla birlikte grup veya özel yat seçeneğinde öncelikli rezervasyon.' : 'Combine your member coupon with priority seating on sunset or dinner yachts.',
+      href: 'tours.html',
+      cta: tr ? 'Boğaz turlarını incele →' : 'View Bosphorus tours →'
+    },
+    transfer: {
+      tag: tr ? 'TRANSFER + VIP' : 'TRANSFER + VIP',
+      title: tr ? 'IST / SAW Özel VIP Havalimanı Transferi' : 'IST / SAW Private VIP Airport Transfer',
+      desc: tr ? 'Sabit fiyat garantisi + Gold/Platinum üyelerimize VIP araçta ücretsiz sınıf yükseltme önceliği.' : 'Fixed rate per vehicle plus Free Upgrade priority on VIP vehicles for Gold/Platinum.',
+      href: 'index.html#booking',
+      cta: tr ? 'Transfer talep et →' : 'Request transfer →'
+    },
+    oldcity: {
+      tag: tr ? 'TARİH & KÜLTÜR' : 'HERITAGE PACKAGE',
+      title: tr ? 'Sultanahmet & Boğaz Tam Gün Kombine Paketi' : 'Old City & Bosphorus Full-Day Combo',
+      desc: tr ? 'Ayasofya, Topkapı ve Yerebatan rotasını öğleden sonra Boğaz turuyla birleştir.' : 'Combine Hagia Sophia & Topkapı guided walk with an afternoon Bosphorus cruise.',
+      href: 'tours.html',
+      cta: tr ? 'Özel turları gör →' : 'See special tours →'
+    },
+    hammam: {
+      tag: tr ? 'HAMAM & SPA' : 'HAMMAM & SPA',
+      title: tr ? 'Tarihî Türk Hamamı & Kese-Masaj Paketi' : 'Historic Turkish Hammam & Scrub-Massage',
+      desc: tr ? 'Otelden çift yön transfer kolaylığı ile lisanslı tarihî hamam seçkileri.' : 'Licensed Ottoman hammam rituals with convenient pickup and member coupon savings.',
+      href: 'prices.html',
+      cta: tr ? 'Hamam ve turları karşılaştır →' : 'Compare hammam & tours →'
+    },
+    private: {
+      tag: tr ? 'VIP ÖZEL SERVİS' : 'VIP PRIVATE SERVICE',
+      title: tr ? 'Özel Şoförlü VIP Mercedes Vito & Rehber' : 'Private Chauffeur VIP Minivan & Licensed Guide',
+      desc: tr ? 'Platinum üyelerde her zaman maks. %10 VIP öncelikli indirim ve ücretsiz sınıf yükseltme.' : 'Platinum members always enjoy up to 10% priority VIP discount and Free Upgrade priority.',
+      href: 'tours.html',
+      cta: tr ? 'VIP talep oluştur →' : 'Create VIP request →'
+    }
   };
 
   const PROVIDERS = [
@@ -106,7 +182,26 @@
     }
   }
 
-  function openOAuthModal(p, initialEmail = '', initialName = '') {
+  function renderInterestChips(selectedSet) {
+    const wrap = el('div', 'm-interests-wrap');
+    wrap.append(el('span', 'm-interests-title', UI.interests));
+    const list = el('div', 'm-interests');
+    INTEREST_OPTIONS.forEach(([key, label]) => {
+      const chip = el('button', 'm-chip', label);
+      chip.type = 'button';
+      chip.dataset.interest = key;
+      chip.setAttribute('aria-pressed', String(selectedSet.has(key)));
+      chip.addEventListener('click', () => {
+        if (selectedSet.has(key)) selectedSet.delete(key); else selectedSet.add(key);
+        chip.setAttribute('aria-pressed', String(selectedSet.has(key)));
+      });
+      list.append(chip);
+    });
+    wrap.append(list);
+    return wrap;
+  }
+
+  function openOAuthModal(p, initialEmail = '', initialName = '', initialExtra = {}) {
     const existing = document.getElementById('oauthBackdrop');
     if (existing) existing.remove();
     const localProf = (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
@@ -143,6 +238,7 @@
     const labName = el('label'); labName.append(el('span', null, T.mName), nameInput);
 
     const consentInput = el('input'); consentInput.type = 'checkbox';
+    consentInput.checked = !!initialExtra.marketing;
     const cl = el('label', 'm-check'); cl.append(consentInput, el('span', null, T.mMarketing));
 
     const actions = el('div', 'actions');
@@ -162,7 +258,15 @@
       if (addr && !addr.includes('@')) { addr += p.domain; emailInput.value = addr; }
       if (!addr || !emailInput.checkValidity()) { msg.textContent = T.mError; emailInput.focus(); return; }
       allowBtn.disabled = true;
-      const prefill = { mode: 'signup', name: nameInput.value.trim(), marketing: consentInput.checked };
+      const prefill = {
+        mode: 'signup',
+        name: nameInput.value.trim(),
+        phone: initialExtra.phone || localProf.phone || '',
+        country: initialExtra.country || localProf.country || '',
+        hotel: initialExtra.hotel || localProf.hotel || '',
+        interests: Array.isArray(initialExtra.interests) ? initialExtra.interests : (localProf.interests || []),
+        marketing: consentInput.checked
+      };
       try {
         const r = await M.start(addr);
         close();
@@ -212,7 +316,6 @@
     let nameInput = null, phoneInput = null, countryInput = null, hotelInput = null, consentInput = null;
     const selectedInterests = new Set(Array.isArray(localProf.interests) ? localProf.interests : []);
 
-    // Quick provider buttons (Google, Apple, Facebook, Yandex) like Hotels.com.
     const provWrap = el('div', 'm-providers');
     const form = el('form', 'm-form'); form.noValidate = true;
 
@@ -224,18 +327,24 @@
       btn.innerHTML = p.svg;
       btn.append(el('span', null, f(UI.continueWith, { p: p.name })));
       btn.addEventListener('click', async () => {
+        const extra = {
+          phone: phoneInput ? phoneInput.value.trim() : (localProf.phone || ''),
+          country: countryInput ? countryInput.value.trim() : (localProf.country || ''),
+          hotel: hotelInput ? hotelInput.value.trim() : (localProf.hotel || ''),
+          interests: [...selectedInterests],
+          marketing: consentInput ? consentInput.checked : false
+        };
         const avail = await getRemoteProviders();
         if (avail && avail[p.id] && M.oauthUrl) {
-          location.href = M.oauthUrl(p.id);
+          location.href = M.oauthUrl(p.id, extra);
           return;
         }
-        openOAuthModal(p, email.value.trim(), nameInput ? nameInput.value.trim() : '');
+        openOAuthModal(p, email.value.trim(), nameInput ? nameInput.value.trim() : '', extra);
       });
       provWrap.append(btn);
     });
 
     const divider = el('div', 'm-divider', UI.orEmail);
-
     const labEmail = el('label'); labEmail.append(el('span', null, T.mEmail), email);
     const domainRow = el('div', 'm-domains');
     ['@gmail.com', '@yandex.com', '@icloud.com', '@outlook.com'].forEach(dom => {
@@ -271,30 +380,9 @@
       const row2 = el('div', 'm-form-grid');
       row2.append(labCountry, labHotel);
 
-      const intWrap = el('div', 'm-interests-wrap');
-      intWrap.append(el('span', 'm-interests-title', UI.interests));
-      const intList = el('div', 'm-interests');
-      [
-        ['cruise', UI.intCruise],
-        ['transfer', UI.intTransfer],
-        ['oldcity', UI.intOldCity],
-        ['hammam', UI.intHammam],
-        ['private', UI.intPrivate]
-      ].forEach(([key, label]) => {
-        const chip = el('button', 'm-chip', label);
-        chip.type = 'button';
-        chip.dataset.interest = key;
-        chip.setAttribute('aria-pressed', String(selectedInterests.has(key)));
-        chip.addEventListener('click', () => {
-          if (selectedInterests.has(key)) selectedInterests.delete(key);
-          else selectedInterests.add(key);
-          chip.setAttribute('aria-pressed', String(selectedInterests.has(key)));
-        });
-        intList.append(chip);
-      });
-      intWrap.append(intList);
+      const intWrap = renderInterestChips(selectedInterests);
 
-      consentInput = el('input'); consentInput.type = 'checkbox'; consentInput.id = 'mMarketing'; // never pre-ticked
+      consentInput = el('input'); consentInput.type = 'checkbox'; consentInput.id = 'mMarketing';
       const cl = el('label', 'm-check'); cl.append(consentInput, el('span', null, T.mMarketing));
 
       form.append(row1, labEmail, domainRow, row2, intWrap, cl);
@@ -353,7 +441,7 @@
   function codeForm(address, devCode, prefill = {}) {
     const form = el('form', 'm-form'); form.noValidate = true;
     const code = el('input'); code.inputMode = 'numeric'; code.autocomplete = 'one-time-code'; code.maxLength = 6; code.pattern = '\\d{6}'; code.id = 'mCode';
-    if (devCode) code.value = devCode; // development API only
+    if (devCode) code.value = devCode;
     const name = el('input'); name.autocomplete = 'name'; name.maxLength = 100; name.id = 'mName';
     if (prefill.name) name.value = prefill.name;
     const consent = el('input'); consent.type = 'checkbox'; consent.id = 'mMarketing';
@@ -381,7 +469,12 @@
       go.disabled = true;
       try {
         const cleanName = name.value.trim();
-        await M.verify(address, code.value.trim(), { ...(cleanName ? { name: cleanName } : {}), marketing: consent.checked });
+        await M.verify(address, code.value.trim(), {
+          ...(cleanName ? { name: cleanName } : {}),
+          ...(prefill.country ? { country: prefill.country } : {}),
+          ...(Array.isArray(prefill.interests) && prefill.interests.length ? { interests: prefill.interests } : {}),
+          marketing: consent.checked
+        });
         if (window.BosphorlyAccount && window.BosphorlyAccount.saveProfile) {
           const cur = window.BosphorlyAccount.profile() || {};
           window.BosphorlyAccount.saveProfile({
@@ -412,27 +505,159 @@
     const card = el('div', 'm-coupon ' + c.status);
     const top = el('div', 'm-ctop');
     top.append(el('strong', 'm-pct', f(T.mOff, { p: pct(c.percentBps) })), el('span', 'm-kind', KIND[c.kind] || c.kind));
-    const code = el('code', 'm-code', c.code);
+    const codeRow = el('div', 'm-code-row');
+    const codeEl = el('code', 'm-code', c.code);
+    codeRow.append(codeEl);
+    if (c.status === 'issued') {
+      const cp = el('button', 'm-copy-mini', UI.copyCode);
+      cp.type = 'button';
+      cp.addEventListener('click', async () => {
+        try { await navigator.clipboard.writeText(c.code); } catch {}
+        cp.textContent = UI.copiedCode;
+        setTimeout(() => { cp.textContent = UI.copyCode; }, 1600);
+      });
+      codeRow.append(cp);
+    }
     const state = c.status === 'issued' ? f(T.mValidUntil, { d: day(c.expiresAt) }) : c.status === 'held' ? f(T.mHeld, { ref: c.heldFor }) : c.status === 'redeemed' ? T.mRedeemed : T.mExpired;
-    card.append(top, code, el('span', 'm-state', state));
+    card.append(top, codeRow, el('span', 'm-state', state));
+    if (c.status === 'issued') {
+      const links = el('div', 'm-coupon-links');
+      const a1 = el('a', null, UI.useTransfer); a1.href = 'index.html#booking';
+      const a2 = el('a', null, UI.useTours); a2.href = 'tours.html';
+      links.append(a1, a2);
+      card.append(links);
+    }
+    return card;
+  }
+
+  function vipCouponCard(p) {
+    const card = el('div', 'm-coupon vip');
+    const top = el('div', 'm-ctop');
+    const pctStr = p.vipPriorityDiscountBps > 0 ? pct(p.vipPriorityDiscountBps) : '';
+    top.append(el('strong', 'm-pct', p.tier === 'platinum' ? (pctStr + ' VIP') : pctStr), el('span', 'm-kind', UI.vipCardBadge));
+    card.append(top, el('strong', null, p.tier === 'platinum' ? UI.vipCardTitlePlat : UI.vipCardTitleGold), el('span', 'm-state', UI.vipCardDesc));
+    const links = el('div', 'm-coupon-links');
+    const a1 = el('a', null, UI.useTransfer); a1.href = 'index.html#booking';
+    const a2 = el('a', null, UI.useTours); a2.href = 'tours.html';
+    links.append(a1, a2);
+    card.append(links);
+    return card;
+  }
+
+  function tierCard(p) {
+    const tierKey = p.tier || 'silver';
+    const card = el('div', 'm-tier-card');
+    card.dataset.tier = tierKey;
+    const top = el('div', 'm-tier-top');
+    top.append(el('span', 'm-tier-badge', UI.tierNames[tierKey] || UI.tierNames.silver));
+    top.append(el('span', 'm-fine', f(UI.completedCount, { n: p.fulfilledCount || 0 }) + ' · ' + (p.marketing ? UI.newsletterActive : UI.newsletterOff)));
+    const bar = el('div', 'm-tier-bar');
+    const fill = el('div', 'm-tier-fill');
+    const ratio = Math.min(100, Math.round(((p.fulfilledCount || 0) / 5) * 100));
+    fill.style.width = Math.max(12, ratio) + '%';
+    bar.append(fill);
+
+    let msgText = UI.atPlatinum;
+    if (p.nextTier === 'gold') msgText = f(UI.toGold, { n: p.toursToNextTier || 2 });
+    else if (p.nextTier === 'platinum') msgText = f(UI.toPlatinum, { n: p.toursToNextTier || 1 });
+
+    const ul = el('ul', 'm-tier-perks');
+    [UI.tierPerkSilver, UI.tierPerkGold, UI.tierPerkPlatinum].forEach(txt => ul.append(el('li', null, txt)));
+    card.append(top, bar, el('p', 'm-fine', msgText), ul);
     return card;
   }
 
   async function member() {
     let p;
     try { p = await M.profile(true); } catch { return M.signedIn() ? box.replaceChildren(head(), el('p', 'm-msg', T.mError)) : signInForm(); }
+
+    // Keep local device profile aligned with server member basics.
+    if (window.BosphorlyAccount) {
+      const cur = window.BosphorlyAccount.profile() || {};
+      const next = {
+        ...cur,
+        name: p.name || cur.name || '',
+        email: p.email || cur.email || '',
+        country: p.country || cur.country || '',
+        interests: Array.isArray(p.interests) && p.interests.length ? p.interests : (cur.interests || [])
+      };
+      window.BosphorlyAccount.saveProfile(next);
+      const pName = document.getElementById('pName'), pEmail = document.getElementById('pEmail');
+      if (pName && !pName.value && p.name) pName.value = p.name;
+      if (pEmail && !pEmail.value && p.email) pEmail.value = p.email;
+    }
+
     const hello = el('h2', null, p.name ? f(T.mHello, { name: p.name.split(/\s+/)[0] }) : T.mHelloNoName);
-    const sub = el('p', 'm-lead', p.email);
-    // Coupons: usable ones first.
+    const subParts = [p.email, p.country].filter(Boolean);
+    const sub = el('p', 'm-lead', subParts.join(' · '));
+
+    // Loyalty Tier Card.
+    const tierEl = tierCard(p);
+
+    // Coupons Grid (always clearly visible, usable first + VIP priority card for Gold/Platinum).
     const order = { issued: 0, held: 1, redeemed: 2, expired: 3, void: 4 };
+    const cs = [...(p.coupons || [])].sort((a, b) => (order[a.status] ?? 9) - (order[b.status] ?? 9));
+    const usableCount = cs.filter(c => c.status === 'issued').length;
+    const h3 = el('h3', null, T.mCoupons);
+    h3.append(el('span', 'm-count', f(UI.usableBadge, { n: usableCount })));
     const list = el('div', 'm-coupons');
-    const cs = [...p.coupons].sort((a, b) => order[a.status] - order[b.status]);
-    if (cs.length) cs.forEach(c => list.append(couponCard(c))); else list.append(el('p', 'm-fine', T.mNoCoupons));
+    if (p.tier === 'gold' || p.tier === 'platinum') list.append(vipCouponCard(p));
+    if (cs.length) cs.forEach(c => list.append(couponCard(c)));
+    else if (p.tier === 'silver') list.append(el('p', 'm-fine', T.mNoCoupons));
+
+    // Personalized Package Campaigns.
+    const campHead = el('h3', null, UI.campaignsTitle);
+    const selectedInts = new Set(Array.isArray(p.interests) ? p.interests : []);
+    const orderedKeys = [...selectedInts, ...Object.keys(CAMPAIGNS).filter(k => !selectedInts.has(k))].slice(0, selectedInts.size ? Math.max(2, selectedInts.size) : 3);
+    const campSub = el('p', 'm-fine', selectedInts.size ? UI.campaignsSub : UI.campaignsPickHint);
+    const campGrid = el('div', 'm-offers-grid');
+    orderedKeys.forEach(k => {
+      const cfg = CAMPAIGNS[k];
+      if (!cfg) return;
+      const card = el('div', 'm-offer');
+      const cta = el('a', null, cfg.cta); cta.href = cfg.href;
+      card.append(el('span', 'm-offer-tag', cfg.tag), el('strong', null, cfg.title), el('p', null, cfg.desc), cta);
+      campGrid.append(card);
+    });
+
+    // Personal Preferences & Newsletter editor.
+    const prefs = el('form', 'm-prefs'); prefs.noValidate = true;
+    const prefsHead = el('h3', null, UI.prefsTitle); prefsHead.style.margin = '0';
+    const cInput = el('input'); cInput.maxLength = 80; cInput.placeholder = UI.countryPh; cInput.value = p.country || '';
+    const labC = el('label'); labC.append(el('span', null, UI.country), cInput);
+    const prefInts = new Set(Array.isArray(p.interests) ? p.interests : []);
+    const intEditor = renderInterestChips(prefInts);
+    const offers = el('input'); offers.type = 'checkbox'; offers.checked = !!p.marketing; offers.id = 'mOffers';
+    const ol = el('label', 'm-check'); ol.append(offers, el('span', null, UI.newsletterLabel));
+    const savePrefsBtn = el('button', 'btn primary', UI.savePrefs); savePrefsBtn.type = 'submit';
+    const prefMsg = el('p', 'm-msg'); prefMsg.setAttribute('role', 'status');
+    prefs.append(prefsHead, labC, intEditor, ol, savePrefsBtn, prefMsg);
+    prefs.addEventListener('submit', async e => {
+      e.preventDefault();
+      savePrefsBtn.disabled = true;
+      prefMsg.textContent = ''; prefMsg.classList.remove('ok');
+      try {
+        await M.update({ country: cInput.value.trim(), interests: [...prefInts], marketing: offers.checked });
+        if (window.BosphorlyAccount) {
+          const cur = window.BosphorlyAccount.profile() || {};
+          window.BosphorlyAccount.saveProfile({ ...cur, country: cInput.value.trim(), interests: [...prefInts] });
+        }
+        prefMsg.classList.add('ok');
+        prefMsg.textContent = UI.savedPrefs;
+        setTimeout(() => { member(); }, 450);
+      } catch (err) {
+        prefMsg.textContent = errorText(err);
+      } finally {
+        savePrefsBtn.disabled = false;
+      }
+    });
+
     // Stamps.
     const st = el('div', 'm-stamps');
     const dots = el('div', 'm-dots'); dots.setAttribute('aria-hidden', 'true');
     for (let i = 0; i < p.stampsGoal; i++) dots.append(el('span', i < p.stamps ? 'on' : null, i < p.stamps ? '★' : '☆'));
     st.append(el('h3', null, T.mStamps), dots, el('p', 'm-fine', f(T.mStampsText, { n: p.stamps, goal: p.stampsGoal })));
+
     // Invite.
     const link = location.origin + location.pathname.replace(/[^/]*$/, '') + 'index.html?ref=' + p.referralCode;
     const inv = el('div', 'm-invite');
@@ -442,21 +667,22 @@
     const share = el('a', 'btn wa', T.mShareWa); share.href = 'mailto:?subject=' + encodeURIComponent('Bosphorly invitation') + '&body=' + encodeURIComponent(f(T.mShareMsg, { url: link })); share.target = '_blank'; share.rel = 'noopener';
     const row = el('div', 'actions'); row.append(copy, share);
     inv.append(el('h3', null, T.mInvite), el('p', 'm-fine', T.mInviteText), linkBox, row);
-    // Settings.
+
+    // Account actions (Sign out + Delete).
     const set = el('div', 'm-settings');
-    const offers = el('input'); offers.type = 'checkbox'; offers.checked = p.marketing; offers.id = 'mOffers';
-    const ol = el('label', 'm-check'); ol.append(offers, el('span', null, T.mOffersToggle));
-    offers.addEventListener('change', async () => { try { await M.update({ marketing: offers.checked }); } catch { offers.checked = !offers.checked; } });
     const out = el('button', 'btn ghost', T.mSignOut); out.type = 'button';
     out.addEventListener('click', async () => { await M.signOut(); signInForm(); });
     const del = el('button', 'btn danger', T.mDelete); del.type = 'button';
     del.addEventListener('click', async () => { if (!confirm(T.mConfirmDelete)) return; try { await M.remove(); signInForm(); } catch { alert(T.mError); } });
     const acts = el('div', 'actions'); acts.append(out, del);
-    set.append(ol, acts);
-    const h3 = el('h3', null, T.mCoupons);
-    box.replaceChildren(hello, sub, h3, list, st, inv, set);
+    set.append(acts);
+
+    box.replaceChildren(hello, sub, tierEl, h3, list, campHead, campSub, campGrid, prefs, st, inv, set);
   }
 
+  window.addEventListener('bosphorly:member-changed', e => {
+    if (!e.detail && M.enabled() && box.querySelector('.m-tier-card')) signInForm();
+  });
   addEventListener('hashchange', () => {
     if (M.enabled() && !M.signedIn()) signInForm(location.hash === '#signup' ? 'signup' : 'signin');
   });

@@ -2169,10 +2169,21 @@
     if (!MB || !MB.enabled()) return;
     MT = await MB.texts();
     if (!MB.signedIn()) { $('couponHintLink').textContent = MT.bSignInHint; $('couponHint').hidden = false; return; }
+    let prof = null;
+    try { prof = await MB.profile(); } catch {}
     coupons = await MB.usableCoupons();
-    if (!coupons.length) return;
+    const vipText = prof && prof.tier === 'platinum'
+      ? (lang === 'tr' ? '💎 Platinum VIP ayrıcalığın aktif: Öncelikli Free Upgrade + VIP servislerde %10 indirim.' : '💎 Platinum VIP active: Priority Free Upgrade + 10% VIP priority discount.')
+      : prof && prof.tier === 'gold'
+        ? (lang === 'tr' ? '🥇 Gold ayrıcalığın aktif: Müsaitliğe göre Free Upgrade + VIP servislerde %5 öncelik.' : '🥇 Gold tier active: Free Upgrade (subject to availability) + 5% VIP priority.')
+        : '';
+    if (!coupons.length) {
+      if (vipText) { $('couponHintLink').textContent = vipText; $('couponHint').hidden = false; }
+      return;
+    }
     const kinds = { welcome: MT.kWelcome, referral: MT.kReferral, hotel: MT.kHotel, second_tour: MT.kSecond, loyalty: MT.kLoyalty };
-    $('couponLabel').textContent = MT.bCoupon; $('couponNote').textContent = MT.bCouponNote;
+    $('couponLabel').textContent = MT.bCoupon;
+    $('couponNote').textContent = vipText ? vipText + ' ' + MT.bCouponNote : MT.bCouponNote;
     const none = document.createElement('option'); none.value = ''; none.textContent = MT.bNoCoupon;
     $('coupon').replaceChildren(none, ...coupons.map(c => { const o = document.createElement('option'); o.value = c.code; o.textContent = MB.fill(MT.mOff, { p: pct(c.percentBps) }) + ' · ' + (kinds[c.kind] || c.kind) + ' · ' + c.code; return o; }));
     $('coupon').value = coupons[0].code;
@@ -2205,6 +2216,12 @@
         coupons = coupons.filter(c => c.code !== coupon.code);
       } else reg.catch(() => {});
     }
+    const memProf = MB && MB.signedIn() ? MB.cachedProfile() : null;
+    const vipNote = memProf && memProf.tier === 'platinum'
+      ? (lang === 'tr' ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount)')
+      : memProf && memProf.tier === 'gold'
+        ? (lang === 'tr' ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %5 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 5% VIP priority)')
+        : null;
     // The snapshot is what a server would store unchanged with the request.
     const snapshot = { reference, recordId: r.id, operator: r.operator, tour: r.title, option: selOption(r)?.name || null, durationMin: selDuration(r)?.min || null, time: $('time').value,
       date: $('date').value, guests: num, currency: r.currency ?? null, unitMinor: q.unitMinor, totalMinor: q.totalMinor,
@@ -2215,7 +2232,7 @@
     const d = document.createElement('dl'); d.className = 'draft';
     const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));
     const rows = [[t.r_ref, snapshot.reference], [t.r_tour, title(r)], ...(selOption(r) ? [[t.r_option, optName(selOption(r))]] : []), ...(selDuration(r) ? [[t.r_duration, selDuration(r).min + ' ' + t.minutes]] : []), [t.r_company, r.operator], [t.r_date, dateText], [t.r_time, $('time').selectedOptions[0].textContent],
-      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), [t.r_name, name], [t.r_phone, phone],
+      [t.r_guests, String(num)], [t.r_unit, q.unit], [t.r_total, q.total], ...(held ? [[MT.bCoupon, held.code + ' (−' + pct(held.percentBps) + ')'], ...(couponTotal(r, q, held) ? [[MT.bAfter, couponTotal(r, q, held)]] : [])] : []), ...(vipNote ? [[lang === 'tr' ? 'Üye ayrıcalığı' : 'Member privilege', vipNote]] : []), [t.r_pay, t.r_cash], ...(window.BosphorlyCurrency?.convert(1, r.currency) ? [[t.r_rate, 'TCMB ' + window.BosphorlyCurrency.rates.date + ' ' + t.rateBasis]] : []), ...(hammamMode ? [[t.r_branch, $('branch').selectedOptions[0].textContent]] : []), ...(hotel ? [[t.r_hotel, hotel + (hammamMode ? '' : ' (' + area.selectedOptions[0].textContent + ')')]] : []), [t.r_name, name], [t.r_phone, phone],
       ...(email ? [[t.r_email, email]] : []), [t.r_source, r.operator + ' · ' + t.r_checked + ' ' + (snapshot.priceChecked || '')],
       [t.r_shownAt, new Intl.DateTimeFormat(loc, { dateStyle: 'medium', timeStyle: 'short' }).format(shownAt)]];
     rows.forEach(([k, v]) => { const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; d.append(dt, dd); });

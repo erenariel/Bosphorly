@@ -1,4 +1,4 @@
-/* One header for every page: brand, navigation, language, currency and quick auth actions. */
+/* One header for every page: brand, navigation, language, currency and quick auth/member status. */
 .site-header{display:block;padding:0;margin:0;background:#0a1753;color:#fff;position:sticky;top:0;z-index:1100;box-shadow:0 2px 12px #0a175326}
 .sh-inner{max-width:1180px;margin:0 auto;padding:10px 20px;display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"brand nav tools" "auth auth auth";align-items:center;column-gap:18px;row-gap:8px}
 .sh-brand{grid-area:brand;display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font:900 20px/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.5px}
@@ -14,18 +14,30 @@
 .sh-search:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
 .sh-tools [data-currency-mount],.sh-tools [data-lang-mount]{display:inline-flex}
 .sh-tools select{appearance:none;-webkit-appearance:none;background:#16236b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23cfe0ff' stroke-width='1.6' fill='none'/%3E%3C/svg%3E") no-repeat right 9px center;border:1px solid #34448a;color:#fff;border-radius:999px;padding:7px 24px 7px 11px;font:700 12.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;max-width:134px;min-height:36px;margin:0;cursor:pointer}
-.sh-tools select:focus-visible,.sh-nav a:focus-visible,.sh-brand:focus-visible,.sh-auth a:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
+.sh-tools select:focus-visible,.sh-nav a:focus-visible,.sh-brand:focus-visible,.sh-auth a:focus-visible,.sh-member-pill:focus-visible,.sh-member-out:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
 .sh-tools select option{color:#0a1753;background:#fff}
 [dir=rtl] .sh-tools select{background-position:left 9px center;padding:7px 11px 7px 24px}
 
-.sh-auth{grid-area:auth;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:6px;border-top:1px solid rgba(159,182,220,.16)}
-.sh-auth[hidden]{display:none!important}
+.sh-auth,.sh-member{grid-area:auth;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:6px;border-top:1px solid rgba(159,182,220,.16);min-width:0}
+.sh-auth[hidden],.sh-member[hidden]{display:none!important}
 .sh-auth-perk{font:700 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#ffd596;margin-inline-end:auto}
 .sh-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;white-space:nowrap;border-radius:999px;padding:8px 14px;font:800 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;transition:transform .15s,background .15s}
 .sh-auth-btn.in{background:#16236b;border:1px solid #3b4fa3;color:#fff}
 .sh-auth-btn.in:hover{background:#1e2f87}
 .sh-auth-btn.up{background:linear-gradient(135deg,#ffbf62,#f4a63a);border:1px solid #ffca7a;color:#0a1753;box-shadow:0 3px 10px rgba(255,191,98,.22)}
 .sh-auth-btn.up:hover{background:linear-gradient(135deg,#ffd085,#f7b454)}
+
+.sh-member-pill{display:inline-flex;align-items:center;gap:8px;max-width:100%;min-width:0;text-decoration:none;background:#142266;border:1px solid #384d9e;color:#fff;border-radius:999px;padding:6px 12px;font:700 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;transition:background .15s}
+.sh-member-pill:hover{background:#1b2c80}
+.sh-member-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.sh-member-tier{border-radius:999px;padding:3px 8px;font-size:11px;font-weight:800;white-space:nowrap;letter-spacing:.2px}
+.sh-member-tier[data-tier=silver]{background:#22346e;color:#dbe8ff;border:1px solid #4d67bd}
+.sh-member-tier[data-tier=gold]{background:linear-gradient(135deg,#ffca63,#e29b22);color:#0a1753;border:1px solid #ffe09a}
+.sh-member-tier[data-tier=platinum]{background:linear-gradient(135deg,#e2d9ff,#8c7aff);color:#100938;border:1px solid #f0ebff}
+.sh-member-coupons{background:#1f4f3c;color:#c2fae0;border:1px solid #358362;border-radius:999px;padding:3px 8px;font-size:11.5px;font-weight:800;white-space:nowrap}
+.sh-member-coupons[hidden]{display:none}
+.sh-member-out{background:transparent;color:#d5e3f5;border:1px solid #3b4fa3;border-radius:999px;padding:7px 12px;font:700 12.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap}
+.sh-member-out:hover{background:#1e2f87;color:#fff}
 
 @media (max-width:900px){
  .sh-inner{grid-template-columns:1fr auto;grid-template-areas:"brand tools" "nav nav" "auth auth";row-gap:9px;padding:10px 14px 10px}
@@ -37,9 +49,13 @@
  .sh-auth{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:6px}
  .sh-auth-perk{display:none}
  .sh-auth-btn{padding:10px 12px;font-size:13.5px}
+ .sh-member{justify-content:space-between;flex-wrap:nowrap;gap:6px}
+ .sh-member-pill{flex:1 1 auto;padding:7px 10px;font-size:12.5px;gap:6px}
+ .sh-member-name{max-width:130px}
+ .sh-member-out{padding:8px 11px;font-size:12px}
 }
 @media (max-width:440px){.sh-brand>span{display:none}.sh-tools{gap:5px}.sh-tools select{max-width:114px}}
-@media (max-width:360px){.sh-tools select{max-width:96px;padding-inline:8px 20px}.sh-auth-btn{font-size:12.5px;padding:9px 10px}}
+@media (max-width:360px){.sh-tools select{max-width:96px;padding-inline:8px 20px}.sh-auth-btn{font-size:12.5px;padding:9px 10px}.sh-member-coupons{display:none}}
 
 /* Korean breaks lines between words, not inside them. */
 html:lang(ko) body{word-break:keep-all;overflow-wrap:anywhere}

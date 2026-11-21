@@ -45,10 +45,10 @@ const str = (v, max) => (typeof v === 'string' && v.trim() && v.length <= max ? 
 const isoDate = v => typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) && new Date(v + 'T00:00:00Z').toISOString().slice(0, 10) === v;
 const maxBps = env => Math.min(5000, Math.max(1, parseInt(env.MAX_DISCOUNT_BPS || '1000', 10) || 1000));
 
-async function readJson(request) {
+async function readJson(request, maxBytes = 4096) {
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) fail(415, 'JSON required');
   const text = await request.text();
-  if (enc.encode(text).length > 4096) fail(413, 'Payload too large');
+  if (enc.encode(text).length > maxBytes) fail(413, 'Payload too large');
   try { const v = JSON.parse(text || '{}'); if (!v || typeof v !== 'object' || Array.isArray(v)) throw 0; return v; } catch { fail(400, 'Invalid JSON'); }
 }
 const bearer = request => (request.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '');
@@ -97,6 +97,31 @@ async function memberFromSession(request, env) {
   return m;
 }
 
+const ALLOWED_INTERESTS = new Set(['cruise', 'transfer', 'oldcity', 'hammam', 'private']);
+function sanitizeInterests(val) {
+  if (!Array.isArray(val)) return [];
+  const out = [];
+  for (const x of val) {
+    if (typeof x === 'string' && ALLOWED_INTERESTS.has(x) && !out.includes(x)) out.push(x);
+    if (out.length >= 5) break;
+  }
+  return out;
+}
+function parseInterests(raw) {
+  if (!raw) return [];
+  try { return sanitizeInterests(JSON.parse(raw)); } catch { return []; }
+}
+function tierInfo(env, fulfilledCount) {
+  const cap = maxBps(env);
+  if (fulfilledCount >= 5) {
+    return { tier: 'platinum', nextTier: null, toursToNextTier: 0, vipPriorityDiscountBps: cap, freeUpgrade: 'priority' };
+  }
+  if (fulfilledCount >= 2) {
+    return { tier: 'gold', nextTier: 'platinum', toursToNextTier: 5 - fulfilledCount, vipPriorityDiscountBps: Math.min(500, cap), freeUpgrade: 'eligible' };
+  }
+  return { tier: 'silver', nextTier: 'gold', toursToNextTier: 2 - fulfilledCount, vipPriorityDiscountBps: 0, freeUpgrade: 'none' };
+}
+
 async function profile(env, m) {
   const now = sqlTime(new Date());
   const coupons = (await env.DB.prepare(
@@ -107,12 +132,19 @@ async function profile(env, m) {
   const requests = (await env.DB.prepare(
     `SELECT ref, service_id, service_date, guests, state FROM member_requests WHERE member_id=? ORDER BY created_at DESC LIMIT 50`).bind(m.id).all()).results
     .map(r => ({ ref: r.ref, serviceId: r.service_id, date: r.service_date, guests: r.guests, state: r.state }));
-  return { email: m.email, name: m.name, lang: m.lang, referralCode: m.referral_code, marketing: !!m.marketing_consent,
-    stamps: m.stamps, stampsGoal: STAMPS_GOAL, coupons, requests };
+  const doneRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
+  const fulfilledCount = Number(doneRow?.n || 0);
+  const ti = tierInfo(env, fulfilledCount);
+  return {
+    email: m.email, name: m.name, lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
+    referralCode: m.referral_code, marketing: !!m.marketing_consent,
+    stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, ...ti, coupons, requests
+  };
 }
 
 // --- routes -------------------------------------------------------------------------------------------
 const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/me', '/v1/me/requests', '/v1/me/delete',
+  '/v1/newsletter/subscribe', '/v1/newsletter/unsubscribe', '/v1/admin/newsletter/send',
   '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns']);
 const OAUTH_PROVIDERS = new Set(['google', 'yandex', 'facebook', 'apple']);
 export const isMemberRoute = path => ROUTES.has(path) || path.startsWith('/v1/auth/oauth/');
@@ -150,12 +182,29 @@ async function verifyState(pepper, stateStr) {
   } catch { return null; }
 }
 
+async function syncNewsletterRow(env, email, lang, interestsArr, active, source = 'member') {
+  const now = sqlTime(new Date());
+  const interestsJson = interestsArr && interestsArr.length ? JSON.stringify(interestsArr) : null;
+  if (active) {
+    await env.DB.prepare(
+      `INSERT INTO newsletter_subscribers (email, lang, interests, source, active, subscribed_at, unsubscribed_at) VALUES (?,?,?,?,1,?,NULL)
+       ON CONFLICT(email) DO UPDATE SET lang=excluded.lang, interests=COALESCE(excluded.interests, newsletter_subscribers.interests), active=1, subscribed_at=excluded.subscribed_at, unsubscribed_at=NULL`)
+      .bind(email, lang, interestsJson, source, now).run();
+  } else {
+    await env.DB.prepare(`UPDATE newsletter_subscribers SET active=0, unsubscribed_at=? WHERE email=?`).bind(now, email).run();
+  }
+}
+
 async function createOrLoadMemberSession(env, rawEmail, body = {}) {
   const email = typeof rawEmail === 'string' ? rawEmail.trim().toLowerCase() : '';
   if (!validEmail(email)) fail(400, 'Invalid e-mail');
   const now = sqlTime(new Date());
   let m = await env.DB.prepare(`SELECT * FROM members WHERE email=?`).bind(email).first();
   const created = !m;
+  const cleanInterests = sanitizeInterests(body.interests);
+  const cleanCountry = str(body.country, 80);
+  const cleanName = str(body.name, 100);
+  const lang = LANGS.includes(body.lang) ? body.lang : 'en';
   if (!m) {
     const referrer = str(body.ref, 20) ? await env.DB.prepare(`SELECT id FROM members WHERE referral_code=?`).bind(body.ref.trim().toUpperCase()).first() : null;
     const hotel = str(body.hotel, 60) ? await env.DB.prepare(`SELECT id FROM hotels WHERE id=? AND status='verified'`).bind(body.hotel.trim()).first() : null;
@@ -163,15 +212,20 @@ async function createOrLoadMemberSession(env, rawEmail, body = {}) {
     const mid = id();
     let code = randomString(8);
     for (let i = 0; i < 3 && await env.DB.prepare(`SELECT 1 AS x FROM members WHERE referral_code=?`).bind(code).first(); i++) code = randomString(8);
-    await env.DB.prepare(`INSERT INTO members (id, email, name, lang, referral_code, referred_by, hotel_id, marketing_consent, marketing_consent_at) VALUES (?,?,?,?,?,?,?,?,?)`)
-      .bind(mid, email, str(body.name, 100), LANGS.includes(body.lang) ? body.lang : 'en', code, referrer ? referrer.id : null, hotel ? hotel.id : null, marketing ? 1 : 0, marketing ? now : null).run();
+    await env.DB.prepare(`INSERT INTO members (id, email, name, lang, country, interests, referral_code, referred_by, hotel_id, marketing_consent, marketing_consent_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
+      .bind(mid, email, cleanName, lang, cleanCountry, cleanInterests.length ? JSON.stringify(cleanInterests) : null, code, referrer ? referrer.id : null, hotel ? hotel.id : null, marketing ? 1 : 0, marketing ? now : null).run();
+    if (marketing) await syncNewsletterRow(env, email, lang, cleanInterests, true, 'signup');
     await issue(env, mid, 'welcome');
     if (hotel) await issue(env, mid, 'hotel', hotel.id);
     m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(mid).first();
-  } else if (!m.name && str(body.name, 100)) {
-    const cleanName = str(body.name, 100);
-    await env.DB.prepare(`UPDATE members SET name=? WHERE id=?`).bind(cleanName, m.id).run();
-    m = { ...m, name: cleanName };
+  } else {
+    const nextName = !m.name && cleanName ? cleanName : m.name;
+    const nextCountry = !m.country && cleanCountry ? cleanCountry : m.country;
+    const nextInterests = !m.interests && cleanInterests.length ? JSON.stringify(cleanInterests) : m.interests;
+    if (nextName !== m.name || nextCountry !== m.country || nextInterests !== m.interests) {
+      await env.DB.prepare(`UPDATE members SET name=?, country=?, interests=? WHERE id=?`).bind(nextName, nextCountry, nextInterests, m.id).run();
+      m = { ...m, name: nextName, country: nextCountry, interests: nextInterests };
+    }
   }
   const t = token();
   await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
@@ -213,11 +267,14 @@ async function handleOAuth(request, env, url) {
     const lang = LANGS.includes(url.searchParams.get('lang')) ? url.searchParams.get('lang') : 'en';
     const ref = str(url.searchParams.get('ref'), 20);
     const hotel = str(url.searchParams.get('hotel'), 60);
+    const country = str(url.searchParams.get('country'), 80);
+    const interests = sanitizeInterests((url.searchParams.get('interests') || '').split(',').map(x => x.trim()).filter(Boolean));
+    const marketing = url.searchParams.get('marketing') === '1';
     if (!avail[provider] || !env.CODE_PEPPER) {
       return redirect(`${pubOrigin}/account.html?lang=${encodeURIComponent(lang)}&oauth_modal=${encodeURIComponent(provider)}#signup`);
     }
     const nonce = randomString(16);
-    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, nonce });
+    const state = await signState(env.CODE_PEPPER, { p: provider, t: Date.now(), lang, ref, hotel, country, interests, marketing, nonce });
     if (provider === 'google') {
       const q = new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, redirect_uri: callbackUrl, response_type: 'code', scope: 'openid email profile', state, prompt: 'select_account' });
       return redirect('https://accounts.google.com/o/oauth2/v2/auth?' + q);
@@ -292,7 +349,10 @@ async function handleOAuth(request, env, url) {
       }
     }
     if (!validEmail(email)) throw 0;
-    const session = await createOrLoadMemberSession(env, email, { name, lang: st.lang, ref: st.ref, hotel: st.hotel });
+    const session = await createOrLoadMemberSession(env, email, {
+      name, lang: st.lang, ref: st.ref, hotel: st.hotel,
+      country: st.country, interests: st.interests, marketing: !!st.marketing
+    });
     return redirect(`${pubOrigin}/account.html#oauth_token=${encodeURIComponent(session.token)}&oauth_provider=${encodeURIComponent(provider)}`);
   } catch {
     return redirect(`${pubOrigin}/account.html?oauth_error=${encodeURIComponent(provider)}#signup`);
@@ -306,8 +366,18 @@ export async function handleMembers(request, env, url) {
     if (p === '/v1/auth/providers' && request.method === 'GET') return json(enabledProviders(env));
     if (p.startsWith('/v1/auth/oauth/')) return await handleOAuth(request, env, url);
     if (request.method === 'GET' && p === '/v1/me') return json(await profile(env, await memberFromSession(request, env)));
+    if (request.method === 'GET' && p === '/v1/newsletter/unsubscribe') {
+      const email = (url.searchParams.get('email') || '').trim().toLowerCase();
+      const sig = url.searchParams.get('sig') || '';
+      if (!validEmail(email) || !env.CODE_PEPPER || !equal(sig, await hmac(env.CODE_PEPPER, 'unsub:' + email))) fail(400, 'Invalid unsubscribe link');
+      await env.DB.batch([
+        env.DB.prepare(`UPDATE newsletter_subscribers SET active=0, unsubscribed_at=? WHERE email=?`).bind(sqlTime(new Date()), email),
+        env.DB.prepare(`UPDATE members SET marketing_consent=0, marketing_consent_at=NULL WHERE email=?`).bind(email)
+      ]);
+      return new Response('<!doctype html><meta charset="utf-8"><title>Bosphorly</title><body style="font-family:system-ui,sans-serif;max-width:520px;margin:60px auto;padding:24px;color:#111"><h1>Newsletter unsubscribed</h1><p>You have been unsubscribed from Bosphorly newsletter updates.</p></body>', { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+    }
     if (request.method !== 'POST') fail(405, 'Method not allowed');
-    const body = await readJson(request);
+    const body = await readJson(request, p === '/v1/admin/newsletter/send' ? 65536 : 4096);
 
     if (p === '/v1/auth/start') {
       if (!env.CODE_PEPPER) fail(503, 'Service unavailable');
@@ -349,10 +419,16 @@ export async function handleMembers(request, env, url) {
       const m = await memberFromSession(request, env);
       const name = body.name === undefined ? m.name : str(body.name, 100);
       const lang = LANGS.includes(body.lang) ? body.lang : m.lang;
+      const country = body.country === undefined ? m.country : str(body.country, 80);
+      const nextInterestsArr = body.interests === undefined ? parseInterests(m.interests) : sanitizeInterests(body.interests);
+      const interests = nextInterestsArr.length ? JSON.stringify(nextInterestsArr) : null;
       const marketing = body.marketing === undefined ? m.marketing_consent : (body.marketing === true ? 1 : 0);
-      await env.DB.prepare(`UPDATE members SET name=?, lang=?, marketing_consent=?, marketing_consent_at=? WHERE id=?`)
-        .bind(name, lang, marketing, marketing ? (m.marketing_consent ? m.marketing_consent_at : sqlTime(new Date())) : null, m.id).run();
-      return json(await profile(env, { ...m, name, lang, marketing_consent: marketing }));
+      const consentAt = marketing ? (m.marketing_consent ? m.marketing_consent_at : sqlTime(new Date())) : null;
+      await env.DB.prepare(`UPDATE members SET name=?, lang=?, country=?, interests=?, marketing_consent=?, marketing_consent_at=? WHERE id=?`)
+        .bind(name, lang, country, interests, marketing, consentAt, m.id).run();
+      if (marketing) await syncNewsletterRow(env, m.email, lang, nextInterestsArr, true, 'member');
+      else if (body.marketing === false) await syncNewsletterRow(env, m.email, lang, [], false);
+      return json(await profile(env, { ...m, name, lang, country, interests, marketing_consent: marketing, marketing_consent_at: consentAt }));
     }
 
     if (p === '/v1/me/requests') {
@@ -379,6 +455,7 @@ export async function handleMembers(request, env, url) {
         env.DB.prepare(`DELETE FROM coupons WHERE member_id=?`).bind(m.id),
         env.DB.prepare(`DELETE FROM sessions WHERE member_id=?`).bind(m.id),
         env.DB.prepare(`DELETE FROM login_codes WHERE email=?`).bind(m.email),
+        env.DB.prepare(`DELETE FROM newsletter_subscribers WHERE email=?`).bind(m.email),
         env.DB.prepare(`DELETE FROM members WHERE id=?`).bind(m.id)
       ]);
       return json({ deleted: true });
@@ -390,11 +467,14 @@ export async function handleMembers(request, env, url) {
       const ref = str(body.ref, 40);
       if (!ref) fail(400, 'Invalid reference');
       const r = await env.DB.prepare(
-        `SELECT r.*, c.code AS coupon_code, c.percent_bps, c.status AS coupon_status, m.name AS member_name
+        `SELECT r.*, c.code AS coupon_code, c.percent_bps, c.status AS coupon_status, m.name AS member_name,
+                (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS fulfilled_count
          FROM member_requests r JOIN members m ON m.id=r.member_id LEFT JOIN coupons c ON c.id=r.coupon_id WHERE r.ref=?`).bind(ref).first();
       if (!r) fail(404, 'Unknown reference');
+      const ti = tierInfo(env, Number(r.fulfilled_count || 0));
       const view = { ref: r.ref, serviceId: r.service_id, date: r.service_date, guests: r.guests, state: r.state,
         firstName: r.member_name ? r.member_name.split(/\s+/)[0] : null,
+        tier: ti.tier, freeUpgrade: ti.freeUpgrade, vipPriorityDiscountBps: ti.vipPriorityDiscountBps,
         coupon: r.coupon_code ? { code: r.coupon_code, percentBps: r.percent_bps, status: r.coupon_status } : null };
       if (p === '/v1/partner/lookup') return json(view);
       if (r.state !== 'requested') fail(409, 'Request already closed');
@@ -424,7 +504,9 @@ export async function handleMembers(request, env, url) {
           const ok = await env.DB.prepare(`UPDATE members SET referral_rewarded=1 WHERE id=? AND referral_rewarded=0`).bind(m.id).run();
           if (ok.meta.changes && await issue(env, m.referred_by, 'referral')) issued.push('referral');
         }
-        return json({ ...view, state: 'fulfilled', coupon: view.coupon ? { ...view.coupon, status: 'redeemed' } : null, issued });
+        const nextTier = tierInfo(env, Number(done.n || 0));
+        return json({ ...view, state: 'fulfilled', tier: nextTier.tier, freeUpgrade: nextTier.freeUpgrade, vipPriorityDiscountBps: nextTier.vipPriorityDiscountBps,
+          coupon: view.coupon ? { ...view.coupon, status: 'redeemed' } : null, issued });
       }
     }
 
@@ -440,6 +522,90 @@ export async function handleMembers(request, env, url) {
          ON CONFLICT(id) DO UPDATE SET percent_bps=excluded.percent_bps, valid_days=excluded.valid_days, active=excluded.active, ends_at=excluded.ends_at`)
         .bind(cid, body.kind, body.percentBps, body.validDays, body.kind === 'hotel' ? body.hotelId.trim() : null, body.active === false ? 0 : 1, str(body.endsAt, 19)).run();
       return json({ saved: cid });
+    }
+
+    if (p === '/v1/newsletter/subscribe') {
+      const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+      if (!validEmail(email)) fail(400, 'Invalid e-mail');
+      const lang = LANGS.includes(body.lang) ? body.lang : 'en';
+      const interests = sanitizeInterests(body.interests);
+      const source = str(body.source, 40) || 'site';
+      await syncNewsletterRow(env, email, lang, interests, true, source);
+      return json({ subscribed: true, email, lang, interests });
+    }
+
+    if (p === '/v1/newsletter/unsubscribe') {
+      const tok = bearer(request);
+      let email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+      if (tok) {
+        const m = await memberFromSession(request, env);
+        email = m.email;
+        await env.DB.prepare(`UPDATE members SET marketing_consent=0, marketing_consent_at=NULL WHERE id=?`).bind(m.id).run();
+      } else {
+        if (!validEmail(email) || !env.CODE_PEPPER || !equal(str(body.sig, 128) || '', await hmac(env.CODE_PEPPER, 'unsub:' + email))) {
+          fail(400, 'Invalid unsubscribe request');
+        }
+        await env.DB.prepare(`UPDATE members SET marketing_consent=0, marketing_consent_at=NULL WHERE email=?`).bind(email).run();
+      }
+      await syncNewsletterRow(env, email, 'en', [], false);
+      return json({ unsubscribed: true, email });
+    }
+
+    if (p === '/v1/admin/newsletter/send') {
+      if (!env.ADMIN_TOKEN || !equal(bearer(request), env.ADMIN_TOKEN)) fail(401, 'Unauthorized');
+      const subject = str(body.subject, 200);
+      const textBody = typeof body.text === 'string' && body.text.trim() && body.text.length <= 20000 ? body.text.trim() : null;
+      const htmlBody = typeof body.html === 'string' && body.html.trim() && body.html.length <= 40000 ? body.html.trim() : null;
+      if (!subject || (!textBody && !htmlBody)) fail(400, 'Subject and body required');
+      const targetLang = LANGS.includes(body.lang) ? body.lang : null;
+      const targetInterest = typeof body.interest === 'string' && ALLOWED_INTERESTS.has(body.interest) ? body.interest : null;
+      const targetTier = ['silver', 'gold', 'platinum'].includes(body.tier) ? body.tier : null;
+      const rows = (await env.DB.prepare(
+        `SELECT ns.email, ns.lang, ns.interests, m.id AS member_id, m.name AS member_name,
+                (SELECT COUNT(*) FROM member_requests r WHERE r.member_id=m.id AND r.state='fulfilled') AS fulfilled_count
+         FROM newsletter_subscribers ns LEFT JOIN members m ON m.email=ns.email
+         WHERE ns.active=1`).all()).results;
+      const recipients = rows.filter(r => {
+        if (targetLang && r.lang !== targetLang) return false;
+        if (targetInterest && !parseInterests(r.interests).includes(targetInterest)) return false;
+        if (targetTier) {
+          if (!r.member_id) return false;
+          if (tierInfo(env, Number(r.fulfilled_count || 0)).tier !== targetTier) return false;
+        }
+        return true;
+      });
+      if (body.dryRun === true) {
+        return json({ dryRun: true, count: recipients.length, recipients: recipients.slice(0, 100).map(r => r.email) });
+      }
+      if (!env.RESEND_API_KEY && env.DEV_RETURN_CODE !== '1') fail(503, 'E-mail provider not configured');
+      const escHtml = s => String(s).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+      let sent = 0, failed = 0;
+      const from = env.MAIL_FROM || 'Bosphorly <no-reply@bosphorly.com>';
+      for (const r of recipients) {
+        const tierLabel = r.member_id ? tierInfo(env, Number(r.fulfilled_count || 0)).tier : 'guest';
+        const firstName = r.member_name ? r.member_name.split(/\s+/)[0] : '';
+        const personalText = (textBody || '').replace(/\{name\}/g, firstName || 'Guest').replace(/\{tier\}/g, tierLabel.toUpperCase());
+        const personalHtml = (htmlBody || '').replace(/\{name\}/g, escHtml(firstName || 'Guest')).replace(/\{tier\}/g, tierLabel.toUpperCase());
+        let unsubUrl = '';
+        if (env.CODE_PEPPER) {
+          const sig = await hmac(env.CODE_PEPPER, 'unsub:' + r.email);
+          unsubUrl = `${url.origin}/v1/newsletter/unsubscribe?email=${encodeURIComponent(r.email)}&sig=${encodeURIComponent(sig)}`;
+        }
+        if (!env.RESEND_API_KEY) { sent++; continue; }
+        const payload = { from, to: [r.email], subject };
+        if (personalText) payload.text = unsubUrl ? `${personalText}\n\n---\nUnsubscribe: ${unsubUrl}` : personalText;
+        if (personalHtml) payload.html = unsubUrl ? `${personalHtml}<hr><p style="font-size:12px;color:#666"><a href="${unsubUrl}">Unsubscribe</a></p>` : personalHtml;
+        if (unsubUrl) payload.headers = { 'List-Unsubscribe': `<${unsubUrl}>` };
+        try {
+          const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: { Authorization: 'Bearer ' + env.RESEND_API_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (res.ok) sent++; else failed++;
+        } catch { failed++; }
+      }
+      return json({ sent, failed, total: recipients.length });
     }
     fail(404, 'Not found');
   } catch (e) {

@@ -40,7 +40,22 @@
     const dir = el('a', 'btn', '📍 ' + t('directions')); dir.href = D.mapsLink(p.lat, p.lng); dir.target = '_blank'; dir.rel = 'noopener';
     act.append(dir);
     if (p.official) { const o = el('a', 'btn', t('official') + ' ↗'); o.href = p.official; o.target = '_blank'; o.rel = 'noopener'; act.append(o); }
-    const wa = el('a', 'btn wa', t('ask')); wa.href = D.emailLink(t('askMsg', { place: p.name }), 'Bosphorly Istanbul inquiry'); wa.target = '_blank'; wa.rel = 'noopener';
+    const ASK_SUB = {
+      en: 'Bosphorly Istanbul inquiry', tr: 'Bosphorly İstanbul sorusu', ru: 'Вопрос по Стамбулу · Bosphorly', uk: 'Запитання про Стамбул · Bosphorly',
+      de: 'Bosphorly Istanbul-Anfrage', fr: 'Demande Istanbul · Bosphorly', nl: 'Vraag over Istanbul · Bosphorly', ar: 'استفسار إسطنبول · Bosphorly',
+      he: 'שאלה על איסטנבול · Bosphorly', az: 'Bosphorly İstanbul sorğusu', fa: 'پرسش درباره استانبول · Bosphorly', es: 'Consulta Estambul · Bosphorly',
+      it: 'Richiesta Istanbul · Bosphorly', pt: 'Dúvida Istambul · Bosphorly', hr: 'Upit Istanbul · Bosphorly', hu: 'Bosphorly Isztambul kérdés',
+      bs: 'Upit Istanbul · Bosphorly', zh: 'Bosphorly 伊斯坦布尔咨询', ja: 'Bosphorly イスタンブールのお問い合わせ', ko: 'Bosphorly 이스탄불 문의',
+      hi: 'Bosphorly इस्तांबुल पूछताछ', bn: 'Bosphorly ইস্তাম্বুল জিজ্ঞাসা', id: 'Pertanyaan Istanbul · Bosphorly'
+    };
+    const M = window.BosphorlyMember;
+    const mp = M && M.signedIn() ? M.cachedProfile() : null;
+    const msgLines = [
+      t('askMsg', { place: p.name }),
+      mp && (mp.name || mp.email) ? [mp.name, mp.email, mp.tier ? mp.tier.toUpperCase() : null].filter(Boolean).join(' · ') : null,
+      'Language: ' + D.lang.toUpperCase()
+    ].filter(Boolean);
+    const wa = el('a', 'btn wa', t('ask')); wa.href = D.emailLink(msgLines.join('\n'), (ASK_SUB[D.lang] || ASK_SUB.en) + ' · ' + p.name);
     act.append(wa);
     c.append(act);
     return c;

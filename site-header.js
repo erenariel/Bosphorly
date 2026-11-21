@@ -17,7 +17,14 @@
     account: { en: 'My account', tr: 'Hesabım', ru: 'Мой аккаунт', uk: 'Мій акаунт', de: 'Mein Konto', fr: 'Mon compte', nl: 'Mijn account', ar: 'حسابي', he: 'החשבון שלי', az: 'Hesabım', fa: 'حساب من', es: 'Mi cuenta', it: "Il mio account", pt: "Minha conta", hr: "Moj račun", hu: "Fiókom", bs: "Moj račun", zh: "我的账户", ja: "マイアカウント", ko: "내 계정", hi: "मेरा खाता", bn: "আমার অ্যাকাউন্ট", id: "Akun saya" },
     signin: { en: 'Sign in', tr: 'Giriş yap', ru: 'Войти', uk: 'Увійти', de: 'Anmelden', fr: 'Connexion', nl: 'Inloggen', ar: 'تسجيل الدخول', he: 'התחברות', az: 'Daxil ol', fa: 'ورود', es: 'Iniciar sesión', it: 'Accedi', pt: 'Entrar', hr: 'Prijava', hu: 'Belépés', bs: 'Prijava', zh: '登录', ja: 'ログイン', ko: '로그인', hi: 'साइन इन', bn: 'সাইন ইন', id: 'Masuk' },
     signup: { en: 'Create account', tr: 'Hesap oluştur', ru: 'Создать аккаунт', uk: 'Створити акаунт', de: 'Konto erstellen', fr: 'Créer un compte', nl: 'Account aanmaken', ar: 'إنشاء حساب', he: 'יצירת חשבון', az: 'Hesab yarat', fa: 'ایجاد حساب', es: 'Crear cuenta', it: 'Crea account', pt: 'Criar conta', hr: 'Izradi račun', hu: 'Fiók létrehozása', bs: 'Kreiraj račun', zh: '创建账户', ja: 'アカウント作成', ko: '계정 만들기', hi: 'खाता बनाएँ', bn: 'অ্যাকাউন্ট খুলুন', id: 'Buat akun' },
+    signout: { en: 'Sign out', tr: 'Çıkış', ru: 'Выйти', uk: 'Вийти', de: 'Abmelden', fr: 'Déconnexion', nl: 'Uitloggen', ar: 'خروج', he: 'יציאה', az: 'Çıxış', fa: 'خروج', es: 'Salir', it: 'Esci', pt: 'Sair', hr: 'Odjava', hu: 'Kilépés', bs: 'Odjava', zh: '退出', ja: 'ログアウト', ko: '로그아웃', hi: 'साइन आउट', bn: 'সাইন আউট', id: 'Keluar' },
+    coupons: { en: 'coupons', tr: 'kupon', ru: 'купон.', uk: 'купон.', de: 'Gutscheine', fr: 'coupons', nl: 'coupons', ar: 'قسائم', he: 'קופונים', az: 'kupon', fa: 'کوپن', es: 'cupones', it: 'coupon', pt: 'cupons', hr: 'kupona', hu: 'kupon', bs: 'kupona', zh: '优惠券', ja: 'クーポン', ko: '쿠폰', hi: 'कूपन', bn: 'কুপন', id: 'kupon' },
     perk: { en: '🎁 Free membership · 5% welcome coupon', tr: '🎁 Ücretsiz üyelik · %5 hoş geldin kuponu', ru: '🎁 Бесплатно · купон −5% при регистрации', uk: '🎁 Безкоштовно · купон −5% за реєстрацію', de: '🎁 Kostenlos · 5 % Willkommensgutschein', fr: '🎁 Gratuit · coupon de bienvenue −5 %', nl: '🎁 Gratis · 5% welkomstcoupon', ar: '🎁 عضوية مجانية · قسيمة ترحيب 5%', he: '🎁 חברות חינם · קופון 5% מתנה', az: '🎁 Pulsuz üzvlük · 5% xoş gəldin kuponu', fa: '🎁 عضویت رایگان · ۵٪ کوپن خوش‌آمد', es: '🎁 Gratis · cupón de bienvenida del 5 %', it: '🎁 Gratis · coupon di benvenuto del 5%', pt: '🎁 Grátis · cupom de boas-vindas de 5%', hr: '🎁 Besplatno · 5% kupon dobrodošlice', hu: '🎁 Ingyenes · 5% üdvözlő kupon', bs: '🎁 Besplatno · 5% kupon dobrodošlice', zh: '🎁 免费注册 · 享 95 折迎新优惠券', ja: '🎁 無料会員登録 · 5%OFFウェルカムクーポン', ko: '🎁 무료 회원가입 · 5% 웰컴 쿠폰', hi: '🎁 मुफ़्त सदस्यता · 5% वेलकम कूपन', bn: '🎁 বিনামূল্যে সদস্যপদ · ৫% স্বাগত কুপন', id: '🎁 Gratis · kupon selamat datang 5%' }
+  };
+  const TIERS = {
+    silver: ['🥈', 'Silver'],
+    gold: ['🥇', 'Gold'],
+    platinum: ['💎', 'Platinum']
   };
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder
@@ -27,7 +34,8 @@
   header.className = 'site-header';
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
     '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div>' +
-    '<div class="sh-auth" hidden><span class="sh-auth-perk">' + (L.perk[lang] || L.perk.en) + '</span><a class="sh-auth-btn in" href="' + base + 'account.html">👤 ' + (L.signin[lang] || L.signin.en) + '</a><a class="sh-auth-btn up" href="' + base + 'account.html#signup">🎁 ' + (L.signup[lang] || L.signup.en) + '</a></div></div>';
+    '<div class="sh-auth" hidden><span class="sh-auth-perk">' + (L.perk[lang] || L.perk.en) + '</span><a class="sh-auth-btn in" href="' + base + 'account.html">👤 ' + (L.signin[lang] || L.signin.en) + '</a><a class="sh-auth-btn up" href="' + base + 'account.html#signup">🎁 ' + (L.signup[lang] || L.signup.en) + '</a></div>' +
+    '<div class="sh-member" hidden><a class="sh-member-pill" href="' + base + 'account.html"><span class="sh-member-name"></span><span class="sh-member-tier" data-tier="silver"></span><span class="sh-member-coupons" hidden></span></a><button class="sh-member-out" type="button">' + (L.signout[lang] || L.signout.en) + '</button></div></div>';
   const nav = header.querySelector('nav');
   for (const [key, href] of links) {
     const a = document.createElement('a');
@@ -36,11 +44,62 @@
     nav.append(a);
   }
   const authBar = header.querySelector('.sh-auth');
-  const checkAuthBar = () => {
-    const apiLive = !!(window.BOSPHORLY_API && window.BOSPHORLY_API.base);
-    if (authBar && page !== 'account' && apiLive) authBar.hidden = false;
+  const memberBar = header.querySelector('.sh-member');
+  const nameEl = memberBar.querySelector('.sh-member-name');
+  const tierEl = memberBar.querySelector('.sh-member-tier');
+  const couponsEl = memberBar.querySelector('.sh-member-coupons');
+  const outBtn = memberBar.querySelector('.sh-member-out');
+
+  const readCache = () => {
+    try { const raw = localStorage.getItem('bosphorly.member_cache'); return raw ? JSON.parse(raw) : null; } catch { return null; }
   };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkAuthBar); else checkAuthBar();
+  const syncMemberBar = () => {
+    const apiLive = !!(window.BOSPHORLY_API && window.BOSPHORLY_API.base);
+    let session = null;
+    try { session = localStorage.getItem('bosphorly.session'); } catch {}
+    if (!session && location.hash && location.hash.includes('oauth_token=')) {
+      const ot = new URLSearchParams(location.hash.replace(/^#/, '')).get('oauth_token');
+      if (ot) session = ot;
+    }
+    const M = window.BosphorlyMember;
+    const signedIn = M ? M.signedIn() : !!(apiLive && session);
+    if (signedIn) {
+      authBar.hidden = true;
+      memberBar.hidden = false;
+      const prof = (M && M.cachedProfile()) || readCache();
+      const localAcct = window.BosphorlyAccount && window.BosphorlyAccount.profile();
+      const displayName = (prof && (prof.name || prof.email)) || (localAcct && (localAcct.name || localAcct.email)) || (L.account[lang] || L.account.en);
+      nameEl.textContent = '👤 ' + displayName;
+      const tKey = (prof && TIERS[prof.tier]) ? prof.tier : 'silver';
+      const [icon, tName] = TIERS[tKey];
+      tierEl.dataset.tier = tKey;
+      tierEl.textContent = icon + ' ' + tName;
+      const count = prof && typeof prof.usableCouponCount === 'number' ? prof.usableCouponCount : 0;
+      if (count > 0) {
+        couponsEl.textContent = '🎟️ ' + count + ' ' + (L.coupons[lang] || L.coupons.en);
+        couponsEl.hidden = false;
+      } else {
+        couponsEl.hidden = true;
+      }
+    } else {
+      memberBar.hidden = true;
+      authBar.hidden = !(apiLive && page !== 'account');
+    }
+  };
+
+  outBtn.addEventListener('click', async () => {
+    if (window.BosphorlyMember) {
+      await window.BosphorlyMember.signOut();
+    } else {
+      try { localStorage.removeItem('bosphorly.session'); localStorage.removeItem('bosphorly.member_cache'); } catch {}
+    }
+    syncMemberBar();
+  });
+
+  syncMemberBar();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncMemberBar);
+  window.addEventListener('bosphorly:member-changed', syncMemberBar);
+  window.addEventListener('storage', e => { if (!e.key || e.key.startsWith('bosphorly.')) syncMemberBar(); });
   host.replaceWith(header);
 })();
 
