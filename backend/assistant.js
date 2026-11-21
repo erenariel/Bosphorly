@@ -1,6 +1,6 @@
 import knowledge from './knowledge.json' with { type: 'json' };
 
-export const ASSISTANT_MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
+export const ASSISTANT_MODEL = '@cf/zai-org/glm-4.7-flash';
 export const SUPPORTED_LANGS = new Set([
   'tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az',
   'fa', 'es', 'it', 'pt', 'hr', 'hu', 'bs', 'zh', 'ja', 'ko', 'hi', 'bn', 'id'
@@ -252,20 +252,48 @@ function capWords(text, maxWords = 120) {
   return words.slice(0, maxWords).join(' ') + '…';
 }
 
+function extractRawText(raw) {
+  if (typeof raw === 'string') return raw;
+  if (raw && typeof raw.response === 'string') return raw.response;
+  const resultResp = raw && raw.result && raw.result.response;
+  if (typeof resultResp === 'string') return resultResp;
+  const choices = (raw && Array.isArray(raw.choices) && raw.choices) || (raw && raw.result && Array.isArray(raw.result.choices) && raw.result.choices);
+  const choiceContent = choices && choices[0] && choices[0].message && choices[0].message.content;
+  if (typeof choiceContent === 'string') return choiceContent;
+  return '';
+}
+
+function isNonsensicalReply(reply) {
+  const s = String(reply || '').trim();
+  if (!s) return true;
+  if (/^(null|undefined|none|n\/a|\{\}|\[\])$/i.test(s)) return true;
+  if (!/\p{L}{2,}/u.test(s)) return true;
+  return false;
+}
+
 function parseModelOutput(raw) {
-  const text = typeof raw === 'string' ? raw : (raw && typeof raw.response === 'string' ? raw.response : '');
+  const objCandidate =
+    (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
+    (raw && raw.result && typeof raw.result.response === 'object' && raw.result.response !== null && raw.result.response);
+  if (objCandidate && typeof objCandidate.reply === 'string') {
+    return { handoff: Boolean(objCandidate.handoff), reply: objCandidate.reply.trim(), parseFailed: false };
+  }
+
+  const text = extractRawText(raw).replace(/<think>[\s\S]*?<\/think>/gi, '');
   const trimmed = text.trim();
   const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
   if (jsonMatch) {
     try {
       const obj = JSON.parse(jsonMatch[0]);
       if (obj && typeof obj.reply === 'string') {
-        return { handoff: Boolean(obj.handoff), reply: obj.reply.trim() };
+        return { handoff: Boolean(obj.handoff), reply: obj.reply.trim(), parseFailed: false };
       }
-    } catch {}
+    } catch {
+      return { handoff: true, reply: '', parseFailed: true };
+    }
   }
   const handoff = /\[HANDOFF\]/i.test(trimmed);
-  return { handoff, reply: trimmed.replace(/\[HANDOFF\]/gi, '').trim() };
+  return { handoff, reply: trimmed.replace(/\[HANDOFF\]/gi, '').trim(), parseFailed: false };
 }
 
 export async function runAssistant({ message, pageLang = '', telegramLang = '', history = [], env = {}, actorKey = 'anon', now = Date.now() }) {
@@ -352,20 +380,33 @@ export async function runAssistant({ message, pageLang = '', telegramLang = '', 
 
   try {
     const aiResult = await Promise.race([
-      env.AI.run(ASSISTANT_MODEL, { messages, max_tokens: 260, temperature: 0.2 }),
+      env.AI.run(ASSISTANT_MODEL, {
+        messages,
+        max_completion_tokens: 280,
+        temperature: 0.2,
+        chat_template_kwargs: { enable_thinking: false },
+      }),
       new Promise((_, reject) => setTimeout(() => reject(new Error('AI timeout')), AI_TIMEOUT_MS)),
     ]);
     const parsed = parseModelOutput(aiResult);
     let reply = stripExternalLinks(redactSensitive(parsed.reply).text);
-    if (!reply) {
-      return { ok: true, handoff: true, lang, reply: `${warnPrefix}${msg('unknownHandoff', lang)}` };
+    if (parsed.parseFailed || isNonsensicalReply(reply)) {
+      console.warn('assistant_ai_invalid_output', {
+        model: ASSISTANT_MODEL,
+        reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
+      });
+      return { ok: true, handoff: true, fallback: true, lang, reply: `${warnPrefix}${msg('unknownHandoff', lang)}` };
     }
     reply = capWords(reply, 120);
     if (!parsed.handoff && !/bosphorly\.com/i.test(reply) && chunks[0] && chunks[0].url) {
       reply = `${reply}\n${chunks[0].url}`;
     }
     return { ok: true, handoff: parsed.handoff, lang, reply: `${warnPrefix}${reply}` };
-  } catch {
+  } catch (err) {
+    console.error('assistant_ai_call_failed', {
+      model: ASSISTANT_MODEL,
+      errorType: err && err.name ? String(err.name) : 'Error',
+    });
     return {
       ok: true,
       handoff: true,

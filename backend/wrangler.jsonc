@@ -1,6 +1,6 @@
 {
  "name": "bosphorly-booking", "main": "worker.js", "compatibility_date": "2026-11-16",
- "workers_dev": true, "preview_urls": false, "observability": {"enabled": false},
+ "workers_dev": true, "preview_urls": false, "observability": {"enabled": true},
  "d1_databases": [{"binding":"DB","database_name":"bosphorly-booking","database_id":"e833157a-839a-4834-95b0-dc92a66598be","migrations_dir":"migrations"}],
  "ai": {"binding": "AI"},
  "vars": {"PUBLIC_ORIGIN":"https://bosphorly.com","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@notify.bosphorly.com>","ASSISTANT_DAILY_LIMIT":"200"},

@@ -152,7 +152,9 @@ test('invalid Turnstile token is rejected with 403 and CORS is restricted to PUB
   assert.equal((await worker.fetch(badOrigin, baseEnv())).status, 403);
 });
 
-test('AI error falls back silently to handoff', async () => {
+test('AI error or empty/nonsensical output falls back silently to handoff', async () => {
+  assert.equal(ASSISTANT_MODEL, '@cf/zai-org/glm-4.7-flash');
+
   const res = await runAssistant({
     message: 'Bosphorus cruise schedule?',
     pageLang: 'en',
@@ -162,6 +164,66 @@ test('AI error falls back silently to handoff', async () => {
   assert.equal(res.ok, true);
   assert.equal(res.handoff, true);
   assert.equal(res.fallback, true);
+
+  for (const bad of ['', '   ', '...', '{}', 'null', { choices: [{ message: { content: '   ' } }] }, { response: '{"handoff":false,"reply":"..."}' }]) {
+    const r = await runAssistant({
+      message: 'Bosphorus cruise schedule?',
+      pageLang: 'tr',
+      env: { AI: { run: async () => (typeof bad === 'string' ? { response: bad } : bad) } },
+      actorKey: `test-ai-bad-${Math.random()}`,
+    });
+    assert.equal(r.ok, true);
+    assert.equal(r.handoff, true);
+    assert.equal(r.fallback, true);
+  }
+
+  const choicesRes = await runAssistant({
+    message: 'IST airport transfer price?',
+    pageLang: 'en',
+    env: {
+      AI: {
+        run: async () => ({
+          choices: [{ message: { content: JSON.stringify({ handoff: false, reply: 'IST to Sultanahmet is €60. https://bosphorly.com/booking.html' }) } }],
+        }),
+      },
+    },
+    actorKey: 'test-ai-choices',
+  });
+  assert.equal(choicesRes.ok, true);
+  assert.equal(choicesRes.handoff, false);
+  assert.ok(choicesRes.reply.includes('€60'));
+
+  const objRes = await runAssistant({
+    message: 'IST airport transfer price?',
+    pageLang: 'en',
+    env: {
+      AI: {
+        run: async () => ({
+          response: { handoff: false, reply: 'IST to Sultanahmet is €60. https://bosphorly.com/booking.html' },
+        }),
+      },
+    },
+    actorKey: 'test-ai-obj',
+  });
+  assert.equal(objRes.ok, true);
+  assert.equal(objRes.handoff, false);
+  assert.ok(objRes.reply.includes('€60'));
+
+  const resultNestedRes = await runAssistant({
+    message: 'SAW airport transfer price?',
+    pageLang: 'en',
+    env: {
+      AI: {
+        run: async () => ({
+          result: { response: JSON.stringify({ handoff: false, reply: 'SAW to Sultanahmet is €65. https://bosphorly.com/booking.html' }) },
+        }),
+      },
+    },
+    actorKey: 'test-ai-result-nested',
+  });
+  assert.equal(resultNestedRes.ok, true);
+  assert.equal(resultNestedRes.handoff, false);
+  assert.ok(resultNestedRes.reply.includes('€65'));
 });
 
 test('assistant handoff forwards conversation to info@bosphorly.com with Reply-To', async t => {
