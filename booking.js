@@ -2277,6 +2277,8 @@
     // Optional direct delivery (mail Worker), no email account needed; the guest's email is the Reply-To.
     if (window.addDirectDelivery) window.addDirectDelivery(box, { reference: snapshot.reference, kind: hammamMode ? 'hammam' : 'tour', service: title(r).slice(0, 160),
       name, phone, email, date: snapshot.date, guests: num, message: lines.join('\n'), consent: true }, lang);
+    const tgAfter = window.BosphorlyTelegram && window.BosphorlyTelegram.createLink({ key: 'afterSubmit', lang, className: 'tg-after' });
+    if (tgAfter) box.append(tgAfter);
     box.hidden = false; box.focus();
     if (window.BosphorlyAccount) {
       window.BosphorlyAccount.saveProfile({ name, phone, email, hotel });

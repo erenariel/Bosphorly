@@ -103,20 +103,31 @@
   host.replaceWith(header);
 })();
 
-// Footer privacy link in the visitor's language, followed by the corporate email.
+// Footer privacy link in the visitor's language, followed by the corporate email and Telegram button.
 (() => {
   const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
+  const scriptSrc = document.currentScript && document.currentScript.src;
+  const base = window.BOSPHORLY_BASE || (scriptSrc ? new URL('.', scriptSrc).href : '');
   const P = {"en": "Privacy", "tr": "Gizlilik", "ru": "Конфиденциальность", "uk": "Конфіденційність", "de": "Datenschutz", "fr": "Confidentialité", "nl": "Privacy", "ar": "الخصوصية", "he": "פרטיות", "az": "Məxfilik", "fa": "حریم خصوصی", "es": "Privacidad", "it": "Privacy", "pt": "Privacidade", "hr": "Privatnost", "hu": "Adatvédelem", "bs": "Privatnost", "zh": "隐私", "ja": "プライバシー", "ko": "개인정보", "hi": "गोपनीयता", "bn": "গোপনীয়তা", "id": "Privasi"};
   const run = () => document.querySelectorAll('a.privacy-link').forEach(a => {
     a.textContent = '🔒 ' + (P[lang] || P.en) + ' · KVKK';
     // Corporate email next to it, once.
-    if (a.parentNode.querySelector('a.mail-link')) return;
-    const m = document.createElement('a');
-    m.className = 'mail-link'; m.href = 'mailto:info@bosphorly.com'; m.textContent = '✉ info@bosphorly.com';
-    m.style.textDecoration = 'underline'; m.style.whiteSpace = 'nowrap';
-    a.after(' · ', m);
+    if (!a.parentNode.querySelector('a.mail-link')) {
+      const m = document.createElement('a');
+      m.className = 'mail-link'; m.href = 'mailto:info@bosphorly.com'; m.textContent = '✉ info@bosphorly.com';
+      m.style.textDecoration = 'underline'; m.style.whiteSpace = 'nowrap';
+      a.after(' · ', m);
+    }
+    if (!a.parentNode.querySelector('a.tg-foot') && window.BosphorlyTelegram) {
+      const tg = window.BosphorlyTelegram.createLink({ key: 'ask', lang, base, className: 'tg-foot' });
+      if (tg) {
+        const anchor = a.parentNode.querySelector('a.mail-link') || a;
+        anchor.after(' ', tg);
+      }
+    }
   });
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
 })();
+
 

@@ -1,5 +1,6 @@
 import {
   ASSISTANT_MESSAGES,
+  SUPPORTED_LANGS,
   detectLanguage,
   forwardConversationEmail,
   isAffirmative,
@@ -223,6 +224,14 @@ async function clearState(env, chatId) {
   await env.DB.prepare('DELETE FROM telegram_handoff_state WHERE chat_id = ?').bind(String(chatId)).run();
 }
 
+export function parseStartPayloadLang(text) {
+  const m = String(text || '').trim().match(/^\/start(?:@\w+)?(?:\s+([^\s]+))?/i);
+  if (!m || !m[1]) return '';
+  let code = m[1].trim().toLowerCase().split(/[-_]/)[0];
+  if (code === 'in') code = 'id';
+  return SUPPORTED_LANGS.has(code) ? code : '';
+}
+
 export async function handleTelegramWebhook(request, env) {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
@@ -253,15 +262,25 @@ export async function handleTelegramWebhook(request, env) {
   const tgUser = msg.from && msg.from.username ? `@${msg.from.username}` : '';
   const text = msg.text.trim();
   const telegramLang = (msg.from && msg.from.language_code) || '';
-  const lang = detectLanguage({ message: text, telegramLang });
 
-  if (/^\/(start|help)\b/i.test(text)) {
-    await clearState(env, chatId);
-    await sendTelegramMessage(env, chatId, t('welcome', lang));
-    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  if (/^\/start(?:@\w+)?(?:\s|$)/i.test(text)) {
+    const payloadLang = parseStartPayloadLang(text);
+    const welcomeLang = payloadLang || detectLanguage({ message: '', telegramLang });
+    await saveState(env, chatId, 0, welcomeLang, []);
+    await sendTelegramMessage(env, chatId, t('welcome', welcomeLang));
+    return new Response(JSON.stringify({ ok: true, lang: welcomeLang }), { status: 200 });
   }
 
   const state = await getState(env, chatId);
+  const savedLang = state && state.lang ? state.lang : '';
+  const lang = detectLanguage({ message: text, pageLang: savedLang, telegramLang });
+
+  if (/^\/help(?:@\w+)?(?:\s|$)/i.test(text)) {
+    const helpLang = savedLang || detectLanguage({ message: '', telegramLang });
+    await saveState(env, chatId, 0, helpLang, []);
+    await sendTelegramMessage(env, chatId, t('welcome', helpLang));
+    return new Response(JSON.stringify({ ok: true, lang: helpLang }), { status: 200 });
+  }
 
   if (/^\/cancel\b|^iptal$/i.test(text) && state && state.pendingHandoff > 0) {
     await clearState(env, chatId);
@@ -328,6 +347,7 @@ export async function handleTelegramWebhook(request, env) {
   const history = state ? state.history : [];
   const res = await runAssistant({
     message: text,
+    pageLang: savedLang,
     telegramLang,
     history,
     env,

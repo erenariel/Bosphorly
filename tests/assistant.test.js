@@ -570,3 +570,145 @@ test('telegram webhook asks handoff confirmation then forwards linked member ema
   assert.ok(!sentEmail.text.includes('Telegram chat ID'));
   assert.ok(tgReplies[1] && tgReplies[1].text.includes('info@bosphorly.com'));
 });
+
+test('telegram-cta builds https://t.me/<bot>?start=<lang> for all 23 languages and hides when telegramBot is empty', () => {
+  const ctaSrc = readFileSync(new URL('../telegram-cta.js', import.meta.url), 'utf8');
+  const loadCta = (telegramBot) => {
+    const win = { BOSPHORLY_API: { telegramBot } };
+    const makeEl = (tag) => {
+      const attrs = {};
+      const children = [];
+      return {
+        tagName: tag.toUpperCase(),
+        hidden: false,
+        children,
+        setAttribute(k, v) { attrs[k] = String(v); },
+        getAttribute(k) { return attrs[k] ?? null; },
+        removeAttribute(k) { delete attrs[k]; if (k === 'href') delete this.href; },
+        querySelector(sel) {
+          if (sel === 'img.tg-ico') return children.find((c) => c.tagName === 'IMG') || null;
+          if (sel === 'span') return children.find((c) => c.tagName === 'SPAN') || null;
+          return null;
+        },
+        replaceChildren(...nodes) { children.splice(0, children.length, ...nodes); },
+      };
+    };
+    const doc = { currentScript: null, createElement: makeEl };
+    new Function('window', 'document', ctaSrc)(win, doc);
+    return { tg: win.BosphorlyTelegram, makeEl };
+  };
+
+  const { tg } = loadCta('BosphorlyBot');
+  for (const [key, map] of Object.entries(tg.TEXT)) {
+    for (const lang of ALL_23_LANGS) {
+      assert.ok(typeof map[lang] === 'string' && map[lang].trim().length > 0, `telegram-cta TEXT.${key}.${lang}`);
+    }
+  }
+  for (const lang of ALL_23_LANGS) {
+    assert.equal(tg.url(lang), `https://t.me/BosphorlyBot?start=${lang}`);
+  }
+  assert.equal(tg.url('he-IL'), 'https://t.me/BosphorlyBot?start=he');
+  assert.equal(tg.url('in'), 'https://t.me/BosphorlyBot?start=id');
+
+  const { tg: tgAt } = loadCta('@BosphorlyBot');
+  assert.equal(tgAt.url('tr'), 'https://t.me/BosphorlyBot?start=tr');
+
+  for (const emptyVal of ['', '   ', null, undefined]) {
+    const { tg: emptyTg, makeEl } = loadCta(emptyVal);
+    assert.equal(emptyTg.url('he'), '');
+    assert.equal(emptyTg.createLink({ key: 'ask', lang: 'he' }), null);
+    const el = makeEl('a');
+    el.href = 'https://t.me/old';
+    assert.equal(emptyTg.fillLink(el, { key: 'ask', lang: 'he' }), false);
+    assert.equal(el.hidden, true);
+    assert.equal(el.href, undefined);
+  }
+});
+
+test('telegram webhook /start <lang> sends welcome in payload lang, saves chat lang, and falls back to language_code', async t => {
+  const pepper = 'test-pepper-123';
+  const secret = await computeTelegramWebhookSecret(pepper);
+  const tgReplies = [];
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    if (String(url).includes('api.telegram.org')) {
+      tgReplies.push(JSON.parse(init.body));
+      return Response.json({ ok: true });
+    }
+    return Response.json({ ok: true });
+  });
+
+  const tgState = new Map();
+  const mockDb = {
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        first: async () => {
+          if (sql.includes('telegram_handoff_state')) return tgState.get(args[0]) || null;
+          return null;
+        },
+        run: async () => {
+          if (sql.includes('INSERT INTO telegram_handoff_state')) {
+            tgState.set(args[0], {
+              pending_handoff: args[1],
+              lang: args[2],
+              context_json: args[3],
+              updated_at: args[4],
+            });
+          } else if (sql.includes('DELETE FROM telegram_handoff_state')) {
+            tgState.delete(args[0]);
+          }
+          return { success: true };
+        },
+      }),
+    }),
+  };
+
+  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: mockDb });
+
+  // 1. /start he overrides language_code ("en") and saves "he" for chat 111
+  const resHe = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+    body: JSON.stringify({
+      message: { chat: { id: 111, type: 'private' }, from: { id: 111, language_code: 'en' }, text: '/start he' },
+    }),
+  }), env);
+  assert.equal(resHe.status, 200);
+  assert.equal(tgReplies[0].text, TG_TEXT.welcome.he);
+  assert.equal(tgState.get('111')?.lang, 'he');
+
+  // Subsequent Latin smalltalk in chat 111 uses saved "he" language instead of language_code "en"
+  const resFollow = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+    body: JSON.stringify({
+      message: { chat: { id: 111, type: 'private' }, from: { id: 111, language_code: 'en' }, text: 'Hello' },
+    }),
+  }), env);
+  assert.equal(resFollow.status, 200);
+  assert.equal(tgReplies[1].text, ASSISTANT_MESSAGES.greeting.he);
+
+  // 2. /start without payload uses from.language_code ("tr") and saves "tr"
+  const resTr = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+    body: JSON.stringify({
+      message: { chat: { id: 222, type: 'private' }, from: { id: 222, language_code: 'tr' }, text: '/start' },
+    }),
+  }), env);
+  assert.equal(resTr.status, 200);
+  assert.equal(tgReplies[2].text, TG_TEXT.welcome.tr);
+  assert.equal(tgState.get('222')?.lang, 'tr');
+
+  // 3. /start without payload and without language_code falls back to "en"
+  const resEn = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+    body: JSON.stringify({
+      message: { chat: { id: 333, type: 'private' }, from: { id: 333 }, text: '/start' },
+    }),
+  }), env);
+  assert.equal(resEn.status, 200);
+  assert.equal(tgReplies[3].text, TG_TEXT.welcome.en);
+  assert.equal(tgState.get('333')?.lang, 'en');
+});
+
