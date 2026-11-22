@@ -9,6 +9,7 @@ import {
   SUPPORTED_LANGS,
   TIME_GREETINGS,
   capEmojis,
+  classifySmallTalk,
   createChatSessionToken,
   detectLanguage,
   extractGuestName,
@@ -1359,4 +1360,101 @@ test('per-actor rate limit (6/min) and global daily limit still enforce when usi
   const busyData = await dailyBusy.json();
   assert.equal(busyData.busy, true);
   assert.equal(busyData.handoff, true);
+});
+
+// Casual chat: only the opening plain hello gets the canned welcome; everything else is answered by the model.
+function chatModel(reply, extra = {}) {
+  const calls = [];
+  return {
+    calls,
+    env: { AI: { run: async (model, opts) => { calls.push(opts); return { response: JSON.stringify({ abuse: false, handoff: false, reply, ...extra }) }; } } },
+  };
+}
+
+test('small talk questions go to the model with a casual-chat prompt and no handoff', async () => {
+  const cases = [
+    { message: 'nasılsın', pageLang: 'tr' },
+    { message: 'how are you', pageLang: 'en' },
+    { message: 'מה נשמע', pageLang: 'he' },
+    { message: 'кто ты', pageLang: 'ru' },
+    { message: 'futbol sever misin?', pageLang: 'tr' },
+    { message: 'çok yorgunum', pageLang: 'tr' },
+  ];
+  for (const c of cases) {
+    const m = chatModel('Çok iyiyim, Boğaz’dan esen rüzgârla enerji doldum 😊 Sen nasılsın?');
+    const res = await runAssistant({ ...c, env: m.env, actorKey: `chat-${c.message}` });
+    assert.equal(m.calls.length, 1, `model called for "${c.message}"`);
+    assert.equal(res.handoff, false, `handoff=false for "${c.message}"`);
+    assert.ok(!res.handoffOffer, `no handoff offer for "${c.message}"`);
+    assert.ok(res.reply.includes('Boğaz'), `model reply used for "${c.message}"`);
+    const system = m.calls[0].messages[0].content;
+    assert.ok(system.includes('SOHBET (CASUAL CHAT)'), 'chat rules in the system prompt');
+    assert.ok(system.includes('never claim to be human'), 'Mimo never claims to be human');
+  }
+  assert.equal(classifySmallTalk('nasılsın'), 'chat');
+  assert.equal(classifySmallTalk('how are you'), 'chat');
+  assert.equal(classifySmallTalk('Merhaba'), 'greeting');
+  assert.equal(classifySmallTalk('Merhaba?'), 'chat');
+});
+
+test('small talk asks the model for a short, warm reply without catalog context and keeps handoff off', async () => {
+  const m = chatModel('İyiyim, teşekkürler! Sen nasılsın?', { handoff: true });
+  const res = await runAssistant({ message: 'nasılsın', pageLang: 'tr', env: m.env, actorKey: 'chat-handoff-ignored' });
+  assert.equal(res.handoff, false);
+  assert.ok(!res.handoffOffer);
+  assert.equal(res.reply, 'İyiyim, teşekkürler! Sen nasılsın?');
+  const system = m.calls[0].messages[0].content;
+  assert.ok(system.includes('THIS MESSAGE IS SMALL TALK'));
+  assert.ok(system.includes('(Small talk: no catalog context needed.)'));
+  assert.ok(m.calls[0].temperature > 0.2, 'livelier temperature for casual chat');
+});
+
+test('the canned welcome is only for an opening plain hello; a hello mid-conversation goes to the model', async () => {
+  const first = chatModel('should not be used');
+  const opening = await runAssistant({ message: 'merhaba', pageLang: 'tr', env: first.env, actorKey: 'hello-first' });
+  assert.equal(first.calls.length, 0, 'opening hello does not call the model');
+  assert.ok(opening.reply.includes(ASSISTANT_MESSAGES.greeting.tr));
+
+  const second = chatModel('Tekrar merhaba! Bugün İstanbul’da neler yapıyorsun?');
+  const again = await runAssistant({
+    message: 'merhaba',
+    pageLang: 'tr',
+    history: [{ role: 'user', content: 'merhaba' }, { role: 'assistant', content: opening.reply }],
+    env: second.env,
+    actorKey: 'hello-second',
+  });
+  assert.equal(second.calls.length, 1, 'second hello goes to the model');
+  assert.ok(!again.reply.includes(ASSISTANT_MESSAGES.greeting.tr), 'no repeated introduction');
+
+  for (const message of ['teşekkürler', 'görüşürüz']) {
+    const m = chatModel('Rica ederim, iyi geziler!');
+    const res = await runAssistant({ message, pageLang: 'tr', history: [{ role: 'assistant', content: 'Selam!' }], env: m.env, actorKey: `chat-${message}` });
+    assert.equal(m.calls.length, 1, `"${message}" goes to the model`);
+    assert.equal(res.handoff, false);
+  }
+});
+
+test('Mimo does not send the same reply twice in a row', async () => {
+  const replies = ['Harika bir gün! Sen nasılsın?', 'Bugün enerjim yerinde 😊 Senin günün nasıl geçiyor?'];
+  const calls = [];
+  const env = { AI: { run: async (model, opts) => { calls.push(opts); return { response: JSON.stringify({ handoff: false, reply: replies[Math.min(calls.length - 1, 1)] }) }; } } };
+  const res = await runAssistant({
+    message: 'nasılsın',
+    pageLang: 'tr',
+    history: [{ role: 'user', content: 'nasılsın' }, { role: 'assistant', content: 'Harika bir gün! Sen nasılsın?' }],
+    env,
+    actorKey: 'no-repeat',
+  });
+  assert.equal(calls.length, 2, 'model asked once more after a repeated reply');
+  assert.equal(res.reply, replies[1]);
+});
+
+test('political questions: the prompt tells Mimo to change the subject kindly, and the reply is not a handoff', async () => {
+  const m = chatModel('Siyasete girmeyeyim 😊 Ama İstanbul’da hangi semtleri gezmeyi düşünüyorsun?');
+  const res = await runAssistant({ message: 'Seçimlerde kime oy vermeliyim?', pageLang: 'tr', env: m.env, actorKey: 'politics' });
+  assert.equal(m.calls.length, 1);
+  assert.equal(res.handoff, false);
+  assert.ok(!res.handoffOffer);
+  assert.ok(m.calls[0].messages[0].content.includes('do not enter political or religious debates (kindly change the subject'));
+  assert.ok(res.reply.includes('İstanbul'));
 });

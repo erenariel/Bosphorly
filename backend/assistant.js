@@ -743,8 +743,13 @@ const SMALL_TALK_THANK_RE = /(?:^|[^\p{L}])(teşekkür\w*|sağ ol\w*|eyvallah|th
 
 const SMALL_TALK_BYE_RE = /(?:^|[^\p{L}])(görüşürüz|hoşça kal\w*|güle güle|bye|goodbye|see you|farewell|пока|до свидания|бувай|до побачення|tschüss|auf wiedersehen|au revoir|à bientôt|tot ziens|doei|مع السلامة|إلى اللقاء|להתראות|ביי|görüşənədək|xudahafiz|خداحافظ|adiós|hasta luego|arrivederci|tchau|até logo|doviđenja|viszlát|sampai jumpa|अलविदा|বিদায়|再见|拜拜|さようなら|안녕히 가세요)(?=$|[^\p{L}])/iu;
 
-const SMALL_TALK_GREET_RE = /(?:^|[^\p{L}])(merhaba|selam\w*|günaydın|iyi akşamlar|iyi günler|nasılsın\w*|kimsin\w*|ne yapabilirsin|hello|hi|hey|good morning|good afternoon|good evening|how are you|who are you|what can you do|привет|здравствуйте|добрый день|доброе утро|добрый вечер|как дела|кто ты|что ты умеешь|привіт|вітаю|добрий день|добрий ранок|hallo|guten tag|guten morgen|guten abend|wie geht es|wer bist du|bonjour|salut|bonsoir|comment ça va|hoi|goedemorgen|goedemiddag|goedenavond|مرحبا|أهلا|اهلا|السلام عليكم|صباح الخير|مساء الخير|كيف حالك|שלום|היי|בוקר טוב|ערב טוב|מה נשמע|salam|sabahınız xeyir|necəsən|سلام|درود|صبح بخیر|حالت چطوره|hola|buenos días|buenas tardes|buenas noches|ciao|buongiorno|buonasera|salve|olá|oi|bom dia|boa tarde|boa noite|bok|pozdrav|dobro jutro|dobar dan|zdravo|ćao|szia|helló|jó reggelt|jó napot|halo|hai|selamat pagi|selamat siang|selamat malam|apa kabar|नमस्ते|नमस्कार|হ্যালো|নমস্কার|সালাম|你好|您好|早上好|晚上好|こんにちは|こんばんは|おはよう|안녕하세요|안녕)(?=$|[^\p{L}])/iu;
+const SMALL_TALK_GREET_RE = /(?:^|[^\p{L}])(merhaba|selam\w*|günaydın|iyi akşamlar|iyi günler|hello|hi|hey|good morning|good afternoon|good evening|привет|здравствуйте|добрый день|доброе утро|добрый вечер|привіт|вітаю|добрий день|добрий ранок|hallo|guten tag|guten morgen|guten abend|bonjour|salut|bonsoir|hoi|goedemorgen|goedemiddag|goedenavond|مرحبا|أهلا|اهلا|السلام عليكم|صباح الخير|مساء الخير|שלום|היי|בוקר טוב|ערב טוב|salam|sabahınız xeyir|سلام|درود|صبح بخیر|hola|buenos días|buenas tardes|buenas noches|ciao|buongiorno|buonasera|salve|olá|oi|bom dia|boa tarde|boa noite|bok|pozdrav|dobro jutro|dobar dan|zdravo|ćao|szia|helló|jó reggelt|jó napot|halo|hai|selamat pagi|selamat siang|selamat malam|नमस्ते|नमस्कार|হ্যালো|নমস্কার|সালাম|你好|您好|早上好|晚上好|こんにちは|こんばんは|おはよう|안녕하세요|안녕)(?=$|[^\p{L}])/iu;
 
+// Small-talk questions ("how are you", "who are you", "what can you do"): always answered by the model, never by a canned text.
+const SMALL_TALK_CHAT_RE = /(?:^|[^\p{L}])(nasılsın\w*|naber|ne haber|nasıl gidiyor|kimsin\w*|ne yapabilirsin|neler yapabilirsin|how are you|how's it going|how are things|what's up|whats up|who are you|what can you do|как дела|как ты|как поживаешь|кто ты|что ты умеешь|як справи|хто ти|що ти вмієш|wie geht es|wie geht's|wer bist du|was kannst du|comment ça va|ça va|qui es-tu|qui es tu|hoe gaat het|wie ben jij|كيف حالك|كيفك|من أنت|ماذا تستطيع|מה נשמע|מה שלומך|מי אתה|מה אתה יודע לעשות|necəsən|nə var nə yox|sən kimsən|حالت چطوره|چطوری|خوبی|تو کی هستی|cómo estás|qué tal|quién eres|qué puedes hacer|come stai|come va|chi sei|cosa sai fare|como vai|como está|tudo bem|quem é você|kako si|tko si|ko si|šta možeš|hogy vagy|ki vagy|apa kabar|siapa kamu|kamu bisa apa|कैसे हो|आप कैसे हैं|तुम कौन हो|কেমন আছেন|কেমন আছো|তুমি কে|你好吗|你是谁|你会做什么|お元気ですか|元気|あなたは誰|誰ですか|잘 지내|어떻게 지내|누구세요|넌 누구야)(?=$|[^\p{L}])/iu;
+
+// Returns 'greeting' only for a plain hello (no question), 'chat' for small-talk questions, 'thanks' or 'goodbye'.
+// Only a plain 'greeting' at the start of a conversation gets the canned welcome; everything else goes to the model.
 export function classifySmallTalk(message) {
   const t = String(message || '').trim();
   if (!t) return null;
@@ -754,8 +759,17 @@ export function classifySmallTalk(message) {
   if (wordCount > 8) return null;
   if (SMALL_TALK_THANK_RE.test(t)) return 'thanks';
   if (SMALL_TALK_BYE_RE.test(t)) return 'goodbye';
-  if (SMALL_TALK_GREET_RE.test(t)) return 'greeting';
+  if (SMALL_TALK_CHAT_RE.test(t)) return 'chat';
+  if (SMALL_TALK_GREET_RE.test(t)) return /[?？؟]/.test(t) || wordCount > 4 ? 'chat' : 'greeting';
   return null;
+}
+
+// Was the last assistant reply word-for-word the same? (Compared without spacing, case or trailing punctuation.)
+function sameAsLastReply(reply, history) {
+  const last = [...history].reverse().find((h) => h.role === 'assistant');
+  if (!last) return false;
+  const norm = (x) => String(x || '').toLowerCase().replace(/\s+/g, ' ').replace(/[.!?…\s]+$/u, '').trim();
+  return norm(reply) !== '' && norm(reply) === norm(last.content);
 }
 
 export function isSmallTalk(message) {
@@ -1063,21 +1077,18 @@ export async function runAssistant({
   const aiIdentityAsked = isAiIdentityQuestion(cleanMsg);
 
   const smallTalkKind = classifySmallTalk(cleanMsg);
-  if (smallTalkKind) {
-    let baseReply = msg(smallTalkKind, lang);
-    if (smallTalkKind === 'greeting') {
+  const cannedSmallTalk = (kind) => {
+    let baseReply = msg(kind === 'chat' ? 'greeting' : kind, lang);
+    if (kind === 'greeting' || kind === 'chat') {
       baseReply = `${timeGreet}${guestName ? `, ${guestName}` : ''}! ${baseReply}`;
     } else if (guestName) {
       baseReply = attachGuestName(baseReply, guestName);
     }
-    return {
-      ok: true,
-      handoff: false,
-      lang,
-      reply: `${warnPrefix}${capEmojis(baseReply, 2)}`,
-    };
-  }
-
+    return { ok: true, handoff: false, lang, reply: `${warnPrefix}${capEmojis(baseReply, 2)}` };
+  };
+  // The canned welcome is only for a plain hello that opens the conversation.
+  if (smallTalkKind === 'greeting' && safeHistory.length === 0) return cannedSmallTalk('greeting');
+  if (smallTalkKind && (!env || !env.AI || typeof env.AI.run !== 'function')) return cannedSmallTalk(smallTalkKind);
   if (!env || !env.AI || typeof env.AI.run !== 'function') {
     if (aiIdentityAsked) {
       return {
@@ -1096,8 +1107,10 @@ export async function runAssistant({
     };
   }
 
-  const chunks = retrieveChunks(cleanMsg, 6);
-  const contextBlock = chunks.length
+  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 6);
+  const contextBlock = smallTalkKind
+    ? '(Small talk: no catalog context needed.)'
+    : chunks.length
     ? chunks.map((c, i) => `[${i + 1}] ${c.title}\nURL: ${c.url}\n${c.text}`).join('\n\n')
     : '(No specific Bosphorly catalog chunks matched this general query; answer from reliable general Istanbul knowledge and only mention Bosphorly services if genuinely relevant.)';
 
@@ -1109,7 +1122,7 @@ export async function runAssistant({
       ? `The guest shared their name in this conversation: "${guestName}". Address them warmly by name ("${guestName}") in your reply (never store their name on the server).`
       : 'If the guest tells you their name during the chat, address them warmly by name.',
     'PERSONALITY & RULES:',
-    '1. IDENTITY (MIMO): Your name is Mimo. Always introduce yourself as Mimo, Bosphorly\'s AI assistant ("Bosphorly\'nin yapay zekâ asistanı Mimo"). NEVER claim to be human; if asked whether you are human, a real person, a robot, or AI, state clearly and warmly that you are Mimo, an AI assistant.',
+    '1. IDENTITY (MIMO): Your name is Mimo, Bosphorly\'s AI assistant ("Bosphorly\'nin yapay zekâ asistanı Mimo"). Introduce yourself only in your first reply of a conversation or when asked who you are; otherwise do not reintroduce yourself. NEVER claim to be human; if asked whether you are human, a real person, a robot, or AI, state clearly and warmly that you are Mimo, an AI assistant.',
     '2. TONE & EMOJIS: Use warm, cheerful, short sentences. Use at most 1–2 emojis per reply (never more than 2 emojis).',
     '3. HONESTY WHEN UNSURE: If you do not know something, be witty/playful and honest—never invent facts or prices.',
     '4. NO PUSHY SALES: Help the guest first! Only mention or suggest a Bosphorly service (name + "approx." price if in context + bosphorly.com link) naturally when genuinely relevant. Never force a sales pitch.',
@@ -1117,9 +1130,11 @@ export async function runAssistant({
     '6. BOSPHORLY FACTS ONLY FROM CONTEXT: For Bosphorly prices, tours, operators, transfers, and payment policy, use ONLY the PROVIDED CONTEXT below. State tour prices as approximate and confirmed upon request (fixed Sultanahmet transfers: €60 IST, €65 SAW one-way per vehicle, also confirmed upon request).',
     `7. BOOKING INTEREST: If the guest expresses interest in a transfer, cruise, tour, or hammam, ask for their date, number of guests, and hotel area (if not already given), share the matching link with parameters — https://bosphorly.com/booking.html?service=<id>&lang=${lang} (ids: bb-morning, bb-sunset, bb-oldcity, orient-dinner, sea-land, alaturka, azure-islands, azure-bursa, azure-sapanca, sl-privateyacht), https://bosphorly.com/index.html?lang=${lang}#booking for transfers, or https://bosphorly.com/tours.html?lang=${lang} for custom/private/multi-day tours — and say that once they submit the form, our team will confirm ("formu doldurduğunda ekibimiz onaylar" in Turkish, or equivalent).`,
     '8. FORBIDDEN: Never use fake urgency ("last seats", "only today", "son yer", "sadece bugün"), never promise discounts, never confirm a booking yourself, never ask for payment/card/passport numbers, never badmouth competitors, never engage in political or religious debates.',
-    '9. HANDOFF vs ZERO-TOLERANCE ABUSE: Set abuse=true ONLY if the user directs insults, humiliation, profanity, harassment, sexual content, hate speech, or threats at you (Mimo). Do NOT set abuse=true for anger or complaints about a service ("transfer did not arrive", "terrible service")—for service complaints, refunds, payment issues, existing booking changes/cancellations, or requests to speak with a human, set abuse=false and handoff=true. Never retaliate, mock, or argue.',
+    'SOHBET (CASUAL CHAT): Chat with the guest warmly, naturally and briefly — how are you, where they are from, the trip, food, weather, football, music, Turkish culture, learning languages, everyday jokes are all welcome. Be curious, ask a question back, be witty. You have a personality but never claim to be human (sweet answers like "I live on a server with a Bosphorus view 😄" are fine; to "how are you" answer with character, e.g. "I\'m great, charged up by the breeze off the Bosphorus 😊 How are you?"). Do not sell in every message: only when the chat naturally fits (food → Kadıköy food tour, the sea → Bosphorus cruise, tiredness → hammam), link it to a Bosphorly suggestion lightly and at most once. Do not repeat your previous reply. Boundaries: do not enter political or religious debates (kindly change the subject, e.g. back to their trip), give no medical, legal or financial advice, never badmouth competitors, never ask for personal data. If no catalog context matches, do NOT say "I don\'t know" or offer a human — chat from general knowledge.',
+    '9. HANDOFF vs ZERO-TOLERANCE ABUSE: Set abuse=true ONLY if the user directs insults, humiliation, profanity, harassment, sexual content, hate speech, or threats at you (Mimo). Do NOT set abuse=true for anger or complaints about a service ("transfer did not arrive", "terrible service")—for service complaints, refunds, payment issues, existing booking changes/cancellations, or requests to speak with a human, set abuse=false and handoff=true. Set handoff=true ONLY for those cases — never for casual chat, greetings, thanks, or questions you can answer from general knowledge. Never retaliate, mock, or argue.',
     '10. FORMAT & LENGTH: Keep replies warm and concise (max ~120 words), ending with a helpful follow-up question when natural. Output ONLY valid JSON: {"abuse": boolean, "handoff": boolean, "reply": "string"}',
     '',
+    smallTalkKind ? 'THIS MESSAGE IS SMALL TALK: reply short (1–3 sentences), warm and natural; do not reintroduce yourself; if it fits, gently connect to their Istanbul plans. handoff must be false.' : '',
     'PROVIDED CONTEXT:',
     contextBlock,
   ].join('\n');
@@ -1130,17 +1145,30 @@ export async function runAssistant({
     { role: 'user', content: cleanMsg.slice(0, 1000) },
   ];
 
+  const callModel = async (msgs, temperature) => parseModelOutput(await Promise.race([
+    env.AI.run(ASSISTANT_MODEL, {
+      messages: msgs,
+      max_completion_tokens: 280,
+      temperature,
+      chat_template_kwargs: { enable_thinking: false },
+    }),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('AI timeout')), AI_TIMEOUT_MS)),
+  ]));
+  // Casual chat gets a livelier temperature; catalog answers stay factual.
+  const temperature = smallTalkKind ? 0.7 : 0.2;
+
   try {
-    const aiResult = await Promise.race([
-      env.AI.run(ASSISTANT_MODEL, {
-        messages,
-        max_completion_tokens: 280,
-        temperature: 0.2,
-        chat_template_kwargs: { enable_thinking: false },
-      }),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('AI timeout')), AI_TIMEOUT_MS)),
-    ]);
-    const parsed = parseModelOutput(aiResult);
+    let parsed = await callModel(messages, temperature);
+    // Never send the same reply twice in a row: ask once more for a different wording.
+    if (!parsed.parseFailed && sameAsLastReply(parsed.reply, safeHistory)) {
+      const retry = await callModel([
+        ...messages,
+        { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
+      ], 0.9);
+      if (!retry.parseFailed && retry.reply) parsed = retry;
+    }
+    // Small talk never needs a human: keep the model's friendly answer even if it asked for a handoff.
+    if (smallTalkKind && parsed.handoff && parsed.reply && !parsed.abuse) parsed = { ...parsed, handoff: false };
     if (parsed.abuse && !isServiceComplaint(cleanMsg)) {
       await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
       return {
