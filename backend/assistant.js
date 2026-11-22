@@ -2,6 +2,7 @@ import knowledge from './knowledge.json' with { type: 'json' };
 import {
   TIME_HUMOR_NOTES,
   REGISTER_GUIDES,
+  ANTI_REPEAT_RULE,
   getFewShotsPromptBlock,
   stripModelThinking,
   extractFlagsTag,
@@ -10,6 +11,7 @@ import {
   buildKbPriceIndex,
   enforcePriceSafetyBelt,
   detectReplyLanguage,
+  isRepetitiveAgainstHistory,
 } from './mimo-personality.js';
 
 const KB_PRICE_PAIRS = buildKbPriceIndex(knowledge);
@@ -710,6 +712,45 @@ function tokenize(text) {
   return out;
 }
 
+const PRICE_RATE_TO_EUR = { EUR: 1, USD: 0.92, TRY: 0.027 };
+
+const PRICE_QUERY_RE = /(?:^|[^\p{L}])(fiyat\p{L}*|ücret\p{L}*|kaç\s+para|kaça|ne\s+kadar|price\p{L}*|cost|rate\p{L}*|fare|how\s+much|сколько|поч[её]м|стоимост\p{L}*|цен\p{L}*|ціна|скільки|preis\p{L}*|kosten|prix|tarif\p{L}*|coût|prijs|precio|prezzo|preço|cijena|ár|mennyibe|qiymət\p{L}*|سعر|تكلفة|كم|بكم|מחיר|כמה\s*(?:זה\s*)?עולה|עולה|قیمت|چقدر|harga|berapa)(?=$|[^\p{L}])|价格|多少钱|费用|料金|いくら|가격|요금|얼마|कीमत|किराया|দাম|কত/iu;
+
+export function isPriceQuery(query = '') {
+  return PRICE_QUERY_RE.test(String(query || ''));
+}
+
+const EVENING_QUERY_RE = /(?:^|[^\p{L}])(ak[sş]am\p{L}*|evening\p{L}*|night\p{L}*|вечер\p{L}*|ноч\p{L}*|веч[іи]р\p{L}*|н[іи]ч\p{L}*|ערב|לילה|abend\p{L}*|nacht\p{L}*|soir\p{L}*|nuit|avond\p{L}*|tarde|noche|sera|notte|noite|ve[cč]er\p{L}*|este|ax[sş]am\p{L}*|شب|مساء|شام|संध्या|शाम|সন্ধ্যা|রাত|malam|sore)(?=$|[^\p{L}])|저녁|밤|夕方|夜|傍晚|晚上/iu;
+
+const NON_SUNSET_HINT_RE = /\b(?:transfer|airport|havaliman|havaalan|shuttle|hamm?am|bath|massage|bursa|sapanca|yalova)\b|трансфер|аэропорт|хамам|העברה|הסעה|חמאם/iu;
+
+const RETRIEVAL_STOPWORDS = new Set([
+  'a', 'an', 'the', 'is', 'are', 'was', 'be', 'do', 'does', 'can', 'of', 'on', 'in', 'to', 'for', 'with', 'and', 'or', 'by', 'at', 'this', 'that',
+  'bir', 've', 'bu', 'da', 'de', 'mi', 'mı', 'mu', 'mü', 'ile',
+  'по', 'в', 'на', 'с', 'и', 'у', 'о', 'из', 'за',
+  'את', 'של', 'על', 'עם', 'זה',
+]);
+
+function extractChunkMinPriceEur(doc) {
+  const src = `${doc?.title || ''} ${doc?.text || ''}`;
+  const prices = [];
+  for (const m of src.matchAll(/(\d+(?:\.\d+)?)\s*(EUR|USD|TRY)\b/gi)) {
+    const n = Number(m[1]);
+    const cur = m[2].toUpperCase();
+    if (Number.isFinite(n) && n > 0 && PRICE_RATE_TO_EUR[cur]) {
+      prices.push(n * PRICE_RATE_TO_EUR[cur]);
+    }
+  }
+  for (const m of src.matchAll(/([€$₺])\s*(\d+(?:\.\d+)?)/g)) {
+    const n = Number(m[2]);
+    const cur = m[1] === '€' ? 'EUR' : m[1] === '$' ? 'USD' : 'TRY';
+    if (Number.isFinite(n) && n > 0 && PRICE_RATE_TO_EUR[cur]) {
+      prices.push(n * PRICE_RATE_TO_EUR[cur]);
+    }
+  }
+  return prices.length ? Math.min(...prices) : null;
+}
+
 const DOC_STATS = (() => {
   const docs = Array.isArray(knowledge) ? knowledge : [];
   const df = new Map();
@@ -721,37 +762,106 @@ const DOC_STATS = (() => {
     const tf = new Map();
     for (const t of tokens) tf.set(t, (tf.get(t) || 0) + 1);
     for (const t of tf.keys()) df.set(t, (df.get(t) || 0) + 1);
-    return { doc: d, tf, len: tokens.length, titleTokens };
+    return { doc: d, tf, len: tokens.length, titleTokens, minPriceEur: extractChunkMinPriceEur(d) };
   });
   const avgLen = parsed.length ? totalLen / parsed.length : 1;
   return { parsed, df, avgLen, N: parsed.length };
 })();
 
-export function retrieveChunks(query, k = 3) {
-  const qTokens = [...new Set(tokenize(query))];
+export function retrieveChunks(query, k) {
+  const rawQTokens = [...new Set(tokenize(query))];
+  const filteredQTokens = rawQTokens.filter((t) => !RETRIEVAL_STOPWORDS.has(t));
+  const qTokens = filteredQTokens.length ? filteredQTokens : rawQTokens;
   if (!qTokens.length || !DOC_STATS.N) return [];
+
+  const priceQuery = isPriceQuery(query);
+  const expandEveningSunset = EVENING_QUERY_RE.test(String(query || '')) && !NON_SUNSET_HINT_RE.test(String(query || ''));
+  const queryTerms = expandEveningSunset ? [...new Set([...qTokens, 'sunset', 'batimi'])] : qTokens;
+
   const k1 = 1.5;
   const b = 0.75;
   const scored = [];
 
   for (const item of DOC_STATS.parsed) {
     let score = 0;
-    for (const qt of qTokens) {
+    for (const qt of queryTerms) {
       const f = item.tf.get(qt) || 0;
       if (!f) continue;
       const df = DOC_STATS.df.get(qt) || 0;
       const idf = Math.log(1 + (DOC_STATS.N - df + 0.5) / (df + 0.5));
       const num = f * (k1 + 1);
       const den = f + k1 * (1 - b + b * (item.len / DOC_STATS.avgLen));
-      score += idf * (num / den);
-      if (item.titleTokens.has(qt)) score += 0.5;
+      const weight = qt === 'sunset' || qt === 'batimi' ? (qTokens.includes(qt) ? 1 : 0.75) : 1;
+      score += idf * (num / den) * weight;
+      if (item.titleTokens.has(qt)) score += 0.5 * weight;
     }
-    if (score > 0) scored.push({ score, doc: item.doc });
+    if (score > 0) {
+      if (priceQuery && item.minPriceEur !== null) {
+        score += 0.8 + (item.doc.category ? 0.4 : 0);
+      }
+      scored.push({ score, doc: item.doc, minPriceEur: item.minPriceEur });
+    }
   }
 
   scored.sort((a, bScore) => bScore.score - a.score);
-  const limit = Math.min(8, Math.max(1, Number(k) || 3));
-  return scored.slice(0, limit).map((s) => s.doc);
+  const defaultK = priceQuery ? 5 : 3;
+  const limit = Math.min(8, Math.max(1, k !== undefined && k !== null ? (Number(k) || defaultK) : defaultK));
+
+  const selected = [];
+  const selectedIds = new Set();
+  const catCounts = new Map();
+  for (const item of scored) {
+    if (selected.length >= limit) break;
+    const cat = item.doc.category;
+    if (cat && (catCounts.get(cat) || 0) >= 2) continue;
+    selected.push(item);
+    selectedIds.add(item.doc.id);
+    if (cat) catCounts.set(cat, (catCounts.get(cat) || 0) + 1);
+  }
+
+  if (priceQuery && selected.length > 0) {
+    const topScore = scored[0].score;
+    const relevantPriced = scored.filter((it) => it.minPriceEur !== null && it.score >= topScore * 0.45);
+    const categorizedPool = relevantPriced.filter((it) => it.doc.category);
+    const pool = categorizedPool.length ? categorizedPool : relevantPriced;
+    if (pool.length) {
+      const cheapest = pool.reduce((best, cur) => {
+        if (!best) return cur;
+        if (cur.minPriceEur < best.minPriceEur) return cur;
+        if (cur.minPriceEur === best.minPriceEur && cur.score > best.score) return cur;
+        return best;
+      }, null);
+      if (cheapest && !selectedIds.has(cheapest.doc.id)) {
+        const cheapCat = cheapest.doc.category;
+        if (selected.length < limit && (!cheapCat || (catCounts.get(cheapCat) || 0) < 2)) {
+          selected.push(cheapest);
+        } else {
+          let replaceIdx = -1;
+          if (cheapCat && (catCounts.get(cheapCat) || 0) >= 2) {
+            for (let i = selected.length - 1; i >= 0; i--) {
+              if (selected[i].doc.category === cheapCat) {
+                replaceIdx = i;
+                break;
+              }
+            }
+          } else {
+            for (let i = selected.length - 1; i >= 1; i--) {
+              const c = selected[i].doc.category;
+              if (!c || (catCounts.get(c) || 0) >= 2) {
+                replaceIdx = i;
+                break;
+              }
+            }
+            if (replaceIdx === -1 && selected.length > 1) replaceIdx = selected.length - 1;
+            else if (replaceIdx === -1) replaceIdx = 0;
+          }
+          if (replaceIdx >= 0) selected[replaceIdx] = cheapest;
+        }
+      }
+    }
+  }
+
+  return selected.map((s) => s.doc);
 }
 
 const CATALOG_QUESTION_RE = /(?:^|[^\p{L}\p{N}])(?:transfer\w*|havaliman\w*|airport\w*|аэропорт\w*|аеропорт\w*|shuttle\w*|cruise\w*|bo[gğ]az\w*|bosphor\w*|bospor\w*|босфор\w*|بوسفور|بسفر|בוספורוס|ボスポラス|博斯普鲁斯|보스포루스|hamam\w*|hammam\w*|хаммам\w*|хамам\w*|حمام|חמאם|ハマム|土耳其浴|하맘|tur(?:u(?:muz|nuz)?|lar\w*)?|tour\w*|круиз\w*|круїз\w*|тур\w*|جولة|کروز|שייט|游船|クルーズ|크루즈|pelayaran|crucero\w*|croisi[eè]re\w*|crociera\w*|cruzeiro\w*|kreuzfahrt\w*|fiyat\w*|ücret\w*|price\w*|cost\w*|сколько|цена\w*|ціна\w*|سعر|قیمت|מחיר|precio\w*|prezzo|preço\w*|preis\w*|prix|prijs|料金|价格|가격|कीमत|rezervasyon\w*|booking\w*|bilet\w*|ticket\w*|yacht\w*|ist|saw)(?=$|[^\p{L}\p{N}])/iu;
@@ -1210,11 +1320,33 @@ function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
   return Promise.race([settled, timeout]).finally(() => clearTimeout(timer));
 }
 
-async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {}) {
+function createAiBudget(timeoutMs, aiStart = Date.now()) {
+  const perCallMs = Math.max(20, Number(timeoutMs) || AI_TIMEOUT_MS);
+  const totalBudgetMs = perCallMs * 2;
+  return {
+    timeoutMs: perCallMs,
+    totalBudgetMs,
+    aiStart,
+    callsUsed: 0,
+    maxCalls: 2,
+    remainingMs() {
+      return Math.max(0, this.totalBudgetMs - (Date.now() - this.aiStart));
+    },
+    canSpendCall() {
+      return this.callsUsed < this.maxCalls && this.remainingMs() > 15;
+    },
+  };
+}
+
+async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {}, budget = null) {
+  if (budget) budget.callsUsed += 1;
   const first = await runAiOnce(env, messages, timeoutMs, temperature, extra);
   if (first.ok) return first.value;
   if (isAiGateway429Error(first.error) || !isAiTimeoutError(first.error)) throw first.error;
-  const second = await runAiOnce(env, messages, timeoutMs, temperature, extra);
+  if (budget && !budget.canSpendCall()) throw first.error;
+  if (budget) budget.callsUsed += 1;
+  const retryTimeout = budget ? Math.min(timeoutMs, budget.remainingMs()) : timeoutMs;
+  const second = await runAiOnce(env, messages, retryTimeout, temperature, extra);
   if (second.ok) return second.value;
   throw second.error;
 }
@@ -1231,9 +1363,12 @@ function readStreamChunkWithTimeout(reader, timeoutMs) {
   return Promise.race([readCall, timeout]).finally(() => clearTimeout(timer));
 }
 
-async function runAiStreamWithRetry(env, messages, timeoutMs, temperature, extra = {}) {
+async function runAiStreamWithRetry(env, messages, timeoutMs, temperature, extra = {}, budget = null) {
   for (let attempt = 0; attempt < 2; attempt++) {
-    const call = await runAiOnce(env, messages, timeoutMs, temperature, { ...extra, stream: true });
+    if (attempt > 0 && budget && !budget.canSpendCall()) break;
+    if (budget) budget.callsUsed += 1;
+    const callTimeout = budget && attempt > 0 ? Math.min(timeoutMs, budget.remainingMs()) : timeoutMs;
+    const call = await runAiOnce(env, messages, callTimeout, temperature, { ...extra, stream: true });
     if (!call.ok) {
       if (isAiGateway429Error(call.error) || !isAiTimeoutError(call.error) || attempt === 1) throw call.error;
       continue;
@@ -1292,7 +1427,6 @@ export function stripRepeatIntroAndGreeting(reply) {
   return cur.replace(/^\p{Ll}/u, (ch) => ch.toUpperCase());
 }
 
-const PRICE_QUERY_RE = /(?:^|[^\p{L}])(fiyat\p{L}*|ücret\p{L}*|kaç\s+para|ne\s+kadar|price\p{L}*|cost|rate\p{L}*|fare|how\s+much|сколько|стоимост\p{L}*|цен\p{L}*|ціна|скільки|preis\p{L}*|kosten|prix|tarif\p{L}*|coût|prijs|precio|prezzo|preço|cijena|ár|mennyibe|qiymət\p{L}*|سعر|تكلفة|كم|بكم|מחיר|כמה\s*עולה|עולה|قیمت|چقدر|harga|berapa)(?=$|[^\p{L}])|价格|多少钱|费用|料金|いくら|가격|요금|얼마|कीमत|किराया|দাম|কত/iu;
 const TRANSFER_QUERY_HINT_RE = /(?:^|[^\p{L}])(ist|saw|sultanahmet|havaliman\p{L}*|airport|трансфер|аэропорт|аеропорт|העברה|הסעה|نقل|توصيل|ترانسفر|transfer\p{L}*|traslado|trasferimento)(?=$|[^\p{L}])|接送|送迎|픽업|ट्रांसफ़र|ট্রান্সফার/iu;
 
 function localizeBosphorlyUrl(rawUrl, lang) {
@@ -1369,6 +1503,7 @@ function buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGr
       : `First turn vibe: ${timeGreet}! (${timeHumor}) Introduce yourself as Mimo once only if natural.`,
     guestName ? `Guest name is "${guestName}"—use it warmly.` : '',
     'Casual chat & voice: write 1–3 short lively sentences (<90 words total), ask a natural follow-up question when helpful, remember and refer back to details the guest shared earlier (like their partner, neighborhood, or plans), and use at most 2 emojis.',
+    ANTI_REPEAT_RULE,
     'Ethics & honesty: never use guilt or sadness ("almazsan üzülürüm"), never invent fake urgency, and if the guest declines a tour, do not insist again—just wish them a warm trip ("İyi gezmeler!"). Stay out of politics/religion, give no medical/legal/financial advice, and never ask for card or passport numbers.',
   ].filter(Boolean).join('\n');
 }
@@ -1377,7 +1512,7 @@ function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted,
   const examples = getFewShotsPromptBlock(lang);
   return [
     buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
-    `Istanbul & catalog facts: use ONLY CONTEXT below for Bosphorly prices, tours, and transfers—never invent prices, hours, discounts, or currency conversions. When a CONTEXT item is marked "Mimo'nun favorisi 💙", recommend it warmly as your personal favorite. When answering a price/tour/transfer question, share the exact price (confirmed upon request) and its https://bosphorly.com/... link from CONTEXT (with ?lang=${lang}), plus one light next step. For live museum hours/tickets, suggest checking the official site.`,
+    `Istanbul & catalog facts: use ONLY CONTEXT below for Bosphorly prices, tours, and transfers—never invent prices, hours, discounts, or currency conversions. When a CONTEXT item is marked "Mimo'nun favorisi 💙", recommend it warmly as your personal favorite. When answering a price question, start with the cheapest suitable option from CONTEXT first before higher tiers, sharing exact prices (confirmed upon request) and its https://bosphorly.com/... link from CONTEXT (with ?lang=${lang}), plus one light next step. For live museum hours/tickets, suggest checking the official site.`,
     'EXAMPLES:',
     examples,
     '',
@@ -1562,7 +1697,7 @@ async function prepareAssistantTurn({
     return { path, lang, effectiveChannel, earlyResult };
   }
 
-  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 3);
+  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg);
   const contextBlock = smallTalkKind
     ? '(Small talk: no catalog context needed.)'
     : chunks.length
@@ -1660,20 +1795,48 @@ function logModelFailure(err, { aiIdentityAsked = false, durationMs = 0, parseFa
   });
 }
 
-async function regenerateInExpectedLanguage(env, prep) {
-  const retryRaw = await runAiWithRetry(
+async function regenerateWithinBudget(env, prep, budget, instruction) {
+  if (!budget || !budget.canSpendCall()) return null;
+  const remaining = budget.remainingMs();
+  if (remaining <= 40) return null;
+  budget.callsUsed += 1;
+  const call = await runAiOnce(
     env,
     [
       ...prep.messages,
       {
         role: 'system',
-        content: `Your previous draft used the wrong language. Reply strictly in language "${prep.lang}" only, keeping Mimo's warm voice and ending with [[flags:abuse=0;handoff=0]].`,
+        content: instruction,
       },
     ],
-    prep.timeoutMs,
+    Math.min(prep.timeoutMs, remaining),
     prep.temperature,
   );
-  return parseModelOutput(retryRaw);
+  if (!call.ok) {
+    if (isAiGateway429Error(call.error)) throw call.error;
+    return null;
+  }
+  const parsed = parseModelOutput(call.value);
+  if (parsed.parseFailed || !parsed.reply || parsed.abuse || parsed.handoff) return null;
+  return parsed;
+}
+
+async function regenerateInExpectedLanguage(env, prep, budget) {
+  return regenerateWithinBudget(
+    env,
+    prep,
+    budget,
+    `Your previous draft used the wrong language. Reply strictly in language "${prep.lang}" only, keeping Mimo's warm voice without repeating earlier conversation anecdotes/imagery, and ending with [[flags:abuse=0;handoff=0]].`,
+  );
+}
+
+async function regenerateFreshReply(env, prep, budget) {
+  return regenerateWithinBudget(
+    env,
+    prep,
+    budget,
+    `Your previous draft repeated an anecdote, image, or phrasing already used earlier in this conversation (such as sharing simit with seagulls). Write a completely fresh, natural reply strictly in language "${prep.lang}" with different wording/imagery, keeping Mimo's warm voice and ending with [[flags:abuse=0;handoff=0]].`,
+  );
 }
 
 function gatewayTiredResult({ lang, warnPrefix = '' }) {
@@ -1716,22 +1879,33 @@ export async function runAssistant({
   }
 
   const aiStart = Date.now();
+  const budget = createAiBudget(prep.timeoutMs, aiStart);
   let lastParseFailed = false;
   try {
-    let parsed = parseModelOutput(await runAiWithRetry(env, prep.messages, prep.timeoutMs, prep.temperature));
+    let parsed = parseModelOutput(await runAiWithRetry(env, prep.messages, prep.timeoutMs, prep.temperature, {}, budget));
     lastParseFailed = Boolean(parsed.parseFailed);
+    let extraPath = null;
     if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
-      const langProbe = stripExternalLinks(redactSensitive(parsed.reply).text);
-      if (detectReplyLanguage(langProbe, prep.lang) !== prep.lang) {
-        const retryParsed = await regenerateInExpectedLanguage(env, prep);
-        if (!retryParsed.parseFailed && retryParsed.reply) parsed = retryParsed;
+      const probe = stripExternalLinks(redactSensitive(parsed.reply).text);
+      if (detectReplyLanguage(probe, prep.lang) !== prep.lang) {
+        const retryParsed = await regenerateInExpectedLanguage(env, prep, budget);
+        if (retryParsed) {
+          parsed = retryParsed;
+          extraPath = 'ai_lang_retry';
+        }
+      } else if (isRepetitiveAgainstHistory(probe, prep.safeHistory, prep.cleanMsg)) {
+        const retryParsed = await regenerateFreshReply(env, prep, budget);
+        if (retryParsed) {
+          parsed = retryParsed;
+          extraPath = 'ai_repeat_retry';
+        }
       }
     }
     const finalized = await finalizeModelOutput({ parsed, prep, env, now });
     logAssistantTiming({
       channel: prep.effectiveChannel,
       lang: prep.lang,
-      path: finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai',
+      path: extraPath || (finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai'),
       streamed: false,
       totalMs: Date.now() - reqStart,
       modelMs: Date.now() - aiStart,
@@ -1867,19 +2041,22 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
   const stream = new ReadableStream({
     async start(controller) {
       const aiStart = Date.now();
+      const budget = createAiBudget(prep.timeoutMs, aiStart);
+      const hasPriorAssistant = Array.isArray(prep.safeHistory) && prep.safeHistory.some((h) => h && h.role === 'assistant' && h.content);
       let ttftMs = null;
       let rawAccum = '';
       let emittedText = '';
       let warned = false;
       let abortedEarly = false;
       let langVerified = false;
+      let varietyVerified = !hasPriorAssistant;
 
       if (chatSession) {
         sendEvent(controller, 'session', { chatSession });
       }
 
       const emitSafePrefix = (decoded) => {
-        if (abortedEarly || !langVerified) return;
+        if (abortedEarly || !langVerified || !varietyVerified) return;
         let working = decoded;
         if (prep.hasGreeted && !prep.aiIdentityAsked) {
           if (working.length < 64) return;
@@ -1947,20 +2124,32 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           prep.messages,
           prep.timeoutMs,
           prep.temperature,
+          {},
+          budget,
         );
 
         if (streamResult.kind === 'value') {
           ttftMs = Date.now() - aiStart;
           let parsed = parseModelOutput(streamResult.value);
+          let extraPath = null;
           if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
-            const langProbe = stripExternalLinks(redactSensitive(parsed.reply).text);
-            if (detectReplyLanguage(langProbe, prep.lang) !== prep.lang) {
-              const retryParsed = await regenerateInExpectedLanguage(env, prep);
-              if (!retryParsed.parseFailed && retryParsed.reply) parsed = retryParsed;
+            const probe = stripExternalLinks(redactSensitive(parsed.reply).text);
+            if (detectReplyLanguage(probe, prep.lang) !== prep.lang) {
+              const retryParsed = await regenerateInExpectedLanguage(env, prep, budget);
+              if (retryParsed) {
+                parsed = retryParsed;
+                extraPath = 'ai_lang_retry';
+              }
+            } else if (hasPriorAssistant && isRepetitiveAgainstHistory(probe, prep.safeHistory, prep.cleanMsg)) {
+              const retryParsed = await regenerateFreshReply(env, prep, budget);
+              if (retryParsed) {
+                parsed = retryParsed;
+                extraPath = 'ai_repeat_retry';
+              }
             }
           }
           const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-          finishWithFinalized(finalized);
+          finishWithFinalized(finalized, extraPath);
           return;
         }
 
@@ -2016,15 +2205,34 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
             if (!langVerified && visible && (visible.length >= 48 || findLastSentenceBoundary(visible) > 0)) {
               const probe = stripExternalLinks(redactSensitive(visible).text);
               if (detectReplyLanguage(probe, prep.lang) !== prep.lang) {
-                try { await reader.cancel(); } catch {}
-                const retryParsed = await regenerateInExpectedLanguage(env, prep);
-                const finalized = await finalizeModelOutput({ parsed: retryParsed, prep, env, now });
-                finishWithFinalized(finalized, 'ai_lang_retry');
-                return;
+                if (budget.canSpendCall()) {
+                  try { await reader.cancel(); } catch {}
+                  const retryParsed = await regenerateInExpectedLanguage(env, prep, budget);
+                  const chosen = retryParsed || parseModelOutput(rawAccum);
+                  const finalized = await finalizeModelOutput({ parsed: chosen, prep, env, now });
+                  finishWithFinalized(finalized, retryParsed ? 'ai_lang_retry' : null);
+                  return;
+                }
               }
               langVerified = true;
             }
-            if (langVerified && visible) {
+            if (!varietyVerified && langVerified && !emittedText && visible && (visible.length >= 110 || findLastSentenceBoundary(visible) > 0)) {
+              const probe = stripExternalLinks(redactSensitive(visible).text);
+              if (isRepetitiveAgainstHistory(probe, prep.safeHistory, prep.cleanMsg)) {
+                if (budget.canSpendCall()) {
+                  try { await reader.cancel(); } catch {}
+                  const retryParsed = await regenerateFreshReply(env, prep, budget);
+                  const chosen = retryParsed || parseModelOutput(rawAccum);
+                  const finalized = await finalizeModelOutput({ parsed: chosen, prep, env, now });
+                  finishWithFinalized(finalized, retryParsed ? 'ai_repeat_retry' : null);
+                  return;
+                }
+                varietyVerified = true;
+              } else if (visible.length >= 110) {
+                varietyVerified = true;
+              }
+            }
+            if (langVerified && varietyVerified && visible) {
               emitSafePrefix(visible);
             }
           }
@@ -2036,15 +2244,25 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         }
 
         let parsed = parseModelOutput(rawAccum);
-        if (!langVerified && !parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
+        let extraPath = null;
+        if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
           const probe = stripExternalLinks(redactSensitive(parsed.reply).text);
-          if (detectReplyLanguage(probe, prep.lang) !== prep.lang) {
-            const retryParsed = await regenerateInExpectedLanguage(env, prep);
-            if (!retryParsed.parseFailed && retryParsed.reply) parsed = retryParsed;
+          if (!langVerified && detectReplyLanguage(probe, prep.lang) !== prep.lang) {
+            const retryParsed = await regenerateInExpectedLanguage(env, prep, budget);
+            if (retryParsed) {
+              parsed = retryParsed;
+              extraPath = 'ai_lang_retry';
+            }
+          } else if (!emittedText && hasPriorAssistant && isRepetitiveAgainstHistory(probe, prep.safeHistory, prep.cleanMsg)) {
+            const retryParsed = await regenerateFreshReply(env, prep, budget);
+            if (retryParsed) {
+              parsed = retryParsed;
+              extraPath = 'ai_repeat_retry';
+            }
           }
         }
         const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-        finishWithFinalized(finalized);
+        finishWithFinalized(finalized, extraPath);
       } catch (err) {
         const modelMs = Date.now() - aiStart;
         if (isAiGateway429Error(err)) {
