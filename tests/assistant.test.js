@@ -2413,3 +2413,94 @@ test('Mimo 2.0: knowledge base marks exactly 1 "Mimo\'nun favorisi 💙" per cat
     assert.ok(MIMO_FAVORITE_LABEL[lang], `favorite label in ${lang}`);
   }
 });
+
+test('AI Gateway: wrangler configures AI_GATEWAY_ID="mimo" and env.AI.run passes { gateway: { id } }', async () => {
+  const wranglerRaw = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
+  assert.match(wranglerRaw, /"AI_GATEWAY_ID"\s*:\s*"mimo"/);
+
+  const seenGateways = [];
+  const defaultEnv = {
+    AI: {
+      run: async (_model, _inputs, opts) => {
+        seenGateways.push(opts);
+        return { response: 'Gün batımı turu harika bir seçim 💙\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  };
+  await runAssistant({ message: 'Boğaz turu önerir misin?', pageLang: 'tr', env: defaultEnv, actorKey: 'gw-default' });
+  assert.deepEqual(seenGateways, [{ gateway: { id: 'mimo' } }]);
+
+  seenGateways.length = 0;
+  const customEnv = {
+    AI_GATEWAY_ID: 'mimo-staging',
+    AI: {
+      run: async (_model, _inputs, opts) => {
+        seenGateways.push(opts);
+        return { response: 'Great sunset option 💙\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  };
+  await runAssistant({ message: 'Best sunset cruise?', pageLang: 'en', env: customEnv, actorKey: 'gw-custom' });
+  assert.deepEqual(seenGateways, [{ gateway: { id: 'mimo-staging' } }]);
+});
+
+test('AI Gateway 429 spend limit does not retry or time out and replies politely across all 23 languages', async () => {
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(ASSISTANT_MESSAGES.gatewayTired[lang].includes('😴'), `gatewayTired emoji in ${lang}`);
+    assert.ok(/Telegram|تيليجرام|טלגרם|تلگرام/i.test(ASSISTANT_MESSAGES.gatewayTired[lang]), `Telegram in gatewayTired.${lang}`);
+    assert.ok(ASSISTANT_MESSAGES.gatewayTired[lang].includes('info@bosphorly.com'), `email in gatewayTired.${lang}`);
+
+    let calls = 0;
+    const res = await runAssistant({
+      message: 'Bosphorus cruise?',
+      pageLang: lang,
+      env: {
+        AI: {
+          run: async (_m, _inputs, opts) => {
+            calls += 1;
+            assert.deepEqual(opts, { gateway: { id: 'mimo' } });
+            const err = new Error('Too Many Requests (spend limit exceeded)');
+            err.status = 429;
+            err.code = 2018;
+            throw err;
+          },
+        },
+      },
+      actorKey: `gw-429-${lang}`,
+    });
+    assert.equal(calls, 1, `no retry on 429 in ${lang}`);
+    assert.equal(res.ok, true);
+    assert.equal(res.handoff, false);
+    assert.equal(res.gatewayLimited, true);
+    assert.equal(res.reply, ASSISTANT_MESSAGES.gatewayTired[lang]);
+  }
+
+  // Also test SSE streaming endpoint on HTTP 429 from Gateway (single call, graceful done event)
+  const pepper = 'gw-sse-429';
+  const ip = '203.0.113.149';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  let sseCalls = 0;
+  const sseRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu fiyatı?', lang: 'tr', stream: true, history: [], chatSession: sessionTok }),
+  }), baseEnv({
+    CODE_PEPPER: pepper,
+    AI: {
+      run: async (_m, _inputs, opts) => {
+        sseCalls += 1;
+        assert.deepEqual(opts, { gateway: { id: 'mimo' } });
+        return { status: 429, errors: [{ code: 2018, message: 'Spend limit reached' }] };
+      },
+    },
+  }));
+  assert.equal(sseRes.status, 200);
+  const sseBody = await sseRes.text();
+  assert.equal(sseCalls, 1, 'SSE must not retry on gateway 429');
+  const m = sseBody.match(/event: done\ndata: ([^\n]+)/);
+  assert.ok(m, 'SSE emits done payload on 429');
+  const done = JSON.parse(m[1]);
+  assert.equal(done.handoff, false);
+  assert.equal(done.reply, ASSISTANT_MESSAGES.gatewayTired.tr);
+});
+

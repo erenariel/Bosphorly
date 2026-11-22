@@ -302,6 +302,31 @@ export const ASSISTANT_MESSAGES = {
     bn: 'এক সেকেন্ড, গাঙচিলগুলো আমাকে বিভ্রান্ত করেছে 😅 আবার লিখবেন?',
     id: 'Sebentar, burung camar mengalihkan perhatianku 😅 Bisa tulis lagi?',
   },
+  gatewayTired: {
+    tr: "Bugünlük biraz yoruldum 😴 Telegram'dan ya da info@bosphorly.com'dan yazabilirsin.",
+    en: 'I got a little tired for today 😴 You can write to us on Telegram or at info@bosphorly.com.',
+    ru: 'На сегодня я немного устал 😴 Можешь написать нам в Telegram или на info@bosphorly.com.',
+    uk: 'На сьогодні я трохи втомився 😴 Можеш написати нам у Telegram або на info@bosphorly.com.',
+    de: 'Für heute bin ich ein bisschen müde geworden 😴 Du kannst uns auf Telegram oder an info@bosphorly.com schreiben.',
+    fr: 'Je suis un peu fatigué pour aujourd’hui 😴 Tu peux nous écrire sur Telegram ou à info@bosphorly.com.',
+    nl: 'Ik ben een beetje moe geworden voor vandaag 😴 Je kunt ons schrijven via Telegram of info@bosphorly.com.',
+    ar: 'لقد تعبت قليلاً لليوم 😴 يمكنك مراسلتنا عبر تيليجرام أو info@bosphorly.com.',
+    he: 'התעייפתי קצת להיום 😴 אפשר לכתוב לנו בטלגרם או ל-info@bosphorly.com.',
+    az: 'Bu günlük bir az yoruldum 😴 Telegram-dan və ya info@bosphorly.com-dan yaza bilərsən.',
+    fa: 'برای امروز کمی خسته شدم 😴 می‌توانی در تلگرام یا به info@bosphorly.com پیام بدهی.',
+    es: 'Me cansé un poco por hoy 😴 Puedes escribirnos por Telegram o a info@bosphorly.com.',
+    it: 'Mi sono stancato un po’ per oggi 😴 Puoi scriverci su Telegram o a info@bosphorly.com.',
+    pt: 'Fiquei um pouco cansado por hoje 😴 Você pode falar conosco no Telegram ou pelo e-mail info@bosphorly.com.',
+    hr: 'Malo sam se umorio za danas 😴 Možeš nam pisati na Telegram ili na info@bosphorly.com.',
+    hu: 'Mára kicsit elfáradtam 😴 Írhatsz nekünk Telegramon vagy a info@bosphorly.com címre.',
+    bs: 'Malo sam se umorio za danas 😴 Možeš nam pisati na Telegram ili na info@bosphorly.com.',
+    zh: '今天我有点累啦 😴 欢迎通过 Telegram 或发送邮件至 info@bosphorly.com 联系我们。',
+    ja: '今日はちょっと疲れちゃった 😴 Telegram か info@bosphorly.com にメッセージしてね。',
+    ko: '오늘은 조금 피곤하네 😴 Telegram이나 info@bosphorly.com으로 연락해 줄래?',
+    hi: 'आज के लिए मैं थोड़ा थक गया हूँ 😴 तुम Telegram या info@bosphorly.com पर लिख सकते हो।',
+    bn: 'আজকের মতো একটু ক্লান্ত হয়ে পড়েছি 😴 তুমি Telegram-এ বা info@bosphorly.com-এ লিখতে পারো।',
+    id: 'Untuk hari ini aku agak capek nih 😴 Kamu bisa hubungi lewat Telegram atau info@bosphorly.com.',
+  },
   unknownHandoff: {
     tr: 'Bunu Boğaz’ın martılarına bile sordum ama emin olamadım 🌊 Uydurmak istemem; sorunu ekibimize iletmem için e-posta adresini paylaşabilirsin.',
     en: 'I even asked the Bosphorus seagulls, but I am not completely sure 🌊 I never want to guess—please share your email address so our team can help you.',
@@ -1083,57 +1108,6 @@ function isNonsensicalReply(reply) {
   return false;
 }
 
-function decodeJsonStringFragment(rawFragment) {
-  let out = '';
-  for (let i = 0; i < rawFragment.length; i++) {
-    const ch = rawFragment[i];
-    if (ch !== '\\') {
-      out += ch;
-      continue;
-    }
-    i += 1;
-    if (i >= rawFragment.length) break;
-    const esc = rawFragment[i];
-    if (esc === 'n') out += '\n';
-    else if (esc === 'r') out += ' ';
-    else if (esc === 't') out += ' ';
-    else if (esc === '"' || esc === '\\' || esc === '/') out += esc;
-    else if (esc === 'u' && /^[0-9a-fA-F]{4}/.test(rawFragment.slice(i + 1, i + 5))) {
-      out += String.fromCharCode(parseInt(rawFragment.slice(i + 1, i + 5), 16));
-      i += 4;
-    } else {
-      out += esc;
-    }
-  }
-  return out.trim();
-}
-
-function findBalancedJsonObjects(text) {
-  const candidates = [];
-  let inStr = false;
-  let escape = false;
-  let depth = 0;
-  let start = -1;
-  for (let i = 0; i < text.length; i++) {
-    const ch = text[i];
-    if (escape) { escape = false; continue; }
-    if (ch === '\\' && inStr) { escape = true; continue; }
-    if (ch === '"') { inStr = !inStr; continue; }
-    if (inStr) continue;
-    if (ch === '{') {
-      if (depth === 0) start = i;
-      depth += 1;
-    } else if (ch === '}' && depth > 0) {
-      depth -= 1;
-      if (depth === 0 && start !== -1) {
-        candidates.push(text.slice(start, i + 1));
-        start = -1;
-      }
-    }
-  }
-  return candidates;
-}
-
 function parseModelOutput(raw) {
   const objCandidate =
     (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
@@ -1186,15 +1160,42 @@ function isAiTimeoutError(err) {
   return Boolean(err && (err.name === 'TimeoutError' || err.message === 'AI stream empty' || /timeout/i.test(String(err.message || ''))));
 }
 
+export function getAiGatewayOptions(env) {
+  const id = (env && typeof env.AI_GATEWAY_ID === 'string' && env.AI_GATEWAY_ID.trim()) || 'mimo';
+  return { gateway: { id } };
+}
+
+export function isAiGateway429Error(err) {
+  if (!err || typeof err !== 'object') return false;
+  if (err.isGateway429 === true) return true;
+  if (Number(err.status) === 429 || Number(err.statusCode) === 429 || Number(err.code) === 429 || Number(err.code) === 2018) return true;
+  if (err.cause && (Number(err.cause.status) === 429 || Number(err.cause.code) === 429 || Number(err.cause.code) === 2018)) return true;
+  if (err.response && Number(err.response.status) === 429) return true;
+  if (Array.isArray(err.errors) && err.errors.some((e) => Number(e && e.status) === 429 || Number(e && e.code) === 2018)) return true;
+  const message = String(err.message || '');
+  return /\b429\b|too\s+many\s+requests|spend\s+limit|rate\s+limit\s+exceeded|error\s*code\s*2018/i.test(message);
+}
+
+function makeGateway429Error(detail = 'AI Gateway 429 rate/spend limit') {
+  return Object.assign(new Error(detail), { status: 429, isGateway429: true });
+}
+
 function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
   let timer;
-  const aiCall = Promise.resolve().then(() => env.AI.run(ASSISTANT_MODEL, {
-    messages,
-    max_completion_tokens: 350,
-    temperature,
-    chat_template_kwargs: { enable_thinking: false },
-    ...extra,
-  }));
+  const aiCall = Promise.resolve().then(() => env.AI.run(
+    ASSISTANT_MODEL,
+    {
+      messages,
+      max_completion_tokens: 350,
+      temperature,
+      chat_template_kwargs: { enable_thinking: false },
+      ...extra,
+    },
+    getAiGatewayOptions(env),
+  )).then((val) => {
+    if (isAiGateway429Error(val)) throw makeGateway429Error();
+    return val;
+  });
   const settled = aiCall.then(
     (value) => ({ ok: true, value }),
     (error) => ({ ok: false, error }),
@@ -1212,7 +1213,7 @@ function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
 async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {}) {
   const first = await runAiOnce(env, messages, timeoutMs, temperature, extra);
   if (first.ok) return first.value;
-  if (!isAiTimeoutError(first.error)) throw first.error;
+  if (isAiGateway429Error(first.error) || !isAiTimeoutError(first.error)) throw first.error;
   const second = await runAiOnce(env, messages, timeoutMs, temperature, extra);
   if (second.ok) return second.value;
   throw second.error;
@@ -1234,7 +1235,7 @@ async function runAiStreamWithRetry(env, messages, timeoutMs, temperature, extra
   for (let attempt = 0; attempt < 2; attempt++) {
     const call = await runAiOnce(env, messages, timeoutMs, temperature, { ...extra, stream: true });
     if (!call.ok) {
-      if (!isAiTimeoutError(call.error) || attempt === 1) throw call.error;
+      if (isAiGateway429Error(call.error) || !isAiTimeoutError(call.error) || attempt === 1) throw call.error;
       continue;
     }
     const aiRes = call.value;
@@ -1245,7 +1246,7 @@ async function runAiStreamWithRetry(env, messages, timeoutMs, temperature, extra
     const firstRead = await readStreamChunkWithTimeout(reader, timeoutMs);
     if (!firstRead.ok) {
       try { await reader.cancel(); } catch {}
-      if (!isAiTimeoutError(firstRead.error) || attempt === 1) throw firstRead.error;
+      if (isAiGateway429Error(firstRead.error) || !isAiTimeoutError(firstRead.error) || attempt === 1) throw firstRead.error;
       continue;
     }
     if (firstRead.res && firstRead.res.done && (!firstRead.res.value || firstRead.res.value.length === 0)) {
@@ -1675,6 +1676,17 @@ async function regenerateInExpectedLanguage(env, prep) {
   return parseModelOutput(retryRaw);
 }
 
+function gatewayTiredResult({ lang, warnPrefix = '' }) {
+  return {
+    ok: true,
+    handoff: false,
+    handoffOffer: false,
+    gatewayLimited: true,
+    lang,
+    reply: `${warnPrefix}${enforceMaxEmojis(msg('gatewayTired', lang), 2)}`,
+  };
+}
+
 export async function runAssistant({
   message,
   pageLang = '',
@@ -1708,19 +1720,6 @@ export async function runAssistant({
   try {
     let parsed = parseModelOutput(await runAiWithRetry(env, prep.messages, prep.timeoutMs, prep.temperature));
     lastParseFailed = Boolean(parsed.parseFailed);
-    if (!parsed.parseFailed && sameAsLastReply(parsed.reply, prep.safeHistory)) {
-      try {
-        const retry = parseModelOutput(await runAiWithRetry(env, [
-          ...prep.messages,
-          { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
-        ], prep.timeoutMs, 0.9));
-        const retryClean = stripFakeUrgency(stripExternalLinks(redactSensitive(retry.reply).text));
-        if (!retry.parseFailed && !isNonsensicalReply(retryClean)) {
-          parsed = retry;
-          lastParseFailed = false;
-        }
-      } catch {}
-    }
     if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
       const langProbe = stripExternalLinks(redactSensitive(parsed.reply).text);
       if (detectReplyLanguage(langProbe, prep.lang) !== prep.lang) {
@@ -1739,6 +1738,18 @@ export async function runAssistant({
     });
     return finalized;
   } catch (err) {
+    if (isAiGateway429Error(err)) {
+      const tired = gatewayTiredResult(prep);
+      logAssistantTiming({
+        channel: prep.effectiveChannel,
+        lang: prep.lang,
+        path: 'ai_gateway_429',
+        streamed: false,
+        totalMs: Date.now() - reqStart,
+        modelMs: Date.now() - aiStart,
+      });
+      return tired;
+    }
     logModelFailure(err, {
       aiIdentityAsked: prep.aiIdentityAsked,
       durationMs: Date.now() - aiStart,
@@ -2036,6 +2047,13 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         finishWithFinalized(finalized);
       } catch (err) {
         const modelMs = Date.now() - aiStart;
+        if (isAiGateway429Error(err)) {
+          const tired = gatewayTiredResult(prep);
+          logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_gateway_429', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+          sendEvent(controller, 'done', toHttpAssistantBody(tired, chatSession));
+          controller.close();
+          return;
+        }
         if (prep.aiIdentityAsked) {
           const reply = `${prep.warnPrefix}${enforceMaxEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
@@ -2269,14 +2287,24 @@ export async function transcribeAudio({ env, audioBytes, lang = 'en', actorKey =
   let audio = '';
   try {
     audio = bytesToBase64(audioBytes);
-    const result = await env.AI.run(WHISPER_MODEL, {
-      audio,
-      task: 'transcribe',
-      language: locale.slice(0, 2),
-    });
+    const result = await env.AI.run(
+      WHISPER_MODEL,
+      {
+        audio,
+        task: 'transcribe',
+        language: locale.slice(0, 2),
+      },
+      getAiGatewayOptions(env),
+    );
+    if (isAiGateway429Error(result)) {
+      return { ok: false, status: 429, error: 'gateway_limit' };
+    }
     const text = extractTranscript(result).replace(/\s+/g, ' ').trim().slice(0, 1000);
     return { ok: true, text };
   } catch (err) {
+    if (isAiGateway429Error(err)) {
+      return { ok: false, status: 429, error: 'gateway_limit' };
+    }
     console.error('assistant_transcribe_failed', {
       model: WHISPER_MODEL,
       errorType: err && err.name ? String(err.name) : 'Error',

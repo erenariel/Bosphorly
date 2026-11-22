@@ -330,3 +330,38 @@ test('per-minute dictation limit returns 429 without calling Whisper again', asy
   assert.equal(blocked.status, 429);
   assert.equal(calls, 6);
 });
+
+test('dictation passes AI Gateway option to Whisper and returns 429 on gateway limit without retrying', async () => {
+  const seenOpts = [];
+  const okEnv = env({
+    AI: {
+      run: async (_m, _inputs, opts) => {
+        seenOpts.push(opts);
+        return { text: 'boğaz turu' };
+      },
+    },
+  });
+  const okRes = await transcribeAudio({ env: okEnv, audioBytes: new Uint8Array([1, 2, 3]), lang: 'tr', actorKey: 'gw-whisper-ok' });
+  assert.equal(okRes.ok, true);
+  assert.deepEqual(seenOpts, [{ gateway: { id: 'mimo' } }]);
+
+  let failCalls = 0;
+  const errEnv = env({
+    AI_GATEWAY_ID: 'mimo',
+    AI: {
+      run: async (_m, _inputs, opts) => {
+        failCalls += 1;
+        assert.deepEqual(opts, { gateway: { id: 'mimo' } });
+        const err = new Error('AI Gateway 429 spend limit reached');
+        err.status = 429;
+        throw err;
+      },
+    },
+  });
+  const errRes = await transcribeAudio({ env: errEnv, audioBytes: new Uint8Array([1, 2, 3]), lang: 'tr', actorKey: 'gw-whisper-429' });
+  assert.equal(failCalls, 1);
+  assert.equal(errRes.ok, false);
+  assert.equal(errRes.status, 429);
+  assert.equal(errRes.error, 'gateway_limit');
+});
+
