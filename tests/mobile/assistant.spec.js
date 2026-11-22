@@ -2,43 +2,79 @@ import { test, expect } from '@playwright/test';
 
 async function expectChatPanelLayout(page, panel) {
   const vp = page.viewportSize();
+  const isMobile = vp.width <= 480;
   const box = await panel.boundingBox();
   expect(box).not.toBeNull();
-  const expectedW = vp.width <= 480 ? vp.width - 24 : (vp.width >= 1440 ? 460 : 420);
-  const expectedH = vp.width <= 480 ? vp.height * 0.85 : Math.min(640, vp.height * 0.82);
-  expect(Math.abs(box.width - expectedW)).toBeLessThanOrEqual(2);
-  expect(Math.abs(box.height - expectedH)).toBeLessThanOrEqual(2);
-  expect(box.x).toBeGreaterThanOrEqual(-1);
-  expect(box.x + box.width).toBeLessThanOrEqual(vp.width + 1);
+  if (isMobile) {
+    expect(Math.abs(box.x)).toBeLessThanOrEqual(1);
+    expect(Math.abs(box.y)).toBeLessThanOrEqual(1);
+    expect(Math.abs(box.width - vp.width)).toBeLessThanOrEqual(2);
+    expect(Math.abs(box.height - vp.height)).toBeLessThanOrEqual(2);
+  } else {
+    const expectedW = vp.width >= 1440 ? 460 : 420;
+    const expectedH = Math.min(640, vp.height * 0.82);
+    expect(Math.abs(box.width - expectedW)).toBeLessThanOrEqual(2);
+    expect(Math.abs(box.height - expectedH)).toBeLessThanOrEqual(2);
+    expect(box.x).toBeGreaterThanOrEqual(-1);
+    expect(box.x + box.width).toBeLessThanOrEqual(vp.width + 1);
+  }
 
   const metrics = await panel.evaluate((el) => {
     const cs = (node) => getComputedStyle(node);
+    const panelCs = cs(el);
+    const head = el.querySelector('.bc-head');
+    const av = el.querySelector('.bc-head-avatar');
+    const sub = el.querySelector('.bc-sub');
     const log = el.querySelector('.bc-log');
     const msg = el.querySelector('.bc-msg');
     const msgCs = cs(msg);
-    const handoff = el.querySelector('.bc-handoff');
     const quick = el.querySelector('.bc-quick');
+    const tg = el.querySelector('.bc-tg-link');
+    const tgRect = tg.getBoundingClientRect();
     return {
+      borderRadius: panelCs.borderRadius,
+      headH: head.getBoundingClientRect().height,
+      avW: av.getBoundingClientRect().width,
+      subDisplay: cs(sub).display,
+      visibleTitle: el.querySelector('.bc-title').innerText.trim(),
       logH: log.getBoundingClientRect().height,
       panelH: el.getBoundingClientRect().height,
-      title: cs(el.querySelector('.bc-title')).fontSize,
+      titleSize: cs(el.querySelector('.bc-title')).fontSize,
       msg: msgCs.fontSize,
       lineHeight: msgCs.lineHeight,
       input: cs(el.querySelector('.bc-input')).fontSize,
-      handoffHidden: handoff.hidden || cs(handoff).display === 'none',
+      handoffCount: el.querySelectorAll('.bc-handoff').length,
+      tgBarCount: el.querySelectorAll('.bc-tg-bar').length,
       quickWrap: cs(quick).flexWrap,
-      tgMin: parseFloat(cs(el.querySelector('.bc-tg-link')).minHeight),
+      tgW: tgRect.width,
+      tgH: tgRect.height,
+      tgInHead: head.contains(tg),
+      fabHidden: getComputedStyle(document.querySelector('.bc-fab')).display === 'none',
+      scrollLocked: document.body.classList.contains('bc-scroll-lock'),
     };
   });
-  expect(metrics.logH / metrics.panelH).toBeGreaterThanOrEqual(0.6);
-  expect(metrics.title).toBe('16px');
+  expect(metrics.logH / metrics.panelH).toBeGreaterThanOrEqual(isMobile ? 0.7 : 0.6);
+  expect(metrics.titleSize).toBe('16px');
   expect(metrics.msg).toBe('15px');
   expect(parseFloat(metrics.lineHeight) / 15).toBeCloseTo(1.5, 1);
-  expect(metrics.input).toBe(vp.width <= 480 ? '16px' : '15px');
-  expect(metrics.handoffHidden).toBe(true);
-  expect(metrics.quickWrap).toBe('wrap');
-  expect(metrics.tgMin).toBeGreaterThanOrEqual(44);
-  await expect(panel.locator('.bc-handoff')).toBeHidden();
+  expect(metrics.input).toBe(isMobile ? '16px' : '15px');
+  expect(metrics.handoffCount).toBe(0);
+  expect(metrics.tgBarCount).toBe(0);
+  expect(metrics.tgInHead).toBe(true);
+  expect(metrics.tgW).toBeGreaterThanOrEqual(44);
+  expect(metrics.tgH).toBeGreaterThanOrEqual(44);
+  if (isMobile) {
+    expect(parseFloat(metrics.borderRadius)).toBe(0);
+    expect(metrics.headH).toBeLessThanOrEqual(56);
+    expect(Math.round(metrics.avW)).toBe(32);
+    expect(metrics.visibleTitle).toBe('Mimo');
+    expect(metrics.subDisplay).toBe('none');
+    expect(metrics.fabHidden).toBe(true);
+    expect(metrics.scrollLocked).toBe(true);
+  } else {
+    expect(metrics.quickWrap).toBe('wrap');
+  }
+  await expect(panel.locator('.bc-handoff')).toHaveCount(0);
   const closeHit = await panel.locator('.bc-close').evaluate((el) => {
     const r = el.getBoundingClientRect();
     const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
@@ -47,8 +83,8 @@ async function expectChatPanelLayout(page, panel) {
   expect(closeHit).toBe(true);
   const send = await panel.locator('.bc-send').boundingBox();
   const input = await panel.locator('.bc-input').boundingBox();
-  expect(send.y + send.height).toBeLessThanOrEqual(box.y + box.height + 1);
-  expect(input.y + input.height).toBeLessThanOrEqual(box.y + box.height + 1);
+  expect(send.y + send.height).toBeLessThanOrEqual(vp.height + 1);
+  expect(input.y + input.height).toBeLessThanOrEqual(vp.height + 1);
 }
 
 test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile without horizontal overflow, and Hero Mimo card opens panel', async ({ page }) => {
@@ -82,16 +118,18 @@ test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile withou
   // Panel size, type scale, and email box stay within the mobile layout contract
   await expectChatPanelLayout(page, panel);
 
-  // Talk to a human toggles email input
+  // Talk to a human opens email card inside .bc-log and removes it on close
   await panel.locator('.bc-human-btn').click();
-  await expect(panel.locator('.bc-handoff')).toBeVisible();
+  await expect(panel.locator('.bc-log .bc-handoff')).toBeVisible();
   await expect(panel.locator('.bc-handoff input[type="email"]')).toBeVisible();
   const vp = page.viewportSize();
   const emailSize = await panel.locator('.bc-handoff input[type="email"]').evaluate((el) => getComputedStyle(el).fontSize);
   expect(emailSize).toBe(vp.width <= 480 ? '16px' : '15px');
+  await panel.locator('.bc-handoff-close').click();
+  await expect(panel.locator('.bc-handoff')).toHaveCount(0);
   const openBox = await panel.boundingBox();
   const logBox = await panel.locator('.bc-log').boundingBox();
-  expect(logBox.height / openBox.height).toBeGreaterThanOrEqual(0.6);
+  expect(logBox.height / openBox.height).toBeGreaterThanOrEqual(vp.width <= 480 ? 0.7 : 0.6);
 });
 
 test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic without horizontal overflow', async ({ page }) => {
@@ -118,6 +156,7 @@ test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic w
   const tgLink = panel.locator('.bc-tg-link');
   await expect(tgLink).toBeVisible();
   await expect(tgLink).toHaveAttribute('href', 'https://t.me/BosphorlyBot?start=ar');
+  await expect(tgLink).toHaveAttribute('aria-label', 'تابع على تيليجرام');
   await expect(tgLink).toHaveAttribute('target', '_blank');
   await expect(tgLink).toHaveAttribute('rel', /noopener/);
   expect((await tgLink.boundingBox()).height).toBeGreaterThanOrEqual(44);
@@ -148,11 +187,12 @@ test('Telegram CTAs render with language param, local SVG, >=44px touch target, 
   expect((await page.locator('.dc-foot a.tg-foot').boundingBox()).height).toBeGreaterThanOrEqual(44);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 
-  // Assistant panel top link in Turkish
+  // Assistant panel header icon in Turkish (with 44px touch target & localized aria-label)
   await page.locator('.bc-fab').click();
-  const chatTg = page.locator('.bc-panel .bc-tg-link');
+  const chatTg = page.locator('.bc-panel .bc-head .bc-tg-link');
   await expect(chatTg).toHaveAttribute('href', 'https://t.me/BosphorlyBot?start=tr');
-  await expect(chatTg).toContainText("Telegram'dan devam et");
+  await expect(chatTg).toHaveAttribute('aria-label', "Telegram'dan devam et");
+  expect((await chatTg.boundingBox()).width).toBeGreaterThanOrEqual(44);
   expect((await chatTg.boundingBox()).height).toBeGreaterThanOrEqual(44);
 
   // Booking confirmation screen shows "Sorun olursa Telegram'dan yaz"
@@ -198,8 +238,11 @@ test('all Telegram links stay hidden when telegramBot in config/api.js is empty'
 });
 
 
-test('email handoff stays hidden until a human is requested, and quick actions scroll on one line after the first message', async ({ page }) => {
+test('email handoff stays out of DOM until requested, opens inline under matching Mimo reply, and closes/hides quick actions on mobile after first message', async ({ page }) => {
   let calls = 0;
+  await page.route('**/v1/assistant/handoff', async (route) => {
+    await route.fulfill({ status: 202, contentType: 'application/json', body: JSON.stringify({ accepted: true, reference: 'BOS-CARD-1' }) });
+  });
   await page.route('**/v1/assistant', async (route) => {
     calls += 1;
     const handoff = calls > 1;
@@ -224,9 +267,12 @@ test('email handoff stays hidden until a human is requested, and quick actions s
   await page.goto('/index.html?lang=tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
+  const vp = page.viewportSize();
+  const isMobile = vp.width <= 480;
   await expect(panel).toBeVisible();
-  await expect(panel.locator('.bc-handoff')).toBeHidden();
+  await expect(panel.locator('.bc-handoff')).toHaveCount(0);
   await expect(panel.locator('.bc-quick')).not.toHaveClass(/bc-quick-scroll/);
+  await expect(panel.locator('.bc-quick-toggle')).toBeHidden();
 
   const input = panel.locator('.bc-input');
   const sendBtn = panel.locator('.bc-send');
@@ -234,36 +280,60 @@ test('email handoff stays hidden until a human is requested, and quick actions s
   await input.fill('Boğaz turu saat kaçta?');
   await sendBtn.click();
   await expect(panel.locator('.bc-msg.user')).toContainText('Boğaz turu saat kaçta?');
-  await expect(panel.locator('.bc-handoff')).toBeHidden();
+  await expect(panel.locator('.bc-handoff')).toHaveCount(0);
 
   const quick = panel.locator('.bc-quick');
+  const quickToggle = panel.locator('.bc-quick-toggle');
   await expect(quick).toHaveClass(/bc-quick-scroll/);
-  const quickStyle = await quick.evaluate((el) => {
-    const cs = getComputedStyle(el);
-    const btn = getComputedStyle(el.querySelector('.bc-quick-btn'));
-    return {
-      wrap: cs.flexWrap,
-      overflowX: cs.overflowX,
-      whiteSpace: btn.whiteSpace,
-      shrink: btn.flexShrink,
-      scrolls: el.scrollWidth > el.clientWidth + 1,
-    };
-  });
-  expect(quickStyle.wrap).toBe('nowrap');
-  expect(quickStyle.overflowX).toBe('auto');
-  expect(quickStyle.whiteSpace).toBe('nowrap');
-  expect(quickStyle.shrink).toBe('0');
-  if (page.viewportSize().width <= 480) expect(quickStyle.scrolls).toBe(true);
+  if (isMobile) {
+    await expect(quick).toBeHidden();
+    await expect(quickToggle).toBeVisible();
+    await quickToggle.click();
+    await expect(quick).toBeVisible();
+    await quickToggle.click();
+    await expect(quick).toBeHidden();
+  } else {
+    await expect(quickToggle).toBeHidden();
+    const quickStyle = await quick.evaluate((el) => {
+      const cs = getComputedStyle(el);
+      const btn = getComputedStyle(el.querySelector('.bc-quick-btn'));
+      return {
+        wrap: cs.flexWrap,
+        overflowX: cs.overflowX,
+        whiteSpace: btn.whiteSpace,
+        shrink: btn.flexShrink,
+      };
+    });
+    expect(quickStyle.wrap).toBe('nowrap');
+    expect(quickStyle.overflowX).toBe('auto');
+    expect(quickStyle.whiteSpace).toBe('nowrap');
+    expect(quickStyle.shrink).toBe('0');
+  }
 
   await input.fill('Bir insana bağla');
   await sendBtn.click();
   await expect(panel.locator('.bc-msg.bot').last()).toContainText('Ekibimize iletiyorum.');
-  await expect(panel.locator('.bc-handoff')).toBeVisible();
+  const card = panel.locator('.bc-log .bc-handoff');
+  await expect(card).toBeVisible();
+  // Handoff card sits directly under the matching Mimo bot row inside .bc-log
+  const isImmediatelyAfterBot = await panel.locator('.bc-log').evaluate((log) => {
+    const botRows = log.querySelectorAll('.bc-msg-row.bot');
+    const lastBot = botRows[botRows.length - 1];
+    return Boolean(lastBot && lastBot.nextElementSibling && lastBot.nextElementSibling.classList.contains('bc-handoff'));
+  });
+  expect(isImmediatelyAfterBot).toBe(true);
+
   const logRatio = await panel.evaluate((el) => {
     const log = el.querySelector('.bc-log').getBoundingClientRect().height;
     return log / el.getBoundingClientRect().height;
   });
-  expect(logRatio).toBeGreaterThanOrEqual(0.6);
+  expect(logRatio).toBeGreaterThanOrEqual(isMobile ? 0.7 : 0.6);
+
+  // Sending handoff removes the inline card from the chat list
+  await card.locator('input[type="email"]').fill('guest@example.org');
+  await card.locator('.bc-forward-btn').click();
+  await expect(panel.locator('.bc-handoff')).toHaveCount(0);
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('info@bosphorly.com');
 });
 
 test('RTL chat panels for Hebrew, Arabic and Persian keep the email box hidden and the message area dominant', async ({ page }) => {
@@ -278,6 +348,8 @@ test('RTL chat panels for Hebrew, Arabic and Persian keep the email box hidden a
     expect((await panel.locator('.bc-tg-link').boundingBox()).height).toBeGreaterThanOrEqual(44);
     await page.locator('.bc-close').click();
     await expect(panel).toBeHidden();
+    await expect(page.locator('.bc-fab')).toBeVisible();
+    expect(await page.evaluate(() => document.body.classList.contains('bc-scroll-lock'))).toBe(false);
   }
 });
 
@@ -750,3 +822,90 @@ test('panel open pre-warms Turnstile token in background, shows 8s intermediate 
   expect(await page.evaluate(() => window.__sseReq.turnstileToken)).toBe('ts-prewarmed-1');
   expect(await page.evaluate(() => window.__tsStats.resets)).toBe(0);
 });
+
+test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visualViewport, single-line kindNote, FAB hide/restore & dark mode', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.addInitScript(() => {
+    const vvListeners = { resize: [], scroll: [] };
+    let mockH = 0;
+    Object.defineProperty(window, 'visualViewport', {
+      configurable: true,
+      value: {
+        get width() { return window.innerWidth; },
+        get height() { return mockH || window.innerHeight; },
+        get offsetTop() { return 0; },
+        get offsetLeft() { return 0; },
+        addEventListener(type, fn) { (vvListeners[type] = vvListeners[type] || []).push(fn); },
+        removeEventListener(type, fn) { vvListeners[type] = (vvListeners[type] || []).filter((f) => f !== fn); },
+      },
+    });
+    window.__setMockVvHeight = (h) => {
+      mockH = h;
+      (vvListeners.resize || []).forEach((fn) => fn());
+    };
+  });
+
+  for (const vp of [{ width: 375, height: 667 }, { width: 393, height: 852 }]) {
+    await page.setViewportSize(vp);
+    if (page.url() !== 'about:blank') {
+      await page.evaluate(() => { sessionStorage.clear(); window.__setMockVvHeight(0); });
+    }
+
+    await page.goto('/index.html?lang=tr');
+    await page.locator('.bc-fab').click();
+    const panel = page.locator('.bc-panel');
+    await expect(panel).toBeVisible();
+    await expectChatPanelLayout(page, panel);
+
+    const initialMetrics = await panel.evaluate((el) => {
+      const note = el.querySelector('.bc-kind-note');
+      const noteCs = getComputedStyle(note);
+      const panelCs = getComputedStyle(el);
+      const botCs = getComputedStyle(el.querySelector('.bc-msg.bot'));
+      return {
+        noteH: note.getBoundingClientRect().height,
+        noteWrap: noteCs.whiteSpace,
+        panelBg: panelCs.backgroundColor,
+        botBg: botCs.backgroundColor,
+      };
+    });
+    expect(initialMetrics.noteWrap).toBe('nowrap');
+    expect(initialMetrics.noteH).toBeLessThanOrEqual(24);
+    expect(initialMetrics.panelBg).not.toBe('rgb(255, 255, 255)');
+    expect(initialMetrics.botBg).not.toBe('rgb(255, 255, 255)');
+
+    await page.reload();
+    await page.locator('.bc-fab').click();
+    await expect(page.locator('.bc-panel')).toBeVisible();
+    await expect(page.locator('.bc-panel .bc-kind-note')).toHaveCount(0);
+
+    await page.evaluate(() => window.__setMockVvHeight(360));
+    const inputBox = await page.locator('.bc-panel .bc-input').boundingBox();
+    expect(inputBox.y).toBeGreaterThanOrEqual(0);
+    expect(inputBox.y + inputBox.height).toBeLessThanOrEqual(361);
+    const panelBox = await page.locator('.bc-panel').boundingBox();
+    expect(Math.abs(panelBox.height - 360)).toBeLessThanOrEqual(2);
+
+    await page.evaluate(() => window.__setMockVvHeight(0));
+    await page.locator('.bc-panel .bc-close').click();
+    await expect(page.locator('.bc-panel')).toBeHidden();
+    await expect(page.locator('.bc-fab')).toBeVisible();
+    expect(await page.evaluate(() => document.body.classList.contains('bc-scroll-lock'))).toBe(false);
+  }
+});
+
+test('375x667 RTL layout (he, ar, fa) keeps input in viewport, >=70% log area, and no horizontal overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  for (const lang of ['he', 'ar', 'fa']) {
+    await page.goto(`/index.html?lang=${lang}`);
+    await page.locator('.bc-fab').click();
+    const panel = page.locator('.bc-panel');
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveAttribute('dir', 'rtl');
+    await expectChatPanelLayout(page, panel);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.locator('.bc-close').click();
+    await expect(page.locator('.bc-fab')).toBeVisible();
+  }
+});
+

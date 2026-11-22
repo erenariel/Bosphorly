@@ -1069,6 +1069,57 @@ function isNonsensicalReply(reply) {
   return false;
 }
 
+function decodeJsonStringFragment(rawFragment) {
+  let out = '';
+  for (let i = 0; i < rawFragment.length; i++) {
+    const ch = rawFragment[i];
+    if (ch !== '\\') {
+      out += ch;
+      continue;
+    }
+    i += 1;
+    if (i >= rawFragment.length) break;
+    const esc = rawFragment[i];
+    if (esc === 'n') out += '\n';
+    else if (esc === 'r') out += ' ';
+    else if (esc === 't') out += ' ';
+    else if (esc === '"' || esc === '\\' || esc === '/') out += esc;
+    else if (esc === 'u' && /^[0-9a-fA-F]{4}/.test(rawFragment.slice(i + 1, i + 5))) {
+      out += String.fromCharCode(parseInt(rawFragment.slice(i + 1, i + 5), 16));
+      i += 4;
+    } else {
+      out += esc;
+    }
+  }
+  return out.trim();
+}
+
+function findBalancedJsonObjects(text) {
+  const candidates = [];
+  let inStr = false;
+  let escape = false;
+  let depth = 0;
+  let start = -1;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (escape) { escape = false; continue; }
+    if (ch === '\\' && inStr) { escape = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === '{') {
+      if (depth === 0) start = i;
+      depth += 1;
+    } else if (ch === '}' && depth > 0) {
+      depth -= 1;
+      if (depth === 0 && start !== -1) {
+        candidates.push(text.slice(start, i + 1));
+        start = -1;
+      }
+    }
+  }
+  return candidates;
+}
+
 function parseModelOutput(raw) {
   const objCandidate =
     (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
@@ -1082,24 +1133,47 @@ function parseModelOutput(raw) {
     };
   }
 
-  const text = extractRawText(raw).replace(/<think>[\s\S]*?<\/think>/gi, '');
-  const trimmed = text.trim();
-  const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    try {
-      const obj = JSON.parse(jsonMatch[0]);
-      if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+  let text = extractRawText(raw)
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<think>[\s\S]*$/gi, '');
+  let trimmed = text.trim();
+  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenceMatch) trimmed = fenceMatch[1].trim();
+
+  if (trimmed.includes('{')) {
+    const balanced = findBalancedJsonObjects(trimmed);
+    for (const candidate of balanced) {
+      try {
+        const obj = JSON.parse(candidate);
+        if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+          return {
+            abuse: Boolean(obj.abuse),
+            handoff: Boolean(obj.handoff),
+            reply: typeof obj.reply === 'string' ? obj.reply.trim() : '',
+            parseFailed: false,
+          };
+        }
+      } catch {}
+    }
+
+    const partialMatch = trimmed.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)(?:"|$)/s);
+    if (partialMatch) {
+      const recovered = decodeJsonStringFragment(partialMatch[1]);
+      if (/\p{L}{2,}/u.test(recovered)) {
         return {
-          abuse: Boolean(obj.abuse),
-          handoff: Boolean(obj.handoff),
-          reply: typeof obj.reply === 'string' ? obj.reply.trim() : '',
+          abuse: /"abuse"\s*:\s*true\b/i.test(trimmed),
+          handoff: /"handoff"\s*:\s*true\b/i.test(trimmed),
+          reply: recovered,
           parseFailed: false,
         };
       }
-    } catch {
-      return { abuse: false, handoff: true, reply: '', parseFailed: true };
+    }
+
+    if (/^\s*\{/.test(trimmed) || /"\s*(?:reply|abuse|handoff)\s*"\s*:/i.test(trimmed) || /\{[\s\S]*\}/.test(trimmed)) {
+      return { abuse: false, handoff: false, reply: '', parseFailed: true };
     }
   }
+
   const abuse = /\[ABUSE\]/i.test(trimmed);
   const handoff = /\[HANDOFF\]/i.test(trimmed);
   return {
@@ -1111,7 +1185,7 @@ function parseModelOutput(raw) {
 }
 
 function isAiTimeoutError(err) {
-  return Boolean(err && err.message === 'AI timeout');
+  return Boolean(err && (err.name === 'TimeoutError' || /timeout/i.test(String(err.message || ''))));
 }
 
 function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
@@ -1128,7 +1202,11 @@ function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
     (error) => ({ ok: false, error }),
   );
   const timeout = new Promise((resolve) => {
-    timer = setTimeout(() => resolve({ ok: false, error: new Error('AI timeout') }), timeoutMs);
+    timer = setTimeout(() => {
+      const err = new Error(`AI timeout after ${timeoutMs}ms`);
+      err.name = 'TimeoutError';
+      resolve({ ok: false, error: err });
+    }, timeoutMs);
   });
   return Promise.race([settled, timeout]).finally(() => clearTimeout(timer));
 }
@@ -1496,6 +1574,7 @@ async function finalizeModelOutput({
       console.warn('assistant_ai_invalid_output', {
         model: ASSISTANT_MODEL,
         reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
+        parseFailed: Boolean(parsed.parseFailed),
       });
     }
     return modelFallbackResult({ aiIdentityAsked, smallTalkKind, cleanMsg, lang, guestName, warnPrefix });
@@ -1518,11 +1597,14 @@ async function finalizeModelOutput({
   return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
 }
 
-function logModelFailure(err, aiIdentityAsked) {
+function logModelFailure(err, { aiIdentityAsked = false, durationMs = 0, parseFailed = false } = {}) {
   if (aiIdentityAsked) return;
   console.error('assistant_ai_call_failed', {
     model: ASSISTANT_MODEL,
     errorType: err && err.name ? String(err.name) : 'Error',
+    message: redactSensitive(String(err && err.message ? err.message : '')).text.slice(0, 200),
+    durationMs: Math.max(0, Math.round(durationMs)),
+    parseFailed: Boolean(parseFailed),
   });
 }
 
@@ -1555,14 +1637,22 @@ export async function runAssistant({
   }
 
   const aiStart = Date.now();
+  let lastParseFailed = false;
   try {
     let parsed = parseModelOutput(await runAiWithRetry(env, prep.messages, prep.timeoutMs, prep.temperature));
+    lastParseFailed = Boolean(parsed.parseFailed);
     if (!parsed.parseFailed && sameAsLastReply(parsed.reply, prep.safeHistory)) {
-      const retry = parseModelOutput(await runAiWithRetry(env, [
-        ...prep.messages,
-        { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
-      ], prep.timeoutMs, 0.9));
-      if (!retry.parseFailed && retry.reply) parsed = retry;
+      try {
+        const retry = parseModelOutput(await runAiWithRetry(env, [
+          ...prep.messages,
+          { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
+        ], prep.timeoutMs, 0.9));
+        const retryClean = stripFakeUrgency(stripExternalLinks(redactSensitive(retry.reply).text));
+        if (!retry.parseFailed && !isNonsensicalReply(retryClean)) {
+          parsed = retry;
+          lastParseFailed = false;
+        }
+      } catch {}
     }
     const finalized = await finalizeModelOutput({ parsed, prep, env, now });
     logAssistantTiming({
@@ -1575,7 +1665,11 @@ export async function runAssistant({
     });
     return finalized;
   } catch (err) {
-    logModelFailure(err, prep.aiIdentityAsked);
+    logModelFailure(err, {
+      aiIdentityAsked: prep.aiIdentityAsked,
+      durationMs: Date.now() - aiStart,
+      parseFailed: lastParseFailed,
+    });
     const fallback = modelFallbackResult(prep);
     logAssistantTiming({
       channel: prep.effectiveChannel,
@@ -1801,7 +1895,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           controller.close();
           return;
         }
-        logModelFailure(err, false);
+        logModelFailure(err, { aiIdentityAsked: false, durationMs: modelMs, parseFailed: false });
         const fallback = modelFallbackResult(prep);
         logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
         sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));

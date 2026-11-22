@@ -2011,3 +2011,88 @@ test('SSE streaming retries a timeout once, uses tryAgain off-catalog, and keeps
   assert.ok(greet.json.reply.includes('Mimo'));
   assert.equal(/e-posta|email/i.test(greet.json.reply), false);
 });
+
+test('small talk ("nasılsın?", "Selam nasılsın") recovers non-JSON/truncated replies, safely logs failures (message<=200, durationMs, parseFailed), and preserves valid reply on repeat-retry error', async (t) => {
+  assert.equal(AI_TIMEOUT_MS, 9000);
+  assert.equal(ASSISTANT_MESSAGES.tryAgain.tr, 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?');
+
+  for (const q of ['nasılsın?', 'Selam nasılsın']) {
+    for (const raw of [
+      { response: 'İyiyim, Boğaz havasıyla harikayım 😊 Sen nasılsın?' },
+      { response: '```json\n{"abuse":false,"handoff":false,"reply":"Çok iyiyim! İstanbul seni bekliyor 🌊"}\n```' },
+      { response: '{"abuse":false,"handoff":false,"reply":"Harika gidiyor! Sen nasılsın?' },
+      { response: '<think>reasoning\n</think>{"reply":"Süperim! Bugün neler yapıyorsun?"}' },
+    ]) {
+      const r = await runAssistant({
+        message: q,
+        pageLang: 'tr',
+        env: { AI: { run: async () => raw } },
+        actorKey: `st-rec-${Math.random()}`,
+      });
+      assert.equal(r.handoff, false, `no handoff for "${q}"`);
+      assert.ok(!r.handoffOffer);
+      assert.ok(r.reply.length > 10 && !r.reply.includes('e-posta'));
+    }
+
+    for (const emptyRaw of [{ response: '' }, { response: '{}' }, { response: '   ' }, { response: 'null' }]) {
+      const r = await runAssistant({
+        message: q,
+        pageLang: 'tr',
+        env: { AI: { run: async () => emptyRaw } },
+        actorKey: `st-empty-${Math.random()}`,
+      });
+      assert.equal(r.handoff, false);
+      assert.equal(r.fallback, true);
+      assert.equal(r.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+    }
+
+    const errorLogs = [];
+    t.mock.method(console, 'error', (...args) => errorLogs.push(args));
+    let timeoutCalls = 0;
+    const retryFail = await runAssistant({
+      message: `${q} UNLOGGED_TOKEN_ABC`,
+      pageLang: 'tr',
+      aiTimeoutMs: 20,
+      env: {
+        AI: {
+          run: async () => {
+            timeoutCalls += 1;
+            return new Promise(() => {});
+          },
+        },
+      },
+      actorKey: `st-timeout-log-${Math.random()}`,
+    });
+    t.mock.restoreAll();
+    assert.equal(timeoutCalls, 2);
+    assert.equal(retryFail.handoff, false);
+    assert.equal(retryFail.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+    const errCall = errorLogs.find((e) => e[0] === 'assistant_ai_call_failed');
+    assert.ok(errCall);
+    assert.equal(errCall[1].errorType, 'TimeoutError');
+    assert.ok(typeof errCall[1].message === 'string' && errCall[1].message.length > 0 && errCall[1].message.length <= 200);
+    assert.ok(typeof errCall[1].durationMs === 'number' && errCall[1].durationMs >= 0);
+    assert.equal(typeof errCall[1].parseFailed, 'boolean');
+    assert.equal(JSON.stringify(errorLogs).includes('UNLOGGED_TOKEN_ABC'), false);
+  }
+
+  let repCalls = 0;
+  const repSafe = await runAssistant({
+    message: 'nasılsın?',
+    pageLang: 'tr',
+    history: [{ role: 'user', content: 'nasılsın' }, { role: 'assistant', content: 'Harika gidiyor! Sen nasılsın?' }],
+    env: {
+      AI: {
+        run: async () => {
+          repCalls += 1;
+          if (repCalls === 1) return { response: JSON.stringify({ handoff: false, reply: 'Harika gidiyor! Sen nasılsın?' }) };
+          throw new Error('Retry error');
+        },
+      },
+    },
+    actorKey: 'st-repeat-resilient',
+  });
+  assert.equal(repSafe.handoff, false);
+  assert.equal(repSafe.reply, 'Harika gidiyor! Sen nasılsın?');
+});
+
