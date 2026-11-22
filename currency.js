@@ -60,6 +60,15 @@
   const listeners = new Set();
   function set(c) { chosen = c; try { localStorage.setItem(KEY, c); } catch {} document.querySelectorAll('.currency-select').forEach(s => { s.value = c; }); listeners.forEach(f => f()); }
 
+  function syncLabels() {
+    document.querySelectorAll('.currency-select').forEach(s => {
+      s.setAttribute('aria-label', txt().label);
+      const orig = s.querySelector('option[value="original"]');
+      if (orig) orig.textContent = txt().original;
+      s.title = rates ? titleText() : '';
+    });
+  }
+
   function mount() {
     document.querySelectorAll('[data-currency-mount]').forEach(el => {
       if (el.querySelector('select')) return;
@@ -77,6 +86,7 @@
       el.append(s);
     });
   }
+  document.addEventListener('bosphorly:lang', () => { syncLabels(); listeners.forEach(f => f()); });
 
   // The site's own file is refreshed several times a day by GitHub Actions (tools/fetch_rates.py). If it is
   // missing or more than MAX_AGE days old (scheduled runs stopped, long holiday), the browser fetches

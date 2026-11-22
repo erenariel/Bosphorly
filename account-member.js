@@ -14,11 +14,14 @@
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const KIND = { welcome: T.kWelcome, referral: T.kReferral, hotel: T.kHotel, second_tour: T.kSecond, loyalty: T.kLoyalty };
   const SIGNUP = { en: 'Create account', tr: 'Hesap oluştur', ru: 'Создать аккаунт', uk: 'Створити акаунт', de: 'Konto erstellen', fr: 'Créer un compte', nl: 'Account aanmaken', ar: 'إنشاء حساب', he: 'יצירת חשבון', az: 'Hesab yarat', fa: 'ایجاد حساب', es: 'Crear cuenta', it: 'Crea account', pt: 'Criar conta', hr: 'Izradi račun', hu: 'Fiók létrehozása', bs: 'Kreiraj račun', zh: '创建账户', ja: 'アカウント作成', ko: '계정 만들기', hi: 'खाता बनाएँ', bn: 'অ্যাকাউন্ট খুলুন', id: 'Buat akun' };
+  const BADGE = { tr: 'BOSPHORLY ÜYELİK AYRICALIKLARI', en: 'BOSPHORLY MEMBER PRIVILEGES', ru: 'ПРИВИЛЕГИИ УЧАСТНИКА BOSPHORLY', uk: 'ПРИВІЛЕЇ УЧАСНИКА BOSPHORLY', de: 'BOSPHORLY MITGLIEDERVORTEILE', fr: 'PRIVILÈGES MEMBRE BOSPHORLY', nl: 'BOSPHORLY LEDENVOORDELEN', ar: 'مزايا عضوية BOSPHORLY', he: 'הטבות חברי BOSPHORLY', az: 'BOSPHORLY ÜZVLÜK İMTİYAZLARI', fa: 'مزایای عضویت BOSPHORLY', es: 'PRIVILEGIOS DE MIEMBRO BOSPHORLY', it: 'PRIVILEGI MEMBRI BOSPHORLY', pt: 'PRIVILÉGIOS DE MEMBRO BOSPHORLY', hr: 'BOSPHORLY POGODNOSTI ZA ČLANOVE', hu: 'BOSPHORLY TAGI KEDVEZMÉNYEK', bs: 'BOSPHORLY POGODNOSTI ZA ČLANOVE', zh: 'BOSPHORLY 会员礼遇', ja: 'BOSPHORLY 会員特典', ko: 'BOSPHORLY 멤버십 혜택', hi: 'BOSPHORLY सदस्य विशेषाधिकार', bn: 'BOSPHORLY সদস্য সুবিধা', id: 'KEUNTUNGAN ANGGOTA BOSPHORLY' };
+  const NAME_ERR = { tr: 'Lütfen adınızı ve soyadınızı girin.', en: 'Please enter your full name.', ru: 'Пожалуйста, введите имя и фамилию.', uk: 'Будь ласка, введіть ім’я та прізвище.', de: 'Bitte geben Sie Ihren vollständigen Namen ein.', fr: 'Veuillez saisir votre nom complet.', nl: 'Vul alstublieft uw volledige naam in.', ar: 'يرجى إدخال الاسم الكامل.', he: 'אנא הזינו שם מלא.', az: 'Zəhmət olmasa ad və soyadınızı daxil edin.', fa: 'لطفاً نام و نام خانوادگی خود را وارد کنید.', es: 'Por favor, introduce tu nombre completo.', it: 'Inserisci nome e cognome.', pt: 'Por favor, insira seu nome completo.', hr: 'Molimo unesite ime i prezime.', hu: 'Kérjük, adja meg a teljes nevét.', bs: 'Molimo unesite ime i prezime.', zh: '请输入您的全名。', ja: 'お名前を入力してください。', ko: '성함을 입력해 주세요.', hi: 'कृपया अपना पूरा नाम दर्ज करें।', bn: 'অনুগ্রহ করে আপনার পুরো নাম লিখুন।', id: 'Silakan masukkan nama lengkap Anda.' };
   const signupLabel = SIGNUP[lang] || SIGNUP.en;
+  const badgeLabel = BADGE[lang] || BADGE.en;
 
   const UI = {
     continueWith: tr ? '{p} ile devam et' : 'Continue with {p}',
-    orEmail: tr ? 'veya e-posta ve seyahat bilgilerinle' : 'or with your email & travel details',
+    orEmail: tr ? 'veya e-posta adresiniz ve seyahat bilgilerinizle' : 'or continue with your e-mail & travel preferences',
     oauthTitle: tr ? '{p} ile bağlan' : 'Connect with {p}',
     oauthSub: tr ? 'Bosphorly hesabınıza erişim izni istiyor' : 'Bosphorly is requesting access to your account',
     oauthPerm1: tr ? 'E-posta adresiniz ve adınız (üyelik hesabınızı oluşturmak ve %5 hoş geldin kuponunuzu tanımlamak için)' : 'Your email address and name (to create your membership account and issue your 5% welcome coupon)',
@@ -26,18 +29,18 @@
     oauthEmailLabel: tr ? '{p} e-posta adresiniz' : 'Your {p} email address',
     oauthAllow: tr ? 'İzin ver ve devam et' : 'Allow and continue',
     oauthCancel: tr ? 'İptal' : 'Cancel',
-    phone: tr ? 'Cep telefonu / WhatsApp' : 'Mobile phone / WhatsApp',
+    phone: tr ? 'Cep telefonu (isteğe bağlı)' : 'Mobile phone (optional)',
     phonePh: tr ? '+90 555 000 00 00' : '+44 7700 900123',
     country: tr ? 'Ülke / Uyruk (isteğe bağlı)' : 'Country / Nationality (optional)',
     countryPh: tr ? 'Örn. Türkiye, Almanya, İngiltere' : 'e.g. United Kingdom, Germany',
-    hotel: tr ? 'İstanbul’daki otelin (isteğe bağlı)' : 'Your hotel in Istanbul (optional)',
+    hotel: tr ? 'Konaklayacağınız otel (isteğe bağlı)' : 'Your hotel in Istanbul (optional)',
     hotelPh: tr ? 'Örn. Sultanahmet Palace' : 'e.g. Sultanahmet Palace',
-    interests: tr ? 'İlgilendiğin turlar ve hizmetler (isteğe bağlı)' : 'Tours & services you are interested in (optional)',
-    intCruise: tr ? '⛵ Boğaz turları' : '⛵ Bosphorus cruises',
-    intTransfer: tr ? '✈️ Havalimanı transferi' : '✈️ Airport transfer',
-    intOldCity: tr ? '🏛️ Tarihî Yarımada & kültür' : '🏛️ Old City & heritage',
-    intHammam: tr ? '🫧 Türk hamamı & spa' : '🫧 Turkish hammam & spa',
-    intPrivate: tr ? '🚐 Özel / VIP tur' : '🚐 Private & VIP tours',
+    interests: tr ? 'İlgi alanlarınız (isteğe bağlı)' : 'Travel interests (optional)',
+    intCruise: tr ? 'Boğaz turları' : 'Bosphorus cruises',
+    intTransfer: tr ? 'Havalimanı transferi' : 'Airport transfer',
+    intOldCity: tr ? 'Tarihî Yarımada & kültür' : 'Old City & heritage',
+    intHammam: tr ? 'Türk hamamı & spa' : 'Turkish hammam & spa',
+    intPrivate: tr ? 'Özel / VIP tur' : 'Private & VIP tours',
     openInbox: tr ? '✉ {p} gelen kutusunu aç ↗' : '✉ Open {p} inbox ↗',
     tierNames: {
       silver: tr ? '🥈 Silver Üye' : '🥈 Silver Member',
@@ -48,7 +51,7 @@
     toGold: tr ? 'Gold ayrıcalıkları (Free Upgrade & %5 VIP öncelik) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Gold (Free Upgrade & 5% VIP priority)',
     toPlatinum: tr ? 'Platinum VIP (her zaman öncelikli VIP indirim & Free Upgrade) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Platinum VIP (always-on VIP priority discount & Free Upgrade)',
     atPlatinum: tr ? 'En yüksek üye seviyesi! Tüm VIP servislerde öncelikli indirim ve Free Upgrade aktif.' : 'Highest tier unlocked! Always-on VIP priority discount & Free Upgrade active on all services.',
-    tierPerkSilver: tr ? 'Silver: Hoş geldin kuponu (%5), damga kartı ve ilgi alanına özel paket kampanyaları' : 'Silver: 5% welcome coupon, stamp card & personalized package campaigns',
+    tierPerkSilver: tr ? 'Silver: Hoş geldin kuponu (%5), sadakat programı ve ilgi alanınıza özel kampanyalar' : 'Silver: 5% welcome voucher, loyalty tier progress & tailored member campaigns',
     tierPerkGold: tr ? 'Gold (2+ tur): Müsaitliğe göre Free Upgrade + VIP servislerde %5 öncelikli indirim' : 'Gold (2+ tours): Free Upgrade (subject to availability) + 5% VIP service priority',
     tierPerkPlatinum: tr ? 'Platinum (5+ tur): Öncelikli Free Upgrade + VIP servislerde her zaman maks. %10 öncelikli indirim' : 'Platinum (5+ tours): Priority Free Upgrade + always-on max 10% VIP service priority discount',
     usableBadge: tr ? '{n} kullanılabilir' : '{n} available',
@@ -60,9 +63,9 @@
     vipCardTitleGold: tr ? 'Free Upgrade · %5 VIP öncelik' : 'Free Upgrade · 5% VIP priority',
     vipCardTitlePlat: tr ? 'Öncelikli Free Upgrade + %10 VIP indirim' : 'Priority Free Upgrade + 10% VIP discount',
     vipCardDesc: tr ? 'VIP havalimanı transferi ve özel şoförlü / VIP turlarda geçerlidir.' : 'Automatically applies to VIP airport transfers and private VIP tours.',
-    campaignsTitle: tr ? 'Sana özel paket kampanyaları' : 'Personalized package campaigns',
-    campaignsSub: tr ? 'Seçtiğin ilgi alanlarına ve üyelik seviyene göre önerilen fırsatlar:' : 'Curated packages tailored to your selected interests and tier:',
-    campaignsPickHint: tr ? 'İlgi alanlarını aşağıdan seç; seyahat tarzına özel kampanyalar hemen burada güncellensin.' : 'Select your interests below to tailor package campaigns to your trip.',
+    campaignsTitle: tr ? 'Size özel paket kampanyaları' : 'Personalized package campaigns',
+    campaignsSub: tr ? 'Seçtiğiniz ilgi alanlarına ve üyelik seviyenize göre önerilen fırsatlar:' : 'Curated packages tailored to your selected interests and tier:',
+    campaignsPickHint: tr ? 'İlgi alanlarınızı aşağıdan seçin; seyahat tarzınıza özel kampanyalar hemen güncellensin.' : 'Select your interests below to tailor package campaigns to your trip.',
     prefsTitle: tr ? 'Kişisel tercihler & haber bülteni' : 'Personal preferences & newsletter',
     newsletterLabel: tr ? 'Bosphorly Haber Bülteni: Sezonluk turlar, özel VIP kampanyalar ve kupon hatırlatmaları e-postama gelsin.' : 'Bosphorly Newsletter: Send me seasonal tours, VIP offers and personalized campaign updates.',
     savePrefs: tr ? 'Tercihleri ve bülteni kaydet' : 'Save preferences & newsletter',
@@ -83,28 +86,28 @@
     cruise: {
       tag: tr ? 'BOĞAZ PAKETİ' : 'BOSPHORUS BUNDLE',
       title: tr ? 'Boğaz Gün Batımı + Akşam Yemeği Turu' : 'Bosphorus Sunset & Dinner Cruise Package',
-      desc: tr ? 'Kuponunla birlikte grup veya özel yat seçeneğinde öncelikli rezervasyon.' : 'Combine your member coupon with priority seating on sunset or dinner yachts.',
+      desc: tr ? 'Üye indiriminizle birlikte grup veya özel yat seçeneğinde öncelikli rezervasyon.' : 'Combine your member voucher with priority seating on sunset or dinner yachts.',
       href: 'tours.html',
       cta: tr ? 'Boğaz turlarını incele →' : 'View Bosphorus tours →'
     },
     transfer: {
       tag: tr ? 'TRANSFER + VIP' : 'TRANSFER + VIP',
       title: tr ? 'IST / SAW Özel VIP Havalimanı Transferi' : 'IST / SAW Private VIP Airport Transfer',
-      desc: tr ? 'Sabit fiyat garantisi + Gold/Platinum üyelerimize VIP araçta ücretsiz sınıf yükseltme önceliği.' : 'Fixed rate per vehicle plus Free Upgrade priority on VIP vehicles for Gold/Platinum.',
+      desc: tr ? 'Sabit fiyat garantisi + Gold ve Platinum üyelerimize VIP araçta ücretsiz sınıf yükseltme önceliği.' : 'Fixed rate per vehicle plus Free Upgrade priority on VIP vehicles for Gold/Platinum.',
       href: 'index.html#booking',
       cta: tr ? 'Transfer talep et →' : 'Request transfer →'
     },
     oldcity: {
       tag: tr ? 'TARİH & KÜLTÜR' : 'HERITAGE PACKAGE',
       title: tr ? 'Sultanahmet & Boğaz Tam Gün Kombine Paketi' : 'Old City & Bosphorus Full-Day Combo',
-      desc: tr ? 'Ayasofya, Topkapı ve Yerebatan rotasını öğleden sonra Boğaz turuyla birleştir.' : 'Combine Hagia Sophia & Topkapı guided walk with an afternoon Bosphorus cruise.',
+      desc: tr ? 'Ayasofya, Topkapı ve Yerebatan rotasını öğleden sonra Boğaz turuyla birleştirin.' : 'Combine Hagia Sophia & Topkapı guided walk with an afternoon Bosphorus cruise.',
       href: 'tours.html',
       cta: tr ? 'Özel turları gör →' : 'See special tours →'
     },
     hammam: {
       tag: tr ? 'HAMAM & SPA' : 'HAMMAM & SPA',
       title: tr ? 'Tarihî Türk Hamamı & Kese-Masaj Paketi' : 'Historic Turkish Hammam & Scrub-Massage',
-      desc: tr ? 'Otelden çift yön transfer kolaylığı ile lisanslı tarihî hamam seçkileri.' : 'Licensed Ottoman hammam rituals with convenient pickup and member coupon savings.',
+      desc: tr ? 'Otelden çift yön transfer kolaylığı ile lisanslı tarihî hamam seçkileri.' : 'Licensed Ottoman hammam rituals with convenient pickup and member voucher savings.',
       href: 'prices.html',
       cta: tr ? 'Hamam ve turları karşılaştır →' : 'Compare hammam & tours →'
     },
@@ -149,19 +152,83 @@
 
   const errorText = e => (e && e.status === 429 ? T.mTooMany : e && e.status === 400 ? T.mBadCode : T.mError);
 
+  const PERK_ICONS = [
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v1.5a1.5 1.5 0 0 0 0 3V15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1.5a1.5 1.5 0 0 0 0-3V9Z"/><path d="M9.5 7v10"/></svg>',
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M16 11h6"/></svg>',
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5"/></svg>',
+    '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+  ];
+
+  function corpBar() {
+    const bar = el('div', 'm-corp-bar');
+    const img = el('img', 'm-corp-logo');
+    img.src = 'assets/brand/approved-icon.webp'; img.alt = 'Bosphorly';
+    img.width = 24; img.height = 24; img.loading = 'lazy'; img.decoding = 'async';
+    bar.append(img, el('span', 'm-corp-tag', badgeLabel));
+    return bar;
+  }
   function perks(goal = 5) {
     const ul = el('ul', 'm-perks');
-    [T.mPerk1, T.mPerk2, T.mPerk3, f(T.mPerk4, { goal })].forEach(x => ul.append(el('li', null, x)));
+    const items = [
+      { tier: 'welcome', kind: T.kWelcome, deal: '−' + pct(500), text: T.mPerk1, svg: PERK_ICONS[0] },
+      { tier: 'referral', kind: T.kReferral, deal: '+' + pct(500), text: T.mPerk2, svg: PERK_ICONS[1] },
+      { tier: 'second', kind: T.kSecond, deal: '−' + pct(700), text: T.mPerk3, svg: PERK_ICONS[2] },
+      { tier: 'loyalty', kind: T.kLoyalty, deal: '−' + pct(1000), text: f(T.mPerk4, { goal }), svg: PERK_ICONS[3] }
+    ];
+    items.forEach(item => {
+      const li = el('li', 'm-perk-card tier-' + item.tier);
+      const art = el('span', 'm-perk-art'); art.innerHTML = item.svg;
+      const copy = el('div', 'm-perk-copy');
+      copy.append(el('strong', 'm-perk-kind', item.kind), el('span', 'm-perk-desc', item.text));
+      const deal = el('span', 'm-perk-deal', item.deal);
+      li.append(art, copy, deal);
+      ul.append(li);
+    });
     return ul;
+  }
+  function stampJourney(goal = 5) {
+    const wrap = el('div', 'm-journey');
+    wrap.setAttribute('aria-hidden', 'true');
+    const top = el('div', 'm-journey-top');
+    top.append(el('span', 'm-journey-label', T.mStamps + ' · ' + T.kLoyalty), el('strong', 'm-journey-max', f(T.mOff, { p: pct(1000) })));
+    const track = el('div', 'm-journey-track');
+    for (let i = 1; i <= goal; i++) {
+      const node = el('span', i === goal ? 'm-jnode vip' : 'm-jnode', i === goal ? '★ ' + pct(1000) : String(i));
+      track.append(node);
+    }
+    wrap.append(top, track);
+    return wrap;
   }
   function head(mode) {
     const h = el('div', 'm-head');
-    h.append(el('h2', null, '🎟️ ' + (mode === 'signup' ? signupLabel + ' · ' + T.mTitle : T.mTitle)), el('p', 'm-lead', T.mLead));
+    h.append(el('h2', null, mode === 'signup' ? signupLabel + ' · ' + T.mTitle : T.mTitle), el('p', 'm-lead', T.mLead));
     return h;
+  }
+  function authShell(mode, ...authNodes) {
+    const shell = el('div', 'm-shell');
+    const auth = el('div', 'm-auth-pane');
+    auth.append(corpBar(), ...authNodes);
+
+    const brand = el('div', 'm-brand-pane');
+    const hero = el('div', 'm-editorial-hero');
+    const photo = el('img', 'm-editorial-img');
+    photo.src = 'assets/images/istanbul-galata-640.webp';
+    photo.alt = 'Istanbul Bosphorus';
+    photo.width = 640; photo.height = 427; photo.loading = 'lazy'; photo.decoding = 'async';
+    const overlay = el('div', 'm-editorial-overlay');
+    overlay.append(head(mode));
+    hero.append(photo, overlay);
+
+    const body = el('div', 'm-brand-body');
+    body.append(perks(), stampJourney());
+    brand.append(hero, body);
+
+    shell.append(auth, brand);
+    box.replaceChildren(shell);
   }
   const privacy = () => { const p = el('p', 'm-fine', T.mPrivacy + ' '); const a = el('a', null, T.mPrivacyLink); a.href = 'privacy.html'; p.append(a); return p; };
 
-  function soon() { box.replaceChildren(head(), perks(), el('p', 'm-soon', T.mSoon)); }
+  function soon() { authShell('signin', el('p', 'm-soon', T.mSoon), privacy()); }
 
   function inboxForEmail(address) {
     const d = (address.split('@')[1] || '').toLowerCase();
@@ -228,8 +295,8 @@
 
   function signInForm(mode = location.hash === '#signup' ? 'signup' : 'signin') {
     const isSignup = mode === 'signup';
-    const localProf = (window.BOSPHORLY_API && window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
-    const shell = el('div', 'm-auth-shell');
+    const localProf = (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || {};
+    const alerts = [];
 
     // Handle oauth_error redirect
     const urlParams = new URLSearchParams(location.search);
@@ -238,8 +305,7 @@
       urlParams.delete('oauth_error');
       const qs = urlParams.toString();
       history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
-      const alertBox = el('div', 'm-alert-box', T.mOAuthUnavailable || 'Bu giriş yöntemi şu an kullanılamıyor, e-posta koduyla devam edebilirsin.');
-      shell.append(alertBox);
+      alerts.push(el('div', 'm-alert-box', T.mOAuthUnavailable || 'Bu giriş yöntemi şu an kullanılamıyor, e-posta koduyla devam edebilirsin.'));
     }
 
     // Handle Telegram link flow
@@ -248,8 +314,7 @@
     const linkToken = hashParams.get('state') || urlParams.get('state') || urlParams.get('link_token');
     const isTelegramLink = location.hash.includes('link-telegram');
     if (isTelegramLink && linkToken) {
-      const linkNote = el('div', 'm-alert-box', T.mTelegramLinkNote || 'Telegram hesabınızı bağlamak için lütfen e-posta adresinizi girin ve onay kodunu yazın.');
-      shell.append(linkNote);
+      alerts.push(el('div', 'm-alert-box', T.mTelegramLinkNote || 'Telegram hesabınızı bağlamak için lütfen e-posta adresinizi girin ve onay kodunu yazın.'));
     }
 
     const email = el('input'); email.type = 'email'; email.autocomplete = 'email'; email.required = true; email.id = 'mEmail';
@@ -347,8 +412,10 @@
 
     if (isSignup) {
       nameInput = el('input'); nameInput.autocomplete = 'name'; nameInput.maxLength = 100; nameInput.id = 'mName';
+      nameInput.required = true; nameInput.minLength = 2;
       if (localProf.name) nameInput.value = localProf.name;
-      const labName = el('label'); labName.append(el('span', null, T.mName), nameInput);
+      const rawNameLabel = String(T.mName || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+      const labName = el('label', 'm-req'); labName.append(el('span', null, rawNameLabel + ' *'), nameInput);
 
       phoneInput = el('input'); phoneInput.type = 'tel'; phoneInput.autocomplete = 'tel'; phoneInput.maxLength = 32; phoneInput.id = 'mPhone';
       phoneInput.placeholder = UI.phonePh;
@@ -386,6 +453,11 @@
     form.append(send, msg);
     form.addEventListener('submit', async e => {
       e.preventDefault();
+      if (isSignup && (!nameInput || nameInput.value.trim().length < 2)) {
+        msg.textContent = NAME_ERR[lang] || NAME_ERR.en;
+        if (nameInput) nameInput.focus();
+        return;
+      }
       if (!email.checkValidity() || !email.value.trim()) { msg.textContent = T.mError; email.focus(); return; }
       send.disabled = true;
       const prefill = {
@@ -414,23 +486,27 @@
       catch (err) { msg.textContent = errorText(err); send.disabled = false; }
     });
 
-    shell.append(authTabs(mode));
-    if (passkeyBtn) shell.append(passkeyBtn);
-    shell.append(provWrap, divider, form);
-    box.replaceChildren(head(mode), perks(), shell, privacy());
+    const authNodes = [authTabs(mode), ...alerts];
+    if (passkeyBtn) authNodes.push(passkeyBtn);
+    authNodes.push(provWrap, divider, form, privacy());
+    authShell(mode, ...authNodes);
   }
 
   function codeForm(address, devCode, prefill = {}) {
+    const isSignup = prefill.mode === 'signup';
     const form = el('form', 'm-form'); form.noValidate = true;
     const code = el('input'); code.inputMode = 'numeric'; code.autocomplete = 'one-time-code'; code.maxLength = 6; code.pattern = '\\d{6}'; code.id = 'mCode';
     if (devCode) code.value = devCode;
     const name = el('input'); name.autocomplete = 'name'; name.maxLength = 100; name.id = 'mName';
     if (prefill.name) name.value = prefill.name;
+    if (isSignup) { name.required = true; name.minLength = 2; }
     const consent = el('input'); consent.type = 'checkbox'; consent.id = 'mMarketing';
     consent.checked = !!prefill.marketing;
     const cl = el('label', 'm-check'); cl.append(consent, el('span', null, T.mMarketing));
     const l1 = el('label'); l1.append(el('span', null, T.mCode), code);
-    const l2 = el('label'); l2.append(el('span', null, T.mName), name);
+    const l2 = el('label', isSignup ? 'm-req' : null);
+    const rawNameLabel = String(T.mName || '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+    l2.append(el('span', null, isSignup ? rawNameLabel + ' *' : T.mName), name);
     const go = el('button', 'btn primary', T.mSignIn); go.type = 'submit';
     const msg = el('p', 'm-msg'); msg.setAttribute('role', 'status');
 
@@ -448,6 +524,7 @@
     form.addEventListener('submit', async e => {
       e.preventDefault();
       if (!/^\d{6}$/.test(code.value.trim())) { msg.textContent = T.mBadCode; return; }
+      if (isSignup && name.value.trim().length < 2) { msg.textContent = NAME_ERR[lang] || NAME_ERR.en; name.focus(); return; }
       go.disabled = true;
       try {
         const cleanName = name.value.trim();
@@ -482,7 +559,7 @@
       }
       catch (err) { msg.textContent = errorText(err); go.disabled = false; }
     });
-    box.replaceChildren(head(prefill.mode), authTabs(prefill.mode || 'signin'), form, privacy());
+    authShell(prefill.mode || 'signin', authTabs(prefill.mode || 'signin'), form, privacy());
     code.focus();
   }
 
@@ -731,7 +808,13 @@
     const acts = el('div', 'actions'); acts.append(out, del);
     set.append(acts);
 
-    box.replaceChildren(hello, sub, tierEl, h3, list, campHead, campSub, campGrid, prefs, passkeySec, st, inv, set);
+    const dash = el('div', 'm-dashboard');
+    const dashHead = el('div', 'm-dash-head');
+    dashHead.append(corpBar(), hello, sub);
+    const dashBody = el('div', 'm-dash-body');
+    dashBody.append(tierEl, h3, list, campHead, campSub, campGrid, prefs, passkeySec, st, inv, set);
+    dash.append(dashHead, dashBody);
+    box.replaceChildren(dash);
   }
 
   window.addEventListener('bosphorly:member-changed', e => {

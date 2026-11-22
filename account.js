@@ -7,15 +7,15 @@
   document.documentElement.lang = lang;
   const D = {
     tr: {
-    navHome: 'Ana sayfa', navCompare: 'Tur karşılaştır', navAccount: 'Hesabım', eyebrow: 'BOSPHORLY HESABIM', heading: 'Hesabım',
-    lead: 'Bilgilerin ve Bosphorly üzerinden gönderdiğin talepler.',
-    deviceNote: 'Yalnızca bu cihazda saklanır. Bosphorly’yi başka bir telefon veya bilgisayarda açarsan bu talepler şimdilik görünmez.',
-    reqTitle: 'Taleplerim', tabUpcoming: 'Yaklaşan', tabPast: 'Geçmiş', profileTitle: 'Bilgilerim', lName: 'Ad soyad', lPhone:'Cep telefonu',
-    lEmail: 'E-posta (isteğe bağlı)', lHotel: 'Otel', lRoom: 'Oda numarası', saveBtn: 'Kaydet', clearBtn: 'Bu cihazdaki her şeyi sil',
-    profileNote: 'Kayıtlı bilgilerin talep formlarına otomatik doldurulur.', footer: 'Bosphorly · Bu sayfadaki hiçbir bilgi sunucuya gönderilmez.',
-    msgSaved: 'Kaydedildi.', confirmClear: 'Bu cihazdaki profilin ve tüm talep geçmişin silinsin mi?', cleared: 'Silindi.',
-    emptyUpcoming: 'Yaklaşan talebin yok.', emptyPast: 'Geçmiş talebin yok.', browse: 'Turları keşfet →',
-    status: 'Email draft prepared · not yet sent', reopen: 'Open email draft', remove: 'Listeden kaldır', guests: 'kişi', transfer: 'Havalimanı transferi'
+    navHome: 'Ana sayfa', navCompare: 'Tur karşılaştır', navAccount: 'Hesabım', eyebrow: 'BOSPHORLY ÜYE PANELİ', heading: 'Hesabım',
+    lead: 'Kayıtlı profil bilgileriniz ve Bosphorly üzerinden oluşturduğunuz rezervasyon talepleri.',
+    deviceNote: 'Bu bölümdeki yerel talep taslakları yalnızca mevcut cihazınızda saklanır; üye girişi yaparak kupon ve sadakat haklarınızı hesabınızla eşleştirebilirsiniz.',
+    reqTitle: 'Rezervasyon Taleplerim', tabUpcoming: 'Yaklaşan', tabPast: 'Geçmiş', profileTitle: 'İletişim ve Konaklama Bilgilerim', lName: 'Ad Soyad', lPhone:'Cep telefonu',
+    lEmail: 'E-posta (isteğe bağlı)', lHotel: 'Konakladığınız otel', lRoom: 'Oda numarası', saveBtn: 'Bilgileri kaydet', clearBtn: 'Cihazdaki yerel kayıtları temizle',
+    profileNote: 'Kaydettiğiniz iletişim ve otel bilgileri, yeni rezervasyon formlarına otomatik olarak aktarılır.', footer: 'Bosphorly · Yerel profil bilgileriniz yalnızca cihazınızda tutulur.',
+    msgSaved: 'Bilgileriniz kaydedildi.', confirmClear: 'Bu cihazda kayıtlı yerel profiliniz ve talep geçmişiniz silinsin mi?', cleared: 'Kayıtlar temizlendi.',
+    emptyUpcoming: 'Yaklaşan bir rezervasyon talebiniz bulunmuyor.', emptyPast: 'Geçmiş bir rezervasyon talebiniz bulunmuyor.', browse: 'Deneyimleri keşfet →',
+    status: 'E-posta taslağı oluşturuldu · onay bekliyor', reopen: 'E-posta taslağını aç', remove: 'Listeden kaldır', guests: 'kişi', transfer: 'Havalimanı transferi'
     },
     en: {
     navHome: 'Home', navCompare: 'Compare tours', navAccount: 'My account', eyebrow: 'MY BOSPHORLY', heading: 'My account',
