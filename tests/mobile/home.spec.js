@@ -37,7 +37,7 @@ test('homepage polish preserves local planning, language and reduced motion',asy
 });
 test('guest pages invite requests: no prototype labels, no partner pitch, no coupon promise while membership is off',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.route('**/config/api.js',r=>r.fulfill({contentType:'text/javascript',body:'window.BOSPHORLY_API=Object.freeze({base:""});'}));
+ await page.route('**/config/api.js*',r=>r.fulfill({contentType:'text/javascript',body:'window.BOSPHORLY_API=Object.freeze({base:""});'}));
  for(const lang of ['tr','en','de','ar','zh']) {
  await page.goto('/?lang='+lang);
  await expect(page.locator('.tour-card')).toHaveCount(6);

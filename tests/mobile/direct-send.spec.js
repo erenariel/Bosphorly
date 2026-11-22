@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 // "Send without opening email" on tour/hammam and special tour requests. The mail Worker and
 // Turnstile are replaced by stubs, so nothing leaves the test.
 async function stubMail(page, sent) {
-  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript',
+  await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript',
     body: "window.BOSPHORLY_API=Object.freeze({base:'',transferMailBase:'https://mail.example.test',turnstileSiteKey:'test-site-key'});" }));
   await page.route('https://challenges.cloudflare.com/**', r => r.fulfill({ contentType: 'text/javascript',
     body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("test-token"));return 1},remove(){}};' }));
