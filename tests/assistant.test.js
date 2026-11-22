@@ -1,12 +1,17 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import worker from '../backend/worker.js';
 import {
   ASSISTANT_MESSAGES,
   ASSISTANT_MODEL,
   SUPPORTED_LANGS,
+  TIME_GREETINGS,
+  capEmojis,
   detectLanguage,
+  extractGuestName,
+  getIstanbulGreeting,
+  isAiIdentityQuestion,
   isSmallTalk,
   redactSensitive,
   retrieveChunks,
@@ -70,22 +75,36 @@ test('all 23 languages have complete static dictionaries and pass greeting small
   assert.equal(SUPPORTED_LANGS.size, 23);
   for (const lang of ALL_23_LANGS) assert.ok(SUPPORTED_LANGS.has(lang), lang);
 
-  // Check backend/assistant.js ASSISTANT_MESSAGES
+  // Check backend/assistant.js ASSISTANT_MESSAGES and TIME_GREETINGS
   for (const [key, map] of Object.entries(ASSISTANT_MESSAGES)) {
     for (const lang of ALL_23_LANGS) {
       assert.ok(typeof map[lang] === 'string' && map[lang].trim().length > 0, `ASSISTANT_MESSAGES.${key}.${lang}`);
     }
   }
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(ASSISTANT_MESSAGES.greeting[lang].includes('Mimo'), `greeting includes Mimo in ${lang}`);
+    assert.ok(ASSISTANT_MESSAGES.aiIdentity[lang].includes('Mimo'), `aiIdentity includes Mimo in ${lang}`);
+    for (const slot of ['morning', 'afternoon', 'evening']) {
+      assert.ok(typeof TIME_GREETINGS[slot][lang] === 'string' && TIME_GREETINGS[slot][lang].trim().length > 0, `TIME_GREETINGS.${slot}.${lang}`);
+    }
+  }
 
-  // Check backend/telegram.js TG_TEXT
+  // Check backend/telegram.js TG_TEXT (Mimo personality + wave emoji 🌊, never 🕊)
+  assert.ok(TG_TEXT.welcome.tr.startsWith('Merhaba, ben Mimo 🌊'));
   for (const [key, map] of Object.entries(TG_TEXT)) {
     for (const lang of ALL_23_LANGS) {
       assert.ok(typeof map[lang] === 'string' && map[lang].trim().length > 0, `TG_TEXT.${key}.${lang}`);
     }
   }
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(TG_TEXT.welcome[lang].includes('Mimo'), `TG_TEXT.welcome.${lang} includes Mimo`);
+    assert.ok(TG_TEXT.welcome[lang].includes('🌊'), `TG_TEXT.welcome.${lang} includes wave emoji`);
+    assert.ok(!TG_TEXT.welcome[lang].includes('🕊'), `TG_TEXT.welcome.${lang} must not use dove emoji`);
+  }
 
-  // Check assistant-chat.js UI and config/api.js LABELS
+  // Check assistant-chat.js UI and config/api.js LABELS & BUBBLE_GREET
   const chatJs = readFileSync(new URL('../assistant-chat.js', import.meta.url), 'utf8');
+  assert.ok(!chatJs.includes('Bosphorly Asistan'), 'assistant-chat.js replaces Bosphorly Asistan with Mimo');
   const uiBlock = chatJs.match(/const UI = (\{[\s\S]*?\n  \});/)[1];
   const uiObj = new Function(`return ${uiBlock}`)();
   for (const [key, map] of Object.entries(uiObj)) {
@@ -93,11 +112,18 @@ test('all 23 languages have complete static dictionaries and pass greeting small
       assert.ok(typeof map[lang] === 'string' && map[lang].trim().length > 0, `assistant-chat UI.${key}.${lang}`);
     }
   }
+  assert.equal(uiObj.title.tr, 'Mimo · İstanbul asistanın');
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(uiObj.title[lang].includes('Mimo'), `UI.title.${lang} includes Mimo`);
+  }
   const apiJs = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
   const labelsMatch = apiJs.match(/const LABELS = (\{[^}]+\});/);
   const labelsObj = new Function(`return ${labelsMatch[1]}`)();
+  const bubbleMatch = apiJs.match(/const BUBBLE_GREET = (\{[^}]+\});/);
+  const bubbleObj = new Function(`return ${bubbleMatch[1]}`)();
   for (const lang of ALL_23_LANGS) {
     assert.ok(typeof labelsObj[lang] === 'string' && labelsObj[lang].trim().length > 0, `config/api LABELS.${lang}`);
+    assert.ok(typeof bubbleObj[lang] === 'string' && bubbleObj[lang].includes('Mimo'), `config/api BUBBLE_GREET.${lang}`);
   }
 
   const GREETINGS = {
@@ -124,16 +150,19 @@ test('all 23 languages have complete static dictionaries and pass greeting small
     assert.equal(isSmallTalk(THANKS[lang]), true, `thanks smalltalk ${lang}`);
     assert.equal(isSmallTalk(GOODBYES[lang]), true, `goodbye smalltalk ${lang}`);
 
+    const fixedNow = Date.UTC(2026, 5, 15, 6, 30, 0); // 09:30 in Europe/Istanbul (morning)
     const res = await runAssistant({
       message: GREETINGS[lang],
       pageLang: lang,
       env: { AI: { run: async () => { throw new Error('AI should not be called for smalltalk'); } } },
       actorKey: `loop-23-${lang}`,
+      now: fixedNow,
     });
     assert.equal(res.ok, true);
     assert.equal(res.handoff, false, `handoff=false for ${lang}`);
     assert.equal(res.lang, lang, `lang match for ${lang}`);
-    assert.equal(res.reply, ASSISTANT_MESSAGES.greeting[lang]);
+    assert.ok(res.reply.includes(TIME_GREETINGS.morning[lang]), `morning greeting in ${lang}`);
+    assert.ok(res.reply.includes(ASSISTANT_MESSAGES.greeting[lang]), `Mimo greeting in ${lang}`);
   }
 });
 
@@ -571,6 +600,7 @@ test('telegram webhook asks handoff confirmation then forwards linked member ema
   assert.ok(tgReplies[1] && tgReplies[1].text.includes('info@bosphorly.com'));
 });
 
+
 test('telegram-cta builds https://t.me/<bot>?start=<lang> for all 23 languages and hides when telegramBot is empty', () => {
   const ctaSrc = readFileSync(new URL('../telegram-cta.js', import.meta.url), 'utf8');
   const loadCta = (telegramBot) => {
@@ -685,7 +715,7 @@ test('telegram webhook /start <lang> sends welcome in payload lang, saves chat l
     }),
   }), env);
   assert.equal(resFollow.status, 200);
-  assert.equal(tgReplies[1].text, ASSISTANT_MESSAGES.greeting.he);
+  assert.ok(tgReplies[1].text.includes(ASSISTANT_MESSAGES.greeting.he), 'saved /start language is used for the next message');
 
   // 2. /start without payload uses from.language_code ("tr") and saves "tr"
   const resTr = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
@@ -710,5 +740,163 @@ test('telegram webhook /start <lang> sends welcome in payload lang, saves chat l
   assert.equal(resEn.status, 200);
   assert.equal(tgReplies[3].text, TG_TEXT.welcome.en);
   assert.equal(tgState.get('333')?.lang, 'en');
+});
+
+
+test('Mimo mascot SVG files (default, hello, thinking, happy) exist under assets/brand/mimo/ and are < 4 KB each', () => {
+  const states = ['mimo-default.svg', 'mimo-hello.svg', 'mimo-thinking.svg', 'mimo-happy.svg'];
+  for (const file of states) {
+    const url = new URL(`../assets/brand/mimo/${file}`, import.meta.url);
+    const st = statSync(url);
+    assert.ok(st.size > 200 && st.size < 4096, `${file} must be < 4 KB (actual: ${st.size} bytes)`);
+    const svg = readFileSync(url, 'utf8');
+    assert.ok(svg.includes('<svg') && svg.includes('#0a1753'), `${file} uses Bosphorly navy #0a1753`);
+  }
+});
+
+test('"Sen insan mısın?" returns a response stating Mimo is an AI assistant (mock and fallback)', async () => {
+  assert.equal(isAiIdentityQuestion('Sen insan mısın?'), true);
+  assert.equal(isAiIdentityQuestion('Are you human?'), true);
+  assert.equal(isAiIdentityQuestion('Are you a real person?'), true);
+
+  let systemPromptSawMimo = false;
+  const mockedRes = await runAssistant({
+    message: 'Sen insan mısın?',
+    pageLang: 'tr',
+    env: {
+      AI: {
+        run: async (_model, opts) => {
+          const sys = opts.messages.find((m) => m.role === 'system').content;
+          systemPromptSawMimo = sys.includes("Bosphorly'nin yapay zekâ asistanı Mimo") && sys.includes('NEVER claim to be human');
+          return {
+            response: JSON.stringify({
+              handoff: false,
+              reply: 'Hayır, insan değilim; ben Bosphorly’nin yapay zekâ asistanı Mimo’yum! 🌊 Sana İstanbul’da nasıl yardımcı olabilirim?',
+            }),
+          };
+        },
+      },
+    },
+    actorKey: 'test-ai-identity-mock',
+  });
+  assert.equal(systemPromptSawMimo, true);
+  assert.equal(mockedRes.ok, true);
+  assert.equal(mockedRes.handoff, false);
+  assert.ok(/yapay zek[aâ]/i.test(mockedRes.reply));
+  assert.ok(mockedRes.reply.includes('Mimo'));
+
+  // Without AI or on empty model response, deterministic fallback also clearly identifies Mimo as AI
+  const fallbackRes = await runAssistant({
+    message: 'Sen insan mısın?',
+    pageLang: 'tr',
+    env: {},
+    actorKey: 'test-ai-identity-fallback',
+  });
+  assert.equal(fallbackRes.ok, true);
+  assert.equal(fallbackRes.handoff, false);
+  assert.ok(/yapay zek[aâ]/i.test(fallbackRes.reply));
+  assert.ok(fallbackRes.reply.includes('Mimo'));
+});
+
+test('Mimo addresses guest by name from conversation history without storing name on server, and caps emojis to 2', async () => {
+  assert.equal(extractGuestName([{ role: 'user', content: 'Merhaba, benim adım Deniz' }], 'Boğaz turu var mı?'), 'Deniz');
+  assert.equal(capEmojis('Harika! 🌊⛵🛁🗺️✨', 2), 'Harika! 🌊⛵');
+
+  const res = await runAssistant({
+    message: 'Boğaz turu fiyatları nedir?',
+    pageLang: 'tr',
+    history: [
+      { role: 'user', content: 'Merhaba, benim adım Deniz' },
+      { role: 'assistant', content: 'Merhaba Deniz!' },
+    ],
+    env: {
+      AI: {
+        run: async (_model, opts) => {
+          const sys = opts.messages.find((m) => m.role === 'system').content;
+          assert.ok(sys.includes('Deniz'));
+          return {
+            response: JSON.stringify({
+              handoff: false,
+              reply: 'Sabah Boğaz turu yaklaşık €15 civarındadır 🌊⛵✨🎉',
+            }),
+          };
+        },
+      },
+    },
+    actorKey: 'test-guest-name',
+  });
+  assert.equal(res.handoff, false);
+  assert.ok(res.reply.includes('Deniz'));
+  const emojiMatches = res.reply.match(/\p{Extended_Pictographic}/gu) || [];
+  assert.ok(emojiMatches.length <= 2, `Expected <= 2 emojis, got ${emojiMatches.length}`);
+
+  // Time-of-day greetings in Istanbul time (UTC+3)
+  const morningTs = Date.UTC(2026, 5, 15, 6, 0, 0);   // 09:00 Istanbul
+  const afternoonTs = Date.UTC(2026, 5, 15, 11, 0, 0); // 14:00 Istanbul
+  const eveningTs = Date.UTC(2026, 5, 15, 18, 0, 0);   // 21:00 Istanbul
+  assert.equal(getIstanbulGreeting('tr', morningTs), 'Günaydın');
+  assert.equal(getIstanbulGreeting('tr', afternoonTs), 'İyi günler');
+  assert.equal(getIstanbulGreeting('tr', eveningTs), 'İyi akşamlar');
+});
+
+test('👍/👎 feedback endpoint (/v1/assistant/feedback) stores only vote & language counter in D1 and rejects message content', async () => {
+  const feedbackCounts = new Map();
+  const mockDb = {
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        run: async () => {
+          if (sql.includes('INSERT INTO assistant_feedback')) {
+            const k = `${args[0]}:${args[1]}`;
+            feedbackCounts.set(k, (feedbackCounts.get(k) || 0) + 1);
+          }
+          return { success: true };
+        },
+        first: async () => {
+          if (sql.includes('SELECT count FROM assistant_feedback')) {
+            const k = `${args[0]}:${args[1]}`;
+            return { count: feedbackCounts.get(k) || 0 };
+          }
+          return null;
+        },
+      }),
+    }),
+  };
+
+  const env = baseEnv({ DB: mockDb });
+
+  // Valid 👍 request with ONLY vote and lang
+  const reqUp = new Request(`${ORIGIN}/v1/assistant/feedback`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ vote: 'up', lang: 'tr' }),
+  });
+  const resUp = await worker.fetch(reqUp, env);
+  assert.equal(resUp.status, 200);
+  const dataUp = await resUp.json();
+  assert.deepEqual(dataUp, { ok: true, lang: 'tr', vote: 'up', count: 1 });
+  assert.equal(feedbackCounts.get('tr:up'), 1);
+
+  // Second 👍 increments counter in D1
+  const resUp2 = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/feedback`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ vote: 'up', lang: 'tr' }),
+  }), env);
+  assert.equal((await resUp2.json()).count, 2);
+
+  // Any request that includes message content or history is rejected with 400
+  for (const forbiddenBody of [
+    { vote: 'up', lang: 'tr', message: 'secret chat text' },
+    { vote: 'down', lang: 'en', content: 'assistant reply text' },
+    { vote: 'up', lang: 'tr', history: [{ role: 'user', content: 'hi' }] },
+  ]) {
+    const badReq = new Request(`${ORIGIN}/v1/assistant/feedback`, {
+      method: 'POST',
+      headers: { Origin: ORIGIN, 'Content-Type': 'application/json' },
+      body: JSON.stringify(forbiddenBody),
+    });
+    const badRes = await worker.fetch(badReq, env);
+    assert.equal(badRes.status, 400);
+  }
 });
 

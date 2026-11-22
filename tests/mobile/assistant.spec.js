@@ -1,17 +1,29 @@
 import { test, expect } from '@playwright/test';
 
-test('assistant button lazy-loads chat panel on mobile without horizontal overflow', async ({ page }) => {
+test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile without horizontal overflow, and Hero Mimo card opens panel', async ({ page }) => {
   await page.goto('/index.html?lang=tr');
   const fab = page.locator('.bc-fab');
   await expect(fab).toBeVisible();
+  await expect(fab.locator('img.bc-fab-avatar')).toHaveAttribute('src', /assets\/brand\/mimo\/mimo-default\.svg$/);
+
+  // Hero Mimo card is visible in Turkish with button and Telegram link
+  const heroMimo = page.locator('#heroMimo');
+  await expect(heroMimo).toBeVisible();
+  await expect(page.locator('#heroMimoAsk')).toContainText('Sorun mu var? Mimo’ya sor');
+  await expect(page.locator('#heroMimoTg')).toContainText('Telegram’da da buradayım');
 
   // Not loaded before click
   await expect(page.locator('script[src*="assistant-chat.js"]')).toHaveCount(0);
 
-  await fab.click();
+  await page.locator('#heroMimoAsk').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
-  await expect(panel.locator('.bc-title')).toHaveText('Bosphorly Asistan');
+  await expect(panel.locator('.bc-title')).toHaveText('Mimo · İstanbul asistanın');
+  await expect(panel.locator('img.bc-head-avatar')).toBeVisible();
+  await expect(panel.locator('img.bc-bot-avatar').first()).toBeVisible();
+
+  // 4 quick question buttons are present
+  await expect(panel.locator('.bc-quick-btn')).toHaveCount(4);
 
   // Fits within viewport without horizontal overflow
   const box = await panel.boundingBox();
@@ -24,7 +36,7 @@ test('assistant button lazy-loads chat panel on mobile without horizontal overfl
   await expect(panel.locator('.bc-handoff')).toBeVisible();
 });
 
-test('assistant chat panel renders cleanly in RTL for Arabic without horizontal overflow', async ({ page }) => {
+test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic without horizontal overflow', async ({ page }) => {
   await page.goto('/index.html?lang=ar');
   const fab = page.locator('.bc-fab');
   await expect(fab).toBeVisible();
@@ -32,11 +44,13 @@ test('assistant chat panel renders cleanly in RTL for Arabic without horizontal 
   const vp = page.viewportSize();
   expect(fabBox.x).toBeLessThan(vp.width / 2);
 
+  await expect(page.locator('#heroMimoAsk')).toContainText('لديك سؤال؟ اسأل Mimo');
+
   await fab.click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
   await expect(panel).toHaveAttribute('dir', 'rtl');
-  await expect(panel.locator('.bc-title')).toHaveText('مساعد Bosphorly');
+  await expect(panel.locator('.bc-title')).toHaveText('Mimo · مساعدك في إسطنبول');
 
   const box = await panel.boundingBox();
   expect(box.x).toBeGreaterThanOrEqual(0);
@@ -124,3 +138,115 @@ test('all Telegram links stay hidden when telegramBot in config/api.js is empty'
   await expect(page.locator('a[href*="t.me"]')).toHaveCount(0);
 });
 
+
+test('greeting bubble shows once per session, does not cover mobile reservation buttons, hides on input focus, and closes on Escape', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__BOSPHORLY_MIMO_BUBBLE_MS = 250;
+    window.__BOSPHORLY_MIMO_COLLAPSE_MS = 8000;
+  });
+
+  await page.goto('/index.html?lang=tr');
+  const bubble = page.locator('.bc-bubble');
+  await expect(bubble).toBeVisible({ timeout: 3000 });
+  await expect(bubble).toHaveAttribute('aria-live', 'polite');
+  await expect(bubble.locator('.bc-bubble-text')).toContainText('Merhaba, ben Mimo 👋');
+  await expect(bubble.locator('.bc-bubble-chip')).toHaveCount(2);
+
+  // Verify Playwright bounding box: bubble does NOT overlap the reservation button (#toStep2)
+  const reserveBtn = page.locator('#toStep2');
+  await reserveBtn.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(100);
+  const bBox = await bubble.boundingBox();
+  const rBox = await reserveBtn.boundingBox();
+  expect(bBox).not.toBeNull();
+  expect(rBox).not.toBeNull();
+  const overlaps =
+    bBox.x < rBox.x + rBox.width &&
+    bBox.x + bBox.width > rBox.x &&
+    bBox.y < rBox.y + rBox.height &&
+    bBox.y + bBox.height > rBox.y;
+  expect(overlaps).toBe(false);
+
+  // Focusing a form input (virtual keyboard open) hides the bubble
+  await page.locator('#hotel').focus();
+  await expect(bubble).toBeHidden();
+
+  // Reloading in the same session: bubble must NOT appear again because sessionStorage recorded it
+  const seenFlag = await page.evaluate(() => sessionStorage.getItem('bosphorly.mimo_greeted'));
+  expect(seenFlag).toBe('1');
+  await page.reload();
+  await page.waitForTimeout(500);
+  await expect(page.locator('.bc-bubble')).toBeHidden();
+});
+
+test('prefers-reduced-motion disables Mimo entrance and blink animations', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => {
+    window.__BOSPHORLY_MIMO_POP_MS = 100;
+  });
+  await page.goto('/index.html?lang=tr');
+  await page.waitForTimeout(250);
+
+  const fab = page.locator('.bc-fab');
+  const fabAvatar = page.locator('.bc-fab-avatar');
+  expect(await fab.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
+  expect(await fabAvatar.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
+
+  await fab.click();
+  const headAvatar = page.locator('.bc-head-avatar');
+  await expect(headAvatar).toBeVisible();
+  expect(await headAvatar.evaluate((el) => getComputedStyle(el).animationName)).toBe('none');
+});
+
+test('contextual first messages, member greeting, quick question send, and 👍/👎 feedback without message content', async ({ page }) => {
+  const feedbackPayloads = [];
+  await page.route('**/v1/assistant/feedback', async (route) => {
+    feedbackPayloads.push(route.request().postDataJSON());
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, count: 1 }) });
+  });
+  await page.route('**/v1/assistant', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ reply: 'IST havalimanından Sultanahmet transferi €60.', handoff: false, lang: 'tr' }),
+    });
+  });
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-tok"),10);return 1},reset(){}};',
+    });
+  });
+
+  // 1. Transfer context + signed-in member personal greeting
+  await page.addInitScript(() => {
+    try {
+      localStorage.setItem('bosphorly.session', 'tok-test');
+      localStorage.setItem('bosphorly.member_cache', JSON.stringify({ name: 'Eren', email: 'eren@example.com', tier: 'gold' }));
+      sessionStorage.removeItem('bosphorly.assistant_chat');
+    } catch {}
+  });
+  await page.goto('/index.html?lang=tr#booking');
+  await page.locator('.bc-fab').click();
+  const firstBotMsg = page.locator('.bc-msg.bot').first();
+  await expect(firstBotMsg).toContainText('Tekrar hoş geldin, Eren 💙');
+  await expect(firstBotMsg).toContainText('Havalimanından otele mi gidiyorsun? ✈️');
+
+  // Clicking 👍 sends only vote & lang (no message content)
+  await page.locator('.bc-rate-btn[data-vote="up"]').first().click();
+  await expect.poll(() => feedbackPayloads.length).toBe(1);
+  expect(feedbackPayloads[0]).toEqual({ vote: 'up', lang: 'tr' });
+
+  // 2. Tour page contextual message
+  await page.addInitScript(() => {
+    try { sessionStorage.removeItem('bosphorly.assistant_chat'); } catch {}
+  });
+  await page.goto('/tours.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  await expect(page.locator('.bc-msg.bot').first()).toContainText('Hangi Boğaz turu sana uygun, birlikte bakalım mı? ⛵');
+
+  // 3. Hammam page contextual message
+  await page.goto('/booking.html?service=alaturka&lang=tr');
+  await page.locator('.bc-fab').click();
+  await expect(page.locator('.bc-msg.bot').first()).toContainText('İlk hamam deneyimin mi? 🛁');
+});
