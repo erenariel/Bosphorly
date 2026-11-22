@@ -1252,6 +1252,83 @@ export async function forwardConversationEmail({ env, email, lang = 'en', histor
   return { ok: true, reference: ref };
 }
 
+export const CHAT_SESSION_TTL_MS = 30 * 60 * 1000;
+const CHAT_ENC = new TextEncoder();
+
+function toHex(buf) {
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+function b64urlEncodeStr(s) {
+  const bytes = CHAT_ENC.encode(String(s));
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function b64urlDecodeStr(s) {
+  const pad = String(s || '').replace(/-/g, '+').replace(/_/g, '/');
+  const bin = atob(pad + '='.repeat((4 - (pad.length % 4)) % 4));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+function constantTimeEqual(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string' || a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function hmacSha256Hex(secret, message) {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    CHAT_ENC.encode(String(secret)),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  return toHex(await crypto.subtle.sign('HMAC', key, CHAT_ENC.encode(String(message))));
+}
+
+async function hashClientIp(pepper, ip) {
+  return hmacSha256Hex(pepper, `chat-ip:${String(ip || 'unknown')}`);
+}
+
+export async function createChatSessionToken(pepper, ip, now = Date.now(), ttlMs = CHAT_SESSION_TTL_MS) {
+  if (typeof pepper !== 'string' || !pepper) return null;
+  const ipHash = await hashClientIp(pepper, ip);
+  const exp = now + ttlMs;
+  const payload = b64urlEncodeStr(JSON.stringify({ typ: 'chat', ip: ipHash, exp }));
+  const sig = await hmacSha256Hex(pepper, `chat-session:${payload}`);
+  return `${payload}.${sig}`;
+}
+
+export async function verifyChatSessionToken(pepper, token, ip, now = Date.now()) {
+  if (typeof pepper !== 'string' || !pepper) return false;
+  if (typeof token !== 'string' || !token || token.length > 1024) return false;
+  const dotIdx = token.indexOf('.');
+  if (dotIdx <= 0 || token.indexOf('.', dotIdx + 1) !== -1) return false;
+  const payload = token.slice(0, dotIdx);
+  const sig = token.slice(dotIdx + 1);
+  if (!payload || !/^[0-9a-f]{64}$/i.test(sig)) return false;
+  const expectedSig = await hmacSha256Hex(pepper, `chat-session:${payload}`);
+  if (!constantTimeEqual(sig.toLowerCase(), expectedSig)) return false;
+  let data;
+  try {
+    data = JSON.parse(b64urlDecodeStr(payload));
+  } catch {
+    return false;
+  }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+  if (data.typ !== 'chat') return false;
+  if (typeof data.exp !== 'number' || !Number.isFinite(data.exp) || data.exp <= now) return false;
+  if (typeof data.ip !== 'string') return false;
+  const expectedIpHash = await hashClientIp(pepper, ip);
+  return constantTimeEqual(data.ip, expectedIpHash);
+}
+
 async function verifyTurnstile(env, token, remoteip) {
   if (!env.TURNSTILE_SECRET || typeof token !== 'string' || !token.trim() || token.length > 2048) {
     return false;
@@ -1312,15 +1389,44 @@ export async function handleAssistantRoutes(request, env, url) {
   const parsed = await readJsonBody(request);
   if (parsed.error) return jsonResp({ error: parsed.error }, parsed.status);
   const body = parsed.data;
-  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  const ip = (request.headers.get('CF-Connecting-IP') || 'unknown').trim() || 'unknown';
+
+  const hasChatSessionField = Boolean(body && typeof body === 'object' && !Array.isArray(body) && body.chatSession !== undefined);
+  const hasTurnstileField = Boolean(body && typeof body === 'object' && !Array.isArray(body) && body.turnstileToken !== undefined);
+  const rawChatSession = hasChatSessionField && typeof body.chatSession === 'string' ? body.chatSession.trim() : '';
+  const rawTurnstile = hasTurnstileField && typeof body.turnstileToken === 'string' ? body.turnstileToken.trim() : '';
+
+  async function authorizeChatRequest() {
+    if (!env.TURNSTILE_SECRET) return { ok: false };
+    if (rawChatSession) {
+      const validSession = await verifyChatSessionToken(env.CODE_PEPPER, rawChatSession, ip);
+      if (validSession) {
+        return { ok: true, usedTurnstile: false, chatSession: null };
+      }
+      if (!rawTurnstile) return { ok: false };
+    }
+    const turnstileOk = await verifyTurnstile(env, rawTurnstile, ip);
+    if (!turnstileOk) return { ok: false };
+    const minted = await createChatSessionToken(env.CODE_PEPPER, ip);
+    return { ok: true, usedTurnstile: true, chatSession: minted };
+  }
 
   if (url.pathname === '/v1/assistant/feedback') {
     if (!body || typeof body !== 'object' || Array.isArray(body)) {
       return jsonResp({ error: 'Invalid feedback payload' }, 400);
     }
     const keys = Object.keys(body);
-    if (keys.some((k) => !['vote', 'rating', 'lang'].includes(k))) {
+    if (keys.some((k) => !['vote', 'rating', 'lang', 'chatSession', 'turnstileToken'].includes(k))) {
       return jsonResp({ error: 'Message content is not allowed in feedback' }, 400);
+    }
+    if ((hasChatSessionField && typeof body.chatSession !== 'string') || (hasTurnstileField && typeof body.turnstileToken !== 'string')) {
+      return jsonResp({ error: 'Invalid feedback payload' }, 400);
+    }
+    let mintedSession = null;
+    if (hasChatSessionField || hasTurnstileField) {
+      const auth = await authorizeChatRequest();
+      if (!auth.ok) return jsonResp({ error: 'Bot verification failed' }, 403);
+      mintedSession = auth.chatSession;
     }
     const rawVote = body.vote !== undefined ? body.vote : body.rating;
     let vote = '';
@@ -1329,11 +1435,12 @@ export async function handleAssistantRoutes(request, env, url) {
     if (!vote) return jsonResp({ error: 'Invalid vote' }, 400);
     const lang = normalizeLang(typeof body.lang === 'string' ? body.lang : '') || 'en';
     const recorded = await recordAssistantFeedback({ env, lang, vote });
+    if (mintedSession) recorded.chatSession = mintedSession;
     return jsonResp(recorded, 200);
   }
 
-  const turnstileOk = await verifyTurnstile(env, body && body.turnstileToken, ip);
-  if (!turnstileOk) return jsonResp({ error: 'Bot verification failed' }, 403);
+  const auth = await authorizeChatRequest();
+  if (!auth.ok) return jsonResp({ error: 'Bot verification failed' }, 403);
 
   const cleanSessionId =
     body && typeof body.sessionId === 'string' && body.sessionId.trim()
@@ -1354,8 +1461,12 @@ export async function handleAssistantRoutes(request, env, url) {
       actorKeys,
       channel: 'web',
     });
-    if (!result.ok) return jsonResp({ error: result.reply, handoff: true, lang: result.lang }, result.status || 429);
-    return jsonResp({
+    if (!result.ok) {
+      const errBody = { error: result.reply, handoff: true, lang: result.lang };
+      if (auth.chatSession) errBody.chatSession = auth.chatSession;
+      return jsonResp(errBody, result.status || 429);
+    }
+    const okBody = {
       reply: result.reply,
       handoff: Boolean(result.handoff),
       handoffOffer: Boolean(result.handoffOffer),
@@ -1363,7 +1474,9 @@ export async function handleAssistantRoutes(request, env, url) {
       closed: Boolean(result.closed),
       ...(result.closed ? { status: 'closed' } : {}),
       lang: result.lang,
-    }, 200);
+    };
+    if (auth.chatSession) okBody.chatSession = auth.chatSession;
+    return jsonResp(okBody, 200);
   }
 
   if (url.pathname === '/v1/assistant/handoff') {
@@ -1387,7 +1500,9 @@ export async function handleAssistantRoutes(request, env, url) {
       source: 'web',
     });
     if (!forwarded.ok) return jsonResp({ error: forwarded.error }, forwarded.status);
-    return jsonResp({ accepted: true, reference: forwarded.reference }, 202);
+    const acceptedBody = { accepted: true, reference: forwarded.reference };
+    if (auth.chatSession) acceptedBody.chatSession = auth.chatSession;
+    return jsonResp(acceptedBody, 202);
   }
 
   return jsonResp({ error: 'Not found' }, 404);

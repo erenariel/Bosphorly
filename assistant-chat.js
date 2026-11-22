@@ -112,6 +112,7 @@
   const STORE_KEY = 'bosphorly.assistant_chat';
   const SESSION_ID_KEY = 'bosphorly.assistant_session';
   const CLOSED_KEY = 'bosphorly.assistant_closed';
+  const CHAT_SESSION_KEY = 'bosphorly.assistant_chat_session';
   let history = [];
   let sessionId = '';
   let isChatClosed = false;
@@ -132,6 +133,15 @@
   }
   const saveHistory = () => {
     try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-12))); } catch {}
+  };
+  let chatSession = '';
+  try { chatSession = sessionStorage.getItem(CHAT_SESSION_KEY) || ''; } catch { chatSession = ''; }
+  const saveChatSession = (tok) => {
+    chatSession = typeof tok === 'string' ? tok : '';
+    try {
+      if (chatSession) sessionStorage.setItem(CHAT_SESSION_KEY, chatSession);
+      else sessionStorage.removeItem(CHAT_SESSION_KEY);
+    } catch {}
   };
 
   const rawBot = window.BOSPHORLY_API && window.BOSPHORLY_API.telegramBot;
@@ -163,12 +173,12 @@
     `<button type="button" class="bc-quick-btn" data-q="hammam">${tr('qHammam')}</button>` +
     `<button type="button" class="bc-quick-btn" data-q="plan">${tr('qPlan')}</button>` +
     `</div>` +
-    `<div class="bc-turnstile"></div>` +
     `<div class="bc-handoff" hidden><div class="bc-handoff-row"><input type="email" placeholder="${tr('emailPh')}" autocomplete="email">` +
     `<button type="button" class="bc-forward-btn">${tr('forwardBtn')}</button></div></div>` +
     `<div class="bc-actions"><button type="button" class="bc-human-btn">💬 ${tr('human')}</button></div>` +
     `<form class="bc-form"><input class="bc-input" type="text" maxlength="1000" placeholder="${tr('placeholder')}" autocomplete="off">` +
-    `<button class="bc-send" type="submit">${tr('send')}</button></form>`;
+    `<button class="bc-send" type="submit">${tr('send')}</button></form>` +
+    `<div class="bc-turnstile" hidden></div>`;
   document.body.appendChild(panel);
 
   const headAvatar = panel.querySelector('.bc-head-avatar');
@@ -186,6 +196,10 @@
 
   let turnstileToken = '';
   let tsWidgetId = null;
+  let tsRendered = false;
+  let tsInFlight = false;
+  let tsWaiters = [];
+  let tsScriptLoading = false;
 
   function lockChatClosed() {
     isChatClosed = true;
@@ -204,17 +218,39 @@
     });
   }
 
-  function sendFeedback(vote, upBtn, downBtn) {
+  async function sendFeedback(vote, upBtn, downBtn) {
     upBtn.disabled = true;
     downBtn.disabled = true;
     if (vote === 'up') upBtn.classList.add('active');
     else downBtn.classList.add('active');
     if (!apiBase) return;
-    fetch(`${apiBase}/v1/assistant/feedback`, {
+    const postFeedback = (authPayload) => fetch(`${apiBase}/v1/assistant/feedback`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ vote, lang }),
-    }).catch(() => {});
+      body: JSON.stringify({ vote, lang, ...authPayload }),
+    });
+    try {
+      const res = await postFeedback(chatSession ? { chatSession } : {});
+      if (res.status === 403 && chatSession) {
+        saveChatSession('');
+        const freshTok = await refreshTurnstileToken();
+        if (freshTok) {
+          turnstileToken = '';
+          const retryRes = await postFeedback({ turnstileToken: freshTok });
+          const retryData = await retryRes.json().catch(() => ({}));
+          if (retryRes.ok && retryData && typeof retryData.chatSession === 'string' && retryData.chatSession) {
+            saveChatSession(retryData.chatSession);
+          }
+        }
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data && typeof data.chatSession === 'string' && data.chatSession) {
+          saveChatSession(data.chatSession);
+        }
+      }
+    } catch {}
   }
 
   function renderMsg(role, text, opts = {}) {
@@ -340,35 +376,129 @@
   }
   if (isChatClosed) lockChatClosed();
 
-  function loadTurnstile() {
+  function resolveTurnstileWaiters(tok) {
+    const list = tsWaiters;
+    tsWaiters = [];
+    for (const resolve of list) resolve(tok || '');
+  }
+
+  function renderTurnstileWidget() {
     const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
-    if (!siteKey) return;
-    const renderWidget = () => {
-      if (!window.turnstile || tsWidgetId !== null) return;
+    if (!siteKey || !window.turnstile || tsRendered) return;
+    tsMount.hidden = true;
+    tsInFlight = true;
+    tsRendered = true;
+    try {
       tsWidgetId = window.turnstile.render(tsMount, {
         sitekey: siteKey,
         theme: 'light',
-        callback: (tok) => { turnstileToken = tok; },
-        'expired-callback': () => { turnstileToken = ''; },
+        appearance: 'interaction-only',
+        callback: (tok) => {
+          tsInFlight = false;
+          tsMount.hidden = true;
+          turnstileToken = tok || '';
+          resolveTurnstileWaiters(turnstileToken);
+        },
+        'before-interactive-callback': () => {
+          tsMount.hidden = false;
+        },
+        'after-interactive-callback': () => {
+          tsMount.hidden = true;
+        },
+        'expired-callback': () => {
+          tsInFlight = false;
+          turnstileToken = '';
+        },
+        'error-callback': () => {
+          tsInFlight = false;
+          turnstileToken = '';
+          tsMount.hidden = true;
+          resolveTurnstileWaiters('');
+        },
       });
-    };
-    if (window.turnstile) { renderWidget(); return; }
-    if (!document.querySelector('script[data-bc-turnstile]')) {
-      const s = document.createElement('script');
-      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-      s.async = true;
-      s.defer = true;
-      s.dataset.bcTurnstile = '1';
-      s.onload = renderWidget;
-      document.head.appendChild(s);
+    } catch {
+      tsInFlight = false;
+      tsRendered = false;
+      tsWidgetId = null;
+      resolveTurnstileWaiters('');
     }
   }
 
-  function resetTurnstile() {
-    turnstileToken = '';
-    if (window.turnstile && tsWidgetId !== null) {
-      try { window.turnstile.reset(tsWidgetId); } catch {}
+  function loadTurnstile() {
+    const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
+    if (!siteKey) return;
+    if (window.turnstile) { renderTurnstileWidget(); return; }
+    const existing = document.querySelector('script[data-bc-turnstile]');
+    if (existing) {
+      if (!tsScriptLoading) {
+        tsScriptLoading = true;
+        existing.addEventListener('load', () => { tsScriptLoading = false; renderTurnstileWidget(); }, { once: true });
+        existing.addEventListener('error', () => { tsScriptLoading = false; existing.remove(); resolveTurnstileWaiters(''); }, { once: true });
+      }
+      return;
     }
+    tsScriptLoading = true;
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.async = true;
+    s.defer = true;
+    s.dataset.bcTurnstile = '1';
+    s.onload = () => { tsScriptLoading = false; renderTurnstileWidget(); };
+    s.onerror = () => { tsScriptLoading = false; s.remove(); resolveTurnstileWaiters(''); };
+    document.head.appendChild(s);
+  }
+
+  function waitForNextTurnstileToken(timeoutMs = 30000) {
+    return new Promise((resolve) => {
+      let done = false;
+      let timer = null;
+      const finish = (tok) => {
+        if (done) return;
+        done = true;
+        if (timer) clearTimeout(timer);
+        resolve(tok || '');
+      };
+      timer = setTimeout(() => {
+        tsWaiters = tsWaiters.filter((fn) => fn !== finish);
+        finish('');
+      }, timeoutMs);
+      tsWaiters.push(finish);
+    });
+  }
+
+  async function refreshTurnstileToken() {
+    const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
+    if (!siteKey) return '';
+    turnstileToken = '';
+    tsMount.hidden = true;
+    const wait = waitForNextTurnstileToken();
+    if (window.turnstile && tsRendered) {
+      tsInFlight = true;
+      try {
+        if (tsWidgetId !== null && tsWidgetId !== undefined) window.turnstile.reset(tsWidgetId);
+        else window.turnstile.reset();
+      } catch {
+        tsInFlight = false;
+        tsRendered = false;
+        tsWidgetId = null;
+        loadTurnstile();
+      }
+    } else {
+      loadTurnstile();
+    }
+    return wait;
+  }
+
+  async function ensureTurnstileToken() {
+    const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
+    if (!siteKey) return '';
+    if (turnstileToken) return turnstileToken;
+    if (window.turnstile && tsRendered && !tsInFlight) {
+      return refreshTurnstileToken();
+    }
+    const wait = waitForNextTurnstileToken();
+    loadTurnstile();
+    return wait;
   }
 
   async function submitMessage(rawMessage) {
@@ -380,22 +510,61 @@
       renderMsg('bot', tr('offline'));
       return;
     }
-    if (window.BOSPHORLY_API.turnstileSiteKey && !turnstileToken) {
-      renderMsg('bot', tr('verifyFirst'));
-      return;
-    }
+    const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
     renderMsg('user', message);
     input.value = '';
     sendBtn.disabled = true;
     showTyping();
     const recent = history.slice(-6);
+    const postAssistant = (authPayload) => fetch(`${apiBase}/v1/assistant`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, lang, history: recent, sessionId, ...authPayload }),
+    });
     try {
-      const res = await fetch(`${apiBase}/v1/assistant`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, lang, history: recent, sessionId, turnstileToken }),
-      });
-      const data = await res.json().catch(() => ({}));
+      let res;
+      let data = {};
+      if (chatSession) {
+        res = await postAssistant({ chatSession });
+        data = await res.json().catch(() => ({}));
+        if (res.status === 403 && !(data.closed || data.status === 'closed') && siteKey) {
+          saveChatSession('');
+          const freshTok = await refreshTurnstileToken();
+          if (!freshTok) {
+            hideTyping();
+            renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
+            return;
+          }
+          turnstileToken = '';
+          res = await postAssistant({ turnstileToken: freshTok });
+          data = await res.json().catch(() => ({}));
+        }
+      } else {
+        const tok = siteKey ? await ensureTurnstileToken() : '';
+        if (siteKey && !tok) {
+          hideTyping();
+          renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
+          return;
+        }
+        turnstileToken = '';
+        res = await postAssistant(tok ? { turnstileToken: tok } : {});
+        data = await res.json().catch(() => ({}));
+        if (res.status === 403 && !(data.closed || data.status === 'closed') && siteKey) {
+          const freshTok = await refreshTurnstileToken();
+          if (!freshTok) {
+            hideTyping();
+            renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
+            return;
+          }
+          turnstileToken = '';
+          res = await postAssistant({ turnstileToken: freshTok });
+          data = await res.json().catch(() => ({}));
+        }
+      }
+
+      if (data && typeof data.chatSession === 'string' && data.chatSession) {
+        saveChatSession(data.chatSession);
+      }
       if (data.closed || data.status === 'closed') {
         const closeReply = data.reply || tr('abuseClose');
         history.push({ role: 'assistant', content: closeReply });
@@ -403,6 +572,11 @@
         hideTyping();
         renderMsg('bot', closeReply, { noFeedback: true, avatarState: 'default' });
         lockChatClosed();
+        return;
+      }
+      if (res.status === 403) {
+        hideTyping();
+        renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
         return;
       }
       const reply = data.reply || data.error || tr('offline');
@@ -418,7 +592,6 @@
     } finally {
       hideTyping();
       sendBtn.disabled = isChatClosed;
-      resetTurnstile();
     }
   }
 
@@ -465,19 +638,45 @@
     const email = emailInput.value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
     if (!apiBase) { renderMsg('bot', tr('offline')); return; }
-    if (window.BOSPHORLY_API.turnstileSiteKey && !turnstileToken) {
-      renderMsg('bot', tr('verifyFirst'));
-      return;
-    }
+    const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
     forwardBtn.disabled = true;
+    const postHandoff = (authPayload) => fetch(`${apiBase}/v1/assistant/handoff`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, lang, history: history.slice(-6), sessionId, ...authPayload }),
+    });
     try {
-      const res = await fetch(`${apiBase}/v1/assistant/handoff`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, lang, history: history.slice(-6), sessionId, turnstileToken }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (data.closed || data.status === 'closed' || res.status === 403) {
+      let res;
+      let data = {};
+      if (chatSession) {
+        res = await postHandoff({ chatSession });
+        data = await res.json().catch(() => ({}));
+        if (res.status === 403 && !(data.closed || data.status === 'closed') && siteKey) {
+          saveChatSession('');
+          const freshTok = await refreshTurnstileToken();
+          if (!freshTok) { renderMsg('bot', tr('verifyFirst'), { noFeedback: true }); return; }
+          turnstileToken = '';
+          res = await postHandoff({ turnstileToken: freshTok });
+          data = await res.json().catch(() => ({}));
+        }
+      } else {
+        const tok = siteKey ? await ensureTurnstileToken() : '';
+        if (siteKey && !tok) { renderMsg('bot', tr('verifyFirst'), { noFeedback: true }); return; }
+        turnstileToken = '';
+        res = await postHandoff(tok ? { turnstileToken: tok } : {});
+        data = await res.json().catch(() => ({}));
+        if (res.status === 403 && !(data.closed || data.status === 'closed') && siteKey) {
+          const freshTok = await refreshTurnstileToken();
+          if (!freshTok) { renderMsg('bot', tr('verifyFirst'), { noFeedback: true }); return; }
+          turnstileToken = '';
+          res = await postHandoff({ turnstileToken: freshTok });
+          data = await res.json().catch(() => ({}));
+        }
+      }
+      if (data && typeof data.chatSession === 'string' && data.chatSession) {
+        saveChatSession(data.chatSession);
+      }
+      if (data.closed || data.status === 'closed') {
         lockChatClosed();
         return;
       }
@@ -485,6 +684,8 @@
         handoffBox.hidden = true;
         emailInput.value = '';
         renderMsg('bot', tr('forwarded'));
+      } else if (res.status === 403) {
+        renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
       } else {
         renderMsg('bot', tr('offline'));
       }
@@ -492,7 +693,6 @@
       renderMsg('bot', tr('offline'));
     } finally {
       forwardBtn.disabled = isChatClosed;
-      resetTurnstile();
     }
   });
 

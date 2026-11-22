@@ -300,3 +300,180 @@ test('zero-tolerance closure locks input box and all panel buttons immediately o
     await expect(panel.locator('.bc-quick-btn').nth(i)).toBeDisabled();
   }
 });
+
+test('Turnstile renders interaction-only in hidden footer container, stays invisible across 3 consecutive messages, and silently resets/retries on expired chatSession', async ({ page }) => {
+  const assistantRequests = [];
+  const feedbackPayloads = [];
+  const handoffPayloads = [];
+  let messageCallIdx = 0;
+
+  await page.route('**/v1/assistant/feedback', async (route) => {
+    feedbackPayloads.push(route.request().postDataJSON());
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, count: 1 }) });
+  });
+  await page.route('**/v1/assistant/handoff', async (route) => {
+    handoffPayloads.push(route.request().postDataJSON());
+    await route.fulfill({ status: 202, contentType: 'application/json', body: JSON.stringify({ accepted: true, reference: 'BOS-CHAT-1' }) });
+  });
+  await page.route('**/v1/assistant', async (route) => {
+    const body = route.request().postDataJSON();
+    assistantRequests.push(body);
+    messageCallIdx += 1;
+    if (messageCallIdx === 1) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ reply: 'Birinci yanıt 🌊', handoff: false, lang: 'tr', chatSession: 'sess-1' }),
+      });
+    }
+    if (messageCallIdx === 2) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ reply: 'İkinci yanıt ⛵', handoff: false, lang: 'tr' }),
+      });
+    }
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ reply: 'Üçüncü yanıt 🛁', handoff: false, lang: 'tr' }),
+    });
+  });
+
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: `
+        window.__tsStats = { renders: [], resets: 0, tokenSeq: 0, opts: null };
+        window.turnstile = {
+          render(el, opts) {
+            window.__tsStats.renders.push({
+              appearance: opts.appearance,
+              theme: opts.theme,
+              hasBeforeInteractive: typeof opts['before-interactive-callback'] === 'function',
+              hasAfterInteractive: typeof opts['after-interactive-callback'] === 'function',
+              className: el.className,
+              isLastChild: el === el.parentElement.lastElementChild,
+            });
+            window.__tsStats.opts = opts;
+            const child = document.createElement('div');
+            child.style.height = '65px';
+            child.textContent = 'Turnstile widget';
+            el.appendChild(child);
+            const tok = 'ts-tok-' + (++window.__tsStats.tokenSeq);
+            setTimeout(() => opts.callback(tok), 10);
+            return 1;
+          },
+          reset() {
+            window.__tsStats.resets += 1;
+            const tok = 'ts-tok-' + (++window.__tsStats.tokenSeq);
+            setTimeout(() => window.__tsStats.opts.callback(tok), 10);
+          }
+        };
+      `,
+    });
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await expect(panel).toBeVisible();
+
+  const tsBox = panel.locator('.bc-turnstile');
+  await expect(tsBox).toBeHidden();
+
+  // Wait for Turnstile script & render to run
+  await expect.poll(async () => page.evaluate(() => window.__tsStats?.renders?.length || 0)).toBe(1);
+  const renderInfo = await page.evaluate(() => window.__tsStats.renders[0]);
+  expect(renderInfo.appearance).toBe('interaction-only');
+  expect(renderInfo.isLastChild).toBe(true);
+  expect(renderInfo.hasBeforeInteractive).toBe(true);
+  expect(renderInfo.hasAfterInteractive).toBe(true);
+  await expect(tsBox).toBeHidden();
+
+  // Send 3 consecutive messages: Turnstile box must remain hidden for all 3
+  const input = panel.locator('.bc-input');
+  const sendBtn = panel.locator('.bc-send');
+
+  await input.fill('Boğaz turu saat kaçta?');
+  await sendBtn.click();
+  await expect(panel.locator('.bc-msg.bot')).toContainText(['Birinci yanıt 🌊']);
+  await expect(tsBox).toBeHidden();
+
+  await input.fill('Transfer fiyatı nedir?');
+  await sendBtn.click();
+  await expect(panel.locator('.bc-msg.bot')).toContainText(['İkinci yanıt ⛵']);
+  await expect(tsBox).toBeHidden();
+
+  await input.fill('Hamam rezervasyonu nasıl yapılır?');
+  await sendBtn.click();
+  await expect(panel.locator('.bc-msg.bot')).toContainText(['Üçüncü yanıt 🛁']);
+  await expect(tsBox).toBeHidden();
+
+  // Only message 1 carried turnstileToken; messages 2 and 3 carried chatSession without turnstileToken
+  expect(assistantRequests).toHaveLength(3);
+  expect(assistantRequests[0].turnstileToken).toBe('ts-tok-1');
+  expect(assistantRequests[0].chatSession).toBeUndefined();
+  expect(assistantRequests[1].chatSession).toBe('sess-1');
+  expect(assistantRequests[1].turnstileToken).toBeUndefined();
+  expect(assistantRequests[2].chatSession).toBe('sess-1');
+  expect(assistantRequests[2].turnstileToken).toBeUndefined();
+  expect(await page.evaluate(() => window.__tsStats.resets)).toBe(0);
+
+  // Subsequent feedback & handoff reuse chatSession without Turnstile
+  await panel.locator('.bc-rate-btn[data-vote="up"]').last().click();
+  await expect.poll(() => feedbackPayloads.length).toBe(1);
+  expect(feedbackPayloads[0]).toEqual({ vote: 'up', lang: 'tr', chatSession: 'sess-1' });
+
+  await panel.locator('.bc-human-btn').click();
+  await panel.locator('.bc-handoff input[type="email"]').fill('guest@example.org');
+  await panel.locator('.bc-forward-btn').click();
+  await expect.poll(() => handoffPayloads.length).toBe(1);
+  expect(handoffPayloads[0].chatSession).toBe('sess-1');
+  expect(handoffPayloads[0].turnstileToken).toBeUndefined();
+
+  // Now simulate expired/invalid chatSession on message 4: server returns 403 once, client resets Turnstile silently and retries
+  await page.unroute('**/v1/assistant');
+  const retryRequests = [];
+  await page.route('**/v1/assistant', async (route) => {
+    const body = route.request().postDataJSON();
+    retryRequests.push(body);
+    if (body.chatSession === 'sess-1') {
+      return route.fulfill({
+        status: 403,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Bot verification failed' }),
+      });
+    }
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ reply: 'Yenilenmiş yanıt ✅', handoff: false, lang: 'tr', chatSession: 'sess-2' }),
+    });
+  });
+
+  await input.fill('Dördüncü mesaj');
+  await sendBtn.click();
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('Yenilenmiş yanıt ✅');
+  await expect(tsBox).toBeHidden();
+
+  // Verify silent turnstile.reset + auto retry with no duplicate user message or error shown
+  expect(retryRequests).toHaveLength(2);
+  expect(retryRequests[0].chatSession).toBe('sess-1');
+  expect(retryRequests[1].turnstileToken).toBe('ts-tok-2');
+  expect(retryRequests[1].chatSession).toBeUndefined();
+  expect(await page.evaluate(() => window.__tsStats.resets)).toBe(1);
+  expect(await panel.locator('.bc-msg.user').filter({ hasText: 'Dördüncü mesaj' }).count()).toBe(1);
+  const allBotTexts = await panel.locator('.bc-msg.bot').allInnerTexts();
+  expect(allBotTexts.join(' ')).not.toContain('güvenlik doğrulamasını');
+  expect(allBotTexts.join(' ')).not.toContain('çevrimdışı');
+
+  // If interaction IS required by Cloudflare (before-interactive-callback), container becomes visible at bottom then hides on solve
+  await page.evaluate(() => window.__tsStats.opts['before-interactive-callback']());
+  await expect(tsBox).toBeVisible();
+  await page.evaluate(() => {
+    window.__tsStats.opts['after-interactive-callback']();
+    window.__tsStats.opts.callback('ts-tok-3');
+  });
+  await expect(tsBox).toBeHidden();
+});

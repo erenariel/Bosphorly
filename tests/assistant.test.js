@@ -5,9 +5,11 @@ import worker from '../backend/worker.js';
 import {
   ASSISTANT_MESSAGES,
   ASSISTANT_MODEL,
+  CHAT_SESSION_TTL_MS,
   SUPPORTED_LANGS,
   TIME_GREETINGS,
   capEmojis,
+  createChatSessionToken,
   detectLanguage,
   extractGuestName,
   getIstanbulGreeting,
@@ -21,7 +23,9 @@ import {
   runAssistant,
   stripExternalLinks,
   stripFakeUrgency,
+  verifyChatSessionToken,
 } from '../backend/assistant.js';
+import { signState } from '../backend/members.js';
 import { TG_TEXT, computeTelegramWebhookSecret, handleTelegramWebhook } from '../backend/telegram.js';
 
 const ORIGIN = 'https://bosphorly.com';
@@ -1139,3 +1143,220 @@ test('Telegram zero-tolerance: blocks chat_id for 7 days on 1st violation, unblo
   assert.equal(blockRows.get(tgHash).blocked_until, tRepeat + 30 * 24 * 60 * 60 * 1000);
 });
 
+test('chatSession: Turnstile required on first request, valid chatSession accepted without Turnstile across /v1/assistant, /handoff & /feedback, and expired/other-IP tokens rejected', async t => {
+  const pepper = 'chat-pepper-secret';
+  const clientIp = '203.0.113.10';
+  const otherIp = '198.51.100.99';
+  let siteverifyCalls = 0;
+  let sentEmails = [];
+  const feedbackCounts = new Map();
+
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    if (String(url).includes('siteverify')) {
+      siteverifyCalls += 1;
+      return Response.json({ success: true });
+    }
+    if (String(url) === 'https://api.resend.com/emails') {
+      sentEmails.push(JSON.parse(init.body));
+      return Response.json({ id: 'email-cs-1' });
+    }
+    throw new Error(`Unexpected fetch: ${url}`);
+  });
+
+  const mockDb = {
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        run: async () => {
+          if (sql.includes('INSERT INTO assistant_feedback')) {
+            const k = `${args[0]}:${args[1]}`;
+            feedbackCounts.set(k, (feedbackCounts.get(k) || 0) + 1);
+          }
+          return { success: true };
+        },
+        first: async () => {
+          if (sql.includes('SELECT count FROM assistant_feedback')) {
+            const k = `${args[0]}:${args[1]}`;
+            return { count: feedbackCounts.get(k) || 0 };
+          }
+          return null;
+        },
+      }),
+    }),
+  };
+  const env = baseEnv({
+    CODE_PEPPER: pepper,
+    DB: mockDb,
+    AI: {
+      run: async () => ({
+        response: JSON.stringify({ handoff: false, reply: 'Sabah Boğaz turu €15 civarındadır. https://bosphorly.com/booking.html?service=bb-morning&lang=tr' }),
+      }),
+    },
+  });
+
+  // 1. First request without turnstileToken and without chatSession is rejected with 403
+  const noTsRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ message: 'Boğaz turu fiyatı?', lang: 'tr', history: [] }),
+  }), env);
+  assert.equal(noTsRes.status, 403);
+  assert.equal(siteverifyCalls, 0);
+
+  const noTsHandoffRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/handoff`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ email: 'guest@example.org', lang: 'tr', history: [] }),
+  }), env);
+  assert.equal(noTsHandoffRes.status, 403);
+  assert.equal(siteverifyCalls, 0);
+
+  // 2. First request with turnstileToken verifies via siteverify and returns a signed 30-min chatSession (IP hash + exp, no message content)
+  const firstRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ message: 'Boğaz turu fiyatı?', lang: 'tr', history: [], turnstileToken: 'ts-first-ok' }),
+  }), env);
+  assert.equal(firstRes.status, 200);
+  assert.equal(siteverifyCalls, 1);
+  const firstData = await firstRes.json();
+  assert.equal(typeof firstData.chatSession, 'string');
+  assert.ok(firstData.chatSession.includes('.'));
+
+  const [payloadB64] = firstData.chatSession.split('.');
+  const decodedPayload = JSON.parse(Buffer.from(payloadB64.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8'));
+  assert.equal(decodedPayload.typ, 'chat');
+  assert.equal(typeof decodedPayload.ip, 'string');
+  assert.ok(!JSON.stringify(decodedPayload).includes(clientIp), 'chatSession must store IP hash, not raw IP');
+  assert.ok(!JSON.stringify(decodedPayload).includes('Boğaz'), 'chatSession must not contain message content');
+  assert.ok(decodedPayload.exp > Date.now() + 25 * 60 * 1000 && decodedPayload.exp <= Date.now() + CHAT_SESSION_TTL_MS + 5000);
+
+  // 3. Subsequent /v1/assistant, /handoff, and /feedback requests with valid chatSession succeed WITHOUT Turnstile
+  const followAssistantRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ message: 'Transfer fiyatı nedir?', lang: 'tr', history: [], chatSession: firstData.chatSession }),
+  }), env);
+  assert.equal(followAssistantRes.status, 200);
+  assert.equal(siteverifyCalls, 1, 'siteverify must not be called when chatSession is valid');
+
+  const followHandoffRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/handoff`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ email: 'guest@example.org', lang: 'tr', history: [], chatSession: firstData.chatSession }),
+  }), env);
+  assert.equal(followHandoffRes.status, 202);
+  assert.equal(sentEmails.length, 1);
+  assert.equal(siteverifyCalls, 1);
+
+  const followFeedbackRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/feedback`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ vote: 'up', lang: 'tr', chatSession: firstData.chatSession }),
+  }), env);
+  assert.equal(followFeedbackRes.status, 200);
+  assert.equal((await followFeedbackRes.json()).count, 1);
+  assert.equal(siteverifyCalls, 1);
+
+  // 4. Token belonging to another IP is rejected across /v1/assistant, /handoff, and /feedback
+  const wrongIpAssistant = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': otherIp },
+    body: JSON.stringify({ message: 'Hi', lang: 'en', history: [], chatSession: firstData.chatSession }),
+  }), env);
+  assert.equal(wrongIpAssistant.status, 403);
+
+  const wrongIpHandoff = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/handoff`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': otherIp },
+    body: JSON.stringify({ email: 'guest@example.org', lang: 'en', history: [], chatSession: firstData.chatSession }),
+  }), env);
+  assert.equal(wrongIpHandoff.status, 403);
+
+  const wrongIpFeedback = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/feedback`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': otherIp },
+    body: JSON.stringify({ vote: 'down', lang: 'en', chatSession: firstData.chatSession }),
+  }), env);
+  assert.equal(wrongIpFeedback.status, 403);
+
+  // 5. Expired chatSession token is rejected across /v1/assistant, /handoff, and /feedback
+  const expiredToken = await createChatSessionToken(pepper, clientIp, Date.now() - 31 * 60 * 1000);
+  assert.equal(await verifyChatSessionToken(pepper, expiredToken, clientIp), false);
+
+  const expAssistant = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ message: 'Hi', lang: 'en', history: [], chatSession: expiredToken }),
+  }), env);
+  assert.equal(expAssistant.status, 403);
+
+  const expHandoff = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/handoff`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ email: 'guest@example.org', lang: 'en', history: [], chatSession: expiredToken }),
+  }), env);
+  assert.equal(expHandoff.status, 403);
+
+  const expFeedback = await worker.fetch(new Request(`${ORIGIN}/v1/assistant/feedback`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ vote: 'up', lang: 'en', chatSession: expiredToken }),
+  }), env);
+  assert.equal(expFeedback.status, 403);
+
+  // 6. Tampered token, OAuth state token signed with same pepper, and missing CODE_PEPPER fail closed
+  const tamperedToken = `${payloadB64}.0000000000000000000000000000000000000000000000000000000000000000`;
+  assert.equal(await verifyChatSessionToken(pepper, tamperedToken, clientIp), false);
+  const oauthState = await signState(pepper, { p: 'google', t: Date.now() });
+  assert.equal(await verifyChatSessionToken(pepper, oauthState, clientIp), false);
+  assert.equal(await verifyChatSessionToken('', firstData.chatSession, clientIp), false);
+
+  const noPepperRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': clientIp },
+    body: JSON.stringify({ message: 'Hi', lang: 'en', history: [], chatSession: firstData.chatSession }),
+  }), baseEnv({ CODE_PEPPER: '' }));
+  assert.equal(noPepperRes.status, 403);
+});
+
+test('per-actor rate limit (6/min) and global daily limit still enforce when using valid chatSession', async t => {
+  const pepper = 'rate-pepper';
+  const ip = '198.51.100.77';
+  const env = baseEnv({
+    CODE_PEPPER: pepper,
+    ASSISTANT_DAILY_LIMIT: '100',
+    AI: { run: async () => ({ response: JSON.stringify({ handoff: false, reply: 'IST transfer €60.' }) }) },
+  });
+  const token = await createChatSessionToken(pepper, ip);
+  t.mock.method(globalThis, 'fetch', async () => {
+    throw new Error('siteverify should not be called when chatSession is valid');
+  });
+
+  for (let i = 0; i < 6; i++) {
+    const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+      method: 'POST',
+      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+      body: JSON.stringify({ message: 'Merhaba', lang: 'tr', history: [], chatSession: token }),
+    }), env);
+    assert.equal(res.status, 200);
+  }
+  const rateLimited = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Merhaba', lang: 'tr', history: [], chatSession: token }),
+  }), env);
+  assert.equal(rateLimited.status, 429);
+
+  // Global daily limit still returns busy=true & handoff=true even with valid chatSession
+  const dailyIp = '198.51.100.88';
+  const dailyToken = await createChatSessionToken(pepper, dailyIp);
+  const dailyBusy = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': dailyIp },
+    body: JSON.stringify({ message: 'Merhaba', lang: 'tr', history: [], chatSession: dailyToken }),
+  }), { ...env, ASSISTANT_DAILY_LIMIT: '1' });
+  assert.equal(dailyBusy.status, 200);
+  const busyData = await dailyBusy.json();
+  assert.equal(busyData.busy, true);
+  assert.equal(busyData.handoff, true);
+});
