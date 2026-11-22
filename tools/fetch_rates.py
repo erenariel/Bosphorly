@@ -21,7 +21,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parents[1] / "data" / "rates.json"
-CODES = ["EUR", "USD", "GBP", "RUB", "SAR", "AED", "AZN"]
+CODES = ["EUR", "USD", "GBP", "CHF", "SAR", "AED", "QAR", "KWD", "RUB", "AZN", "KZT", "CAD", "AUD", "JPY", "CNY", "KRW", "NOK", "SEK", "DKK", "RON", "PKR"]
 MAX_AGE_DAYS = 4
 TCMB_URL = "https://www.tcmb.gov.tr/kurlar/today.xml"
 ERAPI_URL = "https://open.er-api.com/v6/latest/TRY"
