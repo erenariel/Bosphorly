@@ -26,10 +26,11 @@ import {
   runAssistant,
   stripExternalLinks,
   stripFakeUrgency,
+  stripRepeatIntroAndGreeting,
   verifyChatSessionToken,
 } from '../backend/assistant.js';
 import { signState } from '../backend/members.js';
-import { TG_TEXT, computeTelegramWebhookSecret, handleTelegramWebhook } from '../backend/telegram.js';
+import { TG_TEXT, computeTelegramWebhookSecret, formatTelegramPlainText, handleTelegramWebhook } from '../backend/telegram.js';
 
 const ORIGIN = 'https://bosphorly.com';
 const ALL_23_LANGS = [
@@ -1623,4 +1624,390 @@ test('a hello with anything else (question mark, second sentence, 3+ words, extr
     assert.equal(m.calls.length, 1, `model called for "${c.message}"`);
     assert.ok(!res.reply.includes(ASSISTANT_MESSAGES.greeting[res.lang]), `no canned welcome for "${c.message}"`);
   }
+});
+test('all 23 languages retrieve Bosphorus cruise price and IST->Sultanahmet transfer price + URL (including Hebrew)', async () => {
+  const cruiseQueries = {
+    tr: 'Boğaz turu fiyatı',
+    en: 'Bosphorus cruise price',
+    de: 'Bosporus Bootsfahrt Preis',
+    fr: 'Croisière sur le Bosphore prix',
+    es: 'Crucero por el Bósforo precio',
+    it: 'Crociera sul Bosforo prezzo',
+    pt: 'Cruzeiro no Bósforo preço',
+    nl: 'Bosporus cruise prijs',
+    ru: 'Круиз по Босфору цена',
+    uk: 'Круїз по Босфору ціна',
+    bs: 'Krstarenje Bosforom cijena',
+    hr: 'Krstarenje Bosporom cijena',
+    hu: 'Boszporusz hajóút ár',
+    az: 'Bosfor turu qiyməti',
+    ar: 'سعر رحلة البوسفور',
+    he: 'כמה עולה שיט בבוספורוס?',
+    fa: 'قیمت کشتی تفریحی بسفر',
+    zh: '博斯普鲁斯海峡游船价格',
+    ja: 'ボスポラス海峡クルーズ料金',
+    ko: '보스포루스 크루즈 가격',
+    hi: 'बोस्फोरस क्रूज़ की कीमत',
+    bn: 'বসফরাস ক্রুজ দাম কত',
+    id: 'Harga pelayaran Bosporus',
+  };
+  const transferQueries = {
+    tr: 'IST→Sultanahmet transfer fiyatı',
+    en: 'IST→Sultanahmet transfer price',
+    de: 'IST→Sultanahmet Transfer Preis',
+    fr: 'Transfert IST→Sultanahmet prix',
+    es: 'Traslado IST→Sultanahmet precio',
+    it: 'Trasferimento IST→Sultanahmet prezzo',
+    pt: 'Transfer IST→Sultanahmet preço',
+    nl: 'IST→Sultanahmet transfer prijs',
+    ru: 'Трансфер IST→Султанахмет цена',
+    uk: 'Трансфер IST→Султанахмет ціна',
+    bs: 'Transfer IST→Sultanahmet cijena',
+    hr: 'Transfer IST→Sultanahmet cijena',
+    hu: 'IST→Sultanahmet transzfer ár',
+    az: 'IST→Sultanəhməd transfer qiyməti',
+    ar: 'سعر توصيل IST السلطان أحمد',
+    he: 'מחיר העברה IST סולטן אחמט',
+    fa: 'قیمت ترانسفر IST سلطان احمد',
+    zh: 'IST到苏丹艾哈迈德接送价格',
+    ja: 'ISTからスルタンアフメット送迎料金',
+    ko: 'IST 술탄아흐메트 픽업 가격',
+    hi: 'IST से सुल्तानअहमत ट्रांसफर कीमत',
+    bn: 'IST থেকে সুলতানআহমেত ট্রান্সফার দাম',
+    id: 'Harga transfer IST→Sultanahmet',
+  };
+
+  for (const lang of ALL_23_LANGS) {
+    const cruiseChunks = retrieveChunks(cruiseQueries[lang], 4);
+    const pricedCruise = cruiseChunks.find((c) => /Approx\.\s*\d+\s*(?:EUR|USD)/.test(c.text) && c.url.includes('booking.html'));
+    assert.ok(pricedCruise, `${lang} cruise retrieval should include priced tour chunk & booking link, got: ${cruiseChunks.map((c) => c.id).join(', ')}`);
+
+    const transferChunks = retrieveChunks(transferQueries[lang], 4);
+    const rateChunk = transferChunks.find((c) => c.id === 'transfer-rates' && c.text.includes('€60') && c.text.includes('€65'));
+    assert.ok(rateChunk, `${lang} transfer retrieval should include transfer-rates (€60/€65), got: ${transferChunks.map((c) => c.id).join(', ')}`);
+
+    // Verify runAssistant injects those exact chunks & enforces URL fallback if mocked model omits URL
+    let capturedSystem = '';
+    const mockEnv = {
+      AI: {
+        run: async (_model, opts) => {
+          capturedSystem = opts.messages[0].content;
+          const hasTransfer = capturedSystem.includes('€60');
+          return {
+            response: JSON.stringify({
+              abuse: false,
+              handoff: false,
+              reply: hasTransfer ? 'IST → Sultanahmet ~€60 (request).' : 'Bosphorus cruise approx. 25 EUR.',
+            }),
+          };
+        },
+      },
+    };
+    const res = await runAssistant({ message: transferQueries[lang], pageLang: lang, env: mockEnv, actorKey: `t23-${lang}` });
+    assert.equal(res.ok, true);
+    assert.match(capturedSystem, /€60/);
+    assert.ok(res.reply.includes('https://bosphorly.com/index.html?lang=' + lang + '#booking'), `${lang} reply should ensure localized booking link`);
+  }
+});
+
+test('model config disables thinking, caps tokens at 350, compacts prompt, and uses informal address', async () => {
+  let capturedModel = '';
+  let capturedOpts = null;
+  const env = {
+    AI: {
+      run: async (model, opts) => {
+        capturedModel = model;
+        capturedOpts = opts;
+        return {
+          response: JSON.stringify({
+            abuse: false,
+            handoff: false,
+            reply: 'Sabah Boğaz turu kişi başı yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr Tarihini paylaşır mısın?',
+          }),
+        };
+      },
+    },
+  };
+  await runAssistant({ message: 'Boğaz turu fiyatı ne kadar?', pageLang: 'tr', env, actorKey: 'cfg-check' });
+  assert.equal(capturedModel, ASSISTANT_MODEL);
+  assert.equal(capturedOpts.max_completion_tokens, 350);
+  assert.deepEqual(capturedOpts.chat_template_kwargs, { enable_thinking: false, clear_thinking: true });
+  const sys = capturedOpts.messages[0].content;
+  assert.ok(sys.length < 3600, `Compact system prompt + context should stay under 3600 chars (got ${sys.length})`);
+  assert.match(sys, /"sen" TR/);
+  assert.match(sys, /"du" DE/);
+  assert.match(sys, /"tu" FR/);
+  assert.match(sys, /"ты" RU/);
+});
+
+test('repeat greetings and "Ben Mimo" intros are suppressed on follow-up turns and web chat after initial welcome', async () => {
+  let followPrompt = '';
+  const env = {
+    AI: {
+      run: async (_m, opts) => {
+        followPrompt = opts.messages[0].content;
+        return {
+          response: JSON.stringify({
+            abuse: false,
+            handoff: false,
+            reply: 'İyi akşamlar! Merhaba! Ben Mimo, Bosphorly’nin yapay zekâ asistanıyım. Boğaz turu kişi başı yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr',
+          }),
+        };
+      },
+    },
+  };
+
+  // With prior assistant message in history -> strips greeting & Ben Mimo intro
+  const resHistory = await runAssistant({
+    message: 'Sabah Boğaz turu fiyatı nedir?',
+    pageLang: 'tr',
+    history: [
+      { role: 'user', content: 'Merhaba' },
+      { role: 'assistant', content: 'Merhaba! Sana nasıl yardımcı olabilirim?' },
+    ],
+    env,
+    actorKey: 'followup-1',
+  });
+  assert.match(followPrompt, /CONTINUING CHAT.*Do NOT say/i);
+  assert.ok(!resHistory.reply.startsWith('İyi akşamlar'));
+  assert.ok(!resHistory.reply.includes('Ben Mimo'));
+  assert.match(resHistory.reply, /^Boğaz turu kişi başı yaklaşık 25 EUR/);
+
+  // With alreadyGreeted=true (web panel already showed initial welcome before first turn)
+  const resWeb = await runAssistant({
+    message: 'Transfer ne kadar?',
+    pageLang: 'tr',
+    history: [],
+    alreadyGreeted: true,
+    env,
+    actorKey: 'followup-2',
+  });
+  assert.ok(!resWeb.reply.includes('Ben Mimo'));
+  assert.match(resWeb.reply, /^Boğaz turu kişi başı yaklaşık 25 EUR/);
+
+  // Direct unit check on multilingual repeat intro stripper
+  assert.equal(
+    stripRepeatIntroAndGreeting("Hello! I'm Mimo, your Istanbul guide. Fixed transfer to Sultanahmet is €60."),
+    'Fixed transfer to Sultanahmet is €60.'
+  );
+  // Leaves substantive text untouched when removing intro leaves too little
+  assert.equal(stripRepeatIntroAndGreeting('Ben Mimo.'), 'Ben Mimo.');
+});
+
+test('stripFakeUrgency catches "son 2 yer kaldı", "son X koltuk", "sadece bugün", and multilingual urgency', () => {
+  const tr1 = stripFakeUrgency('Sabah turu 25 EUR, son 2 yer kaldı!');
+  assert.ok(!/son 2 yer/i.test(tr1), tr1);
+  assert.ok(tr1.includes('25 EUR'));
+
+  const tr2 = stripFakeUrgency('Son 5 koltuk kaldı, hemen yerini ayırt.');
+  assert.ok(!/son 5 koltuk/i.test(tr2), tr2);
+  assert.ok(!/hemen/i.test(tr2), tr2);
+
+  const tr3 = stripFakeUrgency('Bu fiyat sadece bugün geçerli.');
+  assert.ok(!/sadece bugün/i.test(tr3), tr3);
+
+  const tr4 = stripFakeUrgency('Yalnızca bugün için son iki yer kaldı!');
+  assert.ok(!/yalnızca bugün|son iki yer/i.test(tr4), tr4);
+
+  const multi = stripFakeUrgency(
+    'Цена 25 EUR, осталось 2 места. Nur noch 3 Plätze frei. נשארו רק 2 מקומות רק היום. Dernières 4 places. 最后2个名额.'
+  );
+  assert.ok(multi.includes('25 EUR'), multi);
+  assert.ok(!/осталось 2 места|Plätze|מקומות|רק היום|places|名额/.test(multi), multi);
+});
+
+test('assistant_timing console.log outputs totalMs and modelMs without message content or PII', async t => {
+  const logs = [];
+  t.mock.method(console, 'log', (...args) => {
+    logs.push(args.join(' '));
+  });
+  const env = {
+    AI: {
+      run: async () => ({
+        response: JSON.stringify({ abuse: false, handoff: false, reply: 'SECRET_BOT_REPLY IST €60 https://bosphorly.com/index.html?lang=tr#booking' }),
+      }),
+    },
+  };
+  await runAssistant({
+    message: 'Benim adım Caner SECRET_USER_QUERY transfer ne kadar?',
+    pageLang: 'tr',
+    env,
+    actorKey: 'timing-log-test',
+  });
+  const timingLine = logs.find((l) => l.includes('assistant_timing'));
+  assert.ok(timingLine, 'Should log assistant_timing');
+  assert.ok(timingLine.includes('"totalMs"'));
+  assert.ok(timingLine.includes('"modelMs"'));
+  assert.ok(!timingLine.includes('SECRET_USER_QUERY'));
+  assert.ok(!timingLine.includes('SECRET_BOT_REPLY'));
+  assert.ok(!timingLine.includes('Caner'));
+});
+
+test('POST /v1/assistant supports SSE streaming (stream=true), filters <think> and unsafe content, and returns canonical done payload', async t => {
+  const pepper = 'sse-pepper';
+  const ip = '203.0.113.55';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  t.mock.method(console, 'log', () => {});
+
+  const enc = new TextEncoder();
+  const env = baseEnv({
+    CODE_PEPPER: pepper,
+    AI: {
+      run: async (_m, opts) => {
+        assert.equal(opts.stream, true);
+        assert.equal(opts.max_completion_tokens, 350);
+        assert.deepEqual(opts.chat_template_kwargs, { enable_thinking: false, clear_thinking: true });
+        const tokens = [
+          'data: {"response":"<think>secret thought</think>"}\n\n',
+          'data: {"response":"{\\"abuse\\":false,\\"handoff\\":false,\\"reply\\":\\""}\n\n',
+          'data: {"response":"Merhaba! Ben Mimo. **Sabah Boğaz turu** kişi başı "}\n\n',
+          'data: {"response":"yaklaşık **25 EUR** ve sadece resmi site: "}\n\n',
+          'data: {"response":"https://bosphorly.com/booking.html?service=bb-morning&lang=tr "}\n\n',
+          'data: {"response":"https://evil.com son 2 yer kaldı. Tarihini yazar mısın?\\"}"}\n\n',
+          'data: [DONE]\n\n',
+        ];
+        return new ReadableStream({
+          start(controller) {
+            for (const tok of tokens) controller.enqueue(enc.encode(tok));
+            controller.close();
+          },
+        });
+      },
+    },
+  });
+
+  const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: {
+      Origin: ORIGIN,
+      'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
+      'CF-Connecting-IP': ip,
+    },
+    body: JSON.stringify({
+      message: 'Sabah Boğaz turu ne kadar?',
+      lang: 'tr',
+      greeted: true,
+      stream: true,
+      history: [],
+      chatSession: sessionTok,
+    }),
+  }), env);
+
+  assert.equal(res.status, 200);
+  assert.match(res.headers.get('content-type') || '', /text\/event-stream/);
+  const bodyText = await res.text();
+  assert.ok(!bodyText.includes('secret thought'));
+  assert.ok(!bodyText.includes('evil.com'));
+  assert.ok(!bodyText.includes('son 2 yer'));
+  assert.ok(bodyText.includes('event: delta'));
+  assert.ok(bodyText.includes('event: done'));
+
+  const doneMatch = bodyText.match(/event: done\ndata: (.+)/);
+  assert.ok(doneMatch);
+  const donePayload = JSON.parse(doneMatch[1]);
+  assert.equal(donePayload.closed, false);
+  assert.ok(!donePayload.reply.includes('Ben Mimo'));
+  assert.ok(donePayload.reply.includes('**Sabah Boğaz turu**'));
+  assert.ok(donePayload.reply.includes('https://bosphorly.com/booking.html?service=bb-morning&lang=tr'));
+});
+
+test('Telegram formatTelegramPlainText cleans markdown bold asterisks and markdown links when parse_mode is unused', () => {
+  const cleaned = formatTelegramPlainText('**Boğaz Turu** yaklaşık **25 EUR**. [Rezervasyon](https://bosphorly.com/booking.html?service=bb-morning&lang=tr) **test');
+  assert.ok(!cleaned.includes('**'), cleaned);
+  assert.ok(cleaned.includes('Boğaz Turu yaklaşık 25 EUR.'));
+  assert.ok(cleaned.includes('Rezervasyon (https://bosphorly.com/booking.html?service=bb-morning&lang=tr)'));
+});
+
+
+test('SSE streaming retries a timeout once, uses tryAgain off-catalog, and keeps email handoff on catalog questions', async () => {
+  const pepper = 'sse-timeout-pepper';
+  const ip = '203.0.113.77';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+
+  async function post(message, lang, run) {
+    const env = baseEnv({
+      CODE_PEPPER: pepper,
+      ASSISTANT_AI_TIMEOUT_MS: '25',
+      AI: { run },
+    });
+    const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+      method: 'POST',
+      headers: {
+        Origin: ORIGIN,
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        'CF-Connecting-IP': ip,
+      },
+      body: JSON.stringify({ message, lang, stream: true, history: [], chatSession: sessionTok }),
+    }), env);
+    const ct = res.headers.get('content-type') || '';
+    if (!ct.includes('text/event-stream')) {
+      return { ct, json: await res.json() };
+    }
+    const text = await res.text();
+    const doneMatch = text.match(/event: done\ndata: (.+)/);
+    return { ct, done: doneMatch ? JSON.parse(doneMatch[1]) : null };
+  }
+
+  let recoveredCalls = 0;
+  const recovered = await post('Boğaz turu fiyatı nedir?', 'tr', () => {
+    recoveredCalls += 1;
+    if (recoveredCalls === 1) return new Promise(() => {});
+    return Promise.resolve({
+      response: JSON.stringify({ handoff: false, reply: 'Sabah turu yaklaşık iki saat sürer.' }),
+    });
+  });
+  assert.equal(recoveredCalls, 2);
+  assert.match(recovered.ct, /text\/event-stream/);
+  assert.equal(recovered.done.handoff, false);
+  assert.ok(recovered.done.reply.includes('iki saat'));
+
+  let catalogCalls = 0;
+  const catalog = await post('Boğaz turu fiyatı nedir?', 'tr', () => {
+    catalogCalls += 1;
+    return new Promise(() => {});
+  });
+  assert.equal(catalogCalls, 2);
+  assert.equal(catalog.done.handoff, true);
+  assert.match(catalog.done.reply, /e-posta/i);
+
+  let weatherCalls = 0;
+  const weather = await post('Bugün hava nasıl?', 'tr', () => {
+    weatherCalls += 1;
+    return new Promise(() => {});
+  });
+  assert.equal(weatherCalls, 2);
+  assert.equal(weather.done.handoff, false);
+  assert.equal(weather.done.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+  assert.equal(/e-posta|email/i.test(weather.done.reply), false);
+
+  let chatCalls = 0;
+  const chat = await post('nasılsın', 'tr', () => {
+    chatCalls += 1;
+    return new Promise(() => {});
+  });
+  assert.equal(chatCalls, 2);
+  assert.equal(chat.done.handoff, false);
+  assert.equal(chat.done.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+
+  let errorCalls = 0;
+  const hard = await post('How is the weather today?', 'en', async () => {
+    errorCalls += 1;
+    throw new Error('Workers AI down');
+  });
+  assert.equal(errorCalls, 1);
+  assert.equal(hard.done.handoff, false);
+  assert.equal(hard.done.reply, ASSISTANT_MESSAGES.tryAgain.en);
+
+  let greetCalls = 0;
+  const greet = await post('Merhaba', 'tr', async () => {
+    greetCalls += 1;
+    throw new Error('should not run for an opening hello');
+  });
+  assert.equal(greetCalls, 0);
+  assert.equal(greet.json.handoff, false);
+  assert.equal(greet.json.fallback, undefined);
+  assert.ok(greet.json.reply.includes('Mimo'));
+  assert.equal(/e-posta|email/i.test(greet.json.reply), false);
 });

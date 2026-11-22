@@ -1,0 +1,10 @@
+{
+  "0001.sql": "13738286e18fbe27e543840d12f360e78f02de89c91383d6eb41ec6e4b7c877e",
+  "0002_members.sql": "605b33a3a64a7dcbe06d9970fe29467fc09902abf02d99705dfba318389e546a",
+  "0003_member_preferences_newsletter.sql": "36b46e7245bee56defc14415bee22d0f2f0dfa1ffe9251e00ba7b56100a53b72",
+  "0004_member_sync_requests_details.sql": "bc214eb2f204fafd7642b92d224fb26e05d9bbdecd34bf25ec64c73eecf6c5bf",
+  "0005_identities_passkeys.sql": "4ae3fd92694700cc20f779714bd2d6fb239fb4293bc814b3c51e28ed90c34e57",
+  "0006_oauth_pending.sql": "746b6213c35bd3216c897c1c8fb8e2939d262388e3dd922e6e5da21bd1306fcb",
+  "0007_assistant.sql": "30c96dba9b603371935b9b315cc114cc3c1c5d194323e53f91d0a5d49633c060",
+  "0008_assistant_blocks.sql": "5245bbed158b26d33543d42281be06cf4a76d9425ecf3149f77d2ced0877796c"
+}
