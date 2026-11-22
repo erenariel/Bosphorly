@@ -183,6 +183,7 @@
 
   const headAvatar = panel.querySelector('.bc-head-avatar');
   const logEl = panel.querySelector('.bc-log');
+  const quickEl = panel.querySelector('.bc-quick');
   const closeBtn = panel.querySelector('.bc-close');
   const tsMount = panel.querySelector('.bc-turnstile');
   const handoffBox = panel.querySelector('.bc-handoff');
@@ -254,6 +255,7 @@
   }
 
   function renderMsg(role, text, opts = {}) {
+    if (role === 'user') quickEl.classList.add('bc-quick-scroll');
     const isFirstBotMsg = role === 'bot' && !logEl.querySelector('.bc-msg-row.bot');
     const row = document.createElement('div');
     row.className = `bc-msg-row ${role === 'user' ? 'user' : 'bot'}`;
@@ -588,7 +590,6 @@
     } catch {
       hideTyping();
       renderMsg('bot', tr('offline'));
-      handoffBox.hidden = false;
     } finally {
       hideTyping();
       sendBtn.disabled = isChatClosed;

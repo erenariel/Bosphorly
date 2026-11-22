@@ -1,5 +1,56 @@
 import { test, expect } from '@playwright/test';
 
+async function expectChatPanelLayout(page, panel) {
+  const vp = page.viewportSize();
+  const box = await panel.boundingBox();
+  expect(box).not.toBeNull();
+  const expectedW = vp.width <= 480 ? vp.width - 24 : (vp.width >= 1440 ? 460 : 420);
+  const expectedH = vp.width <= 480 ? vp.height * 0.85 : Math.min(640, vp.height * 0.82);
+  expect(Math.abs(box.width - expectedW)).toBeLessThanOrEqual(2);
+  expect(Math.abs(box.height - expectedH)).toBeLessThanOrEqual(2);
+  expect(box.x).toBeGreaterThanOrEqual(-1);
+  expect(box.x + box.width).toBeLessThanOrEqual(vp.width + 1);
+
+  const metrics = await panel.evaluate((el) => {
+    const cs = (node) => getComputedStyle(node);
+    const log = el.querySelector('.bc-log');
+    const msg = el.querySelector('.bc-msg');
+    const msgCs = cs(msg);
+    const handoff = el.querySelector('.bc-handoff');
+    const quick = el.querySelector('.bc-quick');
+    return {
+      logH: log.getBoundingClientRect().height,
+      panelH: el.getBoundingClientRect().height,
+      title: cs(el.querySelector('.bc-title')).fontSize,
+      msg: msgCs.fontSize,
+      lineHeight: msgCs.lineHeight,
+      input: cs(el.querySelector('.bc-input')).fontSize,
+      handoffHidden: handoff.hidden || cs(handoff).display === 'none',
+      quickWrap: cs(quick).flexWrap,
+      tgMin: parseFloat(cs(el.querySelector('.bc-tg-link')).minHeight),
+    };
+  });
+  expect(metrics.logH / metrics.panelH).toBeGreaterThanOrEqual(0.6);
+  expect(metrics.title).toBe('16px');
+  expect(metrics.msg).toBe('15px');
+  expect(parseFloat(metrics.lineHeight) / 15).toBeCloseTo(1.5, 1);
+  expect(metrics.input).toBe(vp.width <= 480 ? '16px' : '15px');
+  expect(metrics.handoffHidden).toBe(true);
+  expect(metrics.quickWrap).toBe('wrap');
+  expect(metrics.tgMin).toBeGreaterThanOrEqual(44);
+  await expect(panel.locator('.bc-handoff')).toBeHidden();
+  const closeHit = await panel.locator('.bc-close').evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const top = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+    return top === el || el.contains(top);
+  });
+  expect(closeHit).toBe(true);
+  const send = await panel.locator('.bc-send').boundingBox();
+  const input = await panel.locator('.bc-input').boundingBox();
+  expect(send.y + send.height).toBeLessThanOrEqual(box.y + box.height + 1);
+  expect(input.y + input.height).toBeLessThanOrEqual(box.y + box.height + 1);
+}
+
 test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile without horizontal overflow, and Hero Mimo card opens panel', async ({ page }) => {
   await page.goto('/index.html?lang=tr');
   const fab = page.locator('.bc-fab');
@@ -28,15 +79,19 @@ test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile withou
   // 4 quick question buttons are present
   await expect(panel.locator('.bc-quick-btn')).toHaveCount(4);
 
-  // Fits within viewport without horizontal overflow
-  const box = await panel.boundingBox();
-  const vp = page.viewportSize();
-  expect(box.x).toBeGreaterThanOrEqual(0);
-  expect(box.x + box.width).toBeLessThanOrEqual(vp.width);
+  // Panel size, type scale, and email box stay within the mobile layout contract
+  await expectChatPanelLayout(page, panel);
 
   // Talk to a human toggles email input
   await panel.locator('.bc-human-btn').click();
   await expect(panel.locator('.bc-handoff')).toBeVisible();
+  await expect(panel.locator('.bc-handoff input[type="email"]')).toBeVisible();
+  const vp = page.viewportSize();
+  const emailSize = await panel.locator('.bc-handoff input[type="email"]').evaluate((el) => getComputedStyle(el).fontSize);
+  expect(emailSize).toBe(vp.width <= 480 ? '16px' : '15px');
+  const openBox = await panel.boundingBox();
+  const logBox = await panel.locator('.bc-log').boundingBox();
+  expect(logBox.height / openBox.height).toBeGreaterThanOrEqual(0.6);
 });
 
 test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic without horizontal overflow', async ({ page }) => {
@@ -58,9 +113,7 @@ test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic w
   await expect(arKindNote).toBeVisible();
   await expect(arKindNote).toContainText('💙');
 
-  const box = await panel.boundingBox();
-  expect(box.x).toBeGreaterThanOrEqual(0);
-  expect(box.x + box.width).toBeLessThanOrEqual(vp.width);
+  await expectChatPanelLayout(page, panel);
 
   const tgLink = panel.locator('.bc-tg-link');
   await expect(tgLink).toBeVisible();
@@ -144,6 +197,89 @@ test('all Telegram links stay hidden when telegramBot in config/api.js is empty'
   await expect(page.locator('a[href*="t.me"]')).toHaveCount(0);
 });
 
+
+test('email handoff stays hidden until a human is requested, and quick actions scroll on one line after the first message', async ({ page }) => {
+  let calls = 0;
+  await page.route('**/v1/assistant', async (route) => {
+    calls += 1;
+    const handoff = calls > 1;
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        reply: handoff ? 'Ekibimize iletiyorum.' : 'Boğaz turu sabah kalkıyor.',
+        handoff,
+        lang: 'tr',
+        chatSession: 'sess-layout',
+      }),
+    });
+  });
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-tok"),10);return 1},reset(){}};',
+    });
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('.bc-handoff')).toBeHidden();
+  await expect(panel.locator('.bc-quick')).not.toHaveClass(/bc-quick-scroll/);
+
+  const input = panel.locator('.bc-input');
+  const sendBtn = panel.locator('.bc-send');
+  await page.waitForTimeout(80);
+  await input.fill('Boğaz turu saat kaçta?');
+  await sendBtn.click();
+  await expect(panel.locator('.bc-msg.user')).toContainText('Boğaz turu saat kaçta?');
+  await expect(panel.locator('.bc-handoff')).toBeHidden();
+
+  const quick = panel.locator('.bc-quick');
+  await expect(quick).toHaveClass(/bc-quick-scroll/);
+  const quickStyle = await quick.evaluate((el) => {
+    const cs = getComputedStyle(el);
+    const btn = getComputedStyle(el.querySelector('.bc-quick-btn'));
+    return {
+      wrap: cs.flexWrap,
+      overflowX: cs.overflowX,
+      whiteSpace: btn.whiteSpace,
+      shrink: btn.flexShrink,
+      scrolls: el.scrollWidth > el.clientWidth + 1,
+    };
+  });
+  expect(quickStyle.wrap).toBe('nowrap');
+  expect(quickStyle.overflowX).toBe('auto');
+  expect(quickStyle.whiteSpace).toBe('nowrap');
+  expect(quickStyle.shrink).toBe('0');
+  if (page.viewportSize().width <= 480) expect(quickStyle.scrolls).toBe(true);
+
+  await input.fill('Bir insana bağla');
+  await sendBtn.click();
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('Ekibimize iletiyorum.');
+  await expect(panel.locator('.bc-handoff')).toBeVisible();
+  const logRatio = await panel.evaluate((el) => {
+    const log = el.querySelector('.bc-log').getBoundingClientRect().height;
+    return log / el.getBoundingClientRect().height;
+  });
+  expect(logRatio).toBeGreaterThanOrEqual(0.6);
+});
+
+test('RTL chat panels for Hebrew, Arabic and Persian keep the email box hidden and the message area dominant', async ({ page }) => {
+  for (const lang of ['he', 'ar', 'fa']) {
+    await page.goto(`/index.html?lang=${lang}`);
+    await page.locator('.bc-fab').click();
+    const panel = page.locator('.bc-panel');
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveAttribute('dir', 'rtl');
+    await expectChatPanelLayout(page, panel);
+    await expect(panel.locator('.bc-tg-link')).toHaveAttribute('href', `https://t.me/BosphorlyBot?start=${lang}`);
+    expect((await panel.locator('.bc-tg-link').boundingBox()).height).toBeGreaterThanOrEqual(44);
+    await page.locator('.bc-close').click();
+    await expect(panel).toBeHidden();
+  }
+});
 
 test('greeting bubble shows once per session, does NOT contain kindNote, does not cover mobile reservation buttons, hides on input focus, and closes on Escape', async ({ page }) => {
   await page.addInitScript(() => {
