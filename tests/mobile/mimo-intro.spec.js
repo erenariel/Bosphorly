@@ -38,3 +38,23 @@ test('390px layout keeps its 54px launcher without an introduction', async ({pag
   await expect(page.locator('.bc-launcher-label')).toBeHidden();
   await expect(page.locator('.mimo-intro')).toHaveCount(0);
 });
+
+test('RTL label sits to the left and an intro click reaches the page', async ({page}) => {
+  await page.setViewportSize({width:1200,height:800});
+  await page.goto('/?lang=ar');
+  const intro = page.locator('.mimo-intro');
+  await expect(intro).toHaveAttribute('dir','rtl');
+  const label = await page.locator('.bc-launcher-label').boundingBox();
+  const button = await page.locator('.bc-fab').boundingBox();
+  expect(label.x + label.width).toBeLessThanOrEqual(button.x);
+  await page.evaluate(() => {
+    const control = document.createElement('button');
+    control.id = 'intro-click-target';
+    control.style.cssText = 'position:fixed;top:50%;left:50%;width:44px;height:44px;z-index:940';
+    control.onclick = () => { control.textContent = 'clicked'; };
+    document.body.append(control);
+  });
+  await page.locator('#intro-click-target').click();
+  await expect(page.locator('#intro-click-target')).toHaveText('clicked');
+  await expect(intro).toHaveCount(0);
+});
