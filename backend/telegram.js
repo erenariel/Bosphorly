@@ -10,6 +10,7 @@ import {
   isNegative,
   redactSensitive,
   runAssistant,
+  transcribeAudio,
 } from './assistant.js';
 
 export const TG_TEXT = {
@@ -113,6 +114,56 @@ export const TG_TEXT = {
     bn: 'এই মুহূর্তে পাঠানো যায়নি। অনুগ্রহ করে সরাসরি info@bosphorly.com-এ ইমেইল করুন।',
     id: 'Gagal meneruskan saat ini. Silakan kirim email langsung ke info@bosphorly.com.',
   },
+  voiceTooLong: {
+    tr: 'Sesli mesaj en fazla 60 saniye olabilir. Lütfen daha kısa bir kayıt gönderin veya sorunuzu yazın.',
+    en: 'Voice messages can be at most 60 seconds. Please send a shorter recording or type your question.',
+    ru: 'Голосовые сообщения — не длиннее 60 секунд. Пришлите более короткую запись или напишите вопрос.',
+    uk: 'Голосові повідомлення — не довше 60 секунд. Надішліть коротший запис або напишіть запитання.',
+    de: 'Sprachnachrichten dürfen höchstens 60 Sekunden lang sein. Bitte senden Sie eine kürzere Aufnahme oder schreiben Sie Ihre Frage.',
+    fr: 'Les messages vocaux ne peuvent pas dépasser 60 secondes. Envoyez un enregistrement plus court ou écrivez votre question.',
+    nl: 'Spraakberichten mogen maximaal 60 seconden duren. Stuur een kortere opname of typ je vraag.',
+    ar: 'الرسائل الصوتية يجب ألا تتجاوز 60 ثانية. يرجى إرسال تسجيل أقصر أو كتابة سؤالك.',
+    he: 'הודעות קוליות יכולות להיות עד 60 שניות. שלחו הקלטה קצרה יותר או כתבו את השאלה.',
+    az: 'Səsli mesaj ən çox 60 saniyə ola bilər. Zəhmət olmasa daha qısa bir yazı göndərin və ya sualınızı yazın.',
+    fa: 'پیام صوتی حداکثر ۶۰ ثانیه است. لطفاً فایل کوتاه‌تری بفرستید یا سؤالتان را بنویسید.',
+    es: 'Los mensajes de voz pueden durar como máximo 60 segundos. Envía una grabación más corta o escribe tu pregunta.',
+    it: 'I messaggi vocali possono durare al massimo 60 secondi. Invia una registrazione più breve o scrivi la domanda.',
+    pt: 'Mensagens de voz podem ter no máximo 60 segundos. Envie uma gravação mais curta ou escreva a sua pergunta.',
+    hr: 'Glasovne poruke mogu trajati najviše 60 sekundi. Pošaljite kraći zapis ili upišite pitanje.',
+    hu: 'A hangüzenet legfeljebb 60 másodperc lehet. Kérjük, küldjön rövidebb felvételt, vagy írja le a kérdését.',
+    bs: 'Glasovne poruke mogu trajati najviše 60 sekundi. Pošaljite kraći zapis ili upišite pitanje.',
+    zh: '语音消息最长 60 秒。请发送更短的录音，或直接输入您的问题。',
+    ja: 'ボイスメッセージは60秒以内にしてください。短い録音を送るか、質問を入力してください。',
+    ko: '음성 메시지는 최대 60초입니다. 더 짧은 녹음을 보내거나 질문을 입력해 주세요.',
+    hi: 'वॉइस संदेश अधिकतम 60 सेकंड का हो सकता है। कृपया छोटी रिकॉर्डिंग भेजें या अपना सवाल लिखें।',
+    bn: 'ভয়েস মেসেজ সর্বোচ্চ ৬০ সেকেন্ড হতে পারে। অনুগ্রহ করে ছোট রেকর্ডিং পাঠান বা প্রশ্নটি লিখুন।',
+    id: 'Pesan suara paling lama 60 detik. Kirim rekaman yang lebih pendek atau ketik pertanyaan Anda.',
+  },
+  voiceFailed: {
+    tr: 'Sesini yazıya çeviremedim. Lütfen yeniden deneyin veya sorunuzu yazın.',
+    en: 'I could not turn that voice message into text. Please try again or type your question.',
+    ru: 'Не удалось распознать голосовое сообщение. Попробуйте ещё раз или напишите вопрос.',
+    uk: 'Не вдалося розпізнати голосове повідомлення. Спробуйте ще раз або напишіть запитання.',
+    de: 'Die Sprachnachricht konnte nicht in Text umgewandelt werden. Bitte versuchen Sie es erneut oder schreiben Sie Ihre Frage.',
+    fr: 'Impossible de transcrire ce message vocal. Réessayez ou écrivez votre question.',
+    nl: 'Dit spraakbericht kon niet naar tekst worden omgezet. Probeer het opnieuw of typ je vraag.',
+    ar: 'تعذّر تحويل الرسالة الصوتية إلى نص. يرجى المحاولة مرة أخرى أو كتابة سؤالك.',
+    he: 'לא הצלחנו להפוך את ההודעה הקולית לטקסט. נסו שוב או כתבו את השאלה.',
+    az: 'Səsli mesajı mətnə çevirə bilmədim. Zəhmət olmasa yenidən yoxlayın və ya sualınızı yazın.',
+    fa: 'نتوانستم پیام صوتی را به متن تبدیل کنم. لطفاً دوباره تلاش کنید یا سؤالتان را بنویسید.',
+    es: 'No pude convertir ese mensaje de voz en texto. Inténtalo de nuevo o escribe tu pregunta.',
+    it: 'Non sono riuscito a trasformare il messaggio vocale in testo. Riprova o scrivi la domanda.',
+    pt: 'Não consegui transformar essa mensagem de voz em texto. Tente de novo ou escreva a sua pergunta.',
+    hr: 'Nisam uspio pretvoriti glasovnu poruku u tekst. Pokušajte ponovno ili upišite pitanje.',
+    hu: 'Nem sikerült szöveggé alakítani a hangüzenetet. Próbálja újra, vagy írja le a kérdését.',
+    bs: 'Nisam uspio pretvoriti glasovnu poruku u tekst. Pokušajte ponovo ili upišite pitanje.',
+    zh: '无法将这条语音转成文字。请再试一次，或直接输入您的问题。',
+    ja: 'ボイスメッセージを文字にできませんでした。もう一度送るか、質問を入力してください。',
+    ko: '음성 메시지를 텍스트로 바꾸지 못했습니다. 다시 시도하거나 질문을 입력해 주세요.',
+    hi: 'इस वॉइस संदेश को टेक्स्ट में नहीं बदल सका। कृपया फिर कोशिश करें या सवाल लिखें।',
+    bn: 'এই ভয়েস মেসেজটি লেখায় রূপান্তর করা যায়নি। আবার চেষ্টা করুন বা প্রশ্নটি লিখুন।',
+    id: 'Pesan suara itu tidak bisa diubah menjadi teks. Coba lagi atau ketik pertanyaan Anda.',
+  },
   cancelled: {
     tr: 'İletme işlemi iptal edildi. Başka bir sorunuz varsa yazabilirsiniz.',
     en: 'Forwarding cancelled. Feel free to ask another question.',
@@ -166,6 +217,25 @@ function constantTimeEqual(a, b) {
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
+}
+
+const TELEGRAM_VOICE_MAX_SECONDS = 60;
+const TELEGRAM_VOICE_MAX_BYTES = 2 * 1024 * 1024;
+
+async function fetchTelegramVoice(env, fileId) {
+  if (!env.TELEGRAM_BOT_TOKEN || !fileId) return null;
+  const token = env.TELEGRAM_BOT_TOKEN;
+  const metaRes = await fetch(`https://api.telegram.org/bot${token}/getFile?file_id=${encodeURIComponent(fileId)}`);
+  if (!metaRes.ok) return null;
+  const meta = await metaRes.json().catch(() => null);
+  const path = meta && meta.result && meta.result.file_path;
+  const size = meta && meta.result && Number(meta.result.file_size || 0);
+  if (!path || (size && size > TELEGRAM_VOICE_MAX_BYTES)) return null;
+  const fileRes = await fetch(`https://api.telegram.org/file/bot${token}/${path}`);
+  if (!fileRes.ok) return null;
+  const buf = await fileRes.arrayBuffer();
+  if (!buf || buf.byteLength === 0 || buf.byteLength > TELEGRAM_VOICE_MAX_BYTES) return null;
+  return new Uint8Array(buf);
 }
 
 async function sendTelegramMessage(env, chatId, text) {
@@ -258,7 +328,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now()) {
   }
 
   const msg = update && update.message;
-  if (!msg || !msg.chat || msg.chat.type !== 'private' || typeof msg.text !== 'string' || !msg.text.trim()) {
+  if (!msg || !msg.chat || msg.chat.type !== 'private') {
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   }
 
@@ -272,8 +342,36 @@ export async function handleTelegramWebhook(request, env, now = Date.now()) {
 
   const telegramId = String((msg.from && msg.from.id) || chatId);
   const tgUser = msg.from && msg.from.username ? `@${msg.from.username}` : '';
-  const text = msg.text.trim();
   const telegramLang = (msg.from && msg.from.language_code) || '';
+  let text = typeof msg.text === 'string' ? msg.text.trim() : '';
+
+  if (!text && msg.voice && typeof msg.voice.file_id === 'string') {
+    const voiceLang = detectLanguage({ message: '', telegramLang });
+    const duration = Number(msg.voice.duration);
+    if (Number.isFinite(duration) && duration > TELEGRAM_VOICE_MAX_SECONDS) {
+      await sendTelegramMessage(env, chatId, t('voiceTooLong', voiceLang));
+      return new Response(JSON.stringify({ ok: true, voice: 'too_long' }), { status: 200 });
+    }
+    const audio = await fetchTelegramVoice(env, msg.voice.file_id);
+    const transcribed = audio
+      ? await transcribeAudio({
+        env,
+        audioBytes: audio,
+        lang: voiceLang,
+        actorKey: `tg:${chatId}`,
+        maxBytes: TELEGRAM_VOICE_MAX_BYTES,
+      })
+      : { ok: false };
+    text = transcribed && transcribed.ok ? String(transcribed.text || '').trim() : '';
+    if (!text) {
+      await sendTelegramMessage(env, chatId, t('voiceFailed', voiceLang));
+      return new Response(JSON.stringify({ ok: true, voice: 'failed' }), { status: 200 });
+    }
+  }
+
+  if (!text) {
+    return new Response(JSON.stringify({ ok: true }), { status: 200 });
+  }
 
   if (/^\/start(?:@\w+)?(?:\s|$)/i.test(text)) {
     const payloadLang = parseStartPayloadLang(text);

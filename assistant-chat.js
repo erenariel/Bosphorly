@@ -47,7 +47,12 @@
     offline: { tr:'Mimo şu an çevrimdışı; soruların için info@bosphorly.com adresine yazabilirsin.', en:'Mimo is currently offline; please email info@bosphorly.com for help.', ru:'Mimo сейчас недоступен; напишите на info@bosphorly.com.', uk:'Mimo зараз недоступний; напишіть на info@bosphorly.com.', de:'Mimo ist offline; schreiben Sie an info@bosphorly.com.', fr:'Mimo est hors ligne ; écrivez à info@bosphorly.com.', nl:'Mimo is offline; mail naar info@bosphorly.com.', ar:'Mimo غير متصل حاليًا؛ يرجى مراسلة info@bosphorly.com.', he:'Mimo לא זמין כרגע; כתבו ל-info@bosphorly.com.', az:'Mimo hazırda oflayndır; info@bosphorly.com ünvanına yazın.', fa:'Mimo آفلاین است؛ لطفاً به info@bosphorly.com ایمیل بزنید.', es:'Mimo está desconectado; escribe a info@bosphorly.com.', it:'Mimo non è disponibile; scrivi a info@bosphorly.com.', pt:'Mimo está offline; escreva para info@bosphorly.com.', hr:'Mimo je izvan mreže; pišite na info@bosphorly.com.', hu:'Mimo jelenleg offline; írj a info@bosphorly.com címre.', bs:'Mimo je van mreže; pišite na info@bosphorly.com.', zh:'Mimo 当前离线，请发送邮件至 info@bosphorly.com。', ja:'Mimoは現在オフラインです。info@bosphorly.com までメールでお問い合わせください。', ko:'Mimo가 현재 오프라인입니다. info@bosphorly.com으로 문의해 주세요.', hi:'Mimo अभी ऑफ़लाइन है; info@bosphorly.com पर ईमेल करें।', bn:'Mimo এখন অফলাইন; info@bosphorly.com-এ ইমেইল করুন।', id:'Mimo sedang offline; silakan email ke info@bosphorly.com.' },
     continueTg: { tr:"Telegram'dan devam et", en:'Continue on Telegram', ru:'Продолжить в Telegram', uk:'Продовжити в Telegram', de:'Auf Telegram fortsetzen', fr:'Continuer sur Telegram', nl:'Ga verder op Telegram', ar:'تابع على تيليجرام', he:'המשיכו בטלגרם', az:'Telegram-da davam et', fa:'در تلگرام ادامه دهید', es:'Continuar en Telegram', it:'Continua su Telegram', pt:'Continuar no Telegram', hr:'Nastavite na Telegramu', hu:'Folytatás Telegramon', bs:'Nastavite na Telegramu', zh:'在 Telegram 继续对话', ja:'Telegramで続ける', ko:'Telegram에서 계속하기', hi:'Telegram पर जारी रखें', bn:'Telegram-এ চালিয়ে যান', id:'Lanjutkan di Telegram' },
     kindNote: { tr:'Mimo’ya nazik davrandığın için teşekkürler 💙 Saygısız dil kullanılırsa sohbet sonlanır.', en:'Thank you for being kind to Mimo 💙 The chat ends if disrespectful language is used.', ru:'Спасибо за вежливое общение с Mimo 💙 При неуважительном тоне чат завершается.', uk:'Дякуємо за ввічливе спілкування з Mimo 💙 У разі неповажного тону чат завершується.', de:'Danke, dass du freundlich zu Mimo bist 💙 Bei respektloser Sprache wird der Chat beendet.', fr:'Merci d’être bienveillant avec Mimo 💙 Le chat prend fin en cas de langage irrespectueux.', nl:'Bedankt dat je vriendelijk bent tegen Mimo 💙 Bij respectloos taalgebruik stopt de chat.', ar:'شكرًا للطفك مع Mimo 💙 تنتهي المحادثة في حال استخدام لغة غير محترمة.', he:'תודה שאתם נחמדים אל Mimo 💙 השיחה מסתיימת במקרה של שפה לא מכבדת.', az:'Mimo ilə nəzakətli davrandığınız üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.', fa:'ممنون که با Mimo مهربان هستید 💙 در صورت استفاده از لحن نامحترمانه گفتگو پایان می‌یابد.', es:'Gracias por tratar con amabilidad a Mimo 💙 El chat finaliza si se usa lenguaje irrespetuoso.', it:'Grazie per essere gentile con Mimo 💙 La chat termina in caso di linguaggio irrispettoso.', pt:'Obrigado por tratar o Mimo com gentileza 💙 O chat é encerrado se houver linguagem desrespeitosa.', hr:'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.', hu:'Köszönjük, hogy kedves vagy Mimóval 💙 Tiszteletlen hangnem esetén a csevegés véget ér.', bs:'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.', zh:'感谢您温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。', ja:'Mimoに優しく接していただきありがとうございます 💙 礼儀を欠く言葉遣いがあった場合、チャットは終了します。', ko:'Mimo에게 다정하게 대해 주셔서 고마워요 💙 무례한 표현이 사용되면 대화가 종료됩니다.', hi:'Mimo के साथ विनम्र रहने के लिए धन्यवाद 💙 अपमानजनक भाषा का प्रयोग होने पर चैट समाप्त हो जाएगी।', bn:'Mimo-এর সাথে সদয় আচরণের জন্য ধন্যবাদ 💙 অসম্মানজনক ভাষা ব্যবহার করলে চ্যাট বন্ধ হয়ে যাবে।', id:'Terima kasih telah bersikap ramah kepada Mimo 💙 Obrolan akan berakhir jika bahasa tidak sopan digunakan.' },
-    abuseClose: { tr:'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.', en:'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.', ru:'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у вас есть вопрос, вы можете написать на info@bosphorly.com.', uk:'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєте питання, напишіть на info@bosphorly.com.', de:'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen können Sie an info@bosphorly.com schreiben.', fr:'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, vous pouvez écrire à info@bosphorly.com.', nl:'Op deze toon kan ik het gesprek niet voortzetten. Ik beëindig de chat hier. Als je een vraag hebt, kun je mailen naar info@bosphorly.com.', ar:'لا يمكنني متابعة المحادثة بهذه اللغة. أنهي المحادثة هنا. إذا كانت لديك مشكلة يمكنك الكتابة إلى info@bosphorly.com.', he:'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לכם פנייה, ניתן לכתוב אל info@bosphorly.com.', az:'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualınız varsa info@bosphorly.com ünvanına yaza bilərsiniz.', fa:'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی دارید می‌توانید به info@bosphorly.com بنویسید.', es:'No puedo continuar la conversación con este lenguaje. Termino el chat aquí. Si tienes algún problema, puedes escribir a info@bosphorly.com.', it:'Non posso continuare la conversazione con questo linguaggio. Chiudo qui la chat. Se hai un problema, puoi scrivere a info@bosphorly.com.', pt:'Não posso continuar a conversa com essa linguagem. Encerro o chat aqui. Se tiver alguma questão, escreva para info@bosphorly.com.', hr:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.', hu:'Ilyen hangnemben nem tudom folytatni a beszélgetést. A csevegést itt lezárom. Ha kérdésed van, írhatsz az info@bosphorly.com címre.', bs:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.', zh:'我无法在这样的语言下继续对话。本次对话到此结束。如有问题，请发邮件至 info@bosphorly.com。', ja:'このような言葉遣いでは会話を続けられません。ここでチャットを終了します。ご用件がある場合は info@bosphorly.com までご連絡ください。', ko:'이러한 표현으로는 대화를 이어갈 수 없습니다. 여기서 대화를 종료합니다. 문의 사항이 있으시면 info@bosphorly.com으로 메일을 보내주세요.', hi:'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए आप info@bosphorly.com पर लिख सकते हैं।', bn:'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারেন।', id:'Saya tidak dapat melanjutkan percakapan dengan bahasa seperti ini. Saya mengakhiri obrolan di sini. Jika ada masalah, silakan tulis ke info@bosphorly.com.' }
+    abuseClose: { tr:'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.', en:'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.', ru:'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у вас есть вопрос, вы можете написать на info@bosphorly.com.', uk:'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєте питання, напишіть на info@bosphorly.com.', de:'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen können Sie an info@bosphorly.com schreiben.', fr:'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, vous pouvez écrire à info@bosphorly.com.', nl:'Op deze toon kan ik het gesprek niet voortzetten. Ik beëindig de chat hier. Als je een vraag hebt, kun je mailen naar info@bosphorly.com.', ar:'لا يمكنني متابعة المحادثة بهذه اللغة. أنهي المحادثة هنا. إذا كانت لديك مشكلة يمكنك الكتابة إلى info@bosphorly.com.', he:'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לכם פנייה, ניתן לכתוב אל info@bosphorly.com.', az:'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualınız varsa info@bosphorly.com ünvanına yaza bilərsiniz.', fa:'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی دارید می‌توانید به info@bosphorly.com بنویسید.', es:'No puedo continuar la conversación con este lenguaje. Termino el chat aquí. Si tienes algún problema, puedes escribir a info@bosphorly.com.', it:'Non posso continuare la conversazione con questo linguaggio. Chiudo qui la chat. Se hai un problema, puoi scrivere a info@bosphorly.com.', pt:'Não posso continuar a conversa com essa linguagem. Encerro o chat aqui. Se tiver alguma questão, escreva para info@bosphorly.com.', hr:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.', hu:'Ilyen hangnemben nem tudom folytatni a beszélgetést. A csevegést itt lezárom. Ha kérdésed van, írhatsz az info@bosphorly.com címre.', bs:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.', zh:'我无法在这样的语言下继续对话。本次对话到此结束。如有问题，请发邮件至 info@bosphorly.com。', ja:'このような言葉遣いでは会話を続けられません。ここでチャットを終了します。ご用件がある場合は info@bosphorly.com までご連絡ください。', ko:'이러한 표현으로는 대화를 이어갈 수 없습니다. 여기서 대화를 종료합니다. 문의 사항이 있으시면 info@bosphorly.com으로 메일을 보내주세요.', hi:'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए आप info@bosphorly.com पर लिख सकते हैं।', bn:'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারেন।', id:'Saya tidak dapat melanjutkan percakapan dengan bahasa seperti ini. Saya mengakhiri obrolan di sini. Jika ada masalah, silakan tulis ke info@bosphorly.com.' },
+    mic: { tr:'Sesle yaz', en:'Dictate', ru:'Надиктовать', uk:'Надиктувати', de:'Diktieren', fr:'Dicter', nl:'Dicteren', ar:'إملاء', he:'הכתבה', az:'Səslə yaz', fa:'دیکته', es:'Dictar', it:'Detta', pt:'Ditar', hr:'Diktiraj', hu:'Diktálás', bs:'Diktiranje', zh:'语音输入', ja:'音声入力', ko:'음성 입력', hi:'बोलकर लिखें', bn:'বলে লিখুন', id:'Dikte' },
+    listening: { tr:'Dinliyorum…', en:'Listening…', ru:'Слушаю…', uk:'Слухаю…', de:'Ich höre zu…', fr:'J’écoute…', nl:'Ik luister…', ar:'أستمع…', he:'מאזינים…', az:'Dinləyirəm…', fa:'در حال شنیدن…', es:'Escuchando…', it:'Sto ascoltando…', pt:'Ouvindo…', hr:'Slušam…', hu:'Hallgatom…', bs:'Slušam…', zh:'正在听…', ja:'聞いています…', ko:'듣는 중…', hi:'सुन रहा हूँ…', bn:'শুনছি…', id:'Mendengarkan…' },
+    micDenied: { tr:'Mikrofon izni verilmedi. İstersen sorunu yazarak gönderebilirsin.', en:'Microphone access was blocked. You can still type your question.', ru:'Доступ к микрофону закрыт. Вы можете написать вопрос текстом.', uk:'Доступ до мікрофона заборонено. Ви можете написати запитання текстом.', de:'Der Mikrofonzugriff wurde abgelehnt. Sie können Ihre Frage auch tippen.', fr:'L’accès au micro a été refusé. Vous pouvez écrire votre question.', nl:'Microfoontoegang is geweigerd. Je kunt je vraag ook typen.', ar:'تم رفض إذن الميكروفون. يمكنك كتابة سؤالك بدلًا من ذلك.', he:'הגישה למיקרופון נחסמה. אפשר עדיין להקליד את השאלה.', az:'Mikrofona icazə verilmədi. Sualınızı yazaraq da göndərə bilərsiniz.', fa:'اجازه میکروفون داده نشد. می‌توانید سؤالتان را تایپ کنید.', es:'Se bloqueó el acceso al micrófono. Aún puedes escribir tu pregunta.', it:'Accesso al microfono negato. Puoi comunque scrivere la domanda.', pt:'O acesso ao microfone foi bloqueado. Você ainda pode digitar a pergunta.', hr:'Pristup mikrofonu je odbijen. Pitanje i dalje možete upisati.', hu:'A mikrofonengedélyt elutasították. A kérdést be is gépelheti.', bs:'Pristup mikrofonu je odbijen. Pitanje i dalje možete upisati.', zh:'麦克风权限被拒绝。您仍可以直接输入问题。', ja:'マイクの使用が拒否されました。質問はキーボードから入力できます。', ko:'마이크 권한이 거부되었습니다. 질문을 직접 입력할 수도 있습니다.', hi:'माइक्रोफ़ोन की अनुमति नहीं मिली। आप सवाल टाइप भी कर सकते हैं।', bn:'মাইক্রোফোনের অনুমতি দেওয়া হয়নি। আপনি প্রশ্নটি লিখেও পাঠাতে পারেন।', id:'Akses mikrofon ditolak. Anda tetap bisa mengetik pertanyaan.' },
+    micFailed: { tr:'Sesi yazıya çeviremedim. İstersen sorunu yazarak gönderebilirsin.', en:'I could not turn that into text. You can still type your question.', ru:'Не удалось распознать речь. Вы можете написать вопрос текстом.', uk:'Не вдалося розпізнати мовлення. Ви можете написати запитання текстом.', de:'Die Sprache konnte nicht in Text umgewandelt werden. Sie können Ihre Frage auch tippen.', fr:'Impossible de transcrire la voix. Vous pouvez écrire votre question.', nl:'De spraak kon niet naar tekst worden omgezet. Je kunt je vraag ook typen.', ar:'تعذّر تحويل الصوت إلى نص. يمكنك كتابة سؤالك.', he:'לא הצלחנו להפוך את הדיבור לטקסט. אפשר להקליד את השאלה.', az:'Səsi mətnə çevirə bilmədim. Sualınızı yazaraq göndərə bilərsiniz.', fa:'نتوانستم صدا را به متن تبدیل کنم. می‌توانید سؤالتان را تایپ کنید.', es:'No pude convertir la voz en texto. Aún puedes escribir tu pregunta.', it:'Non sono riuscito a trasformare la voce in testo. Puoi scrivere la domanda.', pt:'Não consegui transformar a voz em texto. Você ainda pode digitar a pergunta.', hr:'Nisam uspio pretvoriti glas u tekst. Pitanje i dalje možete upisati.', hu:'Nem sikerült szöveggé alakítani a beszédet. A kérdést be is gépelheti.', bs:'Nisam uspio pretvoriti glas u tekst. Pitanje i dalje možete upisati.', zh:'无法将语音转成文字。您仍可以直接输入问题。', ja:'音声を文字にできませんでした。質問はキーボードから入力できます。', ko:'음성을 텍스트로 바꾸지 못했습니다. 질문을 직접 입력할 수도 있습니다.', hi:'आवाज़ को टेक्स्ट में नहीं बदल सका। आप सवाल टाइप भी कर सकते हैं।', bn:'কথা লেখায় রূপান্তর করা যায়নি। আপনি প্রশ্নটি লিখেও পাঠাতে পারেন।', id:'Suara tidak bisa diubah menjadi teks. Anda tetap bisa mengetik pertanyaan.' },
+    micTooBig: { tr:'Ses kaydı en fazla 30 saniye ve 1 MB olabilir.', en:'A recording can be at most 30 seconds and 1 MB.', ru:'Запись — не длиннее 30 секунд и не больше 1 МБ.', uk:'Запис — не довший за 30 секунд і не більший за 1 МБ.', de:'Eine Aufnahme darf höchstens 30 Sekunden und 1 MB groß sein.', fr:'Un enregistrement ne peut pas dépasser 30 secondes ni 1 Mo.', nl:'Een opname mag maximaal 30 seconden en 1 MB zijn.', ar:'التسجيل يجب ألا يتجاوز 30 ثانية أو 1 ميغابايت.', he:'הקלטה יכולה להיות עד 30 שניות ו-1MB.', az:'Səs yazısı ən çox 30 saniyə və 1 MB ola bilər.', fa:'ضبط صدا حداکثر ۳۰ ثانیه و ۱ مگابایت است.', es:'La grabación puede durar como máximo 30 segundos y pesar 1 MB.', it:'La registrazione può durare al massimo 30 secondi e pesare 1 MB.', pt:'A gravação pode ter no máximo 30 segundos e 1 MB.', hr:'Snimka može trajati najviše 30 sekundi i imati 1 MB.', hu:'A felvétel legfeljebb 30 másodperc és 1 MB lehet.', bs:'Snimak može trajati najviše 30 sekundi i imati 1 MB.', zh:'录音最长 30 秒，且不超过 1 MB。', ja:'録音は30秒以内、1MBまでです。', ko:'녹음은 최대 30초, 1MB까지입니다.', hi:'रिकॉर्डिंग अधिकतम 30 सेकंड और 1 MB हो सकती है।', bn:'রেকর্ডিং সর্বোচ্চ ৩০ সেকেন্ড এবং ১ এমবি হতে পারে।', id:'Rekaman paling lama 30 detik dan 1 MB.' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
 
@@ -176,13 +181,16 @@
     `<div class="bc-handoff" hidden><div class="bc-handoff-row"><input type="email" placeholder="${tr('emailPh')}" autocomplete="email">` +
     `<button type="button" class="bc-forward-btn">${tr('forwardBtn')}</button></div></div>` +
     `<div class="bc-actions"><button type="button" class="bc-human-btn">💬 ${tr('human')}</button></div>` +
+    `<p class="bc-listen" hidden></p><p class="bc-mic-note" hidden></p>` +
     `<form class="bc-form"><input class="bc-input" type="text" maxlength="1000" placeholder="${tr('placeholder')}" autocomplete="off">` +
+    `<button type="button" class="bc-mic" aria-label="${tr('mic')}" aria-pressed="false">🎤</button>` +
     `<button class="bc-send" type="submit">${tr('send')}</button></form>` +
     `<div class="bc-turnstile" hidden></div>`;
   document.body.appendChild(panel);
 
   const headAvatar = panel.querySelector('.bc-head-avatar');
   const logEl = panel.querySelector('.bc-log');
+  const quickEl = panel.querySelector('.bc-quick');
   const closeBtn = panel.querySelector('.bc-close');
   const tsMount = panel.querySelector('.bc-turnstile');
   const handoffBox = panel.querySelector('.bc-handoff');
@@ -193,6 +201,10 @@
   const input = panel.querySelector('.bc-input');
   const sendBtn = panel.querySelector('.bc-send');
   const apiBase = window.BOSPHORLY_API && window.BOSPHORLY_API.base;
+  const micBtn = panel.querySelector('.bc-mic');
+  const listenEl = panel.querySelector('.bc-listen');
+  const micNote = panel.querySelector('.bc-mic-note');
+  listenEl.textContent = tr('listening');
 
   let turnstileToken = '';
   let tsWidgetId = null;
@@ -254,6 +266,7 @@
   }
 
   function renderMsg(role, text, opts = {}) {
+    if (role === 'user') quickEl.classList.add('bc-quick-scroll');
     const isFirstBotMsg = role === 'bot' && !logEl.querySelector('.bc-msg-row.bot');
     const row = document.createElement('div');
     row.className = `bc-msg-row ${role === 'user' ? 'user' : 'bot'}`;
@@ -588,7 +601,6 @@
     } catch {
       hideTyping();
       renderMsg('bot', tr('offline'));
-      handoffBox.hidden = false;
     } finally {
       hideTyping();
       sendBtn.disabled = isChatClosed;
@@ -612,8 +624,8 @@
     if (q && !isChatClosed) submitMessage(q);
   };
 
-  closeBtn.addEventListener('click', () => toggle(false));
-  panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggle(false); });
+  closeBtn.addEventListener('click', () => { stopDictation(); toggle(false); });
+  panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { stopDictation(); toggle(false); } });
   humanBtn.addEventListener('click', () => {
     if (isChatClosed) return;
     handoffBox.hidden = !handoffBox.hidden;
@@ -694,6 +706,154 @@
     } finally {
       forwardBtn.disabled = isChatClosed;
     }
+  });
+
+  const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
+  const speechLocale = (code) => SPEECH_LOCALES[String(code || '').slice(0, 2)] || 'en-US';
+  function chooseDictationMode(caps) {
+    if (caps.SpeechRecognition || caps.webkitSpeechRecognition) return 'browser';
+    if (caps.MediaRecorder && caps.mediaDevices) return 'whisper';
+    return 'none';
+  }
+  const DICTATION_MAX_MS = 30000;
+  const DICTATION_MAX_BYTES = 1024 * 1024;
+  let listening = false;
+  let activeRec = null;
+  let recorder = null;
+  let recTimer = 0;
+  let recChunks = [];
+  let recStream = null;
+
+  function applyDictationText(text) {
+    const piece = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!piece) return;
+    const cur = input.value.replace(/\s+$/, '');
+    input.value = (cur ? cur + ' ' : '') + piece;
+    input.focus();
+  }
+
+  function setListening(on) {
+    listening = on;
+    micBtn.classList.toggle('listening', on);
+    micBtn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    listenEl.hidden = !on;
+  }
+
+  function showMicNote(key) {
+    micNote.hidden = false;
+    micNote.textContent = tr(key);
+  }
+
+  function stopTracks() {
+    if (!recStream) return;
+    recStream.getTracks().forEach((track) => { try { track.stop(); } catch {} });
+    recStream = null;
+  }
+
+  function stopDictation() {
+    if (recTimer) { clearTimeout(recTimer); recTimer = 0; }
+    if (activeRec) {
+      const rec = activeRec;
+      activeRec = null;
+      try { rec.onresult = null; rec.stop(); } catch {}
+    }
+    if (recorder && recorder.state === 'recording') {
+      try { recorder.stop(); return; } catch {}
+    }
+    setListening(false);
+    stopTracks();
+  }
+
+  async function uploadDictation(blob) {
+    if (!blob || blob.size > DICTATION_MAX_BYTES) { showMicNote('micTooBig'); return; }
+    if (!chatSession) { showMicNote('micFailed'); return; }
+    try {
+      const res = await fetch(`${apiBase}/v1/assistant/transcribe?lang=${encodeURIComponent(lang)}`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${chatSession}`, 'Content-Type': blob.type || 'audio/webm' },
+        body: blob,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.text) { showMicNote('micFailed'); return; }
+      applyDictationText(data.text);
+      micNote.hidden = true;
+    } catch {
+      showMicNote('micFailed');
+    }
+  }
+
+  function startBrowser(Rec) {
+    let rec;
+    try { rec = new Rec(); } catch { showMicNote('micFailed'); return; }
+    rec.lang = speechLocale(lang);
+    rec.interimResults = false;
+    rec.continuous = false;
+    rec.onresult = (event) => {
+      const said = event.results && event.results[0] && event.results[0][0] && event.results[0][0].transcript;
+      applyDictationText(said || '');
+      micNote.hidden = true;
+    };
+    rec.onerror = (event) => {
+      const code = event && event.error;
+      if (code === 'not-allowed' || code === 'service-not-allowed') showMicNote('micDenied');
+      else if (code && code !== 'aborted' && code !== 'no-speech') showMicNote('micFailed');
+      setListening(false);
+    };
+    rec.onend = () => { activeRec = null; setListening(false); };
+    activeRec = rec;
+    setListening(true);
+    try { rec.start(); } catch { activeRec = null; setListening(false); showMicNote('micFailed'); }
+  }
+
+  async function startRecorder() {
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+      showMicNote('micFailed');
+      return;
+    }
+    try {
+      recStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      const name = err && err.name;
+      if (name === 'NotAllowedError' || name === 'PermissionDeniedError' || name === 'SecurityError') showMicNote('micDenied');
+      else showMicNote('micFailed');
+      return;
+    }
+    const mime = window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+      ? 'audio/webm;codecs=opus'
+      : (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '');
+    recChunks = [];
+    let mr;
+    try { mr = new MediaRecorder(recStream, mime ? { mimeType: mime } : undefined); }
+    catch { stopTracks(); showMicNote('micFailed'); return; }
+    mr.ondataavailable = (event) => { if (event.data && event.data.size) recChunks.push(event.data); };
+    mr.onstop = () => {
+      setListening(false);
+      stopTracks();
+      const blob = new Blob(recChunks, { type: mr.mimeType || 'audio/webm' });
+      recChunks = [];
+      recorder = null;
+      if (blob.size) uploadDictation(blob);
+    };
+    recorder = mr;
+    try { mr.start(); } catch { recorder = null; stopTracks(); showMicNote('micFailed'); return; }
+    setListening(true);
+    recTimer = setTimeout(() => {
+      if (recorder && recorder.state === 'recording') recorder.stop();
+    }, DICTATION_MAX_MS);
+  }
+
+  micBtn.addEventListener('click', () => {
+    if (listening) { stopDictation(); return; }
+    micNote.hidden = true;
+    const mode = chooseDictationMode({
+      SpeechRecognition: window.SpeechRecognition,
+      webkitSpeechRecognition: window.webkitSpeechRecognition,
+      MediaRecorder: window.MediaRecorder,
+      mediaDevices: navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function' ? navigator.mediaDevices : null,
+    });
+    if (mode === 'browser') startBrowser(window.SpeechRecognition || window.webkitSpeechRecognition);
+    else if (mode === 'whisper') startRecorder();
+    else showMicNote('micFailed');
   });
 
   loadTurnstile();

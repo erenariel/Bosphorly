@@ -20,7 +20,7 @@ export default {async fetch(request,env) {
  if (url.pathname==='/v1/telegram/webhook') {
  return handleTelegramWebhook(request,env);
  }
- if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback') {
+ if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback' || url.pathname==='/v1/assistant/transcribe') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  return handleAssistantRoutes(request,env,url);
  }
