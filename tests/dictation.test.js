@@ -231,7 +231,7 @@ test('telegram voice is transcribed and passed to Mimo; audio over 60s is refuse
   }), base);
   assert.equal(voice.status, 200);
   assert.ok(models.includes(WHISPER_MODEL));
-  assert.ok(models.includes('@cf/zai-org/glm-4.7-flash'));
+  assert.ok(models.includes('@cf/google/gemma-4-26b-a4b-it'));
   const sent = fetches.includes('https://api.telegram.org/botbot-tok/sendMessage') || fetches.some((u) => u.includes('sendMessage'));
   assert.equal(sent, true);
   const state = tgState.get('4242');

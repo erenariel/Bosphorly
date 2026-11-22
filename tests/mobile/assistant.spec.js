@@ -909,3 +909,95 @@ test('375x667 RTL layout (he, ar, fa) keeps input in viewport, >=70% log area, a
   }
 });
 
+test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims history to 4, strips leaked tags, and shows happy Mimo on booking confirmation', async ({ page }) => {
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: `window.__tsCb = null; window.__tsN = 0; window.turnstile = { render(_el, o){ window.__tsCb = o.callback; setTimeout(() => o.callback('ts-cap-' + (++window.__tsN)), 10); return 1; }, reset(){ setTimeout(() => window.__tsCb && window.__tsCb('ts-cap-' + (++window.__tsN)), 10); } };`,
+    });
+  });
+
+  await page.addInitScript(() => {
+    sessionStorage.setItem(
+      'bosphorly.assistant_chat',
+      JSON.stringify([
+        { role: 'user', content: 'u1' },
+        { role: 'assistant', content: 'a1' },
+        { role: 'user', content: 'u2' },
+        { role: 'assistant', content: 'a2' },
+        { role: 'user', content: 'u3' },
+        { role: 'assistant', content: 'a3' },
+      ]),
+    );
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await expect(panel).toBeVisible();
+
+  await page.evaluate(() => {
+    window.__BOSPHORLY_MIMO_CAP_MS = 180;
+    window.__capturedHistLens = [];
+    let callN = 0;
+    const origFetch = window.fetch.bind(window);
+    window.fetch = async (url, init) => {
+      if (String(url).includes('/v1/assistant')) {
+        const body = JSON.parse(init.body);
+        window.__capturedHistLens.push(Array.isArray(body.history) ? body.history.length : -1);
+        callN += 1;
+        if (callN === 1) {
+          // Hang stream forever without closing until client cap triggers abort
+          const stream = new ReadableStream({
+            start() {},
+          });
+          return new Response(stream, {
+            status: 200,
+            headers: { 'Content-Type': 'text/event-stream; charset=utf-8' },
+          });
+        }
+        return Response.json({
+          reply: '<|channel>thought\nhidden<channel|>Harika! Benim favorim gün batımı turu 💙\n[[flags:abuse=0;handoff=0]]',
+          handoff: false,
+          lang: 'tr',
+        });
+      }
+      return origFetch(url, init);
+    };
+  });
+
+  await panel.locator('.bc-input').fill('Merhaba Mimo');
+  await panel.locator('.bc-send').click();
+
+  // Client upper cap aborts stalling SSE cleanly and renders localized tryAgain
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('martılar kafamı karıştırdı', { timeout: 3000 });
+  await expect(panel.locator('.bc-send')).toBeEnabled();
+  expect(await page.evaluate(() => window.__capturedHistLens[0])).toBe(4);
+
+  // Second turn verifies client strips any stray <|channel>thought or [[flags:...]]
+  await panel.locator('.bc-input').fill('Favorin hangisi?');
+  await panel.locator('.bc-send').click();
+  const botMsg = panel.locator('.bc-msg.bot').last();
+  await expect(botMsg).toContainText('gün batımı turu');
+  const botText = await botMsg.innerText();
+  expect(botText).not.toContain('hidden');
+  expect(botText).not.toContain('[[flags:');
+
+  // Reservation confirmation displays Mimo happy thank-you message and mimo-happy.svg
+  await page.goto('/booking.html?service=bb-sunset&lang=tr');
+  await page.locator('#date').fill(new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10));
+  await page.locator('#date').dispatchEvent('change');
+  await page.fill('#hotelName', 'Test Sultanahmet Hotel');
+  await page.fill('#fullName', 'Deniz Kaya');
+  await page.fill('#phone', '+905551112233');
+  await page.fill('#email', 'deniz@example.org');
+  await page.check('#ack');
+  await page.click('#submit');
+
+  const thanks = page.locator('#result .mimo-thanks');
+  await expect(thanks).toBeVisible();
+  await expect(thanks.locator('.mimo-thanks-text')).toContainText('Harika seçim');
+  const thanksImg = thanks.locator('img.mimo-thanks-img');
+  await expect(thanksImg).toHaveAttribute('src', /mimo-happy\.svg$/);
+});
+

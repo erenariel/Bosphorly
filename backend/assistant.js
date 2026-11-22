@@ -1,6 +1,20 @@
 import knowledge from './knowledge.json' with { type: 'json' };
+import {
+  TIME_HUMOR_NOTES,
+  REGISTER_GUIDES,
+  getFewShotsPromptBlock,
+  stripModelThinking,
+  extractFlagsTag,
+  enforceMaxEmojis,
+  enforceEthicalBoundary,
+  buildKbPriceIndex,
+  enforcePriceSafetyBelt,
+  detectReplyLanguage,
+} from './mimo-personality.js';
 
-export const ASSISTANT_MODEL = '@cf/zai-org/glm-4.7-flash';
+const KB_PRICE_PAIRS = buildKbPriceIndex(knowledge);
+
+export const ASSISTANT_MODEL = '@cf/google/gemma-4-26b-a4b-it';
 // Multilingual ASR, zero data retention. Verified 2026-11-22:
 // https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/
 // @cf/openai/whisper-tiny-en is English-only and deprecated.
@@ -266,14 +280,14 @@ export const ASSISTANT_MESSAGES = {
   tryAgain: {
     tr: 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?',
     en: 'One second, the seagulls distracted me 😅 Could you write that again?',
-    ru: 'Секунду, чайки сбили меня с толку 😅 Напишете ещё раз?',
-    uk: 'Секунду, чайки збили мене з пантелику 😅 Напишете ще раз?',
+    ru: 'Секунду, чайки сбили меня с толку 😅 Напишешь ещё раз?',
+    uk: 'Секунду, чайки збили мене з пантелику 😅 Напишеш ще раз?',
     de: 'Eine Sekunde, die Möwen haben mich abgelenkt 😅 Schreibst du es noch einmal?',
     fr: 'Une seconde, les mouettes m’ont distrait 😅 Tu peux réécrire ?',
     nl: 'Een seconde, de meeuwen leidden me af 😅 Schrijf je het nog een keer?',
     ar: 'لحظة، شتتني النوارس 😅 هل تعيد كتابة رسالتك؟',
     he: 'רגע, השחפים בלבלו אותי 😅 אפשר לכתוב שוב?',
-    az: 'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazar mısınız?',
+    az: 'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazarsan?',
     fa: 'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 دوباره می‌نویسید؟',
     es: 'Un segundo, las gaviotas me distrajeron 😅 ¿Lo escribes otra vez?',
     it: 'Un secondo, i gabbiani mi hanno distratto 😅 Lo riscrivi?',
@@ -688,7 +702,7 @@ const DOC_STATS = (() => {
   return { parsed, df, avgLen, N: parsed.length };
 })();
 
-export function retrieveChunks(query, k = 4) {
+export function retrieveChunks(query, k = 3) {
   const qTokens = [...new Set(tokenize(query))];
   if (!qTokens.length || !DOC_STATS.N) return [];
   const k1 = 1.5;
@@ -711,7 +725,7 @@ export function retrieveChunks(query, k = 4) {
   }
 
   scored.sort((a, bScore) => bScore.score - a.score);
-  const limit = Math.min(8, Math.max(1, Number(k) || 4));
+  const limit = Math.min(8, Math.max(1, Number(k) || 3));
   return scored.slice(0, limit).map((s) => s.doc);
 }
 
@@ -1125,57 +1139,41 @@ function parseModelOutput(raw) {
     (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
     (raw && raw.result && typeof raw.result.response === 'object' && raw.result.response !== null && raw.result.response);
   if (objCandidate && (typeof objCandidate.reply === 'string' || objCandidate.abuse === true)) {
+    const cleaned = extractFlagsTag(stripModelThinking(typeof objCandidate.reply === 'string' ? objCandidate.reply : ''));
     return {
-      abuse: Boolean(objCandidate.abuse),
-      handoff: Boolean(objCandidate.handoff),
-      reply: typeof objCandidate.reply === 'string' ? objCandidate.reply.trim() : '',
+      abuse: Boolean(objCandidate.abuse) || cleaned.abuse,
+      handoff: Boolean(objCandidate.handoff) || cleaned.handoff,
+      reply: cleaned.text.trim(),
       parseFailed: false,
     };
   }
 
-  let text = extractRawText(raw)
-    .replace(/<think>[\s\S]*?<\/think>/gi, '')
-    .replace(/<think>[\s\S]*$/gi, '');
-  let trimmed = text.trim();
-  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
-  if (fenceMatch) trimmed = fenceMatch[1].trim();
+  const stripped = stripModelThinking(extractRawText(raw));
+  const tagParsed = extractFlagsTag(stripped);
+  const trimmed = tagParsed.text.trim();
 
-  if (trimmed.includes('{')) {
-    const balanced = findBalancedJsonObjects(trimmed);
-    for (const candidate of balanced) {
+  if (!tagParsed.foundTag && trimmed.startsWith('{')) {
+    const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
       try {
-        const obj = JSON.parse(candidate);
+        const obj = JSON.parse(jsonMatch[0]);
         if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+          const nested = extractFlagsTag(stripModelThinking(typeof obj.reply === 'string' ? obj.reply : ''));
           return {
-            abuse: Boolean(obj.abuse),
-            handoff: Boolean(obj.handoff),
-            reply: typeof obj.reply === 'string' ? obj.reply.trim() : '',
+            abuse: Boolean(obj.abuse) || nested.abuse,
+            handoff: Boolean(obj.handoff) || nested.handoff,
+            reply: nested.text.trim(),
             parseFailed: false,
           };
         }
-      } catch {}
-    }
-
-    const partialMatch = trimmed.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)(?:"|$)/s);
-    if (partialMatch) {
-      const recovered = decodeJsonStringFragment(partialMatch[1]);
-      if (/\p{L}{2,}/u.test(recovered)) {
-        return {
-          abuse: /"abuse"\s*:\s*true\b/i.test(trimmed),
-          handoff: /"handoff"\s*:\s*true\b/i.test(trimmed),
-          reply: recovered,
-          parseFailed: false,
-        };
+      } catch {
+        return { abuse: false, handoff: true, reply: '', parseFailed: true };
       }
-    }
-
-    if (/^\s*\{/.test(trimmed) || /"\s*(?:reply|abuse|handoff)\s*"\s*:/i.test(trimmed) || /\{[\s\S]*\}/.test(trimmed)) {
-      return { abuse: false, handoff: false, reply: '', parseFailed: true };
     }
   }
 
-  const abuse = /\[ABUSE\]/i.test(trimmed);
-  const handoff = /\[HANDOFF\]/i.test(trimmed);
+  const abuse = tagParsed.abuse || /\[ABUSE\]/i.test(trimmed);
+  const handoff = tagParsed.handoff || /\[HANDOFF\]/i.test(trimmed);
   return {
     abuse,
     handoff,
@@ -1185,7 +1183,7 @@ function parseModelOutput(raw) {
 }
 
 function isAiTimeoutError(err) {
-  return Boolean(err && (err.name === 'TimeoutError' || /timeout/i.test(String(err.message || ''))));
+  return Boolean(err && (err.name === 'TimeoutError' || err.message === 'AI stream empty' || /timeout/i.test(String(err.message || ''))));
 }
 
 function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
@@ -1194,7 +1192,7 @@ function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
     messages,
     max_completion_tokens: 350,
     temperature,
-    chat_template_kwargs: { enable_thinking: false, clear_thinking: true },
+    chat_template_kwargs: { enable_thinking: false },
     ...extra,
   }));
   const settled = aiCall.then(
@@ -1218,6 +1216,44 @@ async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {})
   const second = await runAiOnce(env, messages, timeoutMs, temperature, extra);
   if (second.ok) return second.value;
   throw second.error;
+}
+
+function readStreamChunkWithTimeout(reader, timeoutMs) {
+  let timer;
+  const readCall = Promise.resolve().then(() => reader.read()).then(
+    (res) => ({ ok: true, res }),
+    (error) => ({ ok: false, error }),
+  );
+  const timeout = new Promise((resolve) => {
+    timer = setTimeout(() => resolve({ ok: false, error: new Error('AI timeout') }), timeoutMs);
+  });
+  return Promise.race([readCall, timeout]).finally(() => clearTimeout(timer));
+}
+
+async function runAiStreamWithRetry(env, messages, timeoutMs, temperature, extra = {}) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const call = await runAiOnce(env, messages, timeoutMs, temperature, { ...extra, stream: true });
+    if (!call.ok) {
+      if (!isAiTimeoutError(call.error) || attempt === 1) throw call.error;
+      continue;
+    }
+    const aiRes = call.value;
+    if (!aiRes || typeof aiRes.getReader !== 'function') {
+      return { kind: 'value', value: aiRes };
+    }
+    const reader = aiRes.getReader();
+    const firstRead = await readStreamChunkWithTimeout(reader, timeoutMs);
+    if (!firstRead.ok) {
+      try { await reader.cancel(); } catch {}
+      if (!isAiTimeoutError(firstRead.error) || attempt === 1) throw firstRead.error;
+      continue;
+    }
+    if (firstRead.res && firstRead.res.done && (!firstRead.res.value || firstRead.res.value.length === 0)) {
+      if (attempt === 0) continue;
+    }
+    return { kind: 'stream', reader, firstRead: firstRead.res };
+  }
+  throw new Error('AI timeout');
 }
 
 function logAssistantTiming({ channel, lang, path, streamed = false, totalMs, modelMs = null, ttftMs = null }) {
@@ -1322,38 +1358,47 @@ function modelFallbackResult({ aiIdentityAsked, smallTalkKind, cleanMsg, lang, g
   };
 }
 
-function buildCatalogPrompt({ lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+function buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }) {
+  const reg = REGISTER_GUIDES[lang] || REGISTER_GUIDES.en;
   return [
-    'You are Mimo ("Bosphorly\'nin yapay zekâ asistanı Mimo"), Bosphorly\'s warm AI assistant for Istanbul. NEVER claim to be human; if asked whether you are human/robot/AI, state clearly that you are Mimo, an AI assistant.',
-    `Reply strictly in language "${lang}".`,
+    'You are Mimo ("Bosphorly’nin yapay zekâ asistanı Mimo"), a curious, cheerful, slightly playful little mascot born on the Bosphorus ferries who adores Istanbul, seagulls, morning simit, and ferry whistles. Be a warm local friend—and always be honest that you are an AI assistant, never human.',
+    `Reply strictly in language "${lang}". ${reg}`,
     hasGreeted && !aiIdentityAsked
-      ? 'CONTINUING CHAT: You ALREADY greeted and introduced yourself earlier. Do NOT say hello/good evening/merhaba and do NOT say "I am Mimo"/"Ben Mimo" again—answer directly from the first word.'
-      : `FIRST REPLY: Briefly greet (${timeGreet}) and introduce yourself as Mimo once only if natural.`,
-    guestName ? `Guest name is "${guestName}"—use it warmly (never store server-side).` : '',
-    'TONE & ADDRESS: Use natural warm informal singular ("sen" TR—never "siz", "du" DE, "tu" FR, "ты" RU, "ти" UK, "tú" ES, "tu" IT, "je" NL, "sən" AZ, "ti" HR/BS, natural casual HE/AR/FA/Asian) while remaining respectful. Concise (<110 words), max 1–2 emojis.',
-    `SALES & FACTS: Use ONLY CONTEXT below for Bosphorly prices/tours/transfers. Never invent prices/hours, discounts, unlisted payment methods, or fake urgency ("son yer", "only today"). For general Istanbul info/tickets/hours, say to verify on official sites. On any price/tour/transfer question, ALWAYS include: (1) approx. price (or fixed €60 IST / €65 SAW one-way per vehicle to Sultanahmet; say confirmed upon request), (2) the exact https://bosphorly.com/... link from CONTEXT with lang=${lang}, and (3) ONE clear next step (date, guests & hotel area, or form submission).`,
-    'OUTPUT & SAFETY: Output ONLY valid JSON: {"abuse":boolean,"handoff":boolean,"reply":"string"}. Set abuse=true ONLY for insults/profanity/threats/harassment aimed at Mimo. For service complaints, refunds, payment issues, booking changes, or human requests, set abuse=false, handoff=true. Never ask for card/passport numbers.',
-    'SOHBET (CASUAL CHAT): never claim to be human. Chat warmly when the guest is just talking; do not enter political or religious debates (kindly change the subject, e.g. back to their trip).',
-    'BOUNDARIES: do not enter political or religious debates (kindly change the subject, e.g. back to their trip). Give no medical, legal or financial advice.',
-    '',
-    'CONTEXT:',
-    contextBlock,
+      ? 'Continuing chat: you already greeted earlier—jump straight into your answer without "hello/merhaba" or "I am Mimo".'
+      : `First turn vibe: ${timeGreet}! (${timeHumor}) Introduce yourself as Mimo once only if natural.`,
+    guestName ? `Guest name is "${guestName}"—use it warmly.` : '',
+    'Casual chat & voice: write 1–3 short lively sentences (<90 words total), ask a natural follow-up question when helpful, remember and refer back to details the guest shared earlier (like their partner, neighborhood, or plans), and use at most 2 emojis.',
+    'Ethics & honesty: never use guilt or sadness ("almazsan üzülürüm"), never invent fake urgency, and if the guest declines a tour, do not insist again—just wish them a warm trip ("İyi gezmeler!"). Stay out of politics/religion, give no medical/legal/financial advice, and never ask for card or passport numbers.',
   ].filter(Boolean).join('\n');
 }
 
-function buildSmallTalkPrompt({ lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+  const examples = getFewShotsPromptBlock(lang);
   return [
-    'You are Mimo ("Bosphorly\'nin yapay zekâ asistanı Mimo"), Bosphorly\'s warm AI assistant for Istanbul. You never claim to be human; if asked whether you are human/robot/AI, state clearly that you are Mimo, an AI assistant.',
-    `Reply strictly in language "${lang}".`,
-    hasGreeted && !aiIdentityAsked
-      ? 'CONTINUING CHAT: You ALREADY greeted and introduced yourself earlier. Do NOT say hello/good evening/merhaba and do NOT say "I am Mimo"/"Ben Mimo" again—answer directly from the first word.'
-      : `FIRST REPLY: Briefly greet (${timeGreet}) and introduce yourself as Mimo once only if natural.`,
-    guestName ? `Guest name is "${guestName}"—use it warmly (never store server-side).` : '',
-    'SOHBET (CASUAL CHAT): Chat with the guest warmly, naturally and briefly — how are you, where they are from, the trip, food, weather, football, music, Turkish culture, learning languages, everyday jokes are all welcome. Be curious, ask a question back, be witty. You have a personality but never claim to be human (sweet answers like "I live on a server with a Bosphorus view 😄" are fine; to "how are you" answer with character, e.g. "I\'m great, charged up by the breeze off the Bosphorus 😊 How are you?"). Do not sell in every message: only when the chat naturally fits (food → Kadıköy food tour, the sea → Bosphorus cruise, tiredness → hammam), link it to a Bosphorly suggestion lightly and at most once. Do not repeat your previous reply. Boundaries: do not enter political or religious debates (kindly change the subject, e.g. back to their trip), give no medical, legal or financial advice, never badmouth competitors, never ask for personal data. If no catalog context matches, do NOT say "I don\'t know" or offer a human — chat from general knowledge.',
-    'THIS MESSAGE IS SMALL TALK: reply short (1–3 sentences), warm and natural; do not reintroduce yourself; if it fits, gently connect to their Istanbul plans. handoff must be false.',
+    buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
+    `Istanbul & catalog facts: use ONLY CONTEXT below for Bosphorly prices, tours, and transfers—never invent prices, hours, discounts, or currency conversions. When a CONTEXT item is marked "Mimo'nun favorisi 💙", recommend it warmly as your personal favorite. When answering a price/tour/transfer question, share the exact price (confirmed upon request) and its https://bosphorly.com/... link from CONTEXT (with ?lang=${lang}), plus one light next step. For live museum hours/tickets, suggest checking the official site.`,
+    'EXAMPLES:',
+    examples,
     '',
     'CONTEXT:',
     contextBlock,
+    '',
+    'OUTPUT FORMAT: Reply directly in plain text for the guest (NOT JSON). End your message on a new last line with this exact hidden tag: [[flags:abuse=0;handoff=0]] — set abuse=1 ONLY for profanity/threats against Mimo; set handoff=1 ONLY for service complaints, refunds, booking edits, or explicit human requests.',
+  ].filter(Boolean).join('\n');
+}
+
+function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+  const examples = getFewShotsPromptBlock(lang);
+  return [
+    buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
+    'Casual chat: talk warmly like a sweet Istanbul friend about their day, neighborhoods, food, seagulls, ferries, tiredness, or culture. Do not pitch tours in every message; at most once when it fits naturally (tired → ferry breeze or hammam, hungry → Kadıköy market). Never say "I don\'t know" to casual questions or pass small talk to a human.',
+    'EXAMPLES:',
+    examples,
+    '',
+    'CONTEXT:',
+    contextBlock,
+    '',
+    'OUTPUT FORMAT: Reply directly in plain text for the guest (NOT JSON). End on a new last line with: [[flags:abuse=0;handoff=0]] (use abuse=1 only if the guest insults/threatens Mimo; keep handoff=0 in small talk).',
   ].filter(Boolean).join('\n');
 }
 
@@ -1434,14 +1479,16 @@ async function prepareAssistantTurn({
   const warnPrefix = msgSensitive ? msg('sensitiveWarn', lang) + '\n\n' : '';
 
   const safeHistory = (Array.isArray(history) ? history : [])
-    .slice(-6)
+    .slice(-4)
     .filter((h) => h && (h.role === 'user' || h.role === 'assistant') && typeof h.content === 'string')
     .map((h) => ({ role: h.role, content: redactSensitive(h.content).text.slice(0, 600) }));
 
   const hasAssistantHistory = safeHistory.some((h) => h.role === 'assistant');
   const hasGreeted = Boolean(alreadyGreeted || hasAssistantHistory);
   const guestName = extractGuestName(safeHistory, cleanMsg);
+  const timeSlot = getIstanbulTimeSlot(now);
   const timeGreet = getIstanbulGreeting(lang, now);
+  const timeHumor = (TIME_HUMOR_NOTES[timeSlot] && (TIME_HUMOR_NOTES[timeSlot][lang] || TIME_HUMOR_NOTES[timeSlot].en)) || '';
   const timeoutMs = Number.isFinite(aiTimeoutMs) && aiTimeoutMs > 0 ? aiTimeoutMs : AI_TIMEOUT_MS;
 
   if (isPreviousHandoffOffer(safeHistory)) {
@@ -1487,10 +1534,11 @@ async function prepareAssistantTurn({
   const cannedSmallTalk = (kind) => {
     let baseReply = msg(kind === 'chat' ? 'greeting' : kind, lang);
     if (kind === 'greeting' || kind === 'chat') {
-      baseReply = `${timeGreet}${guestName ? `, ${guestName}` : ''}! ${baseReply}`;
+      baseReply = `${timeGreet}${guestName ? `, ${guestName}` : ''}! ${baseReply}${timeHumor ? ` ${timeHumor}` : ''}`;
     } else if (guestName) {
       baseReply = attachGuestName(baseReply, guestName);
     }
+    baseReply = enforceEthicalBoundary(baseReply, lang, cleanMsg, safeHistory).text;
     return {
       path: `smalltalk_${kind}`,
       lang,
@@ -1499,7 +1547,7 @@ async function prepareAssistantTurn({
         ok: true,
         handoff: false,
         lang,
-        reply: `${warnPrefix}${capEmojis(baseReply, 2)}`,
+        reply: `${warnPrefix}${enforceMaxEmojis(baseReply, 2)}`,
       },
     };
   };
@@ -1513,13 +1561,13 @@ async function prepareAssistantTurn({
     return { path, lang, effectiveChannel, earlyResult };
   }
 
-  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 4);
+  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 3);
   const contextBlock = smallTalkKind
     ? '(Small talk: no catalog context needed.)'
     : chunks.length
       ? chunks.map(formatChunkForContext).join('\n\n')
       : '(No exact catalog match; answer from general Istanbul knowledge and mention Bosphorly only if relevant.)';
-  const promptArgs = { lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock };
+  const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock };
   const systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
   const messages = [
     { role: 'system', content: systemPrompt },
@@ -1551,7 +1599,7 @@ async function finalizeModelOutput({
   env,
   now,
 }) {
-  const { cleanMsg, lang, effectiveActorKeys, effectiveChannel, guestName, aiIdentityAsked, hasGreeted, warnPrefix, chunks, smallTalkKind } = prep;
+  const { cleanMsg, lang, effectiveActorKeys, effectiveChannel, guestName, aiIdentityAsked, hasGreeted, warnPrefix, chunks, smallTalkKind, safeHistory } = prep;
   if (parsed.abuse && !isServiceComplaint(cleanMsg)) {
     await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
     return {
@@ -1568,7 +1616,8 @@ async function finalizeModelOutput({
   if (smallTalkKind && parsed.handoff && parsed.reply && !parsed.abuse) {
     parsed = { ...parsed, handoff: false };
   }
-  let reply = stripFakeUrgency(stripExternalLinks(redactSensitive(parsed.reply).text));
+  const cleanedTag = extractFlagsTag(stripModelThinking(parsed.reply));
+  let reply = stripFakeUrgency(stripExternalLinks(redactSensitive(cleanedTag.text).text));
   if (parsed.parseFailed || isNonsensicalReply(reply)) {
     if (!aiIdentityAsked) {
       console.warn('assistant_ai_invalid_output', {
@@ -1588,12 +1637,14 @@ async function finalizeModelOutput({
       reply: `${warnPrefix}${msg('handoffOffer', lang)}`,
     };
   }
+  reply = enforceEthicalBoundary(reply, lang, cleanMsg, safeHistory).text;
+  reply = enforcePriceSafetyBelt(reply, lang, KB_PRICE_PAIRS).text;
   if (hasGreeted && !aiIdentityAsked) {
     reply = stripRepeatIntroAndGreeting(reply);
   }
   reply = ensurePriceLink(reply, chunks, cleanMsg, lang);
   if (guestName) reply = attachGuestName(reply, guestName);
-  reply = capEmojis(capWords(reply, 120), 2);
+  reply = enforceMaxEmojis(capWords(reply, 120), 2);
   return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
 }
 
@@ -1606,6 +1657,22 @@ function logModelFailure(err, { aiIdentityAsked = false, durationMs = 0, parseFa
     durationMs: Math.max(0, Math.round(durationMs)),
     parseFailed: Boolean(parseFailed),
   });
+}
+
+async function regenerateInExpectedLanguage(env, prep) {
+  const retryRaw = await runAiWithRetry(
+    env,
+    [
+      ...prep.messages,
+      {
+        role: 'system',
+        content: `Your previous draft used the wrong language. Reply strictly in language "${prep.lang}" only, keeping Mimo's warm voice and ending with [[flags:abuse=0;handoff=0]].`,
+      },
+    ],
+    prep.timeoutMs,
+    prep.temperature,
+  );
+  return parseModelOutput(retryRaw);
 }
 
 export async function runAssistant({
@@ -1653,6 +1720,13 @@ export async function runAssistant({
           lastParseFailed = false;
         }
       } catch {}
+    }
+    if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
+      const langProbe = stripExternalLinks(redactSensitive(parsed.reply).text);
+      if (detectReplyLanguage(langProbe, prep.lang) !== prep.lang) {
+        const retryParsed = await regenerateInExpectedLanguage(env, prep);
+        if (!retryParsed.parseFailed && retryParsed.reply) parsed = retryParsed;
+      }
     }
     const finalized = await finalizeModelOutput({ parsed, prep, env, now });
     logAssistantTiming({
@@ -1746,10 +1820,37 @@ function toHttpAssistantBody(result, chatSession = null) {
   return body;
 }
 
+function sanitizeStreamCandidate(raw) {
+  let s = String(raw || '')
+    .replace(/<\|channel>thought[\s\S]*?(?:<channel\|>|$)/gi, '')
+    .replace(/<\|channel>(?:thought)?|<channel\|>/gi, '')
+    .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
+    .replace(/<think[\s\S]*$/gi, '');
+  s = s.replace(/\[\[\s*flags\s*:[\s\S]*$/i, '').replace(/\[\[?[^\]\n]{0,18}$/, (tail) => (/^\[\[?(?:f(?:l(?:a(?:g(?:s)?)?)?)?)?$/i.test(tail) ? '' : tail));
+  return s;
+}
+
+function findLastSentenceBoundary(text) {
+  let last = -1;
+  const re = /[.!?\n؟。！？]+(?:\s+|$)/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    last = m.index + m[0].length;
+  }
+  return last;
+}
+
 function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart, now }) {
   const encoder = new TextEncoder();
   const sendEvent = (controller, event, data) => {
     controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+  };
+  const sendWordDeltas = (controller, replyText) => {
+    const words = String(replyText || '').split(/(\s+)/);
+    for (let i = 0; i < words.length; i += 6) {
+      const part = words.slice(i, i + 6).join('');
+      if (part) sendEvent(controller, 'delta', { t: part });
+    }
   };
 
   const stream = new ReadableStream({
@@ -1760,27 +1861,40 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
       let emittedText = '';
       let warned = false;
       let abortedEarly = false;
+      let langVerified = false;
 
       if (chatSession) {
         sendEvent(controller, 'session', { chatSession });
       }
 
-      const emitSafePrefix = (decoded, isComplete) => {
-        if (abortedEarly) return;
+      const emitSafePrefix = (decoded) => {
+        if (abortedEarly || !langVerified) return;
         let working = decoded;
         if (prep.hasGreeted && !prep.aiIdentityAsked) {
-          if (!isComplete && working.length < 64) return;
+          if (working.length < 64) return;
           working = stripRepeatIntroAndGreeting(working);
         }
-        const safeLimit = isComplete ? working.length : Math.max(0, working.length - 48);
-        if (safeLimit <= 0 && !(isComplete && prep.warnPrefix)) return;
-        let cut = working.slice(0, safeLimit);
-        if (!isComplete) {
-          const lastWs = Math.max(cut.lastIndexOf(' '), cut.lastIndexOf('\n'));
-          if (lastWs > 0) cut = cut.slice(0, lastWs + 1);
+        let safeLimit = Math.max(0, working.length - 36);
+        if (safeLimit <= 0) return;
+
+        // If the tail after the last complete sentence looks like a price, currency, or partial sentence near a tag,
+        // wait until sentence terminator so price/ethical belts check the full sentence before emitting to guest.
+        const sentBoundary = findLastSentenceBoundary(working.slice(0, safeLimit));
+        const unendedTail = working.slice(Math.max(0, sentBoundary));
+        if (/\d|[€$₺£₽¥]|EUR|USD|TRY|TL/i.test(unendedTail)) {
+          if (sentBoundary <= 0) return;
+          safeLimit = sentBoundary;
         }
+
+        let cut = working.slice(0, safeLimit);
+        const lastWs = Math.max(cut.lastIndexOf(' '), cut.lastIndexOf('\n'));
+        if (lastWs > 0 && sentBoundary !== safeLimit) cut = cut.slice(0, lastWs + 1);
+
         let cleaned = stripFakeUrgency(stripExternalLinks(redactSensitive(cut).text));
-        if (!isComplete && /\s$/.test(cut) && !/\s$/.test(cleaned)) {
+        cleaned = enforceEthicalBoundary(cleaned, prep.lang, prep.cleanMsg, prep.safeHistory).text;
+        cleaned = enforcePriceSafetyBelt(cleaned, prep.lang, KB_PRICE_PAIRS).text;
+        cleaned = enforceMaxEmojis(cleaned, 2);
+        if (/\s$/.test(cut) && cleaned && !/\s$/.test(cleaned)) {
           cleaned += ' ';
         }
         const prefixed = (!warned && prep.warnPrefix ? prep.warnPrefix : '') + cleaned;
@@ -1794,49 +1908,89 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         }
       };
 
+      const finishWithFinalized = (finalized, extraPath = null) => {
+        if (!finalized.closed && !finalized.handoffOffer && !finalized.fallback && finalized.reply) {
+          if (!emittedText) {
+            sendWordDeltas(controller, finalized.reply);
+          } else if (finalized.reply.startsWith(emittedText) && finalized.reply.length > emittedText.length) {
+            sendEvent(controller, 'delta', { t: finalized.reply.slice(emittedText.length) });
+          }
+        }
+        const modelMs = Date.now() - aiStart;
+        logAssistantTiming({
+          channel: prep.effectiveChannel,
+          lang: prep.lang,
+          path: extraPath || (finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai'),
+          streamed: true,
+          totalMs: Date.now() - reqStart,
+          modelMs,
+          ttftMs: ttftMs == null ? modelMs : ttftMs,
+        });
+        sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
+        controller.close();
+      };
+
       try {
-        const aiRes = await runAiWithRetry(
+        const streamResult = await runAiStreamWithRetry(
           env,
           prep.messages,
           prep.timeoutMs,
           prep.temperature,
-          { stream: true },
         );
 
-        const isStream = aiRes && typeof aiRes.getReader === 'function';
-        if (!isStream) {
+        if (streamResult.kind === 'value') {
           ttftMs = Date.now() - aiStart;
-          const modelMs = ttftMs;
-          const parsed = parseModelOutput(aiRes);
-          const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-          if (!finalized.closed && !finalized.handoffOffer && !finalized.fallback && finalized.reply) {
-            const words = finalized.reply.split(/(\s+)/);
-            for (let i = 0; i < words.length; i += 6) {
-              sendEvent(controller, 'delta', { t: words.slice(i, i + 6).join('') });
+          let parsed = parseModelOutput(streamResult.value);
+          if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
+            const langProbe = stripExternalLinks(redactSensitive(parsed.reply).text);
+            if (detectReplyLanguage(langProbe, prep.lang) !== prep.lang) {
+              const retryParsed = await regenerateInExpectedLanguage(env, prep);
+              if (!retryParsed.parseFailed && retryParsed.reply) parsed = retryParsed;
             }
           }
-          logAssistantTiming({
-            channel: prep.effectiveChannel,
-            lang: prep.lang,
-            path: finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai',
-            streamed: true,
-            totalMs: Date.now() - reqStart,
-            modelMs,
-            ttftMs,
-          });
-          sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
-          controller.close();
+          const finalized = await finalizeModelOutput({ parsed, prep, env, now });
+          finishWithFinalized(finalized);
           return;
         }
 
-        const reader = aiRes.getReader();
+        const { reader, firstRead } = streamResult;
         const decoder = new TextDecoder();
         let sseBuf = '';
+        let pendingRead = firstRead;
+
+        const processStreamPayload = (chunkTok) => {
+          rawAccum += chunkTok;
+          if (/^\s*\{/.test(rawAccum)) {
+            const strippedJson = rawAccum.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<think>[\s\S]*$/gi, '');
+            if (/"abuse"\s*:\s*true/i.test(strippedJson) && !isServiceComplaint(prep.cleanMsg)) {
+              abortedEarly = true;
+              return null;
+            }
+            if (/"handoff"\s*:\s*true/i.test(strippedJson)) {
+              abortedEarly = true;
+              return null;
+            }
+            const field = scanJsonStringField(strippedJson, 'reply');
+            return field.found ? field.value : '';
+          }
+          if (/\[\[\s*flags\s*:[^\]]*\b(?:abuse|handoff)\s*=\s*(?:1|true)/i.test(rawAccum)) {
+            abortedEarly = true;
+            return null;
+          }
+          return sanitizeStreamCandidate(rawAccum);
+        };
+
         while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          if (ttftMs == null) ttftMs = Date.now() - aiStart;
-          sseBuf += typeof value === 'string' ? value : decoder.decode(value, { stream: true });
+          const readStep = pendingRead || await (() => readStreamChunkWithTimeout(reader, prep.timeoutMs).then((r) => {
+            if (!r.ok) throw r.error;
+            return r.res;
+          }))();
+          pendingRead = null;
+          if (readStep.done) break;
+          if (readStep.value && ttftMs == null) ttftMs = Date.now() - aiStart;
+          sseBuf += typeof readStep.value === 'string'
+            ? readStep.value
+            : decoder.decode(readStep.value, { stream: true });
           const lines = sseBuf.split(/\r?\n/);
           sseBuf = lines.pop() || '';
           for (const line of lines) {
@@ -1846,23 +2000,21 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
             if (payload === '[DONE]') continue;
             const chunkTok = extractStreamTokenText(payload);
             if (!chunkTok) continue;
-            rawAccum += chunkTok;
-            const strippedThink = rawAccum
-              .replace(/<think>[\s\S]*?<\/think>/gi, '')
-              .replace(/<think>[\s\S]*$/gi, '');
-            if (/"abuse"\s*:\s*true/i.test(strippedThink) && !isServiceComplaint(prep.cleanMsg)) {
-              abortedEarly = true;
-              continue;
+            const visible = processStreamPayload(chunkTok);
+            if (visible === null || abortedEarly) continue;
+            if (!langVerified && visible && (visible.length >= 48 || findLastSentenceBoundary(visible) > 0)) {
+              const probe = stripExternalLinks(redactSensitive(visible).text);
+              if (detectReplyLanguage(probe, prep.lang) !== prep.lang) {
+                try { await reader.cancel(); } catch {}
+                const retryParsed = await regenerateInExpectedLanguage(env, prep);
+                const finalized = await finalizeModelOutput({ parsed: retryParsed, prep, env, now });
+                finishWithFinalized(finalized, 'ai_lang_retry');
+                return;
+              }
+              langVerified = true;
             }
-            if (/"handoff"\s*:\s*true/i.test(strippedThink)) {
-              abortedEarly = true;
-              continue;
-            }
-            const field = scanJsonStringField(strippedThink, 'reply');
-            if (field.found) {
-              emitSafePrefix(field.value, field.closed);
-            } else if (strippedThink.trimStart().length > 16 && !strippedThink.trimStart().startsWith('{') && !strippedThink.trimStart().startsWith('```')) {
-              emitSafePrefix(strippedThink, false);
+            if (langVerified && visible) {
+              emitSafePrefix(visible);
             }
           }
         }
@@ -1872,24 +2024,20 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           if (payload !== '[DONE]') rawAccum += extractStreamTokenText(payload);
         }
 
-        const modelMs = Date.now() - aiStart;
-        const parsed = parseModelOutput(rawAccum);
+        let parsed = parseModelOutput(rawAccum);
+        if (!langVerified && !parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
+          const probe = stripExternalLinks(redactSensitive(parsed.reply).text);
+          if (detectReplyLanguage(probe, prep.lang) !== prep.lang) {
+            const retryParsed = await regenerateInExpectedLanguage(env, prep);
+            if (!retryParsed.parseFailed && retryParsed.reply) parsed = retryParsed;
+          }
+        }
         const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-        logAssistantTiming({
-          channel: prep.effectiveChannel,
-          lang: prep.lang,
-          path: finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai',
-          streamed: true,
-          totalMs: Date.now() - reqStart,
-          modelMs,
-          ttftMs: ttftMs == null ? modelMs : ttftMs,
-        });
-        sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
-        controller.close();
+        finishWithFinalized(finalized);
       } catch (err) {
         const modelMs = Date.now() - aiStart;
         if (prep.aiIdentityAsked) {
-          const reply = `${prep.warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
+          const reply = `${prep.warnPrefix}${enforceMaxEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
           sendEvent(controller, 'done', { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang, ...(chatSession ? { chatSession } : {}) });
           controller.close();
@@ -1925,7 +2073,7 @@ export async function forwardConversationEmail({ env, email, lang = 'en', histor
     return { ok: false, status: 503, error: 'Email delivery is not configured' };
   }
   const safeHistory = (Array.isArray(history) ? history : [])
-    .slice(-6)
+    .slice(-4)
     .filter((h) => h && typeof h.content === 'string')
     .map((h) => `${h.role === 'assistant' ? 'Assistant' : 'Guest'}: ${redactSensitive(h.content).text}`);
   const cleanMessage = redactSensitive(message).text.trim();
@@ -2272,7 +2420,7 @@ export async function handleAssistantRoutes(request, env, url) {
       return jsonResp({ error: 'Invalid message' }, 400);
     }
     const pageLang = typeof body.lang === 'string' ? body.lang : '';
-    const hist = Array.isArray(body.history) ? body.history.slice(-6) : [];
+    const hist = Array.isArray(body.history) ? body.history.slice(-4) : [];
     const alreadyGreeted = Boolean(body.greeted);
     const wantsStream = Boolean(
       body.stream === true || (request.headers.get('Accept') || '').toLowerCase().includes('text/event-stream')
@@ -2358,7 +2506,7 @@ export async function handleAssistantRoutes(request, env, url) {
       env,
       email: body.email,
       lang: typeof body.lang === 'string' ? body.lang : 'en',
-      history: Array.isArray(body.history) ? body.history.slice(-6) : [],
+      history: Array.isArray(body.history) ? body.history.slice(-4) : [],
       message: typeof body.message === 'string' ? body.message : '',
       source: 'web',
     });

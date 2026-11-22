@@ -2274,6 +2274,7 @@
     a.textContent = lang === 'tr' ? 'E-posta taslağını aç' : t.openWa;
     const mine = document.createElement('a'); mine.href = 'account.html'; mine.textContent = t.seeRequests; mine.style.cssText = 'display:inline-block;margin:12px 0 0 12px;font-weight:800';
     box.append(h, d, a, mine);
+    if (window.BosphorlyMimoThanks) window.BosphorlyMimoThanks.append(box, lang);
     // Optional direct delivery (mail Worker), no email account needed; the guest's email is the Reply-To.
     if (window.addDirectDelivery) window.addDirectDelivery(box, { reference: snapshot.reference, kind: hammamMode ? 'hammam' : 'tour', service: title(r).slice(0, 160),
       name, phone, email, date: snapshot.date, guests: num, message: lines.join('\n'), consent: true }, lang);
