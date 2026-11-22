@@ -20,12 +20,13 @@
 
 .sh-auth,.sh-member{grid-area:auth;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:6px;border-top:1px solid rgba(159,182,220,.16);min-width:0}
 .sh-auth[hidden],.sh-member[hidden]{display:none!important}
-.sh-auth-perk{font:700 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#ffd596;margin-inline-end:auto}
-.sh-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;white-space:nowrap;border-radius:999px;padding:8px 14px;font:800 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;transition:transform .15s,background .15s}
-.sh-auth-btn.in{background:#16236b;border:1px solid #3b4fa3;color:#fff}
-.sh-auth-btn.in:hover{background:#1e2f87}
-.sh-auth-btn.up{background:linear-gradient(135deg,#ffbf62,#f4a63a);border:1px solid #ffca7a;color:#0a1753;box-shadow:0 3px 10px rgba(255,191,98,.22)}
-.sh-auth-btn.up:hover{background:linear-gradient(135deg,#ffd085,#f7b454)}
+.sh-auth-perk{font:700 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#dbe8ff;margin-inline-end:auto}
+.sh-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;white-space:nowrap;border-radius:10px;padding:8px 14px;font:750 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.1px;transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
+.sh-auth-btn svg{width:14px;height:14px;flex:none;display:block}
+.sh-auth-btn.in{background:rgba(255,255,255,.07);border:1px solid rgba(203,217,239,.35);color:#eef4ff}
+.sh-auth-btn.in:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.55);color:#fff}
+.sh-auth-btn.up{background:#fff;border:1px solid #fff;color:#0a1753;font-weight:800;box-shadow:0 2px 8px rgba(4,12,48,.18)}
+.sh-auth-btn.up:hover{background:#eef5ff;border-color:#dbe8ff}
 
 .sh-member-pill{display:inline-flex;align-items:center;gap:8px;max-width:100%;min-width:0;text-decoration:none;background:#142266;border:1px solid #384d9e;color:#fff;border-radius:999px;padding:6px 12px;font:700 13px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;transition:background .15s}
 .sh-member-pill:hover{background:#1b2c80}
@@ -51,8 +52,8 @@
  .sh-auth,.sh-member{border-top:0;padding-top:0;gap:8px}
  .sh-auth-perk{display:none}
  .sh-auth-btn{padding:9px 14px;font-size:13px}
- .sh-auth-btn.in{background:transparent;border-color:#3b4fa3}
- .sh-auth-btn.up{box-shadow:none}
+ .sh-auth-btn.in{background:rgba(255,255,255,.07);border-color:rgba(203,217,239,.35)}
+ .sh-auth-btn.up{box-shadow:0 2px 8px rgba(4,12,48,.16)}
  .sh-inner.sh-two-rows{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"brand . tools" "nav nav auth";row-gap:8px}
  .sh-two-rows .sh-nav{flex-wrap:wrap;overflow:visible;margin-inline-start:0;padding-top:8px;border-top:1px solid rgba(159,182,220,.16)}
  .sh-two-rows .sh-auth,.sh-two-rows .sh-member{padding-top:8px;align-self:start}
@@ -92,27 +93,31 @@ section[id]{scroll-margin-top:170px}
 .tg-btn.tg-foot{background:#fff;border-color:#b7ddf2;color:#0b5684;border-radius:999px;padding:7px 13px;font-size:12.5px}
 .tg-btn.tg-after{margin-top:12px;background:#fff;border-color:#88cbe8;color:#0a4b73}
 
-/* Home hero: two clear actions, then one quiet line of secondary links, then a slim membership line. */
+/* Home hero: two clear actions, then one quiet line of secondary links, then a corporate member privilege card. */
 .hero .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:6px}
 .hero .hero-actions .hero-cta{margin:0;padding:15px 26px;border-radius:12px;font-size:15px}
 .hero .hero-cta2{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.32);color:#fff;font-weight:800;font-size:15px;text-decoration:none;transition:background .15s,border-color .15s}
 .hero .hero-cta2:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55)}
 .hero .hero-links{display:flex;flex-wrap:wrap;align-items:center;gap:0 26px;margin-top:18px}
-.hero .hero-links .hero-map,.hero .hero-links .tg-btn.tg-hero{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;min-height:44px;background:none;border:0;border-radius:0;color:#b9cbe6;font:600 13px/1.4 inherit;text-decoration:none}
+.hero .hero-links .hero-map,.hero .hero-links .tg-btn.tg-hero{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;min-height:45px;background:none;border:0;border-radius:0;color:#b9cbe6;font:600 13px/1.4 inherit;text-decoration:none}
 .hero .hero-links .hero-map:hover,.hero .hero-links .tg-btn.tg-hero:hover{color:#fff;background:none}
 .hero .hero-links .tg-btn.tg-hero .tg-ico{width:15px;height:15px}
-.hero .hero-auth{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:26px;padding:14px 0 0;border:0;border-top:1px solid rgba(255,255,255,.12);border-radius:0;background:none;max-width:none}
+.hero .hero-auth{display:grid;gap:10px;margin-top:18px;padding:12px 15px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:rgba(7,18,64,.48);backdrop-filter:blur(8px);max-width:580px}
 .hero .hero-auth[hidden]{display:none!important}
-.hero .hero-auth-badge{margin:0;font-size:13px;font-weight:700;color:#ffd596}
-.hero .hero-auth-btns{display:flex;gap:16px;align-items:center}
-.hero .hero-auth-btn{padding:0;background:none!important;border:0!important;border-radius:0;font-size:13px;font-weight:800;color:#fff}
-.hero .hero-auth-btn.up{color:#ffbf62}
-.hero .hero-auth-btn:hover{text-decoration:underline;text-underline-offset:4px}
-.hero .hero-auth-btn::after{content:" →"}
-[dir=rtl] .hero .hero-auth-btn::after{content:" ←"}
+.hero .hero-auth-top{display:flex;align-items:center;gap:9px}
+.hero .hero-auth-art{width:28px;height:28px;border-radius:8px;background:rgba(123,227,245,.13);border:1px solid rgba(142,232,248,.24);color:#8ee8f8;display:grid;place-items:center;flex:none}
+.hero .hero-auth-art svg{width:15px;height:15px}
+.hero .hero-auth-kicker{font-size:10.5px;font-weight:800;letter-spacing:.75px;text-transform:uppercase;color:#8ee8f8;line-height:1.2}
+.hero .hero-auth-deal{margin-inline-start:auto;font:800 11px/1 ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:#ffdc7a;background:rgba(255,220,122,.14);border:1px solid rgba(255,220,122,.34);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.hero .hero-auth-row{display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap}
+.hero .hero-auth-badge{margin:0;font-size:12px;font-weight:600;color:#eef4ff;line-height:1.35}
+.hero .hero-auth-btns{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-inline-start:auto}
+.hero .hero-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 11px;border-radius:9px;font-family:inherit;font-size:12px;line-height:1;font-weight:800;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s}
+.hero .hero-auth-btn.up{background:#fff;border:1px solid #fff;color:#0a1753}
+.hero .hero-auth-btn.up:hover{background:#eef5ff;border-color:#dbe8ff}
+.hero .hero-auth-btn.in{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:750}
+.hero .hero-auth-btn.in:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.5)}
 .hero .hero-caption{margin-top:12px}
 @media (max-width:560px){.hero .hero-actions>a{flex:1 1 100%;justify-content:center;text-align:center}.hero .hero-links{margin-top:14px}}
-/* The header already offers sign-in, so the hero keeps only the welcome offer; on phones the header row covers it. */
-.hero #heroAuth .hero-auth-btn.in{display:none}
 @media (max-width:900px){.hero #heroAuth{display:none!important}}
 @media (max-width:560px){.hero .hero-links{flex-direction:column;align-items:flex-start;gap:0}}
