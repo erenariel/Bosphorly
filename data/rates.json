@@ -3,53 +3,137 @@
   "source": "TCMB (Türkiye Cumhuriyet Merkez Bankası) gösterge niteliğindeki kurlar",
   "source_name": "TCMB",
   "source_url": "https://www.tcmb.gov.tr/kurlar/today.xml",
-  "date": "19.11.2026",
-  "bulletin": "2026/218",
+  "date": "20.11.2026",
+  "bulletin": "2026/219",
   "basis": "forex_selling",
   "rates": {
     "USD": {
       "unit": 1,
-      "forex_selling": 50.4694,
-      "forex_buying": 50.3786,
-      "banknote_selling": 50.5451
+      "forex_selling": 50.4936,
+      "forex_buying": 50.4028,
+      "banknote_selling": 50.5694
+    },
+    "AUD": {
+      "unit": 1,
+      "forex_selling": 33.7377,
+      "forex_buying": 33.5191,
+      "banknote_selling": 33.9401
+    },
+    "DKK": {
+      "unit": 1,
+      "forex_selling": 7.4228,
+      "forex_buying": 7.3865,
+      "banknote_selling": 7.4399
     },
     "EUR": {
       "unit": 1,
-      "forex_selling": 55.4579,
-      "forex_buying": 55.3581,
-      "banknote_selling": 55.541
+      "forex_selling": 55.397,
+      "forex_buying": 55.2974,
+      "banknote_selling": 55.4801
     },
     "GBP": {
       "unit": 1,
-      "forex_selling": 66.5006,
-      "forex_buying": 66.1557,
-      "banknote_selling": 66.6004
+      "forex_selling": 66.2801,
+      "forex_buying": 65.9363,
+      "banknote_selling": 66.3795
+    },
+    "CHF": {
+      "unit": 1,
+      "forex_selling": 60.0964,
+      "forex_buying": 59.713,
+      "banknote_selling": 60.1865
+    },
+    "SEK": {
+      "unit": 1,
+      "forex_selling": 4.9711,
+      "forex_buying": 4.9202,
+      "banknote_selling": 4.9826
+    },
+    "CAD": {
+      "unit": 1,
+      "forex_selling": 35.2994,
+      "forex_buying": 35.141,
+      "banknote_selling": 35.4336
+    },
+    "KWD": {
+      "unit": 1,
+      "forex_selling": 164.3241,
+      "forex_buying": 162.2017,
+      "banknote_selling": 166.789
+    },
+    "NOK": {
+      "unit": 1,
+      "forex_selling": 5.1822,
+      "forex_buying": 5.1476,
+      "banknote_selling": 5.1941
     },
     "SAR": {
       "unit": 1,
-      "forex_selling": 13.4542,
-      "forex_buying": 13.43,
-      "banknote_selling": 13.5551
+      "forex_selling": 13.4582,
+      "forex_buying": 13.434,
+      "banknote_selling": 13.5591
+    },
+    "JPY": {
+      "unit": 100,
+      "forex_selling": 31.8372,
+      "forex_buying": 31.6277,
+      "banknote_selling": 31.9581
+    },
+    "RON": {
+      "unit": 1,
+      "forex_selling": 10.4136,
+      "forex_buying": 10.2791,
+      "banknote_selling": null
     },
     "RUB": {
       "unit": 1,
-      "forex_selling": 0.61892,
-      "forex_buying": 0.61092,
+      "forex_selling": 0.6199,
+      "forex_buying": 0.6119,
+      "banknote_selling": null
+    },
+    "CNY": {
+      "unit": 1,
+      "forex_selling": 7.6063,
+      "forex_buying": 7.5081,
+      "banknote_selling": null
+    },
+    "PKR": {
+      "unit": 1,
+      "forex_selling": 0.18369,
+      "forex_buying": 0.18132,
+      "banknote_selling": null
+    },
+    "QAR": {
+      "unit": 1,
+      "forex_selling": 13.9355,
+      "forex_buying": 13.7555,
+      "banknote_selling": null
+    },
+    "KRW": {
+      "unit": 1,
+      "forex_selling": 0.03797,
+      "forex_buying": 0.03748,
       "banknote_selling": null
     },
     "AZN": {
       "unit": 1,
-      "forex_selling": 29.854,
-      "forex_buying": 29.4684,
+      "forex_selling": 29.8683,
+      "forex_buying": 29.4825,
       "banknote_selling": null
     },
     "AED": {
       "unit": 1,
-      "forex_selling": 13.818,
-      "forex_buying": 13.6395,
+      "forex_selling": 13.8254,
+      "forex_buying": 13.6468,
+      "banknote_selling": null
+    },
+    "KZT": {
+      "unit": 1,
+      "forex_selling": 0.11173,
+      "forex_buying": 0.11029,
       "banknote_selling": null
     }
   },
   "base": "TRY",
-  "fetched_at": "2026-11-19T22:31:24Z"
+  "fetched_at": "2026-11-22T01:31:15Z"
 }
