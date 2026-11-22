@@ -271,6 +271,31 @@ def assert_discover_data():
             assert sorted(re.findall(r"\{\w+\}", v)) == sorted(re.findall(r"\{\w+\}", mpack[k])), (lang, k)
 
 
+def assert_language_sync():
+    """Verify all 23 supported languages stay synchronized across lang.js, index.html, and every interactive page."""
+    lang_js = (ROOT / "lang.js").read_text(encoding="utf-8")
+    supported = re.findall(r"'(\w+)'", re.search(r"const supported = \[([^\]]+)\]", lang_js).group(1))
+    names_block = re.search(r"const NAMES = \{([^}]+)\}", lang_js).group(1)
+    names_keys = re.findall(r"\b([a-z]{2})\s*:", names_block)
+    assert len(supported) == 23, ("Expected 23 languages in lang.js", len(supported))
+    assert supported == names_keys, ("lang.js supported and NAMES differ", supported, names_keys)
+
+    homepage = (ROOT / "index.html").read_text(encoding="utf-8")
+    select_block = re.search(r'<select id="language"[^>]*>([\s\S]*?)</select>', homepage).group(1)
+    index_options = re.findall(r'<option value="(\w+)">', select_block)
+    assert index_options == supported, ("index.html #language options differ from lang.js", index_options, supported)
+
+    header_js = (ROOT / "site-header.js").read_text(encoding="utf-8")
+    assert "BosphorlyLang" in header_js and ".mount()" in header_js, "site-header.js must mount language selector"
+
+    for page in PAGES:
+        if page in ("index.html", "map.html"):
+            continue
+        html = (ROOT / page).read_text(encoding="utf-8")
+        assert "lang.js" in html, f"{page} must include lang.js"
+        assert "site-header.js" in html or "data-lang-mount" in html, f"{page} must mount language selector"
+
+
 if __name__ == "__main__":
     assert_local_links()
     assert_no_supplier_checkout_redirects()
@@ -280,5 +305,6 @@ if __name__ == "__main__":
     assert_hreflang()
     assert_seo()
     assert_faq()
+    assert_language_sync()
     assert_js_parses()
     print("Bosphorly: internal links, booking safety, SEO metadata, logo, map and JS syntax OK.")
