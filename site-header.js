@@ -29,7 +29,7 @@
   const page = host.dataset.page || '';
   const base = host.dataset.base || ''; // '../' on pages inside a sub-folder
   const withCurrency = host.dataset.currency !== 'off';
-  const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['faq', 'faq.html'], ['account', 'account.html']];
+  const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['faq', 'faq.html']].concat(window.BOSPHORLY_API && window.BOSPHORLY_API.base ? [] : [['account', 'account.html']]);
   const header = document.createElement('header');
   header.className = 'site-header';
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span>Bosphorly<small>ISTANBUL · MADE SIMPLE</small></span></a>' +
@@ -101,6 +101,7 @@
   window.addEventListener('bosphorly:member-changed', syncMemberBar);
   window.addEventListener('storage', e => { if (!e.key || e.key.startsWith('bosphorly.')) syncMemberBar(); });
   host.replaceWith(header);
+  if (!document.querySelector('script[src$="header-fit.js"]')) { const fit = document.createElement('script'); fit.src = base + 'header-fit.js'; fit.defer = true; document.head.append(fit); }
   if (window.BosphorlyLang && window.BosphorlyLang.mount) window.BosphorlyLang.mount();
 })();
 

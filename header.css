@@ -39,15 +39,26 @@
 .sh-member-out{background:transparent;color:#d5e3f5;border:1px solid #3b4fa3;border-radius:999px;padding:7px 12px;font:700 12.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap}
 .sh-member-out:hover{background:#1e2f87;color:#fff}
 
-/* Desktop: brand and tools on the first row, the menu and sign-in buttons on the second, so the menu never runs under the search button. */
+/* Desktop: one calm row (logo · menu · tools · sign-in). header-fit.js adds .sh-two-rows when the labels do not fit,
+   and the menu then gets its own row instead of running under the tools. */
 @media (min-width:901px){
- .sh-inner{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"brand . tools" "nav nav auth";row-gap:8px}
- .sh-nav{justify-content:flex-start;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(159,182,220,.16);gap:4px}
- .sh-auth,.sh-member{align-self:start}
- .sh-nav a{padding:8px 12px}
- .sh-auth,.sh-member{padding-top:8px}
+ .sh-inner{max-width:1320px;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"brand nav tools auth";column-gap:12px;padding:12px 24px}
+ .sh-inner:not(.sh-two-rows) .sh-brand small{display:none}
+ .sh-nav{justify-content:flex-start;gap:2px;overflow:hidden;margin-inline-start:12px}
+ .sh-nav a{padding:9px 10px;font-size:13.5px;color:#cbd9ef}
+ .sh-nav a:hover{background:transparent;color:#fff}
+ .sh-nav a[aria-current=page]{background:transparent;color:#fff;box-shadow:inset 0 -2px 0 #ffbf62;border-radius:0}
+ .sh-auth,.sh-member{border-top:0;padding-top:0;gap:8px}
  .sh-auth-perk{display:none}
+ .sh-auth-btn{padding:9px 14px;font-size:13px}
+ .sh-auth-btn.in{background:transparent;border-color:#3b4fa3}
+ .sh-auth-btn.up{box-shadow:none}
+ .sh-inner.sh-two-rows{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"brand . tools" "nav nav auth";row-gap:8px}
+ .sh-two-rows .sh-nav{flex-wrap:wrap;overflow:visible;margin-inline-start:0;padding-top:8px;border-top:1px solid rgba(159,182,220,.16)}
+ .sh-two-rows .sh-auth,.sh-two-rows .sh-member{padding-top:8px;align-self:start}
 }
+/* Sign-in buttons already lead to the account page, so the "My account" menu link hides while they are shown. */
+.sh-inner:has(.sh-auth:not([hidden])) .sh-nav a[href$="account.html"],.sh-inner:has(.sh-member:not([hidden])) .sh-nav a[href$="account.html"]{display:none}
 @media (max-width:900px){
  .sh-inner{grid-template-columns:1fr auto;grid-template-areas:"brand tools" "nav nav" "auth auth";row-gap:9px;padding:10px 14px 10px}
  .sh-brand{font-size:18px}.sh-brand img{width:38px;height:38px}.sh-brand small{display:none}
@@ -78,17 +89,30 @@ section[id]{scroll-margin-top:170px}
 .tg-btn:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
 .tg-btn[hidden]{display:none!important}
 .tg-btn .tg-ico{width:18px;height:18px;flex:none;display:block}
-.tg-btn.tg-hero{background:none;border:0;border-radius:0;min-height:44px;padding:0;gap:7px;color:#d9f5ff;font:700 13px/1.4 inherit;margin:2px 0 2px 18px;vertical-align:middle}
-.tg-btn.tg-hero::after{content:"→"}
-[dir=rtl] .tg-btn.tg-hero::after{content:"←"}
-.tg-btn.tg-hero:hover{background:none;color:#fff;text-decoration:underline;text-underline-offset:4px}
-.tg-btn.tg-hero .tg-ico{width:16px;height:16px}
 .tg-btn.tg-foot{background:#fff;border-color:#b7ddf2;color:#0b5684;border-radius:999px;padding:7px 13px;font-size:12.5px}
 .tg-btn.tg-after{margin-top:12px;background:#fff;border-color:#88cbe8;color:#0a4b73}
-@media (max-width:1000px){.tg-btn.tg-hero{display:flex;width:max-content;margin-inline-start:0}}
-@media (min-width:851px) and (max-width:1000px){.tg-btn.tg-hero{display:inline-flex;margin-inline-start:18px}}
-@media (max-width:560px){.tg-btn.tg-hero{display:flex;margin-inline-start:0}}
 
-/* Hero links: the gap sits after each link, so a link that wraps to a new line lines up with the main button. */
-@media (min-width:1001px){.hero-copy .hero-cta{margin-inline-end:18px}.hero-copy .hero-map{margin:12px 18px 12px 0}.hero-copy .tg-btn.tg-hero{margin:2px 18px 2px 0}}
-@media (min-width:851px) and (max-width:1000px){.hero-copy .hero-map,.hero-copy .tg-btn.tg-hero{margin-inline-start:0}}
+/* Home hero: two clear actions, then one quiet line of secondary links, then a slim membership line. */
+.hero .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:6px}
+.hero .hero-actions .hero-cta{margin:0;padding:15px 26px;border-radius:12px;font-size:15px}
+.hero .hero-cta2{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.32);color:#fff;font-weight:800;font-size:15px;text-decoration:none;transition:background .15s,border-color .15s}
+.hero .hero-cta2:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55)}
+.hero .hero-links{display:flex;flex-wrap:wrap;align-items:center;gap:0 26px;margin-top:18px}
+.hero .hero-links .hero-map,.hero .hero-links .tg-btn.tg-hero{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;min-height:44px;background:none;border:0;border-radius:0;color:#b9cbe6;font:600 13px/1.4 inherit;text-decoration:none}
+.hero .hero-links .hero-map:hover,.hero .hero-links .tg-btn.tg-hero:hover{color:#fff;background:none}
+.hero .hero-links .tg-btn.tg-hero .tg-ico{width:15px;height:15px}
+.hero .hero-auth{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:26px;padding:14px 0 0;border:0;border-top:1px solid rgba(255,255,255,.12);border-radius:0;background:none;max-width:none}
+.hero .hero-auth[hidden]{display:none!important}
+.hero .hero-auth-badge{margin:0;font-size:13px;font-weight:700;color:#ffd596}
+.hero .hero-auth-btns{display:flex;gap:16px;align-items:center}
+.hero .hero-auth-btn{padding:0;background:none!important;border:0!important;border-radius:0;font-size:13px;font-weight:800;color:#fff}
+.hero .hero-auth-btn.up{color:#ffbf62}
+.hero .hero-auth-btn:hover{text-decoration:underline;text-underline-offset:4px}
+.hero .hero-auth-btn::after{content:" →"}
+[dir=rtl] .hero .hero-auth-btn::after{content:" ←"}
+.hero .hero-caption{margin-top:12px}
+@media (max-width:560px){.hero .hero-actions>a{flex:1 1 100%;justify-content:center;text-align:center}.hero .hero-links{margin-top:14px}}
+/* The header already offers sign-in, so the hero keeps only the welcome offer; on phones the header row covers it. */
+.hero #heroAuth .hero-auth-btn.in{display:none}
+@media (max-width:900px){.hero #heroAuth{display:none!important}}
+@media (max-width:560px){.hero .hero-links{flex-direction:column;align-items:flex-start;gap:0}}
