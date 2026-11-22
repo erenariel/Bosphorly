@@ -176,7 +176,7 @@ test('member routes keep the origin check, rate limit and size limit', async () 
   assert.equal((await call(env, '/v1/auth/start', { email: 'a@example.com', pad: 'x'.repeat(5000) })).status, 413);
 });
 
-test('deployment config has D1 database_id, live api base, secret-only workflow and TR/EN KVKK draft notice', () => {
+test('deployment config has D1 database_id, live api base, secret-only workflow and a finished TR/EN KVKK notice', () => {
   const wrangler = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
   assert.match(wrangler, /"database_id"\s*:\s*"[0-9a-f-]{36}"/);
   const apiConfig = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
@@ -194,8 +194,9 @@ test('deployment config has D1 database_id, live api base, secret-only workflow 
   assert.match(workflow, /wrangler@\S+\s+d1 migrations apply bosphorly-booking --remote --config "\$config"/);
   assert.match(workflow, /wrangler@\S+\s+deploy --config "\$config"/);
   const privacy = readFileSync(new URL('../privacy.html', import.meta.url), 'utf8');
-  assert.match(privacy, /TASLAK \(Üyelik Aydınlatma Bölümü\)/);
-  assert.match(privacy, /DRAFT \(Membership Disclosure Section\)/);
+  // The published notice has no editor or lawyer notes and no unfilled fields.
+  assert.doesNotMatch(privacy, /TASLAK|DRAFT|Avukat değerlendirmesi|Legal review|class="(?:draft|legal)"/);
+  assert.doesNotMatch(privacy, /class="ph"|\[(?:Ad Soyad|Full name|iletişim adresi|contact address|tarih|date)\]/);
   assert.match(privacy, /Hangi veriler işlenir\?/);
   assert.match(privacy, /What data we process:/);
   assert.match(privacy, /Silme talebi nasıl yapılır\?/);
