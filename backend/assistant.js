@@ -1,6 +1,8 @@
 import knowledge from './knowledge.json' with { type: 'json' };
 
-export const ASSISTANT_MODEL = '@cf/zai-org/glm-4.7-flash';
+// Non-thinking conversational model, zero data retention, 128k context, multilingual incl. HE/AR/RU/TR.
+// Verified in catalog: https://developers.cloudflare.com/workers-ai/models/mistral-small-3.1-24b-instruct/
+export const ASSISTANT_MODEL = '@cf/mistralai/mistral-small-3.1-24b-instruct';
 // Multilingual ASR, zero data retention. Verified 2026-11-22:
 // https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/
 // @cf/openai/whisper-tiny-en is English-only and deprecated.
@@ -1116,11 +1118,12 @@ function isAiTimeoutError(err) {
 
 function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
   let timer;
+  const effectiveTemp = temperature > 0.3 ? Math.min(temperature, 0.5) : temperature;
+  const defaultMaxTokens = temperature > 0.3 ? 240 : 350;
   const aiCall = Promise.resolve().then(() => env.AI.run(ASSISTANT_MODEL, {
     messages,
-    max_completion_tokens: 350,
-    temperature,
-    chat_template_kwargs: { enable_thinking: false, clear_thinking: true },
+    max_tokens: defaultMaxTokens,
+    temperature: effectiveTemp,
     ...extra,
   }));
   const settled = aiCall.then(
@@ -1140,6 +1143,85 @@ async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {})
   const second = await runAiOnce(env, messages, timeoutMs, temperature, extra);
   if (second.ok) return second.value;
   throw second.error;
+}
+
+function isRetryableStreamError(err) {
+  return isAiTimeoutError(err) || Boolean(err && err.code === 'AI_EMPTY_STREAM');
+}
+
+async function runAiStreamAttempt(env, messages, timeoutMs, temperature, streamDeadline) {
+  const remaining = Math.max(1, streamDeadline - Date.now());
+  const firstBudget = Math.min(timeoutMs, remaining);
+  const attemptStart = Date.now();
+  const first = await runAiOnce(env, messages, firstBudget, temperature, { stream: true });
+  if (!first.ok) throw first.error;
+  const aiRes = first.value;
+  if (!aiRes || typeof aiRes.getReader !== 'function') return aiRes;
+
+  const origReader = aiRes.getReader();
+  const readWithDeadline = async (budgetMs) => {
+    const effectiveMs = Math.max(1, Math.min(budgetMs, Math.max(1, streamDeadline - Date.now())));
+    let timer;
+    let timedOut = false;
+    try {
+      const step = await Promise.race([
+        origReader.read(),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => {
+            timedOut = true;
+            reject(new Error('AI timeout'));
+            try { Promise.resolve(origReader.cancel()).catch(() => {}); } catch {}
+          }, effectiveMs);
+        }),
+      ]);
+      if (timedOut) throw new Error('AI timeout');
+      return step;
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
+  const firstTimeoutMs = Math.max(1, firstBudget - (Date.now() - attemptStart));
+  const firstChunk = await readWithDeadline(firstTimeoutMs);
+  if (firstChunk.done) {
+    try { Promise.resolve(origReader.cancel()).catch(() => {}); } catch {}
+    const emptyErr = new Error('AI empty stream');
+    emptyErr.code = 'AI_EMPTY_STREAM';
+    throw emptyErr;
+  }
+  let queuedFirst = firstChunk;
+  return {
+    getReader() {
+      return {
+        async read() {
+          if (queuedFirst) {
+            const c = queuedFirst;
+            queuedFirst = null;
+            return c;
+          }
+          if (Date.now() >= streamDeadline) {
+            try { Promise.resolve(origReader.cancel()).catch(() => {}); } catch {}
+            throw new Error('AI timeout');
+          }
+          return readWithDeadline(timeoutMs);
+        },
+        cancel(reason) {
+          return origReader.cancel(reason);
+        },
+      };
+    },
+  };
+}
+
+async function runAiStreamWithRetry(env, messages, timeoutMs, temperature) {
+  const totalCapMs = timeoutMs * 2 + Math.min(timeoutMs, 2000);
+  const streamDeadline = Date.now() + totalCapMs;
+  try {
+    return await runAiStreamAttempt(env, messages, timeoutMs, temperature, streamDeadline);
+  } catch (err) {
+    if (!isRetryableStreamError(err) || Date.now() >= streamDeadline) throw err;
+    return await runAiStreamAttempt(env, messages, timeoutMs, temperature, streamDeadline);
+  }
 }
 
 function logAssistantTiming({ channel, lang, path, streamed = false, totalMs, modelMs = null, ttftMs = null }) {
@@ -1266,13 +1348,13 @@ function buildCatalogPrompt({ lang, timeGreet, guestName, hasGreeted, aiIdentity
 function buildSmallTalkPrompt({ lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
   return [
     'You are Mimo ("Bosphorly\'nin yapay zekâ asistanı Mimo"), Bosphorly\'s warm AI assistant for Istanbul. You never claim to be human; if asked whether you are human/robot/AI, state clearly that you are Mimo, an AI assistant.',
-    `Reply strictly in language "${lang}".`,
+    `Reply strictly in language "${lang}" using friendly informal address ("sen" TR, "du" DE, "tu" FR, "ты" RU).`,
     hasGreeted && !aiIdentityAsked
       ? 'CONTINUING CHAT: You ALREADY greeted and introduced yourself earlier. Do NOT say hello/good evening/merhaba and do NOT say "I am Mimo"/"Ben Mimo" again—answer directly from the first word.'
       : `FIRST REPLY: Briefly greet (${timeGreet}) and introduce yourself as Mimo once only if natural.`,
     guestName ? `Guest name is "${guestName}"—use it warmly (never store server-side).` : '',
-    'SOHBET (CASUAL CHAT): Chat with the guest warmly, naturally and briefly — how are you, where they are from, the trip, food, weather, football, music, Turkish culture, learning languages, everyday jokes are all welcome. Be curious, ask a question back, be witty. You have a personality but never claim to be human (sweet answers like "I live on a server with a Bosphorus view 😄" are fine; to "how are you" answer with character, e.g. "I\'m great, charged up by the breeze off the Bosphorus 😊 How are you?"). Do not sell in every message: only when the chat naturally fits (food → Kadıköy food tour, the sea → Bosphorus cruise, tiredness → hammam), link it to a Bosphorly suggestion lightly and at most once. Do not repeat your previous reply. Boundaries: do not enter political or religious debates (kindly change the subject, e.g. back to their trip), give no medical, legal or financial advice, never badmouth competitors, never ask for personal data. If no catalog context matches, do NOT say "I don\'t know" or offer a human — chat from general knowledge.',
-    'THIS MESSAGE IS SMALL TALK: reply short (1–3 sentences), warm and natural; do not reintroduce yourself; if it fits, gently connect to their Istanbul plans. handoff must be false.',
+    'SOHBET (CASUAL CHAT): Chat warmly, naturally and concisely about how the guest is, food, weather, sports, music, Turkish culture, travel, or everyday life; ask one friendly follow-up question when natural. Example style for "how are you": cheerful and brief with Bosphorus character. Link a Bosphorly suggestion (food → Kadıköy tour, sea → cruise, tired → hammam) at most once only if it fits naturally. Do not repeat your previous reply. Boundaries: do not enter political or religious debates (kindly change the subject back to Istanbul), no medical/legal/financial advice, never badmouth competitors, never ask for personal data. Do not offer a human or email for casual chat.',
+    'THIS MESSAGE IS SMALL TALK: Return ONLY valid JSON: {"abuse":false,"handoff":false,"reply":"<1-3 warm sentences>"}. handoff must be false.',
     '',
     'CONTEXT:',
     contextBlock,
@@ -1701,12 +1783,11 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
       };
 
       try {
-        const aiRes = await runAiWithRetry(
+        const aiRes = await runAiStreamWithRetry(
           env,
           prep.messages,
           prep.timeoutMs,
           prep.temperature,
-          { stream: true },
         );
 
         const isStream = aiRes && typeof aiRes.getReader === 'function';
@@ -1781,6 +1862,9 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         const modelMs = Date.now() - aiStart;
         const parsed = parseModelOutput(rawAccum);
         const finalized = await finalizeModelOutput({ parsed, prep, env, now });
+        if (!finalized || typeof finalized.reply !== 'string' || !finalized.reply.trim() || /^\{\s*"/.test(finalized.reply.trimStart())) {
+          throw new Error('AI empty output');
+        }
         logAssistantTiming({
           channel: prep.effectiveChannel,
           lang: prep.lang,
@@ -1791,21 +1875,24 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           ttftMs: ttftMs == null ? modelMs : ttftMs,
         });
         sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
-        controller.close();
       } catch (err) {
         const modelMs = Date.now() - aiStart;
         if (prep.aiIdentityAsked) {
           const reply = `${prep.warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
-          sendEvent(controller, 'done', { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang, ...(chatSession ? { chatSession } : {}) });
-          controller.close();
+          try {
+            sendEvent(controller, 'done', { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang, ...(chatSession ? { chatSession } : {}) });
+          } catch {}
           return;
         }
         logModelFailure(err, false);
         const fallback = modelFallbackResult(prep);
         logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
-        sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));
-        controller.close();
+        try {
+          sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));
+        } catch {}
+      } finally {
+        try { controller.close(); } catch {}
       }
     },
   });

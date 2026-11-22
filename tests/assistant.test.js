@@ -374,7 +374,7 @@ test('invalid Turnstile token is rejected with 403 and CORS is restricted to PUB
 });
 
 test('AI error or empty/nonsensical output falls back silently to handoff and supports object/choices formats', async () => {
-  assert.equal(ASSISTANT_MODEL, '@cf/zai-org/glm-4.7-flash');
+  assert.equal(ASSISTANT_MODEL, '@cf/mistralai/mistral-small-3.1-24b-instruct');
 
   const res = await runAssistant({
     message: 'Bosphorus cruise schedule?',
@@ -1710,7 +1710,7 @@ test('all 23 languages retrieve Bosphorus cruise price and IST->Sultanahmet tran
   }
 });
 
-test('model config disables thinking, caps tokens at 350, compacts prompt, and uses informal address', async () => {
+test('model config uses non-thinking model, caps max_tokens at 350, compacts prompt, and uses informal address', async () => {
   let capturedModel = '';
   let capturedOpts = null;
   const env = {
@@ -1730,8 +1730,9 @@ test('model config disables thinking, caps tokens at 350, compacts prompt, and u
   };
   await runAssistant({ message: 'Boğaz turu fiyatı ne kadar?', pageLang: 'tr', env, actorKey: 'cfg-check' });
   assert.equal(capturedModel, ASSISTANT_MODEL);
-  assert.equal(capturedOpts.max_completion_tokens, 350);
-  assert.deepEqual(capturedOpts.chat_template_kwargs, { enable_thinking: false, clear_thinking: true });
+  assert.equal(capturedOpts.max_tokens, 350);
+  assert.equal(capturedOpts.max_completion_tokens, undefined);
+  assert.equal(capturedOpts.chat_template_kwargs, undefined);
   const sys = capturedOpts.messages[0].content;
   assert.ok(sys.length < 3600, `Compact system prompt + context should stay under 3600 chars (got ${sys.length})`);
   assert.match(sys, /"sen" TR/);
@@ -1853,10 +1854,11 @@ test('POST /v1/assistant supports SSE streaming (stream=true), filters <think> a
   const env = baseEnv({
     CODE_PEPPER: pepper,
     AI: {
-      run: async (_m, opts) => {
+      run: async (model, opts) => {
+        assert.equal(model, ASSISTANT_MODEL);
         assert.equal(opts.stream, true);
-        assert.equal(opts.max_completion_tokens, 350);
-        assert.deepEqual(opts.chat_template_kwargs, { enable_thinking: false, clear_thinking: true });
+        assert.equal(opts.max_tokens, 350);
+        assert.equal(opts.chat_template_kwargs, undefined);
         const tokens = [
           'data: {"response":"<think>secret thought</think>"}\n\n',
           'data: {"response":"{\\"abuse\\":false,\\"handoff\\":false,\\"reply\\":\\""}\n\n',
@@ -2010,4 +2012,128 @@ test('SSE streaming retries a timeout once, uses tryAgain off-catalog, and keeps
   assert.equal(greet.json.fallback, undefined);
   assert.ok(greet.json.reply.includes('Mimo'));
   assert.equal(/e-posta|email/i.test(greet.json.reply), false);
+});
+
+test('SSE /v1/assistant real model path handles "nasılsın", "Selam nasılsın", "how are you", and "מה נשמע" with handoff=false', async (t) => {
+  const pepper = 'smalltalk-real-pepper';
+  const ip = '203.0.113.91';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  t.mock.method(console, 'log', () => {});
+
+  const cases = [
+    { message: 'nasılsın', lang: 'tr', reply: 'Harikayım, Boğaz rüzgârıyla enerji doldum 😊 Sen nasılsın?' },
+    { message: 'Selam nasılsın', lang: 'tr', reply: 'Selam! Çok iyiyim, İstanbul’dan selamlar 🌊 Sen nasılsın?' },
+    { message: 'how are you', lang: 'en', reply: 'Doing great, watching the ferries go by on the Bosphorus! How are you?' },
+    { message: 'מה נשמע', lang: 'he', reply: 'הכל מעולה, נהנה מהבריזה של הבוספורוס! מה שלומך?' },
+  ];
+
+  const enc = new TextEncoder();
+  for (const c of cases) {
+    assert.equal(classifySmallTalk(c.message), 'chat', `small talk routes to model: ${c.message}`);
+    const seen = [];
+    const env = baseEnv({
+      CODE_PEPPER: pepper,
+      AI: {
+        run: async (model, opts) => {
+          seen.push({ model, opts });
+          const payload = JSON.stringify({ abuse: false, handoff: false, reply: c.reply });
+          return new ReadableStream({
+            start(controller) {
+              controller.enqueue(enc.encode(`data: ${JSON.stringify({ response: payload })}\n\n`));
+              controller.enqueue(enc.encode('data: [DONE]\n\n'));
+              controller.close();
+            },
+          });
+        },
+      },
+    });
+    const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+      method: 'POST',
+      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+      body: JSON.stringify({ message: c.message, lang: c.lang, stream: true, history: [], chatSession: sessionTok }),
+    }), env);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get('content-type') || '', /text\/event-stream/);
+    assert.equal(seen.length, 1);
+    assert.equal(seen[0].model, ASSISTANT_MODEL);
+    assert.equal(seen[0].opts.max_tokens, 240);
+    assert.equal(seen[0].opts.temperature, 0.5);
+    assert.equal(seen[0].opts.chat_template_kwargs, undefined);
+    const body = await res.text();
+    const doneMatch = body.match(/event: done\ndata: (.+)/);
+    assert.ok(doneMatch, `done event emitted for "${c.message}"`);
+    const done = JSON.parse(doneMatch[1]);
+    assert.equal(done.handoff, false, `handoff=false for "${c.message}"`);
+    assert.equal(done.lang, c.lang);
+    assert.equal(done.reply, c.reply);
+  }
+});
+
+test('SSE /v1/assistant closes cleanly with tryAgain on hanging reader.read(), empty 0-token stream, and mid-stream cutoff/error', async (t) => {
+  const pepper = 'sse-stall-pepper';
+  const ip = '203.0.113.92';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  t.mock.method(console, 'log', () => {});
+  t.mock.method(console, 'error', () => {});
+  const enc = new TextEncoder();
+
+  async function postStream(message, lang, run) {
+    const env = baseEnv({ CODE_PEPPER: pepper, ASSISTANT_AI_TIMEOUT_MS: '25', AI: { run } });
+    const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+      method: 'POST',
+      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+      body: JSON.stringify({ message, lang, stream: true, history: [], chatSession: sessionTok }),
+    }), env);
+    assert.equal(res.status, 200);
+    const body = await res.text();
+    const doneMatch = body.match(/event: done\ndata: (.+)/);
+    return { body, done: doneMatch ? JSON.parse(doneMatch[1]) : null };
+  }
+
+  // 1. Stream resolves immediately, then reader.read() hangs with 0 tokens forever -> retries once, emits tryAgain
+  let hangCalls = 0;
+  const hangRes = await postStream('Selam nasılsın', 'tr', async () => {
+    hangCalls += 1;
+    return new ReadableStream({ start() {} });
+  });
+  assert.equal(hangCalls, 2);
+  assert.equal(hangRes.done.handoff, false);
+  assert.equal(hangRes.done.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+
+  // 2. Empty 0-token stream closes immediately -> retries once, emits tryAgain
+  let emptyCalls = 0;
+  const emptyRes = await postStream('how are you', 'en', async () => {
+    emptyCalls += 1;
+    return new ReadableStream({
+      start(controller) {
+        controller.close();
+      },
+    });
+  });
+  assert.equal(emptyCalls, 2);
+  assert.equal(emptyRes.done.handoff, false);
+  assert.equal(emptyRes.done.reply, ASSISTANT_MESSAGES.tryAgain.en);
+
+  // 3. Stream emits partial delta and then stalls mid-stream -> bounds read timeout, closes with tryAgain
+  const midStall = await postStream('Selam nasılsın', 'tr', async () => {
+    return new ReadableStream({
+      start(controller) {
+        controller.enqueue(enc.encode('data: {"response":"{\\"abuse\\":false,\\"handoff\\":false,\\"reply\\":\\"Merh"}\n\n'));
+      },
+    });
+  });
+  assert.equal(midStall.done.handoff, false);
+  assert.equal(midStall.done.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+
+  // 4. Stream emits partial delta then errors mid-stream -> closes with tryAgain
+  const midErr = await postStream('מה נשמע', 'he', async () => {
+    return new ReadableStream({
+      start(controller) {
+        controller.enqueue(enc.encode('data: {"response":"{\\"abuse\\":false,\\"handoff\\":false,\\"reply\\":\\"שלו"}\n\n'));
+        controller.error(new Error('upstream connection reset'));
+      },
+    });
+  });
+  assert.equal(midErr.done.handoff, false);
+  assert.equal(midErr.done.reply, ASSISTANT_MESSAGES.tryAgain.he);
 });

@@ -46,6 +46,7 @@
     forwarded: { tr:'Sohbetin info@bosphorly.com adresine iletildi. En kısa sürede e-posta ile dönüş yapacağız.', en:'Your conversation was forwarded to info@bosphorly.com. We will reply by email shortly.', ru:'Переписка отправлена на info@bosphorly.com. Мы скоро ответим по e-mail.', uk:'Розмову надіслано на info@bosphorly.com. Ми скоро відповімо електронною поштою.', de:'Deine Nachricht wurde an info@bosphorly.com weitergeleitet. Wir antworten in Kürze per E-Mail.', fr:'Ta conversation a été transmise à info@bosphorly.com. Nous te répondrons vite par e-mail.', nl:'Je gesprek is doorgestuurd naar info@bosphorly.com. We reageren spoedig per e-mail.', ar:'تم إرسال محادثتك إلى info@bosphorly.com. سنرد عليك عبر البريد الإلكتروني قريبًا.', he:'השיחה הועברה אל info@bosphorly.com. נחזור אליך בדוא״ל בהקדם.', az:'Söhbətin info@bosphorly.com ünvanına göndərildi.', fa:'گفتگویت به info@bosphorly.com ارسال شد. به‌زودی پاسخ می‌دهیم.', es:'Tu conversación se envió a info@bosphorly.com. Responderemos por correo pronto.', it:'La conversazione è stata inoltrata a info@bosphorly.com. Risponderemo via e-mail.', pt:'Sua conversa foi enviada para info@bosphorly.com. Responderemos por e-mail em breve.', hr:'Razgovor je proslijeđen na info@bosphorly.com.', hu:'A beszélgetést továbbítottuk a info@bosphorly.com címre.', bs:'Razgovor je proslijeđen na info@bosphorly.com.', zh:'你的对话已转发至 info@bosphorly.com，我们会尽快邮件回复。', ja:'会話内容を info@bosphorly.com に送信したよ。まもなくメールで返信するね。', ko:'대화 내용이 info@bosphorly.com으로 전달되었어요. 곧 이메일로 회신드릴게요.', hi:'तुम्हारी बातचीत info@bosphorly.com पर भेज दी गई है।', bn:'তোমার কথোপকথন info@bosphorly.com-এ পাঠানো হয়েছে।', id:'Percakapan kamu sudah diteruskan ke info@bosphorly.com.' },
     verifyFirst: { tr:'Lütfen önce güvenlik doğrulamasını tamamla.', en:'Please complete the security check first.', ru:'Пожалуйста, сначала пройди проверку безопасности.', uk:'Будь ласка, спочатку пройди перевірку безпеки.', de:'Bitte schließe zuerst die Sicherheitsprüfung ab.', fr:'Complète d’abord la vérification de sécurité.', nl:'Voltooi eerst de beveiligingscontrole.', ar:'يرجى إكمال التحقق الأمني أولاً.', he:'נא להשלים תחילה את בדיקת האבטחה.', az:'Zəhmət olmasa təhlükəsizlik yoxlamasını tamamla.', fa:'لطفاً ابتدا بررسی امنیتی را تکمیل کن.', es:'Completa primero la verificación de seguridad.', it:'Completa prima la verifica di sicurezza.', pt:'Conclua primeiro a verificação de segurança.', hr:'Molimo dovrši sigurnosnu provjeru.', hu:'Kérjük, először végezd el a biztonsági ellenőrzést.', bs:'Molimo dovrši sigurnosnu provjeru.', zh:'请先完成安全验证。', ja:'先にセキュリティ確認を完了してね。', ko:'먼저 보안 확인을 완료해 주세요.', hi:'कृपया पहले सुरक्षा जांच पूरी करो।', bn:'অনুগ্রহ করে প্রথমে নিরাপত্তা যাচাই সম্পন্ন করো।', id:'Harap selesaikan pemeriksaan keamanan dulu ya.' },
     offline: { tr:'Mimo şu an çevrimdışı; soruların için info@bosphorly.com adresine yazabilirsin.', en:'Mimo is currently offline; please email info@bosphorly.com for help.', ru:'Mimo сейчас недоступен; напиши на info@bosphorly.com.', uk:'Mimo зараз недоступний; напиши на info@bosphorly.com.', de:'Mimo ist offline; schreib uns an info@bosphorly.com.', fr:'Mimo est hors ligne ; écris à info@bosphorly.com.', nl:'Mimo is offline; mail naar info@bosphorly.com.', ar:'Mimo غير متصل حاليًا؛ يرجى مراسلة info@bosphorly.com.', he:'Mimo לא זמין כרגע; כתוב ל-info@bosphorly.com.', az:'Mimo hazırda oflayndır; info@bosphorly.com ünvanına yaz.', fa:'Mimo آفلاین است؛ لطفاً به info@bosphorly.com ایمیل بزن.', es:'Mimo está desconectado; escribe a info@bosphorly.com.', it:'Mimo non è disponibile; scrivi a info@bosphorly.com.', pt:'Mimo está offline; escreva para info@bosphorly.com.', hr:'Mimo je izvan mreže; piši na info@bosphorly.com.', hu:'Mimo jelenleg offline; írj a info@bosphorly.com címre.', bs:'Mimo je van mreže; piši na info@bosphorly.com.', zh:'Mimo 当前离线，请发送邮件至 info@bosphorly.com。', ja:'Mimoは現在オフラインです。info@bosphorly.com までメールで連絡してね。', ko:'Mimo가 현재 오프라인이에요. info@bosphorly.com으로 문의해 주세요.', hi:'Mimo अभी ऑफ़लाइन है; info@bosphorly.com पर ईमेल करो।', bn:'Mimo এখন অফলাইন; info@bosphorly.com-এ ইমেইল করো।', id:'Mimo sedang offline; silakan email ke info@bosphorly.com.' },
+    tryAgain: { tr:'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?', en:'One second, the seagulls distracted me 😅 Could you write that again?', ru:'Секунду, чайки сбили меня с толку 😅 Напишете ещё раз?', uk:'Секунду, чайки збили мене з пантелику 😅 Напишете ще раз?', de:'Eine Sekunde, die Möwen haben mich abgelenkt 😅 Schreibst du es noch einmal?', fr:'Une seconde, les mouettes m’ont distrait 😅 Tu peux réécrire ?', nl:'Een seconde, de meeuwen leidden me af 😅 Schrijf je het nog een keer?', ar:'لحظة، شتتني النوارس 😅 هل تعيد كتابة رسالتك؟', he:'רגע, השחפים בלבלו אותי 😅 אפשר לכתוב שוב?', az:'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazar mısınız?', fa:'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 دوباره می‌نویسید؟', es:'Un segundo, las gaviotas me distrajeron 😅 ¿Lo escribes otra vez?', it:'Un secondo, i gabbiani mi hanno distratto 😅 Lo riscrivi?', pt:'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?', hr:'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovno?', hu:'Egy pillanat, a sirályok elvonták a figyelmemet 😅 Megírnád még egyszer?', bs:'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovo?', zh:'等一下，海鸥把我弄糊涂了 😅 可以再写一遍吗？', ja:'ちょっと待って、カモメに気を取られちゃった 😅 もう一度書いてもらえる？', ko:'잠깐, 갈매기 때문에 정신이 팔렸어요 😅 다시 한 번 적어 주실래요?', hi:'एक सेकंड, सीगल ने मुझे भटका दिया 😅 क्या आप फिर से लिखेंगे?', bn:'এক সেকেন্ড, গাঙচিলগুলো আমাকে বিভ্রান্ত করেছে 😅 আবার লিখবেন?', id:'Sebentar, burung camar mengalihkan perhatianku 😅 Bisa tulis lagi?' },
     continueTg: { tr:"Telegram'dan devam et", en:'Continue on Telegram', ru:'Продолжить в Telegram', uk:'Продовжити в Telegram', de:'Auf Telegram fortsetzen', fr:'Continuer sur Telegram', nl:'Ga verder op Telegram', ar:'تابع على تيليجرام', he:'המשך בטלגרם', az:'Telegram-da davam et', fa:'در تلگرام ادامه بده', es:'Continuar en Telegram', it:'Continua su Telegram', pt:'Continuar no Telegram', hr:'Nastavi na Telegramu', hu:'Folytatás Telegramon', bs:'Nastavi na Telegramu', zh:'在 Telegram 继续对话', ja:'Telegramで続ける', ko:'Telegram에서 계속하기', hi:'Telegram पर जारी रखो', bn:'Telegram-এ চালিয়ে যাও', id:'Lanjutkan di Telegram' },
     kindNote: { tr:'Mimo’ya nazik davrandığın için teşekkürler 💙 Saygısız dil kullanılırsa sohbet sonlanır.', en:'Thank you for being kind to Mimo 💙 The chat ends if disrespectful language is used.', ru:'Спасибо за вежливое общение с Mimo 💙 При неуважительном тоне чат завершается.', uk:'Дякуємо за ввічливе спілкування з Mimo 💙 У разі неповажного тону чат завершується.', de:'Danke, dass du freundlich zu Mimo bist 💙 Bei respektloser Sprache wird der Chat beendet.', fr:'Merci d’être bienveillant avec Mimo 💙 Le chat prend fin en cas de langage irrespectueux.', nl:'Bedankt dat je vriendelijk bent tegen Mimo 💙 Bij respectloos taalgebruik stopt de chat.', ar:'شكرًا للطفك مع Mimo 💙 تنتهي المحادثة في حال استخدام لغة غير محترمة.', he:'תודה שאתם נחמדים אל Mimo 💙 השיחה מסתיימת במקרה של שפה לא מכבדת.', az:'Mimo ilə nəzakətli davrandığın üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.', fa:'ممنون که با Mimo مهربان هستید 💙 در صورت استفاده از لحن نامحترمانه گفتگو پایان می‌یابد.', es:'Gracias por tratar con amabilidad a Mimo 💙 El chat finaliza si se usa lenguaje irrespetuoso.', it:'Grazie per essere gentile con Mimo 💙 La chat termina in caso di linguaggio irrispettoso.', pt:'Obrigado por tratar o Mimo com gentileza 💙 O chat é encerrado se houver linguagem desrespeitosa.', hr:'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.', hu:'Köszönjük, hogy kedves vagy Mimóval 💙 Tiszteletlen hangnem esetén a csevegés véget ér.', bs:'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.', zh:'感谢你温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。', ja:'Mimoに優しく接していただきありがとうございます 💙 礼儀を欠く言葉遣いがあった場合、チャットは終了します。', ko:'Mimo에게 다정하게 대해 주셔서 고마워요 💙 무례한 표현이 사용되면 대화가 종료됩니다.', hi:'Mimo के साथ विनम्र रहने के लिए धन्यवाद 💙 अपमानजनक भाषा का प्रयोग होने पर चैट समाप्त हो जाएगी।', bn:'Mimo-এর সাথে সদয় আচরণের জন্য ধন্যবাদ 💙 অসম্মানজনক ভাষা ব্যবহার করলে চ্যাট বন্ধ হয়ে যাবে।', id:'Terima kasih telah bersikap ramah kepada Mimo 💙 Obrolan akan berakhir jika bahasa tidak sopan digunakan.' },
     abuseClose: { tr:'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.', en:'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.', ru:'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у тебя есть вопрос, можешь написать на info@bosphorly.com.', uk:'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєш питання, напиши на info@bosphorly.com.', de:'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen kannst du an info@bosphorly.com schreiben.', fr:'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, tu peux écrire à info@bosphorly.com.', nl:'Op deze toon kan ik het gesprek niet voortzetten. Ik beëindig de chat hier. Als je een vraag hebt, kun je mailen naar info@bosphorly.com.', ar:'لا يمكنني متابعة المحادثة بهذه اللغة. أنهي المحادثة هنا. إذا كانت لديك مشكلة يمكنك الكتابة إلى info@bosphorly.com.', he:'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לך פנייה, ניתן לכתוב אל info@bosphorly.com.', az:'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualın varsa info@bosphorly.com ünvanına yaza bilərsən.', fa:'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی داری می‌توانی به info@bosphorly.com بنویسی.', es:'No puedo continuar la conversación con este lenguaje. Termino el chat aquí. Si tienes algún problema, puedes escribir a info@bosphorly.com.', it:'Non posso continuare la conversazione con questo linguaggio. Chiudo qui la chat. Se hai un problema, puoi scrivere a info@bosphorly.com.', pt:'Não posso continuar a conversa com essa linguagem. Encerro o chat aqui. Se tiver alguma questão, escreva para info@bosphorly.com.', hr:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imaš pitanje, možeš pisati na info@bosphorly.com.', hu:'Ilyen hangnemben nem tudom folytatni a beszélgetést. A csevegést itt lezárom. Ha kérdésed van, írhatsz az info@bosphorly.com címre.', bs:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imaš pitanje, možeš pisati na info@bosphorly.com.', zh:'我无法在这样的语言下继续对话。本次对话到此结束。如有问题，请发邮件至 info@bosphorly.com。', ja:'このような言葉遣いでは会話を続けられません。ここでチャットを終了します。ご用件がある場合は info@bosphorly.com までご連絡ください。', ko:'이러한 표현으로는 대화를 이어갈 수 없습니다. 여기서 대화를 종료합니다. 문의 사항이 있으시면 info@bosphorly.com으로 메일을 보내주세요.', hi:'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए तुम info@bosphorly.com पर लिख सकते हो।', bn:'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারো।', id:'Saya tidak dapat melanjutkan percakapan dengan bahasa seperti ini. Saya mengakhiri obrolan di sini. Jika ada masalah, silakan tulis ke info@bosphorly.com.' },
@@ -628,8 +629,44 @@
     sendBtn.disabled = true;
     showTyping();
     const recent = history.slice(-6);
-    const postAssistant = (authPayload) => fetch(`${apiBase}/v1/assistant`, {
+    const abortWaiters = [];
+    let streamTimedOut = false;
+    const streamAbort = typeof AbortController === 'function' ? new AbortController() : null;
+    const triggerStreamTimeout = () => {
+      if (streamTimedOut) return;
+      streamTimedOut = true;
+      if (streamAbort) { try { streamAbort.abort(); } catch {} }
+      while (abortWaiters.length) abortWaiters.shift()();
+    };
+    const streamTimeoutMs = Number(window.__BOSPHORLY_MIMO_STREAM_TIMEOUT_MS) > 0
+      ? Number(window.__BOSPHORLY_MIMO_STREAM_TIMEOUT_MS)
+      : 25000;
+    const streamCapTimer = setTimeout(triggerStreamTimeout, streamTimeoutMs);
+    const raceStreamCap = (promise, onTimeout) => {
+      if (streamTimedOut) {
+        if (onTimeout) onTimeout();
+        return Promise.reject(new Error('Assistant stream timeout'));
+      }
+      let waiter;
+      const timeoutP = new Promise((_, reject) => {
+        waiter = () => {
+          reject(new Error('Assistant stream timeout'));
+          if (onTimeout) onTimeout();
+        };
+        abortWaiters.push(waiter);
+      });
+      return Promise.race([promise, timeoutP]).then((val) => {
+        if (streamTimedOut) throw new Error('Assistant stream timeout');
+        return val;
+      }).finally(() => {
+        const idx = abortWaiters.indexOf(waiter);
+        if (idx !== -1) abortWaiters.splice(idx, 1);
+      });
+    };
+
+    const postAssistant = (authPayload) => raceStreamCap(fetch(`${apiBase}/v1/assistant`, {
       method: 'POST',
+      ...(streamAbort ? { signal: streamAbort.signal } : {}),
       headers: {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream, application/json',
@@ -643,7 +680,7 @@
         stream: true,
         ...authPayload,
       }),
-    });
+    }));
 
     let streamMsg = null;
     let streamText = '';
@@ -689,7 +726,9 @@
       };
 
       while (true) {
-        const { done, value } = await reader.read();
+        const { done, value } = await raceStreamCap(reader.read(), () => {
+          try { Promise.resolve(reader.cancel()).catch(() => {}); } catch {}
+        });
         if (done) break;
         buf += decoder.decode(value, { stream: true });
         const lines = buf.split('\n');
@@ -700,7 +739,8 @@
       if (buf) {
         for (const line of buf.split('\n')) processLine(line);
       }
-      return finalData || { reply: streamText };
+      if (!finalData) throw new Error('Incomplete assistant stream');
+      return finalData;
     };
 
     try {
@@ -781,13 +821,16 @@
       }
       if (data.handoff) handoffBox.hidden = false;
     } catch {
+      clearTimeout(streamCapTimer);
       hideTyping();
+      const errText = tr('tryAgain') || tr('offline');
       if (streamMsg) {
-        setBotMessageBody(streamMsg.div, streamText || tr('offline'));
+        setBotMessageBody(streamMsg.div, errText);
       } else {
-        renderMsg('bot', tr('offline'));
+        renderMsg('bot', errText);
       }
     } finally {
+      clearTimeout(streamCapTimer);
       hideTyping();
       sendBtn.disabled = isChatClosed;
     }

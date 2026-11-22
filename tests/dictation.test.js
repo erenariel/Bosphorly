@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import worker from '../backend/worker.js';
 import {
+  ASSISTANT_MODEL,
   SPEECH_LOCALES,
   SUPPORTED_LANGS,
   TRANSCRIBE_MAX_BYTES,
@@ -231,7 +232,7 @@ test('telegram voice is transcribed and passed to Mimo; audio over 60s is refuse
   }), base);
   assert.equal(voice.status, 200);
   assert.ok(models.includes(WHISPER_MODEL));
-  assert.ok(models.includes('@cf/zai-org/glm-4.7-flash'));
+  assert.ok(models.includes(ASSISTANT_MODEL));
   const sent = fetches.includes('https://api.telegram.org/botbot-tok/sendMessage') || fetches.some((u) => u.includes('sendMessage'));
   assert.equal(sent, true);
   const state = tgState.get('4242');

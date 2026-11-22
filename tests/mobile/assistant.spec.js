@@ -750,3 +750,89 @@ test('panel open pre-warms Turnstile token in background, shows 8s intermediate 
   expect(await page.evaluate(() => window.__sseReq.turnstileToken)).toBe('ts-prewarmed-1');
   expect(await page.evaluate(() => window.__tsStats.resets)).toBe(0);
 });
+
+test('client enforces 25s stream upper bound and shows localized tryAgain when 0 tokens arrive or SSE cuts off mid-stream', async ({ page }) => {
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: `window.turnstile = { render(el, opts) { setTimeout(() => opts.callback('ts-stream-err-1'), 10); return 1; }, reset() {} };`,
+    });
+  });
+
+  // Case 1: EN chat where upstream SSE yields 0 tokens and stalls past upper limit -> typing clears and tryAgain appears (not offline)
+  await page.goto('/index.html?lang=en');
+  await page.locator('.bc-fab').click();
+  const panelEn = page.locator('.bc-panel');
+  await expect(panelEn).toBeVisible();
+  await expect(panelEn.locator('.bc-typing')).toHaveCount(0);
+
+  await page.evaluate(() => {
+    window.__BOSPHORLY_MIMO_STREAM_TIMEOUT_MS = 220;
+    window.__capturedSignal = null;
+    const origFetch = window.fetch.bind(window);
+    window.fetch = async (url, init) => {
+      if (String(url).includes('/v1/assistant')) {
+        window.__capturedSignal = init?.signal || null;
+        const stream = new ReadableStream({
+          start() {
+            // Never emits tokens and never closes -> simulates 50+s stall
+          },
+        });
+        return new Response(stream, {
+          status: 200,
+          headers: { 'Content-Type': 'text/event-stream; charset=utf-8' },
+        });
+      }
+      return origFetch(url, init);
+    };
+  });
+
+  await page.waitForTimeout(30);
+  await panelEn.locator('.bc-input').fill('Hi, how are you?');
+  await panelEn.locator('.bc-send').click();
+
+  await expect(panelEn.locator('.bc-typing')).toHaveCount(1);
+  await expect(panelEn.locator('.bc-msg.bot').last()).toContainText('One second, the seagulls distracted me 😅 Could you write that again?', { timeout: 2500 });
+  await expect(panelEn.locator('.bc-typing')).toHaveCount(0);
+  await expect(panelEn.locator('.bc-msg.bot').last()).not.toContainText('offline');
+  await expect(panelEn.locator('.bc-input')).toBeEnabled();
+  expect(await page.evaluate(() => Boolean(window.__capturedSignal?.aborted))).toBe(true);
+
+  // Case 2: TR chat where SSE emits a partial delta then drops mid-stream before event: done -> typing clears and tryAgain replaces partial text
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panelTr = page.locator('.bc-panel');
+  await expect(panelTr).toBeVisible();
+
+  await page.evaluate(() => {
+    const enc = new TextEncoder();
+    const origFetch = window.fetch.bind(window);
+    window.fetch = async (url, init) => {
+      if (String(url).includes('/v1/assistant')) {
+        const stream = new ReadableStream({
+          async start(controller) {
+            controller.enqueue(enc.encode('event: delta\ndata: {"t":"Selam! Şu an düşünüyor..."}\n\n'));
+            await new Promise((r) => setTimeout(r, 30));
+            controller.close(); // Connection drops before event: done
+          },
+        });
+        return new Response(stream, {
+          status: 200,
+          headers: { 'Content-Type': 'text/event-stream; charset=utf-8' },
+        });
+      }
+      return origFetch(url, init);
+    };
+  });
+
+  await page.waitForTimeout(30);
+  await panelTr.locator('.bc-input').fill('Selam nasılsın');
+  await panelTr.locator('.bc-send').click();
+
+  const lastBotTr = panelTr.locator('.bc-msg.bot').last();
+  await expect(lastBotTr).toContainText('Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?', { timeout: 2500 });
+  await expect(panelTr.locator('.bc-typing')).toHaveCount(0);
+  await expect(lastBotTr).not.toContainText('Şu an düşünüyor');
+  await expect(lastBotTr).not.toContainText('çevrimdışı');
+  await expect(panelTr.locator('.bc-input')).toBeEnabled();
+});
