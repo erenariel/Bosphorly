@@ -292,7 +292,7 @@ async function getState(env, chatId, now = Date.now()) {
 
 async function saveState(env, chatId, pendingHandoff, lang, history, now = Date.now()) {
   if (!env.DB) return;
-  const trimmed = (Array.isArray(history) ? history : []).slice(-6);
+  const trimmed = (Array.isArray(history) ? history : []).slice(-4);
   const mode = typeof pendingHandoff === 'number' ? pendingHandoff : (pendingHandoff ? 1 : 0);
   await env.DB.prepare(
     `INSERT INTO telegram_handoff_state (chat_id, pending_handoff, lang, context_json, updated_at)
@@ -463,7 +463,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now()) {
         ...state.history,
         { role: 'user', content: redactSensitive(text).text },
         { role: 'assistant', content: reply },
-      ].slice(-6);
+      ].slice(-4);
       await saveState(env, chatId, 0, activeLang, nextHistory, now);
       await sendTelegramMessage(env, chatId, reply);
       return new Response(JSON.stringify({ ok: true, handoff: false }), { status: 200 });
@@ -494,7 +494,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now()) {
     ...history,
     { role: 'user', content: cleanUser },
     { role: 'assistant', content: res.reply },
-  ].slice(-6);
+  ].slice(-4);
 
   if (res.handoffOffer) {
     await saveState(env, chatId, 2, res.lang || lang, nextHistory, now);

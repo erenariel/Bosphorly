@@ -124,6 +124,66 @@ CRUISE_FLAGSHIP_IDS = {
     "azure-halfbosphorus",
 }
 
+TOUR_CATEGORY_MAP = {
+    "bb-morning": "cruise",
+    "bb-afternoon": "cruise",
+    "bb-sunset": "cruise",
+    "bb-oldcity": "city",
+    "bb-europeasia": "city",
+    "orient-classic": "cruise",
+    "orient-dinner": "dinner",
+    "orient-alacarte": "dinner",
+    "orient-private-newyear": "dinner",
+    "orient-newyear-special": "dinner",
+    "sea-land": "cruise",
+    "sl-afternoon": "cruise",
+    "sl-sunset": "cruise",
+    "sl-generic-cruise": "cruise",
+    "sl-privateyacht": "cruise",
+    "sl-two-continents": "city",
+    "sl-oldcity": "city",
+    "sl-asia-half": "city",
+    "sl-asia-afternoon": "city",
+    "sl-islands": "islands",
+    "sl-turkish-breakfast": "dinner",
+    "sl-dinner": "dinner",
+    "azure-bosphorus": "cruise",
+    "azure-halfbosphorus": "cruise",
+    "azure-two-continents": "city",
+    "azure-city": "city",
+    "azure-dinner": "dinner",
+    "azure-islands": "islands",
+    "azure-bursa": "day",
+    "azure-sapanca": "day",
+    "azure-sileagva": "day",
+    "azure-yalova": "day",
+    "azure-triple-eurplane": "day",
+    "azure-triple-eurbus": "day",
+    "azure-transfer": "transfer",
+    "alaturka": "wellness",
+    "alaturka-peeling": "wellness",
+    "alaturka-sultan": "wellness",
+    "alaturka-massage": "wellness",
+}
+
+MIMO_FAVORITE_BY_CATEGORY = {
+    "transfer": "transfer-rates",
+    "cruise": "tour-bb-sunset",
+    "dinner": "tour-orient-dinner",
+    "city": "tour-bb-oldcity",
+    "wellness": "tour-alaturka",
+    "islands": "tour-azure-islands",
+    "day": "tour-azure-bursa",
+    "themed": "discover-tour-ottoman-imperial",
+    "hoods": "discover-tour-kadikoy-moda",
+    "panoramic": "discover-tour-panoramic-bus",
+    "private": "discover-tour-private-guide",
+    "multi": "discover-tour-anatolian-civilizations",
+}
+
+MIMO_FAVORITE_IDS = set(MIMO_FAVORITE_BY_CATEGORY.values())
+
+
 
 def build_chunks() -> list[dict[str, str]]:
     chunks: list[dict[str, str]] = []
@@ -192,8 +252,10 @@ def build_chunks() -> list[dict[str, str]]:
         "id": "transfer-rates",
         "title": "Airport transfer rates (IST / SAW to Sultanahmet) / Havalimanı transfer fiyatları",
         "url": "https://bosphorly.com/index.html#booking",
+        "category": "transfer",
+        "favorite": True,
         "text": (
-            "Fixed one-way airport transfer rates to Sultanahmet per vehicle (confirmed upon request): "
+            "Mimo'nun favorisi 💙 (Transfer): Fixed one-way airport transfer rates to Sultanahmet per vehicle (confirmed upon request): "
             + "; ".join(rate_parts)
             + ". Istanbul Airport (IST) -> Sultanahmet €60, Sabiha Gökçen (SAW) -> Sultanahmet €65. "
             "Other zones require an individual quote. "
@@ -212,6 +274,7 @@ def build_chunks() -> list[dict[str, str]]:
             "id": f"offer-{offer['id']}",
             "title": offer["name"],
             "url": f"https://bosphorly.com/booking.html?service={offer['id']}",
+            "category": offer.get("category", ""),
             "text": (
                 f"{offer['name']} ({offer.get('category', '')}, {offer.get('duration', '')}): "
                 f"{offer.get('description', '')} Confirmed upon request."
@@ -222,15 +285,27 @@ def build_chunks() -> list[dict[str, str]]:
     # 4. Public market prices (tours & hammam) — compact text + 23-language keywords
     for rec in market.get("records", []):
         rid = rec.get("id", "")
+        chunk_id = f"tour-{rid}"
+        cat = TOUR_CATEGORY_MAP.get(rid, "cruise")
+        is_fav = chunk_id in MIMO_FAVORITE_IDS
         title_en = rec.get("title", "")
         title_tr = rec.get("title_tr", "")
         price = rec.get("price")
         currency = rec.get("currency", "EUR")
         basis = rec.get("basis", "per_person")
+        dur_prices = sorted({
+            d.get("price")
+            for opt in (rec.get("options") or [])
+            for d in (opt.get("durations") or [])
+            if d.get("price") is not None
+        })
+        extra_price = ""
+        if dur_prices:
+            extra_price = " Options: " + "/".join(str(p) for p in dur_prices) + f" {currency}."
         price_str = (
-            f"Approx. {price} {currency} ({basis}); confirmed upon request."
+            f"Approx. {price} {currency} ({basis}); confirmed upon request.{extra_price}"
             if price is not None
-            else "Confirmed upon request."
+            else f"Confirmed upon request.{extra_price}"
         )
         details = rec.get("details") or {}
         en_det = details.get("en") or {}
@@ -239,8 +314,9 @@ def build_chunks() -> list[dict[str, str]]:
         if len(summary) > 180:
             summary = summary[:177].rsplit(" ", 1)[0] + "…"
         duration = en_det.get("duration") or tr_det.get("duration") or ""
+        fav_prefix = "Mimo'nun favorisi 💙: " if is_fav else ""
         text = (
-            f"{title_en}. Operator: {rec.get('operator', '')}. {duration}. "
+            f"{fav_prefix}{title_en}. Operator: {rec.get('operator', '')}. {duration}. "
             f"{price_str} {summary} Booking: https://bosphorly.com/booking.html?service={rid}"
         ).strip()
 
@@ -256,14 +332,17 @@ def build_chunks() -> list[dict[str, str]]:
             kw_parts.append(HAMMAM_KEYWORDS_23)
         if rid == "azure-transfer":
             kw_parts.append("airport transfer")
-
-        chunks.append({
-            "id": f"tour-{rid}",
+        chunk_obj = {
+            "id": chunk_id,
             "title": f"{title_en} / {title_tr}" if title_tr else title_en,
             "url": f"https://bosphorly.com/booking.html?service={rid}",
+            "category": cat,
             "text": text,
             "keywords": " | ".join(dict.fromkeys(kw_parts)),
-        })
+        }
+        if is_fav:
+            chunk_obj["favorite"] = True
+        chunks.append(chunk_obj)
 
     # 5. Discover places, 2-day route stops, themed/private tours & city guide
     master = json.loads((ROOT / "tools/discover-src/master.json").read_text(encoding="utf-8"))
@@ -329,8 +408,11 @@ def build_chunks() -> list[dict[str, str]]:
         })
 
     for tid, (name_en, desc_en) in disc_en.get("tours", {}).items():
+        chunk_id = f"discover-tour-{tid}"
         name_tr, desc_tr = disc_tr.get("tours", {}).get(tid, ["", ""])
         mt = master_tours.get(tid, {})
+        t_cat = mt.get("cat") or ""
+        is_fav = chunk_id in MIMO_FAVORITE_IDS
         t_meta = []
         if mt.get("from"):
             t_meta.append(f"Market reference from approx. {mt['from'][0]} {mt['from'][1]} (confirmed upon request)")
@@ -347,13 +429,19 @@ def build_chunks() -> list[dict[str, str]]:
             loc_t = dpack.get("tours", {}).get(tid)
             if loc_t and loc_t[0] and loc_t[0] not in t_aliases:
                 t_aliases.append(loc_t[0])
-        chunks.append({
-            "id": f"discover-tour-{tid}",
+        fav_prefix = "Mimo'nun favorisi 💙: " if is_fav else ""
+        t_chunk = {
+            "id": chunk_id,
             "title": f"{name_en} / {name_tr}" if name_tr else name_en,
             "url": "https://bosphorly.com/tours.html",
-            "text": f"{name_en}: {desc_en} | {name_tr}: {desc_tr} {' '.join(t_meta)}".strip(" |"),
+            "text": f"{fav_prefix}{name_en}: {desc_en} | {name_tr}: {desc_tr} {' '.join(t_meta)}".strip(" |"),
             "keywords": " | ".join(t_aliases),
-        })
+        }
+        if t_cat:
+            t_chunk["category"] = t_cat
+        if is_fav:
+            t_chunk["favorite"] = True
+        chunks.append(t_chunk)
 
     en_ui = disc_en.get("ui", {})
     tr_ui = disc_tr.get("ui", {})

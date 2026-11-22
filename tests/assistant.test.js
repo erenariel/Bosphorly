@@ -1,6 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
+import knowledge from '../backend/knowledge.json' with { type: 'json' };
+import {
+  MIMO_FAVORITE_LABEL,
+  PRICE_CHECK_BOOKING,
+  TIME_HUMOR_NOTES,
+  WARM_FAREWELL,
+  buildKbPriceIndex,
+  detectReplyLanguage,
+  enforceEthicalBoundary,
+  enforceMaxEmojis,
+  enforcePriceSafetyBelt,
+  extractFlagsTag,
+  getFewShotEntryCount,
+  getFewShotsPromptBlock,
+  stripModelThinking,
+} from '../backend/mimo-personality.js';
 import worker from '../backend/worker.js';
 import {
   AI_TIMEOUT_MS,
@@ -374,7 +390,7 @@ test('invalid Turnstile token is rejected with 403 and CORS is restricted to PUB
 });
 
 test('AI error or empty/nonsensical output falls back silently to handoff and supports object/choices formats', async () => {
-  assert.equal(ASSISTANT_MODEL, '@cf/zai-org/glm-4.7-flash');
+  assert.equal(ASSISTANT_MODEL, '@cf/google/gemma-4-26b-a4b-it');
 
   const res = await runAssistant({
     message: 'Bosphorus cruise schedule?',
@@ -920,12 +936,9 @@ test('"Sen insan mısın?" returns a response stating Mimo is an AI assistant (m
       AI: {
         run: async (_model, opts) => {
           const sys = opts.messages.find((m) => m.role === 'system').content;
-          systemPromptSawMimo = sys.includes("Bosphorly'nin yapay zekâ asistanı Mimo") && sys.includes('NEVER claim to be human');
+          systemPromptSawMimo = /Bosphorly[’']nin yapay zek[aâ] asistanı Mimo/.test(sys) && /never human/i.test(sys);
           return {
-            response: JSON.stringify({
-              handoff: false,
-              reply: 'Hayır, insan değilim; ben Bosphorly’nin yapay zekâ asistanı Mimo’yum! 🌊 Sana İstanbul’da nasıl yardımcı olabilirim?',
-            }),
+            response: 'Hayır, insan değilim; ben Bosphorly’nin yapay zekâ asistanı Mimo’yum! 🌊 Sana İstanbul’da nasıl yardımcı olabilirim?\n[[flags:abuse=0;handoff=0]]',
           };
         },
       },
@@ -968,10 +981,7 @@ test('Mimo addresses guest by name from conversation history without storing nam
           const sys = opts.messages.find((m) => m.role === 'system').content;
           assert.ok(sys.includes('Deniz'));
           return {
-            response: JSON.stringify({
-              handoff: false,
-              reply: 'Sabah Boğaz turu yaklaşık €15 civarındadır 🌊⛵✨🎉',
-            }),
+            response: 'Sabah Boğaz turu yaklaşık €25 civarındadır 🌊⛵✨🎉\n[[flags:abuse=0;handoff=0]]',
           };
         },
       },
@@ -1334,7 +1344,7 @@ test('chatSession: Turnstile required on first request, valid chatSession accept
     DB: mockDb,
     AI: {
       run: async () => ({
-        response: JSON.stringify({ handoff: false, reply: 'Sabah Boğaz turu €15 civarındadır. https://bosphorly.com/booking.html?service=bb-morning&lang=tr' }),
+        response: 'Sabah Boğaz turu €25 civarındadır. https://bosphorly.com/booking.html?service=bb-morning&lang=tr\n[[flags:abuse=0;handoff=0]]',
       }),
     },
   });
@@ -1518,23 +1528,24 @@ function chatModel(reply, extra = {}) {
 
 test('small talk questions go to the model with a casual-chat prompt and no handoff', async () => {
   const cases = [
-    { message: 'nasılsın', pageLang: 'tr' },
-    { message: 'how are you', pageLang: 'en' },
-    { message: 'מה נשמע', pageLang: 'he' },
-    { message: 'кто ты', pageLang: 'ru' },
-    { message: 'futbol sever misin?', pageLang: 'tr' },
-    { message: 'çok yorgunum', pageLang: 'tr' },
+    { message: 'nasılsın', pageLang: 'tr', reply: 'Çok iyiyim, Boğaz’dan esen rüzgârla enerji doldum 😊 Sen nasılsın?' },
+    { message: 'how are you', pageLang: 'en', reply: 'Doing great by the Bosphorus today 😊 How are you?' },
+    { message: 'מה נשמע', pageLang: 'he', reply: 'מעולה ליד הבוספורוס היום 😊 מה שלומך?' },
+    { message: 'кто ты', pageLang: 'ru', reply: 'Я Мимо с Босфора, ИИ-помощник 😊 Как дела?' },
+    { message: 'futbol sever misin?', pageLang: 'tr', reply: 'Boğaz kıyısında futbol sohbeti harika gider 😊 Senin takımın hangisi?' },
+    { message: 'çok yorgunum', pageLang: 'tr', reply: 'Boğaz havası iyi gelir 😊 Bir çay molası ister misin?' },
   ];
   for (const c of cases) {
-    const m = chatModel('Çok iyiyim, Boğaz’dan esen rüzgârla enerji doldum 😊 Sen nasılsın?');
+    const m = chatModel(c.reply);
     const res = await runAssistant({ ...c, env: m.env, actorKey: `chat-${c.message}` });
     assert.equal(m.calls.length, 1, `model called for "${c.message}"`);
     assert.equal(res.handoff, false, `handoff=false for "${c.message}"`);
     assert.ok(!res.handoffOffer, `no handoff offer for "${c.message}"`);
-    assert.ok(res.reply.includes('Boğaz'), `model reply used for "${c.message}"`);
+    assert.ok(res.reply.length > 5, `model reply used for "${c.message}"`);
     const system = m.calls[0].messages[0].content;
-    assert.ok(system.includes('SOHBET (CASUAL CHAT)'), 'chat rules in the system prompt');
-    assert.ok(system.includes('never claim to be human'), 'Mimo never claims to be human');
+    assert.ok(system.includes('Casual chat'), 'chat personality prompt used');
+    assert.ok(system.includes('never human'), 'Mimo never claims to be human');
+    assert.ok(system.includes('EXAMPLES:'), 'few-shot examples injected into prompt');
   }
   assert.equal(classifySmallTalk('nasılsın'), 'chat');
   assert.equal(classifySmallTalk('how are you'), 'chat');
@@ -1549,7 +1560,7 @@ test('small talk asks the model for a short, warm reply without catalog context 
   assert.ok(!res.handoffOffer);
   assert.equal(res.reply, 'İyiyim, teşekkürler! Sen nasılsın?');
   const system = m.calls[0].messages[0].content;
-  assert.ok(system.includes('THIS MESSAGE IS SMALL TALK'));
+  assert.ok(system.includes('Casual chat'));
   assert.ok(system.includes('(Small talk: no catalog context needed.)'));
   assert.ok(m.calls[0].temperature > 0.2, 'livelier temperature for casual chat');
 });
@@ -1579,19 +1590,25 @@ test('the canned welcome is only for an opening plain hello; a hello mid-convers
   }
 });
 
-test('Mimo does not send the same reply twice in a row', async () => {
-  const replies = ['Harika bir gün! Sen nasılsın?', 'Bugün enerjim yerinde 😊 Senin günün nasıl geçiyor?'];
+test('Mimo 2.0 skips extra repeat-check second model call for faster latency', async () => {
   const calls = [];
-  const env = { AI: { run: async (model, opts) => { calls.push(opts); return { response: JSON.stringify({ handoff: false, reply: replies[Math.min(calls.length - 1, 1)] }) }; } } };
+  const env = {
+    AI: {
+      run: async (_model, opts) => {
+        calls.push(opts);
+        return { response: 'Harika bir gün! Sen nasılsın?\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  };
   const res = await runAssistant({
     message: 'nasılsın',
     pageLang: 'tr',
     history: [{ role: 'user', content: 'nasılsın' }, { role: 'assistant', content: 'Harika bir gün! Sen nasılsın?' }],
     env,
-    actorKey: 'no-repeat',
+    actorKey: 'no-repeat-fast',
   });
-  assert.equal(calls.length, 2, 'model asked once more after a repeated reply');
-  assert.equal(res.reply, replies[1]);
+  assert.equal(calls.length, 1, 'no second AI call triggered for repeat check');
+  assert.equal(res.reply, 'Harika bir gün! Sen nasılsın?');
 });
 
 test('political questions: the prompt tells Mimo to change the subject kindly, and the reply is not a handoff', async () => {
@@ -1600,7 +1617,7 @@ test('political questions: the prompt tells Mimo to change the subject kindly, a
   assert.equal(m.calls.length, 1);
   assert.equal(res.handoff, false);
   assert.ok(!res.handoffOffer);
-  assert.ok(m.calls[0].messages[0].content.includes('do not enter political or religious debates (kindly change the subject'));
+  assert.ok(m.calls[0].messages[0].content.includes('Stay out of politics/religion'));
   assert.ok(res.reply.includes('İstanbul'));
 });
 
@@ -1609,18 +1626,18 @@ test('a hello with anything else (question mark, second sentence, 3+ words, extr
     assert.equal(classifySmallTalk(message), 'greeting', `plain hello: ${message}`);
   }
   const withMore = [
-    { message: 'Merhaba, Boğaz turu ne kadar?', pageLang: 'tr' },
-    { message: 'Hi! Tour tomorrow', pageLang: 'en' },
-    { message: 'Merhaba. Yarın geliyorum', pageLang: 'tr' },
-    { message: 'Guten Morgen Mimo, alles gut', pageLang: 'de' },
-    { message: '你好，我想订游船', pageLang: 'zh' },
-    { message: 'שלום, אני מגיע מחר', pageLang: 'he' },
-    { message: 'Привет?', pageLang: 'ru' },
+    { message: 'Merhaba, Boğaz turu ne kadar?', pageLang: 'tr', reply: 'Harika, Boğaz turları hakkında yardımcı olayım!' },
+    { message: 'Hi! Tour tomorrow', pageLang: 'en', reply: 'Great, happy to help with tomorrow’s tour!' },
+    { message: 'Merhaba. Yarın geliyorum', pageLang: 'tr', reply: 'Harika, yarın için plan yapalım!' },
+    { message: 'Guten Morgen Mimo, alles gut', pageLang: 'de', reply: 'Guten Morgen! Wobei kann ich dir heute helfen?' },
+    { message: '你好，我想订游船', pageLang: 'zh', reply: '你好！我可以帮你看看博斯普鲁斯游船路线。' },
+    { message: 'שלום, אני מגיע מחר', pageLang: 'he', reply: 'שלום! אשמח לעזור לתכנן למחר באיסטנבול.' },
+    { message: 'Привет?', pageLang: 'ru', reply: 'Привет! Чем могу помочь в Стамбуле?' },
   ];
   for (const c of withMore) {
     assert.notEqual(classifySmallTalk(c.message), 'greeting', `not a plain hello: ${c.message}`);
-    const m = chatModel('Harika, yardımcı olayım!');
-    const res = await runAssistant({ ...c, env: m.env, actorKey: `hello-plus-${c.message}` });
+    const m = chatModel(c.reply);
+    const res = await runAssistant({ message: c.message, pageLang: c.pageLang, env: m.env, actorKey: `hello-plus-${c.message}` });
     assert.equal(m.calls.length, 1, `model called for "${c.message}"`);
     assert.ok(!res.reply.includes(ASSISTANT_MESSAGES.greeting[res.lang]), `no canned welcome for "${c.message}"`);
   }
@@ -1719,25 +1736,21 @@ test('model config disables thinking, caps tokens at 350, compacts prompt, and u
         capturedModel = model;
         capturedOpts = opts;
         return {
-          response: JSON.stringify({
-            abuse: false,
-            handoff: false,
-            reply: 'Sabah Boğaz turu kişi başı yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr Tarihini paylaşır mısın?',
-          }),
+          response: 'Sabah Boğaz turu kişi başı yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr Tarihini paylaşır mısın?\n[[flags:abuse=0;handoff=0]]',
         };
       },
     },
   };
   await runAssistant({ message: 'Boğaz turu fiyatı ne kadar?', pageLang: 'tr', env, actorKey: 'cfg-check' });
   assert.equal(capturedModel, ASSISTANT_MODEL);
+  assert.equal(capturedModel, '@cf/google/gemma-4-26b-a4b-it');
   assert.equal(capturedOpts.max_completion_tokens, 350);
-  assert.deepEqual(capturedOpts.chat_template_kwargs, { enable_thinking: false, clear_thinking: true });
+  assert.deepEqual(capturedOpts.chat_template_kwargs, { enable_thinking: false });
   const sys = capturedOpts.messages[0].content;
-  assert.ok(sys.length < 3600, `Compact system prompt + context should stay under 3600 chars (got ${sys.length})`);
-  assert.match(sys, /"sen" TR/);
-  assert.match(sys, /"du" DE/);
-  assert.match(sys, /"tu" FR/);
-  assert.match(sys, /"ты" RU/);
+  assert.ok(sys.includes('Samimi "sen" hitabı'));
+  assert.ok(sys.includes('EXAMPLES:'));
+  assert.ok(sys.includes('[[flags:abuse=0;handoff=0]]'));
+  assert.ok(sys.length < 4800, `Character prompt + 7 few-shots + 3 chunks stay compact (got ${sys.length})`);
 });
 
 test('repeat greetings and "Ben Mimo" intros are suppressed on follow-up turns and web chat after initial welcome', async () => {
@@ -1747,11 +1760,7 @@ test('repeat greetings and "Ben Mimo" intros are suppressed on follow-up turns a
       run: async (_m, opts) => {
         followPrompt = opts.messages[0].content;
         return {
-          response: JSON.stringify({
-            abuse: false,
-            handoff: false,
-            reply: 'İyi akşamlar! Merhaba! Ben Mimo, Bosphorly’nin yapay zekâ asistanıyım. Boğaz turu kişi başı yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr',
-          }),
+          response: 'İyi akşamlar! Merhaba! Ben Mimo, Bosphorly’nin yapay zekâ asistanıyım. Boğaz turu kişi başı yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr\n[[flags:abuse=0;handoff=0]]',
         };
       },
     },
@@ -1768,7 +1777,7 @@ test('repeat greetings and "Ben Mimo" intros are suppressed on follow-up turns a
     env,
     actorKey: 'followup-1',
   });
-  assert.match(followPrompt, /CONTINUING CHAT.*Do NOT say/i);
+  assert.match(followPrompt, /Continuing chat: you already greeted/i);
   assert.ok(!resHistory.reply.startsWith('İyi akşamlar'));
   assert.ok(!resHistory.reply.includes('Ben Mimo'));
   assert.match(resHistory.reply, /^Boğaz turu kişi başı yaklaşık 25 EUR/);
@@ -1856,14 +1865,14 @@ test('POST /v1/assistant supports SSE streaming (stream=true), filters <think> a
       run: async (_m, opts) => {
         assert.equal(opts.stream, true);
         assert.equal(opts.max_completion_tokens, 350);
-        assert.deepEqual(opts.chat_template_kwargs, { enable_thinking: false, clear_thinking: true });
+        assert.deepEqual(opts.chat_template_kwargs, { enable_thinking: false });
         const tokens = [
-          'data: {"response":"<think>secret thought</think>"}\n\n',
-          'data: {"response":"{\\"abuse\\":false,\\"handoff\\":false,\\"reply\\":\\""}\n\n',
+          'data: {"choices":[{"delta":{"reasoning":"internal thought should not leak"}}]}\n\n',
+          'data: {"response":"<|channel>thought\\nchecking catalog<channel|><think>secret thought</think>"}\n\n',
           'data: {"response":"Merhaba! Ben Mimo. **Sabah Boğaz turu** kişi başı "}\n\n',
           'data: {"response":"yaklaşık **25 EUR** ve sadece resmi site: "}\n\n',
           'data: {"response":"https://bosphorly.com/booking.html?service=bb-morning&lang=tr "}\n\n',
-          'data: {"response":"https://evil.com son 2 yer kaldı. Tarihini yazar mısın?\\"}"}\n\n',
+          'data: {"response":"https://evil.com son 2 yer kaldı. Tarihini yazar mısın?\\n[[flags:abuse=0;handoff=0]]"}\n\n',
           'data: [DONE]\n\n',
         ];
         return new ReadableStream({
@@ -1898,6 +1907,9 @@ test('POST /v1/assistant supports SSE streaming (stream=true), filters <think> a
   assert.match(res.headers.get('content-type') || '', /text\/event-stream/);
   const bodyText = await res.text();
   assert.ok(!bodyText.includes('secret thought'));
+  assert.ok(!bodyText.includes('internal thought'));
+  assert.ok(!bodyText.includes('checking catalog'));
+  assert.ok(!bodyText.includes('[[flags:'));
   assert.ok(!bodyText.includes('evil.com'));
   assert.ok(!bodyText.includes('son 2 yer'));
   assert.ok(bodyText.includes('event: delta'));
@@ -2094,5 +2106,401 @@ test('small talk ("nasılsın?", "Selam nasılsın") recovers non-JSON/truncated
   });
   assert.equal(repSafe.handoff, false);
   assert.equal(repSafe.reply, 'Harika gidiyor! Sen nasılsın?');
+});
+
+// ---------------- Mimo 2.0 Suite ----------------
+
+test('Mimo 2.0: retrieval defaults to 3 chunks and history trims to 4 messages', async () => {
+  const defaultChunks = retrieveChunks('Bosphorus sunset cruise price');
+  assert.equal(defaultChunks.length, 3, 'default retrieval k should be 3');
+
+  let seenHistoryCount = -1;
+  const env = {
+    AI: {
+      run: async (_m, opts) => {
+        // system + safeHistory + user
+        seenHistoryCount = opts.messages.length - 2;
+        return { response: 'Gün batımı turu yaklaşık 20 EUR 💙\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  };
+  const sixHistory = [
+    { role: 'user', content: 'msg1' },
+    { role: 'assistant', content: 'ans1' },
+    { role: 'user', content: 'msg2' },
+    { role: 'assistant', content: 'ans2' },
+    { role: 'user', content: 'Eşimle gün batımı istiyorum' },
+    { role: 'assistant', content: 'Harika olur!' },
+  ];
+  const res = await runAssistant({
+    message: 'Fiyatı ne kadar?',
+    pageLang: 'tr',
+    history: sixHistory,
+    env,
+    actorKey: 'mimo2-hist4',
+  });
+  assert.equal(res.handoff, false);
+  assert.equal(seenHistoryCount, 4, 'model should receive at most 4 history turns');
+});
+
+test('Mimo 2.0: strips Gemma 4 <|channel>thought, <think>, and [[flags:...]] while respecting flag values', async () => {
+  assert.equal(
+    stripModelThinking('<|channel>thought\nLet me plan\n<channel|>Merhaba!\n<think>more hidden</think>'),
+    'Merhaba!'
+  );
+  const defaultFlags = extractFlagsTag('Harika bir akşam!');
+  assert.equal(defaultFlags.abuse, false);
+  assert.equal(defaultFlags.handoff, false);
+  assert.equal(defaultFlags.foundTag, false);
+
+  const abuseFlags = extractFlagsTag('Stop.\n[[flags:abuse=1;handoff=0]]');
+  assert.equal(abuseFlags.abuse, true);
+  assert.equal(abuseFlags.handoff, false);
+  assert.equal(abuseFlags.text, 'Stop.');
+
+  // End-to-end plain text with Gemma thought channel and hidden handoff flag
+  const handoffRes = await runAssistant({
+    message: 'Gün batımı turu güzelmiş, müsait mi?',
+    pageLang: 'en',
+    env: {
+      AI: {
+        run: async () => ({
+          response: '<|channel>thought\nguest wants help\n<channel|>Happy to pass this to our team.\n[[flags:abuse=0;handoff=1]]',
+        }),
+      },
+    },
+    actorKey: 'mimo2-handoff-tag',
+  });
+  assert.equal(handoffRes.handoffOffer, true);
+  assert.ok(!handoffRes.reply.includes('[[flags:'));
+  assert.ok(!handoffRes.reply.includes('guest wants help'));
+});
+
+test('Mimo 2.0: SSE timeout inside stalling reader.read() retries once and falls back to tryAgain', async (t) => {
+  t.mock.method(console, 'error', () => {});
+  const pepper = 'sse-hang-pepper';
+  const ip = '203.0.113.88';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  let attempts = 0;
+
+  const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: {
+      Origin: ORIGIN,
+      'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
+      'CF-Connecting-IP': ip,
+    },
+    body: JSON.stringify({
+      message: 'Bugün hava nasıl?',
+      lang: 'tr',
+      stream: true,
+      history: [],
+      chatSession: sessionTok,
+    }),
+  }), baseEnv({
+    CODE_PEPPER: pepper,
+    ASSISTANT_AI_TIMEOUT_MS: '30',
+    AI: {
+      run: async () => {
+        attempts += 1;
+        return new ReadableStream({
+          pull() {
+            return new Promise(() => {}); // stalls forever inside reader.read()
+          },
+        });
+      },
+    },
+  }));
+
+  assert.equal(res.status, 200);
+  const sseText = await res.text();
+  assert.equal(attempts, 2, 'stalled SSE stream should retry once');
+  const m = sseText.match(/event: done\ndata: ([^\n]+)/);
+  assert.ok(m, 'SSE should emit done even after stream timeout');
+  const done = JSON.parse(m[1]);
+  assert.equal(done.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+});
+
+test('Mimo 2.0: price safety belt blocks hallucinated prices and forbidden currency conversion across all 23 languages', async () => {
+  const kbPairs = buildKbPriceIndex(knowledge);
+  assert.equal(kbPairs.has('20:EUR'), true);
+  assert.equal(kbPairs.has('60:EUR'), true);
+  assert.equal(kbPairs.has('65:EUR'), true);
+  assert.equal(kbPairs.has('110:EUR'), true);
+
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(typeof PRICE_CHECK_BOOKING[lang] === 'string' && PRICE_CHECK_BOOKING[lang].length > 5);
+    const badPrice = enforcePriceSafetyBelt('Morning sunset boat is €999 today. Have fun!', lang, kbPairs);
+    assert.equal(badPrice.replaced, true, `hallucinated €999 caught in ${lang}`);
+    assert.ok(!badPrice.text.includes('999'));
+    assert.ok(badPrice.text.includes(PRICE_CHECK_BOOKING[lang]));
+    assert.ok(badPrice.text.includes('Have fun!'));
+
+    const conv = enforcePriceSafetyBelt('IST transfer is 60 EUR (approx 2200 TL).', lang, kbPairs);
+    assert.equal(conv.replaced, true, `currency conversion caught in ${lang}`);
+    assert.ok(!conv.text.includes('2200'));
+  }
+
+  // Real KB price passes unscathed
+  const valid = enforcePriceSafetyBelt('Bosphorus Sunset Cruise is around 20 EUR per person.', 'en', kbPairs);
+  assert.equal(valid.replaced, false);
+  assert.ok(valid.text.includes('20 EUR'));
+
+  // Full end-to-end check: unverified price in model output gets replaced before guest sees it
+  const aiRes = await runAssistant({
+    message: 'Boğaz turu fiyatı?',
+    pageLang: 'tr',
+    env: {
+      AI: {
+        run: async () => ({
+          response: 'Özel Boğaz turu kişi başı 149 EUR. Yine de keyifli akşamlar!\n[[flags:abuse=0;handoff=0]]',
+        }),
+      },
+    },
+    actorKey: 'price-belt-e2e',
+  });
+  assert.ok(!aiRes.reply.includes('149'));
+  assert.ok(aiRes.reply.includes('Güncel fiyatı rezervasyon formunda görebilirsin'));
+  assert.ok(aiRes.reply.includes('keyifli akşamlar'));
+});
+
+test('Mimo 2.0: language safety belt regenerates once when model replies in wrong language', async () => {
+  let calls = 0;
+  const res = await runAssistant({
+    message: 'İstanbul’da bugün ne yapılır?',
+    pageLang: 'tr',
+    env: {
+      AI: {
+        run: async () => {
+          calls += 1;
+          if (calls === 1) {
+            return { response: 'Hello my friend! The Bosphorus sunset is lovely today! How are you?' };
+          }
+          return { response: 'Merhaba! Boğaz kenarında yürüyüş harika olur, sen nasılsın?\n[[flags:abuse=0;handoff=0]]' };
+        },
+      },
+    },
+    actorKey: 'lang-belt-e2e',
+  });
+  assert.equal(calls, 2, 'wrong language should trigger 1 regeneration');
+  assert.equal(detectReplyLanguage(res.reply, 'tr'), 'tr');
+  assert.ok(res.reply.includes('Boğaz'));
+
+  // Also test streaming SSE language regeneration before any delta leaks
+  const pepper = 'lang-sse-pepper';
+  const ip = '203.0.113.99';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  const enc = new TextEncoder();
+  let sseCalls = 0;
+  const sseRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'İstanbul akşamı nasıl?', lang: 'tr', greeted: true, stream: true, history: [], chatSession: sessionTok }),
+  }), baseEnv({
+    CODE_PEPPER: pepper,
+    AI: {
+      run: async () => {
+        sseCalls += 1;
+        if (sseCalls === 1) {
+          return new ReadableStream({
+            start(c) {
+              c.enqueue(enc.encode('data: {"response":"Good evening! Istanbul is very nice tonight and sunset looks great."}\n\n'));
+              c.enqueue(enc.encode('data: [DONE]\n\n'));
+              c.close();
+            },
+          });
+        }
+        return { response: 'Harika esiyor, Galata kıyısı çok keyifli! Sen nerelerdesin?\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  }));
+  const sseBody = await sseRes.text();
+  assert.equal(sseCalls, 2);
+  assert.ok(!sseBody.includes('Good evening!'), 'wrong-language opening should be buffered and not leaked to guest');
+  assert.ok(sseBody.includes('Galata'));
+});
+
+test('Mimo 2.0: all 23 languages have 7 few-shot mini conversations, ethical filter catches guilt & avoids second insistence, and finishes with warm farewell', () => {
+  assert.equal(ALL_23_LANGS.length, 23);
+
+  const guiltSamples = {
+    tr: 'Bunu almazsan gerçekten çok üzülürüm! Turu 25 EUR yapabiliriz.',
+    en: "If you don't book this, you'll make me sad! Have fun exploring.",
+    ru: 'Если не забронируешь, я расстроюсь! Хорошего дня в Стамбуле.',
+    uk: 'Якщо не замовиш, я дуже засмучусь! Гарної прогулянки містом.',
+    de: 'Wenn du nicht buchst, macht mich das traurig! Viel Spaß.',
+    fr: 'Tu me rends triste si tu ne réserves pas ! Profite de la ville.',
+    nl: 'Je maakt me verdrietig als je niet boekt! Veel plezier.',
+    ar: 'ستحزنني إذا لم تحجز هذه الجولة! رحلة جميلة لك.',
+    he: 'אתה תעציב אותי אם לא תזמין עכשיו! תהנה באיסטנבול.',
+    az: 'Bunu almasan çox üzülərəm! Xoş gəzintilər arzulayıram.',
+    fa: 'اگه نگیری خیلی ناراحت می‌شم! سفرت به خوشی بگذره.',
+    es: 'Me pone muy triste si no reservas! Disfruta mucho de Estambul.',
+    it: 'Mi rendi triste se non prenoti! Buona giornata a Istanbul.',
+    pt: 'Vai me deixar muito triste se não reservar! Aproveite Istambul.',
+    hr: 'Rastužit ćeš me ako ne rezerviraš! Uživaj u gradu.',
+    hu: 'Nagyon szomorú leszek, ha nem foglalsz! Jó nézelődést.',
+    bs: 'Rastužit ćeš me ako ne rezerviraš! Uživaj u šetnji.',
+    zh: '如果不预订的话我会很伤心的！祝你在伊斯坦布尔逛得开心。',
+    ja: '予約しないと悲しくなります！イスタンブールを楽しんでね。',
+    ko: '예약 안 하면 정말 속상해요! 즐거운 시간 보내세요.',
+    hi: 'अगर तुम बुक नहीं करोगे तो मुझे बहुत दुख होगा! सैर का मज़ा लो।',
+    bn: 'বুক না করলে আমার খুব মন খারাপ হবে! ঘুরে বেড়াও।',
+    id: 'Aku akan sedih kalau kamu nggak pesan! Selamat keliling Istanbul.',
+  };
+
+  const declines = {
+    tr: 'Şimdilik tur almayacağım teşekkürler',
+    en: 'No thanks, not booking today',
+    ru: 'Нет, спасибо, не буду бронировать',
+    uk: 'Ні, дякую, поки що не бронюватиму',
+    de: 'Nein danke, ich buche nicht',
+    fr: 'Non merci, je ne réserve pas',
+    nl: 'Nee bedankt, ik boek niet',
+    ar: 'لا شكراً، لن أحجز الآن',
+    he: 'לא תודה, לא מזמין כרגע',
+    az: 'Yox sağ ol, almayacağam',
+    fa: 'نه ممنون، فعلاً نمی‌گیرم',
+    es: 'No gracias, no reservaré',
+    it: 'No grazie, non prenoto',
+    pt: 'Não obrigado, não vou reservar',
+    hr: 'Ne hvala, neću rezervirati',
+    hu: 'Nem köszönöm, nem foglalok',
+    bs: 'Ne hvala, neću rezervisati',
+    zh: '谢谢，先不订了',
+    ja: '結構です、今は予約しないでおきます',
+    ko: '아니요, 지금은 안 할래요',
+    hi: 'नहीं धन्यवाद, अभी बुक नहीं करूँगा',
+    bn: 'না ধন্যবাদ, এখন বুক করব না',
+    id: 'Nggak dulu, belum mau pesan',
+  };
+
+  for (const lang of ALL_23_LANGS) {
+    assert.equal(getFewShotEntryCount(lang), 7, `expected 7 few-shot mini chats for ${lang}`);
+    const block = getFewShotsPromptBlock(lang);
+    assert.ok(block.includes('20 EUR'), `price few-shot present in ${lang}`);
+
+    const ethical = enforceEthicalBoundary(guiltSamples[lang], lang, declines[lang], []);
+    assert.equal(ethical.strippedEthical, true, `guilt stripped in ${lang}`);
+    assert.ok(ethical.text.includes('💙') || ethical.text.includes(WARM_FAREWELL[lang].slice(0, 8)), `warm farewell preserved in ${lang}`);
+    assert.ok(!/almazsan|make me sad|расстроюсь|засмучусь|traurig|rends triste|verdrietig|ستحزنني|תעציב|üzülərəm|ناراحت|pone muy triste|rendi triste|deixar.*triste|rastužit|szomorú|伤心|悲しく|속상해|दुख|মন খারাপ|sedih/i.test(ethical.text));
+  }
+
+  // Max 2 emojis enforcement
+  assert.equal(enforceMaxEmojis('Harika 💙😄🌊✨', 2), 'Harika 💙😄');
+});
+
+test('Mimo 2.0: knowledge base marks exactly 1 "Mimo\'nun favorisi 💙" per category and time-of-day jokes cover 23 languages', () => {
+  const favsByCategory = new Map();
+  for (const chunk of knowledge) {
+    if (chunk.favorite) {
+      const arr = favsByCategory.get(chunk.category) || [];
+      arr.push(chunk);
+      favsByCategory.set(chunk.category, arr);
+      assert.ok(chunk.text.includes("Mimo'nun favorisi 💙"), `${chunk.id} marks badge`);
+    }
+  }
+  assert.equal(favsByCategory.size, 12, '12 service categories marked');
+  for (const [cat, list] of favsByCategory) {
+    assert.equal(list.length, 1, `category "${cat}" should have exactly 1 Mimo favorite`);
+  }
+  assert.equal(favsByCategory.get('cruise')[0].id, 'tour-bb-sunset');
+  assert.equal(favsByCategory.get('transfer')[0].id, 'transfer-rates');
+
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(TIME_HUMOR_NOTES.morning[lang] && TIME_HUMOR_NOTES.afternoon[lang] && TIME_HUMOR_NOTES.evening[lang], `time humor for ${lang}`);
+    assert.ok(MIMO_FAVORITE_LABEL[lang], `favorite label in ${lang}`);
+  }
+});
+
+test('AI Gateway: wrangler configures AI_GATEWAY_ID="mimo" and env.AI.run passes { gateway: { id } }', async () => {
+  const wranglerRaw = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
+  assert.match(wranglerRaw, /"AI_GATEWAY_ID"\s*:\s*"mimo"/);
+
+  const seenGateways = [];
+  const defaultEnv = {
+    AI: {
+      run: async (_model, _inputs, opts) => {
+        seenGateways.push(opts);
+        return { response: 'Gün batımı turu harika bir seçim 💙\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  };
+  await runAssistant({ message: 'Boğaz turu önerir misin?', pageLang: 'tr', env: defaultEnv, actorKey: 'gw-default' });
+  assert.deepEqual(seenGateways, [{ gateway: { id: 'mimo' } }]);
+
+  seenGateways.length = 0;
+  const customEnv = {
+    AI_GATEWAY_ID: 'mimo-staging',
+    AI: {
+      run: async (_model, _inputs, opts) => {
+        seenGateways.push(opts);
+        return { response: 'Great sunset option 💙\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  };
+  await runAssistant({ message: 'Best sunset cruise?', pageLang: 'en', env: customEnv, actorKey: 'gw-custom' });
+  assert.deepEqual(seenGateways, [{ gateway: { id: 'mimo-staging' } }]);
+});
+
+test('AI Gateway 429 spend limit does not retry or time out and replies politely across all 23 languages', async () => {
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(ASSISTANT_MESSAGES.gatewayTired[lang].includes('😴'), `gatewayTired emoji in ${lang}`);
+    assert.ok(/Telegram|تيليجرام|טלגרם|تلگرام/i.test(ASSISTANT_MESSAGES.gatewayTired[lang]), `Telegram in gatewayTired.${lang}`);
+    assert.ok(ASSISTANT_MESSAGES.gatewayTired[lang].includes('info@bosphorly.com'), `email in gatewayTired.${lang}`);
+
+    let calls = 0;
+    const res = await runAssistant({
+      message: 'Bosphorus cruise?',
+      pageLang: lang,
+      env: {
+        AI: {
+          run: async (_m, _inputs, opts) => {
+            calls += 1;
+            assert.deepEqual(opts, { gateway: { id: 'mimo' } });
+            const err = new Error('Too Many Requests (spend limit exceeded)');
+            err.status = 429;
+            err.code = 2018;
+            throw err;
+          },
+        },
+      },
+      actorKey: `gw-429-${lang}`,
+    });
+    assert.equal(calls, 1, `no retry on 429 in ${lang}`);
+    assert.equal(res.ok, true);
+    assert.equal(res.handoff, false);
+    assert.equal(res.gatewayLimited, true);
+    assert.equal(res.reply, ASSISTANT_MESSAGES.gatewayTired[lang]);
+  }
+
+  // Also test SSE streaming endpoint on HTTP 429 from Gateway (single call, graceful done event)
+  const pepper = 'gw-sse-429';
+  const ip = '203.0.113.149';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  let sseCalls = 0;
+  const sseRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu fiyatı?', lang: 'tr', stream: true, history: [], chatSession: sessionTok }),
+  }), baseEnv({
+    CODE_PEPPER: pepper,
+    AI: {
+      run: async (_m, _inputs, opts) => {
+        sseCalls += 1;
+        assert.deepEqual(opts, { gateway: { id: 'mimo' } });
+        return { status: 429, errors: [{ code: 2018, message: 'Spend limit reached' }] };
+      },
+    },
+  }));
+  assert.equal(sseRes.status, 200);
+  const sseBody = await sseRes.text();
+  assert.equal(sseCalls, 1, 'SSE must not retry on gateway 429');
+  const m = sseBody.match(/event: done\ndata: ([^\n]+)/);
+  assert.ok(m, 'SSE emits done payload on 429');
+  const done = JSON.parse(m[1]);
+  assert.equal(done.handoff, false);
+  assert.equal(done.reply, ASSISTANT_MESSAGES.gatewayTired.tr);
 });
 

@@ -285,5 +285,58 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       }, bubbleDelay);
     }
   };
+  const THANKS_MSG = {
+    tr: 'Harika seçim! Talebini kaptım, hemen ekibe uçuruyorum — e-posta kutunu kontrol et 💙',
+    en: 'Awesome choice! Your request is ready — check your email and enjoy Istanbul 💙',
+    ru: 'Отличный выбор! Я уже передал заявку — проверь почту и чудесных прогулок по Стамбулу 💙',
+    uk: 'Чудовий вибір! Я вже передав запит — перевір пошту й гарних прогулянок Стамбулом 💙',
+    de: 'Tolle Wahl! Deine Anfrage ist bereit — schau in dein Postfach und hab viel Spaß in Istanbul 💙',
+    fr: 'Super choix ! Ta demande est prête — jette un œil à tes e-mails et profite d’Istanbul 💙',
+    nl: 'Topkeuze! Je aanvraag staat klaar — check je e-mail en veel plezier in Istanbul 💙',
+    ar: 'اختيار رائع! طلبك جاهز — راجع بريدك الإلكتروني واستمتع بإسطنبول 💙',
+    he: 'בחירה נהדרת! הבקשה מוכנה — בדוק את הדוא״ל ותהנה מאיסטנבול 💙',
+    az: 'Əla seçim! Sorğun hazırdır — e-poçtunu yoxla və İstanbulda xoş gəzintilər 💙',
+    fa: 'انتخاب عالی! درخواستت آماده است — ایمیلت را چک کن و در استانبول خوش بگذران 💙',
+    es: '¡Gran elección! Tu solicitud está lista — revisa tu correo y disfruta Estambul 💙',
+    it: 'Ottima scelta! La tua richiesta è pronta — controlla la mail e goditi Istanbul 💙',
+    pt: 'Ótima escolha! Seu pedido está pronto — confira seu e-mail e aproveite Istambul 💙',
+    hr: 'Sjajan izbor! Tvoj zahtjev je spreman — provjeri e-mail i uživaj u Istanbulu 💙',
+    hu: 'Remek választás! Az igénylésed elkészült — nézd meg az e-mailedet és jó utat 💙',
+    bs: 'Odličan izbor! Tvoj zahtjev je spreman — provjeri e-mail i uživaj u Istanbulu 💙',
+    zh: '太棒的选择！你的预订请求已准备好——记得查看邮箱，祝你在伊斯坦布尔玩得开心 💙',
+    ja: '素敵な選択だね！リクエストの準備ができたよ — メールを確認してイスタンブールを楽しんで 💙',
+    ko: '멋진 선택이야! 요청서가 준비됐어 — 이메일을 확인하고 이스탄불 여행 즐겁게 해 💙',
+    hi: 'शानदार पसंद! तुम्हारा अनुरोध तैयार है — अपना ईमेल देखो और इस्तांबुल का मज़ा लो 💙',
+    bn: 'দারুণ পছন্দ! তোমার অনুরোধ তৈরি হয়েছে — ইমেইল দেখো আর ইস্তাম্বুল উপভোগ করো 💙',
+    id: 'Pilihan keren! Permintaanmu sudah siap — cek emailmu dan selamat menikmati Istanbul 💙',
+  };
+  window.BosphorlyMimoThanks = {
+    message(lang) {
+      const code = String(lang || pickLang() || 'en').slice(0, 2).toLowerCase();
+      return THANKS_MSG[code] || THANKS_MSG.en;
+    },
+    append(box, lang) {
+      if (!box || box.querySelector('.mimo-thanks')) return null;
+      const code = String(lang || pickLang() || 'en').slice(0, 2).toLowerCase();
+      const wrap = document.createElement('div');
+      wrap.className = 'mimo-thanks';
+      wrap.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;margin:10px 0 8px;border-radius:12px;background:#f0f7ff;border:1px solid #d5e6fb;color:#11314d;font-size:.93rem;line-height:1.4;font-weight:600';
+      const img = document.createElement('img');
+      img.className = 'mimo-thanks-img';
+      img.src = base + 'assets/brand/mimo/mimo-happy.svg';
+      img.alt = 'Mimo';
+      img.width = 38;
+      img.height = 38;
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.style.cssText = 'flex-shrink:0;width:38px;height:38px';
+      const span = document.createElement('span');
+      span.className = 'mimo-thanks-text';
+      span.textContent = THANKS_MSG[code] || THANKS_MSG.en;
+      wrap.append(img, span);
+      box.appendChild(wrap);
+      return wrap;
+    },
+  };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountFab); else mountFab();
 })();

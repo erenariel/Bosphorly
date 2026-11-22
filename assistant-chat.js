@@ -54,21 +54,31 @@
     micDenied: { tr:'Mikrofon izni verilmedi. İstersen sorunu yazarak gönderebilirsin.', en:'Microphone access was blocked. You can still type your question.', ru:'Доступ к микрофону закрыт. Вы можете написать вопрос текстом.', uk:'Доступ до мікрофона заборонено. Ви можете написати запитання текстом.', de:'Der Mikrofonzugriff wurde abgelehnt. Sie können Ihre Frage auch tippen.', fr:'L’accès au micro a été refusé. Vous pouvez écrire votre question.', nl:'Microfoontoegang is geweigerd. Je kunt je vraag ook typen.', ar:'تم رفض إذن الميكروفون. يمكنك كتابة سؤالك بدلًا من ذلك.', he:'הגישה למיקרופון נחסמה. אפשר עדיין להקליד את השאלה.', az:'Mikrofona icazə verilmədi. Sualınızı yazaraq da göndərə bilərsiniz.', fa:'اجازه میکروفون داده نشد. می‌توانید سؤالتان را تایپ کنید.', es:'Se bloqueó el acceso al micrófono. Aún puedes escribir tu pregunta.', it:'Accesso al microfono negato. Puoi comunque scrivere la domanda.', pt:'O acesso ao microfone foi bloqueado. Você ainda pode digitar a pergunta.', hr:'Pristup mikrofonu je odbijen. Pitanje i dalje možete upisati.', hu:'A mikrofonengedélyt elutasították. A kérdést be is gépelheti.', bs:'Pristup mikrofonu je odbijen. Pitanje i dalje možete upisati.', zh:'麦克风权限被拒绝。您仍可以直接输入问题。', ja:'マイクの使用が拒否されました。質問はキーボードから入力できます。', ko:'마이크 권한이 거부되었습니다. 질문을 직접 입력할 수도 있습니다.', hi:'माइक्रोफ़ोन की अनुमति नहीं मिली। आप सवाल टाइप भी कर सकते हैं।', bn:'মাইক্রোফোনের অনুমতি দেওয়া হয়নি। আপনি প্রশ্নটি লিখেও পাঠাতে পারেন।', id:'Akses mikrofon ditolak. Anda tetap bisa mengetik pertanyaan.' },
     micFailed: { tr:'Sesi yazıya çeviremedim. İstersen sorunu yazarak gönderebilirsin.', en:'I could not turn that into text. You can still type your question.', ru:'Не удалось распознать речь. Вы можете написать вопрос текстом.', uk:'Не вдалося розпізнати мовлення. Ви можете написати запитання текстом.', de:'Die Sprache konnte nicht in Text umgewandelt werden. Sie können Ihre Frage auch tippen.', fr:'Impossible de transcrire la voix. Vous pouvez écrire votre question.', nl:'De spraak kon niet naar tekst worden omgezet. Je kunt je vraag ook typen.', ar:'تعذّر تحويل الصوت إلى نص. يمكنك كتابة سؤالك.', he:'לא הצלחנו להפוך את הדיבור לטקסט. אפשר להקליד את השאלה.', az:'Səsi mətnə çevirə bilmədim. Sualınızı yazaraq göndərə bilərsiniz.', fa:'نتوانستم صدا را به متن تبدیل کنم. می‌توانید سؤالتان را تایپ کنید.', es:'No pude convertir la voz en texto. Aún puedes escribir tu pregunta.', it:'Non sono riuscito a trasformare la voce in testo. Puoi scrivere la domanda.', pt:'Não consegui transformar a voz em texto. Você ainda pode digitar a pergunta.', hr:'Nisam uspio pretvoriti glas u tekst. Pitanje i dalje možete upisati.', hu:'Nem sikerült szöveggé alakítani a beszédet. A kérdést be is gépelheti.', bs:'Nisam uspio pretvoriti glas u tekst. Pitanje i dalje možete upisati.', zh:'无法将语音转成文字。您仍可以直接输入问题。', ja:'音声を文字にできませんでした。質問はキーボードから入力できます。', ko:'음성을 텍스트로 바꾸지 못했습니다. 질문을 직접 입력할 수도 있습니다.', hi:'आवाज़ को टेक्स्ट में नहीं बदल सका। आप सवाल टाइप भी कर सकते हैं।', bn:'কথা লেখায় রূপান্তর করা যায়নি। আপনি প্রশ্নটি লিখেও পাঠাতে পারেন।', id:'Suara tidak bisa diubah menjadi teks. Anda tetap bisa mengetik pertanyaan.' },
     micTooBig: { tr:'Ses kaydı en fazla 30 saniye ve 1 MB olabilir.', en:'A recording can be at most 30 seconds and 1 MB.', ru:'Запись — не длиннее 30 секунд и не больше 1 МБ.', uk:'Запис — не довший за 30 секунд і не більший за 1 МБ.', de:'Eine Aufnahme darf höchstens 30 Sekunden und 1 MB groß sein.', fr:'Un enregistrement ne peut pas dépasser 30 secondes ni 1 Mo.', nl:'Een opname mag maximaal 30 seconden en 1 MB zijn.', ar:'التسجيل يجب ألا يتجاوز 30 ثانية أو 1 ميغابايت.', he:'הקלטה יכולה להיות עד 30 שניות ו-1MB.', az:'Səs yazısı ən çox 30 saniyə və 1 MB ola bilər.', fa:'ضبط صدا حداکثر ۳۰ ثانیه و ۱ مگابایت است.', es:'La grabación puede durar como máximo 30 segundos y pesar 1 MB.', it:'La registrazione può durare al massimo 30 secondi e pesare 1 MB.', pt:'A gravação pode ter no máximo 30 segundos e 1 MB.', hr:'Snimka može trajati najviše 30 sekundi i imati 1 MB.', hu:'A felvétel legfeljebb 30 másodperc és 1 MB lehet.', bs:'Snimak može trajati najviše 30 sekundi i imati 1 MB.', zh:'录音最长 30 秒，且不超过 1 MB。', ja:'録音は30秒以内、1MBまでです。', ko:'녹음은 최대 30초, 1MB까지입니다.', hi:'रिकॉर्डिंग अधिकतम 30 सेकंड और 1 MB हो सकती है।', bn:'রেকর্ডিং সর্বোচ্চ ৩০ সেকেন্ড এবং ১ এমবি হতে পারে।', id:'Rekaman paling lama 30 detik dan 1 MB.' },
-    quickToggle: { tr:'Hızlı sorular', en:'Quick prompts', ru:'Быстрые вопросы', uk:'Швидкі запитання', de:'Schnellfragen', fr:'Questions rapides', nl:'Snelle vragen', ar:'أسئلة سريعة', he:'שאלות מהירות', az:'Sürətli suallar', fa:'پرسش‌های سریع', es:'Preguntas rápidas', it:'Domande rapide', pt:'Perguntas rápidas', hr:'Brza pitanja', hu:'Gyors kérdések', bs:'Brza pitanja', zh:'快捷提问', ja:'クイック質問', ko:'빠른 질문', hi:'त्वरित प्रश्न', bn:'দ্রুত প্রশ্ন', id:'Pertanyaan cepat' }
+    quickToggle: { tr:'Hızlı sorular', en:'Quick prompts', ru:'Быстрые вопросы', uk:'Швидкі запитання', de:'Schnellfragen', fr:'Questions rapides', nl:'Snelle vragen', ar:'أسئلة سريعة', he:'שאלות מהירות', az:'Sürətli suallar', fa:'پرسش‌های سریع', es:'Preguntas rápidas', it:'Domande rapide', pt:'Perguntas rápidas', hr:'Brza pitanja', hu:'Gyors kérdések', bs:'Brza pitanja', zh:'快捷提问', ja:'クイック質問', ko:'빠른 질문', hi:'त्वरित प्रश्न', bn:'দ্রুত প্রশ্ন', id:'Pertanyaan cepat' },
+    tryAgain: { tr:'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?', en:'One second, the seagulls distracted me 😅 Could you write that again?', ru:'Секунду, чайки сбили меня с толку 😅 Напишешь ещё раз?', uk:'Секунду, чайки збили мене з пантелику 😅 Напишеш ще раз?', de:'Eine Sekunde, die Möwen haben mich abgelenkt 😅 Schreibst du es noch einmal?', fr:'Une seconde, les mouettes m’ont distrait 😅 Tu peux réécrire ?', nl:'Een seconde, de meeuwen leidden me af 😅 Schrijf je het nog een keer?', ar:'لحظة، شتتني النوارس 😅 هل تعيد كتابة رسالتك؟', he:'רגע, השחפים בלבלו אותי 😅 אפשר לכתוב שוב?', az:'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazarsan?', fa:'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 دوباره می‌نویسید؟', es:'Un segundo, las gaviotas me distrajeron 😅 ¿Lo escribes otra vez?', it:'Un secondo, i gabbiani mi hanno distratto 😅 Lo riscrivi?', pt:'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?', hr:'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovno?', hu:'Egy pillanat, a sirályok elvonták a figyelmemet 😅 Megírnád még egyszer?', bs:'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovo?', zh:'等一下，海鸥把我弄糊涂了 😅 可以再写一遍吗？', ja:'ちょっと待って、カモメに気を取られちゃった 😅 もう一度書いてもらえる？', ko:'잠깐, 갈매기 때문에 정신이 팔렸어요 😅 다시 한 번 적어 주실래요?', hi:'एक सेकंड, सीगल ने मुझे भटका दिया 😅 क्या फिर से लिखोगे?', bn:'এক সেকেন্ড, সিগালগুলো আমাকে বিভ্রান্ত করেছে 😅 আবার লিখবে?', id:'Sebentar, burung camar mengalihkan perhatianku 😅 Bisa tulis lagi?' },
+    humorMorning: { tr:'Sabah simidi taze çıktı, martılar da kahvaltıya göz dikmiş!', en:'Fresh morning simit just landed and the seagulls already spotted it!', ru:'Утренний симит ещё тёплый, а чайки уже присматриваются!', uk:'Ранковий симіт ще теплий, а чайки вже чатують!', de:'Frischer Morgen-Simit duftet schon und die Möwen schauen zu!', fr:'Le simit du matin est tout chaud et les mouettes veillent !', nl:'De ochtendsimit is nog warm en de meeuwen kijken mee!', ar:'السميت الصباحي طازج والنوارس تراقبه بشغف!', he:'הסימיט של הבוקר עוד חם והשחפים כבר עוקבים!', az:'Səhər simiti hələ istidir, qağayılar da göz qoyub!', fa:'سیمیت صبح هنوز داغه و مرغ‌های دریایی چشم دوختن!', es:'El simit de la mañana sigue calentito y las gaviotas ya miran!', it:'Il simit del mattino è ancora caldo e i gabbiani già guardano!', pt:'O simit da manhã está quentinho e as gaivotas já estão de olho!', hr:'Jutarnji simit je još topao, a galebovi ga već merkaju!', hu:'A reggeli szimit még meleg, és a sirályok már lesik!', bs:'Jutarnji simit je još topao, a galebovi ga već gledaju!', zh:'早晨的芝麻圈还热乎着，海鸥已经盯上啦！', ja:'朝のシミットが焼きたてでカモメが狙ってるよ！', ko:'아침 시미트가 갓 나왔는데 갈매기가 벌써 노리고 있어!', hi:'सुबह का सिमित अभी गरम है और सीगल भी ताक में हैं!', bn:'সকালের সিমিত এখনো গরম, সিগালরাও তাকিয়ে আছে!', id:'Simit pagi masih hangat dan burung camar sudah mengincar!' },
+    humorAfternoon: { tr:'Vapur düdüğü çaldı, Boğaz esintisi serin serin esiyor!', en:'A ferry whistle just echoed across the Bosphorus breeze!', ru:'Слышен гудок паромчика и свежий ветер с Босфора!', uk:'Лунає гудок порома й свіжий вітер з Босфору!', de:'Eine Fähre tutet gerade über den Bosporus!', fr:'Le sifflet du ferry résonne sur le Bosphore !', nl:'Een veerboot toetert net over de Bosporus!', ar:'صافرة العبارة تعلو فوق نسيم البوسفور!', he:'שריקת המעבורת נשמעת מעל רוח הבוספורוס!', az:'Bərə səsi Boğazdan gəlir, meh sərin əsir!', fa:'سوت کشتی روی بسفر پیچیده و نسیم خنکی می‌وزد!', es:'¡Suena la sirena del ferri con la brisa del Bósforo!', it:'Si sente il fischio del traghetto nella brezza del Bosforo!', pt:'A buzina da balsa ecoa na brisa do Bósforo!', hr:'Čuje se sirena trajekta uz bosforski povjetarac!', hu:'Most szólalt meg a komp kürtje a boszporuszi szellőben!', bs:'Čuje se sirena trajekta uz bosforski povjetarac!', zh:'博斯普鲁斯的渡轮汽笛刚刚响起！', ja:'ボスポラスの潮風と一緒にフェリーの汽笛が聞こえるよ！', ko:'보스포루스 바람을 타고 페리 뱃고동이 울리고 있어!', hi:'बोस्फोरस की हवा के साथ फेरी की सीटी गूँज रही है!', bn:'বসফরাসের বাতাসে ফেরির হুইসেল বাজছে!', id:'Peluit feri baru saja terdengar bersama angin Bosporus!' },
+    humorEvening: { tr:'Boğaz’da gün batımı kızıllığı çıktı, martılar eve dönüyor!', en:'Sunset colors are warming up the Bosphorus while seagulls glide home!', ru:'Закат раскрасил Босфор, а чайки уже летят домой!', uk:'Захід сонця розфарбував Босфор, а чайки летять додому!', de:'Die Abendsonne taucht den Bosporus in Gold!', fr:'Le soleil se couche sur le Bosphore et les mouettes rentrent !', nl:'De avondzon kleurt de Bosporus goud!', ar:'شفق الغروب يلوّن البوسفور والنوارس تعود لأعشاشها!', he:'שקיעה יפה צובעת את הבוספורוס והשחפים חוזרים!', az:'Boğazda gün batımı qızarıb, qağayılar yuvaya dönür!', fa:'غروب بسفر طلایی شده و مرغ‌های دریایی برمی‌گردن!', es:'¡El atardecer tiñe de oro el Bósforo y las gaviotas vuelven a casa!', it:'Il tramonto accende il Bosforo e i gabbiani rientrano!', pt:'O pôr do sol tinge o Bósforo de dourado!', hr:'Zalazak sunca boji Bospor, a galebovi se vraćaju!', hu:'Aranyló naplemente borul a Boszporuszra!', bs:'Zalazak sunca boji Bosfor, a galebovi se vraćaju!', zh:'夕阳把博斯普鲁斯染成了金色，海鸥也回家啦！', ja:'ボスポラスが夕焼けに染まってカモメたちもお帰りの時間だよ！', ko:'보스포루스가 노을빛으로 물들고 갈매기들도 집으로 가네!', hi:'बोस्फोरस पर शाम का सुनहरा नज़ारा है और सीगल घर लौट रहे हैं!', bn:'বসফরাসে গোধূলির রঙ লেগেছে, সিগালরা ঘরে ফিরছে!', id:'Senja mewarnai Bosporus dan burung camar mulai pulang!' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
 
-  const getIstanbulTimeGreeting = () => {
+  const getIstanbulTimeSlot = () => {
     try {
       const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'Europe/Istanbul', hour: 'numeric', hour12: false }).formatToParts(new Date());
       const hPart = parts.find((p) => p.type === 'hour');
       const hour = hPart ? Number(hPart.value) % 24 : 12;
-      if (hour >= 5 && hour < 12) return tr('morning');
-      if (hour >= 12 && hour < 18) return tr('afternoon');
-      return tr('evening');
+      if (hour >= 5 && hour < 12) return 'morning';
+      if (hour >= 12 && hour < 18) return 'afternoon';
+      return 'evening';
     } catch {
-      return tr('afternoon');
+      return 'afternoon';
     }
+  };
+
+  const getIstanbulTimeGreeting = () => tr(getIstanbulTimeSlot());
+  const getIstanbulTimeHumor = () => {
+    const slot = getIstanbulTimeSlot();
+    return tr(slot === 'morning' ? 'humorMorning' : slot === 'afternoon' ? 'humorAfternoon' : 'humorEvening');
   };
 
   const getMemberNameFromBrowser = () => {
@@ -112,6 +122,8 @@
       parts.push(getIstanbulTimeGreeting() + '!');
     }
     parts.push(tr('welcome'));
+    const humor = getIstanbulTimeHumor();
+    if (humor) parts.push(humor);
     if (ctxMsg) parts.push(ctxMsg);
     return parts.join(' ');
   };
@@ -402,8 +414,17 @@
     }
   }
 
+  function sanitizeClientText(str) {
+    return String(str || '')
+      .replace(/<\|channel>thought[\s\S]*?(?:<channel\|>|$)/gi, '')
+      .replace(/<\|channel>(?:thought)?|<channel\|>/gi, '')
+      .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
+      .replace(/\[\[\s*flags\s*:[^\]]*\]\]/gi, '')
+      .trim();
+  }
+
   function renderBotHtml(text) {
-    const escaped = escapeHtml(text);
+    const escaped = escapeHtml(sanitizeClientText(text));
     const placeholders = [];
     const makeAnchor = (escapedUrl, escapedLabel) => {
       const candidate = escapedUrl
@@ -747,13 +768,19 @@
     input.value = '';
     sendBtn.disabled = true;
     showTyping();
-    const recent = history.slice(-6);
+    const CLIENT_CAP_MS = Number(window.__BOSPHORLY_MIMO_CAP_MS) > 0 ? Number(window.__BOSPHORLY_MIMO_CAP_MS) : 25000;
+    const recent = history.slice(-4);
+    const abortCtrl = typeof AbortController === 'function' ? new AbortController() : null;
+    const capTimer = setTimeout(() => {
+      if (abortCtrl) abortCtrl.abort(new Error('stream_timeout'));
+    }, CLIENT_CAP_MS);
     const postAssistant = (authPayload) => fetch(`${apiBase}/v1/assistant`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream, application/json',
       },
+      ...(abortCtrl ? { signal: abortCtrl.signal } : {}),
       body: JSON.stringify({
         message,
         lang,
@@ -767,10 +794,21 @@
 
     let streamMsg = null;
     let streamText = '';
+    const turnDeadline = Date.now() + CLIENT_CAP_MS;
+    const raceStreamCap = (promise) => {
+      const rem = turnDeadline - Date.now();
+      if (rem <= 0) return Promise.reject(new Error('stream_timeout'));
+      let t;
+      const timerPromise = new Promise((_, rej) => {
+        t = setTimeout(() => rej(new Error('stream_timeout')), rem);
+      });
+      return Promise.race([promise, timerPromise]).finally(() => clearTimeout(t));
+    };
+
     const readAssistantResponse = async (res) => {
       const ct = (res && res.headers && typeof res.headers.get === 'function' ? res.headers.get('content-type') : '') || '';
       if (!ct.toLowerCase().includes('text/event-stream') || !res.body || typeof res.body.getReader !== 'function') {
-        return await res.json().catch(() => ({}));
+        return await raceStreamCap(res.json().catch(() => ({})));
       }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -801,26 +839,34 @@
             headAvatar.src = mimoSrc('thinking');
           }
           streamText += payload.t;
-          setBotMessageBody(streamMsg.div, streamText);
+          setBotMessageBody(streamMsg.div, sanitizeClientText(streamText));
           logEl.scrollTop = logEl.scrollHeight;
         } else if (eventName === 'done' && payload) {
           finalData = payload;
         }
       };
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split('\n');
-        buf = lines.pop() || '';
-        for (const line of lines) processLine(line);
+      try {
+        while (true) {
+          const { done, value } = await raceStreamCap(reader.read());
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split('\n');
+          buf = lines.pop() || '';
+          for (const line of lines) processLine(line);
+        }
+        buf += decoder.decode();
+        if (buf) {
+          for (const line of buf.split('\n')) processLine(line);
+        }
+      } catch (err) {
+        try { await reader.cancel(); } catch {}
+        throw err;
       }
-      buf += decoder.decode();
-      if (buf) {
-        for (const line of buf.split('\n')) processLine(line);
+      if (!finalData && !sanitizeClientText(streamText)) {
+        throw new Error('stream_incomplete');
       }
-      return finalData || { reply: streamText };
+      return finalData || { reply: sanitizeClientText(streamText) };
     };
 
     try {
@@ -887,7 +933,7 @@
         renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
         return;
       }
-      const reply = data.reply || data.error || tr('offline');
+      const reply = sanitizeClientText(data.reply || data.error || '') || tr('offline');
       history.push({ role: 'user', content: message }, { role: 'assistant', content: reply });
       saveHistory();
       hideTyping();
@@ -901,14 +947,21 @@
         const botMsg = renderMsg('bot', reply, { handoffOffer: Boolean(data.handoffOffer), avatarState: 'happy' });
         if (data.handoff) openHandoffCard(botMsg.row);
       }
-    } catch {
+    } catch (err) {
       hideTyping();
+      const isStreamTimeout = Boolean(
+        err && (err.name === 'AbortError' || err.message === 'stream_timeout' || err.message === 'stream_incomplete')
+      );
+      const fallbackText = tr(isStreamTimeout ? 'tryAgain' : 'offline');
+      const partialClean = sanitizeClientText(streamText);
       if (streamMsg) {
-        setBotMessageBody(streamMsg.div, streamText || tr('offline'));
+        setBotMessageBody(streamMsg.div, partialClean || fallbackText);
+        if (streamMsg.av) streamMsg.av.src = mimoSrc('default');
       } else {
-        renderMsg('bot', tr('offline'));
+        renderMsg('bot', fallbackText);
       }
     } finally {
+      clearTimeout(capTimer);
       hideTyping();
       sendBtn.disabled = isChatClosed;
     }
@@ -985,7 +1038,7 @@
     const postHandoff = (authPayload) => fetch(`${apiBase}/v1/assistant/handoff`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, lang, history: history.slice(-6), sessionId, ...authPayload }),
+      body: JSON.stringify({ email, lang, history: history.slice(-4), sessionId, ...authPayload }),
     });
     try {
       let res;

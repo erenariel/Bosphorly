@@ -218,6 +218,7 @@
       const again = el('a', 'btn wa', tr ? 'Gmail / e-posta taslağını aç' : 'Open Gmail / email draft'); again.href = url;
       const mine = el('a', 'btn', t('toMyReq')); mine.href = 'account.html';
       done.append(again, mine);
+      if (window.BosphorlyMimoThanks) window.BosphorlyMimoThanks.append(done, D.lang);
       // Optional direct delivery (mail Worker), no email account needed; the guest's email is the Reply-To.
       if (window.addDirectDelivery) window.addDirectDelivery(done, { reference: ref, kind: 'tour', service: s.name.slice(0, 160), name: name.value.trim(),
         phone: phone.value.trim(), email: emailVal, date: date.value, guests: Number(guests.value), message: lines.join('\n'), consent: true }, D.lang);
