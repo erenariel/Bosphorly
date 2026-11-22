@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('without an API, My account shows membership as coming soon', async ({ page }) => {
-  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:""});' }));
+  await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:""});' }));
   await page.goto('/account.html?lang=tr');
   await expect(page.locator('#member h2')).toContainText('Bosphorly üyeliği');
   await expect(page.locator('#member .m-soon')).toBeVisible();
@@ -12,7 +12,7 @@ test('without an API, My account shows membership as coming soon', async ({ page
 
 // A stand-in API that follows backend/members.js responses.
 async function mockApi(page, calls) {
-  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
+  await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
   const coupon = { code: 'BOS-WELC-OME2', kind: 'welcome', percentBps: 500, status: 'issued', expiresAt: '2099-03-01 00:00:00', heldFor: null };
   const me = { email: 'guest@example.com', name: 'Jane Smith', lang: 'en', referralCode: 'ABCD2345', marketing: false, stamps: 2, stampsGoal: 5, coupons: [coupon], requests: [] };
   await page.route('https://api.test/**', async r => {
@@ -84,7 +84,7 @@ test('sign in with an e-mailed code, see coupons and stamps, then use a coupon o
 
 test('partner check-in looks up a request, shows the coupon and marks the tour completed', async ({ page }) => {
   const calls = [];
-  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
+  await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
   await page.route('https://api.test/**', async r => {
     const path = new URL(r.request().url()).pathname; calls.push({ path, auth: r.request().headers().authorization, body: r.request().postDataJSON() });
     const ok = r.request().headers().authorization === 'Bearer partner-secret';
@@ -107,7 +107,7 @@ test('partner check-in looks up a request, shows the coupon and marks the tour c
 });
 
 test('signed-in member persists in top-right header across pages, hides Create account, and sends localized Special Tours email & newsletter', async ({ page }) => {
-  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
+  await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
   const calls = [];
   const coupon = { code: 'BOS-PLAT-9999', kind: 'loyalty', percentBps: 1000, status: 'issued', expiresAt: '2099-03-01 00:00:00', heldFor: null };
   const me = {
@@ -173,7 +173,7 @@ test('signed-in member persists in top-right header across pages, hides Create a
 });
 
 test('signed-in member sees cloud-synced details and cart/requests on another device (clean localStorage) and can remove open items', async ({ page }) => {
-  await page.route('**/config/api.js', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
+  await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:"https://api.test"});' }));
   const reqs = [
     {
       ref: 'BOS-XDEV01',

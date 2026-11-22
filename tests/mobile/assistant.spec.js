@@ -212,7 +212,7 @@ test('Telegram CTAs render with language param, local SVG, >=44px touch target, 
 });
 
 test('all Telegram links stay hidden when telegramBot in config/api.js is empty', async ({ page }) => {
-  await page.route('**/config/api.js', (r) => r.fulfill({
+  await page.route('**/config/api.js*', (r) => r.fulfill({
     contentType: 'text/javascript',
     body: 'window.BOSPHORLY_API=Object.freeze({base:"",transferMailBase:"",turnstileSiteKey:"",telegramBot:""});',
   }));

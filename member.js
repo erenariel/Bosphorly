@@ -100,7 +100,7 @@
   let texts = null;
   async function t() {
     if (texts) return texts;
-    const get = l => fetch((window.BOSPHORLY_BASE || '') + 'data/members/' + l + '.json?v=20261122c').then(r => (r.ok ? r.json() : null)).catch(() => null);
+    const get = l => fetch((window.BOSPHORLY_BASE || '') + 'data/members/' + l + '.json?v=20261123a').then(r => (r.ok ? r.json() : null)).catch(() => null);
     const [en, own] = await Promise.all([get('en'), lang() === 'en' ? null : get(lang())]);
     texts = Object.assign({}, en, own || {});
     return texts;
