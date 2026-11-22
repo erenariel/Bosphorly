@@ -24,7 +24,7 @@ export const SUPPORTED_LANGS = new Set([
 const PER_MIN_LIMIT = 6;
 const PER_DAY_LIMIT = 40;
 const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
-const AI_TIMEOUT_MS = 15000;
+export const AI_TIMEOUT_MS = 9000;
 
 const memoryLimits = new Map();
 const memoryFeedback = new Map();
@@ -287,6 +287,31 @@ export const ASSISTANT_MESSAGES = {
     hi: 'मैंने बोस्फोरस के सीगल से भी पूछा, पर पक्का नहीं कह सकता 🌊 मैं अंदाज़ा नहीं लगाना चाहता; कृपया अपना ईमेल साझा करें ताकि हमारी टीम आपकी मदद कर सके।',
     bn: 'বসফরাসের গাঙচিলদেরও জিজ্ঞেস করলাম, কিন্তু নিশ্চিত হতে পারিনি 🌊 অনুমান করতে চাই না; অনুগ্রহ করে আপনার ইমেইল দিন যাতে আমাদের টিম সাহায্য করতে পারে।',
     id: 'Saya bahkan bertanya pada burung camar Bosphorus, tapi belum yakin 🌊 Saya tidak ingin menebak-nebak; silakan bagikan email Anda agar tim kami dapat membantu.',
+  },
+  smallTalkFallback: {
+    tr: 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?',
+    en: 'One second, the seagulls distracted me 😅 Could you write that again?',
+    ru: 'Секунду, чайки сбили меня с мысли 😅 Напишете ещё раз?',
+    uk: 'Секунду, чайки трохи збили мене з думки 😅 Напишете ще раз?',
+    de: 'Einen Moment, die Möwen haben mich abgelenkt 😅 Schreibst du es mir noch einmal?',
+    fr: 'Une seconde, les mouettes m’ont déconcentré 😅 Pouvez-vous me le réécrire ?',
+    nl: 'Één seconde, de meeuwen leidden me even af 😅 Wil je het nog een keer sturen?',
+    ar: 'لحظة واحدة، شتّتتني نوارس البوسفور 😅 هل يمكنك كتابتها مرة أخرى؟',
+    he: 'רגע אחד, השחפים בלבלו אותי 😅 תוכלו לכתוב שוב?',
+    az: 'Bir saniyə, qağayılar fikrimi qarışdırdı 😅 Təkrar yazarsan?',
+    fa: 'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 می‌شود دوباره بنویسید؟',
+    es: 'Un segundo, las gaviotas me despistaron 😅 ¿Me lo escribes otra vez?',
+    it: 'Un attimo, i gabbiani mi hanno distratto 😅 Me lo riscrivi?',
+    pt: 'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?',
+    hr: 'Trenutak, galebovi su me zbunili 😅 Možete li napisati ponovno?',
+    hu: 'Egy pillanat, a sirályok elvonták a figyelmem 😅 Írnád még egyszer?',
+    bs: 'Trenutak, galebovi su me zbunili 😅 Možete li napisati ponovo?',
+    zh: '稍等一下，海鸥让我分神了 😅 能再发一次吗？',
+    ja: 'ちょっと待って、カモメに気を取られました 😅 もう一度送ってもらえますか？',
+    ko: '잠깐만요, 갈매기 때문에 헷갈렸어요 😅 다시 한 번만 적어주실래요?',
+    hi: 'एक सेकंड, सीगल ने मेरा ध्यान भटका दिया 😅 क्या आप फिर से लिखेंगे?',
+    bn: 'এক সেকেন্ড, গাঙচিলগুলো আমার মন ঘুরিয়ে দিল 😅 আবার একটু লিখবে?',
+    id: 'Sebentar ya, burung camar bikin aku salah fokus 😅 Bisa tulis lagi?',
   },
   payment: {
     tr: 'Ödeme yöntemi talebinden sonra seninle iletişime geçtiğimizde paylaşılır.',
@@ -972,6 +997,57 @@ function isNonsensicalReply(reply) {
   return false;
 }
 
+function decodeJsonStringFragment(rawFragment) {
+  let out = '';
+  for (let i = 0; i < rawFragment.length; i++) {
+    const ch = rawFragment[i];
+    if (ch !== '\\') {
+      out += ch;
+      continue;
+    }
+    i += 1;
+    if (i >= rawFragment.length) break;
+    const esc = rawFragment[i];
+    if (esc === 'n') out += '\n';
+    else if (esc === 'r') out += ' ';
+    else if (esc === 't') out += ' ';
+    else if (esc === '"' || esc === '\\' || esc === '/') out += esc;
+    else if (esc === 'u' && /^[0-9a-fA-F]{4}/.test(rawFragment.slice(i + 1, i + 5))) {
+      out += String.fromCharCode(parseInt(rawFragment.slice(i + 1, i + 5), 16));
+      i += 4;
+    } else {
+      out += esc;
+    }
+  }
+  return out.trim();
+}
+
+function findBalancedJsonObjects(text) {
+  const candidates = [];
+  let inStr = false;
+  let escape = false;
+  let depth = 0;
+  let start = -1;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (escape) { escape = false; continue; }
+    if (ch === '\\' && inStr) { escape = true; continue; }
+    if (ch === '"') { inStr = !inStr; continue; }
+    if (inStr) continue;
+    if (ch === '{') {
+      if (depth === 0) start = i;
+      depth += 1;
+    } else if (ch === '}' && depth > 0) {
+      depth -= 1;
+      if (depth === 0 && start !== -1) {
+        candidates.push(text.slice(start, i + 1));
+        start = -1;
+      }
+    }
+  }
+  return candidates;
+}
+
 function parseModelOutput(raw) {
   const objCandidate =
     (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
@@ -985,24 +1061,47 @@ function parseModelOutput(raw) {
     };
   }
 
-  const text = extractRawText(raw).replace(/<think>[\s\S]*?<\/think>/gi, '');
-  const trimmed = text.trim();
-  const jsonMatch = trimmed.match(/\{[\s\S]*\}/);
-  if (jsonMatch) {
-    try {
-      const obj = JSON.parse(jsonMatch[0]);
-      if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+  let text = extractRawText(raw)
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<think>[\s\S]*$/gi, '');
+  let trimmed = text.trim();
+  const fenceMatch = trimmed.match(/^```(?:json)?\s*([\s\S]*?)\s*```$/i);
+  if (fenceMatch) trimmed = fenceMatch[1].trim();
+
+  if (trimmed.includes('{')) {
+    const balanced = findBalancedJsonObjects(trimmed);
+    for (const candidate of balanced) {
+      try {
+        const obj = JSON.parse(candidate);
+        if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+          return {
+            abuse: Boolean(obj.abuse),
+            handoff: Boolean(obj.handoff),
+            reply: typeof obj.reply === 'string' ? obj.reply.trim() : '',
+            parseFailed: false,
+          };
+        }
+      } catch {}
+    }
+
+    const partialMatch = trimmed.match(/"reply"\s*:\s*"((?:[^"\\]|\\.)*)(?:"|$)/s);
+    if (partialMatch) {
+      const recovered = decodeJsonStringFragment(partialMatch[1]);
+      if (/\p{L}{2,}/u.test(recovered)) {
         return {
-          abuse: Boolean(obj.abuse),
-          handoff: Boolean(obj.handoff),
-          reply: typeof obj.reply === 'string' ? obj.reply.trim() : '',
+          abuse: /"abuse"\s*:\s*true\b/i.test(trimmed),
+          handoff: /"handoff"\s*:\s*true\b/i.test(trimmed),
+          reply: recovered,
           parseFailed: false,
         };
       }
-    } catch {
-      return { abuse: false, handoff: true, reply: '', parseFailed: true };
+    }
+
+    if (/^\s*\{/.test(trimmed) || /"\s*(?:reply|abuse|handoff)\s*"\s*:/i.test(trimmed) || /\{[\s\S]*\}/.test(trimmed)) {
+      return { abuse: false, handoff: false, reply: '', parseFailed: true };
     }
   }
+
   const abuse = /\[ABUSE\]/i.test(trimmed);
   const handoff = /\[HANDOFF\]/i.test(trimmed);
   return {
@@ -1118,6 +1217,29 @@ export async function runAssistant({
   // The canned welcome is only for a plain hello that opens the conversation.
   if (smallTalkKind === 'greeting' && safeHistory.length === 0) return cannedSmallTalk('greeting');
   if (smallTalkKind && (!env || !env.AI || typeof env.AI.run !== 'function')) return cannedSmallTalk(smallTalkKind);
+
+  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 6);
+  const isCatalogOrBooking = !smallTalkKind && (chunks.length > 0 || DOMAIN_TOPIC_RE.test(cleanMsg));
+  const fallbackResponse = () => {
+    if (isCatalogOrBooking) {
+      return {
+        ok: true,
+        handoff: true,
+        fallback: true,
+        lang,
+        reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
+      };
+    }
+    return {
+      ok: true,
+      handoff: false,
+      handoffOffer: false,
+      fallback: true,
+      lang,
+      reply: `${warnPrefix}${msg('smallTalkFallback', lang)}`,
+    };
+  };
+
   if (!env || !env.AI || typeof env.AI.run !== 'function') {
     if (aiIdentityAsked) {
       return {
@@ -1127,16 +1249,9 @@ export async function runAssistant({
         reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
       };
     }
-    return {
-      ok: true,
-      handoff: true,
-      fallback: true,
-      lang,
-      reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
-    };
+    return fallbackResponse();
   }
 
-  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 6);
   const contextBlock = smallTalkKind
     ? '(Small talk: no catalog context needed.)'
     : chunks.length
@@ -1174,27 +1289,60 @@ export async function runAssistant({
     { role: 'user', content: cleanMsg.slice(0, 1000) },
   ];
 
-  const callModel = async (msgs, temperature) => parseModelOutput(await Promise.race([
-    env.AI.run(ASSISTANT_MODEL, {
-      messages: msgs,
-      max_completion_tokens: 280,
-      temperature,
-      chat_template_kwargs: { enable_thinking: false },
-    }),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('AI timeout')), AI_TIMEOUT_MS)),
-  ]));
+  const timeoutMs = Number(env && env.AI_TIMEOUT_MS) > 0 ? Number(env.AI_TIMEOUT_MS) : AI_TIMEOUT_MS;
+  const aiStartedAt = Date.now();
+  let lastParseFailed = false;
+  const isTimeoutErr = (err) => Boolean(err && (err.name === 'TimeoutError' || /timeout/i.test(String(err.message || ''))));
+  const runOnce = async (msgs, temperature) => {
+    let timer = null;
+    try {
+      const raw = await Promise.race([
+        env.AI.run(ASSISTANT_MODEL, {
+          messages: msgs,
+          max_completion_tokens: 320,
+          temperature,
+          chat_template_kwargs: { enable_thinking: false },
+        }),
+        new Promise((_, reject) => {
+          timer = setTimeout(() => {
+            const err = new Error(`AI timeout after ${timeoutMs}ms`);
+            err.name = 'TimeoutError';
+            reject(err);
+          }, timeoutMs);
+        }),
+      ]);
+      const parsedOut = parseModelOutput(raw);
+      lastParseFailed = Boolean(parsedOut.parseFailed);
+      return parsedOut;
+    } finally {
+      if (timer) clearTimeout(timer);
+    }
+  };
+  const callModel = async (msgs, temperature) => {
+    try {
+      return await runOnce(msgs, temperature);
+    } catch (err) {
+      if (isTimeoutErr(err)) {
+        return await runOnce(msgs, temperature);
+      }
+      throw err;
+    }
+  };
   // Casual chat gets a livelier temperature; catalog answers stay factual.
   const temperature = smallTalkKind ? 0.7 : 0.2;
 
   try {
     let parsed = await callModel(messages, temperature);
-    // Never send the same reply twice in a row: ask once more for a different wording.
+    // Never send the same reply twice in a row: ask once more for a different wording without losing a valid first draft.
     if (!parsed.parseFailed && sameAsLastReply(parsed.reply, safeHistory)) {
-      const retry = await callModel([
-        ...messages,
-        { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
-      ], 0.9);
-      if (!retry.parseFailed && retry.reply) parsed = retry;
+      try {
+        const retry = await callModel([
+          ...messages,
+          { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
+        ], 0.9);
+        const retryClean = stripFakeUrgency(stripExternalLinks(redactSensitive(retry.reply).text));
+        if (!retry.parseFailed && !isNonsensicalReply(retryClean)) parsed = retry;
+      } catch {}
     }
     // Small talk never needs a human: keep the model's friendly answer even if it asked for a handoff.
     if (smallTalkKind && parsed.handoff && parsed.reply && !parsed.abuse) parsed = { ...parsed, handoff: false };
@@ -1224,8 +1372,10 @@ export async function runAssistant({
       console.warn('assistant_ai_invalid_output', {
         model: ASSISTANT_MODEL,
         reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
+        durationMs: Math.max(0, Date.now() - aiStartedAt),
+        parseFailed: Boolean(parsed.parseFailed),
       });
-      return { ok: true, handoff: true, fallback: true, lang, reply: `${warnPrefix}${msg('unknownHandoff', lang)}` };
+      return fallbackResponse();
     }
     if (parsed.handoff) {
       return {
@@ -1251,14 +1401,11 @@ export async function runAssistant({
     console.error('assistant_ai_call_failed', {
       model: ASSISTANT_MODEL,
       errorType: err && err.name ? String(err.name) : 'Error',
+      message: redactSensitive(String(err && err.message ? err.message : '')).text.slice(0, 200),
+      durationMs: Math.max(0, Date.now() - aiStartedAt),
+      parseFailed: Boolean(lastParseFailed),
     });
-    return {
-      ok: true,
-      handoff: true,
-      fallback: true,
-      lang,
-      reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
-    };
+    return fallbackResponse();
   }
 }
 

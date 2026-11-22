@@ -66,6 +66,9 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       '.bc-bubble-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}' +
       '.bc-bubble-chip{background:#f0f5ff;border:1px solid #c9daf6;color:#0a1753;border-radius:999px;padding:4px 10px;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap}' +
       '.bc-bubble-chip:hover{background:#e1ecff}' +
+      '@media(max-width:480px){' +
+      'body.bc-chat-open .bc-fab,body.bc-chat-open .bc-bubble{display:none!important}' +
+      '}' +
       '@media(max-width:768px){' +
       '.bc-bubble{bottom:auto;top:64px;right:12px;left:12px;max-width:calc(100vw - 24px);padding:6px 10px;border-radius:999px;display:flex;align-items:center;justify-content:space-between;gap:6px;white-space:nowrap;overflow:hidden}' +
       '.bc-bubble[dir="rtl"]{right:12px;left:12px}' +
@@ -73,6 +76,13 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       '.bc-bubble-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px}' +
       '.bc-bubble-chips{margin-top:0;flex-wrap:nowrap;gap:4px;flex-shrink:0}' +
       '.bc-bubble-chip{padding:3px 8px;font-size:11px}' +
+      '}' +
+      '@media(prefers-color-scheme:dark){' +
+      '.bc-bubble{background:#111d3e;color:#e8eefc;border-color:#ffd565}' +
+      '.bc-bubble-text{color:#f2f6ff}' +
+      '.bc-bubble-close{color:#a9bad8}' +
+      '.bc-bubble-chip{background:#1b2c5e;border-color:#344c8c;color:#e8eefc}' +
+      '.bc-bubble-chip:hover{background:#243a78}' +
       '}' +
       '@media(prefers-reduced-motion:reduce){' +
       '.bc-fab,.bc-fab.bc-fab-pop,.bc-fab-avatar,.bc-bubble{animation:none!important;transition:none!important;transform:none!important}' +
@@ -186,10 +196,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       if ( pendingQuestion ) window.__bosphorlyInitialQuestion = pendingQuestion;
       const css = document.createElement('link');
       css.rel = 'stylesheet';
-      css.href = base + 'assistant-chat.css';
+      css.href = base + 'assistant-chat.css?v=20261122f';
       document.head.appendChild(css);
       const js = document.createElement('script');
-      js.src = base + 'assistant-chat.js';
+      js.src = base + 'assistant-chat.js?v=20261122f';
       js.defer = true;
       document.body.appendChild(js);
     };

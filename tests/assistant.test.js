@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
 import worker from '../backend/worker.js';
 import {
+  AI_TIMEOUT_MS,
   ASSISTANT_MESSAGES,
   ASSISTANT_MODEL,
   CHAT_SESSION_TTL_MS,
@@ -1480,3 +1481,140 @@ test('a hello with anything else (question mark, second sentence, 3+ words, extr
     assert.ok(!res.reply.includes(ASSISTANT_MESSAGES.greeting[res.lang]), `no canned welcome for "${c.message}"`);
   }
 });
+
+test('small talk ("nasılsın?", "Selam nasılsın") returns warm non-handoff replies on empty, non-JSON, truncated JSON, and slow/timeout responses', async (t) => {
+  assert.equal(AI_TIMEOUT_MS, 9000);
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(typeof ASSISTANT_MESSAGES.smallTalkFallback[lang] === 'string' && ASSISTANT_MESSAGES.smallTalkFallback[lang].includes('😅'), `smallTalkFallback in ${lang}`);
+  }
+  assert.equal(ASSISTANT_MESSAGES.smallTalkFallback.tr, 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?');
+
+  for (const q of ['nasılsın?', 'Selam nasılsın']) {
+    // 1. Non-JSON warm text & fenced/truncated JSON from model are preserved with handoff=false
+    for (const raw of [
+      { response: 'İyiyim, Boğaz havasıyla harikayım 😊 Sen nasılsın?' },
+      { response: '```json\n{"abuse":false,"handoff":false,"reply":"Çok iyiyim! İstanbul seni bekliyor 🌊"}\n```' },
+      { response: '{"abuse":false,"handoff":false,"reply":"Harika gidiyor! Sen nasılsın?' },
+      { response: '<think>reasoning\n</think>{"reply":"Süperim! Bugün neler yapıyorsun?"}' },
+    ]) {
+      const r = await runAssistant({
+        message: q,
+        pageLang: 'tr',
+        env: { AI: { run: async () => raw } },
+        actorKey: `st-nonjson-${Math.random()}`,
+      });
+      assert.equal(r.handoff, false, `no handoff for "${q}" non-JSON/truncated`);
+      assert.ok(!r.handoffOffer);
+      assert.ok(r.reply.length > 10 && !r.reply.includes('e-posta'));
+    }
+
+    // 2. Empty/nonsensical model output falls back to warm smallTalkFallback without asking for email or handoff
+    for (const emptyRaw of [{ response: '' }, { response: '{}' }, { response: '   ' }, { response: 'null' }]) {
+      const r = await runAssistant({
+        message: q,
+        pageLang: 'tr',
+        env: { AI: { run: async () => emptyRaw } },
+        actorKey: `st-empty-${Math.random()}`,
+      });
+      assert.equal(r.handoff, false, `empty response never sets handoff for "${q}"`);
+      assert.equal(r.fallback, true);
+      assert.equal(r.reply, ASSISTANT_MESSAGES.smallTalkFallback.tr);
+      assert.ok(!r.reply.includes('e-posta') && !r.reply.includes('martılarına bile'));
+    }
+
+    // 3. First attempt times out -> retried once -> succeeds warmly with model reply
+    let calls = 0;
+    const retryOk = await runAssistant({
+      message: q,
+      pageLang: 'tr',
+      env: {
+        AI_TIMEOUT_MS: 25,
+        AI: {
+          run: async () => {
+            calls += 1;
+            if (calls === 1) return new Promise(() => {});
+            return { response: JSON.stringify({ handoff: false, reply: 'İkinci denemede hemen geldim 😊 Çok iyiyim, sen nasılsın?' }) };
+          },
+        },
+      },
+      actorKey: `st-retry-ok-${Math.random()}`,
+    });
+    assert.equal(calls, 2, `timed-out "${q}" retried once`);
+    assert.equal(retryOk.handoff, false);
+    assert.ok(retryOk.reply.includes('İkinci denemede hemen geldim'));
+
+    // 4. Both attempts time out -> warm smallTalkFallback, never handoff, safe error log with no user text
+    const errorLogs = [];
+    t.mock.method(console, 'error', (...args) => errorLogs.push(args));
+    let timeoutCalls = 0;
+    const secretUserText = `${q} UNLOGGED_USER_TOKEN_XYZ`;
+    const retryFail = await runAssistant({
+      message: secretUserText,
+      pageLang: 'tr',
+      env: {
+        AI_TIMEOUT_MS: 20,
+        AI: {
+          run: async () => {
+            timeoutCalls += 1;
+            return new Promise(() => {});
+          },
+        },
+      },
+      actorKey: `st-retry-fail-${Math.random()}`,
+    });
+    t.mock.restoreAll();
+    assert.equal(timeoutCalls, 2);
+    assert.equal(retryFail.handoff, false);
+    assert.equal(retryFail.fallback, true);
+    assert.equal(retryFail.reply, ASSISTANT_MESSAGES.smallTalkFallback.tr);
+    assert.equal(errorLogs.length, 1);
+    assert.equal(errorLogs[0][0], 'assistant_ai_call_failed');
+    const logMeta = errorLogs[0][1];
+    assert.equal(logMeta.errorType, 'TimeoutError');
+    assert.ok(typeof logMeta.message === 'string' && logMeta.message.length > 0 && logMeta.message.length <= 200);
+    assert.ok(typeof logMeta.durationMs === 'number' && logMeta.durationMs >= 0);
+    assert.equal(typeof logMeta.parseFailed, 'boolean');
+    assert.equal(JSON.stringify(errorLogs).includes('UNLOGGED_USER_TOKEN_XYZ'), false);
+  }
+
+  // 5. sameAsLastReply second call failure keeps the valid first draft
+  let repCalls = 0;
+  const repSafe = await runAssistant({
+    message: 'nasılsın?',
+    pageLang: 'tr',
+    history: [{ role: 'user', content: 'nasılsın' }, { role: 'assistant', content: 'Harika gidiyor! Sen nasılsın?' }],
+    env: {
+      AI: {
+        run: async () => {
+          repCalls += 1;
+          if (repCalls === 1) return { response: JSON.stringify({ handoff: false, reply: 'Harika gidiyor! Sen nasılsın?' }) };
+          throw new Error('Retry error');
+        },
+      },
+    },
+    actorKey: 'st-same-reply-resilient',
+  });
+  assert.equal(repSafe.handoff, false);
+  assert.equal(repSafe.reply, 'Harika gidiyor! Sen nasılsın?');
+
+  // 6. General off-catalog chat error also avoids handoff, while catalog/booking questions still offer handoff fallback
+  const offCatalogFail = await runAssistant({
+    message: 'Futbol sever misin?',
+    pageLang: 'tr',
+    env: { AI: { run: async () => { throw new Error('Model error'); } } },
+    actorKey: 'st-offcatalog-fail',
+  });
+  assert.equal(offCatalogFail.handoff, false);
+  assert.equal(offCatalogFail.reply, ASSISTANT_MESSAGES.smallTalkFallback.tr);
+
+  const catalogFail = await runAssistant({
+    message: 'Boğaz turu saatleri neler?',
+    pageLang: 'tr',
+    env: { AI: { run: async () => { throw new Error('Model error'); } } },
+    actorKey: 'st-catalog-fail',
+  });
+  assert.equal(catalogFail.handoff, true);
+  assert.equal(catalogFail.fallback, true);
+  assert.equal(catalogFail.reply, ASSISTANT_MESSAGES.unknownHandoff.tr);
+});
+

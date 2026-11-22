@@ -52,7 +52,8 @@
     listening: { tr:'Dinliyorum…', en:'Listening…', ru:'Слушаю…', uk:'Слухаю…', de:'Ich höre zu…', fr:'J’écoute…', nl:'Ik luister…', ar:'أستمع…', he:'מאזינים…', az:'Dinləyirəm…', fa:'در حال شنیدن…', es:'Escuchando…', it:'Sto ascoltando…', pt:'Ouvindo…', hr:'Slušam…', hu:'Hallgatom…', bs:'Slušam…', zh:'正在听…', ja:'聞いています…', ko:'듣는 중…', hi:'सुन रहा हूँ…', bn:'শুনছি…', id:'Mendengarkan…' },
     micDenied: { tr:'Mikrofon izni verilmedi. İstersen sorunu yazarak gönderebilirsin.', en:'Microphone access was blocked. You can still type your question.', ru:'Доступ к микрофону закрыт. Вы можете написать вопрос текстом.', uk:'Доступ до мікрофона заборонено. Ви можете написати запитання текстом.', de:'Der Mikrofonzugriff wurde abgelehnt. Sie können Ihre Frage auch tippen.', fr:'L’accès au micro a été refusé. Vous pouvez écrire votre question.', nl:'Microfoontoegang is geweigerd. Je kunt je vraag ook typen.', ar:'تم رفض إذن الميكروفون. يمكنك كتابة سؤالك بدلًا من ذلك.', he:'הגישה למיקרופון נחסמה. אפשר עדיין להקליד את השאלה.', az:'Mikrofona icazə verilmədi. Sualınızı yazaraq da göndərə bilərsiniz.', fa:'اجازه میکروفون داده نشد. می‌توانید سؤالتان را تایپ کنید.', es:'Se bloqueó el acceso al micrófono. Aún puedes escribir tu pregunta.', it:'Accesso al microfono negato. Puoi comunque scrivere la domanda.', pt:'O acesso ao microfone foi bloqueado. Você ainda pode digitar a pergunta.', hr:'Pristup mikrofonu je odbijen. Pitanje i dalje možete upisati.', hu:'A mikrofonengedélyt elutasították. A kérdést be is gépelheti.', bs:'Pristup mikrofonu je odbijen. Pitanje i dalje možete upisati.', zh:'麦克风权限被拒绝。您仍可以直接输入问题。', ja:'マイクの使用が拒否されました。質問はキーボードから入力できます。', ko:'마이크 권한이 거부되었습니다. 질문을 직접 입력할 수도 있습니다.', hi:'माइक्रोफ़ोन की अनुमति नहीं मिली। आप सवाल टाइप भी कर सकते हैं।', bn:'মাইক্রোফোনের অনুমতি দেওয়া হয়নি। আপনি প্রশ্নটি লিখেও পাঠাতে পারেন।', id:'Akses mikrofon ditolak. Anda tetap bisa mengetik pertanyaan.' },
     micFailed: { tr:'Sesi yazıya çeviremedim. İstersen sorunu yazarak gönderebilirsin.', en:'I could not turn that into text. You can still type your question.', ru:'Не удалось распознать речь. Вы можете написать вопрос текстом.', uk:'Не вдалося розпізнати мовлення. Ви можете написати запитання текстом.', de:'Die Sprache konnte nicht in Text umgewandelt werden. Sie können Ihre Frage auch tippen.', fr:'Impossible de transcrire la voix. Vous pouvez écrire votre question.', nl:'De spraak kon niet naar tekst worden omgezet. Je kunt je vraag ook typen.', ar:'تعذّر تحويل الصوت إلى نص. يمكنك كتابة سؤالك.', he:'לא הצלחנו להפוך את הדיבור לטקסט. אפשר להקליד את השאלה.', az:'Səsi mətnə çevirə bilmədim. Sualınızı yazaraq göndərə bilərsiniz.', fa:'نتوانستم صدا را به متن تبدیل کنم. می‌توانید سؤالتان را تایپ کنید.', es:'No pude convertir la voz en texto. Aún puedes escribir tu pregunta.', it:'Non sono riuscito a trasformare la voce in testo. Puoi scrivere la domanda.', pt:'Não consegui transformar a voz em texto. Você ainda pode digitar a pergunta.', hr:'Nisam uspio pretvoriti glas u tekst. Pitanje i dalje možete upisati.', hu:'Nem sikerült szöveggé alakítani a beszédet. A kérdést be is gépelheti.', bs:'Nisam uspio pretvoriti glas u tekst. Pitanje i dalje možete upisati.', zh:'无法将语音转成文字。您仍可以直接输入问题。', ja:'音声を文字にできませんでした。質問はキーボードから入力できます。', ko:'음성을 텍스트로 바꾸지 못했습니다. 질문을 직접 입력할 수도 있습니다.', hi:'आवाज़ को टेक्स्ट में नहीं बदल सका। आप सवाल टाइप भी कर सकते हैं।', bn:'কথা লেখায় রূপান্তর করা যায়নি। আপনি প্রশ্নটি লিখেও পাঠাতে পারেন।', id:'Suara tidak bisa diubah menjadi teks. Anda tetap bisa mengetik pertanyaan.' },
-    micTooBig: { tr:'Ses kaydı en fazla 30 saniye ve 1 MB olabilir.', en:'A recording can be at most 30 seconds and 1 MB.', ru:'Запись — не длиннее 30 секунд и не больше 1 МБ.', uk:'Запис — не довший за 30 секунд і не більший за 1 МБ.', de:'Eine Aufnahme darf höchstens 30 Sekunden und 1 MB groß sein.', fr:'Un enregistrement ne peut pas dépasser 30 secondes ni 1 Mo.', nl:'Een opname mag maximaal 30 seconden en 1 MB zijn.', ar:'التسجيل يجب ألا يتجاوز 30 ثانية أو 1 ميغابايت.', he:'הקלטה יכולה להיות עד 30 שניות ו-1MB.', az:'Səs yazısı ən çox 30 saniyə və 1 MB ola bilər.', fa:'ضبط صدا حداکثر ۳۰ ثانیه و ۱ مگابایت است.', es:'La grabación puede durar como máximo 30 segundos y pesar 1 MB.', it:'La registrazione può durare al massimo 30 secondi e pesare 1 MB.', pt:'A gravação pode ter no máximo 30 segundos e 1 MB.', hr:'Snimka može trajati najviše 30 sekundi i imati 1 MB.', hu:'A felvétel legfeljebb 30 másodperc és 1 MB lehet.', bs:'Snimak može trajati najviše 30 sekundi i imati 1 MB.', zh:'录音最长 30 秒，且不超过 1 MB。', ja:'録音は30秒以内、1MBまでです。', ko:'녹음은 최대 30초, 1MB까지입니다.', hi:'रिकॉर्डिंग अधिकतम 30 सेकंड और 1 MB हो सकती है।', bn:'রেকর্ডিং সর্বোচ্চ ৩০ সেকেন্ড এবং ১ এমবি হতে পারে।', id:'Rekaman paling lama 30 detik dan 1 MB.' }
+    micTooBig: { tr:'Ses kaydı en fazla 30 saniye ve 1 MB olabilir.', en:'A recording can be at most 30 seconds and 1 MB.', ru:'Запись — не длиннее 30 секунд и не больше 1 МБ.', uk:'Запис — не довший за 30 секунд і не більший за 1 МБ.', de:'Eine Aufnahme darf höchstens 30 Sekunden und 1 MB groß sein.', fr:'Un enregistrement ne peut pas dépasser 30 secondes ni 1 Mo.', nl:'Een opname mag maximaal 30 seconden en 1 MB zijn.', ar:'التسجيل يجب ألا يتجاوز 30 ثانية أو 1 ميغابايت.', he:'הקלטה יכולה להיות עד 30 שניות ו-1MB.', az:'Səs yazısı ən çox 30 saniyə və 1 MB ola bilər.', fa:'ضبط صدا حداکثر ۳۰ ثانیه و ۱ مگابایت است.', es:'La grabación puede durar como máximo 30 segundos y pesar 1 MB.', it:'La registrazione può durare al massimo 30 secondi e pesare 1 MB.', pt:'A gravação pode ter no máximo 30 segundos e 1 MB.', hr:'Snimka može trajati najviše 30 sekundi i imati 1 MB.', hu:'A felvétel legfeljebb 30 másodperc és 1 MB lehet.', bs:'Snimak može trajati najviše 30 sekundi i imati 1 MB.', zh:'录音最长 30 秒，且不超过 1 MB。', ja:'録音は30秒以内、1MBまでです。', ko:'녹음은 최대 30초, 1MB까지입니다.', hi:'रिकॉर्डिंग अधिकतम 30 सेकंड और 1 MB हो सकती है।', bn:'রেকর্ডিং সর্বোচ্চ ৩০ সেকেন্ড এবং ১ এমবি হতে পারে।', id:'Rekaman paling lama 30 detik dan 1 MB.' },
+    quickToggle: { tr:'Hızlı sorular', en:'Quick prompts', ru:'Быстрые вопросы', uk:'Швидкі запитання', de:'Schnellfragen', fr:'Questions rapides', nl:'Snelle vragen', ar:'أسئلة سريعة', he:'שאלות מהירות', az:'Sürətli suallar', fa:'پرسش‌های سریع', es:'Preguntas rápidas', it:'Domande rapide', pt:'Perguntas rápidas', hr:'Brza pitanja', hu:'Gyors kérdések', bs:'Brza pitanja', zh:'快捷提问', ja:'クイック質問', ko:'빠른 질문', hi:'त्वरित प्रश्न', bn:'দ্রুত প্রশ্ন', id:'Pertanyaan cepat' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
 
@@ -118,9 +119,11 @@
   const SESSION_ID_KEY = 'bosphorly.assistant_session';
   const CLOSED_KEY = 'bosphorly.assistant_closed';
   const CHAT_SESSION_KEY = 'bosphorly.assistant_chat_session';
+  const KIND_NOTE_KEY = 'bosphorly.assistant_kind_note_seen';
   let history = [];
   let sessionId = '';
   let isChatClosed = false;
+  let kindNoteSeen = false;
   try {
     const saved = sessionStorage.getItem(STORE_KEY);
     if (saved) history = JSON.parse(saved);
@@ -133,6 +136,7 @@
       sessionStorage.setItem(SESSION_ID_KEY, sessionId);
     }
     isChatClosed = sessionStorage.getItem(CLOSED_KEY) === '1';
+    kindNoteSeen = sessionStorage.getItem(KIND_NOTE_KEY) === '1';
   } catch {
     sessionId = 's_' + Math.random().toString(36).slice(2, 10);
   }
@@ -156,21 +160,24 @@
     : (tgBot ? `https://t.me/${encodeURIComponent(tgBot)}?start=${encodeURIComponent(lang)}` : '');
   const chatScript = document.currentScript || document.querySelector('script[src*="assistant-chat.js"]');
   const assetBase = chatScript && chatScript.src ? new URL('.', chatScript.src).href : (window.BOSPHORLY_BASE || '');
-  const tgBarHtml = tgUrl
-    ? `<div class="bc-tg-bar"><a class="bc-tg-link" href="${tgUrl}" target="_blank" rel="noopener"><img class="bc-tg-ico" src="${assetBase}assets/brand/telegram.svg" alt="" aria-hidden="true" width="18" height="18" loading="lazy" decoding="async"><span>${tr('continueTg')}</span></a></div>`
+  const rawTitle = tr('title');
+  const titleHtml = rawTitle.startsWith('Mimo')
+    ? `<span class="bc-title-name">Mimo</span><span class="bc-title-rest">${rawTitle.slice(4)}</span>`
+    : `<span class="bc-title-name">${rawTitle}</span>`;
+  const tgHeadHtml = tgUrl
+    ? `<a class="bc-tg-link bc-tg-head" href="${tgUrl}" target="_blank" rel="noopener" aria-label="${tr('continueTg')}" title="${tr('continueTg')}"><img class="bc-tg-ico" src="${assetBase}assets/brand/telegram.svg" alt="" aria-hidden="true" width="22" height="22" loading="lazy" decoding="async"></a>`
     : '';
   const mimoSrc = (stateName = 'default') => `${base}assets/brand/mimo/mimo-${stateName}.svg`;
 
   const panel = document.createElement('section');
   panel.className = 'bc-panel';
   panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-label', tr('title'));
+  panel.setAttribute('aria-label', rawTitle);
   if (isRtl) panel.setAttribute('dir', 'rtl');
   panel.innerHTML =
     `<div class="bc-head"><div class="bc-head-info"><img class="bc-head-avatar" src="${mimoSrc('default')}" alt="Mimo" width="36" height="36" loading="lazy" decoding="async">` +
-    `<div><div class="bc-title">${tr('title')}</div><div class="bc-sub">${tr('sub')}</div></div></div>` +
-    `<button type="button" class="bc-close" aria-label="${tr('close')}">×</button></div>` +
-    tgBarHtml +
+    `<div class="bc-head-text"><div class="bc-title">${titleHtml}</div><div class="bc-sub">${tr('sub')}</div></div></div>` +
+    `<div class="bc-head-actions">${tgHeadHtml}<button type="button" class="bc-close" aria-label="${tr('close')}">×</button></div></div>` +
     `<div class="bc-log" aria-live="polite"></div>` +
     `<div class="bc-quick">` +
     `<button type="button" class="bc-quick-btn" data-q="transfer">${tr('qTransfer')}</button>` +
@@ -178,11 +185,10 @@
     `<button type="button" class="bc-quick-btn" data-q="hammam">${tr('qHammam')}</button>` +
     `<button type="button" class="bc-quick-btn" data-q="plan">${tr('qPlan')}</button>` +
     `</div>` +
-    `<div class="bc-handoff" hidden><div class="bc-handoff-row"><input type="email" placeholder="${tr('emailPh')}" autocomplete="email">` +
-    `<button type="button" class="bc-forward-btn">${tr('forwardBtn')}</button></div></div>` +
     `<div class="bc-actions"><button type="button" class="bc-human-btn">💬 ${tr('human')}</button></div>` +
     `<p class="bc-listen" hidden></p><p class="bc-mic-note" hidden></p>` +
-    `<form class="bc-form"><input class="bc-input" type="text" maxlength="1000" placeholder="${tr('placeholder')}" autocomplete="off">` +
+    `<form class="bc-form"><button type="button" class="bc-quick-toggle" aria-label="${tr('quickToggle')}" title="${tr('quickToggle')}" aria-expanded="false" hidden>✨</button>` +
+    `<input class="bc-input" type="text" maxlength="1000" placeholder="${tr('placeholder')}" autocomplete="off">` +
     `<button type="button" class="bc-mic" aria-label="${tr('mic')}" aria-pressed="false">🎤</button>` +
     `<button class="bc-send" type="submit">${tr('send')}</button></form>` +
     `<div class="bc-turnstile" hidden></div>`;
@@ -191,11 +197,9 @@
   const headAvatar = panel.querySelector('.bc-head-avatar');
   const logEl = panel.querySelector('.bc-log');
   const quickEl = panel.querySelector('.bc-quick');
+  const quickToggleBtn = panel.querySelector('.bc-quick-toggle');
   const closeBtn = panel.querySelector('.bc-close');
   const tsMount = panel.querySelector('.bc-turnstile');
-  const handoffBox = panel.querySelector('.bc-handoff');
-  const emailInput = handoffBox.querySelector('input');
-  const forwardBtn = handoffBox.querySelector('.bc-forward-btn');
   const humanBtn = panel.querySelector('.bc-human-btn');
   const form = panel.querySelector('.bc-form');
   const input = panel.querySelector('.bc-input');
@@ -212,6 +216,117 @@
   let tsInFlight = false;
   let tsWaiters = [];
   let tsScriptLoading = false;
+  let hasUserMessage = false;
+  let savedScrollY = null;
+
+  function syncPageLock() {
+    const isOpen = !panel.hidden;
+    document.body.classList.toggle('bc-chat-open', isOpen);
+    const isMobile = window.innerWidth <= 480;
+    if (isOpen && isMobile) {
+      if (savedScrollY === null) {
+        savedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${savedScrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+      }
+      document.documentElement.classList.add('bc-scroll-lock');
+      document.body.classList.add('bc-scroll-lock');
+    } else {
+      document.documentElement.classList.remove('bc-scroll-lock');
+      document.body.classList.remove('bc-scroll-lock');
+      if (savedScrollY !== null) {
+        const restoreY = savedScrollY;
+        savedScrollY = null;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        window.scrollTo(0, restoreY);
+      }
+    }
+  }
+
+  function syncMobileViewport() {
+    if (panel.hidden || window.innerWidth > 480) {
+      panel.style.top = '';
+      panel.style.bottom = '';
+      panel.style.height = '';
+      panel.style.maxHeight = '';
+      return;
+    }
+    const vv = window.visualViewport;
+    if (vv && vv.height > 0) {
+      panel.style.top = `${Math.max(0, Math.round(vv.offsetTop))}px`;
+      panel.style.bottom = 'auto';
+      panel.style.height = `${Math.round(vv.height)}px`;
+      panel.style.maxHeight = `${Math.round(vv.height)}px`;
+    }
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  function syncQuickActions(collapsed = true) {
+    if (!hasUserMessage) {
+      panel.classList.remove('bc-has-chatted');
+      quickEl.classList.remove('bc-quick-scroll', 'bc-quick-open');
+      quickToggleBtn.hidden = true;
+      quickToggleBtn.setAttribute('aria-expanded', 'false');
+      return;
+    }
+    panel.classList.add('bc-has-chatted');
+    quickEl.classList.add('bc-quick-scroll');
+    quickToggleBtn.hidden = false;
+    if (collapsed) {
+      quickEl.classList.remove('bc-quick-open');
+      quickToggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  function removeHandoffCard() {
+    panel.querySelectorAll('.bc-handoff').forEach((card) => card.remove());
+  }
+
+  function openHandoffCard(anchorRow = null) {
+    if (isChatClosed) return null;
+    removeHandoffCard();
+    const card = document.createElement('div');
+    card.className = 'bc-handoff';
+    card.innerHTML =
+      `<div class="bc-handoff-head"><span>✉️ ${tr('human')}</span>` +
+      `<button type="button" class="bc-handoff-close" aria-label="${tr('close')}">×</button></div>` +
+      `<div class="bc-handoff-row"><input type="email" placeholder="${tr('emailPh')}" autocomplete="email">` +
+      `<button type="button" class="bc-forward-btn">${tr('forwardBtn')}</button></div>`;
+    const cardEmail = card.querySelector('input');
+    const cardForward = card.querySelector('.bc-forward-btn');
+    const cardClose = card.querySelector('.bc-handoff-close');
+    cardClose.addEventListener('click', () => card.remove());
+    cardForward.addEventListener('click', () => handleHandoffSubmit(card, cardEmail, cardForward));
+    cardEmail.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleHandoffSubmit(card, cardEmail, cardForward);
+      }
+    });
+
+    let targetRow = anchorRow && logEl.contains(anchorRow) ? anchorRow : null;
+    if (!targetRow) {
+      const botRows = logEl.querySelectorAll('.bc-msg-row.bot');
+      if (botRows.length) targetRow = botRows[botRows.length - 1];
+    }
+    if (targetRow) {
+      const nextEl = targetRow.nextElementSibling;
+      if (nextEl && nextEl.classList.contains('bc-kind-note')) nextEl.insertAdjacentElement('afterend', card);
+      else targetRow.insertAdjacentElement('afterend', card);
+    } else {
+      logEl.appendChild(card);
+    }
+    logEl.scrollTop = logEl.scrollHeight;
+    cardEmail.focus();
+    return card;
+  }
 
   function lockChatClosed() {
     isChatClosed = true;
@@ -222,9 +337,8 @@
     input.disabled = true;
     sendBtn.disabled = true;
     humanBtn.disabled = true;
-    forwardBtn.disabled = true;
-    emailInput.disabled = true;
-    handoffBox.hidden = true;
+    quickToggleBtn.disabled = true;
+    removeHandoffCard();
     panel.querySelectorAll('.bc-quick-btn, .bc-offer-btn').forEach((btn) => {
       btn.disabled = true;
     });
@@ -266,7 +380,10 @@
   }
 
   function renderMsg(role, text, opts = {}) {
-    if (role === 'user') quickEl.classList.add('bc-quick-scroll');
+    if (role === 'user') {
+      hasUserMessage = true;
+      syncQuickActions(true);
+    }
     const isFirstBotMsg = role === 'bot' && !logEl.querySelector('.bc-msg-row.bot');
     const row = document.createElement('div');
     row.className = `bc-msg-row ${role === 'user' ? 'user' : 'bot'}`;
@@ -307,8 +424,7 @@
         yesBtn.textContent = tr('yesForward');
         yesBtn.addEventListener('click', () => {
           actions.remove();
-          handoffBox.hidden = false;
-          emailInput.focus();
+          openHandoffCard(row);
         });
         const noBtn = document.createElement('button');
         noBtn.type = 'button';
@@ -316,7 +432,7 @@
         noBtn.textContent = tr('noThanks');
         noBtn.addEventListener('click', () => {
           actions.remove();
-          handoffBox.hidden = true;
+          removeHandoffCard();
         });
         actions.append(yesBtn, noBtn);
         div.appendChild(actions);
@@ -351,13 +467,17 @@
       row.appendChild(div);
     }
     logEl.appendChild(row);
-    if (isFirstBotMsg && !logEl.querySelector('.bc-kind-note')) {
+    if (isFirstBotMsg && !kindNoteSeen && !history.length && !logEl.querySelector('.bc-kind-note')) {
       const note = document.createElement('div');
       note.className = 'bc-kind-note';
       note.textContent = tr('kindNote');
+      note.title = tr('kindNote');
       logEl.appendChild(note);
+      kindNoteSeen = true;
+      try { sessionStorage.setItem(KIND_NOTE_KEY, '1'); } catch {}
     }
     logEl.scrollTop = logEl.scrollHeight;
+    return row;
   }
 
   let typingRow = null;
@@ -387,6 +507,7 @@
   } else {
     for (const m of history) renderMsg(m.role === 'user' ? 'user' : 'bot', m.content);
   }
+  syncQuickActions(true);
   if (isChatClosed) lockChatClosed();
 
   function resolveTurnstileWaiters(tok) {
@@ -596,8 +717,8 @@
       history.push({ role: 'user', content: message }, { role: 'assistant', content: reply });
       saveHistory();
       hideTyping();
-      renderMsg('bot', reply, { handoffOffer: Boolean(data.handoffOffer), avatarState: 'happy' });
-      if (data.handoff) handoffBox.hidden = false;
+      const botRow = renderMsg('bot', reply, { handoffOffer: Boolean(data.handoffOffer), avatarState: 'happy' });
+      if (data.handoff) openHandoffCard(botRow);
     } catch {
       hideTyping();
       renderMsg('bot', tr('offline'));
@@ -607,11 +728,19 @@
     }
   }
 
+  function applyOpenState(isOpen) {
+    panel.hidden = !isOpen;
+    syncPageLock();
+    syncMobileViewport();
+  }
+
   const toggle = (open) => {
-    panel.hidden = !open;
-    if (open) {
+    const nextOpen = Boolean(open);
+    applyOpenState(nextOpen);
+    if (nextOpen) {
       loadTurnstile();
-      if (!isChatClosed) input.focus();
+      logEl.scrollTop = logEl.scrollHeight;
+      if (!isChatClosed && window.innerWidth > 480) input.focus();
     }
   };
   window.__bosphorlyChatToggle = () => toggle(panel.hidden);
@@ -628,8 +757,19 @@
   panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { stopDictation(); toggle(false); } });
   humanBtn.addEventListener('click', () => {
     if (isChatClosed) return;
-    handoffBox.hidden = !handoffBox.hidden;
-    if (!handoffBox.hidden) emailInput.focus();
+    if (logEl.querySelector('.bc-handoff')) {
+      removeHandoffCard();
+      return;
+    }
+    openHandoffCard();
+  });
+
+  quickToggleBtn.addEventListener('click', () => {
+    if (isChatClosed || !hasUserMessage) return;
+    const nextOpen = !quickEl.classList.contains('bc-quick-open');
+    quickEl.classList.toggle('bc-quick-open', nextOpen);
+    quickToggleBtn.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+    logEl.scrollTop = logEl.scrollHeight;
   });
 
   panel.querySelectorAll('.bc-quick-btn').forEach((btn) => {
@@ -645,13 +785,13 @@
     await submitMessage(input.value);
   });
 
-  forwardBtn.addEventListener('click', async () => {
+  async function handleHandoffSubmit(card, cardEmail, cardForward) {
     if (isChatClosed) return;
-    const email = emailInput.value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
+    const email = cardEmail.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { cardEmail.focus(); return; }
     if (!apiBase) { renderMsg('bot', tr('offline')); return; }
     const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
-    forwardBtn.disabled = true;
+    cardForward.disabled = true;
     const postHandoff = (authPayload) => fetch(`${apiBase}/v1/assistant/handoff`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -693,8 +833,7 @@
         return;
       }
       if (res.ok) {
-        handoffBox.hidden = true;
-        emailInput.value = '';
+        card.remove();
         renderMsg('bot', tr('forwarded'));
       } else if (res.status === 403) {
         renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
@@ -704,9 +843,9 @@
     } catch {
       renderMsg('bot', tr('offline'));
     } finally {
-      forwardBtn.disabled = isChatClosed;
+      cardForward.disabled = isChatClosed;
     }
-  });
+  }
 
   const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
   const speechLocale = (code) => SPEECH_LOCALES[String(code || '').slice(0, 2)] || 'en-US';
@@ -856,8 +995,21 @@
     else showMicNote('micFailed');
   });
 
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', syncMobileViewport);
+    window.visualViewport.addEventListener('scroll', syncMobileViewport);
+  }
+  window.addEventListener('resize', () => {
+    syncPageLock();
+    syncMobileViewport();
+  });
+  input.addEventListener('focus', () => {
+    setTimeout(syncMobileViewport, 60);
+  });
+
+  applyOpenState(true);
   loadTurnstile();
-  if (!isChatClosed) input.focus();
+  if (!isChatClosed && window.innerWidth > 480) input.focus();
   if (window.__bosphorlyInitialQuestion && !isChatClosed) {
     const q = window.__bosphorlyInitialQuestion;
     window.__bosphorlyInitialQuestion = '';
