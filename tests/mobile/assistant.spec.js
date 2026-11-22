@@ -21,6 +21,9 @@ test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile withou
   await expect(panel.locator('.bc-title')).toHaveText('Mimo · İstanbul asistanın');
   await expect(panel.locator('img.bc-head-avatar')).toBeVisible();
   await expect(panel.locator('img.bc-bot-avatar').first()).toBeVisible();
+  const kindNote = panel.locator('.bc-kind-note');
+  await expect(kindNote).toBeVisible();
+  await expect(kindNote).toContainText('Mimo’ya nazik davrandığın için teşekkürler 💙');
 
   // 4 quick question buttons are present
   await expect(panel.locator('.bc-quick-btn')).toHaveCount(4);
@@ -51,6 +54,9 @@ test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic w
   await expect(panel).toBeVisible();
   await expect(panel).toHaveAttribute('dir', 'rtl');
   await expect(panel.locator('.bc-title')).toHaveText('Mimo · مساعدك في إسطنبول');
+  const arKindNote = panel.locator('.bc-kind-note');
+  await expect(arKindNote).toBeVisible();
+  await expect(arKindNote).toContainText('💙');
 
   const box = await panel.boundingBox();
   expect(box.x).toBeGreaterThanOrEqual(0);
@@ -139,7 +145,7 @@ test('all Telegram links stay hidden when telegramBot in config/api.js is empty'
 });
 
 
-test('greeting bubble shows once per session, does not cover mobile reservation buttons, hides on input focus, and closes on Escape', async ({ page }) => {
+test('greeting bubble shows once per session, does NOT contain kindNote, does not cover mobile reservation buttons, hides on input focus, and closes on Escape', async ({ page }) => {
   await page.addInitScript(() => {
     window.__BOSPHORLY_MIMO_BUBBLE_MS = 250;
     window.__BOSPHORLY_MIMO_COLLAPSE_MS = 8000;
@@ -150,6 +156,8 @@ test('greeting bubble shows once per session, does not cover mobile reservation 
   await expect(bubble).toBeVisible({ timeout: 3000 });
   await expect(bubble).toHaveAttribute('aria-live', 'polite');
   await expect(bubble.locator('.bc-bubble-text')).toContainText('Merhaba, ben Mimo 👋');
+  await expect(bubble).not.toContainText('Saygısız dil');
+  await expect(bubble.locator('.bc-kind-note')).toHaveCount(0);
   await expect(bubble.locator('.bc-bubble-chip')).toHaveCount(2);
 
   // Verify Playwright bounding box: bubble does NOT overlap the reservation button (#toStep2)
@@ -249,4 +257,46 @@ test('contextual first messages, member greeting, quick question send, and 👍/
   await page.goto('/booking.html?service=alaturka&lang=tr');
   await page.locator('.bc-fab').click();
   await expect(page.locator('.bc-msg.bot').first()).toContainText('İlk hamam deneyimin mi? 🛁');
+});
+
+test('zero-tolerance closure locks input box and all panel buttons immediately on closed response', async ({ page }) => {
+  await page.route('**/v1/assistant', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        closed: true,
+        status: 'closed',
+        handoff: false,
+        lang: 'tr',
+        reply: 'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.',
+      }),
+    });
+  });
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-tok"),10);return 1},reset(){}};',
+    });
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await expect(panel).toBeVisible();
+  await expect(panel.locator('.bc-kind-note')).toBeVisible();
+
+  // Wait for Turnstile token before submitting
+  await page.waitForTimeout(80);
+  await panel.locator('.bc-input').fill('Sen çok aptalsın');
+  await panel.locator('.bc-send').click();
+
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('Bu dille konuşmaya devam edemem.');
+  await expect(panel).toHaveAttribute('data-closed', 'true');
+  await expect(panel.locator('.bc-input')).toBeDisabled();
+  await expect(panel.locator('.bc-send')).toBeDisabled();
+  await expect(panel.locator('.bc-human-btn')).toBeDisabled();
+  for (let i = 0; i < 4; i++) {
+    await expect(panel.locator('.bc-quick-btn').nth(i)).toBeDisabled();
+  }
 });

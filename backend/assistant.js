@@ -13,6 +13,11 @@ const AI_TIMEOUT_MS = 15000;
 
 const memoryLimits = new Map();
 const memoryFeedback = new Map();
+const memoryBlocks = new Map();
+
+export const WEB_BLOCK_MS = 24 * 60 * 60 * 1000;
+export const TG_FIRST_BLOCK_MS = 7 * 24 * 60 * 60 * 1000;
+export const TG_REPEAT_BLOCK_MS = 30 * 24 * 60 * 60 * 1000;
 
 export const TIME_GREETINGS = {
   morning: {
@@ -368,6 +373,56 @@ export const ASSISTANT_MESSAGES = {
     bn: 'আপনি খুব দ্রুত বার্তা পাঠাচ্ছেন। একটু পরে আবার চেষ্টা করুন বা আমাদের টিমে পাঠান।',
     id: 'Anda mengirim pesan terlalu cepat. Coba lagi sebentar atau teruskan pesan ke tim kami.',
   },
+  abuseClose: {
+    tr: 'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.',
+    en: 'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.',
+    ru: 'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у вас есть вопрос, вы можете написать на info@bosphorly.com.',
+    uk: 'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєте питання, напишіть на info@bosphorly.com.',
+    de: 'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen können Sie an info@bosphorly.com schreiben.',
+    fr: 'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, vous pouvez écrire à info@bosphorly.com.',
+    nl: 'Op deze toon kan ik het gesprek niet voortzetten. Ik beëindig de chat hier. Als je een vraag hebt, kun je mailen naar info@bosphorly.com.',
+    ar: 'لا يمكنني متابعة المحادثة بهذه اللغة. أنهي المحادثة هنا. إذا كانت لديك مشكلة يمكنك الكتابة إلى info@bosphorly.com.',
+    he: 'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לכם פנייה, ניתן לכתוב אל info@bosphorly.com.',
+    az: 'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualınız varsa info@bosphorly.com ünvanına yaza bilərsiniz.',
+    fa: 'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی دارید می‌توانید به info@bosphorly.com بنویسید.',
+    es: 'No puedo continuar la conversación con este lenguaje. Termino el chat aquí. Si tienes algún problema, puedes escribir a info@bosphorly.com.',
+    it: 'Non posso continuare la conversazione con questo linguaggio. Chiudo qui la chat. Se hai un problema, puoi scrivere a info@bosphorly.com.',
+    pt: 'Não posso continuar a conversa com essa linguagem. Encerro o chat aqui. Se tiver alguma questão, escreva para info@bosphorly.com.',
+    hr: 'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.',
+    hu: 'Ilyen hangnemben nem tudom folytatni a beszélgetést. A csevegést itt lezárom. Ha kérdésed van, írhatsz az info@bosphorly.com címre.',
+    bs: 'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.',
+    zh: '我无法在这样的语言下继续对话。本次对话到此结束。如有问题，请发邮件至 info@bosphorly.com。',
+    ja: 'このような言葉遣いでは会話を続けられません。ここでチャットを終了します。ご用件がある場合は info@bosphorly.com までご連絡ください。',
+    ko: '이러한 표현으로는 대화를 이어갈 수 없습니다. 여기서 대화를 종료합니다. 문의 사항이 있으시면 info@bosphorly.com으로 메일을 보내주세요.',
+    hi: 'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए आप info@bosphorly.com पर लिख सकते हैं।',
+    bn: 'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারেন।',
+    id: 'Saya tidak dapat melanjutkan percakapan dengan bahasa seperti ini. Saya mengakhiri obrolan di sini. Jika ada masalah, silakan tulis ke info@bosphorly.com.',
+  },
+  kindNote: {
+    tr: 'Mimo’ya nazik davrandığın için teşekkürler 💙 Saygısız dil kullanılırsa sohbet sonlanır.',
+    en: 'Thank you for being kind to Mimo 💙 The chat ends if disrespectful language is used.',
+    ru: 'Спасибо за вежливое общение с Mimo 💙 При неуважительном тоне чат завершается.',
+    uk: 'Дякуємо за ввічливе спілкування з Mimo 💙 У разі неповажного тону чат завершується.',
+    de: 'Danke, dass du freundlich zu Mimo bist 💙 Bei respektloser Sprache wird der Chat beendet.',
+    fr: 'Merci d’être bienveillant avec Mimo 💙 Le chat prend fin en cas de langage irrespectueux.',
+    nl: 'Bedankt dat je vriendelijk bent tegen Mimo 💙 Bij respectloos taalgebruik stopt de chat.',
+    ar: 'شكرًا للطفك مع Mimo 💙 تنتهي المحادثة في حال استخدام لغة غير محترمة.',
+    he: 'תודה שאתם נחמדים אל Mimo 💙 השיחה מסתיימת במקרה של שפה לא מכבדת.',
+    az: 'Mimo ilə nəzakətli davrandığınız üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.',
+    fa: 'ممنون که با Mimo مهربان هستید 💙 در صورت استفاده از لحن نامحترمانه گفتگو پایان می‌یابد.',
+    es: 'Gracias por tratar con amabilidad a Mimo 💙 El chat finaliza si se usa lenguaje irrespetuoso.',
+    it: 'Grazie per essere gentile con Mimo 💙 La chat termina in caso di linguaggio irrispettoso.',
+    pt: 'Obrigado por tratar o Mimo com gentileza 💙 O chat é encerrado se houver linguagem desrespeitosa.',
+    hr: 'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.',
+    hu: 'Köszönjük, hogy kedves vagy Mimóval 💙 Tiszteletlen hangnem esetén a csevegés véget ér.',
+    bs: 'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.',
+    zh: '感谢您温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。',
+    ja: 'Mimoに優しく接していただきありがとうございます 💙 礼儀を欠く言葉遣いがあった場合、チャットは終了します。',
+    ko: 'Mimo에게 다정하게 대해 주셔서 고마워요 💙 무례한 표현이 사용되면 대화가 종료됩니다.',
+    hi: 'Mimo के साथ विनम्र रहने के लिए धन्यवाद 💙 अपमानजनक भाषा का प्रयोग होने पर चैट समाप्त हो जाएगी।',
+    bn: 'Mimo-এর সাথে সদয় আচরণের জন্য ধন্যবাদ 💙 অসম্মানজনক ভাষা ব্যবহার করলে চ্যাট বন্ধ হয়ে যাবে।',
+    id: 'Terima kasih telah bersikap ramah kepada Mimo 💙 Obrolan akan berakhir jika bahasa tidak sopan digunakan.',
+  },
 };
 
 function msg(key, lang) {
@@ -567,9 +622,112 @@ export function isAiIdentityQuestion(message) {
   return /(?:^|[^\p{L}])(sen\s+insan\s+m[ıi]s[ıi]n|insan\s+m[ıi]s[ıi]n|gerçek\s+(?:bir\s+)?insan\s+m[ıi]s[ıi]n|yapay\s+zek[aâ]\s+m[ıi]s[ıi]n|robot\s+musun|bot\s+musun|sen\s+kimsin|kimsin\s+sen|are\s+you\s+(?:a\s+)?(?:human|real\s+person|person|bot|robot|ai|artificial\s+intelligence)|who\s+are\s+you|ты\s+(?:человек|бот|робот|ии)|ви\s+(?:людина|бот|робот)|bist\s+du\s+(?:ein\s+)?(?:mensch|bot|roboter|ki)|es[-\s]tu\s+(?:humain|un\s+humain|un\s+robot|un\s+bot|une\s+ia)|ben\s+je\s+(?:een\s+)?(?:mens|bot|robot)|هل\s+أنت\s+(?:إنسان|بشر|روبوت|بوت|ذكاء\s+اصطناعي)|האם\s+אתה\s+(?:אנושי|אדם|בוט|רובוט)|sən\s+insansan|آیا\s+(?:شما|تو)\s+انسان\s+هست|¿?eres\s+(?:humano|una\s+persona|un\s+bot|un\s+robot|una\s+ia)|sei\s+(?:umano|una\s+persona|un\s+bot|un\s+robot)|você\s+é\s+(?:humano|uma\s+pessoa|um\s+robô|um\s+bot)|jesi\s+li\s+(?:čovjek|covjek|robot|bot)|ember\s+vagy|你是(?:真人|人类|人|机器人|人工智能)吗|あなたは(?:人間|ロボット|ボット|ai)ですか|(?:\s|^)(?:사람|인간|로봇|봇|인공지능)(?:인가요|이니|입니까|이야)|क्या\s+(?:आप|तुम)\s+इंसान\s+हैं|আপনি\s+কি\s+মানুষ|apakah\s+(?:kamu|anda)\s+manusia)(?=$|[^\p{L}])/iu.test(t);
 }
 
+export function isServiceComplaint(message) {
+  const t = String(message || '').toLowerCase();
+  if (!t) return false;
+  return /(?:^|[^\p{L}])(transfer\s+gelmedi|şoför\s+gelmedi|araç\s+gelmedi|rehber\s+gelmedi|berbat\s+hizmet|kötü\s+hizmet|rezalet\s+hizmet|hizmet\s+(?:çok\s+)?(?:kötü|berbat|rezalet)|tur\s+iptal\s+oldu|geç\s+kald[ıi]\p{L}*|gecikti\p{L}*|memnun\s+kalmad[ıi]\p{L}*|şikayet\p{L}*|şikâyet\p{L}*|transfer\s+did(?:n'?t|\s+not)\s+(?:arrive|come|show)|driver\s+did(?:n'?t|\s+not)\s+(?:arrive|come|show)|driver\s+was\s+late|terrible\s+service|bad\s+service|awful\s+service|poor\s+service|worst\s+service|horrible\s+service|service\s+was\s+(?:terrible|bad|awful|horrible)|трансфер\s+не\s+приехал|водитель\s+не\s+приехал|ужасный\s+сервис|плохой\s+сервис|жахливий\s+сервіс|трансфер\s+не\s+приїхав|schlechter\s+service|transfer\s+kam\s+nicht|fahrer\s+kam\s+nicht|mauvais\s+service|chauffeur\s+n'est\s+pas\s+venu|slechte\s+service|خدمة\s+سيئة|الترانسفر\s+لم\s+يصل|السائق\s+لم\s+يحضر|שירות\s+גרוע|ההסעה\s+לא\s+הגיעה|pis\s+xidmət|transfer\s+gəlmədi|خدمات\s+افتضاح|خدمات\s+بد|ترانسفر\s+نیامد|servicio\s+terrible|mal\s+servicio|el\s+transfer\s+no\s+llegó|servizio\s+pessimo|cattivo\s+servizio|péssimo\s+serviço|mau\s+serviço|loša\s+usluga|transfer\s+nije\s+došao|rossz\s+szolgáltatás|服务太差|接送没来|司机没来|サービスが悪い|送迎が来ない|서비스가\s+최악|픽업이\s+안\s+왔어요|खराब\s+सेवा|ट्रांसफर\s+नहीं\s+आया|বাজে\s+সার্ভিস|ট্রান্সফার\s+আসেনি|layanan\s+buruk|jemputan\s+tidak\s+datang)(?=$|[^\p{L}])/iu.test(t);
+}
+
+const ABUSE_THREAT_RE = /(?:^|[^\p{L}])(seni\s+öldür\p{L}*|öldüreceğim|öldürürüm\s+seni|geber\p{L}*|seni\s+bulacağ\p{L}*|seni\s+mahved\p{L}*|kafan[ıi]\s+k[ıi]r\p{L}*|boğar[ıi]m\s+seni|seni\s+yakar[ıi]m|i(?:'ll|\s+will)\s+(?:kill|murder|hurt|beat|destroy|shoot|bomb|find\s+and\s+kill)\s+you|kill\s+you(?:rself)?|murder\s+you|go\s+die|die\s+bitch|kys|rape\s+you|убью\s+тебя|я\s+тебя\s+убью|сдохни|вб'ю\s+тебе|здохни|ich\s+(?:töte|bringe)\s+dich(?:\s+um)?|stirb\s+du|je\s+vais\s+te\s+tuer|crève|ik\s+maak\s+je\s+af|سأقتلك|أقتلك|سأذبحك|أذبحك|אהרוג\s+אותך|תמות|səni\s+öldürəcəm|gəbər|می‌کشمت|تو\s+را\s+می‌کشم|بمیر|te\s+voy\s+a\s+matar|muérete|ti\s+ammazzo|muori|vou\s+te\s+matar|morra|ubit\s+ću\s+te|crkni|megöllek|dögölj\s+meg|我要杀了你|弄死你|去死吧|殺すぞ|死ね|죽여버릴|죽어라|जान\s+से\s+मार\s+दूँगा|मर\s+जा|তোকে\s+মেরে\s+ফেলব|মরে\s+যা|aku\s+bunuh\s+kamu|mati\s+saja)(?=$|[^\p{L}])/iu;
+
+const ABUSE_PROFANITY_SEXUAL_HATE_RE = /(?:^|[^\p{L}])(amk|a\.q\.|siktir\p{L}*|sik(?:eyim|erim|ik|tir)|orospu\p{L}*|piç\p{L}*|pezevenk\p{L}*|ibne\p{L}*|göt(?:veren|ünü| lalesi)|yarrak\p{L}*|amc[ıi]k\p{L}*|kaltak\p{L}*|fahişe\p{L}*|kahpe\p{L}*|puşt\p{L}*|şerefsiz\p{L}*|haysiyetsiz\p{L}*|namussuz\p{L}*|bok\s+ye|soyun\s+benim\s+için|seks\s+yapal[ıi]m|tecavüz\p{L}*|fuck(?:\s+you|\s+off|ing\s+bot|ing\s+idiot|er)?|motherfuck\p{L}*|bitch\p{L}*|asshole\p{L}*|bastard\p{L}*|cunt\p{L}*|dickhead|whore\p{L}*|slut\p{L}*|retard\p{L}*|nigger\p{L}*|faggot\p{L}*|suck\s+my\s+dick|blowjob|send\s+nudes|strip\s+for\s+me|блядь|блять|сука|хуй\p{L}*|пизд\p{L}*|ебать|ебан\p{L}*|мудак\p{L}*|гандон\p{L}*|шлюха|тварь|курва|їбати|пізд\p{L}*|довбойоб|fick\s+dich|arschloch|hurensohn|fotze|schlampe|missgeburt|wichser|connard|connasse|salope|putain\s+de\s+bot|enculé|ferme\s+ta\s+gueule|ta\s+gueule|klootzak|kanker\p{L}*|hoer|kutbot|rot\s+op|شرموط\p{L}*|قحب\p{L}*|كس\s+أمك|نيك|ابن\s+الكلب|اخرس|لعنة\s+الله\s+عليك|זונה|בן\s+זונה|תשתוק|מניאק|qəhbə|sikdir|köpək\s+oğlu|rədd\s+ol|kəs\s+səsini|جنده|خفه\s+شو|کص\p{L}*|کیر\p{L}*|گمشو|حرامزاده|hijo\s+de\s+puta|puta\s+madre|cabrón|gilipollas|pendejo|cállate|vaffanculo|stronzo|puttana|troia|cazzo|sta'\s+zitto|filho\s+da\s+puta|vai\s+se\s+foder|caralho|arrombado|cala\s+a\s+boca|jebem\s+ti|pička\s+ti|kurac|kurva|mrš\s+u|zaveži|fasz\p{L}*|geci|bazdmeg|kussolj|傻逼|操你\p{L}*|草泥马|滚蛋|去死|闭嘴|クソボット|黙れ|きもい|変態|씨발|시발|병신|개새끼|미친놈|꺼져|닥쳐|मादरचोद|बहनचोद|चूतिया|गांडू|चुप\s+कर|कुत्ते|कमीने|মাদারচোদ|বোকাচোদা|হারামি|চুপ\s+কর|কুত্তা|শালা|anjing\s+lu|bangsat|brengsek|bajingan|tutup\s+mulut)(?=$|[^\p{L}])/iu;
+
+const ABUSE_INSULT_MIMO_RE = /(?:^|[^\p{L}])(aptal\p{L}*|salak\p{L}*|gerizekal[ıi]\p{L}*|geri\s+zek[aâ]l[ıi]\p{L}*|beyinsiz\p{L}*|embesil\p{L}*|dangalak\p{L}*|ahmak\p{L}*|budala\p{L}*|mal\s+m[ıi]s[ıi]n|kes\s+sesini|kapa\s+çeneni|sus\s+lan|defol\p{L}*|işe\s+yaramaz\s+(?:şey|bot|asistan|mimo|yapay\s+zeka)|çöp\s+(?:bot|asistan|mimo)|sen\s+(?:çok\s+)?(?:aptal|salak|berbat|iğrenç|işe\s+yaramaz|çöp)\p{L}*|you\s+(?:are|'re)\s+(?:so\s+)?(?:stupid|dumb|an?\s+idiot|an?\s+imbecile|a\s+moron|useless|trash|garbage|pathetic|worthless|disgusting)|(?:stupid|dumb|idiot|useless|trash|garbage|worthless|pathetic|brainless)\s+(?:bot|ai|assistant|mimo)|shut\s+up|moron|imbecile|scumbag|piece\s+of\s+(?:shit|trash|garbage)|тупой\s+(?:бот|ассистент|mimo)|идиот|дебил|бесполезный\s+бот|заткнись|тупий\s+(?:бот|асистент|mimo)|ідіот|дебіл|замовкни|dumm(?:er|es)?\s+(?:bot|ki|assistent|mimo)|blöder\s+bot|halt\s+die\s+klappe|halt's\s+maul|idiot|stupide\s+(?:bot|robot|assistant|mimo)|imbécile|crétin|abruti|tais-toi|stomme\s+(?:bot|assistent|mimo)|idioot|hou\s+je\s+mond|أنت\s+(?:غبي|أحمق|تافه|عديم\s+الفائدة)|بوت\s+غبي|غبي\s+جدًا|أحمق|אידיוט|מטומטם|בוט\s+טיפש|חסר\s+תועלת|sən\s+axmaqsan|axmaq\s+bot|gicbəsər|tupoy|تو\s+احمقی|ربات\s+احمق|بیشعور|احمق|عوضی|eres\s+(?:un\s+)?(?:idiota|imbécil|estúpido|inútil)|bot\s+(?:estúpido|inútil|idiota)|sei\s+(?:un\s+)?(?:idiota|imbecille|stupido|inutile)|bot\s+(?:stupido|inutile)|você\s+é\s+(?:um\s+)?(?:idiota|imbecil|estúpido|inútil)|bot\s+(?:estúpido|inútil|idiota)|glupi\s+(?:bote|asistentu|mimo)|idiote|kretenu|budalo|hülye\s+(?:bot|mimo)|idióta|barom|蠢货|白痴|智障|废物|垃圾(?:机器人|助手|Mimo)|バカ|馬鹿|アホ|役立たず|ゴミ(?:ボット|AI)?|바보|멍청이|쓰레기\s*(?:봇|AI)?|बेवकूफ|नालायक|गधा|बकवास\s+बॉट|গাধা|বেয়াদব|বাজে\s+বট|অকর্মা|tolol|goblok|bodoh\s+kamu|bot\s+bodoh|sampah)(?=$|[^\p{L}])/iu;
+
+export function isAbuseAgainstMimo(message) {
+  const t = String(message || '').trim();
+  if (!t) return false;
+  if (ABUSE_THREAT_RE.test(t)) return true;
+  if (ABUSE_PROFANITY_SEXUAL_HATE_RE.test(t)) return true;
+  if (ABUSE_INSULT_MIMO_RE.test(t)) return true;
+  return false;
+}
+
+export async function hashActorKey(actorKey, pepper = '') {
+  const enc = new TextEncoder();
+  const data = enc.encode(`${String(pepper || '')}:${String(actorKey || '')}`);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+export async function getBlockStatus({ env, actorKeys = [], now = Date.now() }) {
+  const keys = (Array.isArray(actorKeys) ? actorKeys : [actorKeys]).filter(Boolean);
+  const pepper = (env && env.CODE_PEPPER) || '';
+  for (const rawKey of keys) {
+    const actorHash = await hashActorKey(rawKey, pepper);
+    if (env && env.DB) {
+      const row = await env.DB.prepare(
+        'SELECT blocked_until, strike_count FROM assistant_blocks WHERE actor_hash = ?'
+      ).bind(actorHash).first();
+      if (row && Number(row.blocked_until) > now) {
+        return {
+          blocked: true,
+          blockedUntil: Number(row.blocked_until),
+          strikeCount: Number(row.strike_count || 1),
+        };
+      }
+    } else {
+      const entry = memoryBlocks.get(actorHash);
+      if (entry && entry.blockedUntil > now) {
+        return {
+          blocked: true,
+          blockedUntil: entry.blockedUntil,
+          strikeCount: entry.strikeCount || 1,
+        };
+      }
+    }
+  }
+  return { blocked: false, blockedUntil: 0, strikeCount: 0 };
+}
+
+export async function blockActors({ env, actorKeys = [], channel = 'web', now = Date.now() }) {
+  const keys = (Array.isArray(actorKeys) ? actorKeys : [actorKeys]).filter(Boolean);
+  const pepper = (env && env.CODE_PEPPER) || '';
+  let lastBlockedUntil = 0;
+  let lastStrikeCount = 1;
+
+  for (const rawKey of keys) {
+    const actorHash = await hashActorKey(rawKey, pepper);
+    let prevStrikes = 0;
+    if (env && env.DB) {
+      const row = await env.DB.prepare(
+        'SELECT strike_count FROM assistant_blocks WHERE actor_hash = ?'
+      ).bind(actorHash).first();
+      if (row) prevStrikes = Number(row.strike_count || 0);
+    } else {
+      const prev = memoryBlocks.get(actorHash);
+      if (prev) prevStrikes = Number(prev.strikeCount || 0);
+    }
+    const strikeCount = prevStrikes + 1;
+    const durationMs =
+      channel === 'telegram'
+        ? strikeCount >= 2
+          ? TG_REPEAT_BLOCK_MS
+          : TG_FIRST_BLOCK_MS
+        : WEB_BLOCK_MS;
+    const blockedUntil = now + durationMs;
+    lastBlockedUntil = blockedUntil;
+    lastStrikeCount = strikeCount;
+
+    if (env && env.DB) {
+      await env.DB.prepare(
+        `INSERT INTO assistant_blocks (actor_hash, blocked_until, strike_count, updated_at)
+         VALUES (?, ?, ?, ?)
+         ON CONFLICT(actor_hash) DO UPDATE SET blocked_until = excluded.blocked_until,
+           strike_count = excluded.strike_count, updated_at = excluded.updated_at`
+      ).bind(actorHash, blockedUntil, strikeCount, now).run();
+    } else {
+      memoryBlocks.set(actorHash, { blockedUntil, strikeCount, updatedAt: now });
+    }
+  }
+
+  return { blocked: true, blockedUntil: lastBlockedUntil, strikeCount: lastStrikeCount };
+}
+
 export function isHumanOrHandoffTopic(message) {
   const t = String(message || '').toLowerCase();
   if (isAiIdentityQuestion(t)) return false;
+  if (isServiceComplaint(t)) return true;
   return /(?:^|[^\p{L}])(insanla konuş\w*|müşteri hizmet\w*|yetkili\w*|canlı destek|temsilci\w*|şikayet\w*|şikâyet\w*|iade|para iade\w*|geri ödeme\w*|ödeme sorun\w*|ödeme hata\w*|ödeyemiyorum|iptal et\w*|rezervasyonumu|tarih değişikl\w*|talk to a human|speak to a human|speak to someone|human agent|real person|customer support|complaint|refund|money back|payment issue|payment problem|payment failed|billing issue|change my booking|cancel my booking|modify my booking|reschedule|человек|оператор|менеджер|жалоба|претензия|возврат|проблема с оплатой|ошибка оплаты|отменить бронирование|изменить бронирование|скарга|повернення|скасувати бронювання|تحدث مع|موظف|خدمة العملاء|شكوى|استرداد|مشكلة في الدفع|إلغاء الحجز|تعديل الحجز|נציג|תלונה|החזר כספי|شکایت|بازپرداخت|پشتیبانی)(?=$|[^\p{L}])/iu.test(t);
 }
 
@@ -590,7 +748,7 @@ const SMALL_TALK_GREET_RE = /(?:^|[^\p{L}])(merhaba|selam\w*|günaydın|iyi akş
 export function classifySmallTalk(message) {
   const t = String(message || '').trim();
   if (!t) return null;
-  if (isAiIdentityQuestion(t) || isHumanOrHandoffTopic(t) || isPaymentQuestion(t)) return null;
+  if (isAiIdentityQuestion(t) || isHumanOrHandoffTopic(t) || isPaymentQuestion(t) || isAbuseAgainstMimo(t)) return null;
   if (DOMAIN_TOPIC_RE.test(t)) return null;
   const wordCount = t.split(/\s+/).filter(Boolean).length;
   if (wordCount > 8) return null;
@@ -775,8 +933,13 @@ function parseModelOutput(raw) {
   const objCandidate =
     (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
     (raw && raw.result && typeof raw.result.response === 'object' && raw.result.response !== null && raw.result.response);
-  if (objCandidate && typeof objCandidate.reply === 'string') {
-    return { handoff: Boolean(objCandidate.handoff), reply: objCandidate.reply.trim(), parseFailed: false };
+  if (objCandidate && (typeof objCandidate.reply === 'string' || objCandidate.abuse === true)) {
+    return {
+      abuse: Boolean(objCandidate.abuse),
+      handoff: Boolean(objCandidate.handoff),
+      reply: typeof objCandidate.reply === 'string' ? objCandidate.reply.trim() : '',
+      parseFailed: false,
+    };
   }
 
   const text = extractRawText(raw).replace(/<think>[\s\S]*?<\/think>/gi, '');
@@ -785,20 +948,71 @@ function parseModelOutput(raw) {
   if (jsonMatch) {
     try {
       const obj = JSON.parse(jsonMatch[0]);
-      if (obj && typeof obj.reply === 'string') {
-        return { handoff: Boolean(obj.handoff), reply: obj.reply.trim(), parseFailed: false };
+      if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+        return {
+          abuse: Boolean(obj.abuse),
+          handoff: Boolean(obj.handoff),
+          reply: typeof obj.reply === 'string' ? obj.reply.trim() : '',
+          parseFailed: false,
+        };
       }
     } catch {
-      return { handoff: true, reply: '', parseFailed: true };
+      return { abuse: false, handoff: true, reply: '', parseFailed: true };
     }
   }
+  const abuse = /\[ABUSE\]/i.test(trimmed);
   const handoff = /\[HANDOFF\]/i.test(trimmed);
-  return { handoff, reply: trimmed.replace(/\[HANDOFF\]/gi, '').trim(), parseFailed: false };
+  return {
+    abuse,
+    handoff,
+    reply: trimmed.replace(/\[(?:HANDOFF|ABUSE)\]/gi, '').trim(),
+    parseFailed: false,
+  };
 }
 
-export async function runAssistant({ message, pageLang = '', telegramLang = '', history = [], env = {}, actorKey = 'anon', now = Date.now() }) {
+export async function runAssistant({
+  message,
+  pageLang = '',
+  telegramLang = '',
+  history = [],
+  env = {},
+  actorKey = 'anon',
+  actorKeys = null,
+  channel = '',
+  now = Date.now(),
+}) {
   const { text: cleanMsg, hadSensitive: msgSensitive } = redactSensitive(message);
   const lang = detectLanguage({ message: cleanMsg, pageLang, telegramLang });
+  const effectiveActorKeys = Array.isArray(actorKeys) && actorKeys.length ? actorKeys : [actorKey];
+  const effectiveChannel = channel || (String(actorKey).startsWith('tg:') ? 'telegram' : 'web');
+
+  const blockStatus = await getBlockStatus({ env, actorKeys: effectiveActorKeys, now });
+  if (blockStatus.blocked) {
+    return {
+      ok: true,
+      closed: true,
+      status: 'closed',
+      blocked: true,
+      handoff: false,
+      handoffOffer: false,
+      lang,
+      reply: msg('abuseClose', lang),
+    };
+  }
+
+  if (isAbuseAgainstMimo(cleanMsg)) {
+    await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
+    return {
+      ok: true,
+      closed: true,
+      status: 'closed',
+      abuse: true,
+      handoff: false,
+      handoffOffer: false,
+      lang,
+      reply: msg('abuseClose', lang),
+    };
+  }
 
   const limitRes = await checkAndIncrementLimits({ env, actorKey, now });
   if (!limitRes.allowed) {
@@ -903,8 +1117,8 @@ export async function runAssistant({ message, pageLang = '', telegramLang = '', 
     '6. BOSPHORLY FACTS ONLY FROM CONTEXT: For Bosphorly prices, tours, operators, transfers, and payment policy, use ONLY the PROVIDED CONTEXT below. State tour prices as approximate and confirmed upon request (fixed Sultanahmet transfers: €60 IST, €65 SAW one-way per vehicle, also confirmed upon request).',
     `7. BOOKING INTEREST: If the guest expresses interest in a transfer, cruise, tour, or hammam, ask for their date, number of guests, and hotel area (if not already given), share the matching link with parameters — https://bosphorly.com/booking.html?service=<id>&lang=${lang} (ids: bb-morning, bb-sunset, bb-oldcity, orient-dinner, sea-land, alaturka, azure-islands, azure-bursa, azure-sapanca, sl-privateyacht), https://bosphorly.com/index.html?lang=${lang}#booking for transfers, or https://bosphorly.com/tours.html?lang=${lang} for custom/private/multi-day tours — and say that once they submit the form, our team will confirm ("formu doldurduğunda ekibimiz onaylar" in Turkish, or equivalent).`,
     '8. FORBIDDEN: Never use fake urgency ("last seats", "only today", "son yer", "sadece bugün"), never promise discounts, never confirm a booking yourself, never ask for payment/card/passport numbers, never badmouth competitors, never engage in political or religious debates.',
-    '9. HANDOFF: Set handoff=true ONLY for complaints, refunds, payment issues, existing booking changes/cancellations, or explicit requests to speak with a human. Answer everything else yourself with handoff=false.',
-    '10. FORMAT & LENGTH: Keep replies warm and concise (max ~120 words), ending with a helpful follow-up question when natural. Output ONLY valid JSON: {"handoff": boolean, "reply": "string"}',
+    '9. HANDOFF vs ZERO-TOLERANCE ABUSE: Set abuse=true ONLY if the user directs insults, humiliation, profanity, harassment, sexual content, hate speech, or threats at you (Mimo). Do NOT set abuse=true for anger or complaints about a service ("transfer did not arrive", "terrible service")—for service complaints, refunds, payment issues, existing booking changes/cancellations, or requests to speak with a human, set abuse=false and handoff=true. Never retaliate, mock, or argue.',
+    '10. FORMAT & LENGTH: Keep replies warm and concise (max ~120 words), ending with a helpful follow-up question when natural. Output ONLY valid JSON: {"abuse": boolean, "handoff": boolean, "reply": "string"}',
     '',
     'PROVIDED CONTEXT:',
     contextBlock,
@@ -927,6 +1141,19 @@ export async function runAssistant({ message, pageLang = '', telegramLang = '', 
       new Promise((_, reject) => setTimeout(() => reject(new Error('AI timeout')), AI_TIMEOUT_MS)),
     ]);
     const parsed = parseModelOutput(aiResult);
+    if (parsed.abuse && !isServiceComplaint(cleanMsg)) {
+      await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
+      return {
+        ok: true,
+        closed: true,
+        status: 'closed',
+        abuse: true,
+        handoff: false,
+        handoffOffer: false,
+        lang,
+        reply: msg('abuseClose', lang),
+      };
+    }
     let reply = stripFakeUrgency(stripExternalLinks(redactSensitive(parsed.reply).text));
     if (parsed.parseFailed || isNonsensicalReply(reply)) {
       if (aiIdentityAsked) {
@@ -1108,6 +1335,12 @@ export async function handleAssistantRoutes(request, env, url) {
   const turnstileOk = await verifyTurnstile(env, body && body.turnstileToken, ip);
   if (!turnstileOk) return jsonResp({ error: 'Bot verification failed' }, 403);
 
+  const cleanSessionId =
+    body && typeof body.sessionId === 'string' && body.sessionId.trim()
+      ? body.sessionId.trim().slice(0, 64)
+      : '';
+  const actorKeys = [`ip:${ip}`, ...(cleanSessionId ? [`sess:${cleanSessionId}`] : [])];
+
   if (url.pathname === '/v1/assistant') {
     if (!body || typeof body.message !== 'string' || !body.message.trim() || body.message.length > 1000) {
       return jsonResp({ error: 'Invalid message' }, 400);
@@ -1118,6 +1351,8 @@ export async function handleAssistantRoutes(request, env, url) {
       history: Array.isArray(body.history) ? body.history.slice(-6) : [],
       env,
       actorKey: `ip:${ip}`,
+      actorKeys,
+      channel: 'web',
     });
     if (!result.ok) return jsonResp({ error: result.reply, handoff: true, lang: result.lang }, result.status || 429);
     return jsonResp({
@@ -1125,12 +1360,24 @@ export async function handleAssistantRoutes(request, env, url) {
       handoff: Boolean(result.handoff),
       handoffOffer: Boolean(result.handoffOffer),
       busy: Boolean(result.busy),
+      closed: Boolean(result.closed),
+      ...(result.closed ? { status: 'closed' } : {}),
       lang: result.lang,
     }, 200);
   }
 
   if (url.pathname === '/v1/assistant/handoff') {
     if (!body || typeof body.email !== 'string') return jsonResp({ error: 'Valid email required' }, 400);
+    const blockStatus = await getBlockStatus({ env, actorKeys });
+    const hasAbuse =
+      isAbuseAgainstMimo(body.message) ||
+      (Array.isArray(body.history) && body.history.some((h) => h && typeof h.content === 'string' && isAbuseAgainstMimo(h.content)));
+    if (blockStatus.blocked || hasAbuse) {
+      if (hasAbuse && !blockStatus.blocked) {
+        await blockActors({ env, actorKeys, channel: 'web' });
+      }
+      return jsonResp({ closed: true, status: 'closed', error: 'Chat closed' }, 403);
+    }
     const forwarded = await forwardConversationEmail({
       env,
       email: body.email,

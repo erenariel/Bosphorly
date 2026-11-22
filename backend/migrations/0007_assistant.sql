@@ -25,3 +25,12 @@ CREATE TABLE IF NOT EXISTS assistant_feedback (
   PRIMARY KEY (lang, vote)
 );
 
+-- Zero-tolerance abuse block state: stores only a SHA-256 hash of session/IP/chat_id and expiry timestamp (no message text stored).
+CREATE TABLE IF NOT EXISTS assistant_blocks (
+  actor_hash TEXT PRIMARY KEY,
+  blocked_until INTEGER NOT NULL DEFAULT 0,
+  strike_count INTEGER NOT NULL DEFAULT 1,
+  updated_at INTEGER NOT NULL DEFAULT 0
+);
+
+

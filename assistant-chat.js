@@ -45,7 +45,9 @@
     forwarded: { tr:'Sohbetin info@bosphorly.com adresine iletildi. En kısa sürede e-posta ile dönüş yapacağız.', en:'Your conversation was forwarded to info@bosphorly.com. We will reply by email shortly.', ru:'Переписка отправлена на info@bosphorly.com. Мы скоро ответим по e-mail.', uk:'Розмову надіслано на info@bosphorly.com. Ми скоро відповімо електронною поштою.', de:'Ihre Nachricht wurde an info@bosphorly.com weitergeleitet. Wir antworten in Kürze per E-Mail.', fr:'Votre conversation a été transmise à info@bosphorly.com. Nous vous répondrons par e-mail.', nl:'Je gesprek is doorgestuurd naar info@bosphorly.com. We reageren spoedig per e-mail.', ar:'تم إرسال محادثتك إلى info@bosphorly.com. سنرد عليك عبر البريد الإلكتروني قريبًا.', he:'השיחה הועברה אל info@bosphorly.com. נחזור אליך בדוא״ל בהקדם.', az:'Söhbətiniz info@bosphorly.com ünvanına göndərildi.', fa:'گفتگوی شما به info@bosphorly.com ارسال شد. به‌زودی پاسخ می‌دهیم.', es:'Tu conversación se envió a info@bosphorly.com. Responderemos por correo pronto.', it:'La conversazione è stata inoltrata a info@bosphorly.com. Risponderemo via e-mail.', pt:'Sua conversa foi enviada para info@bosphorly.com. Responderemos por e-mail em breve.', hr:'Razgovor je proslijeđen na info@bosphorly.com.', hu:'A beszélgetést továbbítottuk a info@bosphorly.com címre.', bs:'Razgovor je proslijeđen na info@bosphorly.com.', zh:'您的对话已转发至 info@bosphorly.com，我们将尽快通过邮件回复。', ja:'会話内容を info@bosphorly.com に送信しました。まもなくメールでご返信いたします。', ko:'대화 내용이 info@bosphorly.com으로 전달되었습니다. 곧 이메일로 회신드리겠습니다.', hi:'आपकी बातचीत info@bosphorly.com पर भेज दी गई है।', bn:'আপনার কথোপকথন info@bosphorly.com-এ পাঠানো হয়েছে।', id:'Percakapan Anda telah diteruskan ke info@bosphorly.com.' },
     verifyFirst: { tr:'Lütfen güvenlik doğrulamasını tamamlayın.', en:'Please complete the security check first.', ru:'Пожалуйста, пройдите проверку безопасности.', uk:'Будь ласка, пройдіть перевірку безпеки.', de:'Bitte schließen Sie zuerst die Sicherheitsprüfung ab.', fr:'Veuillez d’abord compléter la vérification de sécurité.', nl:'Voltooi eerst de beveiligingscontrole.', ar:'يرجى إكمال التحقق الأمني أولاً.', he:'נא להשלים תחילה את בדיקת האבטחה.', az:'Zəhmət olmasa təhlükəsizlik yoxlamasını tamamlayın.', fa:'لطفاً ابتدا بررسی امنیتی را تکمیل کنید.', es:'Completa primero la verificación de seguridad.', it:'Completa prima la verifica di sicurezza.', pt:'Conclua primeiro a verificação de segurança.', hr:'Molimo dovršite sigurnosnu provjeru.', hu:'Kérjük, először végezze el a biztonsági ellenőrzést.', bs:'Molimo dovršite sigurnosnu provjeru.', zh:'请先完成安全验证。', ja:'先にセキュリティ確認を完了してください。', ko:'먼저 보안 확인을 완료해 주세요.', hi:'कृपया पहले सुरक्षा जांच पूरी करें।', bn:'অনুগ্রহ করে প্রথমে নিরাপত্তা যাচাই সম্পন্ন করুন।', id:'Harap selesaikan pemeriksaan keamanan terlebih dahulu.' },
     offline: { tr:'Mimo şu an çevrimdışı; soruların için info@bosphorly.com adresine yazabilirsin.', en:'Mimo is currently offline; please email info@bosphorly.com for help.', ru:'Mimo сейчас недоступен; напишите на info@bosphorly.com.', uk:'Mimo зараз недоступний; напишіть на info@bosphorly.com.', de:'Mimo ist offline; schreiben Sie an info@bosphorly.com.', fr:'Mimo est hors ligne ; écrivez à info@bosphorly.com.', nl:'Mimo is offline; mail naar info@bosphorly.com.', ar:'Mimo غير متصل حاليًا؛ يرجى مراسلة info@bosphorly.com.', he:'Mimo לא זמין כרגע; כתבו ל-info@bosphorly.com.', az:'Mimo hazırda oflayndır; info@bosphorly.com ünvanına yazın.', fa:'Mimo آفلاین است؛ لطفاً به info@bosphorly.com ایمیل بزنید.', es:'Mimo está desconectado; escribe a info@bosphorly.com.', it:'Mimo non è disponibile; scrivi a info@bosphorly.com.', pt:'Mimo está offline; escreva para info@bosphorly.com.', hr:'Mimo je izvan mreže; pišite na info@bosphorly.com.', hu:'Mimo jelenleg offline; írj a info@bosphorly.com címre.', bs:'Mimo je van mreže; pišite na info@bosphorly.com.', zh:'Mimo 当前离线，请发送邮件至 info@bosphorly.com。', ja:'Mimoは現在オフラインです。info@bosphorly.com までメールでお問い合わせください。', ko:'Mimo가 현재 오프라인입니다. info@bosphorly.com으로 문의해 주세요.', hi:'Mimo अभी ऑफ़लाइन है; info@bosphorly.com पर ईमेल करें।', bn:'Mimo এখন অফলাইন; info@bosphorly.com-এ ইমেইল করুন।', id:'Mimo sedang offline; silakan email ke info@bosphorly.com.' },
-    continueTg: { tr:"Telegram'dan devam et", en:'Continue on Telegram', ru:'Продолжить в Telegram', uk:'Продовжити в Telegram', de:'Auf Telegram fortsetzen', fr:'Continuer sur Telegram', nl:'Ga verder op Telegram', ar:'تابع على تيليجرام', he:'המשיכו בטלגרם', az:'Telegram-da davam et', fa:'در تلگرام ادامه دهید', es:'Continuar en Telegram', it:'Continua su Telegram', pt:'Continuar no Telegram', hr:'Nastavite na Telegramu', hu:'Folytatás Telegramon', bs:'Nastavite na Telegramu', zh:'在 Telegram 继续对话', ja:'Telegramで続ける', ko:'Telegram에서 계속하기', hi:'Telegram पर जारी रखें', bn:'Telegram-এ চালিয়ে যান', id:'Lanjutkan di Telegram' }
+    continueTg: { tr:"Telegram'dan devam et", en:'Continue on Telegram', ru:'Продолжить в Telegram', uk:'Продовжити в Telegram', de:'Auf Telegram fortsetzen', fr:'Continuer sur Telegram', nl:'Ga verder op Telegram', ar:'تابع على تيليجرام', he:'המשיכו בטלגרם', az:'Telegram-da davam et', fa:'در تلگرام ادامه دهید', es:'Continuar en Telegram', it:'Continua su Telegram', pt:'Continuar no Telegram', hr:'Nastavite na Telegramu', hu:'Folytatás Telegramon', bs:'Nastavite na Telegramu', zh:'在 Telegram 继续对话', ja:'Telegramで続ける', ko:'Telegram에서 계속하기', hi:'Telegram पर जारी रखें', bn:'Telegram-এ চালিয়ে যান', id:'Lanjutkan di Telegram' },
+    kindNote: { tr:'Mimo’ya nazik davrandığın için teşekkürler 💙 Saygısız dil kullanılırsa sohbet sonlanır.', en:'Thank you for being kind to Mimo 💙 The chat ends if disrespectful language is used.', ru:'Спасибо за вежливое общение с Mimo 💙 При неуважительном тоне чат завершается.', uk:'Дякуємо за ввічливе спілкування з Mimo 💙 У разі неповажного тону чат завершується.', de:'Danke, dass du freundlich zu Mimo bist 💙 Bei respektloser Sprache wird der Chat beendet.', fr:'Merci d’être bienveillant avec Mimo 💙 Le chat prend fin en cas de langage irrespectueux.', nl:'Bedankt dat je vriendelijk bent tegen Mimo 💙 Bij respectloos taalgebruik stopt de chat.', ar:'شكرًا للطفك مع Mimo 💙 تنتهي المحادثة في حال استخدام لغة غير محترمة.', he:'תודה שאתם נחמדים אל Mimo 💙 השיחה מסתיימת במקרה של שפה לא מכבדת.', az:'Mimo ilə nəzakətli davrandığınız üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.', fa:'ممنون که با Mimo مهربان هستید 💙 در صورت استفاده از لحن نامحترمانه گفتگو پایان می‌یابد.', es:'Gracias por tratar con amabilidad a Mimo 💙 El chat finaliza si se usa lenguaje irrespetuoso.', it:'Grazie per essere gentile con Mimo 💙 La chat termina in caso di linguaggio irrispettoso.', pt:'Obrigado por tratar o Mimo com gentileza 💙 O chat é encerrado se houver linguagem desrespeitosa.', hr:'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.', hu:'Köszönjük, hogy kedves vagy Mimóval 💙 Tiszteletlen hangnem esetén a csevegés véget ér.', bs:'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.', zh:'感谢您温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。', ja:'Mimoに優しく接していただきありがとうございます 💙 礼儀を欠く言葉遣いがあった場合、チャットは終了します。', ko:'Mimo에게 다정하게 대해 주셔서 고마워요 💙 무례한 표현이 사용되면 대화가 종료됩니다.', hi:'Mimo के साथ विनम्र रहने के लिए धन्यवाद 💙 अपमानजनक भाषा का प्रयोग होने पर चैट समाप्त हो जाएगी।', bn:'Mimo-এর সাথে সদয় আচরণের জন্য ধন্যবাদ 💙 অসম্মানজনক ভাষা ব্যবহার করলে চ্যাট বন্ধ হয়ে যাবে।', id:'Terima kasih telah bersikap ramah kepada Mimo 💙 Obrolan akan berakhir jika bahasa tidak sopan digunakan.' },
+    abuseClose: { tr:'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.', en:'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.', ru:'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у вас есть вопрос, вы можете написать на info@bosphorly.com.', uk:'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєте питання, напишіть на info@bosphorly.com.', de:'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen können Sie an info@bosphorly.com schreiben.', fr:'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, vous pouvez écrire à info@bosphorly.com.', nl:'Op deze toon kan ik het gesprek niet voortzetten. Ik beëindig de chat hier. Als je een vraag hebt, kun je mailen naar info@bosphorly.com.', ar:'لا يمكنني متابعة المحادثة بهذه اللغة. أنهي المحادثة هنا. إذا كانت لديك مشكلة يمكنك الكتابة إلى info@bosphorly.com.', he:'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לכם פנייה, ניתן לכתוב אל info@bosphorly.com.', az:'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualınız varsa info@bosphorly.com ünvanına yaza bilərsiniz.', fa:'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی دارید می‌توانید به info@bosphorly.com بنویسید.', es:'No puedo continuar la conversación con este lenguaje. Termino el chat aquí. Si tienes algún problema, puedes escribir a info@bosphorly.com.', it:'Non posso continuare la conversazione con questo linguaggio. Chiudo qui la chat. Se hai un problema, puoi scrivere a info@bosphorly.com.', pt:'Não posso continuar a conversa com essa linguagem. Encerro o chat aqui. Se tiver alguma questão, escreva para info@bosphorly.com.', hr:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.', hu:'Ilyen hangnemben nem tudom folytatni a beszélgetést. A csevegést itt lezárom. Ha kérdésed van, írhatsz az info@bosphorly.com címre.', bs:'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.', zh:'我无法在这样的语言下继续对话。本次对话到此结束。如有问题，请发邮件至 info@bosphorly.com。', ja:'このような言葉遣いでは会話を続けられません。ここでチャットを終了します。ご用件がある場合は info@bosphorly.com までご連絡ください。', ko:'이러한 표현으로는 대화를 이어갈 수 없습니다. 여기서 대화를 종료합니다. 문의 사항이 있으시면 info@bosphorly.com으로 메일을 보내주세요.', hi:'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए आप info@bosphorly.com पर लिख सकते हैं।', bn:'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারেন।', id:'Saya tidak dapat melanjutkan percakapan dengan bahasa seperti ini. Saya mengakhiri obrolan di sini. Jika ada masalah, silakan tulis ke info@bosphorly.com.' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
 
@@ -108,12 +110,26 @@
   };
 
   const STORE_KEY = 'bosphorly.assistant_chat';
+  const SESSION_ID_KEY = 'bosphorly.assistant_session';
+  const CLOSED_KEY = 'bosphorly.assistant_closed';
   let history = [];
+  let sessionId = '';
+  let isChatClosed = false;
   try {
     const saved = sessionStorage.getItem(STORE_KEY);
     if (saved) history = JSON.parse(saved);
     if (!Array.isArray(history)) history = [];
   } catch { history = []; }
+  try {
+    sessionId = sessionStorage.getItem(SESSION_ID_KEY) || '';
+    if (!sessionId) {
+      sessionId = 's_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      sessionStorage.setItem(SESSION_ID_KEY, sessionId);
+    }
+    isChatClosed = sessionStorage.getItem(CLOSED_KEY) === '1';
+  } catch {
+    sessionId = 's_' + Math.random().toString(36).slice(2, 10);
+  }
   const saveHistory = () => {
     try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-12))); } catch {}
   };
@@ -171,6 +187,23 @@
   let turnstileToken = '';
   let tsWidgetId = null;
 
+  function lockChatClosed() {
+    isChatClosed = true;
+    try { sessionStorage.setItem(CLOSED_KEY, '1'); } catch {}
+    panel.dataset.closed = 'true';
+    panel.classList.add('bc-is-closed');
+    input.value = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+    humanBtn.disabled = true;
+    forwardBtn.disabled = true;
+    emailInput.disabled = true;
+    handoffBox.hidden = true;
+    panel.querySelectorAll('.bc-quick-btn, .bc-offer-btn').forEach((btn) => {
+      btn.disabled = true;
+    });
+  }
+
   function sendFeedback(vote, upBtn, downBtn) {
     upBtn.disabled = true;
     downBtn.disabled = true;
@@ -185,6 +218,7 @@
   }
 
   function renderMsg(role, text, opts = {}) {
+    const isFirstBotMsg = role === 'bot' && !logEl.querySelector('.bc-msg-row.bot');
     const row = document.createElement('div');
     row.className = `bc-msg-row ${role === 'user' ? 'user' : 'bot'}`;
 
@@ -215,7 +249,7 @@
           div.appendChild(document.createTextNode(p));
         }
       }
-      if (opts.handoffOffer) {
+      if (opts.handoffOffer && !isChatClosed) {
         const actions = document.createElement('div');
         actions.className = 'bc-offer-actions';
         const yesBtn = document.createElement('button');
@@ -268,6 +302,12 @@
       row.appendChild(div);
     }
     logEl.appendChild(row);
+    if (isFirstBotMsg && !logEl.querySelector('.bc-kind-note')) {
+      const note = document.createElement('div');
+      note.className = 'bc-kind-note';
+      note.textContent = tr('kindNote');
+      logEl.appendChild(note);
+    }
     logEl.scrollTop = logEl.scrollHeight;
   }
 
@@ -298,6 +338,7 @@
   } else {
     for (const m of history) renderMsg(m.role === 'user' ? 'user' : 'bot', m.content);
   }
+  if (isChatClosed) lockChatClosed();
 
   function loadTurnstile() {
     const siteKey = window.BOSPHORLY_API && window.BOSPHORLY_API.turnstileSiteKey;
@@ -332,7 +373,7 @@
 
   async function submitMessage(rawMessage) {
     const message = String(rawMessage || '').trim();
-    if (!message || sendBtn.disabled) return;
+    if (!message || sendBtn.disabled || isChatClosed) return;
     if (!apiBase) {
       renderMsg('user', message);
       input.value = '';
@@ -352,9 +393,18 @@
       const res = await fetch(`${apiBase}/v1/assistant`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message, lang, history: recent, turnstileToken }),
+        body: JSON.stringify({ message, lang, history: recent, sessionId, turnstileToken }),
       });
       const data = await res.json().catch(() => ({}));
+      if (data.closed || data.status === 'closed') {
+        const closeReply = data.reply || tr('abuseClose');
+        history.push({ role: 'assistant', content: closeReply });
+        saveHistory();
+        hideTyping();
+        renderMsg('bot', closeReply, { noFeedback: true, avatarState: 'default' });
+        lockChatClosed();
+        return;
+      }
       const reply = data.reply || data.error || tr('offline');
       history.push({ role: 'user', content: message }, { role: 'assistant', content: reply });
       saveHistory();
@@ -367,7 +417,7 @@
       handoffBox.hidden = false;
     } finally {
       hideTyping();
-      sendBtn.disabled = false;
+      sendBtn.disabled = isChatClosed;
       resetTurnstile();
     }
   }
@@ -376,38 +426,42 @@
     panel.hidden = !open;
     if (open) {
       loadTurnstile();
-      input.focus();
+      if (!isChatClosed) input.focus();
     }
   };
   window.__bosphorlyChatToggle = () => toggle(panel.hidden);
   window.__bosphorlyChatAsk = (q) => {
     toggle(true);
-    if (q) submitMessage(q);
+    if (q && !isChatClosed) submitMessage(q);
   };
   window.__bosphorlyChatOpen = (q) => {
     toggle(true);
-    if (q) submitMessage(q);
+    if (q && !isChatClosed) submitMessage(q);
   };
 
   closeBtn.addEventListener('click', () => toggle(false));
   panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') toggle(false); });
   humanBtn.addEventListener('click', () => {
+    if (isChatClosed) return;
     handoffBox.hidden = !handoffBox.hidden;
     if (!handoffBox.hidden) emailInput.focus();
   });
 
   panel.querySelectorAll('.bc-quick-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
+      if (isChatClosed) return;
       submitMessage(btn.textContent.trim());
     });
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (isChatClosed) return;
     await submitMessage(input.value);
   });
 
   forwardBtn.addEventListener('click', async () => {
+    if (isChatClosed) return;
     const email = emailInput.value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { emailInput.focus(); return; }
     if (!apiBase) { renderMsg('bot', tr('offline')); return; }
@@ -420,8 +474,13 @@
       const res = await fetch(`${apiBase}/v1/assistant/handoff`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, lang, history: history.slice(-6), turnstileToken }),
+        body: JSON.stringify({ email, lang, history: history.slice(-6), sessionId, turnstileToken }),
       });
+      const data = await res.json().catch(() => ({}));
+      if (data.closed || data.status === 'closed' || res.status === 403) {
+        lockChatClosed();
+        return;
+      }
       if (res.ok) {
         handoffBox.hidden = true;
         emailInput.value = '';
@@ -432,14 +491,14 @@
     } catch {
       renderMsg('bot', tr('offline'));
     } finally {
-      forwardBtn.disabled = false;
+      forwardBtn.disabled = isChatClosed;
       resetTurnstile();
     }
   });
 
   loadTurnstile();
-  input.focus();
-  if (window.__bosphorlyInitialQuestion) {
+  if (!isChatClosed) input.focus();
+  if (window.__bosphorlyInitialQuestion && !isChatClosed) {
     const q = window.__bosphorlyInitialQuestion;
     window.__bosphorlyInitialQuestion = '';
     submitMessage(q);

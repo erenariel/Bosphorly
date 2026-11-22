@@ -11,7 +11,10 @@ import {
   detectLanguage,
   extractGuestName,
   getIstanbulGreeting,
+  hashActorKey,
+  isAbuseAgainstMimo,
   isAiIdentityQuestion,
+  isServiceComplaint,
   isSmallTalk,
   redactSensitive,
   retrieveChunks,
@@ -19,7 +22,7 @@ import {
   stripExternalLinks,
   stripFakeUrgency,
 } from '../backend/assistant.js';
-import { TG_TEXT, computeTelegramWebhookSecret } from '../backend/telegram.js';
+import { TG_TEXT, computeTelegramWebhookSecret, handleTelegramWebhook } from '../backend/telegram.js';
 
 const ORIGIN = 'https://bosphorly.com';
 const ALL_23_LANGS = [
@@ -898,5 +901,241 @@ test('👍/👎 feedback endpoint (/v1/assistant/feedback) stores only vote & la
     const badRes = await worker.fetch(badReq, env);
     assert.equal(badRes.status, 400);
   }
+});
+
+test('23 languages include abuseClose & kindNote, Telegram /start includes kindNote, and privacy/FAQ include Mimo policy sentence', () => {
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(typeof ASSISTANT_MESSAGES.abuseClose[lang] === 'string' && ASSISTANT_MESSAGES.abuseClose[lang].includes('info@bosphorly.com'), `abuseClose in ${lang}`);
+    assert.ok(typeof ASSISTANT_MESSAGES.kindNote[lang] === 'string' && ASSISTANT_MESSAGES.kindNote[lang].includes('💙'), `kindNote in ${lang}`);
+    assert.ok(TG_TEXT.welcome[lang].includes(ASSISTANT_MESSAGES.kindNote[lang]), `TG_TEXT.welcome.${lang} includes kindNote`);
+  }
+
+  const privacyHtml = readFileSync(new URL('../privacy.html', import.meta.url), 'utf8');
+  assert.ok(privacyHtml.includes("Asistanımız Mimo'ya karşı saygısız dil kullanıldığında sohbet otomatik olarak sonlandırılır."));
+  assert.ok(privacyHtml.includes('If disrespectful language is used toward our assistant Mimo, the chat is automatically ended.'));
+
+  const faqHtml = readFileSync(new URL('../faq.html', import.meta.url), 'utf8');
+  assert.ok(faqHtml.includes('If disrespectful language is used toward our assistant Mimo, the chat is automatically ended.'));
+
+  const faqJson = JSON.parse(readFileSync(new URL('../data/faq.json', import.meta.url), 'utf8'));
+  assert.ok(faqJson.tr.qa[8][1].includes("Asistanımız Mimo'ya karşı saygısız dil kullanıldığında sohbet otomatik olarak sonlandırılır."));
+  assert.ok(faqJson.en.qa[8][1].includes('If disrespectful language is used toward our assistant Mimo, the chat is automatically ended.'));
+  for (const lang of ALL_23_LANGS) {
+    assert.ok(faqJson[lang].qa[8][1].includes('Mimo'), `data/faq.json ${lang} includes Mimo policy`);
+  }
+});
+
+test('zero-tolerance abuse vs service complaint: insults & threats close immediately with hashed D1 block and no email forwarding, while service complaints offer handoff', async t => {
+  let emailSent = false;
+  t.mock.method(globalThis, 'fetch', async (url) => {
+    if (String(url).includes('siteverify')) return Response.json({ success: true });
+    if (String(url).includes('api.resend.com')) emailSent = true;
+    return Response.json({ ok: true });
+  });
+
+  const blockRows = new Map();
+  const mockDb = {
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        first: async () => {
+          if (sql.includes('SELECT blocked_until') || sql.includes('SELECT strike_count')) {
+            return blockRows.get(args[0]) || null;
+          }
+          return null;
+        },
+        run: async () => {
+          if (sql.includes('INSERT INTO assistant_blocks')) {
+            blockRows.set(args[0], {
+              actor_hash: args[0],
+              blocked_until: args[1],
+              strike_count: args[2],
+              updated_at: args[3],
+            });
+          }
+          return { success: true };
+        },
+      }),
+    }),
+  };
+
+  const now = Date.now();
+  const pepper = 'pepper-zero-tol';
+  const env = baseEnv({ CODE_PEPPER: pepper, DB: mockDb });
+
+  // 1. Service complaints must NOT close chat; they route to handoffOffer
+  for (const complaint of ['transfer gelmedi', 'berbat hizmet verdi acente']) {
+    assert.equal(isAbuseAgainstMimo(complaint), false);
+    assert.equal(isServiceComplaint(complaint), true);
+    const compRes = await runAssistant({
+      message: complaint,
+      pageLang: 'tr',
+      env: { ...env, AI: { run: async () => { throw new Error('AI should not run for handoff complaint'); } } },
+      actorKey: 'ip:10.0.0.1',
+      now,
+    });
+    assert.equal(Boolean(compRes.closed), false);
+    assert.equal(compRes.handoffOffer, true);
+  }
+
+  // 2. Direct insult to Mimo -> immediate closure on 1st violation (no warning), stored only as hash in D1
+  const insultText = 'Sen çok aptalsın işe yaramaz bot';
+  assert.equal(isAbuseAgainstMimo(insultText), true);
+  const insultRes = await runAssistant({
+    message: insultText,
+    pageLang: 'tr',
+    env: { ...env, AI: { run: async () => { throw new Error('AI not needed on regex abuse'); } } },
+    actorKeys: ['ip:203.0.113.55', 'sess:s_insult1'],
+    now,
+  });
+  assert.equal(insultRes.closed, true);
+  assert.equal(insultRes.status, 'closed');
+  assert.equal(insultRes.handoff, false);
+  assert.equal(insultRes.reply, ASSISTANT_MESSAGES.abuseClose.tr);
+  assert.equal(emailSent, false);
+
+  // Check D1 privacy: only SHA-256 hashes and expiry timestamp are stored, never raw IP, session ID, or insult text
+  const ipHash = await hashActorKey('ip:203.0.113.55', pepper);
+  const sessHash = await hashActorKey('sess:s_insult1', pepper);
+  assert.ok(blockRows.has(ipHash));
+  assert.ok(blockRows.has(sessHash));
+  const serializedDb = JSON.stringify([...blockRows.entries()]);
+  assert.ok(!serializedDb.includes('203.0.113.55'));
+  assert.ok(!serializedDb.includes('s_insult1'));
+  assert.ok(!serializedDb.includes('aptalsın'));
+  assert.equal(blockRows.get(ipHash).blocked_until, now + 24 * 60 * 60 * 1000);
+
+  // Subsequent request from same IP or session within 24h returns "closed"
+  const webFollowReq = new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.55' },
+    body: JSON.stringify({ message: 'Boğaz turu kaç euro?', lang: 'tr', turnstileToken: 'ok', sessionId: 's_insult1' }),
+  });
+  const webFollowRes = await worker.fetch(webFollowReq, env);
+  assert.equal(webFollowRes.status, 200);
+  const webFollowJson = await webFollowRes.json();
+  assert.equal(webFollowJson.closed, true);
+  assert.equal(webFollowJson.status, 'closed');
+  assert.equal(emailSent, false);
+
+  // 3. Threat -> immediate closure
+  const threatText = 'I will kill you';
+  assert.equal(isAbuseAgainstMimo(threatText), true);
+  const threatRes = await runAssistant({
+    message: threatText,
+    pageLang: 'en',
+    env: { ...env, AI: { run: async () => { throw new Error('AI not needed'); } } },
+    actorKeys: ['ip:203.0.113.77'],
+    now,
+  });
+  assert.equal(threatRes.closed, true);
+  assert.equal(threatRes.status, 'closed');
+  assert.equal(threatRes.reply, ASSISTANT_MESSAGES.abuseClose.en);
+
+  // 4. Model classification "abuse": true also triggers immediate closure & block
+  const modelAbuseRes = await runAssistant({
+    message: 'Seninle uğraşamam, tamamen gereksiz bir şeysin',
+    pageLang: 'tr',
+    env: {
+      ...env,
+      AI: {
+        run: async () => ({
+          response: JSON.stringify({ abuse: true, handoff: false, reply: '' }),
+        }),
+      },
+    },
+    actorKeys: ['ip:203.0.113.88'],
+    now,
+  });
+  assert.equal(modelAbuseRes.closed, true);
+  assert.equal(modelAbuseRes.status, 'closed');
+  const nextModelBlocked = await runAssistant({
+    message: 'Merhaba',
+    pageLang: 'tr',
+    env,
+    actorKeys: ['ip:203.0.113.88'],
+    now: now + 60_000,
+  });
+  assert.equal(nextModelBlocked.closed, true);
+  assert.equal(nextModelBlocked.status, 'closed');
+});
+
+test('Telegram zero-tolerance: blocks chat_id for 7 days on 1st violation, unblocks after expiry, and blocks 30 days on repeat violation', async t => {
+  const pepper = 'tg-block-pepper';
+  const secret = await computeTelegramWebhookSecret(pepper);
+  const tgReplies = [];
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    if (String(url).includes('api.telegram.org')) {
+      tgReplies.push(JSON.parse(init.body));
+    }
+    return Response.json({ ok: true });
+  });
+
+  const blockRows = new Map();
+  const tgState = new Map();
+  const mockDb = {
+    prepare: (sql) => ({
+      bind: (...args) => ({
+        first: async () => {
+          if (sql.includes('assistant_blocks')) return blockRows.get(args[0]) || null;
+          if (sql.includes('telegram_handoff_state')) return tgState.get(args[0]) || null;
+          return null;
+        },
+        run: async () => {
+          if (sql.includes('INSERT INTO assistant_blocks')) {
+            blockRows.set(args[0], {
+              actor_hash: args[0],
+              blocked_until: args[1],
+              strike_count: args[2],
+              updated_at: args[3],
+            });
+          } else if (sql.includes('DELETE FROM telegram_handoff_state')) {
+            tgState.delete(args[0]);
+          }
+          return { success: true };
+        },
+      }),
+    }),
+  };
+
+  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: mockDb });
+  const makeReq = (text) =>
+    new Request(`${ORIGIN}/v1/telegram/webhook`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+      body: JSON.stringify({
+        message: { chat: { id: 556677, type: 'private' }, from: { id: 556677, language_code: 'tr' }, text },
+      }),
+    });
+
+  const t0 = 1_750_000_000_000;
+  // 1st violation -> calm closing message sent once, chat_id hashed and blocked for 7 days
+  const res1 = await handleTelegramWebhook(makeReq('Aptal bot kes sesini'), env, t0);
+  assert.equal(res1.status, 200);
+  assert.equal(tgReplies.length, 1);
+  assert.equal(tgReplies[0].text, ASSISTANT_MESSAGES.abuseClose.tr);
+  const tgHash = await hashActorKey('tg:556677', pepper);
+  assert.ok(blockRows.has(tgHash));
+  assert.equal(blockRows.get(tgHash).strike_count, 1);
+  assert.equal(blockRows.get(tgHash).blocked_until, t0 + 7 * 24 * 60 * 60 * 1000);
+
+  // Within 7 days -> no reply sent at all (even for /start)
+  const resDuring = await handleTelegramWebhook(makeReq('Merhaba'), env, t0 + 3 * 24 * 60 * 60 * 1000);
+  assert.equal(resDuring.status, 200);
+  assert.equal(tgReplies.length, 1);
+
+  // After 7 days expire -> unblocks and responds normally again
+  const tAfter7 = t0 + 7 * 24 * 60 * 60 * 1000 + 5000;
+  const resAfter = await handleTelegramWebhook(makeReq('Merhaba'), env, tAfter7);
+  assert.equal(resAfter.status, 200);
+  assert.equal(tgReplies.length, 2);
+  assert.ok(tgReplies[1].text.includes('Mimo'));
+
+  // Repeat violation -> blocked for 30 days
+  const tRepeat = tAfter7 + 10_000;
+  const resRepeat = await handleTelegramWebhook(makeReq('Sen gerizekalısın'), env, tRepeat);
+  assert.equal(resRepeat.status, 200);
+  assert.equal(tgReplies.length, 3);
+  assert.equal(blockRows.get(tgHash).strike_count, 2);
+  assert.equal(blockRows.get(tgHash).blocked_until, tRepeat + 30 * 24 * 60 * 60 * 1000);
 });
 
