@@ -62,3 +62,16 @@ html:lang(ko) body{word-break:keep-all;overflow-wrap:anywhere}
 
 /* In-page links (Transfer, Guides…) stop below the sticky header instead of under it. */
 section[id]{scroll-margin-top:170px}
+
+/* Telegram CTA buttons (44px+ touch target on mobile, RTL-friendly). */
+.tg-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:9px 15px;border-radius:12px;border:1px solid #1d8ec8;background:#e8f6fd;color:#0a4b73;font:700 13.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;cursor:pointer;box-sizing:border-box;max-width:100%}
+.tg-btn:hover{background:#d6effb;border-color:#157ab0}
+.tg-btn:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
+.tg-btn[hidden]{display:none!important}
+.tg-btn .tg-ico{width:18px;height:18px;flex:none;display:block}
+.tg-btn.tg-hero{background:rgba(255,255,255,.12);border-color:rgba(130,213,255,.48);color:#fff;border-radius:999px;padding:8px 14px;font-size:13px;margin:10px 0 0;margin-inline-start:14px;vertical-align:middle}
+.tg-btn.tg-hero:hover{background:rgba(255,255,255,.2)}
+.tg-btn.tg-foot{background:#fff;border-color:#b7ddf2;color:#0b5684;border-radius:999px;padding:7px 13px;font-size:12.5px}
+.tg-btn.tg-after{margin-top:12px;background:#fff;border-color:#88cbe8;color:#0a4b73}
+@media (max-width:560px){.tg-btn.tg-hero{margin-inline-start:0}}
+

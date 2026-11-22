@@ -23,7 +23,8 @@
 .qa p{margin:0;padding:0 16px 14px;color:#34465f;line-height:1.65}
 .qa a.more{display:inline-block;margin:0 16px 14px;color:#164da3;font-weight:700}
 [dir=rtl] .qa summary{padding:15px 16px 15px 44px}
-.ask{display:inline-block;margin-top:14px;background:#25d366;color:#06321a;font-weight:900;border-radius:12px;padding:12px 18px;text-decoration:none}
+.faq-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.ask{display:inline-flex;align-items:center;min-height:44px;background:#25d366;color:#06321a;font-weight:900;border-radius:12px;padding:10px 18px;text-decoration:none}
 </style>
 <script src="lang.js"></script>
 <script src="currency.js"></script>
@@ -58,19 +59,24 @@
 <body>
 <div id="siteHeader" data-page="faq"></div>
 <script src="config/api.js"></script>
+<script src="telegram-cta.js"></script>
 <script src="member.js"></script>
 <script src="site-header.js"></script>
 <main class="faq">
   <h1 id="title">Frequently asked questions</h1>
   <p class="lead" id="intro">How requests, payment and changes work with Bosphorly. Questions? Email us.</p>
   <div id="list"><details class="qa" open><summary>How do I make a request?</summary><p>Choose a transfer, tour or hammam and fill in the form. An email draft opens with your request and a BOS- reference code. Press Send in your email application to deliver it to Bosphorly.</p></details><details class="qa"><summary>How do I pay?</summary><p>Nothing is paid on this website. We share the payment method when we contact you about your request.</p></details><details class="qa"><summary>Are the prices final?</summary><p>The airport transfer to Sultanahmet has a fixed one-way price per vehicle: €60 from Istanbul Airport (IST), €65 from Sabiha Gökçen (SAW). Tour and hammam prices are the companies’ published prices; we confirm the final price for your date on email before booking.</p><a class="more" href="index.html#booking">Airport transfer form →</a></details><details class="qa"><summary>Which currency are prices in?</summary><p>Prices are set in euros. The currency menu at the top shows approximate amounts in other currencies, using the daily rates of the Central Bank of the Republic of Türkiye.</p></details><details class="qa"><summary>How do I change or cancel a booking?</summary><p>Write to us on email with your reference code as early as possible. The cancellation terms of your booking are given on email together with the confirmation.</p></details><details class="qa"><summary>Who is Bosphorly?</summary><p>Bosphorly is an independent request service in Istanbul, not a tour company or travel agency. We pass your request to licensed local companies and confirm the details with you on email; the service itself is provided by the licensed company.</p></details><details class="qa"><summary>What happens to my personal details?</summary><p>Your details reach Bosphorly only when you press Send in your email app. A draft copy may stay on your device under My account, where you can delete it.</p><a class="more" href="privacy.html">Privacy notice →</a></details><details class="qa"><summary>Do I need to print anything?</summary><p>No. Keep your reference code (BOS-…); it appears in your email request and under My account on this device.</p><a class="more" href="account.html">My account →</a></details><details class="qa"><summary>How can I contact Bosphorly?</summary><p>Email info@bosphorly.com for inquiries or changes. Include your reference code (BOS-…) if you have one.</p><a class="more" href="mailto:info@bosphorly.com">✉ info@bosphorly.com</a></details></div>
-  <a class="ask" id="ask" href="mailto:info@bosphorly.com" target="_blank" rel="noopener">Ask by email →</a>
+  <div class="faq-actions">
+    <a class="ask" id="ask" href="mailto:info@bosphorly.com" target="_blank" rel="noopener">Ask by email →</a>
+    <a class="tg-btn ask-tg" id="askTelegram" target="_blank" rel="noopener" hidden></a>
+  </div>
 </main>
 <p class="dc-foot">Bosphorly · <a href="privacy.html" class="privacy-link" style="text-decoration:underline">🔒 Privacy · KVKK</a></p>
 <script>
 (() => {
   const lang = window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const $ = id => document.getElementById(id);
+  if (window.BosphorlyTelegram) window.BosphorlyTelegram.fillLink($('askTelegram'), { key: 'ask', lang });
   // Answers that point to a page: question index -> [link key, address].
   const LINKS = { 2: ['transfer', 'index.html#booking'], 6: ['privacy', 'privacy.html'], 7: ['account', 'account.html'], 8: ['email', 'mailto:info@bosphorly.com'] };
   fetch('data/faq.json', { cache: 'no-cache' }).then(r => r.json()).then(all => {

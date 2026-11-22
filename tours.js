@@ -221,6 +221,8 @@
       // Optional direct delivery (mail Worker), no email account needed; the guest's email is the Reply-To.
       if (window.addDirectDelivery) window.addDirectDelivery(done, { reference: ref, kind: 'tour', service: s.name.slice(0, 160), name: name.value.trim(),
         phone: phone.value.trim(), email: emailVal, date: date.value, guests: Number(guests.value), message: lines.join('\n'), consent: true }, D.lang);
+      const tgAfter = window.BosphorlyTelegram && window.BosphorlyTelegram.createLink({ key: 'afterSubmit', lang: D.lang, className: 'tg-after' });
+      if (tgAfter) done.append(tgAfter);
       done.hidden = false; send.hidden = true;
     });
     return box;
