@@ -93,7 +93,7 @@ section[id]{scroll-margin-top:170px}
 .tg-btn.tg-foot{background:#fff;border-color:#b7ddf2;color:#0b5684;border-radius:999px;padding:7px 13px;font-size:12.5px}
 .tg-btn.tg-after{margin-top:12px;background:#fff;border-color:#88cbe8;color:#0a4b73}
 
-/* Home hero: two clear actions, then one quiet line of secondary links, then a corporate member privilege card. */
+/* Home hero: two clear actions, quiet secondary links, the corporate privilege card, then one thin Mimo line. */
 .hero .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:6px}
 .hero .hero-actions .hero-cta{margin:0;padding:15px 26px;border-radius:12px;font-size:15px}
 .hero .hero-cta2{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.32);color:#fff;font-weight:800;font-size:15px;text-decoration:none;transition:background .15s,border-color .15s}
@@ -118,6 +118,14 @@ section[id]{scroll-margin-top:170px}
 .hero .hero-auth-btn.in{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:750}
 .hero .hero-auth-btn.in:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.5)}
 .hero .hero-caption{margin-top:12px}
+.hero .hero-mimo{display:flex;align-items:center;gap:8px;margin-top:8px;padding:0;max-width:580px;background:none;border:0;min-height:0}
+.hero .hero-mimo-avatar{width:22px;height:22px;border-radius:50%;flex:none;display:block;background:#fff}
+.hero .hero-mimo-body{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;flex:1;min-width:0}
+.hero .hero-mimo-ask{background:none;border:0;padding:0;min-height:32px;min-width:0;color:#ffbf62;font:800 13px/1.2 inherit;cursor:pointer;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero .hero-mimo-ask:hover{text-decoration:underline;text-underline-offset:3px}
+.hero .hero-mimo-tg{color:#b9cbe6;font:600 12.5px/1.2 inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hero .hero-mimo-tg:hover{color:#fff}
+.hero .hero-mimo-tg[hidden]{display:none!important}
 @media (max-width:560px){.hero .hero-actions>a{flex:1 1 100%;justify-content:center;text-align:center}.hero .hero-links{margin-top:14px}}
 @media (max-width:900px){.hero #heroAuth{display:none!important}}
 @media (max-width:560px){.hero .hero-links{flex-direction:column;align-items:flex-start;gap:0}}

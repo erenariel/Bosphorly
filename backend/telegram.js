@@ -1,8 +1,11 @@
 import {
   ASSISTANT_MESSAGES,
   SUPPORTED_LANGS,
+  blockActors,
   detectLanguage,
   forwardConversationEmail,
+  getBlockStatus,
+  isAbuseAgainstMimo,
   isAffirmative,
   isNegative,
   redactSensitive,
@@ -11,29 +14,29 @@ import {
 
 export const TG_TEXT = {
   welcome: {
-    tr: 'Merhaba! Ben Bosphorly İstanbul danışmanın. Havalimanı transferleri, Boğaz turları, hamam, şehir turları veya İstanbul gezi önerileri hakkında sorabilir ya da ekibimize ulaşmak için "insanla konuşmak istiyorum" yazabilirsin.',
-    en: 'Hello! I am your Bosphorly Istanbul advisor. Ask me about airport transfers, Bosphorus cruises, hammams, city tours, or Istanbul tips—or type "talk to a human" to reach our team.',
-    ru: 'Здравствуйте! Я ваш консультант Bosphorly по Стамбулу. Спрашивайте о трансферах, круизах по Босфору, хаммамах, турах и советах по городу или напишите «человек», чтобы связаться с командой.',
-    uk: 'Вітаю! Я ваш консультант Bosphorly у Стамбулі. Запитуйте про трансфери, круїзи Босфором, хамами, тури та поради щодо міста або напишіть «оператор», щоб зв’язатися з командою.',
-    de: 'Hallo! Ich bin Ihr Bosphorly-Berater für Istanbul. Fragen Sie mich nach Flughafentransfers, Bosporus-Fahrten, Hamam, Touren oder Istanbul-Tipps—oder schreiben Sie „Mit Team sprechen“.',
-    fr: 'Bonjour ! Je suis votre conseiller Bosphorly à Istanbul. Posez vos questions sur les transferts, croisières sur le Bosphore, hammams, visites ou conseils locaux—ou écrivez « parler à un humain ».',
-    nl: 'Hallo! Ik ben je Bosphorly-adviseur voor Istanbul. Stel vragen over transfers, Bosporuscruises, hamam, tours of tips voor Istanbul—of typ „spreek met een medewerker“.',
-    ar: 'مرحبًا! أنا مستشارك من Bosphorly في إسطنبول. اسألني عن النقل من المطار، رحلات البوسفور، الحمّام، جولات المدينة أو نصائح السفر—أو اكتب "التحدث مع موظف" للتواصل مع فريقنا.',
-    he: 'שלום! אני היועץ של Bosphorly באיסטנבול. שאלו אותי על הסעות, שייט בבוספורוס, חמאם, סיורים וטיפים—או כתבו "לדבר עם נציג".',
-    az: 'Salam! Mən Bosphorly İstanbul məsləhətçinizəm. Transferlər, Boğaz turları, hamam, şəhər gəzintiləri və ya İstanbul məsləhətləri barədə soruşun, yaxud "insanla danış" yazın.',
-    fa: 'سلام! من مشاور Bosphorly در استانبول هستم. درباره ترانسفر، کروز بسفر، حمام، تورها یا راهنمای استانبول بپرسید یا برای گفتگو با تیم بنویسید «گفتگو با کارشناس».',
-    es: '¡Hola! Soy tu asesor de Bosphorly en Estambul. Pregunta por traslados, cruceros por el Bósforo, hammam, tours o consejos locales—o escribe «hablar con una persona».',
-    it: 'Ciao! Sono il tuo consulente Bosphorly a Istanbul. Chiedi pure su transfer, crociere sul Bosforo, hammam, tour o consigli—oppure scrivi «parla con il team».',
-    pt: 'Olá! Sou seu consultor da Bosphorly em Istambul. Pergunte sobre traslados, cruzeiros pelo Bósforo, hammam, passeios ou dicas—ou digite «falar com atendimento».',
-    hr: 'Pozdrav! Ja sam vaš Bosphorly savjetnik za Istanbul. Pitajte o transferima, krstarenjima Bosporom, hamamu, turama ili savjetima—ili napišite „razgovaraj s osobom“.',
-    hu: 'Szia! A Bosphorly isztambuli tanácsadója vagyok. Kérdezz transzferekről, boszporuszi hajózásról, hamamról, túrákról vagy tippekről—vagy írd be: „beszélj munkatárssal”.',
-    bs: 'Zdravo! Ja sam vaš Bosphorly savjetnik za Istanbul. Pitajte o transferima, krstarenjima Bosporom, hamamu, turama ili savjetima—ili napišite „razgovaraj s osobom“.',
-    zh: '您好！我是您的 Bosphorly 伊斯坦布尔旅行顾问。欢迎咨询机场接送、博斯普鲁斯游船、土耳其浴、城市游览或当地攻略—也可以输入“联系人工客服”。',
-    ja: 'こんにちは！Bosphorlyのイスタンブール案内担当です。空港送迎、クルーズ、ハマム、市内ツアーや観光のコツをお気軽にお尋ねください。「スタッフに相談」と入力するとチームにお繋ぎします。',
-    ko: '안녕하세요! Bosphorly 이스탄불 여행 어드바이저입니다. 공항 픽업, 보스포루스 크루즈, 하맘, 시티 투어나 여행 팁을 물어보세요. 팀 연결은 “상담원 연결”을 입력하세요.',
-    hi: 'नमस्ते! मैं आपका Bosphorly इस्तांबुल सलाहकार हूँ। ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम, सिटी टूर या यात्रा सुझावों के बारे में पूछें—या टीम से जुड़ने के लिए "टीम से बात करें" लिखें।',
-    bn: 'হ্যালো! আমি আপনার Bosphorly ইস্তাম্বুল পরামর্শদাতা। ট্রান্সফার, বসফরাস ক্রুজ, হামাম, সিটি ট্যুর বা ভ্রমণ টিপস নিয়ে জিজ্ঞাসা করুন—অথবা টিমের সাথে কথা বলতে "মানুষের সাথে কথা বলুন" লিখুন।',
-    id: 'Halo! Saya penasihat Bosphorly Anda untuk Istanbul. Tanyakan tentang transfer bandara, pelayaran Bosphorus, hamam, tur kota, atau tips lokal—atau ketik "bicara dengan tim".',
+    tr: 'Merhaba, ben Mimo 🌊 Bosphorly’nin yapay zekâ asistanıyım. Havalimanı transferleri, Boğaz turları, hamam, şehir turları veya İstanbul gezi önerileri hakkında sorabilir ya da ekibimize ulaşmak için "insanla konuşmak istiyorum" yazabilirsin.\nMimo’ya nazik davrandığın için teşekkürler 💙 Saygısız dil kullanılırsa sohbet sonlanır.',
+    en: 'Hello, I am Mimo 🌊 I am Bosphorly’s AI assistant. Ask me about airport transfers, Bosphorus cruises, hammams, city tours, or Istanbul tips—or type "talk to a human" to reach our team.\nThank you for being kind to Mimo 💙 The chat ends if disrespectful language is used.',
+    ru: 'Здравствуйте, я Mimo 🌊 ИИ-ассистент Bosphorly по Стамбулу. Спрашивайте о трансферах, круизах по Босфору, хаммамах, турах и советах по городу или напишите «человек», чтобы связаться с командой.\nСпасибо за вежливое общение с Mimo 💙 При неуважительном тоне чат завершается.',
+    uk: 'Вітаю, я Mimo 🌊 ШІ-асистент Bosphorly у Стамбулі. Запитуйте про трансфери, круїзи Босфором, хамами, тури та поради щодо міста або напишіть «оператор», щоб зв’язатися з командою.\nДякуємо за ввічливе спілкування з Mimo 💙 У разі неповажного тону чат завершується.',
+    de: 'Hallo, ich bin Mimo 🌊 Der KI-Assistent von Bosphorly für Istanbul. Fragen Sie mich nach Flughafentransfers, Bosporus-Fahrten, Hamam, Touren oder Istanbul-Tipps—oder schreiben Sie „Mit Team sprechen“.\nDanke, dass du freundlich zu Mimo bist 💙 Bei respektloser Sprache wird der Chat beendet.',
+    fr: 'Bonjour, je suis Mimo 🌊 L’assistant IA de Bosphorly à Istanbul. Posez vos questions sur les transferts, croisières sur le Bosphore, hammams, visites ou conseils locaux—ou écrivez « parler à un humain ».\nMerci d’être bienveillant avec Mimo 💙 Le chat prend fin en cas de langage irrespectueux.',
+    nl: 'Hallo, ik ben Mimo 🌊 De AI-assistent van Bosphorly voor Istanbul. Stel vragen over transfers, Bosporuscruises, hamam, tours of tips voor Istanbul—of typ „spreek met een medewerker“.\nBedankt dat je vriendelijk bent tegen Mimo 💙 Bij respectloos taalgebruik stopt de chat.',
+    ar: 'مرحبًا، أنا Mimo 🌊 مساعد الذكاء الاصطناعي من Bosphorly في إسطنبول. اسألني عن النقل من المطار، رحلات البوسفور، الحمّام، جولات المدينة أو نصائح السفر—أو اكتب "التحدث مع موظف" للتواصل مع فريقنا.\nشكرًا للطفك مع Mimo 💙 تنتهي المحادثة في حال استخدام لغة غير محترمة.',
+    he: 'שלום, אני Mimo 🌊 עוזר הבינה המלאכותית של Bosphorly באיסטנבול. שאלו אותי על הסעות, שייט בבוספורוס, חמאם, סיורים וטיפים—או כתבו "לדבר עם נציג".\nתודה שאתם נחמדים אל Mimo 💙 השיחה מסתיימת במקרה של שפה לא מכבדת.',
+    az: 'Salam, mən Mimo 🌊 Bosphorly-nin süni intellekt köməkçisiyəm. Transferlər, Boğaz turları, hamam, şəhər gəzintiləri və ya İstanbul məsləhətləri barədə soruşun, yaxud "insanla danış" yazın.\nMimo ilə nəzakətli davrandığınız üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.',
+    fa: 'سلام، من Mimo هستم 🌊 دستیار هوش مصنوعی Bosphorly در استانبول. درباره ترانسفر، کروز بسفر، حمام، تورها یا راهنمای استانبول بپرسید یا برای گفتگو با تیم بنویسید «گفتگو با کارشناس».\nممنون که با Mimo مهربان هستید 💙 در صورت استفاده از لحن نامحترمانه گفتگو پایان می‌یابد.',
+    es: '¡Hola, soy Mimo 🌊 El asistente de IA de Bosphorly en Estambul. Pregunta por traslados, cruceros por el Bósforo, hammam, tours o consejos locales—o escribe «hablar con una persona».\nGracias por tratar con amabilidad a Mimo 💙 El chat finaliza si se usa lenguaje irrespetuoso.',
+    it: 'Ciao, sono Mimo 🌊 L’assistente IA di Bosphorly a Istanbul. Chiedi pure su transfer, crociere sul Bosforo, hammam, tour o consigli—oppure scrivi «parla con il team».\nGrazie per essere gentile con Mimo 💙 La chat termina in caso di linguaggio irrispettoso.',
+    pt: 'Olá, sou Mimo 🌊 O assistente de IA da Bosphorly em Istambul. Pergunte sobre traslados, cruzeiros pelo Bósforo, hammam, passeios ou dicas—ou digite «falar com atendimento».\nObrigado por tratar o Mimo com gentileza 💙 O chat é encerrado se houver linguagem desrespeitosa.',
+    hr: 'Pozdrav, ja sam Mimo 🌊 Bosphorlyjev AI asistent za Istanbul. Pitajte o transferima, krstarenjima Bosporom, hamamu, turama ili savjetima—ili napišite „razgovaraj s osobom“.\nHvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.',
+    hu: 'Szia, Mimo vagyok 🌊 A Bosphorly mesterséges intelligencia asszisztense Isztambulban. Kérdezz transzferekről, boszporuszi hajózásról, hamamról, túrákról vagy tippekről—vagy írd be: „beszélj munkatárssal”.\nKöszönjük, hogy kedves vagy Mimóval 💙 Tiszteletlen hangnem esetén a csevegés véget ér.',
+    bs: 'Zdravo, ja sam Mimo 🌊 Bosphorlyjev AI asistent za Istanbul. Pitajte o transferima, krstarenjima Bosporom, hamamu, turama ili savjetima—ili napišite „razgovaraj s osobom“.\nHvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.',
+    zh: '您好，我是 Mimo 🌊 Bosphorly 的伊斯坦布尔人工智能助手。欢迎咨询机场接送、博斯普鲁斯游船、土耳其浴、城市游览或当地攻略—也可以输入“联系人工客服”。\n感谢您温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。',
+    ja: 'こんにちは、Mimoです 🌊 Bosphorlyのイスタンブール案内AIアシスタントです。空港送迎、クルーズ、ハマム、市内ツアーや観光のコツをお気軽にお尋ねください。「スタッフに相談」と入力するとチームにお繋ぎします。\nMimoに優しく接していただきありがとうございます 💙 礼儀を欠く言葉遣いがあった場合、チャットは終了します。',
+    ko: '안녕하세요, 저는 Mimo예요 🌊 Bosphorly의 이스탄불 AI 도우미입니다. 공항 픽업, 보스포루스 크루즈, 하맘, 시티 투어나 여행 팁을 물어보세요. 팀 연결은 “상담원 연결”을 입력하세요.\nMimo에게 다정하게 대해 주셔서 고마워요 💙 무례한 표현이 사용되면 대화가 종료됩니다.',
+    hi: 'नमस्ते, मैं Mimo हूँ 🌊 Bosphorly का इस्तांबुल AI सहायक। ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम, सिटी टूर या यात्रा सुझावों के बारे में पूछें—या टीम से जुड़ने के लिए "टीम से बात करें" लिखें।\nMimo के साथ विनम्र रहने के लिए धन्यवाद 💙 अपमानजनक भाषा का प्रयोग होने पर चैट समाप्त हो जाएगी।',
+    bn: 'হ্যালো, আমি Mimo 🌊 Bosphorly-এর ইস্তাম্বুল এআই সহায়ক। ট্রান্সফার, বসফরাস ক্রুজ, হামাম, সিটি ট্যুর বা ভ্রমণ টিপস নিয়ে জিজ্ঞাসা করুন—অথবা টিমের সাথে কথা বলতে "মানুষের সাথে কথা বলুন" লিখুন।\nMimo-এর সাথে সদয় আচরণের জন্য ধন্যবাদ 💙 অসম্মানজনক ভাষা ব্যবহার করলে চ্যাট বন্ধ হয়ে যাবে।',
+    id: 'Halo, saya Mimo 🌊 Asisten AI Bosphorly untuk Istanbul. Tanyakan tentang transfer bandara, pelayaran Bosphorus, hamam, tur kota, atau tips lokal—atau ketik "bicara dengan tim".\nTerima kasih telah bersikap ramah kepada Mimo 💙 Obrolan akan berakhir jika bahasa tidak sopan digunakan.',
   },
   askEmail: {
     tr: 'Mesajınızı info@bosphorly.com ekibimize iletmem için lütfen e-posta adresinizi yazın (iptal etmek için /cancel).',
@@ -188,13 +191,13 @@ async function findLinkedMemberEmail(env, telegramId) {
   }
 }
 
-async function getState(env, chatId) {
+async function getState(env, chatId, now = Date.now()) {
   if (!env.DB) return null;
   const row = await env.DB.prepare(
     'SELECT pending_handoff, lang, context_json, updated_at FROM telegram_handoff_state WHERE chat_id = ?'
   ).bind(String(chatId)).first();
   if (!row) return null;
-  if (Date.now() - Number(row.updated_at || 0) > 30 * 60 * 1000) {
+  if (now - Number(row.updated_at || 0) > 30 * 60 * 1000) {
     await env.DB.prepare('DELETE FROM telegram_handoff_state WHERE chat_id = ?').bind(String(chatId)).run();
     return null;
   }
@@ -207,7 +210,7 @@ async function getState(env, chatId) {
   };
 }
 
-async function saveState(env, chatId, pendingHandoff, lang, history) {
+async function saveState(env, chatId, pendingHandoff, lang, history, now = Date.now()) {
   if (!env.DB) return;
   const trimmed = (Array.isArray(history) ? history : []).slice(-6);
   const mode = typeof pendingHandoff === 'number' ? pendingHandoff : (pendingHandoff ? 1 : 0);
@@ -216,7 +219,7 @@ async function saveState(env, chatId, pendingHandoff, lang, history) {
      VALUES (?, ?, ?, ?, ?)
      ON CONFLICT(chat_id) DO UPDATE SET pending_handoff = excluded.pending_handoff, lang = excluded.lang,
        context_json = excluded.context_json, updated_at = excluded.updated_at`
-  ).bind(String(chatId), mode, lang, JSON.stringify(trimmed), Date.now()).run();
+  ).bind(String(chatId), mode, lang, JSON.stringify(trimmed), now).run();
 }
 
 async function clearState(env, chatId) {
@@ -232,7 +235,7 @@ export function parseStartPayloadLang(text) {
   return SUPPORTED_LANGS.has(code) ? code : '';
 }
 
-export async function handleTelegramWebhook(request, env) {
+export async function handleTelegramWebhook(request, env, now = Date.now()) {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
@@ -258,6 +261,13 @@ export async function handleTelegramWebhook(request, env) {
   }
 
   const chatId = String(msg.chat.id);
+  const actorKey = `tg:${chatId}`;
+
+  const blockStatus = await getBlockStatus({ env, actorKeys: [actorKey], now });
+  if (blockStatus.blocked) {
+    return new Response(JSON.stringify({ ok: true, blocked: true }), { status: 200 });
+  }
+
   const telegramId = String((msg.from && msg.from.id) || chatId);
   const tgUser = msg.from && msg.from.username ? `@${msg.from.username}` : '';
   const text = msg.text.trim();
@@ -271,9 +281,17 @@ export async function handleTelegramWebhook(request, env) {
     return new Response(JSON.stringify({ ok: true, lang: welcomeLang }), { status: 200 });
   }
 
-  const state = await getState(env, chatId);
+  const state = await getState(env, chatId, now);
   const savedLang = state && state.lang ? state.lang : '';
   const lang = detectLanguage({ message: text, pageLang: savedLang, telegramLang });
+
+  if (isAbuseAgainstMimo(text)) {
+    await clearState(env, chatId);
+    await blockActors({ env, actorKeys: [actorKey], channel: 'telegram', now });
+    const closeMsg = (ASSISTANT_MESSAGES.abuseClose && (ASSISTANT_MESSAGES.abuseClose[lang] || ASSISTANT_MESSAGES.abuseClose.en)) || '';
+    await sendTelegramMessage(env, chatId, closeMsg);
+    return new Response(JSON.stringify({ ok: true, closed: true }), { status: 200 });
+  }
 
   if (/^\/help(?:@\w+)?(?:\s|$)/i.test(text)) {
     const helpLang = savedLang || detectLanguage({ message: '', telegramLang });
@@ -327,7 +345,7 @@ export async function handleTelegramWebhook(request, env) {
         await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', activeLang) : t('forwardFailed', activeLang));
         return new Response(JSON.stringify({ ok: true, handoff: true, forwarded: forwarded.ok }), { status: 200 });
       }
-      await saveState(env, chatId, 1, activeLang, state.history);
+      await saveState(env, chatId, 1, activeLang, state.history, now);
       await sendTelegramMessage(env, chatId, t('askEmail', activeLang));
       return new Response(JSON.stringify({ ok: true, handoff: true }), { status: 200 });
     }
@@ -338,7 +356,7 @@ export async function handleTelegramWebhook(request, env) {
         { role: 'user', content: redactSensitive(text).text },
         { role: 'assistant', content: reply },
       ].slice(-6);
-      await saveState(env, chatId, 0, activeLang, nextHistory);
+      await saveState(env, chatId, 0, activeLang, nextHistory, now);
       await sendTelegramMessage(env, chatId, reply);
       return new Response(JSON.stringify({ ok: true, handoff: false }), { status: 200 });
     }
@@ -351,8 +369,17 @@ export async function handleTelegramWebhook(request, env) {
     telegramLang,
     history,
     env,
-    actorKey: `tg:${chatId}`,
+    actorKey,
+    actorKeys: [actorKey],
+    channel: 'telegram',
+    now,
   });
+
+  if (res.closed) {
+    await clearState(env, chatId);
+    await sendTelegramMessage(env, chatId, res.reply);
+    return new Response(JSON.stringify({ ok: true, closed: true }), { status: 200 });
+  }
 
   const cleanUser = redactSensitive(text).text;
   const nextHistory = [
@@ -362,7 +389,7 @@ export async function handleTelegramWebhook(request, env) {
   ].slice(-6);
 
   if (res.handoffOffer) {
-    await saveState(env, chatId, 2, res.lang || lang, nextHistory);
+    await saveState(env, chatId, 2, res.lang || lang, nextHistory, now);
     await sendTelegramMessage(env, chatId, res.reply);
     return new Response(JSON.stringify({ ok: true, handoffOffer: true }), { status: 200 });
   }
@@ -383,10 +410,10 @@ export async function handleTelegramWebhook(request, env) {
       await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', res.lang || lang) : t('forwardFailed', res.lang || lang));
       return new Response(JSON.stringify({ ok: true, handoff: true, forwarded: forwarded.ok }), { status: 200 });
     }
-    await saveState(env, chatId, 1, res.lang || lang, nextHistory);
+    await saveState(env, chatId, 1, res.lang || lang, nextHistory, now);
     await sendTelegramMessage(env, chatId, `${res.reply}\n\n${t('askEmail', res.lang || lang)}`);
   } else {
-    await saveState(env, chatId, 0, res.lang || lang, nextHistory);
+    await saveState(env, chatId, 0, res.lang || lang, nextHistory, now);
     await sendTelegramMessage(env, chatId, res.reply);
   }
 
