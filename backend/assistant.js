@@ -9,7 +9,7 @@ export const SUPPORTED_LANGS = new Set([
 const PER_MIN_LIMIT = 6;
 const PER_DAY_LIMIT = 40;
 const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
-const AI_TIMEOUT_MS = 15000;
+export const AI_TIMEOUT_MS = 9000;
 
 const memoryLimits = new Map();
 const memoryFeedback = new Map();
@@ -247,6 +247,31 @@ export const ASSISTANT_MESSAGES = {
     hi: 'मैं इसे हमारी टीम को भेज रहा हूँ। कृपया अपना ईमेल पता साझा करें ताकि हम आपको जवाब दे सकें।',
     bn: 'আমি এটি আমাদের টিমের কাছে পাঠাচ্ছি। অনুগ্রহ করে আপনার ইমেইল ঠিকানা দিন যাতে আমরা উত্তর দিতে পারি।',
     id: 'Dengan senang hati saya teruskan ke tim kami. Mohon bagikan alamat email Anda agar kami dapat membalas.',
+  },
+  tryAgain: {
+    tr: 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?',
+    en: 'One second, the seagulls distracted me 😅 Could you write that again?',
+    ru: 'Секунду, чайки сбили меня с толку 😅 Напишете ещё раз?',
+    uk: 'Секунду, чайки збили мене з пантелику 😅 Напишете ще раз?',
+    de: 'Eine Sekunde, die Möwen haben mich abgelenkt 😅 Schreibst du es noch einmal?',
+    fr: 'Une seconde, les mouettes m’ont distrait 😅 Tu peux réécrire ?',
+    nl: 'Een seconde, de meeuwen leidden me af 😅 Schrijf je het nog een keer?',
+    ar: 'لحظة، شتتني النوارس 😅 هل تعيد كتابة رسالتك؟',
+    he: 'רגע, השחפים בלבלו אותי 😅 אפשר לכתוב שוב?',
+    az: 'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazar mısınız?',
+    fa: 'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 دوباره می‌نویسید؟',
+    es: 'Un segundo, las gaviotas me distrajeron 😅 ¿Lo escribes otra vez?',
+    it: 'Un secondo, i gabbiani mi hanno distratto 😅 Lo riscrivi?',
+    pt: 'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?',
+    hr: 'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovno?',
+    hu: 'Egy pillanat, a sirályok elvonták a figyelmemet 😅 Megírnád még egyszer?',
+    bs: 'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovo?',
+    zh: '等一下，海鸥把我弄糊涂了 😅 可以再写一遍吗？',
+    ja: 'ちょっと待って、カモメに気を取られちゃった 😅 もう一度書いてもらえる？',
+    ko: '잠깐, 갈매기 때문에 정신이 팔렸어요 😅 다시 한 번 적어 주실래요?',
+    hi: 'एक सेकंड, सीगल ने मुझे भटका दिया 😅 क्या आप फिर से लिखेंगे?',
+    bn: 'এক সেকেন্ড, গাঙচিলগুলো আমাকে বিভ্রান্ত করেছে 😅 আবার লিখবেন?',
+    id: 'Sebentar, burung camar mengalihkan perhatianku 😅 Bisa tulis lagi?',
   },
   unknownHandoff: {
     tr: 'Bunu Boğaz’ın martılarına bile sordum ama emin olamadım 🌊 Uydurmak istemem; sorunuzu ekibimize iletmem için e-posta adresinizi paylaşabilirsiniz.',
@@ -614,6 +639,14 @@ export function retrieveChunks(query, k = 6) {
 
   scored.sort((a, bScore) => bScore.score - a.score);
   return scored.slice(0, Math.min(8, Math.max(5, k))).map((s) => s.doc);
+}
+
+const CATALOG_QUESTION_RE = /(?:^|[^\p{L}\p{N}])(?:transfer\w*|havaliman\w*|airport\w*|аэропорт\w*|аеропорт\w*|shuttle\w*|cruise\w*|bo[gğ]az\w*|bosphor\w*|bospor\w*|босфор\w*|بوسفور|بسفر|בוספורוס|ボスポラス|博斯普鲁斯|보스포루스|hamam\w*|hammam\w*|хаммам\w*|хамам\w*|حمام|חמאם|ハマム|土耳其浴|하맘|tur(?:u(?:muz|nuz)?|lar\w*)?|tour\w*|круиз\w*|круїз\w*|тур\w*|جولة|کروز|שייט|游船|クルーズ|크루즈|pelayaran|crucero\w*|croisi[eè]re\w*|crociera\w*|cruzeiro\w*|kreuzfahrt\w*|fiyat\w*|ücret\w*|price\w*|cost\w*|сколько|цена\w*|ціна\w*|سعر|قیمت|מחיר|precio\w*|prezzo|preço\w*|preis\w*|prix|prijs|料金|价格|가격|कीमत|rezervasyon\w*|booking\w*|bilet\w*|ticket\w*|yacht\w*|ist|saw)(?=$|[^\p{L}\p{N}])/iu;
+
+export function isCatalogQuestion(message) {
+  const t = String(message || '').trim();
+  if (!t || isSmallTalk(t)) return false;
+  return CATALOG_QUESTION_RE.test(t);
 }
 
 export function isAiIdentityQuestion(message) {
@@ -998,6 +1031,37 @@ function parseModelOutput(raw) {
   };
 }
 
+function isAiTimeoutError(err) {
+  return Boolean(err && err.message === 'AI timeout');
+}
+
+function runAiOnce(env, messages, timeoutMs, temperature) {
+  let timer;
+  const aiCall = Promise.resolve().then(() => env.AI.run(ASSISTANT_MODEL, {
+    messages,
+    max_completion_tokens: 280,
+    temperature,
+    chat_template_kwargs: { enable_thinking: false },
+  }));
+  const settled = aiCall.then(
+    (value) => ({ ok: true, value }),
+    (error) => ({ ok: false, error }),
+  );
+  const timeout = new Promise((resolve) => {
+    timer = setTimeout(() => resolve({ ok: false, error: new Error('AI timeout') }), timeoutMs);
+  });
+  return Promise.race([settled, timeout]).finally(() => clearTimeout(timer));
+}
+
+async function runAiWithRetry(env, messages, timeoutMs, temperature) {
+  const first = await runAiOnce(env, messages, timeoutMs, temperature);
+  if (first.ok) return first.value;
+  if (!isAiTimeoutError(first.error)) throw first.error;
+  const second = await runAiOnce(env, messages, timeoutMs, temperature);
+  if (second.ok) return second.value;
+  throw second.error;
+}
+
 export async function runAssistant({
   message,
   pageLang = '',
@@ -1008,6 +1072,7 @@ export async function runAssistant({
   actorKeys = null,
   channel = '',
   now = Date.now(),
+  aiTimeoutMs = AI_TIMEOUT_MS,
 }) {
   const { text: cleanMsg, hadSensitive: msgSensitive } = redactSensitive(message);
   const lang = detectLanguage({ message: cleanMsg, pageLang, telegramLang });
@@ -1103,13 +1168,25 @@ export async function runAssistant({
   // The canned welcome is only for a plain hello that opens the conversation.
   if (smallTalkKind === 'greeting' && safeHistory.length === 0) return cannedSmallTalk('greeting');
   if (smallTalkKind && (!env || !env.AI || typeof env.AI.run !== 'function')) return cannedSmallTalk(smallTalkKind);
-  if (!env || !env.AI || typeof env.AI.run !== 'function') {
+
+  const timeoutMs = Number.isFinite(aiTimeoutMs) && aiTimeoutMs > 0 ? aiTimeoutMs : AI_TIMEOUT_MS;
+
+  const modelFallback = () => {
     if (aiIdentityAsked) {
       return {
         ok: true,
         handoff: false,
         lang,
         reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
+      };
+    }
+    if (smallTalkKind || !isCatalogQuestion(cleanMsg)) {
+      return {
+        ok: true,
+        handoff: false,
+        fallback: true,
+        lang,
+        reply: `${warnPrefix}${capEmojis(attachGuestName(msg('tryAgain', lang), guestName), 2)}`,
       };
     }
     return {
@@ -1119,6 +1196,10 @@ export async function runAssistant({
       lang,
       reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
     };
+  };
+
+  if (!env || !env.AI || typeof env.AI.run !== 'function') {
+    return modelFallback();
   }
 
   const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 6);
@@ -1159,15 +1240,9 @@ export async function runAssistant({
     { role: 'user', content: cleanMsg.slice(0, 1000) },
   ];
 
-  const callModel = async (msgs, temperature) => parseModelOutput(await Promise.race([
-    env.AI.run(ASSISTANT_MODEL, {
-      messages: msgs,
-      max_completion_tokens: 280,
-      temperature,
-      chat_template_kwargs: { enable_thinking: false },
-    }),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('AI timeout')), AI_TIMEOUT_MS)),
-  ]));
+  const callModel = async (msgs, temperature) => parseModelOutput(
+    await runAiWithRetry(env, msgs, timeoutMs, temperature),
+  );
   // Casual chat gets a livelier temperature; catalog answers stay factual.
   const temperature = smallTalkKind ? 0.7 : 0.2;
 
@@ -1198,19 +1273,13 @@ export async function runAssistant({
     }
     let reply = stripFakeUrgency(stripExternalLinks(redactSensitive(parsed.reply).text));
     if (parsed.parseFailed || isNonsensicalReply(reply)) {
-      if (aiIdentityAsked) {
-        return {
-          ok: true,
-          handoff: false,
-          lang,
-          reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
-        };
+      if (!aiIdentityAsked) {
+        console.warn('assistant_ai_invalid_output', {
+          model: ASSISTANT_MODEL,
+          reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
+        });
       }
-      console.warn('assistant_ai_invalid_output', {
-        model: ASSISTANT_MODEL,
-        reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
-      });
-      return { ok: true, handoff: true, fallback: true, lang, reply: `${warnPrefix}${msg('unknownHandoff', lang)}` };
+      return modelFallback();
     }
     if (parsed.handoff) {
       return {
@@ -1225,25 +1294,13 @@ export async function runAssistant({
     reply = capEmojis(capWords(reply, 120), 2);
     return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
   } catch (err) {
-    if (aiIdentityAsked) {
-      return {
-        ok: true,
-        handoff: false,
-        lang,
-        reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
-      };
+    if (!aiIdentityAsked) {
+      console.error('assistant_ai_call_failed', {
+        model: ASSISTANT_MODEL,
+        errorType: err && err.name ? String(err.name) : 'Error',
+      });
     }
-    console.error('assistant_ai_call_failed', {
-      model: ASSISTANT_MODEL,
-      errorType: err && err.name ? String(err.name) : 'Error',
-    });
-    return {
-      ok: true,
-      handoff: true,
-      fallback: true,
-      lang,
-      reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
-    };
+    return modelFallback();
   }
 }
 

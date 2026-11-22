@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
 import worker from '../backend/worker.js';
 import {
+  AI_TIMEOUT_MS,
   ASSISTANT_MESSAGES,
   ASSISTANT_MODEL,
   CHAT_SESSION_TTL_MS,
@@ -17,6 +18,7 @@ import {
   hashActorKey,
   isAbuseAgainstMimo,
   isAiIdentityQuestion,
+  isCatalogQuestion,
   isServiceComplaint,
   isSmallTalk,
   redactSensitive,
@@ -442,6 +444,148 @@ test('AI error or empty/nonsensical output falls back silently to handoff and su
   assert.equal(resultNestedRes.ok, true);
   assert.equal(resultNestedRes.handoff, false);
   assert.ok(resultNestedRes.reply.includes('€65'));
+});
+
+test('AI timeout is 9s, retries once, and the email handoff fallback stays on catalog questions', async () => {
+  assert.equal(AI_TIMEOUT_MS, 9000);
+  assert.equal(isCatalogQuestion('Boğaz turu fiyatı nedir?'), true);
+  assert.equal(isCatalogQuestion('Bosphorus cruise schedule?'), true);
+  assert.equal(isCatalogQuestion('Merhaba'), false);
+  assert.equal(isCatalogQuestion('Bugün hava nasıl?'), false);
+  assert.equal(isCatalogQuestion('İstanbul’da kahvaltı için ne önerirsin?'), false);
+
+  for (const lang of ALL_23_LANGS) {
+    const text = ASSISTANT_MESSAGES.tryAgain[lang];
+    assert.equal(text.includes('😅'), true, `tryAgain.${lang} stays warm`);
+    assert.equal(/e-?posta|e-?mail|email|correo|почт/i.test(text), false, `tryAgain.${lang} does not ask for email`);
+  }
+  assert.equal(ASSISTANT_MESSAGES.tryAgain.tr, 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?');
+
+  let retryCalls = 0;
+  const recovered = await runAssistant({
+    message: 'Bosphorus cruise schedule?',
+    pageLang: 'en',
+    aiTimeoutMs: 25,
+    env: {
+      AI: {
+        run: () => {
+          retryCalls += 1;
+          if (retryCalls === 1) return new Promise(() => {});
+          return Promise.resolve({
+            response: JSON.stringify({
+              handoff: false,
+              reply: 'The morning cruise lasts about two hours. https://bosphorly.com/tours.html?lang=en',
+            }),
+          });
+        },
+      },
+    },
+    actorKey: 'timeout-retry-ok',
+  });
+  assert.equal(retryCalls, 2);
+  assert.equal(recovered.handoff, false);
+  assert.equal(recovered.fallback, undefined);
+  assert.ok(recovered.reply.includes('two hours'));
+
+  let timeoutCalls = 0;
+  const catalogTimeout = await runAssistant({
+    message: 'Boğaz turu fiyatı nedir?',
+    pageLang: 'tr',
+    aiTimeoutMs: 25,
+    env: {
+      AI: {
+        run: () => {
+          timeoutCalls += 1;
+          return new Promise(() => {});
+        },
+      },
+    },
+    actorKey: 'timeout-catalog',
+  });
+  assert.equal(timeoutCalls, 2);
+  assert.equal(catalogTimeout.handoff, true);
+  assert.equal(catalogTimeout.fallback, true);
+  assert.ok(catalogTimeout.reply.includes('e-posta'));
+
+  let chatCalls = 0;
+  const smallTimeout = await runAssistant({
+    message: 'Bugün hava nasıl?',
+    pageLang: 'tr',
+    aiTimeoutMs: 25,
+    env: {
+      AI: {
+        run: () => {
+          chatCalls += 1;
+          return new Promise(() => {});
+        },
+      },
+    },
+    actorKey: 'timeout-smalltalk',
+  });
+  assert.equal(chatCalls, 2);
+  assert.equal(smallTimeout.handoff, false);
+  assert.equal(smallTimeout.fallback, true);
+  assert.equal(smallTimeout.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+  assert.equal(/e-posta|email/i.test(smallTimeout.reply), false);
+
+  let errorCalls = 0;
+  const hardError = await runAssistant({
+    message: 'How is the weather today?',
+    pageLang: 'en',
+    aiTimeoutMs: 25,
+    env: {
+      AI: {
+        run: async () => {
+          errorCalls += 1;
+          throw new Error('Workers AI down');
+        },
+      },
+    },
+    actorKey: 'timeout-no-retry',
+  });
+  assert.equal(errorCalls, 1);
+  assert.equal(hardError.handoff, false);
+  assert.equal(hardError.reply, ASSISTANT_MESSAGES.tryAgain.en);
+
+  let chatTimeoutCalls = 0;
+  const chatTimeout = await runAssistant({
+    message: 'nasılsın',
+    pageLang: 'tr',
+    aiTimeoutMs: 25,
+    env: {
+      AI: {
+        run: () => {
+          chatTimeoutCalls += 1;
+          return new Promise(() => {});
+        },
+      },
+    },
+    actorKey: 'timeout-nasilsin',
+  });
+  assert.equal(chatTimeoutCalls, 2);
+  assert.equal(chatTimeout.handoff, false);
+  assert.equal(chatTimeout.fallback, true);
+  assert.equal(chatTimeout.reply, ASSISTANT_MESSAGES.tryAgain.tr);
+
+  let greetCalls = 0;
+  const greet = await runAssistant({
+    message: 'Merhaba',
+    pageLang: 'tr',
+    env: {
+      AI: {
+        run: async () => {
+          greetCalls += 1;
+          throw new Error('should not run for small talk');
+        },
+      },
+    },
+    actorKey: 'timeout-greeting',
+  });
+  assert.equal(greetCalls, 0);
+  assert.equal(greet.handoff, false);
+  assert.equal(greet.fallback, undefined);
+  assert.equal(/e-posta|email/i.test(greet.reply), false);
+  assert.ok(greet.reply.includes('Mimo'));
 });
 
 test('assistant handoff forwards conversation to info@bosphorly.com with Reply-To', async t => {
