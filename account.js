@@ -676,11 +676,11 @@
       note.classList.toggle('synced', signedIn);
       if (signedIn) {
         note.textContent = tr
-          ? '☁️ Hesabınla eşitleniyor: Bilgilerin ve sepetteki / taleplerim listendeki kayıtlar aynı hesapla giriş yaptığın her telefon ve bilgisayarda görünür.'
+          ? '☁️ Hesabınla eşitleniyor: Profil bilgileriniz ve kayıtlı talepleriniz, hesabınızla oturum açtığınız tüm telefon ve bilgisayarlarda görüntülenir.'
           : '☁️ Synced to your Bosphorly account: Your details and saved requests appear across every phone or computer where you sign in.';
       } else if (enabled) {
         note.textContent = tr
-          ? 'Şimdilik yalnızca bu cihazda saklanır. Yukarıdan giriş yaptığında veya hesap oluşturduğunda bilgilerin ve taleplerin başka telefon veya bilgisayarda da görünür.'
+          ? 'Bu bölümdeki yerel talep taslakları yalnızca mevcut cihazınızda saklanır. Yukarıdan üye girişi yaparak veya hesap oluşturarak bilgi ve taleplerinizi tüm cihazlarınızda eşitleyebilirsiniz.'
           : (T.deviceNote + ' Sign in or create an account above to sync across devices.');
       } else {
         note.textContent = T.deviceNote;
@@ -688,7 +688,7 @@
     }
     if (foot) {
       foot.textContent = signedIn
-        ? (tr ? 'Bosphorly · Hesap bilgilerin ve taleplerin oturum açıkken hesabınla güvenli biçimde eşitlenir.' : 'Bosphorly · Your details and requests sync securely with your signed-in account.')
+        ? (tr ? 'Bosphorly · Profil bilgileriniz ve talepleriniz oturum açıkken hesabınızla güvenli biçimde eşitlenir.' : 'Bosphorly · Your details and requests sync securely with your signed-in account.')
         : T.footer;
     }
   }
