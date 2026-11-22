@@ -686,6 +686,143 @@ test('Turnstile renders interaction-only in hidden footer container, stays invis
   await expect(tsBox).toBeHidden();
 });
 
+test('mini-Markdown escapes HTML/XSS first, renders **bold** and <br>, and restricts clickable links with rel=noopener', async ({ page }) => {
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: `window.turnstile = { render(el, opts) { setTimeout(() => opts.callback('ts-md-1'), 5); return 1; }, reset() {} };`,
+    });
+  });
+
+  let capturedReq = null;
+  await page.route('**/v1/assistant', async (route) => {
+    capturedReq = route.request().postDataJSON();
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        reply:
+          '**Sabah Boğaz Turu** kişi başı yaklaşık **25 EUR**.\n' +
+          'Detaylar: https://bosphorly.com/booking.html?service=bb-morning&lang=tr\n' +
+          'Telegram: https://t.me/BosphorlyBot?start=tr\n' +
+          'Saldırı: <img src=x onerror="window.__xssTriggered=1"> https://evil.com https://t.me/OtherBot',
+        handoff: false,
+        lang: 'tr',
+        chatSession: 'sess-md',
+      }),
+    });
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await expect(panel).toBeVisible();
+
+  await panel.locator('.bc-input').fill('<b>merhaba</b> Tur fiyatı?');
+  await panel.locator('.bc-send').click();
+
+  const lastBot = panel.locator('.bc-msg.bot').last();
+  await expect(lastBot).toContainText('Sabah Boğaz Turu');
+  await expect(lastBot).toContainText('<img src=x');
+
+  // Verify no XSS executed and no injected img/script/b DOM nodes exist
+  expect(await page.evaluate(() => window.__xssTriggered)).toBeUndefined();
+  expect(await lastBot.locator('img, script').count()).toBe(0);
+  expect(await panel.locator('.bc-msg.user').last().locator('b').count()).toBe(0);
+  expect(await lastBot.locator('strong').allInnerTexts()).toEqual(['Sabah Boğaz Turu', '25 EUR']);
+  expect(await lastBot.locator('br').count()).toBeGreaterThanOrEqual(3);
+
+  // Only bosphorly.com and t.me/BosphorlyBot are clickable links with rel=noopener
+  const links = await lastBot.locator('a').evaluateAll((els) =>
+    els.map((a) => ({ href: a.getAttribute('href'), rel: a.getAttribute('rel') }))
+  );
+  expect(links).toEqual([
+    { href: 'https://bosphorly.com/booking.html?service=bb-morning&lang=tr', rel: 'noopener' },
+    { href: 'https://t.me/BosphorlyBot?start=tr', rel: 'noopener' },
+  ]);
+  expect(capturedReq.greeted).toBe(true);
+  expect(capturedReq.stream).toBe(true);
+});
+
+test('panel open pre-warms Turnstile token in background, shows 8s intermediate status, and streams SSE deltas word-by-word', async ({ page }) => {
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: `
+        window.__tsStats = { renders: 0, resets: 0, resolvedAtOpen: false };
+        window.turnstile = {
+          render(el, opts) {
+            window.__tsStats.renders += 1;
+            setTimeout(() => {
+              window.__tsStats.resolvedAtOpen = true;
+              opts.callback('ts-prewarmed-1');
+            }, 15);
+            return 1;
+          },
+          reset() { window.__tsStats.resets += 1; }
+        };
+      `,
+    });
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await expect(panel).toBeVisible();
+
+  // Turnstile resolved in background purely from opening panel (no message sent yet)
+  await expect.poll(async () => page.evaluate(() => Boolean(window.__tsStats?.resolvedAtOpen))).toBe(true);
+  expect(await page.evaluate(() => window.__tsStats.renders)).toBe(1);
+  expect(await page.evaluate(() => window.__tsStats.resets)).toBe(0);
+
+  // Override 8s intermediate threshold for deterministic fast test execution & return SSE from Browser fetch mock
+  await page.evaluate(() => {
+    window.__BOSPHORLY_MIMO_THINK_MS = 100;
+    const origFetch = window.fetch.bind(window);
+    window.__sseReq = null;
+    window.fetch = async (url, init) => {
+      if (String(url).includes('/v1/assistant')) {
+        window.__sseReq = JSON.parse(init.body);
+        const enc = new TextEncoder();
+        const stream = new ReadableStream({
+          async start(controller) {
+            controller.enqueue(enc.encode('event: session\ndata: {"chatSession":"sess-sse-1"}\n\n'));
+            await new Promise((r) => setTimeout(r, 240));
+            controller.enqueue(enc.encode('event: delta\ndata: {"t":"**Sabah turu** "}\n\n'));
+            await new Promise((r) => setTimeout(r, 40));
+            controller.enqueue(enc.encode('event: delta\ndata: {"t":"yaklaşık 25 EUR."}\n\n'));
+            controller.enqueue(
+              enc.encode(
+                'event: done\ndata: {"reply":"**Sabah turu** yaklaşık 25 EUR. https://bosphorly.com/booking.html?service=bb-morning&lang=tr","handoff":false,"handoffOffer":false,"lang":"tr","chatSession":"sess-sse-1"}\n\n'
+              )
+            );
+            controller.close();
+          },
+        });
+        return new Response(stream, {
+          status: 200,
+          headers: { 'Content-Type': 'text/event-stream; charset=utf-8' },
+        });
+      }
+      return origFetch(url, init);
+    };
+  });
+
+  await panel.locator('.bc-input').fill('Boğaz turu fiyatı nedir?');
+  await panel.locator('.bc-send').click();
+
+  const typingLabel = panel.locator('.bc-typing-label');
+  await expect(typingLabel).toHaveText('Mimo yazıyor…');
+  await expect(typingLabel).toHaveText('Biraz düşünüyorum…', { timeout: 2000 });
+
+  const lastBot = panel.locator('.bc-msg.bot').last();
+  await expect(lastBot).toContainText('Sabah turu yaklaşık 25 EUR.');
+  await expect(lastBot.locator('strong')).toHaveText('Sabah turu');
+  await expect(lastBot.locator('a')).toHaveAttribute('href', 'https://bosphorly.com/booking.html?service=bb-morning&lang=tr');
+  expect(await page.evaluate(() => window.__sseReq.turnstileToken)).toBe('ts-prewarmed-1');
+  expect(await page.evaluate(() => window.__tsStats.resets)).toBe(0);
+});
+
 test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visualViewport, single-line kindNote, FAB hide/restore & dark mode', async ({ page }) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.addInitScript(() => {
@@ -720,7 +857,6 @@ test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visu
     await expect(panel).toBeVisible();
     await expectChatPanelLayout(page, panel);
 
-    // Kindness note is single-line and dark mode styles apply
     const initialMetrics = await panel.evaluate((el) => {
       const note = el.querySelector('.bc-kind-note');
       const noteCs = getComputedStyle(note);
@@ -738,13 +874,11 @@ test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visu
     expect(initialMetrics.panelBg).not.toBe('rgb(255, 255, 255)');
     expect(initialMetrics.botBg).not.toBe('rgb(255, 255, 255)');
 
-    // Reloading in same session must not duplicate or re-show kindNote on revisit
     await page.reload();
     await page.locator('.bc-fab').click();
     await expect(page.locator('.bc-panel')).toBeVisible();
     await expect(page.locator('.bc-panel .bc-kind-note')).toHaveCount(0);
 
-    // Simulate iOS virtual keyboard shrinking visualViewport to 360px
     await page.evaluate(() => window.__setMockVvHeight(360));
     const inputBox = await page.locator('.bc-panel .bc-input').boundingBox();
     expect(inputBox.y).toBeGreaterThanOrEqual(0);
@@ -752,7 +886,6 @@ test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visu
     const panelBox = await page.locator('.bc-panel').boundingBox();
     expect(Math.abs(panelBox.height - 360)).toBeLessThanOrEqual(2);
 
-    // Closing panel restores FAB visibility & clears body scroll lock
     await page.evaluate(() => window.__setMockVvHeight(0));
     await page.locator('.bc-panel .bc-close').click();
     await expect(page.locator('.bc-panel')).toBeHidden();

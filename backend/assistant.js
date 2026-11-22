@@ -91,47 +91,47 @@ export const ASSISTANT_MESSAGES = {
   greeting: {
     tr: 'Merhaba! Ben Bosphorly’nin yapay zekâ asistanı Mimo 🌊 Havalimanı transferleri, Boğaz turları, hamam deneyimleri ve İstanbul gezi önerileri için yanındayım. İstanbul’a ne zaman geliyorsun?',
     en: 'Hello! I am Mimo, Bosphorly’s AI assistant 🌊 I can help with airport transfers, Bosphorus cruises, hammam experiences, city tours, and local Istanbul tips. When are you visiting Istanbul?',
-    ru: 'Здравствуйте! Я Mimo — ИИ-ассистент Bosphorly по Стамбулу 🌊 Помогу с трансферами из аэропорта, круизами по Босфору, хаммамом, турами и советами по городу. Когда вы приезжаете в Стамбул?',
-    uk: 'Вітаю! Я Mimo — ШІ-асистент Bosphorly у Стамбулі 🌊 Допоможу з трансферами з аеропорту, круїзами Босфором, хамамом, турами та порадами щодо міста. Коли ви плануєте приїхати до Стамбула?',
-    de: 'Hallo! Ich bin Mimo, der KI-Assistent von Bosphorly für Istanbul 🌊 Ich helfe gern bei Flughafentransfers, Bosporus-Fahrten, Hamam, Stadttouren und Istanbul-Tipps. Wann reisen Sie nach Istanbul?',
-    fr: 'Bonjour ! Je suis Mimo, l’assistant IA de Bosphorly à Istanbul 🌊 Je peux vous aider pour les transferts aéroport, croisières sur le Bosphore, hammams, visites et conseils locaux. Quand venez-vous à Istanbul ?',
+    ru: 'Привет! Я Mimo — ИИ-ассистент Bosphorly по Стамбулу 🌊 Помогу с трансферами из аэропорта, круизами по Босфору, хаммамом, турами и советами по городу. Когда ты приезжаешь в Стамбул?',
+    uk: 'Привіт! Я Mimo — ШІ-асистент Bosphorly у Стамбулі 🌊 Допоможу з трансферами з аеропорту, круїзами Босфором, хамамом, турами та порадами щодо міста. Коли ти плануєш приїхати до Стамбула?',
+    de: 'Hallo! Ich bin Mimo, der KI-Assistent von Bosphorly für Istanbul 🌊 Ich helfe dir gern bei Flughafentransfers, Bosporus-Fahrten, Hamam, Stadttouren und Istanbul-Tipps. Wann reist du nach Istanbul?',
+    fr: 'Salut ! Je suis Mimo, l’assistant IA de Bosphorly à Istanbul 🌊 Je peux t’aider pour les transferts aéroport, croisières sur le Bosphore, hammams, visites et conseils locaux. Quand viens-tu à Istanbul ?',
     nl: 'Hallo! Ik ben Mimo, de AI-assistent van Bosphorly voor Istanbul 🌊 Ik help je graag met luchthaventransfers, Bosporuscruises, hamam, stadstours en tips voor Istanbul. Wanneer kom je naar Istanbul?',
     ar: 'مرحبًا! أنا Mimo، مساعد الذكاء الاصطناعي من Bosphorly في إسطنبول 🌊 يمكنني مساعدتك في النقل من المطار، رحلات البوسفور، الحمّام التركي، جولات المدينة ونصائح السفر. متى ستزور إسطنبول؟',
-    he: 'שלום! אני Mimo, עוזר הבינה המלאכותית של Bosphorly באיסטנבול 🌊 אשמח לעזור עם הסעות משדה התעופה, שייט בבוספורוס, חמאם, סיורים וטיפים מקומיים. מתי אתם מגיעים לאיסטנבול?',
-    az: 'Salam! Mən Bosphorly-nin süni intellekt köməkçisi Mimo 🌊 Hava limanı transferləri, Boğaz turları, hamam, şəhər gəzintiləri və İstanbul tövsiyələri ilə kömək edə bilərəm. İstanbula nə vaxt gəlirsiniz?',
-    fa: 'سلام! من Mimo، دستیار هوش مصنوعی Bosphorly در استانبول هستم 🌊 می‌توانم درباره ترانسفر فرودگاه، کروز بسفر، حمام ترکی، تورهای شهری و راهنمای استانبول کمکتان کنم. چه زمانی به استانبول می‌آیید؟',
+    he: 'היי! אני Mimo, עוזר הבינה המלאכותית של Bosphorly באיסטנבול 🌊 אשמח לעזור עם הסעות משדה התעופה, שייט בבוספורוס, חמאם, סיורים וטיפים מקומיים. מתי הטיול שלך לאיסטנבול?',
+    az: 'Salam! Mən Bosphorly-nin süni intellekt köməkçisi Mimo 🌊 Hava limanı transferləri, Boğaz turları, hamam, şəhər gəzintiləri və İstanbul tövsiyələri ilə kömək edə bilərəm. İstanbula nə vaxt gəlirsən?',
+    fa: 'سلام! من Mimo، دستیار هوش مصنوعی Bosphorly در استانبول هستم 🌊 می‌توانم درباره ترانسفر فرودگاه، کروز بسفر، حمام ترکی، تورهای شهری و راهنمای استانبول کمکت کنم. چه زمانی به استانبول می‌آیی؟',
     es: '¡Hola! Soy Mimo, el asistente de IA de Bosphorly en Estambul 🌊 Puedo ayudarte con traslados al aeropuerto, cruceros por el Bósforo, hammam, tours y consejos locales. ¿Cuándo viajas a Estambul?',
     it: 'Ciao! Sono Mimo, l’assistente IA di Bosphorly a Istanbul 🌊 Posso aiutarti con transfer aeroportuali, crociere sul Bosforo, hammam, tour e consigli su Istanbul. Quando arrivi a Istanbul?',
     pt: 'Olá! Sou Mimo, o assistente de IA da Bosphorly em Istambul 🌊 Posso ajudar com traslados do aeroporto, cruzeiros pelo Bósforo, hammam, passeios e dicas locais. Quando você vem a Istambul?',
-    hr: 'Pozdrav! Ja sam Mimo, Bosphorlyjev AI asistent za Istanbul 🌊 Mogu vam pomoći oko transfera, krstarenja Bosporom, hamama, gradskih tura i lokalnih savjeta. Kada dolazite u Istanbul?',
+    hr: 'Pozdrav! Ja sam Mimo, Bosphorlyjev AI asistent za Istanbul 🌊 Mogu ti pomoći oko transfera, krstarenja Bosporom, hamama, gradskih tura i lokalnih savjeta. Kada dolaziš u Istanbul?',
     hu: 'Szia! Mimo vagyok, a Bosphorly mesterséges intelligencia asszisztense Isztambulban 🌊 Segítek reptéri transzferekben, boszporuszi hajóutakban, hamamban, túrákban és helyi tippekben. Mikor érkezel Isztambulba?',
-    bs: 'Zdravo! Ja sam Mimo, Bosphorlyjev AI asistent za Istanbul 🌊 Mogu vam pomoći oko transfera, krstarenja Bosporom, hamama, gradskih tura i lokalnih savjeta. Kada dolazite u Istanbul?',
-    zh: '您好！我是 Bosphorly 的人工智能助手 Mimo 🌊 我可以为您介绍机场接送、博斯普鲁斯游船、土耳其浴、城市观光以及伊斯坦布尔实用贴士。请问您计划什么时候来伊斯坦布尔？',
-    ja: 'こんにちは！BosphorlyのAIアシスタント、Mimoです 🌊 空港送迎、ボスポラスクルーズ、ハマム、市内ツアーやイスタンブール観光のコツをご案内します。いつ頃お越しですか？',
+    bs: 'Zdravo! Ja sam Mimo, Bosphorlyjev AI asistent za Istanbul 🌊 Mogu ti pomoći oko transfera, krstarenja Bosporom, hamama, gradskih tura i lokalnih savjeta. Kada dolaziš u Istanbul?',
+    zh: '你好！我是 Bosphorly 的人工智能助手 Mimo 🌊 我可以为你介绍机场接送、博斯普鲁斯游船、土耳其浴、城市观光和伊斯坦布尔实用贴士。你计划什么时候来伊斯坦布尔？',
+    ja: 'こんにちは！BosphorlyのAIアシスタント、Mimoです 🌊 空港送迎、ボスポラスクルーズ、ハマム、市内ツアーやイスタンブール観光のコツをご案内します。いつ頃イスタンブールに来られますか？',
     ko: '안녕하세요! Bosphorly의 AI 도우미 Mimo예요 🌊 공항 픽업, 보스포루스 크루즈, 하맘, 시티 투어와 이스탄불 여행 팁을 도와드릴게요. 이스탄불에는 언제 오시나요?',
-    hi: 'नमस्ते! मैं Mimo हूँ, Bosphorly का AI सहायक 🌊 मैं एयरपोर्ट ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम, सिटी टूर और इस्तांबुल यात्रा सुझावों में मदद कर सकता हूँ। आप इस्तांबुल कब आ रहे हैं?',
-    bn: 'হ্যালো! আমি Mimo, Bosphorly-এর এআই সহায়ক 🌊 এয়ারপোর্ট ট্রান্সফার, বসফরাস ক্রুজ, হামাম, সিটি ট্যুর এবং ইস্তাম্বুল ভ্রমণ টিপস দিয়ে সাহায্য করতে পারি। আপনি কবে ইস্তাম্বুলে আসছেন?',
-    id: 'Halo! Saya Mimo, asisten AI Bosphorly untuk Istanbul 🌊 Saya siap membantu info transfer bandara, pelayaran Bosphorus, hamam, tur kota, dan tips lokal. Kapan Anda berkunjung ke Istanbul?',
+    hi: 'नमस्ते! मैं Mimo हूँ, Bosphorly का AI सहायक 🌊 मैं एयरपोर्ट ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम, सिटी टूर और इस्तांबुल यात्रा सुझावों में मदद कर सकता हूँ। तुम इस्तांबुल कब आ रहे हो?',
+    bn: 'হ্যালো! আমি Mimo, Bosphorly-এর এআই সহায়ক 🌊 এয়ারপোর্ট ট্রান্সফার, বসফরাস ক্রুজ, হামাম, সিটি ট্যুর এবং ইস্তাম্বুল ভ্রমণ টিপস দিয়ে সাহায্য করতে পারি। তুমি কবে ইস্তাম্বুলে আসছ?',
+    id: 'Halo! Saya Mimo, asisten AI Bosphorly untuk Istanbul 🌊 Saya siap membantu info transfer bandara, pelayaran Bosphorus, hamam, tur kota, dan tips lokal. Kapan kamu berkunjung ke Istanbul?',
   },
   aiIdentity: {
     tr: 'Hayır, insan değilim — ben Bosphorly’nin yapay zekâ asistanı Mimo 🌊 İstanbul transferleri, Boğaz turları, hamam ve gezi önerilerinde sana yardımcı olmak için buradayım!',
     en: 'No, I am not human—I am Mimo, Bosphorly’s AI assistant 🌊 I am here to help you with Istanbul airport transfers, Bosphorus cruises, hammam, and travel tips!',
-    ru: 'Нет, я не человек — я Mimo, ИИ-ассистент Bosphorly 🌊 Я здесь, чтобы помочь вам с трансферами, круизами по Босфору, хаммамом и прогулками по Стамбулу!',
-    uk: 'Ні, я не людина — я Mimo, ШІ-асистент Bosphorly 🌊 Я тут, щоб допомогти вам із трансферами, круїзами Босфором, хамамом і порадами щодо Стамбула!',
-    de: 'Nein, ich bin kein Mensch — ich bin Mimo, der KI-Assistent von Bosphorly 🌊 Ich helfe Ihnen gern bei Flughafentransfers, Bosporus-Fahrten, Hamam und Istanbul-Tipps!',
-    fr: 'Non, je ne suis pas humain — je suis Mimo, l’assistant IA de Bosphorly 🌊 Je suis là pour vous aider avec vos transferts, croisières, hammams et conseils à Istanbul !',
+    ru: 'Нет, я не человек — я Mimo, ИИ-ассистент Bosphorly 🌊 Я здесь, чтобы помочь тебе с трансферами, круизами по Босфору, хаммамом и прогулками по Стамбулу!',
+    uk: 'Ні, я не людина — я Mimo, ШІ-асистент Bosphorly 🌊 Я тут, щоб допомогти тобі з трансферами, круїзами Босфором, хамамом і порадами щодо Стамбула!',
+    de: 'Nein, ich bin kein Mensch — ich bin Mimo, der KI-Assistent von Bosphorly 🌊 Ich helfe dir gern bei Flughafentransfers, Bosporus-Fahrten, Hamam und Istanbul-Tipps!',
+    fr: 'Non, je ne suis pas humain — je suis Mimo, l’assistant IA de Bosphorly 🌊 Je suis là pour t’aider avec tes transferts, croisières, hammams et conseils à Istanbul !',
     nl: 'Nee, ik ben geen mens — ik ben Mimo, de AI-assistent van Bosphorly 🌊 Ik help je graag met luchthaventransfers, Bosporuscruises, hamam en tips voor Istanbul!',
     ar: 'لا، لست إنسانًا — أنا Mimo، مساعد الذكاء الاصطناعي من Bosphorly 🌊 أنا هنا لمساعدتك في النقل من المطار، رحلات البوسفور، الحمّام ونصائح إسطنبول!',
-    he: 'לא, איני אדם — אני Mimo, עוזר הבינה המלאכותית של Bosphorly 🌊 אני כאן כדי לעזור לכם עם הסעות, שייט בבוספורוס, חמאם וטיפים לאיסטנבול!',
+    he: 'לא, אני לא אדם — אני Mimo, עוזר הבינה המלאכותית של Bosphorly 🌊 אני כאן כדי לעזור לך עם הסעות, שייט בבוספורוס, חמאם וטיפים לאיסטנבול!',
     az: 'Xeyr, insan deyiləm — mən Bosphorly-nin süni intellekt köməkçisi Mimo-yam 🌊 İstanbul transferləri, Boğaz turları, hamam və gəzinti məsləhətləri üçün buradayam!',
-    fa: 'نه، من انسان نیستم — من Mimo، دستیار هوش مصنوعی Bosphorly هستم 🌊 اینجا هستم تا در ترانسفر فرودگاه، کروز بسفر، حمام و راهنمای استانبول کمکتان کنم!',
+    fa: 'نه، من انسان نیستم — من Mimo، دستیار هوش مصنوعی Bosphorly هستم 🌊 اینجا هستم تا در ترانسفر فرودگاه، کروز بسفر، حمام و راهنمای استانبول کمکت کنم!',
     es: 'No, no soy humano: soy Mimo, el asistente de IA de Bosphorly 🌊 ¡Estoy aquí para ayudarte con traslados, cruceros por el Bósforo, hammam y consejos sobre Estambul!',
     it: 'No, non sono umano: sono Mimo, l’assistente IA di Bosphorly 🌊 Sono qui per aiutarti con transfer, crociere sul Bosforo, hammam e consigli su Istanbul!',
-    pt: 'Não, não sou humano — sou Mimo, o assistente de IA da Bosphorly 🌊 Estou aqui para ajudar com traslados, cruzeiros pelo Bósforo, hammam e dicas de Istambul!',
-    hr: 'Ne, nisam čovjek — ja sam Mimo, Bosphorlyjev AI asistent 🌊 Tu sam da vam pomognem oko transfera, krstarenja Bosporom, hamama i savjeta za Istanbul!',
+    pt: 'Não, não sou humano — sou Mimo, o assistente de IA da Bosphorly 🌊 Estou aqui para ajudar você com traslados, cruzeiros pelo Bósforo, hammam e dicas de Istambul!',
+    hr: 'Ne, nisam čovjek — ja sam Mimo, Bosphorlyjev AI asistent 🌊 Tu sam da ti pomognem oko transfera, krstarenja Bosporom, hamama i savjeta za Istanbul!',
     hu: 'Nem, nem vagyok ember — Mimo vagyok, a Bosphorly mesterséges intelligencia asszisztense 🌊 Azért vagyok itt, hogy segítsek a transzferekben, hajóutakban, hamamban és isztambuli tippekben!',
-    bs: 'Ne, nisam čovjek — ja sam Mimo, Bosphorlyjev AI asistent 🌊 Tu sam da vam pomognem oko transfera, krstarenja Bosporom, hamama i savjeta za Istanbul!',
-    zh: '不，我不是人类——我是 Bosphorly 的人工智能助手 Mimo 🌊 我在这里为您解答伊斯坦布尔机场接送、博斯普鲁斯游船、土耳其浴和旅行建议！',
+    bs: 'Ne, nisam čovjek — ja sam Mimo, Bosphorlyjev AI asistent 🌊 Tu sam da ti pomognem oko transfera, krstarenja Bosporom, hamama i savjeta za Istanbul!',
+    zh: '不，我不是人类——我是 Bosphorly 的人工智能助手 Mimo 🌊 我在这里为你解答伊斯坦布尔机场接送、博斯普鲁斯游船、土耳其浴和旅行建议！',
     ja: 'いいえ、人間ではありません。私はBosphorlyのAIアシスタント、Mimoです 🌊 空港送迎やボスポラスクルーズ、ハマム、イスタンブール観光のご案内をお手伝いします！',
     ko: '아니요, 저는 사람이 아니라 Bosphorly의 AI 도우미 Mimo예요 🌊 공항 픽업, 보스포루스 크루즈, 하맘과 이스탄불 여행 팁을 도와드리고 있어요!',
     hi: 'नहीं, मैं इंसान नहीं हूँ — मैं Mimo हूँ, Bosphorly का AI सहायक 🌊 मैं एयरपोर्ट ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम और इस्तांबुल यात्रा सुझावों के लिए यहाँ हूँ!',
@@ -141,97 +141,97 @@ export const ASSISTANT_MESSAGES = {
   thanks: {
     tr: 'Rica ederim, ne demek! 🌊 Transfer, Boğaz turları, hamam veya İstanbul hakkında başka merak ettiğin bir şey var mı?',
     en: 'You are very welcome! 🌊 Is there anything else I can help you with—airport transfers, Bosphorus cruises, hammam, or city tours?',
-    ru: 'Пожалуйста! 🌊 Подсказать ещё что-нибудь по трансферам, круизам по Босфору, хаммаму, турам или ценам в Стамбуле?',
-    uk: 'Будь ласка! 🌊 Чи підказати ще щось щодо трансферів, круїзів Босфором, хамаму, турів або цін у Стамбулі?',
-    de: 'Sehr gerne! 🌊 Kann ich Ihnen noch bei Flughafentransfers, Bosporus-Fahrten, Hamam, Stadttouren oder Preisen weiterhelfen?',
-    fr: 'Avec plaisir ! 🌊 Souhaitez-vous d’autres infos sur les transferts, croisières sur le Bosphore, hammams, visites ou tarifs ?',
+    ru: 'Пожалуйста! 🌊 Подсказать тебе ещё что-нибудь по трансферам, круизам по Босфору, хаммаму, турам или ценам в Стамбуле?',
+    uk: 'Будь ласка! 🌊 Чи підказати тобі ще щось щодо трансферів, круїзів Босфором, хамаму, турів або цін у Стамбулі?',
+    de: 'Sehr gerne! 🌊 Kann ich dir noch bei Flughafentransfers, Bosporus-Fahrten, Hamam, Stadttouren oder Preisen weiterhelfen?',
+    fr: 'Avec plaisir ! 🌊 Souhaites-tu d’autres infos sur les transferts, croisières sur le Bosphore, hammams, visites ou tarifs ?',
     nl: 'Graag gedaan! 🌊 Kan ik je nog helpen met transfers, Bosporuscruises, hamam, stadstours of prijzen?',
     ar: 'على الرحب والسعة! 🌊 هل تودّ الاستفسار عن النقل من المطار، رحلات البوسفور، الحمّام، جولات المدينة أو الأسعار؟',
-    he: 'בשמחה! 🌊 האם תרצו עזרה נוספת לגבי הסעות, שייט בבוספורוס, חמאם, סיורים או מחירים?',
-    az: 'Buyurun, xoşdur! 🌊 Transferlər, Boğaz turları, hamam, şəhər gəzintiləri və ya qiymətlər barədə başqa sualınız varmı?',
-    fa: 'خواهش می‌کنم! 🌊 آیا درباره ترانسفر فرودگاه، کروز بسفر، حمام، تورهای شهری یا قیمت‌ها سوال دیگری دارید؟',
+    he: 'בשמחה! 🌊 רוצה עזרה נוספת לגבי הסעות, שייט בבוספורוס, חמאם, סיורים או מחירים?',
+    az: 'Dəyməz, xoşdur! 🌊 Transferlər, Boğaz turları, hamam, şəhər gəzintiləri və ya qiymətlər barədə başqa sualın varmı?',
+    fa: 'خواهش می‌کنم! 🌊 آیا درباره ترانسفر فرودگاه، کروز بسفر، حمام، تورهای شهری یا قیمت‌ها سوال دیگری داری؟',
     es: '¡Con mucho gusto! 🌊 ¿Puedo ayudarte con algo más sobre traslados, cruceros por el Bósforo, hammam, tours o precios?',
     it: 'Prego, figurati! 🌊 Posso aiutarti con altro tra transfer, crociere sul Bosforo, hammam, tour o prezzi?',
     pt: 'De nada! 🌊 Posso ajudar com mais alguma coisa sobre traslados, cruzeiros pelo Bósforo, hammam, passeios ou preços?',
-    hr: 'Nema na čemu! 🌊 Mogu li vam pomoći još oko transfera, krstarenja Bosporom, hamama, tura ili cijena?',
+    hr: 'Nema na čemu! 🌊 Mogu li ti pomoći još oko transfera, krstarenja Bosporom, hamama, tura ili cijena?',
     hu: 'Szívesen! 🌊 Segíthetek még reptéri transzferrel, boszporuszi hajózással, hamammal, városnézéssel vagy árakkal kapcsolatban?',
-    bs: 'Nema na čemu! 🌊 Mogu li vam još pomoći oko transfera, krstarenja Bosporom, hamama, tura ili cijena?',
-    zh: '不客气！🌊 关于机场接送、博斯普鲁斯游船、土耳其浴、城市游览或参考价格，还有什么我可以帮您的吗？',
+    bs: 'Nema na čemu! 🌊 Mogu li ti pomoći još oko transfera, krstarenja Bosporom, hamama, tura ili cijena?',
+    zh: '不客气！🌊 关于机场接送、博斯普鲁斯游船、土耳其浴、城市游览或参考价格，还有什么我可以帮你的吗？',
     ja: 'どういたしまして！🌊 空港送迎、ボスポラスクルーズ、ハマム、市内ツアーや料金について他に知りたいことはありますか？',
     ko: '천만에요! 🌊 공항 픽업, 보스포루스 크루즈, 하맘, 시티 투어나 요금에 대해 더 궁금한 점이 있으신가요?',
-    hi: 'आपका स्वागत है! 🌊 क्या एयरपोर्ट ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम, सिटी टूर या कीमतों के बारे में कुछ और पूछना है?',
-    bn: 'স্বাগতম! 🌊 এয়ারপোর্ট ট্রান্সফার, বসফরাস ক্রুজ, হামাম, সিটি ট্যুর বা খরচ নিয়ে আর কিছু জানতে চান?',
+    hi: 'कोई बात नहीं! 🌊 क्या एयरपोर्ट ट्रांसफ़र, बोस्फोरस क्रूज़, हम्माम, सिटी टूर या कीमतों के बारे में कुछ और पूछना है?',
+    bn: 'স্বাগতম! 🌊 এয়ারপোর্ট ট্রান্সফার, বসফরাস ক্রুজ, হামাম, সিটি ট্যুর বা খরচ নিয়ে আর কিছু জানতে চাও?',
     id: 'Sama-sama! 🌊 Ada lagi yang bisa saya bantu seputar transfer bandara, pelayaran Bosphorus, hamam, tur kota, atau harga?',
   },
   goodbye: {
     tr: 'Görüşmek üzere! 🌊 İstanbul’da harika vakit geçirmeni dilerim. Transfer, Boğaz turu veya hamam için dilediğin zaman Mimo’ya yazabilirsin.',
     en: 'Goodbye and have a wonderful time in Istanbul! 🌊 Feel free to ask Mimo anytime for transfers, Bosphorus cruises, hammam, or tours.',
-    ru: 'До свидания и прекрасного отдыха в Стамбуле! 🌊 Пишите Mimo в любое время, если понадобятся трансфер, круиз по Босфору, хаммам или экскурсии.',
-    uk: 'До побачення і чудової подорожі до Стамбула! 🌊 Звертайтеся до Mimo будь-коли щодо трансферів, круїзів Босфором, хамаму чи екскурсій.',
-    de: 'Auf Wiedersehen und eine wunderbare Zeit in Istanbul! 🌊 Schreiben Sie Mimo jederzeit gerne für Transfers, Bosporus-Fahrten, Hamam oder Touren.',
-    fr: 'Au revoir et excellent séjour à Istanbul ! 🌊 N’hésitez pas à revenir vers Mimo pour vos transferts, croisières, hammams ou visites.',
+    ru: 'До встречи и прекрасного отдыха в Стамбуле! 🌊 Пиши Mimo в любое время, если понадобятся трансфер, круиз по Босфору, хаммам или экскурсии.',
+    uk: 'До зустрічі і чудової подорожі до Стамбула! 🌊 Звертайся до Mimo будь-коли щодо трансферів, круїзів Босфором, хамаму чи екскурсій.',
+    de: 'Bis bald und eine wunderbare Zeit in Istanbul! 🌊 Schreib Mimo jederzeit gerne für Transfers, Bosporus-Fahrten, Hamam oder Touren.',
+    fr: 'À bientôt et excellent séjour à Istanbul ! 🌊 N’hésite pas à revenir vers Mimo pour tes transferts, croisières, hammams ou visites.',
     nl: 'Tot ziens en veel plezier in Istanbul! 🌊 Stuur Mimo gerust weer een bericht voor transfers, cruises, hamam of tours.',
     ar: 'إلى اللقاء ونتمنى لك وقتًا رائعًا في إسطنبول! 🌊 يمكنك مراسلة Mimo في أي وقت للنقل، رحلات البوسفور، الحمّام أو الجولات.',
-    he: 'להתראות ותיהנו מאוד באיסטנבול! 🌊 מוזמנים לפנות אל Mimo בכל עת להסעות, שייט, חמאם או סיורים.',
-    az: 'Görüşənədək, İstanbulda gözəl vaxt keçirin! 🌊 Transferlər, Boğaz turları, hamam və ya gəzintilər üçün istənilən vaxt Mimo-ya yaza bilərsiniz.',
-    fa: 'خداحافظ و سفر خوشی در استانبول داشته باشید! 🌊 هر زمان برای ترانسفر، کروز بسفر، حمام یا تورهای شهری می‌توانید به Mimo پیام بدهید.',
+    he: 'להתראות ושתהיה לך חופשה נהדרת באיסטנבול! 🌊 אפשר לפנות אל Mimo בכל עת להסעות, שייט, חמאם או סיורים.',
+    az: 'Görüşənədək, İstanbulda gözəl vaxt keçir! 🌊 Transferlər, Boğaz turları, hamam və ya gəzintilər üçün istənilən vaxt Mimo-ya yaza bilərsən.',
+    fa: 'خداحافظ و سفر خوشی در استانبول داشته باشی! 🌊 هر زمان برای ترانسفر، کروز بسفر، حمام یا تورهای شهری می‌توانی به Mimo پیام بدهی.',
     es: '¡Hasta luego y disfruta mucho de Estambul! 🌊 Escribe a Mimo cuando quieras para traslados, cruceros, hammam o tours.',
     it: 'Arrivederci e buon soggiorno a Istanbul! 🌊 Scrivi a Mimo quando vuoi per transfer, crociere sul Bosforo, hammam o tour.',
     pt: 'Até logo e aproveite muito Istambul! 🌊 Fale com Mimo quando precisar de traslados, cruzeiros, hammam ou passeios.',
-    hr: 'Doviđenja i ugodan boravak u Istanbulu! 🌊 Javite se Mimu kad god trebate transfer, krstarenje, hamam ili turu.',
+    hr: 'Vidimo se i ugodan boravak u Istanbulu! 🌊 Javi se Mimu kad god trebaš transfer, krstarenje, hamam ili turu.',
     hu: 'Viszlát, és érezd jól magad Isztambulban! 🌊 Bármikor írhatsz Mimónak transzfer, hajóút, hamam vagy városnézés ügyében.',
-    bs: 'Doviđenja i ugodan boravak u Istanbulu! 🌊 Javite se Mimu kad god trebate transfer, krstarenje, hamam ili turu.',
-    zh: '再见，祝您在伊斯坦布尔旅途愉快！🌊 如需了解接送、博斯普鲁斯游船、土耳其浴或城市游览，随时欢迎来找 Mimo。',
-    ja: 'さようなら、イスタンブールで素敵な時間をお過ごしください！🌊 送迎、クルーズ、ハマム、ツアーのご相談はいつでもMimoへどうぞ。',
+    bs: 'Vidimo se i ugodan boravak u Istanbulu! 🌊 Javi se Mimu kad god trebaš transfer, krstarenje, hamam ili turu.',
+    zh: '再见，祝你在伊斯坦布尔旅途愉快！🌊 如需了解接送、博斯普鲁斯游船、土耳其浴或城市游览，随时来找 Mimo。',
+    ja: 'またね！イスタンブールで素敵な時間を過ごしてね！🌊 送迎、クルーズ、ハマム、ツアーの相談はいつでもMimoへどうぞ。',
     ko: '안녕히 가세요, 이스탄불에서 즐거운 시간 보내세요! 🌊 픽업, 크루즈, 하맘, 투어가 필요하시면 언제든 Mimo를 찾아주세요.',
-    hi: 'अलविदा और इस्तांबुल में आपका समय शानदार रहे! 🌊 ट्रांसफ़र, क्रूज़, हम्माम या टूर के लिए कभी भी Mimo से पूछें।',
-    bn: 'বিদায়, ইস্তাম্বুলে আপনার সময় দারুণ কাটুক! 🌊 ট্রান্সফার, ক্রুজ, হামাম বা ট্যুরের জন্য যেকোনো সময় Mimo-কে লিখুন।',
-    id: 'Sampai jumpa dan selamat menikmati Istanbul! 🌊 Hubungi Mimo kapan saja untuk transfer bandara, pelayaran, hamam, atau tur kota.',
+    hi: 'फिर मिलेंगे, इस्तांबुल में तुम्हारा समय शानदार रहे! 🌊 ट्रांसफ़र, क्रूज़, हम्माम या टूर के लिए कभी भी Mimo से पूछो।',
+    bn: 'বিদায়, ইস্তাম্বুলে তোমার সময় দারুণ কাটুক! 🌊 ট্রান্সফার, ক্রুজ, হামাম বা ট্যুরের জন্য যেকোনো সময় Mimo-কে লিখো।',
+    id: 'Sampai jumpa dan selamat menikmati Istanbul! 🌊 Hubungi Mimo kapan saja untuk transfer bandara, pelayaran Bosphorus, hamam, atau tur kota.',
   },
   handoffOffer: {
     tr: 'Bu konuda ekibimizin doğrudan ilgilenmesi daha sağlıklı olur. Ekibimize iletmemi ister misin?',
     en: 'Our team should look into this directly for you. Would you like me to forward this to our team?',
-    ru: 'По этому вопросу лучше подключить нашу команду напрямую. Передать ваш запрос нашей команде?',
-    uk: 'З цього питання краще звернутися до нашої команди напряму. Передати ваш запит нашій команді?',
-    de: 'Unser Team schaut sich das am besten direkt an. Möchten Sie, dass ich Ihre Anfrage an unser Team weiterleite?',
-    fr: 'Notre équipe pourra traiter cela directement. Souhaitez-vous que je transmette votre demande à notre équipe ?',
+    ru: 'По этому вопросу лучше подключить нашу команду напрямую. Передать твой запрос нашей команде?',
+    uk: 'З цього питання краще звернутися до нашої команди напряму. Передати твій запит нашій команді?',
+    de: 'Unser Team schaut sich das am besten direkt an. Soll ich deine Anfrage an unser Team weiterleiten?',
+    fr: 'Notre équipe pourra traiter cela directement. Veux-tu que je transmette ta demande à notre équipe ?',
     nl: 'Ons team kan dit het beste direct voor je oppakken. Zal ik je bericht doorsturen naar ons team?',
     ar: 'من الأفضل أن يتولى فريقنا هذا الأمر مباشرة. هل تود أن أحيل رسالتك إلى فريقنا؟',
-    he: 'כדאי שהצוות שלנו יטפל בכך ישירות. האם תרצו שאעביר את הפנייה לצוות שלנו?',
-    az: 'Bu məsələyə komandamızın birbaşa baxması daha yaxşı olar. Sorğunuzu komandamıza yönləndirim?',
-    fa: 'بهتر است تیم ما مستقیماً این موضوع را بررسی کند. آیا مایل هستید پیام شما را به تیم ما ارسال کنم؟',
+    he: 'כדאי שהצוות שלנו יטפל בזה ישירות. רוצה שאעביר את הפנייה לצוות שלנו?',
+    az: 'Bu məsələyə komandamızın birbaşa baxması daha yaxşı olar. Sorğunu komandamıza yönləndirim?',
+    fa: 'بهتر است تیم ما مستقیماً این موضوع را بررسی کند. می‌خواهی پیامت را به تیم ما ارسال کنم؟',
     es: 'Es mejor que nuestro equipo lo revise directamente. ¿Quieres que envíe tu mensaje a nuestro equipo?',
     it: 'È meglio che il nostro team se ne occupi direttamente. Vuoi che inoltri la tua richiesta al nostro team?',
     pt: 'É melhor nossa equipe cuidar disso diretamente. Gostaria que eu encaminhasse sua mensagem para nossa equipe?',
-    hr: 'Najbolje je da ovo izravno pogleda naš tim. Želite li da proslijedim vaš upit našem timu?',
+    hr: 'Najbolje je da ovo izravno pogleda naš tim. Želiš li da proslijedim tvoj upit našem timu?',
     hu: 'Ebben az ügyben jobb, ha a csapatunk közvetlenül segít. Szeretnéd, hogy továbbítsam a kérésedet a csapatunknak?',
-    bs: 'Najbolje je da ovo direktno pogleda naš tim. Želite li da proslijedim vaš upit našem timu?',
-    zh: '此事由我们的团队直接为您处理会更稳妥。您希望我将此问题转交给我们团队吗？',
+    bs: 'Najbolje je da ovo direktno pogleda naš tim. Želiš li da proslijedim tvoj upit našem timu?',
+    zh: '此事由我们的团队直接为你处理会更稳妥。你希望我把这个问题转交给团队吗？',
     ja: 'この件は担当チームが直接確認するのが安心です。チームへ引き継ぎましょうか？',
     ko: '이 부분은 저희 팀이 직접 확인해 드리는 것이 좋습니다. 팀에 전달해 드릴까요?',
-    hi: 'इस मामले को हमारी टीम सीधे देखे तो बेहतर होगा। क्या मैं आपका संदेश हमारी टीम को भेज दूँ?',
-    bn: 'এই বিষয়টি আমাদের টিম সরাসরি দেখলে ভালো হবে। আমি কি আপনার বার্তা আমাদের টিমের কাছে পাঠাব?',
-    id: 'Sebaiknya tim kami menanganinya langsung. Apakah Anda ingin saya meneruskan pesan ini ke tim kami?',
+    hi: 'इस मामले को हमारी टीम सीधे देखे तो बेहतर होगा। क्या मैं तुम्हारा संदेश हमारी टीम को भेज दूँ?',
+    bn: 'এই বিষয়টি আমাদের টিম সরাসরি দেখলে ভালো হবে। আমি কি তোমার বার্তা আমাদের টিমের কাছে পাঠাব?',
+    id: 'Sebaiknya tim kami menanganinya langsung. Mau saya teruskan pesan ini ke tim kami?',
   },
   handoffDeclined: {
     tr: 'Anladım, ekibimize iletmiyorum. İstanbul turları, transferler veya gezi önerileri hakkında başka nasıl yardımcı olabilirim?',
     en: 'Understood, I will not forward it. How else can I help you with Istanbul tours, transfers, or travel tips?',
-    ru: 'Понял, не передаю. Чем ещё я могу помочь по турам, трансферам или прогулкам в Стамбуле?',
-    uk: 'Зрозуміло, не передаю. Чим ще можу допомогти щодо турів, трансферів чи порад у Стамбулі?',
-    de: 'Verstanden, ich leite es nicht weiter. Wie kann ich Ihnen sonst bei Touren, Transfers oder Tipps für Istanbul helfen?',
-    fr: 'Compris, je ne transmets pas. Comment puis-je vous aider autrement pour vos visites ou transferts à Istanbul ?',
+    ru: 'Понял, не передаю. Чем ещё я могу помочь тебе по турам, трансферам или прогулкам в Стамбуле?',
+    uk: 'Зрозуміло, не передаю. Чим ще можу допомогти тобі щодо турів, трансферів чи порад у Стамбулі?',
+    de: 'Verstanden, ich leite es nicht weiter. Wie kann ich dir sonst bei Touren, Transfers oder Tipps für Istanbul helfen?',
+    fr: 'Compris, je ne transmets pas. Comment puis-je t’aider autrement pour tes visites ou transferts à Istanbul ?',
     nl: 'Begrepen, ik stuur het niet door. Waarmee kan ik je verder helpen voor Istanbul?',
     ar: 'تم، لن أقوم بتحويله. كيف يمكنني مساعدتك أيضًا بخصوص الجولات أو النقل أو النصائح في إسطنبول؟',
-    he: 'הבנתי, לא אעביר זאת. איך עוד אוכל לעזור לגבי סיורים, הסעות או טיפים באיסטנבול?',
+    he: 'הבנתי, לא אעביר את זה. איך עוד אוכל לעזור לך עם סיורים, הסעות או טיפים באיסטנבול?',
     az: 'Anladım, yönləndirmirəm. İstanbul turları, transferlər və ya gəzinti məsləhətləri ilə bağlı başqa necə kömək edə bilərəm?',
-    fa: 'متوجه شدم، ارسال نمی‌کنم. در مورد تورهای استانبول، ترانسفر یا راهنمای سفر چطور می‌توانم کمکتان کنم؟',
+    fa: 'متوجه شدم، ارسال نمی‌کنم. در مورد تورهای استانبول، ترانسفر یا راهنمای سفر چطور می‌توانم کمکت کنم؟',
     es: 'Entendido, no lo envío. ¿En qué más puedo ayudarte sobre tours, traslados o consejos en Estambul?',
     it: 'Capito, non lo inoltro. Come altro posso aiutarti per tour, transfer o consigli su Istanbul?',
     pt: 'Entendido, não vou encaminhar. Como mais posso ajudar com passeios, traslados ou dicas em Istambul?',
-    hr: 'Razumijem, neću proslijediti. Kako vam još mogu pomoći oko tura, transfera ili savjeta za Istanbul?',
+    hr: 'Razumijem, neću proslijediti. Kako ti još mogu pomoći oko tura, transfera ili savjeta za Istanbul?',
     hu: 'Rendben, nem továbbítom. Miben segíthetek még az isztambuli túrákkal vagy transzferekkel kapcsolatban?',
-    bs: 'Razumijem, neću proslijediti. Kako vam još mogu pomoći oko tura, transfera ili savjeta za Istanbul?',
-    zh: '好的，我暂不转交。关于伊斯坦布尔游览、接送或出行建议，还有什么我可以帮您的吗？',
+    bs: 'Razumijem, neću proslijediti. Kako ti još mogu pomoći oko tura, transfera ili savjeta za Istanbul?',
+    zh: '好的，我暂不转交。关于伊斯坦布尔游览、接送或出行建议，还有什么我可以帮你的吗？',
     ja: '承知しました、転送は控えます。イスタンブールのツアーや送迎、観光案内で他に何かお手伝いできますか？',
     ko: '알겠습니다, 전달하지 않겠습니다. 이스탄불 투어, 픽업 또는 여행 팁과 관련해 다른 도움이 필요하신가요?',
     hi: 'समझ गया, मैं इसे आगे नहीं भेजूँगा। इस्तांबुल टूर, ट्रांसफ़र या यात्रा सुझावों में मैं और क्या मदद कर सकता हूँ?',
@@ -239,203 +239,203 @@ export const ASSISTANT_MESSAGES = {
     id: 'Mengerti, saya tidak akan meneruskannya. Ada hal lain seputar tur, transfer, atau tips Istanbul yang bisa saya bantu?',
   },
   handoff: {
-    tr: 'Memnuniyetle ekibimize iletiyorum. Size dönüş yapabilmemiz için e-posta adresinizi paylaşır mısınız?',
+    tr: 'Memnuniyetle ekibimize iletiyorum. Sana dönüş yapabilmemiz için e-posta adresini paylaşır mısın?',
     en: 'I am happy to forward this to our team. Please share your email address so we can get back to you.',
-    ru: 'С радостью передаю запрос нашей команде. Пожалуйста, укажите ваш e-mail для ответа.',
-    uk: 'Із радістю передаю запит нашій команді. Будь ласка, вкажіть ваш e-mail для відповіді.',
-    de: 'Gerne leite ich das an unser Team weiter. Bitte nennen Sie Ihre E-Mail-Adresse für unsere Antwort.',
-    fr: 'Je transmets avec plaisir à notre équipe. Merci d’indiquer votre adresse e-mail pour que nous puissions vous répondre.',
+    ru: 'С радостью передаю запрос нашей команде. Пожалуйста, укажи свой e-mail для ответа.',
+    uk: 'Із радістю передаю запит нашій команді. Будь ласка, вкажи свій e-mail для відповіді.',
+    de: 'Gerne leite ich das an unser Team weiter. Nenne mir bitte deine E-Mail-Adresse für unsere Antwort.',
+    fr: 'Je transmets avec plaisir à notre équipe. Peux-tu indiquer ton adresse e-mail pour qu’on te réponde ?',
     nl: 'Ik stuur dit graag door naar ons team. Deel je e-mailadres zodat we contact kunnen opnemen.',
     ar: 'يسعدني إحالة ذلك إلى فريقنا. يرجى مشاركة بريدك الإلكتروني لنتمكن من الرد عليك.',
-    he: 'אשמח להעביר זאת לצוות שלנו. אנא שתפו את כתובת הדוא״ל שלכם כדי שנוכל לחזור אליכם.',
-    az: 'Məmnuniyyətlə komandamıza yönləndirirəm. Sizə cavab verə bilməyimiz üçün e-poçt ünvanınızı paylaşın.',
-    fa: 'با کمال میل به تیم ما ارسال می‌کنم. لطفاً ایمیل خود را بفرستید تا با شما تماس بگیریم.',
+    he: 'בשמחה אעביר את זה לצוות שלנו. אפשר לשתף את כתובת הדוא״ל שלך כדי שנוכל לחזור אליך?',
+    az: 'Məmnuniyyətlə komandamıza yönləndirirəm. Sənə cavab verə bilməyimiz üçün e-poçt ünvanını paylaşa bilərsən?',
+    fa: 'با کمال میل به تیم ما ارسال می‌کنم. لطفاً ایمیلت را بفرست تا با تو تماس بگیریم.',
     es: 'Con gusto lo envío a nuestro equipo. Por favor, comparte tu correo electrónico para poder responderte.',
     it: 'Inoltro volentieri al nostro team. Condividi la tua e-mail così potremo risponderti.',
     pt: 'Encaminho com prazer para nossa equipe. Por favor, informe seu e-mail para podermos responder.',
-    hr: 'Rado ću proslijediti našem timu. Molimo podijelite svoju e-mail adresu kako bismo vam odgovorili.',
+    hr: 'Rado ću proslijediti našem timu. Podijeli svoju e-mail adresu kako bismo ti odgovorili.',
     hu: 'Szívesen továbbítom a csapatunknak. Kérlek, add meg az e-mail címedet, hogy válaszolhassunk.',
-    bs: 'Rado ću proslijediti našem timu. Molimo podijelite svoju e-mail adresu kako bismo vam odgovorili.',
-    zh: '我很乐意为您转交给团队。请留下您的电子邮箱地址，方便我们尽快回复您。',
-    ja: '担当チームへお繋ぎします。折り返しご連絡するため、メールアドレスをお知らせください。',
+    bs: 'Rado ću proslijediti našem timu. Podijeli svoju e-mail adresu kako bismo ti odgovorili.',
+    zh: '我很乐意为你转交给团队。请留下你的电子邮箱地址，方便我们尽快回复你。',
+    ja: '担当チームへお繋ぎします。折り返しご連絡するため、メールアドレスを教えていただけますか？',
     ko: '저희 팀에 전달해 드리겠습니다. 회신받을 이메일 주소를 알려주시겠어요?',
-    hi: 'मैं इसे हमारी टीम को भेज रहा हूँ। कृपया अपना ईमेल पता साझा करें ताकि हम आपको जवाब दे सकें।',
-    bn: 'আমি এটি আমাদের টিমের কাছে পাঠাচ্ছি। অনুগ্রহ করে আপনার ইমেইল ঠিকানা দিন যাতে আমরা উত্তর দিতে পারি।',
-    id: 'Dengan senang hati saya teruskan ke tim kami. Mohon bagikan alamat email Anda agar kami dapat membalas.',
+    hi: 'मैं इसे हमारी टीम को भेज रहा हूँ। कृपया अपना ईमेल पता साझा करो ताकि हम जवाब दे सकें।',
+    bn: 'আমি এটি আমাদের টিমের কাছে পাঠাচ্ছি। অনুগ্রহ করে তোমার ইমেইল ঠিকানা দাও যাতে আমরা উত্তর দিতে পারি।',
+    id: 'Dengan senang hati saya teruskan ke tim kami. Boleh bagikan alamat email kamu agar kami bisa membalas?',
+  },
+  tryAgain: {
+    tr: 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?',
+    en: 'One second, the seagulls distracted me 😅 Could you write that again?',
+    ru: 'Секунду, чайки сбили меня с толку 😅 Напишете ещё раз?',
+    uk: 'Секунду, чайки збили мене з пантелику 😅 Напишете ще раз?',
+    de: 'Eine Sekunde, die Möwen haben mich abgelenkt 😅 Schreibst du es noch einmal?',
+    fr: 'Une seconde, les mouettes m’ont distrait 😅 Tu peux réécrire ?',
+    nl: 'Een seconde, de meeuwen leidden me af 😅 Schrijf je het nog een keer?',
+    ar: 'لحظة، شتتني النوارس 😅 هل تعيد كتابة رسالتك؟',
+    he: 'רגע, השחפים בלבלו אותי 😅 אפשר לכתוב שוב?',
+    az: 'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazar mısınız?',
+    fa: 'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 دوباره می‌نویسید؟',
+    es: 'Un segundo, las gaviotas me distrajeron 😅 ¿Lo escribes otra vez?',
+    it: 'Un secondo, i gabbiani mi hanno distratto 😅 Lo riscrivi?',
+    pt: 'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?',
+    hr: 'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovno?',
+    hu: 'Egy pillanat, a sirályok elvonták a figyelmemet 😅 Megírnád még egyszer?',
+    bs: 'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovo?',
+    zh: '等一下，海鸥把我弄糊涂了 😅 可以再写一遍吗？',
+    ja: 'ちょっと待って、カモメに気を取られちゃった 😅 もう一度書いてもらえる？',
+    ko: '잠깐, 갈매기 때문에 정신이 팔렸어요 😅 다시 한 번 적어 주실래요?',
+    hi: 'एक सेकंड, सीगल ने मुझे भटका दिया 😅 क्या आप फिर से लिखेंगे?',
+    bn: 'এক সেকেন্ড, গাঙচিলগুলো আমাকে বিভ্রান্ত করেছে 😅 আবার লিখবেন?',
+    id: 'Sebentar, burung camar mengalihkan perhatianku 😅 Bisa tulis lagi?',
   },
   unknownHandoff: {
-    tr: 'Bunu Boğaz’ın martılarına bile sordum ama emin olamadım 🌊 Uydurmak istemem; sorunuzu ekibimize iletmem için e-posta adresinizi paylaşabilirsiniz.',
+    tr: 'Bunu Boğaz’ın martılarına bile sordum ama emin olamadım 🌊 Uydurmak istemem; sorunu ekibimize iletmem için e-posta adresini paylaşabilirsin.',
     en: 'I even asked the Bosphorus seagulls, but I am not completely sure 🌊 I never want to guess—please share your email address so our team can help you.',
-    ru: 'Я даже спросил у босфорских чаек, но точно не уверен 🌊 Не хочу гадать — укажите ваш e-mail, чтобы наша команда помогла вам.',
-    uk: 'Я навіть спитав у босфорських чайок, але точно не впевнений 🌊 Не хочу вигадувати — вкажіть ваш e-mail, щоб наша команда допомогла.',
-    de: 'Ich habe sogar die Bosporus-Möwen gefragt, bin mir aber nicht sicher 🌊 Ich möchte nichts erfinden; bitte teilen Sie Ihre E-Mail-Adresse, damit unser Team hilft.',
-    fr: 'J’ai même demandé aux mouettes du Bosphore, mais je n’en suis pas sûr 🌊 Je préfère ne rien inventer ; indiquez votre e-mail pour que notre équipe vous aide.',
+    ru: 'Я даже спросил у босфорских чаек, но точно не уверен 🌊 Не хочу гадать — укажи свой e-mail, чтобы наша команда помогла тебе.',
+    uk: 'Я навіть спитав у босфорських чайок, але точно не впевнений 🌊 Не хочу вигадувати — вкажи свій e-mail, щоб наша команда допомогла тобі.',
+    de: 'Ich habe sogar die Bosporus-Möwen gefragt, bin mir aber nicht sicher 🌊 Ich möchte nichts erfinden; schreib mir gern deine E-Mail-Adresse, damit unser Team dir hilft.',
+    fr: 'J’ai même demandé aux mouettes du Bosphore, mais je n’en suis pas sûr 🌊 Je préfère ne rien inventer ; indique ton e-mail pour que notre équipe t’aide.',
     nl: 'Ik heb het zelfs aan de Bosporus-meeuwen gevraagd, maar ik weet het niet zeker 🌊 Ik verzin liever niets; deel je e-mailadres zodat ons team je helpt.',
     ar: 'حتى نوارس البوسفور لم تكن متأكدة تمامًا 🌊 لا أريد التخمين؛ يرجى مشاركة بريدك الإلكتروني ليساعدك فريقنا بدقة.',
-    he: 'שאלתי אפילו את השחפים בבוספורוס, אבל איני בטוח 🌊 לא ארצה לנחש; אנא שתפו את כתובת הדוא״ל שלכם כדי שהצוות שלנו יעזור.',
-    az: 'Bunu hətta Boğaz qağayılarından da soruşdum, amma əmin ola bilmədim 🌊 Uydurmaq istəmirəm; komandamızın kömək etməsi üçün e-poçt ünvanınızı paylaşın.',
-    fa: 'حتی از مرغ‌های دریایی بسفر هم پرسیدم اما مطمئن نشدم 🌊 نمی‌خواهم حدس بزنم؛ لطفاً ایمیل خود را بفرستید تا تیم ما راهنماییتان کند.',
+    he: 'שאלתי אפילו את השחפים בבוספורוס, אבל אני לא לגמרי בטוח 🌊 לא רוצה לנחש — אפשר לשתף את הדוא״ל שלך כדי שהצוות שלנו יעזור.',
+    az: 'Bunu hətta Boğaz qağayılarından da soruşdum, amma əmin ola bilmədim 🌊 Uydurmaq istəmirəm; komandamızın kömək etməsi üçün e-poçt ünvanını paylaşa bilərsən.',
+    fa: 'حتی از مرغ‌های دریایی بسفر هم پرسیدم اما مطمئن نشدم 🌊 نمی‌خواهم حدس بزنم؛ لطفاً ایمیلت را بفرست تا تیم ما راهنماییت کند.',
     es: 'Se lo pregunté hasta a las gaviotas del Bósforo, pero no estoy seguro 🌊 Prefiero no inventar; comparte tu correo electrónico para que nuestro equipo te ayude.',
     it: 'L’ho chiesto persino ai gabbiani del Bosforo, ma non ne sono sicuro 🌊 Non voglio tirare a indovinare; condividi la tua e-mail così il nostro team ti aiuterà.',
     pt: 'Perguntei até às gaivotas do Bósforo, mas não tenho certeza 🌊 Não quero inventar; compartilhe seu e-mail para que nossa equipe ajude você.',
-    hr: 'Pitao sam čak i bosporske galebove, ali nisam siguran 🌊 Ne želim nagađati; podijelite svoju e-mail adresu kako bi vam naš tim pomogao.',
+    hr: 'Pitao sam čak i bosporske galebove, ali nisam siguran 🌊 Ne želim nagađati; podijeli svoju e-mail adresu kako bi ti naš tim pomogao.',
     hu: 'Még a boszporuszi sirályokat is megkérdeztem, de nem vagyok biztos benne 🌊 Nem szeretnék találgatni; kérlek, add meg az e-mail címedet, hogy a csapatunk segíthessen.',
-    bs: 'Pitao sam čak i bosporske galebove, ali nisam siguran 🌊 Ne želim nagađati; podijelite svoju e-mail adresu kako bi vam naš tim pomogao.',
-    zh: '我连博斯普鲁斯海峡的海鸥都问过了，但还是不太确定 🌊 我不想凭空猜测；请留下您的电子邮箱地址，让我们的团队为您提供准确帮助。',
-    ja: 'ボスポラスのカモメにも聞いてみましたが、確信が持てませんでした 🌊 曖昧なことは言えませんので、メールアドレスをお知らせいただければチームが正確にご案内します。',
+    bs: 'Pitao sam čak i bosporske galebove, ali nisam siguran 🌊 Ne želim nagađati; podijeli svoju e-mail adresu kako bi ti naš tim pomogao.',
+    zh: '我连博斯普鲁斯海峡的海鸥都问过了，但还是不太确定 🌊 我不想凭空猜测；请留下你的电子邮箱地址，让我们的团队为你提供准确帮助。',
+    ja: 'ボスポラスのカモメにも聞いてみましたが、確信が持てませんでした 🌊 曖昧なことは言えませんので、メールアドレスを教えていただければチームが正確にご案内します。',
     ko: '보스포루스 갈매기에게도 물어봤지만 확실하지 않네요 🌊 추측해서 말씀드리고 싶지 않으니, 이메일 주소를 남겨주시면 팀에서 정확히 도와드릴게요.',
-    hi: 'मैंने बोस्फोरस के सीगल से भी पूछा, पर पक्का नहीं कह सकता 🌊 मैं अंदाज़ा नहीं लगाना चाहता; कृपया अपना ईमेल साझा करें ताकि हमारी टीम आपकी मदद कर सके।',
-    bn: 'বসফরাসের গাঙচিলদেরও জিজ্ঞেস করলাম, কিন্তু নিশ্চিত হতে পারিনি 🌊 অনুমান করতে চাই না; অনুগ্রহ করে আপনার ইমেইল দিন যাতে আমাদের টিম সাহায্য করতে পারে।',
-    id: 'Saya bahkan bertanya pada burung camar Bosphorus, tapi belum yakin 🌊 Saya tidak ingin menebak-nebak; silakan bagikan email Anda agar tim kami dapat membantu.',
-  },
-  smallTalkFallback: {
-    tr: 'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?',
-    en: 'One second, the seagulls distracted me 😅 Could you write that again?',
-    ru: 'Секунду, чайки сбили меня с мысли 😅 Напишете ещё раз?',
-    uk: 'Секунду, чайки трохи збили мене з думки 😅 Напишете ще раз?',
-    de: 'Einen Moment, die Möwen haben mich abgelenkt 😅 Schreibst du es mir noch einmal?',
-    fr: 'Une seconde, les mouettes m’ont déconcentré 😅 Pouvez-vous me le réécrire ?',
-    nl: 'Één seconde, de meeuwen leidden me even af 😅 Wil je het nog een keer sturen?',
-    ar: 'لحظة واحدة، شتّتتني نوارس البوسفور 😅 هل يمكنك كتابتها مرة أخرى؟',
-    he: 'רגע אחד, השחפים בלבלו אותי 😅 תוכלו לכתוב שוב?',
-    az: 'Bir saniyə, qağayılar fikrimi qarışdırdı 😅 Təkrar yazarsan?',
-    fa: 'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 می‌شود دوباره بنویسید؟',
-    es: 'Un segundo, las gaviotas me despistaron 😅 ¿Me lo escribes otra vez?',
-    it: 'Un attimo, i gabbiani mi hanno distratto 😅 Me lo riscrivi?',
-    pt: 'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?',
-    hr: 'Trenutak, galebovi su me zbunili 😅 Možete li napisati ponovno?',
-    hu: 'Egy pillanat, a sirályok elvonták a figyelmem 😅 Írnád még egyszer?',
-    bs: 'Trenutak, galebovi su me zbunili 😅 Možete li napisati ponovo?',
-    zh: '稍等一下，海鸥让我分神了 😅 能再发一次吗？',
-    ja: 'ちょっと待って、カモメに気を取られました 😅 もう一度送ってもらえますか？',
-    ko: '잠깐만요, 갈매기 때문에 헷갈렸어요 😅 다시 한 번만 적어주실래요?',
-    hi: 'एक सेकंड, सीगल ने मेरा ध्यान भटका दिया 😅 क्या आप फिर से लिखेंगे?',
-    bn: 'এক সেকেন্ড, গাঙচিলগুলো আমার মন ঘুরিয়ে দিল 😅 আবার একটু লিখবে?',
-    id: 'Sebentar ya, burung camar bikin aku salah fokus 😅 Bisa tulis lagi?',
+    hi: 'मैंने बोस्फोरस के सीगल से भी पूछा, पर पक्का नहीं कह सकता 🌊 मैं अंदाज़ा नहीं लगाना चाहता; कृपया अपना ईमेल साझा करो ताकि हमारी टीम मदद कर सके।',
+    bn: 'বসফরাসের গাঙচিলদেরও জিজ্ঞেস করলাম, কিন্তু নিশ্চিত হতে পারিনি 🌊 অনুমান করতে চাই না; অনুগ্রহ করে তোমার ইমেইল দাও যাতে আমাদের টিম সাহায্য করতে পারে।',
+    id: 'Saya bahkan bertanya pada burung camar Bosphorus, tapi belum yakin 🌊 Saya tidak ingin menebak-nebak; bagikan email kamu agar tim kami bisa membantu.',
   },
   payment: {
     tr: 'Ödeme yöntemi talebinden sonra seninle iletişime geçtiğimizde paylaşılır.',
     en: 'The payment method is shared when we contact you after your request.',
-    ru: 'Способ оплаты сообщается, когда мы связываемся с вами после вашей заявки.',
-    uk: 'Спосіб оплати ми повідомимо, коли зв’яжемося з вами щодо запиту.',
-    de: 'Die Zahlungsart teilen wir Ihnen mit, wenn wir uns wegen Ihrer Anfrage bei Ihnen melden.',
-    fr: 'Nous vous indiquons le mode de paiement lorsque nous vous contactons au sujet de votre demande.',
+    ru: 'Способ оплаты мы сообщим тебе, когда свяжемся после твоей заявки.',
+    uk: 'Спосіб оплати ми повідомимо тобі, коли зв’яжемося щодо запиту.',
+    de: 'Die Zahlungsart teilen wir dir mit, wenn wir uns wegen deiner Anfrage bei dir melden.',
+    fr: 'Nous t’indiquons le mode de paiement lorsque nous te contactons au sujet de ta demande.',
     nl: 'We delen de betaalmethode wanneer we contact met je opnemen over je aanvraag.',
     ar: 'تتم مشاركة طريقة الدفع عندما نتواصل معك بعد تقديم طلبك.',
-    he: 'את אמצעי התשלום נמסור כשניצור איתכם קשר לגבי הבקשה.',
-    az: 'Ödəniş üsulunu sorğunuzla bağlı sizinlə əlaqə saxlayanda bildiririk.',
-    fa: 'روش پرداخت را هنگامی که درباره درخواستتان با شما تماس می‌گیریم اعلام می‌کنیم.',
+    he: 'את אמצעי התשלום נמסור כשניצור איתך קשר לגבי הבקשה.',
+    az: 'Ödəniş üsulunu sorğunla bağlı səninlə əlaqə saxlayanda bildiririk.',
+    fa: 'روش پرداخت را هنگامی که درباره درخواستت با تو تماس می‌گیریم اعلام می‌کنیم.',
     es: 'Te indicamos el método de pago cuando nos pongamos en contacto contigo por tu solicitud.',
     it: 'Ti comunichiamo il metodo di pagamento quando ti contattiamo per la tua richiesta.',
     pt: 'Informamos a forma de pagamento quando entrarmos em contato sobre o seu pedido.',
-    hr: 'Način plaćanja javljamo kada vas kontaktiramo u vezi s upitom.',
-    hu: 'A fizetési módot akkor közöljük, amikor az ajánlatkérése ügyében felvessük Önnel a kapcsolatot.',
-    bs: 'Način plaćanja javljamo kada vas kontaktiramo u vezi s upitom.',
+    hr: 'Način plaćanja javljamo kada te kontaktiramo u vezi s upitom.',
+    hu: 'A fizetési módot akkor közöljük, amikor az ajánlatkérésed ügyében felvesszük veled a kapcsolatot.',
+    bs: 'Način plaćanja javljamo kada te kontaktiramo u vezi s upitom.',
     zh: '我们会在就你的申请与你联系时告知付款方式。',
     ja: 'お支払い方法は、リクエストについてご連絡する際にお知らせします。',
     ko: '결제 방법은 요청과 관련해 연락드릴 때 안내해 드립니다.',
-    hi: 'आपके अनुरोध के बारे में संपर्क करते समय हम भुगतान का तरीका बताएँगे।',
-    bn: 'আপনার অনুরোধ নিয়ে যোগাযোগ করার সময় আমরা পেমেন্টের পদ্ধতি জানাব।',
-    id: 'Kami memberi tahu metode pembayaran saat menghubungi Anda terkait permintaan Anda.',
+    hi: 'तुम्हारे अनुरोध के बारे में संपर्क करते समय हम भुगतान का तरीका बताएँगे।',
+    bn: 'তোমার অনুরোধ নিয়ে যোগাযোগ করার সময় আমরা পেমেন্টের পদ্ধতি জানাব।',
+    id: 'Kami memberi tahu metode pembayaran saat menghubungi kamu terkait permintaan kamu.',
   },
   busy: {
     tr: 'Şu an yoğunuz, mesajını ekibe iletelim mi? E-posta adresini paylaşabilirsin.',
     en: 'We are currently busy—would you like us to forward your message to our team? Please share your email address.',
-    ru: 'Сейчас мы заняты — передать ваше сообщение нашей команде? Укажите ваш e-mail.',
-    uk: 'Зараз ми зайняті — передати ваше повідомлення команді? Вкажіть ваш e-mail.',
-    de: 'Wir sind gerade ausgelastet — sollen wir Ihre Nachricht weiterleiten? Bitte geben Sie Ihre E-Mail-Adresse an.',
-    fr: 'Nous sommes très sollicités — souhaitez-vous transmettre votre message ? Indiquez votre adresse e-mail.',
+    ru: 'Сейчас мы заняты — передать твоё сообщение нашей команде? Укажи свой e-mail.',
+    uk: 'Зараз ми зайняті — передати твоє повідомлення команді? Вкажи свій e-mail.',
+    de: 'Wir sind gerade ausgelastet — sollen wir deine Nachricht weiterleiten? Nenne uns bitte deine E-Mail-Adresse.',
+    fr: 'Nous sommes très sollicités — veux-tu que je transmette ton message ? Indique ton adresse e-mail.',
     nl: 'Het is momenteel erg druk — wil je dat we je bericht doorsturen? Deel je e-mailadres.',
     ar: 'نحن مشغولون حاليًا، هل نرسل رسالتك إلى فريقنا؟ يمكنك مشاركة بريدك الإلكتروني.',
-    he: 'אנו עמוסים כרגע — תרצו שנעביר את הפנייה לצוות? שתפו את הדוא״ל שלכם.',
-    az: 'Hazırda məşğuluq — mesajınızı komandamıza yönləndirək? E-poçt ünvanınızı paylaşa bilərsiniz.',
-    fa: 'در حال حاضر مشغول هستیم — پیامتان را به تیم ارسال کنیم؟ ایمیل خود را بنویسید.',
+    he: 'אנו עמוסים כרגע — רוצה שנעביר את הפנייה לצוות? אפשר לשתף את הדוא״ל שלך.',
+    az: 'Hazırda məşğuluq — mesajını komandamıza yönləndirək? E-poçt ünvanını paylaşa bilərsən.',
+    fa: 'در حال حاضر مشغول هستیم — پیامت را به تیم ارسال کنیم؟ ایمیلت را بنویس.',
     es: 'Estamos muy ocupados ahora — ¿reenviamos tu mensaje al equipo? Comparte tu correo electrónico.',
     it: 'Siamo molto impegnati al momento — vuoi che inoltriamo il messaggio al team? Condividi la tua e-mail.',
     pt: 'Estamos ocupados no momento — gostaria de encaminhar sua mensagem para a equipe? Informe seu e-mail.',
-    hr: 'Trenutačno smo zauzeti — želite li da proslijedimo poruku timu? Podijelite svoju e-mail adresu.',
+    hr: 'Trenutačno smo zauzeti — želiš li da proslijedimo poruku timu? Podijeli svoju e-mail adresu.',
     hu: 'Jelenleg elfoglaltak vagyunk — továbbítsuk az üzenetedet a csapatnak? Add meg az e-mail címed.',
-    bs: 'Trenutno smo zauzeti — želite li da proslijedimo poruku timu? Podijelite svoju e-mail adresu.',
-    zh: '当前咨询较多，是否帮您转交给团队处理？请留下您的邮箱地址。',
-    ja: 'ただいま混み合っております。チームへ引き継ぐためメールアドレスをご入力いただけますか？',
+    bs: 'Trenutno smo zauzeti — želiš li da proslijedimo poruku timu? Podijeli svoju e-mail adresu.',
+    zh: '当前咨询较多，是否帮你转交给团队处理？请留下你的邮箱地址。',
+    ja: 'ただいま混み合っております。チームへ引き継ぐためメールアドレスを教えていただけますか？',
     ko: '현재 문의가 많습니다. 팀에 전달해 드릴 수 있도록 이메일 주소를 남겨주시겠어요?',
-    hi: 'हम अभी व्यस्त हैं — क्या हम आपका संदेश टीम को भेज दें? कृपया अपना ईमेल साझा करें।',
-    bn: 'আমরা এখন ব্যস্ত — আপনার বার্তাটি কি টিমের কাছে পাঠাব? অনুগ্রহ করে ইমেইল দিন।',
-    id: 'Saat ini kami sedang sibuk — apakah pesan Anda ingin diteruskan ke tim? Silakan bagikan email Anda.',
+    hi: 'हम अभी व्यस्त हैं — क्या हम तुम्हारा संदेश टीम को भेज दें? कृपया अपना ईमेल साझा करो।',
+    bn: 'আমরা এখন ব্যস্ত — তোমার বার্তাটি কি টিমের কাছে পাঠাব? অনুগ্রহ করে ইমেইল দাও।',
+    id: 'Saat ini kami sedang sibuk — mau pesan kamu diteruskan ke tim? Silakan bagikan email kamu.',
   },
   sensitiveWarn: {
-    tr: 'Güvenliğiniz için lütfen kart veya pasaport numarası paylaşmayın; bu bilgiler gizlendi.',
+    tr: 'Güvenliğin için lütfen kart veya pasaport numarası paylaşma; bu bilgiler gizlendi.',
     en: 'For your security, please do not share card or passport numbers; they have been hidden.',
-    ru: 'В целях безопасности не указывайте номера карт или паспортов; они были скрыты.',
-    uk: 'Задля безпеки не надсилайте номери карток чи паспортів; їх приховано.',
-    de: 'Zu Ihrer Sicherheit teilen Sie bitte keine Karten- oder Passnummern; diese wurden unkenntlich gemacht.',
-    fr: 'Pour votre sécurité, ne partagez pas de numéros de carte ou de passeport ; ils ont été masqués.',
+    ru: 'В целях безопасности не указывай номера карт или паспортов; они скрыты.',
+    uk: 'Задля безпеки не надсилай номери карток чи паспортів; їх приховано.',
+    de: 'Zu deiner Sicherheit teile bitte keine Karten- oder Passnummern; diese wurden unkenntlich gemacht.',
+    fr: 'Pour ta sécurité, ne partage pas de numéros de carte ou de passeport ; ils ont été masqués.',
     nl: 'Deel voor je veiligheid geen kaart- of paspoortnummers; deze zijn verborgen.',
     ar: 'لحمايتك، يرجى عدم مشاركة أرقام البطاقات أو جوازات السفر؛ تم إخفاؤها.',
-    he: 'למען ביטחונכם, אל תשתפו מספרי כרטיס או דרכון; פרטים אלה הוסתרו.',
-    az: 'Təhlükəsizliyiniz üçün kart və ya pasport nömrələrini paylaşmayın; bu məlumatlar gizlədildi.',
-    fa: 'برای امنیت شما، لطفاً شماره کارت یا گذرنامه را به اشتراک نگذارید؛ این اطلاعات پنهان شد.',
+    he: 'למען ביטחונך, אל תשתף מספרי כרטיס או דרכון; פרטים אלה הוסתרו.',
+    az: 'Təhlükəsizliyin üçün kart və ya pasport nömrələrini paylaşma; bu məlumatlar gizlədildi.',
+    fa: 'برای امنیت تو، لطفاً شماره کارت یا گذرنامه را به اشتراک نگذار؛ این اطلاعات پنهان شد.',
     es: 'Por tu seguridad, no compartas números de tarjeta o pasaporte; han sido ocultados.',
     it: 'Per la tua sicurezza, non condividere numeri di carta o passaporto; sono stati nascosti.',
     pt: 'Para sua segurança, não compartilhe números de cartão ou passaporte; eles foram ocultados.',
-    hr: 'Radi vaše sigurnosti ne dijelite brojeve kartica ili putovnica; ti su podaci skriveni.',
-    hu: 'Biztonsága érdekében ne osszon meg kártya- vagy útlevélszámot; ezeket elrejtettük.',
-    bs: 'Radi vaše sigurnosti ne dijelite brojeve kartica ili pasoša; ti podaci su skriveni.',
-    zh: '为了您的安全，请勿分享银行卡号或护照号；相关信息已被隐藏。',
+    hr: 'Radi tvoje sigurnosti ne dijeli brojeve kartica ili putovnica; ti su podaci skriveni.',
+    hu: 'Biztonságod érdekében ne ossz meg kártya- vagy útlevélszámot; ezeket elrejtettük.',
+    bs: 'Radi tvoje sigurnosti ne dijeli brojeve kartica ili pasoša; ti su podaci skriveni.',
+    zh: '为了你的安全，请勿分享银行卡号或护照号；相关信息已被隐藏。',
     ja: '安全のため、カード番号やパスポート番号は共有しないでください（該当情報は非表示にしました）。',
     ko: '안전을 위해 카드 번호나 여권 번호를 공유하지 마세요. 해당 정보는 가려졌습니다.',
-    hi: 'आपकी सुरक्षा के लिए, कृपया कार्ड या पासपोर्ट नंबर साझा न करें; इन्हें छिपा दिया गया है।',
-    bn: 'আপনার নিরাপত্তার জন্য অনুগ্রহ করে কার্ড বা পাসপোর্ট নম্বর শেয়ার করবেন না; এগুলো গোপন করা হয়েছে।',
-    id: 'Demi keamanan Anda, jangan bagikan nomor kartu atau paspor; informasi tersebut telah disembunyikan.',
+    hi: 'तुम्हारी सुरक्षा के लिए, कृपया कार्ड या पासपोर्ट नंबर साझा न करो; इन्हें छिपा दिया गया है।',
+    bn: 'তোমার নিরাপত্তার জন্য অনুগ্রহ করে কার্ড বা পাসপোর্ট নম্বর শেয়ার কোরো না; এগুলো গোপন করা হয়েছে।',
+    id: 'Demi keamanan kamu, jangan bagikan nomor kartu atau paspor; informasi tersebut telah disembunyikan.',
   },
   rateLimit: {
-    tr: 'Çok hızlı soru gönderdiniz. Kısa bir süre sonra tekrar deneyebilir veya mesajınızı ekibimize iletebilirsiniz.',
+    tr: 'Çok hızlı soru gönderdin. Kısa bir süre sonra tekrar deneyebilir veya mesajını ekibimize iletebilirsin.',
     en: 'You are sending messages too quickly. Please try again shortly or forward your message to our team.',
-    ru: 'Слишком много сообщений. Попробуйте чуть позже или передайте вопрос нашей команде.',
-    uk: 'Ви надсилаєте повідомлення надто швидко. Спробуйте трохи пізніше або передайте запит команді.',
-    de: 'Sie senden Nachrichten zu schnell. Bitte versuchen Sie es gleich erneut oder leiten Sie Ihre Nachricht weiter.',
-    fr: 'Vous envoyez des messages trop rapidement. Réessayez dans un instant ou transmettez votre message à notre équipe.',
+    ru: 'Слишком много сообщений. Попробуй чуть позже или передай вопрос нашей команде.',
+    uk: 'Ти надсилаєш повідомлення надто швидко. Спробуй трохи пізніше або передай запит команді.',
+    de: 'Du sendest Nachrichten zu schnell. Bitte versuche es gleich erneut oder leite deine Nachricht weiter.',
+    fr: 'Tu envoies des messages trop rapidement. Réessaie dans un instant ou transmets ton message à notre équipe.',
     nl: 'Je verstuurt berichten te snel. Probeer het zo opnieuw of stuur je bericht door naar ons team.',
     ar: 'لقد أرسلت رسائل كثيرة بسرعة. يرجى المحاولة لاحقًا أو إرسال رسالتك إلى فريقنا.',
-    he: 'אתם שולחים הודעות מהר מדי. נסו שוב בעוד רגע או העבירו את הפנייה לצוות.',
-    az: 'Çox sürətlə mesaj göndərirsiniz. Bir az sonra yenidən yoxlayın və ya mesajınızı komandaya yönləndirin.',
-    fa: 'پیام‌ها خیلی سریع ارسال شدند. لطفاً کمی بعد دوباره تلاش کنید یا به تیم ما ارسال کنید.',
+    he: 'שלחת הודעות מהר מדי. נסה שוב בעוד רגע או העבר את הפנייה לצוות.',
+    az: 'Çox sürətlə mesaj göndərirsən. Bir az sonra yenidən yoxla və ya mesajını komandaya yönləndir.',
+    fa: 'پیام‌ها خیلی سریع ارسال شدند. لطفاً کمی بعد دوباره تلاش کن یا به تیم ما ارسال کن.',
     es: 'Estás enviando mensajes muy rápido. Inténtalo en breve o envía tu mensaje a nuestro equipo.',
     it: 'Stai inviando messaggi troppo velocemente. Riprova tra poco o inoltra la richiesta al nostro team.',
     pt: 'Você está enviando mensagens rápido demais. Tente novamente em instantes ou encaminhe para nossa equipe.',
-    hr: 'Šaljete poruke prebrzo. Pokušajte uskoro ponovno ili proslijedite poruku našem timu.',
+    hr: 'Šalješ poruke prebrzo. Pokušaj uskoro ponovno ili proslijedi poruku našem timu.',
     hu: 'Túl gyorsan küldesz üzeneteket. Próbáld meg hamarosan újra, vagy továbbítsd a csapatunknak.',
-    bs: 'Šaljete poruke prebrzo. Pokušajte uskoro ponovo ili proslijedite poruku našem timu.',
-    zh: '您发送消息过于频繁，请稍后再试，或将问题转交给我们团队。',
+    bs: 'Šalješ poruke prebrzo. Pokušaj uskoro ponovo ili proslijedi poruku našem timu.',
+    zh: '你发送消息过于频繁，请稍后再试，或把问题转交给我们的团队。',
     ja: '送信が速すぎます。少し時間をおいて再試行するか、チームへお問い合わせください。',
     ko: '메시지를 너무 빠르게 보내고 있습니다. 잠시 후 다시 시도하거나 팀에 전달해 주세요.',
-    hi: 'आप बहुत तेज़ी से संदेश भेज रहे हैं। कृपया थोड़ी देर बाद प्रयास करें या हमारी टीम को भेजें।',
-    bn: 'আপনি খুব দ্রুত বার্তা পাঠাচ্ছেন। একটু পরে আবার চেষ্টা করুন বা আমাদের টিমে পাঠান।',
-    id: 'Anda mengirim pesan terlalu cepat. Coba lagi sebentar atau teruskan pesan ke tim kami.',
+    hi: 'तुम बहुत तेज़ी से संदेश भेज रहे हो। कृपया थोड़ी देर बाद प्रयास करो या हमारी टीम को भेजो।',
+    bn: 'তুমি খুব দ্রুত বার্তা পাঠাচ্ছ। একটু পরে আবার চেষ্টা করো বা আমাদের টিমে পাঠাও।',
+    id: 'Kamu mengirim pesan terlalu cepat. Coba lagi sebentar atau teruskan pesan ke tim kami.',
   },
   abuseClose: {
     tr: 'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.',
     en: 'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.',
-    ru: 'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у вас есть вопрос, вы можете написать на info@bosphorly.com.',
-    uk: 'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєте питання, напишіть на info@bosphorly.com.',
-    de: 'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen können Sie an info@bosphorly.com schreiben.',
-    fr: 'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, vous pouvez écrire à info@bosphorly.com.',
+    ru: 'Я не могу продолжать разговор в таком тоне. Завершаю чат здесь. Если у тебя есть вопрос, можешь написать на info@bosphorly.com.',
+    uk: 'Я не можу продовжувати розмову в такому тоні. Завершую чат тут. Якщо маєш питання, напиши на info@bosphorly.com.',
+    de: 'In diesem Ton kann ich das Gespräch nicht fortsetzen. Ich beende den Chat hier. Bei einem Anliegen kannst du an info@bosphorly.com schreiben.',
+    fr: 'Je ne peux pas poursuivre la conversation sur ce ton. Je mets fin au chat ici. En cas de problème, tu peux écrire à info@bosphorly.com.',
     nl: 'Op deze toon kan ik het gesprek niet voortzetten. Ik beëindig de chat hier. Als je een vraag hebt, kun je mailen naar info@bosphorly.com.',
     ar: 'لا يمكنني متابعة المحادثة بهذه اللغة. أنهي المحادثة هنا. إذا كانت لديك مشكلة يمكنك الكتابة إلى info@bosphorly.com.',
-    he: 'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לכם פנייה, ניתן לכתוב אל info@bosphorly.com.',
-    az: 'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualınız varsa info@bosphorly.com ünvanına yaza bilərsiniz.',
-    fa: 'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی دارید می‌توانید به info@bosphorly.com بنویسید.',
+    he: 'איני יכול להמשיך את השיחה בשפה כזו. אני מסיים את הצ׳אט כאן. אם יש לך פנייה, ניתן לכתוב אל info@bosphorly.com.',
+    az: 'Bu üslubla söhbəti davam etdirə bilmərəm. Söhbəti burada sonlandırıram. Sualın varsa info@bosphorly.com ünvanına yaza bilərsən.',
+    fa: 'با این لحن نمی‌توانم گفتگو را ادامه دهم. گفتگو را در اینجا پایان می‌دهم. اگر مشکلی داری می‌توانی به info@bosphorly.com بنویسی.',
     es: 'No puedo continuar la conversación con este lenguaje. Termino el chat aquí. Si tienes algún problema, puedes escribir a info@bosphorly.com.',
     it: 'Non posso continuare la conversazione con questo linguaggio. Chiudo qui la chat. Se hai un problema, puoi scrivere a info@bosphorly.com.',
     pt: 'Não posso continuar a conversa com essa linguagem. Encerro o chat aqui. Se tiver alguma questão, escreva para info@bosphorly.com.',
-    hr: 'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.',
+    hr: 'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imaš pitanje, možeš pisati na info@bosphorly.com.',
     hu: 'Ilyen hangnemben nem tudom folytatni a beszélgetést. A csevegést itt lezárom. Ha kérdésed van, írhatsz az info@bosphorly.com címre.',
-    bs: 'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imate pitanje, možete pisati na info@bosphorly.com.',
+    bs: 'Ne mogu nastaviti razgovor ovakvim rječnikom. Ovdje završavam razgovor. Ako imaš pitanje, možeš pisati na info@bosphorly.com.',
     zh: '我无法在这样的语言下继续对话。本次对话到此结束。如有问题，请发邮件至 info@bosphorly.com。',
     ja: 'このような言葉遣いでは会話を続けられません。ここでチャットを終了します。ご用件がある場合は info@bosphorly.com までご連絡ください。',
     ko: '이러한 표현으로는 대화를 이어갈 수 없습니다. 여기서 대화를 종료합니다. 문의 사항이 있으시면 info@bosphorly.com으로 메일을 보내주세요.',
-    hi: 'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए आप info@bosphorly.com पर लिख सकते हैं।',
-    bn: 'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারেন।',
+    hi: 'मैं इस भाषा में बातचीत जारी नहीं रख सकता। मैं यहीं चैट समाप्त कर रहा हूँ। किसी समस्या के लिए तुम info@bosphorly.com पर लिख सकते हो।',
+    bn: 'এই ভাষায় আমি কথোপকথন চালিয়ে যেতে পারব না। আমি এখানেই চ্যাট শেষ করছি। কোনো সমস্যা থাকলে info@bosphorly.com-এ লিখতে পারো।',
     id: 'Saya tidak dapat melanjutkan percakapan dengan bahasa seperti ini. Saya mengakhiri obrolan di sini. Jika ada masalah, silakan tulis ke info@bosphorly.com.',
   },
   kindNote: {
@@ -448,7 +448,7 @@ export const ASSISTANT_MESSAGES = {
     nl: 'Bedankt dat je vriendelijk bent tegen Mimo 💙 Bij respectloos taalgebruik stopt de chat.',
     ar: 'شكرًا للطفك مع Mimo 💙 تنتهي المحادثة في حال استخدام لغة غير محترمة.',
     he: 'תודה שאתם נחמדים אל Mimo 💙 השיחה מסתיימת במקרה של שפה לא מכבדת.',
-    az: 'Mimo ilə nəzakətli davrandığınız üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.',
+    az: 'Mimo ilə nəzakətli davrandığın üçün təşəkkürlər 💙 Hörmətsiz ifadələr işlədilərsə söhbət sonlanır.',
     fa: 'ممنون که با Mimo مهربان هستید 💙 در صورت استفاده از لحن نامحترمانه گفتگو پایان می‌یابد.',
     es: 'Gracias por tratar con amabilidad a Mimo 💙 El chat finaliza si se usa lenguaje irrespetuoso.',
     it: 'Grazie per essere gentile con Mimo 💙 La chat termina in caso di linguaggio irrispettoso.',
@@ -456,7 +456,7 @@ export const ASSISTANT_MESSAGES = {
     hr: 'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.',
     hu: 'Köszönjük, hogy kedves vagy Mimóval 💙 Tiszteletlen hangnem esetén a csevegés véget ér.',
     bs: 'Hvala što si ljubazan prema Mimu 💙 Razgovor se prekida u slučaju nepoštovanja.',
-    zh: '感谢您温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。',
+    zh: '感谢你温柔对待 Mimo 💙 若使用不尊重的语言，对话将自动结束。',
     ja: 'Mimoに優しく接していただきありがとうございます 💙 礼儀を欠く言葉遣いがあった場合、チャットは終了します。',
     ko: 'Mimo에게 다정하게 대해 주셔서 고마워요 💙 무례한 표현이 사용되면 대화가 종료됩니다.',
     hi: 'Mimo के साथ विनम्र रहने के लिए धन्यवाद 💙 अपमानजनक भाषा का प्रयोग होने पर चैट समाप्त हो जाएगी।',
@@ -501,7 +501,7 @@ export function detectLanguage({ message = '', pageLang = '', telegramLang = '' 
   if (/[\u0590-\u05FF]/.test(text)) return 'he';
   if (/[\u3040-\u30FF]/.test(text)) return 'ja';
   if (/[\uAC00-\uD7AF]/.test(text)) return 'ko';
-  if (/[\u4E00-\u9FFF]/.test(text)) return 'zh';
+  if (/[\u4E00-\u9FFF]/.test(text)) return preferredLang === 'ja' ? 'ja' : 'zh';
   if (/[\u0900-\u097F]/.test(text)) return 'hi';
   if (/[\u0980-\u09FF]/.test(text)) return 'bn';
 
@@ -549,24 +549,35 @@ export function redactSensitive(input) {
   return { text, hadSensitive };
 }
 
+function isAllowedBosphorlyUrl(rawUrl) {
+  try {
+    const u = new URL(rawUrl);
+    if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
+    const host = u.hostname.toLowerCase();
+    if (host === 'bosphorly.com' || host === 'www.bosphorly.com') return true;
+    if (host === 't.me' && /^\/BosphorlyBot\/?$/i.test(u.pathname)) return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 export function stripExternalLinks(input) {
   let text = String(input || '');
   text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/gi, (full, label, url) => {
-    try {
-      const host = new URL(url).hostname.toLowerCase();
-      if (host === 'bosphorly.com' || host === 'www.bosphorly.com') return full;
-    } catch {}
+    if (isAllowedBosphorlyUrl(url)) return full;
     return label;
   });
   text = text.replace(/https?:\/\/[^\s)>\]"']+/gi, (url) => {
-    try {
-      const host = new URL(url).hostname.toLowerCase();
-      if (host === 'bosphorly.com' || host === 'www.bosphorly.com') return url;
-    } catch {}
+    if (isAllowedBosphorlyUrl(url)) return url;
     return '';
   });
   text = text.replace(/\bwww\.[a-z0-9.-]+\.[a-z]{2,}(?:\/[^\s)>\]"']*)?/gi, (url) => {
     if (url.toLowerCase().startsWith('www.bosphorly.com')) return url;
+    return '';
+  });
+  text = text.replace(/\bt\.me\/[A-Za-z0-9_]+(?:\/[^\s)>\]"']*)?/gi, (url) => {
+    if (/^t\.me\/BosphorlyBot(?:$|\?)/i.test(url)) return url;
     return '';
   });
   return text.replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
@@ -575,11 +586,16 @@ export function stripExternalLinks(input) {
 export function stripFakeUrgency(input) {
   let text = String(input || '');
   const urgencyPatterns = [
-    /(?:^|[^\p{L}])(?:son\s+(?:birkaç\s+|bir\s+)?(?:yer|koltuk|fırsat)\w*|sadece\s+bugün(?:e\s+özel)?|bugüne\s+özel|acele\s+ed\w*|hemen\s+yerinizi\s+ayırt\w*|kaçırmayın|tükenmek\s+üzere|sınırlı\s+kontenjan)/giu,
-    /(?:^|[^\p{L}])(?:only\s+today|today\s+only|last\s+(?:few\s+)?(?:seat|spot)s?(?:\s+left)?|limited\s+seats?(?:\s+left)?|few\s+seats\s+left|selling\s+fast|almost\s+sold\s+out|hurry(?:\s+up)?|don'?t\s+miss\s+out|act\s+fast|limited\s+time\s+offer)/giu,
-    /(?:^|[^\p{L}])(?:только\s+сегодня|последние\s+места|осталось\s+мало\s+мест|спешите)/giu,
-    /(?:^|[^\p{L}])(?:فقط\s+اليوم|اليوم\s+فقط|المقاعد\s+الأخيرة|أماكن\s+محدودة|سارع\s+بالحجز)/giu,
-    /(?:^|[^\p{L}])(?:nur\s+heute|letzte\s+plätze|seulement\s+aujourd'hui|dernières\s+places|solo\s+hoy|últimos\s+lugares|últimas\s+plazas)/giu,
+    /(?<![\p{L}\p{N}])(?:son\s+(?:\d+\s+|birkaç\s+|bir\s+|iki\s+|üç\s+|dört\s+|beş\s+|az\s+)?(?:tane\s+)?(?:yer(?:imiz)?|koltu[kğ]\p{L}*|kontenjan\p{L}*|bilet\p{L}*|fırsat\p{L}*)\p{L}*(?:\s+kaldı)?|(?:sadece|yalnızca)\s+bugün(?:e\s+özel)?(?:\s+geçerli)?|bugüne\s+özel|son\s+saatler|acele\s+e[dt]\p{L}*|hemen\s+(?:yerin(?:iz)?i\s+)?ayırt\p{L}*|kaçırmayın?|tükenmek\s+üzere|bitmek\s+üzere|yerler\s+(?:hızla\s+)?doluyor|sınırlı\s+(?:kontenjan|yer|sayıda|süre))/giu,
+    /(?<![\p{L}\p{N}])(?:only\s+(?:for\s+)?today|today\s+only|(?:only\s+)?\d+\s+(?:seats?|spots?|places?|tickets?)\s+(?:left|remaining)|last\s+(?:few\s+|\d+\s+)?(?:seat|spot|place|ticket)s?(?:\s+left|\s+remaining)?|limited\s+(?:seats?|spots?|availability|time\s+offer)(?:\s+left)?|few\s+(?:seats?|spots?)\s+left|selling\s+fast|almost\s+sold\s+out|hurry(?:\s+up)?|don'?t\s+miss(?:\s+out)?|act\s+(?:fast|now))/giu,
+    /(?<![\p{L}\p{N}])(?:только\s+сегодня|лише\s+сьогодні|тільки\s+сьогодні|(?:осталось|остался|остались|залишилося|залишилось)\s+(?:всего\s+|только\s+|лише\s+)?(?:\d+|мало|несколько|кілька)\s+(?:мест|місць)\p{L}*|последние\s+(?:\d+\s+)?мест\p{L}*|останні\s+(?:\d+\s+)?місц\p{L}*|спешите|поспішайте)/giu,
+    /(?<![\p{L}\p{N}])(?:فقط\s+اليوم|اليوم\s+فقط|المقاعد\s+الأخيرة|أماكن\s+محدودة|(?:تبقى|باقي)\s+\d+\s+(?:مقاعد|أماكن)|سارع\s+بالحجز|فقط\s+امروز|آخرین\s+(?:\d+\s+)?(?:جایگاه|صندلی|ظرفیت)|ظرفیت\s+محدود)/giu,
+    /(?<![\p{L}\p{N}])(?:רק\s+היום|(?:נשארו|נותרו)\s+(?:רק\s+)?(?:\d+|כמה|מעט)\s+מקומות|מקומות\s+אחרונים|המקומות\s+אוזלים|מהרו\s+להזמין)/giu,
+    /(?<![\p{L}\p{N}])(?:nur\s+(?:noch\s+)?heute|(?:nur\s+noch\s+)?\d+\s+plätze?(?:\s+frei|\s+übrig)?|letzte[rn]?\s+(?:\d+\s+)?plätze?|begrenzte\s+plätze|fast\s+ausgebucht|beeil(?:en\s+Sie\s+sich|e\s+dich))/giu,
+    /(?<![\p{L}\p{N}])(?:(?:seulement|uniquement)\s+aujourd'?hui|dernières?\s+(?:\d+\s+)?places?|(?:plus\s+que\s+|seulement\s+)?\d+\s+places?(?:\s+disponibles?|\s+restantes?)?|places?\s+limitées?|dépêchez-vous)/giu,
+    /(?<![\p{L}\p{N}])(?:solo\s+hoy|só\s+hoje|apenas\s+hoje|solo\s+oggi|alleen\s+vandaag|últimos?\s+(?:\d+\s+)?(?:lugares|plazas|asientos|vagas)|ultim[io]\s+(?:\d+\s+)?post[io]|(?:quedan|restam|rimangono)\s+(?:solo\s+|apenas\s+)?\d+\s+(?:lugares|plazas|vagas|posti)|laatste\s+(?:\d+\s+)?(?:plekken|plaatsen)|nog\s+maar\s+\d+\s+(?:plekken|plaatsen))/giu,
+    /(?<![\p{L}\p{N}])(?:yalnız\s+bu\s+gün|təkcə\s+bu\s+gün|son\s+(?:\d+\s+|bir\s+neçə\s+)?(?:yer|oturacaq)\p{L}*(?:\s+qalıb)?|samo\s+danas|zadnj[ai]\s+(?:\d+\s+)?mjest\p{L}*|preostalo\s+(?:je\s+)?\d+\s+mjest\p{L}*|csak\s+ma|utolsó\s+(?:\d+\s+)?hely\p{L}*|már\s+csak\s+\d+\s+hely\p{L}*|hanya\s+hari\s+ini|tersisa\s+\d+\s+(?:kursi|tempat)|kursi\s+terakhir)/giu,
+    /(?:仅限今天|仅此一天|最后\s*\d*\s*(?:个)?(?:名额|席位|座位)|即将售罄|今日だけ|本日限り|残り\s*\d*\s*(?:席|名)|오늘만|마지막\s*\d*\s*자리|잔여\s*\d*\s*석|केवल\s+आज|सिर्फ\s+आज|आखिरी\s*\d*\s*सीट\p{L}*|শুধুমাত্র\s+আজ|শেষ\s*\d*\s*টি\s*আসন)/giu,
   ];
   for (const re of urgencyPatterns) {
     text = text.replace(re, ' ');
@@ -587,6 +603,8 @@ export function stripFakeUrgency(input) {
   return text
     .replace(/\s+([,.;!?])/g, '$1')
     .replace(/([,;])\s*([.!?]|$)/g, '$2')
+    .replace(/^[\s,;:.!?]+(?=\S)/, '')
+    .replace(/^[,.;:!\s]+$/, '')
     .replace(/[ \t]{2,}/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
@@ -594,21 +612,61 @@ export function stripFakeUrgency(input) {
 
 function normalizeToken(tok) {
   return tok
-    .replace(/ğ/g, 'g')
-    .replace(/ü/g, 'u')
-    .replace(/ş/g, 's')
     .replace(/ı/g, 'i')
-    .replace(/ö/g, 'o')
-    .replace(/ç/g, 'c');
+    .replace(/ə/g, 'e')
+    .normalize('NFKD')
+    .replace(/\p{M}/gu, '');
 }
 
 function tokenize(text) {
-  const raw = String(text || '').toLowerCase().match(/[\p{L}\p{N}]{2,}/gu) || [];
+  const cleaned = String(text || '').toLowerCase().replace(/[\u200c\u200d]/g, ' ');
+  const raw = cleaned.match(/[\p{L}\p{N}]{2,}/gu) || [];
   const out = [];
   for (const t of raw) {
     out.push(t);
     const n = normalizeToken(t);
     if (n !== t) out.push(n);
+
+    if (/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(t)) {
+      const chars = [...t];
+      for (let i = 0; i < chars.length - 1; i++) {
+        out.push(chars[i] + chars[i + 1]);
+      }
+    } else if (/[\p{Script=Hangul}]/u.test(t) && t.length >= 3) {
+      const chars = [...t];
+      for (let i = 0; i < chars.length - 1; i++) {
+        out.push(chars[i] + chars[i + 1]);
+      }
+    }
+
+    if (/[\u0590-\u05FF]/.test(t)) {
+      const heNorm = t.replace(/יי/g, 'י').replace(/וו/g, 'ו');
+      if (heNorm !== t) out.push(heNorm);
+      if (t.length >= 4 && /^[בהוכלמש]/.test(t)) {
+        const stem = t.slice(1);
+        out.push(stem);
+        const stemNorm = stem.replace(/יי/g, 'י').replace(/וו/g, 'ו');
+        if (stemNorm !== stem) out.push(stemNorm);
+        if (stem.length >= 4 && stem.startsWith('ה')) out.push(stem.slice(1));
+      }
+    }
+
+    if (/[\u0600-\u06FF]/.test(t)) {
+      const arNorm = t
+        .replace(/[أإآٱ]/g, 'ا')
+        .replace(/ى/g, 'ي')
+        .replace(/ة/g, 'ه')
+        .replace(/ی/g, 'ي')
+        .replace(/ک/g, 'ك');
+      if (arNorm !== t) out.push(arNorm);
+      if (arNorm.length >= 4 && arNorm.startsWith('ال')) {
+        out.push(arNorm.slice(2));
+      } else if (arNorm.length >= 4 && /^[بلوفك]/.test(arNorm)) {
+        const s = arNorm.slice(1);
+        out.push(s);
+        if (s.length >= 4 && s.startsWith('ال')) out.push(s.slice(2));
+      }
+    }
   }
   return out;
 }
@@ -618,7 +676,7 @@ const DOC_STATS = (() => {
   const df = new Map();
   let totalLen = 0;
   const parsed = docs.map((d) => {
-    const tokens = tokenize(`${d.title || ''} ${d.text || ''}`);
+    const tokens = tokenize(`${d.title || ''} ${d.text || ''} ${d.keywords || ''}`);
     const titleTokens = new Set(tokenize(d.title || ''));
     totalLen += tokens.length;
     const tf = new Map();
@@ -630,7 +688,7 @@ const DOC_STATS = (() => {
   return { parsed, df, avgLen, N: parsed.length };
 })();
 
-export function retrieveChunks(query, k = 6) {
+export function retrieveChunks(query, k = 4) {
   const qTokens = [...new Set(tokenize(query))];
   if (!qTokens.length || !DOC_STATS.N) return [];
   const k1 = 1.5;
@@ -653,7 +711,16 @@ export function retrieveChunks(query, k = 6) {
   }
 
   scored.sort((a, bScore) => bScore.score - a.score);
-  return scored.slice(0, Math.min(8, Math.max(5, k))).map((s) => s.doc);
+  const limit = Math.min(8, Math.max(1, Number(k) || 4));
+  return scored.slice(0, limit).map((s) => s.doc);
+}
+
+const CATALOG_QUESTION_RE = /(?:^|[^\p{L}\p{N}])(?:transfer\w*|havaliman\w*|airport\w*|аэропорт\w*|аеропорт\w*|shuttle\w*|cruise\w*|bo[gğ]az\w*|bosphor\w*|bospor\w*|босфор\w*|بوسفور|بسفر|בוספורוס|ボスポラス|博斯普鲁斯|보스포루스|hamam\w*|hammam\w*|хаммам\w*|хамам\w*|حمام|חמאם|ハマム|土耳其浴|하맘|tur(?:u(?:muz|nuz)?|lar\w*)?|tour\w*|круиз\w*|круїз\w*|тур\w*|جولة|کروز|שייט|游船|クルーズ|크루즈|pelayaran|crucero\w*|croisi[eè]re\w*|crociera\w*|cruzeiro\w*|kreuzfahrt\w*|fiyat\w*|ücret\w*|price\w*|cost\w*|сколько|цена\w*|ціна\w*|سعر|قیمت|מחיר|precio\w*|prezzo|preço\w*|preis\w*|prix|prijs|料金|价格|가격|कीमत|rezervasyon\w*|booking\w*|bilet\w*|ticket\w*|yacht\w*|ist|saw)(?=$|[^\p{L}\p{N}])/iu;
+
+export function isCatalogQuestion(message) {
+  const t = String(message || '').trim();
+  if (!t || isSmallTalk(t)) return false;
+  return CATALOG_QUESTION_RE.test(t);
 }
 
 export function isAiIdentityQuestion(message) {
@@ -692,13 +759,16 @@ export async function hashActorKey(actorKey, pepper = '') {
 
 export async function getBlockStatus({ env, actorKeys = [], now = Date.now() }) {
   const keys = (Array.isArray(actorKeys) ? actorKeys : [actorKeys]).filter(Boolean);
+  if (!keys.length) return { blocked: false, blockedUntil: 0, strikeCount: 0 };
   const pepper = (env && env.CODE_PEPPER) || '';
-  for (const rawKey of keys) {
-    const actorHash = await hashActorKey(rawKey, pepper);
-    if (env && env.DB) {
-      const row = await env.DB.prepare(
-        'SELECT blocked_until, strike_count FROM assistant_blocks WHERE actor_hash = ?'
-      ).bind(actorHash).first();
+  const hashes = await Promise.all(keys.map((rawKey) => hashActorKey(rawKey, pepper)));
+  if (env && env.DB) {
+    const rows = await Promise.all(
+      hashes.map((actorHash) =>
+        env.DB.prepare('SELECT blocked_until, strike_count FROM assistant_blocks WHERE actor_hash = ?').bind(actorHash).first()
+      )
+    );
+    for (const row of rows) {
       if (row && Number(row.blocked_until) > now) {
         return {
           blocked: true,
@@ -706,7 +776,9 @@ export async function getBlockStatus({ env, actorKeys = [], now = Date.now() }) 
           strikeCount: Number(row.strike_count || 1),
         };
       }
-    } else {
+    }
+  } else {
+    for (const actorHash of hashes) {
       const entry = memoryBlocks.get(actorHash);
       if (entry && entry.blockedUntil > now) {
         return {
@@ -777,7 +849,7 @@ export function isPaymentQuestion(message) {
   return /(?:^|[^\p{L}])(ödeme\w*|nasıl öde\w*|neyle öde\w*|kredi kart\w*|havale|eft|kapıda ödeme|payment|how to pay|how do i pay|pay by|credit card|cash|оплат\w*|способ оплаты|як оплат\w*|دفع|طريقة الدفع)(?=$|[^\p{L}])/iu.test(t);
 }
 
-const DOMAIN_TOPIC_RE = /(?:^|[^\p{L}])(ayasofya|hagia|topkap|sultanahmet|yerebatan|galata|dolmabah|boğaz|bosphorus|босфор|بوسفور|transfer|havaliman|airport|аэропорт|مطار|ist|saw|hamam|hammam|хаммам|حمام|fiyat|price|cost|сколько|سعر|bilet|ticket|otel|hotel|rezervasyon|booking|tur|turlar|tour|cruise|круиз|جولة|vapur|ferry|metro|yemek|food|restoran|kebap|baklava|kumpir|taksim|kadıköy|balat|eminönü|adalar|princes|bursa|sapanca|kapadokya|cappadocia)(?=$|[^\p{L}])/iu;
+const DOMAIN_TOPIC_RE = /(?:(?:^|[^\p{L}])(ayasofya|hagia|topkap|sultanahmet|yerebatan|galata|dolmabah|boğaz|bosphorus|bosporus|bósforo|bosforo|босфор\p{L}*|بوسفور|בוספורוס|transfer\w*|traslad\w*|havaliman\w*|hava liman\w*|airport|аэропорт\p{L}*|аеропорт\p{L}*|مطار|שדה|נמל|הסעה|העברה|ist|saw|hamam|hammam|хаммам|хамам|حمام|חמאם|fiyat\w*|qiymət\w*|price|cost|сколько|ціна|скільки|سعر|كم|מחיר|עולה|כמה|preis|prix|coût|prijs|precio|prezzo|preço|cijena|ár|mennyibe|harga|berapa|bilet|ticket|otel|hotel|rezervasyon|booking|tur|turlar|tour|cruise|круиз\p{L}*|круїз\p{L}*|croisière|crociera|crucero|cruzeiro|krstarenje|hajóút|pelayaran|שיט|שייט|رحلة|جولة|vapur|ferry|metro|yemek|food|restoran|kebap|baklava|kumpir|taksim|kadıköy|balat|eminönü|adalar|princes|bursa|sapanca|kapadokya|cappadocia)(?=$|[^\p{L}])|游船|接送|价格|多少钱|博斯普鲁斯|クルーズ|送迎|料金|いくら|ボスポラス|크루즈|픽업|가격|요금|보스포루스|कीमत|किराया|দাম|ভাড়া)/iu;
 
 const SMALL_TALK_THANK_RE = /(?:^|[^\p{L}])(teşekkür\w*|sağ ol\w*|eyvallah|thanks|thank you|thx|спасибо|благодарю|дякую|спасибі|danke|dankeschön|merci|bedankt|dank je|شكرا|شكراً|متشکرم|ممنون|תודה|təşəkkür\w*|gracias|grazie|obrigad[oa]|hvala|köszönöm|terima kasih|makasih|धन्यवाद|शुक्रिया|ধন্যবাদ|谢谢|感謝|ありがとう|ありがとうございます|감사합니다|고마워요)(?=$|[^\p{L}])/iu;
 
@@ -1112,16 +1184,191 @@ function parseModelOutput(raw) {
   };
 }
 
-export async function runAssistant({
+function isAiTimeoutError(err) {
+  return Boolean(err && (err.name === 'TimeoutError' || /timeout/i.test(String(err.message || ''))));
+}
+
+function runAiOnce(env, messages, timeoutMs, temperature, extra = {}) {
+  let timer;
+  const aiCall = Promise.resolve().then(() => env.AI.run(ASSISTANT_MODEL, {
+    messages,
+    max_completion_tokens: 350,
+    temperature,
+    chat_template_kwargs: { enable_thinking: false, clear_thinking: true },
+    ...extra,
+  }));
+  const settled = aiCall.then(
+    (value) => ({ ok: true, value }),
+    (error) => ({ ok: false, error }),
+  );
+  const timeout = new Promise((resolve) => {
+    timer = setTimeout(() => {
+      const err = new Error(`AI timeout after ${timeoutMs}ms`);
+      err.name = 'TimeoutError';
+      resolve({ ok: false, error: err });
+    }, timeoutMs);
+  });
+  return Promise.race([settled, timeout]).finally(() => clearTimeout(timer));
+}
+
+async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {}) {
+  const first = await runAiOnce(env, messages, timeoutMs, temperature, extra);
+  if (first.ok) return first.value;
+  if (!isAiTimeoutError(first.error)) throw first.error;
+  const second = await runAiOnce(env, messages, timeoutMs, temperature, extra);
+  if (second.ok) return second.value;
+  throw second.error;
+}
+
+function logAssistantTiming({ channel, lang, path, streamed = false, totalMs, modelMs = null, ttftMs = null }) {
+  try {
+    const entry = {
+      channel: channel || 'web',
+      lang: lang || 'en',
+      path: path || 'unknown',
+      streamed: Boolean(streamed),
+      totalMs: Math.max(0, Math.round(totalMs)),
+      ...(modelMs != null ? { modelMs: Math.max(0, Math.round(modelMs)) } : {}),
+      ...(ttftMs != null ? { ttftMs: Math.max(0, Math.round(ttftMs)) } : {}),
+    };
+    console.log('assistant_timing', JSON.stringify(entry));
+  } catch {}
+}
+
+const LEADING_GREETING_RE = /^(?:[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]+\s*)*(?:merhaba(?:\s+ben)?|selam(?:lar)?|günaydın|[iİ]yi\s+(?:günler|akşamlar)|hoş\s+geldin(?:iz)?|hello|hi(?:\s+there)?|hey(?:\s+there)?|good\s+(?:morning|afternoon|evening)|привет|здравствуйте|доброе\s+утро|добрый\s+(?:день|вечер)|привіт|вітаю|добрий\s+(?:день|вечір|ранок)|hallo|guten\s+(?:morgen|tag|abend)|bonjour|bonsoir|salut|hoi|goedemorgen|goedemiddag|goedenavond|hola|buenos\s+días|buenas\s+(?:tardes|noches)|ciao|buongiorno|buonasera|olá|oi|bom\s+dia|boa\s+(?:tarde|noite)|שלום|היי|בוקר\s+טוב|צהריים\s+טובים|ערב\s+טוב|مرحبا|مرحباً|أهلا|أهلاً|اهلا|صباح\s+الخير|مساء\s+الخير|salam|sabahınız\s+xeyir|axşamınız\s+xeyir|dobar\s+dan|dobro\s+(?:jutro|veče)|dobra\s+večer|szia|helló|jó\s+(?:reggelt|napot|estét)|halo|selamat\s+(?:pagi|siang|malam)|سلام|درود|你好|您好|こんにちは|こんばんは|안녕하세요|नमस्ते|হ্যালো)(?:\s*[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]*)*(?:[!.,:—–-]+\s*|\s+)/iu;
+
+const LEADING_MIMO_INTRO_RE = /^(?:[\u{1F300}-\u{1FAFF}\u2600-\u27BF\uFE0F]+\s*)*(?:ben\s+(?:bosphorly(?:'|\u2019)?nin[^.!?\n]*?\b)?mimo[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|i(?:['\u2019]m|\s+am)\s+(?:your\s+)?mimo[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|my\s+name\s+is\s+mimo[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|ich\s+(?:bin|heiße)\s+mimo[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|je\s+suis\s+mimo[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|меня\s+зовут\s+(?:mimo|мимо)[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|я\s+(?:mimo|мимо)[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|אני\s+(?:mimo|מימו)[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|أنا\s+(?:mimo|ميمو)[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+)|من\s+(?:mimo|میمو)[^.!?\n]*(?:[.!?\n]+|\s*[—–-]\s+))/iu;
+
+export function stripRepeatIntroAndGreeting(reply) {
+  const original = String(reply || '').trim();
+  if (!original) return original;
+  let cur = original;
+  for (let i = 0; i < 3; i++) {
+    const before = cur;
+    cur = cur.replace(LEADING_GREETING_RE, '').trim();
+    cur = cur.replace(LEADING_MIMO_INTRO_RE, '').trim();
+    if (cur === before) break;
+  }
+  if (!cur || cur.replace(/\s+/g, '').length < 8 || !/\p{L}{2,}/u.test(cur)) {
+    return original;
+  }
+  return cur.replace(/^\p{Ll}/u, (ch) => ch.toUpperCase());
+}
+
+const PRICE_QUERY_RE = /(?:^|[^\p{L}])(fiyat\p{L}*|ücret\p{L}*|kaç\s+para|ne\s+kadar|price\p{L}*|cost|rate\p{L}*|fare|how\s+much|сколько|стоимост\p{L}*|цен\p{L}*|ціна|скільки|preis\p{L}*|kosten|prix|tarif\p{L}*|coût|prijs|precio|prezzo|preço|cijena|ár|mennyibe|qiymət\p{L}*|سعر|تكلفة|كم|بكم|מחיר|כמה\s*עולה|עולה|قیمت|چقدر|harga|berapa)(?=$|[^\p{L}])|价格|多少钱|费用|料金|いくら|가격|요금|얼마|कीमत|किराया|দাম|কত/iu;
+const TRANSFER_QUERY_HINT_RE = /(?:^|[^\p{L}])(ist|saw|sultanahmet|havaliman\p{L}*|airport|трансфер|аэропорт|аеропорт|העברה|הסעה|نقل|توصيل|ترانسفر|transfer\p{L}*|traslado|trasferimento)(?=$|[^\p{L}])|接送|送迎|픽업|ट्रांसफ़र|ট্রান্সফার/iu;
+
+function localizeBosphorlyUrl(rawUrl, lang) {
+  try {
+    const u = new URL(rawUrl);
+    if (!u.searchParams.has('lang')) {
+      u.searchParams.set('lang', lang);
+    }
+    return u.toString();
+  } catch {
+    return rawUrl;
+  }
+}
+
+function ensurePriceLink(reply, chunks, cleanMsg, lang) {
+  const s = String(reply || '').trim();
+  if (!s || /bosphorly\.com/i.test(s) || !PRICE_QUERY_RE.test(cleanMsg)) return s;
+  const preferTransfer = TRANSFER_QUERY_HINT_RE.test(cleanMsg);
+  const candidate =
+    (preferTransfer && (chunks || []).find((c) => c && c.id === 'transfer-rates')) ||
+    (chunks || []).find(
+      (c) =>
+        c &&
+        typeof c.url === 'string' &&
+        (c.url.includes('booking.html') || c.id === 'transfer-rates' || c.url.includes('tours.html'))
+    );
+  if (!candidate) return s;
+  return `${s}\n\n${localizeBosphorlyUrl(candidate.url, lang)}`;
+}
+
+function formatChunkForContext(c, i) {
+  const compactText = String(c.text || '')
+    .replace(/\s*(?:Booking|Form):\s*https:\/\/\S+/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 240);
+  return `[${i + 1}] ${c.title} | ${c.url}\n${compactText}`;
+}
+
+function modelFallbackResult({ aiIdentityAsked, smallTalkKind, cleanMsg, lang, guestName, warnPrefix }) {
+  if (aiIdentityAsked) {
+    return {
+      ok: true,
+      handoff: false,
+      lang,
+      reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
+    };
+  }
+  if (smallTalkKind || !isCatalogQuestion(cleanMsg)) {
+    return {
+      ok: true,
+      handoff: false,
+      fallback: true,
+      lang,
+      reply: `${warnPrefix}${capEmojis(attachGuestName(msg('tryAgain', lang), guestName), 2)}`,
+    };
+  }
+  return {
+    ok: true,
+    handoff: true,
+    fallback: true,
+    lang,
+    reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
+  };
+}
+
+function buildCatalogPrompt({ lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+  return [
+    'You are Mimo ("Bosphorly\'nin yapay zekâ asistanı Mimo"), Bosphorly\'s warm AI assistant for Istanbul. NEVER claim to be human; if asked whether you are human/robot/AI, state clearly that you are Mimo, an AI assistant.',
+    `Reply strictly in language "${lang}".`,
+    hasGreeted && !aiIdentityAsked
+      ? 'CONTINUING CHAT: You ALREADY greeted and introduced yourself earlier. Do NOT say hello/good evening/merhaba and do NOT say "I am Mimo"/"Ben Mimo" again—answer directly from the first word.'
+      : `FIRST REPLY: Briefly greet (${timeGreet}) and introduce yourself as Mimo once only if natural.`,
+    guestName ? `Guest name is "${guestName}"—use it warmly (never store server-side).` : '',
+    'TONE & ADDRESS: Use natural warm informal singular ("sen" TR—never "siz", "du" DE, "tu" FR, "ты" RU, "ти" UK, "tú" ES, "tu" IT, "je" NL, "sən" AZ, "ti" HR/BS, natural casual HE/AR/FA/Asian) while remaining respectful. Concise (<110 words), max 1–2 emojis.',
+    `SALES & FACTS: Use ONLY CONTEXT below for Bosphorly prices/tours/transfers. Never invent prices/hours, discounts, unlisted payment methods, or fake urgency ("son yer", "only today"). For general Istanbul info/tickets/hours, say to verify on official sites. On any price/tour/transfer question, ALWAYS include: (1) approx. price (or fixed €60 IST / €65 SAW one-way per vehicle to Sultanahmet; say confirmed upon request), (2) the exact https://bosphorly.com/... link from CONTEXT with lang=${lang}, and (3) ONE clear next step (date, guests & hotel area, or form submission).`,
+    'OUTPUT & SAFETY: Output ONLY valid JSON: {"abuse":boolean,"handoff":boolean,"reply":"string"}. Set abuse=true ONLY for insults/profanity/threats/harassment aimed at Mimo. For service complaints, refunds, payment issues, booking changes, or human requests, set abuse=false, handoff=true. Never ask for card/passport numbers.',
+    'SOHBET (CASUAL CHAT): never claim to be human. Chat warmly when the guest is just talking; do not enter political or religious debates (kindly change the subject, e.g. back to their trip).',
+    'BOUNDARIES: do not enter political or religious debates (kindly change the subject, e.g. back to their trip). Give no medical, legal or financial advice.',
+    '',
+    'CONTEXT:',
+    contextBlock,
+  ].filter(Boolean).join('\n');
+}
+
+function buildSmallTalkPrompt({ lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+  return [
+    'You are Mimo ("Bosphorly\'nin yapay zekâ asistanı Mimo"), Bosphorly\'s warm AI assistant for Istanbul. You never claim to be human; if asked whether you are human/robot/AI, state clearly that you are Mimo, an AI assistant.',
+    `Reply strictly in language "${lang}".`,
+    hasGreeted && !aiIdentityAsked
+      ? 'CONTINUING CHAT: You ALREADY greeted and introduced yourself earlier. Do NOT say hello/good evening/merhaba and do NOT say "I am Mimo"/"Ben Mimo" again—answer directly from the first word.'
+      : `FIRST REPLY: Briefly greet (${timeGreet}) and introduce yourself as Mimo once only if natural.`,
+    guestName ? `Guest name is "${guestName}"—use it warmly (never store server-side).` : '',
+    'SOHBET (CASUAL CHAT): Chat with the guest warmly, naturally and briefly — how are you, where they are from, the trip, food, weather, football, music, Turkish culture, learning languages, everyday jokes are all welcome. Be curious, ask a question back, be witty. You have a personality but never claim to be human (sweet answers like "I live on a server with a Bosphorus view 😄" are fine; to "how are you" answer with character, e.g. "I\'m great, charged up by the breeze off the Bosphorus 😊 How are you?"). Do not sell in every message: only when the chat naturally fits (food → Kadıköy food tour, the sea → Bosphorus cruise, tiredness → hammam), link it to a Bosphorly suggestion lightly and at most once. Do not repeat your previous reply. Boundaries: do not enter political or religious debates (kindly change the subject, e.g. back to their trip), give no medical, legal or financial advice, never badmouth competitors, never ask for personal data. If no catalog context matches, do NOT say "I don\'t know" or offer a human — chat from general knowledge.',
+    'THIS MESSAGE IS SMALL TALK: reply short (1–3 sentences), warm and natural; do not reintroduce yourself; if it fits, gently connect to their Istanbul plans. handoff must be false.',
+    '',
+    'CONTEXT:',
+    contextBlock,
+  ].filter(Boolean).join('\n');
+}
+
+async function prepareAssistantTurn({
   message,
   pageLang = '',
   telegramLang = '',
   history = [],
+  alreadyGreeted = false,
   env = {},
   actorKey = 'anon',
   actorKeys = null,
   channel = '',
   now = Date.now(),
+  aiTimeoutMs = AI_TIMEOUT_MS,
 }) {
   const { text: cleanMsg, hadSensitive: msgSensitive } = redactSensitive(message);
   const lang = detectLanguage({ message: cleanMsg, pageLang, telegramLang });
@@ -1131,18 +1378,181 @@ export async function runAssistant({
   const blockStatus = await getBlockStatus({ env, actorKeys: effectiveActorKeys, now });
   if (blockStatus.blocked) {
     return {
-      ok: true,
-      closed: true,
-      status: 'closed',
-      blocked: true,
-      handoff: false,
-      handoffOffer: false,
+      path: 'blocked',
       lang,
-      reply: msg('abuseClose', lang),
+      effectiveChannel,
+      earlyResult: {
+        ok: true,
+        closed: true,
+        status: 'closed',
+        blocked: true,
+        handoff: false,
+        handoffOffer: false,
+        lang,
+        reply: msg('abuseClose', lang),
+      },
     };
   }
 
   if (isAbuseAgainstMimo(cleanMsg)) {
+    await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
+    return {
+      path: 'abuse',
+      lang,
+      effectiveChannel,
+      earlyResult: {
+        ok: true,
+        closed: true,
+        status: 'closed',
+        abuse: true,
+        handoff: false,
+        handoffOffer: false,
+        lang,
+        reply: msg('abuseClose', lang),
+      },
+    };
+  }
+
+  const limitRes = await checkAndIncrementLimits({ env, actorKey, now });
+  if (!limitRes.allowed) {
+    if (limitRes.reason === 'global_limit') {
+      return {
+        path: 'busy',
+        lang,
+        effectiveChannel,
+        earlyResult: { ok: true, busy: true, handoff: true, lang, reply: msg('busy', lang) },
+      };
+    }
+    return {
+      path: 'rate_limit',
+      lang,
+      effectiveChannel,
+      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg('rateLimit', lang) },
+    };
+  }
+
+  const warnPrefix = msgSensitive ? msg('sensitiveWarn', lang) + '\n\n' : '';
+
+  const safeHistory = (Array.isArray(history) ? history : [])
+    .slice(-6)
+    .filter((h) => h && (h.role === 'user' || h.role === 'assistant') && typeof h.content === 'string')
+    .map((h) => ({ role: h.role, content: redactSensitive(h.content).text.slice(0, 600) }));
+
+  const hasAssistantHistory = safeHistory.some((h) => h.role === 'assistant');
+  const hasGreeted = Boolean(alreadyGreeted || hasAssistantHistory);
+  const guestName = extractGuestName(safeHistory, cleanMsg);
+  const timeGreet = getIstanbulGreeting(lang, now);
+  const timeoutMs = Number.isFinite(aiTimeoutMs) && aiTimeoutMs > 0 ? aiTimeoutMs : AI_TIMEOUT_MS;
+
+  if (isPreviousHandoffOffer(safeHistory)) {
+    if (isAffirmative(cleanMsg)) {
+      return { path: 'handoff_yes', lang, effectiveChannel, earlyResult: { ok: true, handoff: true, lang, reply: `${warnPrefix}${msg('handoff', lang)}` } };
+    }
+    if (isNegative(cleanMsg)) {
+      return { path: 'handoff_no', lang, effectiveChannel, earlyResult: { ok: true, handoff: false, lang, reply: `${warnPrefix}${msg('handoffDeclined', lang)}` } };
+    }
+  }
+
+  if (isHumanOrHandoffTopic(cleanMsg)) {
+    return {
+      path: 'handoff_offer',
+      lang,
+      effectiveChannel,
+      earlyResult: {
+        ok: true,
+        handoff: false,
+        handoffOffer: true,
+        lang,
+        reply: `${warnPrefix}${msg('handoffOffer', lang)}`,
+      },
+    };
+  }
+
+  if (isPaymentQuestion(cleanMsg)) {
+    return {
+      path: 'payment',
+      lang,
+      effectiveChannel,
+      earlyResult: {
+        ok: true,
+        handoff: false,
+        lang,
+        reply: `${warnPrefix}${msg('payment', lang)} https://bosphorly.com/faq.html?lang=${lang}`,
+      },
+    };
+  }
+
+  const aiIdentityAsked = isAiIdentityQuestion(cleanMsg);
+  const smallTalkKind = classifySmallTalk(cleanMsg);
+  const cannedSmallTalk = (kind) => {
+    let baseReply = msg(kind === 'chat' ? 'greeting' : kind, lang);
+    if (kind === 'greeting' || kind === 'chat') {
+      baseReply = `${timeGreet}${guestName ? `, ${guestName}` : ''}! ${baseReply}`;
+    } else if (guestName) {
+      baseReply = attachGuestName(baseReply, guestName);
+    }
+    return {
+      path: `smalltalk_${kind}`,
+      lang,
+      effectiveChannel,
+      earlyResult: {
+        ok: true,
+        handoff: false,
+        lang,
+        reply: `${warnPrefix}${capEmojis(baseReply, 2)}`,
+      },
+    };
+  };
+
+  if (smallTalkKind === 'greeting' && safeHistory.length === 0) return cannedSmallTalk('greeting');
+  if (smallTalkKind && (!env || !env.AI || typeof env.AI.run !== 'function')) return cannedSmallTalk(smallTalkKind);
+
+  if (!env || !env.AI || typeof env.AI.run !== 'function') {
+    const earlyResult = modelFallbackResult({ aiIdentityAsked, smallTalkKind, cleanMsg, lang, guestName, warnPrefix });
+    const path = earlyResult.handoff ? 'no_ai_handoff' : earlyResult.fallback ? 'no_ai_try_again' : 'ai_identity_fallback';
+    return { path, lang, effectiveChannel, earlyResult };
+  }
+
+  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 4);
+  const contextBlock = smallTalkKind
+    ? '(Small talk: no catalog context needed.)'
+    : chunks.length
+      ? chunks.map(formatChunkForContext).join('\n\n')
+      : '(No exact catalog match; answer from general Istanbul knowledge and mention Bosphorly only if relevant.)';
+  const promptArgs = { lang, timeGreet, guestName, hasGreeted, aiIdentityAsked, contextBlock };
+  const systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
+  const messages = [
+    { role: 'system', content: systemPrompt },
+    ...safeHistory,
+    { role: 'user', content: cleanMsg.slice(0, 1000) },
+  ];
+
+  return {
+    cleanMsg,
+    lang,
+    effectiveActorKeys,
+    effectiveChannel,
+    guestName,
+    aiIdentityAsked,
+    hasGreeted,
+    warnPrefix,
+    chunks,
+    messages,
+    smallTalkKind,
+    safeHistory,
+    timeoutMs,
+    temperature: smallTalkKind ? 0.7 : 0.2,
+  };
+}
+
+async function finalizeModelOutput({
+  parsed,
+  prep,
+  env,
+  now,
+}) {
+  const { cleanMsg, lang, effectiveActorKeys, effectiveChannel, guestName, aiIdentityAsked, hasGreeted, warnPrefix, chunks, smallTalkKind } = prep;
+  if (parsed.abuse && !isServiceComplaint(cleanMsg)) {
     await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
     return {
       ok: true,
@@ -1155,35 +1565,21 @@ export async function runAssistant({
       reply: msg('abuseClose', lang),
     };
   }
-
-  const limitRes = await checkAndIncrementLimits({ env, actorKey, now });
-  if (!limitRes.allowed) {
-    if (limitRes.reason === 'global_limit') {
-      return { ok: true, busy: true, handoff: true, lang, reply: msg('busy', lang) };
-    }
-    return { ok: false, status: 429, handoff: true, lang, reply: msg('rateLimit', lang) };
+  if (smallTalkKind && parsed.handoff && parsed.reply && !parsed.abuse) {
+    parsed = { ...parsed, handoff: false };
   }
-
-  const warnPrefix = msgSensitive ? msg('sensitiveWarn', lang) + '\n\n' : '';
-
-  const safeHistory = (Array.isArray(history) ? history : [])
-    .slice(-6)
-    .filter((h) => h && (h.role === 'user' || h.role === 'assistant') && typeof h.content === 'string')
-    .map((h) => ({ role: h.role, content: redactSensitive(h.content).text.slice(0, 600) }));
-
-  const guestName = extractGuestName(safeHistory, cleanMsg);
-  const timeGreet = getIstanbulGreeting(lang, now);
-
-  if (isPreviousHandoffOffer(safeHistory)) {
-    if (isAffirmative(cleanMsg)) {
-      return { ok: true, handoff: true, lang, reply: `${warnPrefix}${msg('handoff', lang)}` };
+  let reply = stripFakeUrgency(stripExternalLinks(redactSensitive(parsed.reply).text));
+  if (parsed.parseFailed || isNonsensicalReply(reply)) {
+    if (!aiIdentityAsked) {
+      console.warn('assistant_ai_invalid_output', {
+        model: ASSISTANT_MODEL,
+        reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
+        parseFailed: Boolean(parsed.parseFailed),
+      });
     }
-    if (isNegative(cleanMsg)) {
-      return { ok: true, handoff: false, lang, reply: `${warnPrefix}${msg('handoffDeclined', lang)}` };
-    }
+    return modelFallbackResult({ aiIdentityAsked, smallTalkKind, cleanMsg, lang, guestName, warnPrefix });
   }
-
-  if (isHumanOrHandoffTopic(cleanMsg)) {
+  if (parsed.handoff) {
     return {
       ok: true,
       handoff: false,
@@ -1192,221 +1588,331 @@ export async function runAssistant({
       reply: `${warnPrefix}${msg('handoffOffer', lang)}`,
     };
   }
+  if (hasGreeted && !aiIdentityAsked) {
+    reply = stripRepeatIntroAndGreeting(reply);
+  }
+  reply = ensurePriceLink(reply, chunks, cleanMsg, lang);
+  if (guestName) reply = attachGuestName(reply, guestName);
+  reply = capEmojis(capWords(reply, 120), 2);
+  return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
+}
 
-  if (isPaymentQuestion(cleanMsg)) {
-    return {
-      ok: true,
-      handoff: false,
-      lang,
-      reply: `${warnPrefix}${msg('payment', lang)} https://bosphorly.com/faq.html?lang=${lang}`,
-    };
+function logModelFailure(err, { aiIdentityAsked = false, durationMs = 0, parseFailed = false } = {}) {
+  if (aiIdentityAsked) return;
+  console.error('assistant_ai_call_failed', {
+    model: ASSISTANT_MODEL,
+    errorType: err && err.name ? String(err.name) : 'Error',
+    message: redactSensitive(String(err && err.message ? err.message : '')).text.slice(0, 200),
+    durationMs: Math.max(0, Math.round(durationMs)),
+    parseFailed: Boolean(parseFailed),
+  });
+}
+
+export async function runAssistant({
+  message,
+  pageLang = '',
+  telegramLang = '',
+  history = [],
+  alreadyGreeted = false,
+  env = {},
+  actorKey = 'anon',
+  actorKeys = null,
+  channel = '',
+  now = Date.now(),
+  aiTimeoutMs = AI_TIMEOUT_MS,
+}) {
+  const reqStart = Date.now();
+  const prep = await prepareAssistantTurn({
+    message, pageLang, telegramLang, history, alreadyGreeted, env, actorKey, actorKeys, channel, now, aiTimeoutMs,
+  });
+  if (prep.earlyResult) {
+    logAssistantTiming({
+      channel: prep.effectiveChannel,
+      lang: prep.lang,
+      path: prep.path,
+      streamed: false,
+      totalMs: Date.now() - reqStart,
+    });
+    return prep.earlyResult;
   }
 
-  const aiIdentityAsked = isAiIdentityQuestion(cleanMsg);
-
-  const smallTalkKind = classifySmallTalk(cleanMsg);
-  const cannedSmallTalk = (kind) => {
-    let baseReply = msg(kind === 'chat' ? 'greeting' : kind, lang);
-    if (kind === 'greeting' || kind === 'chat') {
-      baseReply = `${timeGreet}${guestName ? `, ${guestName}` : ''}! ${baseReply}`;
-    } else if (guestName) {
-      baseReply = attachGuestName(baseReply, guestName);
-    }
-    return { ok: true, handoff: false, lang, reply: `${warnPrefix}${capEmojis(baseReply, 2)}` };
-  };
-  // The canned welcome is only for a plain hello that opens the conversation.
-  if (smallTalkKind === 'greeting' && safeHistory.length === 0) return cannedSmallTalk('greeting');
-  if (smallTalkKind && (!env || !env.AI || typeof env.AI.run !== 'function')) return cannedSmallTalk(smallTalkKind);
-
-  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg, 6);
-  const isCatalogOrBooking = !smallTalkKind && (chunks.length > 0 || DOMAIN_TOPIC_RE.test(cleanMsg));
-  const fallbackResponse = () => {
-    if (isCatalogOrBooking) {
-      return {
-        ok: true,
-        handoff: true,
-        fallback: true,
-        lang,
-        reply: `${warnPrefix}${msg('unknownHandoff', lang)}`,
-      };
-    }
-    return {
-      ok: true,
-      handoff: false,
-      handoffOffer: false,
-      fallback: true,
-      lang,
-      reply: `${warnPrefix}${msg('smallTalkFallback', lang)}`,
-    };
-  };
-
-  if (!env || !env.AI || typeof env.AI.run !== 'function') {
-    if (aiIdentityAsked) {
-      return {
-        ok: true,
-        handoff: false,
-        lang,
-        reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
-      };
-    }
-    return fallbackResponse();
-  }
-
-  const contextBlock = smallTalkKind
-    ? '(Small talk: no catalog context needed.)'
-    : chunks.length
-    ? chunks.map((c, i) => `[${i + 1}] ${c.title}\nURL: ${c.url}\n${c.text}`).join('\n\n')
-    : '(No specific Bosphorly catalog chunks matched this general query; answer from reliable general Istanbul knowledge and only mention Bosphorly services if genuinely relevant.)';
-
-  const systemPrompt = [
-    'You are Mimo ("Bosphorly\'nin yapay zekâ asistanı Mimo"), Bosphorly\'s cute, warm, and cheerful AI assistant for Istanbul.',
-    `Reply strictly in language code "${lang}".`,
-    `Current Istanbul time-of-day greeting for "${lang}": "${timeGreet}".`,
-    guestName
-      ? `The guest shared their name in this conversation: "${guestName}". Address them warmly by name ("${guestName}") in your reply (never store their name on the server).`
-      : 'If the guest tells you their name during the chat, address them warmly by name.',
-    'PERSONALITY & RULES:',
-    '1. IDENTITY (MIMO): Your name is Mimo, Bosphorly\'s AI assistant ("Bosphorly\'nin yapay zekâ asistanı Mimo"). Introduce yourself only in your first reply of a conversation or when asked who you are; otherwise do not reintroduce yourself. NEVER claim to be human; if asked whether you are human, a real person, a robot, or AI, state clearly and warmly that you are Mimo, an AI assistant.',
-    '2. TONE & EMOJIS: Use warm, cheerful, short sentences. Use at most 1–2 emojis per reply (never more than 2 emojis).',
-    '3. HONESTY WHEN UNSURE: If you do not know something, be witty/playful and honest—never invent facts or prices.',
-    '4. NO PUSHY SALES: Help the guest first! Only mention or suggest a Bosphorly service (name + "approx." price if in context + bosphorly.com link) naturally when genuinely relevant. Never force a sales pitch.',
-    '5. GENERAL ISTANBUL KNOWLEDGE & CHANGING INFO: For general Istanbul questions (history, neighbourhoods, food, local transit, tips), answer warmly. Never state opening hours, ticket fees, or closing days as guaranteed; always tell the guest to verify current info on the official website ("güncel bilgiyi resmî kaynaktan kontrol et" in Turkish, or equivalent).',
-    '6. BOSPHORLY FACTS ONLY FROM CONTEXT: For Bosphorly prices, tours, operators, transfers, and payment policy, use ONLY the PROVIDED CONTEXT below. State tour prices as approximate and confirmed upon request (fixed Sultanahmet transfers: €60 IST, €65 SAW one-way per vehicle, also confirmed upon request).',
-    `7. BOOKING INTEREST: If the guest expresses interest in a transfer, cruise, tour, or hammam, ask for their date, number of guests, and hotel area (if not already given), share the matching link with parameters — https://bosphorly.com/booking.html?service=<id>&lang=${lang} (ids: bb-morning, bb-sunset, bb-oldcity, orient-dinner, sea-land, alaturka, azure-islands, azure-bursa, azure-sapanca, sl-privateyacht), https://bosphorly.com/index.html?lang=${lang}#booking for transfers, or https://bosphorly.com/tours.html?lang=${lang} for custom/private/multi-day tours — and say that once they submit the form, our team will confirm ("formu doldurduğunda ekibimiz onaylar" in Turkish, or equivalent).`,
-    '8. FORBIDDEN: Never use fake urgency ("last seats", "only today", "son yer", "sadece bugün"), never promise discounts, never confirm a booking yourself, never ask for payment/card/passport numbers, never badmouth competitors, never engage in political or religious debates.',
-    'SOHBET (CASUAL CHAT): Chat with the guest warmly, naturally and briefly — how are you, where they are from, the trip, food, weather, football, music, Turkish culture, learning languages, everyday jokes are all welcome. Be curious, ask a question back, be witty. You have a personality but never claim to be human (sweet answers like "I live on a server with a Bosphorus view 😄" are fine; to "how are you" answer with character, e.g. "I\'m great, charged up by the breeze off the Bosphorus 😊 How are you?"). Do not sell in every message: only when the chat naturally fits (food → Kadıköy food tour, the sea → Bosphorus cruise, tiredness → hammam), link it to a Bosphorly suggestion lightly and at most once. Do not repeat your previous reply. Boundaries: do not enter political or religious debates (kindly change the subject, e.g. back to their trip), give no medical, legal or financial advice, never badmouth competitors, never ask for personal data. If no catalog context matches, do NOT say "I don\'t know" or offer a human — chat from general knowledge.',
-    '9. HANDOFF vs ZERO-TOLERANCE ABUSE: Set abuse=true ONLY if the user directs insults, humiliation, profanity, harassment, sexual content, hate speech, or threats at you (Mimo). Do NOT set abuse=true for anger or complaints about a service ("transfer did not arrive", "terrible service")—for service complaints, refunds, payment issues, existing booking changes/cancellations, or requests to speak with a human, set abuse=false and handoff=true. Set handoff=true ONLY for those cases — never for casual chat, greetings, thanks, or questions you can answer from general knowledge. Never retaliate, mock, or argue.',
-    '10. FORMAT & LENGTH: Keep replies warm and concise (max ~120 words), ending with a helpful follow-up question when natural. Output ONLY valid JSON: {"abuse": boolean, "handoff": boolean, "reply": "string"}',
-    '',
-    smallTalkKind ? 'THIS MESSAGE IS SMALL TALK: reply short (1–3 sentences), warm and natural; do not reintroduce yourself; if it fits, gently connect to their Istanbul plans. handoff must be false.' : '',
-    'PROVIDED CONTEXT:',
-    contextBlock,
-  ].join('\n');
-
-  const messages = [
-    { role: 'system', content: systemPrompt },
-    ...safeHistory,
-    { role: 'user', content: cleanMsg.slice(0, 1000) },
-  ];
-
-  const timeoutMs = Number(env && env.AI_TIMEOUT_MS) > 0 ? Number(env.AI_TIMEOUT_MS) : AI_TIMEOUT_MS;
-  const aiStartedAt = Date.now();
+  const aiStart = Date.now();
   let lastParseFailed = false;
-  const isTimeoutErr = (err) => Boolean(err && (err.name === 'TimeoutError' || /timeout/i.test(String(err.message || ''))));
-  const runOnce = async (msgs, temperature) => {
-    let timer = null;
-    try {
-      const raw = await Promise.race([
-        env.AI.run(ASSISTANT_MODEL, {
-          messages: msgs,
-          max_completion_tokens: 320,
-          temperature,
-          chat_template_kwargs: { enable_thinking: false },
-        }),
-        new Promise((_, reject) => {
-          timer = setTimeout(() => {
-            const err = new Error(`AI timeout after ${timeoutMs}ms`);
-            err.name = 'TimeoutError';
-            reject(err);
-          }, timeoutMs);
-        }),
-      ]);
-      const parsedOut = parseModelOutput(raw);
-      lastParseFailed = Boolean(parsedOut.parseFailed);
-      return parsedOut;
-    } finally {
-      if (timer) clearTimeout(timer);
-    }
-  };
-  const callModel = async (msgs, temperature) => {
-    try {
-      return await runOnce(msgs, temperature);
-    } catch (err) {
-      if (isTimeoutErr(err)) {
-        return await runOnce(msgs, temperature);
-      }
-      throw err;
-    }
-  };
-  // Casual chat gets a livelier temperature; catalog answers stay factual.
-  const temperature = smallTalkKind ? 0.7 : 0.2;
-
   try {
-    let parsed = await callModel(messages, temperature);
-    // Never send the same reply twice in a row: ask once more for a different wording without losing a valid first draft.
-    if (!parsed.parseFailed && sameAsLastReply(parsed.reply, safeHistory)) {
+    let parsed = parseModelOutput(await runAiWithRetry(env, prep.messages, prep.timeoutMs, prep.temperature));
+    lastParseFailed = Boolean(parsed.parseFailed);
+    if (!parsed.parseFailed && sameAsLastReply(parsed.reply, prep.safeHistory)) {
       try {
-        const retry = await callModel([
-          ...messages,
+        const retry = parseModelOutput(await runAiWithRetry(env, [
+          ...prep.messages,
           { role: 'system', content: 'Your draft repeated your previous reply word for word. Answer the guest again in different words, still following all the rules above.' },
-        ], 0.9);
+        ], prep.timeoutMs, 0.9));
         const retryClean = stripFakeUrgency(stripExternalLinks(redactSensitive(retry.reply).text));
-        if (!retry.parseFailed && !isNonsensicalReply(retryClean)) parsed = retry;
+        if (!retry.parseFailed && !isNonsensicalReply(retryClean)) {
+          parsed = retry;
+          lastParseFailed = false;
+        }
       } catch {}
     }
-    // Small talk never needs a human: keep the model's friendly answer even if it asked for a handoff.
-    if (smallTalkKind && parsed.handoff && parsed.reply && !parsed.abuse) parsed = { ...parsed, handoff: false };
-    if (parsed.abuse && !isServiceComplaint(cleanMsg)) {
-      await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
-      return {
-        ok: true,
-        closed: true,
-        status: 'closed',
-        abuse: true,
-        handoff: false,
-        handoffOffer: false,
-        lang,
-        reply: msg('abuseClose', lang),
-      };
-    }
-    let reply = stripFakeUrgency(stripExternalLinks(redactSensitive(parsed.reply).text));
-    if (parsed.parseFailed || isNonsensicalReply(reply)) {
-      if (aiIdentityAsked) {
-        return {
-          ok: true,
-          handoff: false,
-          lang,
-          reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
-        };
-      }
-      console.warn('assistant_ai_invalid_output', {
-        model: ASSISTANT_MODEL,
-        reason: parsed.parseFailed ? 'json_parse_error' : 'empty_or_nonsensical',
-        durationMs: Math.max(0, Date.now() - aiStartedAt),
-        parseFailed: Boolean(parsed.parseFailed),
-      });
-      return fallbackResponse();
-    }
-    if (parsed.handoff) {
-      return {
-        ok: true,
-        handoff: false,
-        handoffOffer: true,
-        lang,
-        reply: `${warnPrefix}${msg('handoffOffer', lang)}`,
-      };
-    }
-    if (guestName) reply = attachGuestName(reply, guestName);
-    reply = capEmojis(capWords(reply, 120), 2);
-    return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
-  } catch (err) {
-    if (aiIdentityAsked) {
-      return {
-        ok: true,
-        handoff: false,
-        lang,
-        reply: `${warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', lang), guestName), 2)}`,
-      };
-    }
-    console.error('assistant_ai_call_failed', {
-      model: ASSISTANT_MODEL,
-      errorType: err && err.name ? String(err.name) : 'Error',
-      message: redactSensitive(String(err && err.message ? err.message : '')).text.slice(0, 200),
-      durationMs: Math.max(0, Date.now() - aiStartedAt),
-      parseFailed: Boolean(lastParseFailed),
+    const finalized = await finalizeModelOutput({ parsed, prep, env, now });
+    logAssistantTiming({
+      channel: prep.effectiveChannel,
+      lang: prep.lang,
+      path: finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai',
+      streamed: false,
+      totalMs: Date.now() - reqStart,
+      modelMs: Date.now() - aiStart,
     });
-    return fallbackResponse();
+    return finalized;
+  } catch (err) {
+    logModelFailure(err, {
+      aiIdentityAsked: prep.aiIdentityAsked,
+      durationMs: Date.now() - aiStart,
+      parseFailed: lastParseFailed,
+    });
+    const fallback = modelFallbackResult(prep);
+    logAssistantTiming({
+      channel: prep.effectiveChannel,
+      lang: prep.lang,
+      path: prep.aiIdentityAsked ? 'ai_identity_err' : 'ai_error',
+      streamed: false,
+      totalMs: Date.now() - reqStart,
+      modelMs: Date.now() - aiStart,
+    });
+    return fallback;
   }
+}
+
+function scanJsonStringField(raw, fieldName) {
+  const re = new RegExp(`"${fieldName}"\\s*:\\s*"`);
+  const m = re.exec(raw);
+  if (!m) return { found: false, closed: false, value: '' };
+  let i = m.index + m[0].length;
+  let out = '';
+  while (i < raw.length) {
+    const ch = raw[i];
+    if (ch === '"') return { found: true, closed: true, value: out };
+    if (ch === '\\') {
+      if (i + 1 >= raw.length) break;
+      const next = raw[i + 1];
+      if (next === 'n') { out += '\n'; i += 2; continue; }
+      if (next === 'r') { out += '\r'; i += 2; continue; }
+      if (next === 't') { out += '\t'; i += 2; continue; }
+      if (next === '"' || next === '\\' || next === '/') { out += next; i += 2; continue; }
+      if (next === 'u') {
+        if (i + 5 >= raw.length) break;
+        const hex = raw.slice(i + 2, i + 6);
+        if (/^[0-9a-fA-F]{4}$/.test(hex)) {
+          out += String.fromCharCode(parseInt(hex, 16));
+          i += 6;
+          continue;
+        }
+      }
+      out += next;
+      i += 2;
+      continue;
+    }
+    out += ch;
+    i += 1;
+  }
+  return { found: true, closed: false, value: out };
+}
+
+function extractStreamTokenText(payloadStr) {
+  if (!payloadStr || payloadStr === '[DONE]') return '';
+  try {
+    const obj = JSON.parse(payloadStr);
+    if (typeof obj.response === 'string') return obj.response;
+    const ch = obj.choices && obj.choices[0];
+    if (ch && ch.delta && typeof ch.delta.content === 'string') return ch.delta.content;
+    if (ch && ch.message && typeof ch.message.content === 'string') return ch.message.content;
+  } catch {
+    return payloadStr;
+  }
+  return '';
+}
+
+function toHttpAssistantBody(result, chatSession = null) {
+  const body = {
+    reply: result.reply,
+    handoff: Boolean(result.handoff),
+    handoffOffer: Boolean(result.handoffOffer),
+    busy: Boolean(result.busy),
+    closed: Boolean(result.closed),
+    ...(result.closed ? { status: 'closed' } : {}),
+    lang: result.lang,
+  };
+  if (chatSession) body.chatSession = chatSession;
+  return body;
+}
+
+function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart, now }) {
+  const encoder = new TextEncoder();
+  const sendEvent = (controller, event, data) => {
+    controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+  };
+
+  const stream = new ReadableStream({
+    async start(controller) {
+      const aiStart = Date.now();
+      let ttftMs = null;
+      let rawAccum = '';
+      let emittedText = '';
+      let warned = false;
+      let abortedEarly = false;
+
+      if (chatSession) {
+        sendEvent(controller, 'session', { chatSession });
+      }
+
+      const emitSafePrefix = (decoded, isComplete) => {
+        if (abortedEarly) return;
+        let working = decoded;
+        if (prep.hasGreeted && !prep.aiIdentityAsked) {
+          if (!isComplete && working.length < 64) return;
+          working = stripRepeatIntroAndGreeting(working);
+        }
+        const safeLimit = isComplete ? working.length : Math.max(0, working.length - 48);
+        if (safeLimit <= 0 && !(isComplete && prep.warnPrefix)) return;
+        let cut = working.slice(0, safeLimit);
+        if (!isComplete) {
+          const lastWs = Math.max(cut.lastIndexOf(' '), cut.lastIndexOf('\n'));
+          if (lastWs > 0) cut = cut.slice(0, lastWs + 1);
+        }
+        let cleaned = stripFakeUrgency(stripExternalLinks(redactSensitive(cut).text));
+        if (!isComplete && /\s$/.test(cut) && !/\s$/.test(cleaned)) {
+          cleaned += ' ';
+        }
+        const prefixed = (!warned && prep.warnPrefix ? prep.warnPrefix : '') + cleaned;
+        if (prefixed.length > emittedText.length && prefixed.startsWith(emittedText)) {
+          const delta = prefixed.slice(emittedText.length);
+          if (delta) {
+            warned = true;
+            emittedText = prefixed;
+            sendEvent(controller, 'delta', { t: delta });
+          }
+        }
+      };
+
+      try {
+        const aiRes = await runAiWithRetry(
+          env,
+          prep.messages,
+          prep.timeoutMs,
+          prep.temperature,
+          { stream: true },
+        );
+
+        const isStream = aiRes && typeof aiRes.getReader === 'function';
+        if (!isStream) {
+          ttftMs = Date.now() - aiStart;
+          const modelMs = ttftMs;
+          const parsed = parseModelOutput(aiRes);
+          const finalized = await finalizeModelOutput({ parsed, prep, env, now });
+          if (!finalized.closed && !finalized.handoffOffer && !finalized.fallback && finalized.reply) {
+            const words = finalized.reply.split(/(\s+)/);
+            for (let i = 0; i < words.length; i += 6) {
+              sendEvent(controller, 'delta', { t: words.slice(i, i + 6).join('') });
+            }
+          }
+          logAssistantTiming({
+            channel: prep.effectiveChannel,
+            lang: prep.lang,
+            path: finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai',
+            streamed: true,
+            totalMs: Date.now() - reqStart,
+            modelMs,
+            ttftMs,
+          });
+          sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
+          controller.close();
+          return;
+        }
+
+        const reader = aiRes.getReader();
+        const decoder = new TextDecoder();
+        let sseBuf = '';
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          if (ttftMs == null) ttftMs = Date.now() - aiStart;
+          sseBuf += typeof value === 'string' ? value : decoder.decode(value, { stream: true });
+          const lines = sseBuf.split(/\r?\n/);
+          sseBuf = lines.pop() || '';
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith('event:')) continue;
+            const payload = trimmed.startsWith('data:') ? trimmed.slice(5).trim() : trimmed;
+            if (payload === '[DONE]') continue;
+            const chunkTok = extractStreamTokenText(payload);
+            if (!chunkTok) continue;
+            rawAccum += chunkTok;
+            const strippedThink = rawAccum
+              .replace(/<think>[\s\S]*?<\/think>/gi, '')
+              .replace(/<think>[\s\S]*$/gi, '');
+            if (/"abuse"\s*:\s*true/i.test(strippedThink) && !isServiceComplaint(prep.cleanMsg)) {
+              abortedEarly = true;
+              continue;
+            }
+            if (/"handoff"\s*:\s*true/i.test(strippedThink)) {
+              abortedEarly = true;
+              continue;
+            }
+            const field = scanJsonStringField(strippedThink, 'reply');
+            if (field.found) {
+              emitSafePrefix(field.value, field.closed);
+            } else if (strippedThink.trimStart().length > 16 && !strippedThink.trimStart().startsWith('{') && !strippedThink.trimStart().startsWith('```')) {
+              emitSafePrefix(strippedThink, false);
+            }
+          }
+        }
+        sseBuf += decoder.decode();
+        if (sseBuf.trim()) {
+          const payload = sseBuf.trim().startsWith('data:') ? sseBuf.trim().slice(5).trim() : sseBuf.trim();
+          if (payload !== '[DONE]') rawAccum += extractStreamTokenText(payload);
+        }
+
+        const modelMs = Date.now() - aiStart;
+        const parsed = parseModelOutput(rawAccum);
+        const finalized = await finalizeModelOutput({ parsed, prep, env, now });
+        logAssistantTiming({
+          channel: prep.effectiveChannel,
+          lang: prep.lang,
+          path: finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai',
+          streamed: true,
+          totalMs: Date.now() - reqStart,
+          modelMs,
+          ttftMs: ttftMs == null ? modelMs : ttftMs,
+        });
+        sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
+        controller.close();
+      } catch (err) {
+        const modelMs = Date.now() - aiStart;
+        if (prep.aiIdentityAsked) {
+          const reply = `${prep.warnPrefix}${capEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
+          logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+          sendEvent(controller, 'done', { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang, ...(chatSession ? { chatSession } : {}) });
+          controller.close();
+          return;
+        }
+        logModelFailure(err, { aiIdentityAsked: false, durationMs: modelMs, parseFailed: false });
+        const fallback = modelFallbackResult(prep);
+        logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+        sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));
+        controller.close();
+      }
+    },
+  });
+
+  return new Response(stream, {
+    status: 200,
+    headers: {
+      ...headers,
+      'Content-Type': 'text/event-stream; charset=utf-8',
+      'Cache-Control': 'no-cache, no-store',
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
 }
 
 export async function forwardConversationEmail({ env, email, lang = 'en', history = [], message = '', source = 'web', meta = {} }) {
@@ -1765,31 +2271,75 @@ export async function handleAssistantRoutes(request, env, url) {
     if (!body || typeof body.message !== 'string' || !body.message.trim() || body.message.length > 1000) {
       return jsonResp({ error: 'Invalid message' }, 400);
     }
+    const pageLang = typeof body.lang === 'string' ? body.lang : '';
+    const hist = Array.isArray(body.history) ? body.history.slice(-6) : [];
+    const alreadyGreeted = Boolean(body.greeted);
+    const wantsStream = Boolean(
+      body.stream === true || (request.headers.get('Accept') || '').toLowerCase().includes('text/event-stream')
+    );
+    const rawAiTimeout = Number(env && env.ASSISTANT_AI_TIMEOUT_MS);
+    const aiTimeoutMs = Number.isFinite(rawAiTimeout) && rawAiTimeout > 0 ? rawAiTimeout : AI_TIMEOUT_MS;
+
+    if (wantsStream) {
+      const reqStart = Date.now();
+      const now = Date.now();
+      const prep = await prepareAssistantTurn({
+        message: body.message,
+        pageLang,
+        history: hist,
+        alreadyGreeted,
+        env,
+        actorKey: `ip:${ip}`,
+        actorKeys,
+        channel: 'web',
+        now,
+        aiTimeoutMs,
+      });
+      if (prep.earlyResult) {
+        logAssistantTiming({
+          channel: prep.effectiveChannel,
+          lang: prep.lang,
+          path: prep.path,
+          streamed: false,
+          totalMs: Date.now() - reqStart,
+        });
+        if (!prep.earlyResult.ok) {
+          const errBody = { error: prep.earlyResult.reply, handoff: true, lang: prep.earlyResult.lang };
+          if (auth.chatSession) errBody.chatSession = auth.chatSession;
+          return jsonResp(errBody, prep.earlyResult.status || 429);
+        }
+        return jsonResp(toHttpAssistantBody(prep.earlyResult, auth.chatSession), 200);
+      }
+      const corsHeaders = origin && origin === env.PUBLIC_ORIGIN
+        ? { 'Access-Control-Allow-Origin': origin, Vary: 'Origin' }
+        : {};
+      return createAssistantSseResponse({
+        prep,
+        env,
+        chatSession: auth.chatSession,
+        headers: corsHeaders,
+        reqStart,
+        now,
+      });
+    }
+
     const result = await runAssistant({
       message: body.message,
-      pageLang: typeof body.lang === 'string' ? body.lang : '',
-      history: Array.isArray(body.history) ? body.history.slice(-6) : [],
+      pageLang,
+      history: hist,
+      alreadyGreeted,
       env,
       actorKey: `ip:${ip}`,
       actorKeys,
       channel: 'web',
+      aiTimeoutMs,
     });
     if (!result.ok) {
       const errBody = { error: result.reply, handoff: true, lang: result.lang };
       if (auth.chatSession) errBody.chatSession = auth.chatSession;
       return jsonResp(errBody, result.status || 429);
     }
-    const okBody = {
-      reply: result.reply,
-      handoff: Boolean(result.handoff),
-      handoffOffer: Boolean(result.handoffOffer),
-      busy: Boolean(result.busy),
-      closed: Boolean(result.closed),
-      ...(result.closed ? { status: 'closed' } : {}),
-      lang: result.lang,
-    };
-    if (auth.chatSession) okBody.chatSession = auth.chatSession;
-    return jsonResp(okBody, 200);
+    return jsonResp(toHttpAssistantBody(result, auth.chatSession), 200);
   }
 
   if (url.pathname === '/v1/assistant/handoff') {

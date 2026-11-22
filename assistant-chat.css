@@ -32,6 +32,7 @@
 .bc-msg.user{align-self:flex-end;background:#0a1753;color:#fff;border-end-end-radius:4px}
 .bc-msg.bot{align-self:flex-start;background:#fff;color:#111d35;border:1px solid #dce4f0;border-end-start-radius:4px}
 .bc-msg.bot a{color:#0a58ca;text-decoration:underline;word-break:break-all}
+.bc-msg.bot strong{font-weight:700}
 .bc-feedback{display:flex;align-items:center;gap:4px;padding:0 2px}
 .bc-rate-btn{background:transparent;border:1px solid #dce4f0;border-radius:999px;padding:2px 7px;font-size:11.5px;line-height:1.2;cursor:pointer;color:#4a5d79;opacity:.82;transition:background .15s,border-color .15s,opacity .15s}
 .bc-rate-btn:hover:not(:disabled){opacity:1;background:#eef3fb;border-color:#b8cae4}

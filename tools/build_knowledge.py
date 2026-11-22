@@ -7,6 +7,123 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "backend/knowledge.json"
 
+PRICE_KEYWORDS_23 = (
+    "fiyat fiyatı fiyatlar ücreti kaç para kaç euro ne kadar "
+    "price prices cost rate fare fee how much "
+    "цена стоимость сколько стоит тариф "
+    "ціна вартість скільки коштує тариф "
+    "preis preise kosten wie viel tarif "
+    "prix tarif coût combien "
+    "prijs prijzen kosten tarief hoeveel "
+    "سعر الأسعار تكلفة كم سعر بكم "
+    "מחיר מחירים עלות כמה עולה "
+    "qiymət qiyməti neçəyədir "
+    "قیمت هزینه چقدر است "
+    "precio precios tarifa cuánto cuesta "
+    "prezzo prezzi tariffa quanto costa "
+    "preço preços tarifa quanto custa "
+    "cijena cijene koliko košta "
+    "ár árak díj mennyibe kerül "
+    "cijena cijene koliko košta "
+    "价格 多少钱 费用 价钱 "
+    "料金 価格 いくら 費用 "
+    "가격 요금 얼마 비용 "
+    "कीमत दाम किराया कितना है "
+    "দাম ভাড়া খরচ কত "
+    "harga biaya tarif berapa"
+)
+
+TRANSFER_KEYWORDS_23 = (
+    "IST SAW istanbul airport sabiha gokcen gökçen sultanahmet airport transfer "
+    "havalimanı transferi havaalanı transfer özel araç shuttle otel "
+    "трансфер аэропорт аэропорта стамбул сабиха гекчен султанахмет "
+    "трансфер аеропорт аеропорту стамбул сабіха султанахмет "
+    "flughafentransfer flughafen transfer fahrzeug "
+    "transfert aéroport aeroport véhicule navette "
+    "luchthaventransfer luchthaven vliegveld transfer "
+    "نقل المطار توصيل مطار اسطنبول صبيحة جوكشن السلطان أحمد سلطان احمد سيارة "
+    "הסעה משדה התעופה העברה שדה תעופה נמל התעופה איסטנבול סביחה גוקצן סולטן אחמט "
+    "hava limanı transferi istanbul sultanəhməd "
+    "ترانسفر فرودگاه فرودگاهی استانبول صبیحه سلطان احمد "
+    "traslado aeropuerto estambul vehículo "
+    "transfer aeroporto trasferimento istanbul "
+    "traslado aeroporto transfer istambul "
+    "transfer zračna luka aerodrom prijevoz "
+    "reptéri transzfer repülőtér isztambul szálloda "
+    "transfer aerodrom prevoz "
+    "机场接送 接送 伊斯坦布尔机场 萨比哈 苏丹艾哈迈德 "
+    "空港送迎 送迎 イスタンブール空港 サビハ スルタンアフメット "
+    "공항 픽업 샌딩 이동 이스탄불 공항 사비하 술탄아흐메트 "
+    "एयरपोर्ट ट्रांसफ़र ट्रांसफर इस्तांबुल एयरपोर्ट सबीहा सुल्तानअहमत "
+    "এয়ারপোর্ট ট্রান্সফার ইস্তাম্বুল এয়ারপোর্ট সাবিহা সুলতানআহমেত "
+    "transfer bandara antar jemput bandara istanbul"
+)
+
+CRUISE_KEYWORDS_23 = (
+    "boğaz turu boğaziçi tekne yat gezisi gemi "
+    "bosphorus cruise boat tour yacht sightseeing "
+    "круиз по босфору босфор прогулка теплоход яхта "
+    "круїз босфором босфор прогулянка теплохід яхта "
+    "bosporus fahrt schifffahrt bootstour kreuzfahrt "
+    "croisière bosphore promenade bateau "
+    "bosporus cruise rondvaart boottocht "
+    "رحلة البوسفور جولة بوسفور سفينة قارب يخت كروز "
+    "שייט בבוספורוס שיט בוספורוס הפלגה סירה "
+    "boğaz turu bosfor kruiz gəmi gəzintisi "
+    "کروز بسفر گشت دریایی قایق کشتی تنگه بسفر "
+    "crucero bósforo paseo barco "
+    "crociera bosforo giro barca "
+    "cruzeiro bósforo passeio barco "
+    "krstarenje bosporom bospor brod "
+    "boszporusz hajóút hajókirándulás sétahajó "
+    "krstarenje bosporom bospor brod "
+    "博斯普鲁斯 海峡 游船 观光船 "
+    "ボスポラス クルーズ 遊覧船 "
+    "보스포루스 크루즈 유람선 투어 "
+    "बोस्फोरस क्रूज़ बोट टूर "
+    "বসফরাস ক্রুজ নৌভ্রমণ "
+    "pelayaran bosporus bosphorus kapal pesiar"
+)
+
+HAMMAM_KEYWORDS_23 = (
+    "hamam türk hamamı kese köpük masaj "
+    "hammam turkish bath massage spa "
+    "хаммам хамам турецкая баня массаж "
+    "хамам турецька лазня масаж "
+    "hamam türkisches bad massage "
+    "hammam bain turc massage "
+    "hamam turks bad massage "
+    "حمام تركي الحمّام التركي تدليك مساج "
+    "חמאם חמאם טורקי עיסוי ספא "
+    "hamam türk hamamı masaj "
+    "حمام ترکی حمام ماساژ "
+    "hammam baño turco masaje "
+    "hammam bagno turco massaggio "
+    "hammam banho turco massagem "
+    "hamam turska kupelj masaža "
+    "hamam törökfürdő masszázs "
+    "hamam tursko kupatilo masaža "
+    "土耳其浴 土耳其浴室 按摩 "
+    "ハマム トルコ式風呂 マッサージ "
+    "하맘 터키식 목욕 마사지 "
+    "हम्माम तुर्की स्नान मसाज "
+    "হামাম তুর্কি স্নান ম্যাসাজ "
+    "hamam pemandian turki pijat"
+)
+
+CRUISE_FLAGSHIP_IDS = {
+    "bb-morning",
+    "bb-afternoon",
+    "bb-sunset",
+    "orient-classic",
+    "orient-dinner",
+    "sea-land",
+    "sl-sunset",
+    "sl-generic-cruise",
+    "azure-bosphorus",
+    "azure-halfbosphorus",
+}
+
 
 def build_chunks() -> list[dict[str, str]]:
     chunks: list[dict[str, str]] = []
@@ -17,12 +134,12 @@ def build_chunks() -> list[dict[str, str]]:
         "title": "Bosphorly contact & service overview / İletişim",
         "url": "https://bosphorly.com/faq.html",
         "text": (
-            "Bosphorly is an independent request service in Istanbul, not a tour company or travel agency. "
-            "We pass guest requests for airport transfers, Bosphorus cruises, tours, and Turkish hammam experiences "
-            "to licensed local companies and confirm details by email. "
-            "Contact email: info@bosphorly.com. Telegram bot: @BosphorlyBot. Website: https://bosphorly.com. "
-            "İletişim e-postası: info@bosphorly.com. Bosphorly İstanbul'da bağımsız bir talep hizmetidir."
+            "Bosphorly is an independent request service in Istanbul (not a tour agency). "
+            "We pass guest requests for airport transfers, Bosphorus cruises, tours, and hammams "
+            "to licensed local companies and confirm details by email (info@bosphorly.com). "
+            "Telegram bot: @BosphorlyBot."
         ),
+        "keywords": "bosphorly contact email info@bosphorly.com telegram @BosphorlyBot iletişim hakkında",
     })
 
     chunks.append({
@@ -33,8 +150,9 @@ def build_chunks() -> list[dict[str, str]]:
             "Nothing is paid on the Bosphorly website. "
             "Ödeme yöntemi talebinden sonra seninle iletişime geçtiğimizde paylaşılır. "
             "We share the payment method when we contact you about your request. "
-            "Never share credit card numbers or passport numbers in chat."
+            "Never share card or passport numbers in chat."
         ),
+        "keywords": "payment method ödeme yöntemi nasıl ödenir pay how to pay",
     })
 
     chunks.append({
@@ -42,10 +160,10 @@ def build_chunks() -> list[dict[str, str]]:
         "title": "Booking changes, cancellations & refunds / Değişiklik ve iptal",
         "url": "https://bosphorly.com/faq.html",
         "text": (
-            "To change or cancel a booking, write to info@bosphorly.com as early as possible with your reference code (BOS-...). "
-            "Cancellation terms are provided by email together with your confirmation. "
-            "Rezervasyon değişikliği, iptal veya iade talepleri için referans kodunuzla info@bosphorly.com adresine yazın."
+            "To change or cancel a booking, write to info@bosphorly.com early with your BOS- reference code. "
+            "Cancellation terms are provided by email with your confirmation."
         ),
+        "keywords": "change cancel refund değişiklik iptal iade referans BOS",
     })
 
     # 2. FAQ (EN and TR)
@@ -53,12 +171,15 @@ def build_chunks() -> list[dict[str, str]]:
     for lang in ("en", "tr"):
         qa_list = faq.get(lang, {}).get("qa", [])
         for idx, (q, a) in enumerate(qa_list):
-            chunks.append({
+            chunk = {
                 "id": f"faq-{lang}-{idx}",
                 "title": q,
                 "url": f"https://bosphorly.com/faq.html?lang={lang}",
                 "text": f"Q: {q} A: {a}",
-            })
+            }
+            if idx == 2:
+                chunk["keywords"] = f"{PRICE_KEYWORDS_23} IST SAW Sultanahmet €60 €65"
+            chunks.append(chunk)
 
     # 3. Offers & fixed Sultanahmet transfer rates
     offers = json.loads((ROOT / "data/offers.json").read_text(encoding="utf-8"))
@@ -72,28 +193,33 @@ def build_chunks() -> list[dict[str, str]]:
         "title": "Airport transfer rates (IST / SAW to Sultanahmet) / Havalimanı transfer fiyatları",
         "url": "https://bosphorly.com/index.html#booking",
         "text": (
-            "Fixed one-way airport transfer rates to Sultanahmet per vehicle: "
+            "Fixed one-way airport transfer rates to Sultanahmet per vehicle (confirmed upon request): "
             + "; ".join(rate_parts)
             + ". Istanbul Airport (IST) -> Sultanahmet €60, Sabiha Gökçen (SAW) -> Sultanahmet €65. "
-            "Other Istanbul zones require an individual quote confirmed upon request. "
-            "Diğer bölgeler için güncel fiyat talep sırasında teyit edilir. "
-            "Transfer booking form: https://bosphorly.com/index.html#booking"
+            "Other zones require an individual quote. "
+            "Form: https://bosphorly.com/index.html#booking"
         ),
+        "keywords": f"{TRANSFER_KEYWORDS_23} {PRICE_KEYWORDS_23} €60 €65 60 65",
     })
 
+    market = json.loads((ROOT / "data/public-market-prices.json").read_text(encoding="utf-8"))
+    market_ids = {rec.get("id", "") for rec in market.get("records", [])}
+
     for offer in offers.get("offers", []):
+        if offer.get("id") in market_ids:
+            continue
         chunks.append({
             "id": f"offer-{offer['id']}",
             "title": offer["name"],
             "url": f"https://bosphorly.com/booking.html?service={offer['id']}",
             "text": (
                 f"{offer['name']} ({offer.get('category', '')}, {offer.get('duration', '')}): "
-                f"{offer.get('description', '')} Price is confirmed upon request."
+                f"{offer.get('description', '')} Confirmed upon request."
             ),
+            "keywords": offer.get("slug", "").replace("-", " "),
         })
 
-    # 4. Public market prices (tours & hammam)
-    market = json.loads((ROOT / "data/public-market-prices.json").read_text(encoding="utf-8"))
+    # 4. Public market prices (tours & hammam) — compact text + 23-language keywords
     for rec in market.get("records", []):
         rid = rec.get("id", "")
         title_en = rec.get("title", "")
@@ -101,26 +227,45 @@ def build_chunks() -> list[dict[str, str]]:
         price = rec.get("price")
         currency = rec.get("currency", "EUR")
         basis = rec.get("basis", "per_person")
-        price_str = f"Approx. {price} {currency} ({basis}); exact price confirmed upon request." if price is not None else "Price confirmed upon request."
+        price_str = (
+            f"Approx. {price} {currency} ({basis}); confirmed upon request."
+            if price is not None
+            else "Confirmed upon request."
+        )
         details = rec.get("details") or {}
         en_det = details.get("en") or {}
         tr_det = details.get("tr") or {}
         summary = en_det.get("summary") or tr_det.get("summary") or ""
+        if len(summary) > 180:
+            summary = summary[:177].rsplit(" ", 1)[0] + "…"
         duration = en_det.get("duration") or tr_det.get("duration") or ""
-        # Include multilingual titles for keyword matching across languages
-        alt_titles = " | ".join(
-            str(rec[k]) for k in ("title_tr", "title_ru", "title_ar", "title_de", "title_fr", "title_es")
-            if rec.get(k)
-        )
-        text = f"{title_en} ({alt_titles}). Operator: {rec.get('operator', '')}. {duration}. {price_str} {summary} Service ID: {rid} (https://bosphorly.com/booking.html?service={rid}).".strip()
+        text = (
+            f"{title_en}. Operator: {rec.get('operator', '')}. {duration}. "
+            f"{price_str} {summary} Booking: https://bosphorly.com/booking.html?service={rid}"
+        ).strip()
+
+        all_titles = [
+            str(rec[k]) for k in sorted(rec) if k.startswith("title_") and rec.get(k)
+        ]
+        kw_parts = list(all_titles)
+        if price is not None:
+            kw_parts.append(PRICE_KEYWORDS_23)
+        if rid in CRUISE_FLAGSHIP_IDS:
+            kw_parts.append(CRUISE_KEYWORDS_23)
+        if rid.startswith("alaturka") or "hammam" in title_en.lower():
+            kw_parts.append(HAMMAM_KEYWORDS_23)
+        if rid == "azure-transfer":
+            kw_parts.append("airport transfer")
+
         chunks.append({
             "id": f"tour-{rid}",
             "title": f"{title_en} / {title_tr}" if title_tr else title_en,
             "url": f"https://bosphorly.com/booking.html?service={rid}",
             "text": text,
+            "keywords": " | ".join(dict.fromkeys(kw_parts)),
         })
 
-    # 5. Discover places, 2-day route stops, themed/private tours & city guide (data/discover + tools/discover-src)
+    # 5. Discover places, 2-day route stops, themed/private tours & city guide
     master = json.loads((ROOT / "tools/discover-src/master.json").read_text(encoding="utf-8"))
     master_places = {p["id"]: p for p in master.get("places", [])}
     master_tours = {t["id"]: t for t in master.get("tours", [])}
@@ -157,13 +302,13 @@ def build_chunks() -> list[dict[str, str]]:
             loc_entry = dpack.get("places", {}).get(pid)
             if loc_entry and loc_entry[0] and loc_entry[0] not in aliases:
                 aliases.append(loc_entry[0])
-        alias_str = f"Aliases: {' | '.join(aliases[:14])}." if aliases else ""
         meta_str = " ".join(meta_parts)
         chunks.append({
             "id": f"place-{pid}",
             "title": f"{name_en} / {name_tr}" if name_tr else name_en,
             "url": "https://bosphorly.com/explore.html",
-            "text": f"{name_en}: {desc_en} | {name_tr}: {desc_tr} {meta_str} {alias_str}".strip(" |"),
+            "text": f"{name_en}: {desc_en} | {name_tr}: {desc_tr} {meta_str}".strip(" |"),
+            "keywords": " | ".join(aliases),
         })
 
     for sid, (name_en, desc_en) in disc_en.get("stops", {}).items():
@@ -175,12 +320,12 @@ def build_chunks() -> list[dict[str, str]]:
             loc_stop = dpack.get("stops", {}).get(sid)
             if loc_stop and loc_stop[0] and loc_stop[0] not in stop_aliases:
                 stop_aliases.append(loc_stop[0])
-        alias_str = f" ({' | '.join(stop_aliases[:10])})" if stop_aliases else ""
         chunks.append({
             "id": f"route-{sid}",
             "title": f"{name_en} / {name_tr}" if name_tr else name_en,
             "url": "https://bosphorly.com/route.html",
-            "text": f"2-Day Istanbul Walking Route stop — {name_en}: {desc_en} | {name_tr}: {desc_tr}{alias_str}".strip(" |"),
+            "text": f"2-Day Istanbul Walking Route stop — {name_en}: {desc_en} | {name_tr}: {desc_tr}".strip(" |"),
+            "keywords": " | ".join(stop_aliases),
         })
 
     for tid, (name_en, desc_en) in disc_en.get("tours", {}).items():
@@ -192,9 +337,9 @@ def build_chunks() -> list[dict[str, str]]:
         if mt.get("route"):
             t_meta.append(f"Route: {' -> '.join(mt['route'])}")
         if mt.get("inc"):
-            t_meta.append(f"Usually included: {', '.join(mt['inc'])}")
+            t_meta.append(f"Included: {', '.join(mt['inc'])}")
         if mt.get("exc"):
-            t_meta.append(f"Usually excluded: {', '.join(mt['exc'])}")
+            t_meta.append(f"Excluded: {', '.join(mt['exc'])}")
         t_aliases = []
         for lc, dpack in all_disc.items():
             if lc in ("en", "tr"):
@@ -202,27 +347,27 @@ def build_chunks() -> list[dict[str, str]]:
             loc_t = dpack.get("tours", {}).get(tid)
             if loc_t and loc_t[0] and loc_t[0] not in t_aliases:
                 t_aliases.append(loc_t[0])
-        alias_str = f"Aliases: {' | '.join(t_aliases[:10])}." if t_aliases else ""
         chunks.append({
             "id": f"discover-tour-{tid}",
             "title": f"{name_en} / {name_tr}" if name_tr else name_en,
             "url": "https://bosphorly.com/tours.html",
-            "text": f"{name_en}: {desc_en} | {name_tr}: {desc_tr} {' '.join(t_meta)} {alias_str}".strip(" |"),
+            "text": f"{name_en}: {desc_en} | {name_tr}: {desc_tr} {' '.join(t_meta)}".strip(" |"),
+            "keywords": " | ".join(t_aliases),
         })
 
     en_ui = disc_en.get("ui", {})
     tr_ui = disc_tr.get("ui", {})
     chunks.append({
         "id": "city-guide-getting-around",
-        "title": "Getting around Istanbul & Route tips / Şehirde ulaşım ve gezi ipuçları",
+        "title": "Getting around Istanbul & Route tips / Şehirde ulaşım",
         "url": "https://bosphorly.com/explore.html",
         "text": (
-            f"{en_ui.get('gaTitle', '')}: {en_ui.get('gaIst', '')} {en_ui.get('gaSaw', '')} "
-            f"{en_ui.get('gaTram', '')} {en_ui.get('gaFerry', '')} {en_ui.get('gaNote', '')} "
-            f"Route tips: {en_ui.get('rtLead', '')} {en_ui.get('rtTip1', '')} {en_ui.get('rtTip2', '')} {en_ui.get('rtTip3', '')} | "
-            f"{tr_ui.get('gaTitle', '')}: {tr_ui.get('gaIst', '')} {tr_ui.get('gaSaw', '')} "
-            f"{tr_ui.get('gaTram', '')} {tr_ui.get('gaFerry', '')} {tr_ui.get('rtTip1', '')} {tr_ui.get('rtTip2', '')}"
+            f"{en_ui.get('gaIst', '')} {en_ui.get('gaSaw', '')} "
+            f"{en_ui.get('gaTram', '')} {en_ui.get('gaFerry', '')} "
+            f"{tr_ui.get('gaIst', '')} {tr_ui.get('gaTram', '')} "
+            "Verify lines and schedules on official operator sites."
         ).strip(),
+        "keywords": "M11 M2 M4 T1 tram metro ferry İstanbulkart vapur ulaşım transit route",
     })
 
     return chunks
