@@ -39,6 +39,15 @@
 .sh-member-out{background:transparent;color:#d5e3f5;border:1px solid #3b4fa3;border-radius:999px;padding:7px 12px;font:700 12.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;cursor:pointer;white-space:nowrap}
 .sh-member-out:hover{background:#1e2f87;color:#fff}
 
+/* Desktop: brand and tools on the first row, the menu and sign-in buttons on the second, so the menu never runs under the search button. */
+@media (min-width:901px){
+ .sh-inner{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"brand . tools" "nav nav auth";row-gap:8px}
+ .sh-nav{justify-content:flex-start;flex-wrap:wrap;padding-top:8px;border-top:1px solid rgba(159,182,220,.16);gap:4px}
+ .sh-auth,.sh-member{align-self:start}
+ .sh-nav a{padding:8px 12px}
+ .sh-auth,.sh-member{padding-top:8px}
+ .sh-auth-perk{display:none}
+}
 @media (max-width:900px){
  .sh-inner{grid-template-columns:1fr auto;grid-template-areas:"brand tools" "nav nav" "auth auth";row-gap:9px;padding:10px 14px 10px}
  .sh-brand{font-size:18px}.sh-brand img{width:38px;height:38px}.sh-brand small{display:none}
@@ -69,9 +78,17 @@ section[id]{scroll-margin-top:170px}
 .tg-btn:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
 .tg-btn[hidden]{display:none!important}
 .tg-btn .tg-ico{width:18px;height:18px;flex:none;display:block}
-.tg-btn.tg-hero{background:rgba(255,255,255,.12);border-color:rgba(130,213,255,.48);color:#fff;border-radius:999px;padding:8px 14px;font-size:13px;margin:10px 0 0;margin-inline-start:14px;vertical-align:middle}
-.tg-btn.tg-hero:hover{background:rgba(255,255,255,.2)}
+.tg-btn.tg-hero{background:none;border:0;border-radius:0;min-height:44px;padding:0;gap:7px;color:#d9f5ff;font:700 13px/1.4 inherit;margin:2px 0 2px 18px;vertical-align:middle}
+.tg-btn.tg-hero::after{content:"→"}
+[dir=rtl] .tg-btn.tg-hero::after{content:"←"}
+.tg-btn.tg-hero:hover{background:none;color:#fff;text-decoration:underline;text-underline-offset:4px}
+.tg-btn.tg-hero .tg-ico{width:16px;height:16px}
 .tg-btn.tg-foot{background:#fff;border-color:#b7ddf2;color:#0b5684;border-radius:999px;padding:7px 13px;font-size:12.5px}
 .tg-btn.tg-after{margin-top:12px;background:#fff;border-color:#88cbe8;color:#0a4b73}
-@media (max-width:560px){.tg-btn.tg-hero{margin-inline-start:0}}
+@media (max-width:1000px){.tg-btn.tg-hero{display:flex;width:max-content;margin-inline-start:0}}
+@media (min-width:851px) and (max-width:1000px){.tg-btn.tg-hero{display:inline-flex;margin-inline-start:18px}}
+@media (max-width:560px){.tg-btn.tg-hero{display:flex;margin-inline-start:0}}
 
+/* Hero links: the gap sits after each link, so a link that wraps to a new line lines up with the main button. */
+@media (min-width:1001px){.hero-copy .hero-cta{margin-inline-end:18px}.hero-copy .hero-map{margin:12px 18px 12px 0}.hero-copy .tg-btn.tg-hero{margin:2px 18px 2px 0}}
+@media (min-width:851px) and (max-width:1000px){.hero-copy .hero-map,.hero-copy .tg-btn.tg-hero{margin-inline-start:0}}
