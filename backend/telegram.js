@@ -193,6 +193,8 @@ async function findLinkedMemberEmail(env, telegramId) {
 
 async function getState(env, chatId, now = Date.now()) {
   if (!env.DB) return null;
+  // Keep the last messages of a Telegram chat no longer than 30 minutes, for every chat (privacy notice, section 5).
+  await env.DB.prepare('DELETE FROM telegram_handoff_state WHERE updated_at < ?').bind(now - 30 * 60 * 1000).run();
   const row = await env.DB.prepare(
     'SELECT pending_handoff, lang, context_json, updated_at FROM telegram_handoff_state WHERE chat_id = ?'
   ).bind(String(chatId)).first();
