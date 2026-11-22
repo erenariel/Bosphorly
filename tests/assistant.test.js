@@ -1458,3 +1458,25 @@ test('political questions: the prompt tells Mimo to change the subject kindly, a
   assert.ok(m.calls[0].messages[0].content.includes('do not enter political or religious debates (kindly change the subject'));
   assert.ok(res.reply.includes('İstanbul'));
 });
+
+test('a hello with anything else (question mark, second sentence, 3+ words, extra text in any script) goes to the model', async () => {
+  for (const message of ['Merhaba', 'Merhaba Mimo', 'Hello!', 'Good morning', 'السلام عليكم', '你好', 'こんにちは']) {
+    assert.equal(classifySmallTalk(message), 'greeting', `plain hello: ${message}`);
+  }
+  const withMore = [
+    { message: 'Merhaba, Boğaz turu ne kadar?', pageLang: 'tr' },
+    { message: 'Hi! Tour tomorrow', pageLang: 'en' },
+    { message: 'Merhaba. Yarın geliyorum', pageLang: 'tr' },
+    { message: 'Guten Morgen Mimo, alles gut', pageLang: 'de' },
+    { message: '你好，我想订游船', pageLang: 'zh' },
+    { message: 'שלום, אני מגיע מחר', pageLang: 'he' },
+    { message: 'Привет?', pageLang: 'ru' },
+  ];
+  for (const c of withMore) {
+    assert.notEqual(classifySmallTalk(c.message), 'greeting', `not a plain hello: ${c.message}`);
+    const m = chatModel('Harika, yardımcı olayım!');
+    const res = await runAssistant({ ...c, env: m.env, actorKey: `hello-plus-${c.message}` });
+    assert.equal(m.calls.length, 1, `model called for "${c.message}"`);
+    assert.ok(!res.reply.includes(ASSISTANT_MESSAGES.greeting[res.lang]), `no canned welcome for "${c.message}"`);
+  }
+});

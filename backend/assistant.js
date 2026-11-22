@@ -760,8 +760,22 @@ export function classifySmallTalk(message) {
   if (SMALL_TALK_THANK_RE.test(t)) return 'thanks';
   if (SMALL_TALK_BYE_RE.test(t)) return 'goodbye';
   if (SMALL_TALK_CHAT_RE.test(t)) return 'chat';
-  if (SMALL_TALK_GREET_RE.test(t)) return /[?？؟]/.test(t) || wordCount > 4 ? 'chat' : 'greeting';
+  if (SMALL_TALK_GREET_RE.test(t)) return isPlainGreeting(t, wordCount) ? 'greeting' : 'chat';
   return null;
+}
+
+// A plain hello is the greeting alone (optionally "Mimo"/"Bosphorly"): no question mark, one sentence, at most two words,
+// and nothing left once the greeting is removed. Anything more goes to the model, so this works in every language
+// without listing each language's topics (scripts without spaces, such as Chinese, are covered by the "nothing left" test).
+function isPlainGreeting(t, wordCount) {
+  if (/[?？؟]/.test(t)) return false;
+  if (wordCount > 2) return false;
+  if (t.split(/[.!。！…;:\n]+/u).filter((x) => /[\p{L}\p{N}]/u.test(x)).length > 1) return false;
+  const rest = t
+    .replace(new RegExp(SMALL_TALK_GREET_RE.source, 'giu'), ' ')
+    .replace(/(?:^|[^\p{L}])(mimo|bosphorly)(?=$|[^\p{L}])/giu, ' ')
+    .replace(/[^\p{L}\p{N}]+/gu, '');
+  return rest.length === 0;
 }
 
 // Was the last assistant reply word-for-word the same? (Compared without spacing, case or trailing punctuation.)
