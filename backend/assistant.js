@@ -1,6 +1,21 @@
 import knowledge from './knowledge.json' with { type: 'json' };
 
 export const ASSISTANT_MODEL = '@cf/zai-org/glm-4.7-flash';
+// Multilingual ASR, zero data retention. Verified 2026-11-22:
+// https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/
+// @cf/openai/whisper-tiny-en is English-only and deprecated.
+export const WHISPER_MODEL = '@cf/openai/whisper-large-v3-turbo';
+export const TRANSCRIBE_MAX_BYTES = 1024 * 1024;
+export const SPEECH_LOCALES = Object.freeze({
+  ar: 'ar-SA', az: 'az-AZ', bn: 'bn-BD', bs: 'bs-BA', de: 'de-DE', en: 'en-US',
+  es: 'es-ES', fa: 'fa-IR', fr: 'fr-FR', he: 'he-IL', hi: 'hi-IN', hr: 'hr-HR',
+  hu: 'hu-HU', id: 'id-ID', it: 'it-IT', ja: 'ja-JP', ko: 'ko-KR', nl: 'nl-NL',
+  pt: 'pt-PT', ru: 'ru-RU', tr: 'tr-TR', uk: 'uk-UA', zh: 'zh-CN',
+});
+export function speechLocale(lang) {
+  const code = String(lang || '').toLowerCase().split(/[-_]/)[0];
+  return SPEECH_LOCALES[code] || 'en-US';
+}
 export const SUPPORTED_LANGS = new Set([
   'ar', 'az', 'bn', 'bs', 'de', 'en', 'es', 'fa', 'fr', 'he', 'hi', 'hr',
   'hu', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'zh'
@@ -1370,6 +1385,94 @@ async function readJsonBody(request, maxBytes = 16384) {
   }
 }
 
+export function chatSessionFromRequest(request) {
+  const auth = request.headers.get('Authorization') || '';
+  const match = auth.match(/^Bearer\s+(\S+)/i);
+  if (match) return match[1];
+  return request.headers.get('X-Chat-Session') || '';
+}
+
+function bytesToBase64(bytes) {
+  // Chunked so a 1 MB recording never becomes a million-element array.
+  let binary = '';
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    const slice = bytes.subarray(i, i + chunk);
+    let part = '';
+    for (let j = 0; j < slice.length; j++) part += String.fromCharCode(slice[j]);
+    binary += part;
+  }
+  return btoa(binary);
+}
+
+function extractTranscript(raw) {
+  if (!raw) return '';
+  if (typeof raw === 'string') return raw;
+  if (typeof raw.text === 'string') return raw.text;
+  if (raw.result && typeof raw.result.text === 'string') return raw.result.text;
+  return '';
+}
+
+export async function transcribeAudio({ env, audioBytes, lang = 'en', actorKey = 'anon', now = Date.now(), maxBytes = TRANSCRIBE_MAX_BYTES }) {
+  const size = audioBytes ? audioBytes.byteLength : 0;
+  if (!size) return { ok: false, status: 400, error: 'empty' };
+  if (size > maxBytes) return { ok: false, status: 413, error: 'too_large' };
+  const limitRes = await checkAndIncrementLimits({ env, actorKey: `stt:${actorKey}`, now });
+  if (!limitRes.allowed) return { ok: false, status: 429, error: 'rate_limit' };
+  if (!env || !env.AI || typeof env.AI.run !== 'function') return { ok: false, status: 503, error: 'unavailable' };
+  const locale = speechLocale(lang);
+  // Cloudflare schema: audio is a base64 string (option 1) or {body, contentType}.
+  // https://developers.cloudflare.com/workers-ai/models/whisper-large-v3-turbo/
+  let audio = '';
+  try {
+    audio = bytesToBase64(audioBytes);
+    const result = await env.AI.run(WHISPER_MODEL, {
+      audio,
+      task: 'transcribe',
+      language: locale.slice(0, 2),
+    });
+    const text = extractTranscript(result).replace(/\s+/g, ' ').trim().slice(0, 1000);
+    return { ok: true, text };
+  } catch (err) {
+    console.error('assistant_transcribe_failed', {
+      model: WHISPER_MODEL,
+      errorType: err && err.name ? String(err.name) : 'Error',
+    });
+    return { ok: false, status: 502, error: 'transcribe_failed' };
+  } finally {
+    audio = '';
+  }
+}
+
+async function readAudioBody(request, maxBytes) {
+  const type = request.headers.get('Content-Type') || '';
+  if (!/^(audio\/[\w.+-]+|application\/octet-stream)(\s*;|$)/i.test(type)) {
+    return { error: 'Audio required', status: 415 };
+  }
+  const reader = request.body?.getReader();
+  const chunks = [];
+  let size = 0;
+  if (reader) {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > maxBytes) {
+        await reader.cancel();
+        return { error: 'Payload too large', status: 413 };
+      }
+      chunks.push(value);
+    }
+  }
+  const audio = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    audio.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { audio };
+}
+
 export async function handleAssistantRoutes(request, env, url) {
   const origin = request.headers.get('Origin');
   const jsonResp = (body, status = 200) => {
@@ -1386,6 +1489,27 @@ export async function handleAssistantRoutes(request, env, url) {
   };
 
   if (request.method !== 'POST') return jsonResp({ error: 'Method not allowed' }, 405);
+
+  if (url.pathname === '/v1/assistant/transcribe') {
+    const ip = (request.headers.get('CF-Connecting-IP') || 'unknown').trim() || 'unknown';
+    const sessionOk = await verifyChatSessionToken(env.CODE_PEPPER, chatSessionFromRequest(request), ip);
+    if (!sessionOk) return jsonResp({ error: 'Chat session required' }, 401);
+    const audioBody = await readAudioBody(request, TRANSCRIBE_MAX_BYTES);
+    if (audioBody.error) return jsonResp({ error: audioBody.error }, audioBody.status);
+    const lang = url.searchParams.get('lang') || '';
+    const result = await transcribeAudio({
+      env,
+      audioBytes: audioBody.audio,
+      lang,
+      actorKey: `ip:${ip}`,
+    });
+    if (!result.ok) {
+      const error = result.status === 413 ? 'Payload too large' : (result.status === 429 ? 'Rate limited' : 'Transcription failed');
+      return jsonResp({ error }, result.status);
+    }
+    return jsonResp({ text: result.text });
+  }
+
   const parsed = await readJsonBody(request);
   if (parsed.error) return jsonResp({ error: parsed.error }, parsed.status);
   const body = parsed.data;
