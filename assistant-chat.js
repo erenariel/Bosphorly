@@ -58,9 +58,14 @@
     tryAgain: { tr:'Bir saniye, martılar kafamı karıştırdı 😅 Tekrar yazar mısın?', en:'One second, the seagulls distracted me 😅 Could you write that again?', ru:'Секунду, чайки сбили меня с толку 😅 Напишешь ещё раз?', uk:'Секунду, чайки збили мене з пантелику 😅 Напишеш ще раз?', de:'Eine Sekunde, die Möwen haben mich abgelenkt 😅 Schreibst du es noch einmal?', fr:'Une seconde, les mouettes m’ont distrait 😅 Tu peux réécrire ?', nl:'Een seconde, de meeuwen leidden me af 😅 Schrijf je het nog een keer?', ar:'لحظة، شتتني النوارس 😅 هل تعيد كتابة رسالتك؟', he:'רגע, השחפים בלבלו אותי 😅 אפשר לכתוב שוב?', az:'Bir saniyə, qağayılar fikrimi yayındırdı 😅 Bir daha yazarsan?', fa:'یک لحظه، مرغ‌های دریایی حواسم را پرت کردند 😅 دوباره می‌نویسید؟', es:'Un segundo, las gaviotas me distrajeron 😅 ¿Lo escribes otra vez?', it:'Un secondo, i gabbiani mi hanno distratto 😅 Lo riscrivi?', pt:'Um segundo, as gaivotas me distraíram 😅 Pode escrever de novo?', hr:'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovno?', hu:'Egy pillanat, a sirályok elvonták a figyelmemet 😅 Megírnád még egyszer?', bs:'Sekundu, galebovi su me zbunili 😅 Možeš li napisati ponovo?', zh:'等一下，海鸥把我弄糊涂了 😅 可以再写一遍吗？', ja:'ちょっと待って、カモメに気を取られちゃった 😅 もう一度書いてもらえる？', ko:'잠깐, 갈매기 때문에 정신이 팔렸어요 😅 다시 한 번 적어 주실래요?', hi:'एक सेकंड, सीगल ने मुझे भटका दिया 😅 क्या फिर से लिखोगे?', bn:'এক সেকেন্ড, সিগালগুলো আমাকে বিভ্রান্ত করেছে 😅 আবার লিখবে?', id:'Sebentar, burung camar mengalihkan perhatianku 😅 Bisa tulis lagi?' },
     humorMorning: { tr:'Sabah simidi taze çıktı, martılar da kahvaltıya göz dikmiş!', en:'Fresh morning simit just landed and the seagulls already spotted it!', ru:'Утренний симит ещё тёплый, а чайки уже присматриваются!', uk:'Ранковий симіт ще теплий, а чайки вже чатують!', de:'Frischer Morgen-Simit duftet schon und die Möwen schauen zu!', fr:'Le simit du matin est tout chaud et les mouettes veillent !', nl:'De ochtendsimit is nog warm en de meeuwen kijken mee!', ar:'السميت الصباحي طازج والنوارس تراقبه بشغف!', he:'הסימיט של הבוקר עוד חם והשחפים כבר עוקבים!', az:'Səhər simiti hələ istidir, qağayılar da göz qoyub!', fa:'سیمیت صبح هنوز داغه و مرغ‌های دریایی چشم دوختن!', es:'El simit de la mañana sigue calentito y las gaviotas ya miran!', it:'Il simit del mattino è ancora caldo e i gabbiani già guardano!', pt:'O simit da manhã está quentinho e as gaivotas já estão de olho!', hr:'Jutarnji simit je još topao, a galebovi ga već merkaju!', hu:'A reggeli szimit még meleg, és a sirályok már lesik!', bs:'Jutarnji simit je još topao, a galebovi ga već gledaju!', zh:'早晨的芝麻圈还热乎着，海鸥已经盯上啦！', ja:'朝のシミットが焼きたてでカモメが狙ってるよ！', ko:'아침 시미트가 갓 나왔는데 갈매기가 벌써 노리고 있어!', hi:'सुबह का सिमित अभी गरम है और सीगल भी ताक में हैं!', bn:'সকালের সিমিত এখনো গরম, সিগালরাও তাকিয়ে আছে!', id:'Simit pagi masih hangat dan burung camar sudah mengincar!' },
     humorAfternoon: { tr:'Vapur düdüğü çaldı, Boğaz esintisi serin serin esiyor!', en:'A ferry whistle just echoed across the Bosphorus breeze!', ru:'Слышен гудок паромчика и свежий ветер с Босфора!', uk:'Лунає гудок порома й свіжий вітер з Босфору!', de:'Eine Fähre tutet gerade über den Bosporus!', fr:'Le sifflet du ferry résonne sur le Bosphore !', nl:'Een veerboot toetert net over de Bosporus!', ar:'صافرة العبارة تعلو فوق نسيم البوسفور!', he:'שריקת המעבורת נשמעת מעל רוח הבוספורוס!', az:'Bərə səsi Boğazdan gəlir, meh sərin əsir!', fa:'سوت کشتی روی بسفر پیچیده و نسیم خنکی می‌وزد!', es:'¡Suena la sirena del ferri con la brisa del Bósforo!', it:'Si sente il fischio del traghetto nella brezza del Bosforo!', pt:'A buzina da balsa ecoa na brisa do Bósforo!', hr:'Čuje se sirena trajekta uz bosforski povjetarac!', hu:'Most szólalt meg a komp kürtje a boszporuszi szellőben!', bs:'Čuje se sirena trajekta uz bosforski povjetarac!', zh:'博斯普鲁斯的渡轮汽笛刚刚响起！', ja:'ボスポラスの潮風と一緒にフェリーの汽笛が聞こえるよ！', ko:'보스포루스 바람을 타고 페리 뱃고동이 울리고 있어!', hi:'बोस्फोरस की हवा के साथ फेरी की सीटी गूँज रही है!', bn:'বসফরাসের বাতাসে ফেরির হুইসেল বাজছে!', id:'Peluit feri baru saja terdengar bersama angin Bosporus!' },
-    humorEvening: { tr:'Boğaz’da gün batımı kızıllığı çıktı, martılar eve dönüyor!', en:'Sunset colors are warming up the Bosphorus while seagulls glide home!', ru:'Закат раскрасил Босфор, а чайки уже летят домой!', uk:'Захід сонця розфарбував Босфор, а чайки летять додому!', de:'Die Abendsonne taucht den Bosporus in Gold!', fr:'Le soleil se couche sur le Bosphore et les mouettes rentrent !', nl:'De avondzon kleurt de Bosporus goud!', ar:'شفق الغروب يلوّن البوسفور والنوارس تعود لأعشاشها!', he:'שקיעה יפה צובעת את הבוספורוס והשחפים חוזרים!', az:'Boğazda gün batımı qızarıb, qağayılar yuvaya dönür!', fa:'غروب بسفر طلایی شده و مرغ‌های دریایی برمی‌گردن!', es:'¡El atardecer tiñe de oro el Bósforo y las gaviotas vuelven a casa!', it:'Il tramonto accende il Bosforo e i gabbiani rientrano!', pt:'O pôr do sol tinge o Bósforo de dourado!', hr:'Zalazak sunca boji Bospor, a galebovi se vraćaju!', hu:'Aranyló naplemente borul a Boszporuszra!', bs:'Zalazak sunca boji Bosfor, a galebovi se vraćaju!', zh:'夕阳把博斯普鲁斯染成了金色，海鸥也回家啦！', ja:'ボスポラスが夕焼けに染まってカモメたちもお帰りの時間だよ！', ko:'보스포루스가 노을빛으로 물들고 갈매기들도 집으로 가네!', hi:'बोस्फोरस पर शाम का सुनहरा नज़ारा है और सीगल घर लौट रहे हैं!', bn:'বসফরাসে গোধূলির রঙ লেগেছে, সিগালরা ঘরে ফিরছে!', id:'Senja mewarnai Bosporus dan burung camar mulai pulang!' }
+    humorEvening: { tr:'Boğaz’da gün batımı kızıllığı çıktı, martılar eve dönüyor!', en:'Sunset colors are warming up the Bosphorus while seagulls glide home!', ru:'Закат раскрасил Босфор, а чайки уже летят домой!', uk:'Захід сонця розфарбував Босфор, а чайки летять додому!', de:'Die Abendsonne taucht den Bosporus in Gold!', fr:'Le soleil se couche sur le Bosphore et les mouettes rentrent !', nl:'De avondzon kleurt de Bosporus goud!', ar:'شفق الغروب يلوّن البوسفور والنوارس تعود لأعشاشها!', he:'שקיעה יפה צובעת את הבוספורוס והשחפים חוזרים!', az:'Boğazda gün batımı qızarıb, qağayılar yuvaya dönür!', fa:'غروب بسفر طلایی شده و مرغ‌های دریایی برمی‌گردن!', es:'¡El atardecer tiñe de oro el Bósforo y las gaviotas vuelven a casa!', it:'Il tramonto accende il Bosforo e i gabbiani rientrano!', pt:'O pôr do sol tinge o Bósforo de dourado!', hr:'Zalazak sunca boji Bospor, a galebovi se vraćaju!', hu:'Aranyló naplemente borul a Boszporuszra!', bs:'Zalazak sunca boji Bosfor, a galebovi se vraćaju!', zh:'夕阳把博斯普鲁斯染成了金色，海鸥也回家啦！', ja:'ボスポラスが夕焼けに染まってカモメたちもお帰りの時間だよ！', ko:'보스포루스가 노을빛으로 물들고 갈매기들도 집으로 가네!', hi:'बोस्फोरस पर शाम का सुनहरा नज़ारा है और सीगल घर लौट रहे हैं!', bn:'বসফরাসে গোধূলির রঙ লেগেছে, সিগালরা ঘরে ফিরছে!', id:'Senja mewarnai Bosporus dan burung camar mulai pulang!' },
+    voiceToggle: { tr:'Sesli cevap', en:'Voice reply', ru:'Голосовой ответ', uk:'Голосова відповідь', de:'Sprachantwort', fr:'Réponse vocale', nl:'Spraakantwoord', ar:'رد صوتي', he:'מענה קולי', az:'Səsli cavab', fa:'پاسخ صوتی', es:'Respuesta de voz', it:'Risposta vocale', pt:'Resposta por voz', hr:'Glasovni odgovor', hu:'Hangos válasz', bs:'Glasovni odgovor', zh:'语音朗读', ja:'音声読み上げ', ko:'음성 답변', hi:'वॉइस उत्तर', bn:'ভয়েস উত্তর', id:'Balasan suara' },
+    speakMsg: { tr:'Mesajı sesli oku', en:'Read message aloud', ru:'Озвучить сообщение', uk:'Озвучити повідомлення', de:'Nachricht vorlesen', fr:'Lire le message à voix haute', nl:'Bericht voorlezen', ar:'قراءة الرسالة بصوت عالٍ', he:'הקראת ההודעה בקול', az:'Mesajı səslə oxu', fa:'خواندن پیام با صدا', es:'Leer mensaje en voz alta', it:'Leggi il messaggio ad alta voce', pt:'Ler mensagem em voz alta', hr:'Pročitaj poruku naglas', hu:'Üzenet felolvasása', bs:'Pročitaj poruku naglas', zh:'朗读消息', ja:'メッセージを読み上げる', ko:'메시지 소리 내어 읽기', hi:'संदेश ज़ोर से पढ़ें', bn:'বার্তাটি পড়ে শোনান', id:'Bacakan pesan' },
+    stopSpeak: { tr:'Okumayı durdur', en:'Stop reading', ru:'Остановить чтение', uk:'Зупинити читання', de:'Vorlesen stoppen', fr:'Arrêter la lecture', nl:'Stop met voorlezen', ar:'إيقاف القراءة', he:'עצירת ההקראה', az:'Oxumağı dayandır', fa:'توقف خواندن', es:'Detener lectura', it:'Interrompi lettura', pt:'Parar leitura', hr:'Zaustavi čitanje', hu:'Felolvasás leállítása', bs:'Zaustavi čitanje', zh:'停止朗读', ja:'読み上げを停止', ko:'읽기 중지', hi:'पढ़ना रोकें', bn:'পড়া বন্ধ করুন', id:'Hentikan pembacaan' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
+  const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
+  const speechLocale = (code) => SPEECH_LOCALES[String(code || '').slice(0, 2)] || 'en-US';
 
   const getIstanbulTimeSlot = () => {
     try {
@@ -188,9 +193,9 @@
   panel.setAttribute('aria-label', rawTitle);
   if (isRtl) panel.setAttribute('dir', 'rtl');
   panel.innerHTML =
-    `<div class="bc-head"><div class="bc-head-info"><img class="bc-head-avatar" src="${mimoSrc('default')}" alt="Mimo" width="36" height="36" loading="lazy" decoding="async">` +
+    `<div class="bc-head"><div class="bc-head-info"><img class="bc-head-avatar" src="${mimoSrc('default')}" data-state="default" alt="Mimo" width="36" height="36" loading="lazy" decoding="async">` +
     `<div class="bc-head-text"><div class="bc-title">${titleHtml}</div><div class="bc-sub">${tr('sub')}</div></div></div>` +
-    `<div class="bc-head-actions">${tgHeadHtml}<button type="button" class="bc-close" aria-label="${tr('close')}">×</button></div></div>` +
+    `<div class="bc-head-actions"><button type="button" class="bc-tts-toggle" role="switch" aria-checked="false" hidden><span class="bc-tts-ico" aria-hidden="true">🔇</span><span class="bc-tts-lbl"></span><span class="bc-tts-switch" aria-hidden="true"></span></button>${tgHeadHtml}<button type="button" class="bc-close" aria-label="${tr('close')}">×</button></div></div>` +
     `<div class="bc-log" aria-live="polite"></div>` +
     `<div class="bc-quick">` +
     `<button type="button" class="bc-quick-btn" data-q="transfer">${tr('qTransfer')}</button>` +
@@ -208,6 +213,10 @@
   document.body.appendChild(panel);
 
   const headAvatar = panel.querySelector('.bc-head-avatar');
+  const ttsToggleBtn = panel.querySelector('.bc-tts-toggle');
+  const ttsToggleIco = panel.querySelector('.bc-tts-ico');
+  const ttsToggleLbl = panel.querySelector('.bc-tts-lbl');
+  ttsToggleLbl.textContent = tr('voiceToggle');
   const logEl = panel.querySelector('.bc-log');
   const quickEl = panel.querySelector('.bc-quick');
   const quickToggleBtn = panel.querySelector('.bc-quick-toggle');
@@ -222,6 +231,9 @@
   const listenEl = panel.querySelector('.bc-listen');
   const micNote = panel.querySelector('.bc-mic-note');
   listenEl.textContent = tr('listening');
+  const botItems = [];
+  let ttsAvailable = false;
+  let ttsAutoEnabled = false;
 
   let turnstileToken = '';
   let tsWidgetId = null;
@@ -392,15 +404,6 @@
     } catch {}
   }
 
-  function escapeHtml(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
   function isAllowedHref(rawUrl) {
     try {
       const u = new URL(rawUrl);
@@ -419,45 +422,67 @@
       .replace(/<\|channel>thought[\s\S]*?(?:<channel\|>|$)/gi, '')
       .replace(/<\|channel>(?:thought)?|<channel\|>/gi, '')
       .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
-      .replace(/\[\[\s*flags\s*:[^\]]*\]\]/gi, '')
+      .replace(/\[\[\s*flags\s*:[\s\S]*?(?:\]\]|$)/gi, '')
       .trim();
   }
 
-  function renderBotHtml(text) {
-    const escaped = escapeHtml(sanitizeClientText(text));
-    const placeholders = [];
-    const makeAnchor = (escapedUrl, escapedLabel) => {
-      const candidate = escapedUrl
-        .replace(/&amp;/g, '&')
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'");
-      if (!isAllowedHref(candidate)) {
-        return escapedLabel && escapedLabel !== escapedUrl ? `${escapedLabel} (${escapedUrl})` : escapedUrl;
-      }
-      const token = `\u0000L${placeholders.length}\u0000`;
-      placeholders.push(`<a href="${escapedUrl}" target="_blank" rel="noopener">${escapedLabel || escapedUrl}</a>`);
-      return token;
-    };
+  function appendAllowedLinkOrText(parent, url, label) {
+    if (isAllowedHref(url)) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.textContent = label || url;
+      parent.appendChild(a);
+    } else {
+      const txt = label && label !== url ? `${label} (${url})` : url;
+      parent.appendChild(document.createTextNode(txt));
+    }
+  }
 
-    let out = escaped.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)<]+)\)/gi, (_, label, url) => makeAnchor(url, label));
-    out = out.replace(/https?:\/\/[^\s<>\u0000]+/gi, (match) => {
-      let clean = match;
-      let tail = '';
-      const trailing = clean.match(/(?:&quot;|&#39;|&lt;|&gt;|[).,!?;:])+$/);
-      if (trailing) {
-        clean = clean.slice(0, -trailing[0].length);
-        tail = trailing[0];
+  function appendFormattedLine(parent, line) {
+    const tokenRe = /\[([^\]]+)\]\((https?:\/\/[^\s)<]+)\)|(https?:\/\/[^\s<>]+)|\*\*([^\n*][^*\n]*?)\*\*/gi;
+    let lastIdx = 0;
+    let m;
+    while ((m = tokenRe.exec(line)) !== null) {
+      if (m.index > lastIdx) {
+        parent.appendChild(document.createTextNode(line.slice(lastIdx, m.index)));
       }
-      if (!clean) return match;
-      return makeAnchor(clean, clean) + tail;
-    });
-    out = out.replace(/\*\*([^\n*][^*\n]*?)\*\*/g, '<strong>$1</strong>');
-    out = out.replace(/\r?\n/g, '<br>');
-    return out.replace(/\u0000L(\d+)\u0000/g, (_, idx) => placeholders[Number(idx)] || '');
+      if (m[2]) {
+        appendAllowedLinkOrText(parent, m[2], m[1]);
+      } else if (m[3]) {
+        let clean = m[3];
+        let tail = '';
+        const trailing = clean.match(/[).,!?;:"'<>]+$/);
+        if (trailing) {
+          clean = clean.slice(0, -trailing[0].length);
+          tail = trailing[0];
+        }
+        if (clean) {
+          appendAllowedLinkOrText(parent, clean, clean);
+          if (tail) parent.appendChild(document.createTextNode(tail));
+        } else {
+          parent.appendChild(document.createTextNode(m[3]));
+        }
+      } else if (m[4]) {
+        const strong = document.createElement('strong');
+        strong.textContent = m[4];
+        parent.appendChild(strong);
+      }
+      lastIdx = tokenRe.lastIndex;
+    }
+    if (lastIdx < line.length) {
+      parent.appendChild(document.createTextNode(line.slice(lastIdx)));
+    }
   }
 
   function setBotMessageBody(div, text, opts = {}) {
-    div.innerHTML = renderBotHtml(text);
+    div.textContent = '';
+    const lines = sanitizeClientText(text).split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      if (i > 0) div.appendChild(document.createElement('br'));
+      appendFormattedLine(div, lines[i]);
+    }
     if (opts.handoffOffer && !isChatClosed) {
       const actions = document.createElement('div');
       actions.className = 'bc-offer-actions';
@@ -516,23 +541,53 @@
     const div = document.createElement('div');
     div.className = `bc-msg ${role === 'user' ? 'user' : 'bot'}`;
 
-    let av = null;
-    let wrap = null;
+    const item = {
+      row,
+      div,
+      wrap: null,
+      av: null,
+      speakBtn: null,
+      text: String(text || ''),
+      baseAvatarState: opts.avatarState || 'happy',
+      lang: opts.lang || lang,
+      streaming: Boolean(opts.streaming),
+    };
+
     if (role === 'bot') {
-      av = document.createElement('img');
+      const av = document.createElement('img');
       av.className = 'bc-bot-avatar';
-      av.src = mimoSrc(opts.avatarState || 'happy');
+      av.src = mimoSrc(item.baseAvatarState);
+      av.dataset.state = item.baseAvatarState;
       av.alt = 'Mimo';
       av.width = 28;
       av.height = 28;
       av.loading = 'lazy';
       av.decoding = 'async';
+      item.av = av;
 
-      wrap = document.createElement('div');
+      const wrap = document.createElement('div');
       wrap.className = 'bc-msg-wrap';
+      item.wrap = wrap;
+
+      const mainRow = document.createElement('div');
+      mainRow.className = 'bc-msg-main';
 
       setBotMessageBody(div, text, opts);
-      wrap.appendChild(div);
+
+      const speakBtn = document.createElement('button');
+      speakBtn.type = 'button';
+      speakBtn.className = 'bc-speak-btn';
+      speakBtn.textContent = '🔊';
+      speakBtn.setAttribute('aria-label', tr('speakMsg'));
+      speakBtn.setAttribute('aria-pressed', 'false');
+      speakBtn.disabled = item.streaming;
+      speakBtn.hidden = !resolveVoiceForLang(item.lang);
+      speakBtn.addEventListener('click', () => { toggleSpeakItem(item); });
+      item.speakBtn = speakBtn;
+      botItems.push(item);
+
+      mainRow.append(div, speakBtn);
+      wrap.appendChild(mainRow);
       if (!opts.noFeedback) appendFeedbackBar(wrap);
 
       row.append(av, wrap);
@@ -551,14 +606,16 @@
       try { sessionStorage.setItem(KIND_NOTE_KEY, '1'); } catch {}
     }
     logEl.scrollTop = logEl.scrollHeight;
-    return { row, div, wrap, av };
+    return item;
   }
 
   let typingRow = null;
   let typingTimer = null;
   function showTyping() {
     if (typingRow) return;
+    headAvatar.classList.remove('bc-speaking');
     headAvatar.src = mimoSrc('thinking');
+    headAvatar.dataset.state = 'thinking';
     typingRow = document.createElement('div');
     typingRow.className = 'bc-typing';
 
@@ -608,7 +665,10 @@
       typingRow.remove();
       typingRow = null;
     }
-    headAvatar.src = mimoSrc('happy');
+    if (!headAvatar.classList.contains('bc-speaking')) {
+      headAvatar.src = mimoSrc('happy');
+      headAvatar.dataset.state = 'happy';
+    }
   }
 
   if (!history.length) {
@@ -756,6 +816,7 @@
   async function submitMessage(rawMessage) {
     const message = String(rawMessage || '').trim();
     if (!message || sendBtn.disabled || isChatClosed) return;
+    stopSpeaking();
     if (!apiBase) {
       renderMsg('user', message);
       input.value = '';
@@ -835,8 +896,9 @@
         } else if (eventName === 'delta' && payload && typeof payload.t === 'string' && payload.t) {
           if (!streamMsg) {
             hideTyping();
-            streamMsg = renderMsg('bot', '', { noFeedback: true, avatarState: 'thinking' });
+            streamMsg = renderMsg('bot', '', { noFeedback: true, avatarState: 'thinking', streaming: true });
             headAvatar.src = mimoSrc('thinking');
+            headAvatar.dataset.state = 'thinking';
           }
           streamText += payload.t;
           setBotMessageBody(streamMsg.div, sanitizeClientText(streamText));
@@ -913,16 +975,28 @@
       if (data && typeof data.chatSession === 'string' && data.chatSession) {
         saveChatSession(data.chatSession);
       }
+      const msgLang = (data && typeof data.lang === 'string' && data.lang) ? data.lang : lang;
       if (data.closed || data.status === 'closed') {
         const closeReply = data.reply || tr('abuseClose');
         history.push({ role: 'assistant', content: closeReply });
         saveHistory();
         hideTyping();
         if (streamMsg) {
+          streamMsg.text = sanitizeClientText(closeReply);
+          streamMsg.lang = msgLang;
+          streamMsg.streaming = false;
           setBotMessageBody(streamMsg.div, closeReply);
-          if (streamMsg.av) streamMsg.av.src = mimoSrc('default');
+          if (streamMsg.av) {
+            streamMsg.baseAvatarState = 'default';
+            streamMsg.av.src = mimoSrc('default');
+            streamMsg.av.dataset.state = 'default';
+          }
+          if (streamMsg.speakBtn) {
+            streamMsg.speakBtn.disabled = false;
+            streamMsg.speakBtn.hidden = !resolveVoiceForLang(msgLang);
+          }
         } else {
-          renderMsg('bot', closeReply, { noFeedback: true, avatarState: 'default' });
+          renderMsg('bot', closeReply, { noFeedback: true, avatarState: 'default', lang: msgLang });
         }
         lockChatClosed();
         return;
@@ -937,16 +1011,30 @@
       history.push({ role: 'user', content: message }, { role: 'assistant', content: reply });
       saveHistory();
       hideTyping();
+      let replyItem = null;
       if (streamMsg) {
+        streamMsg.text = reply;
+        streamMsg.lang = msgLang;
+        streamMsg.streaming = false;
         setBotMessageBody(streamMsg.div, reply, { handoffOffer: Boolean(data.handoffOffer) });
         appendFeedbackBar(streamMsg.wrap);
-        if (streamMsg.av) streamMsg.av.src = mimoSrc('happy');
+        if (streamMsg.av) {
+          streamMsg.baseAvatarState = 'happy';
+          streamMsg.av.src = mimoSrc('happy');
+          streamMsg.av.dataset.state = 'happy';
+        }
+        if (streamMsg.speakBtn) {
+          streamMsg.speakBtn.disabled = false;
+          streamMsg.speakBtn.hidden = !resolveVoiceForLang(msgLang);
+        }
         logEl.scrollTop = logEl.scrollHeight;
+        replyItem = streamMsg;
         if (data.handoff) openHandoffCard(streamMsg.row);
       } else {
-        const botMsg = renderMsg('bot', reply, { handoffOffer: Boolean(data.handoffOffer), avatarState: 'happy' });
-        if (data.handoff) openHandoffCard(botMsg.row);
+        replyItem = renderMsg('bot', reply, { handoffOffer: Boolean(data.handoffOffer), avatarState: 'happy', lang: msgLang });
+        if (data.handoff) openHandoffCard(replyItem.row);
       }
+      if (ttsAutoEnabled && replyItem) speakItem(replyItem);
     } catch (err) {
       hideTyping();
       const isStreamTimeout = Boolean(
@@ -955,8 +1043,19 @@
       const fallbackText = tr(isStreamTimeout ? 'tryAgain' : 'offline');
       const partialClean = sanitizeClientText(streamText);
       if (streamMsg) {
-        setBotMessageBody(streamMsg.div, partialClean || fallbackText);
-        if (streamMsg.av) streamMsg.av.src = mimoSrc('default');
+        const recovered = partialClean || fallbackText;
+        streamMsg.text = recovered;
+        streamMsg.streaming = false;
+        setBotMessageBody(streamMsg.div, recovered);
+        if (streamMsg.av) {
+          streamMsg.baseAvatarState = 'default';
+          streamMsg.av.src = mimoSrc('default');
+          streamMsg.av.dataset.state = 'default';
+        }
+        if (streamMsg.speakBtn) {
+          streamMsg.speakBtn.disabled = false;
+          streamMsg.speakBtn.hidden = !resolveVoiceForLang(streamMsg.lang || lang);
+        }
       } else {
         renderMsg('bot', fallbackText);
       }
@@ -974,6 +1073,9 @@
   }
 
   const toggle = (open) => {
+    if (!open) {
+      stopSpeaking();
+    }
     const nextOpen = Boolean(open);
     applyOpenState(nextOpen);
     if (nextOpen) {
@@ -1090,8 +1192,6 @@
     }
   }
 
-  const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
-  const speechLocale = (code) => SPEECH_LOCALES[String(code || '').slice(0, 2)] || 'en-US';
   function chooseDictationMode(caps) {
     if (caps.SpeechRecognition || caps.webkitSpeechRecognition) return 'browser';
     if (caps.MediaRecorder && caps.mediaDevices) return 'whisper';
@@ -1165,6 +1265,7 @@
   }
 
   function startBrowser(Rec) {
+    stopSpeaking();
     let rec;
     try { rec = new Rec(); } catch { showMicNote('micFailed'); return; }
     rec.lang = speechLocale(lang);
@@ -1188,6 +1289,7 @@
   }
 
   async function startRecorder() {
+    stopSpeaking();
     if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function') {
       showMicNote('micFailed');
       return;
@@ -1225,6 +1327,7 @@
   }
 
   micBtn.addEventListener('click', () => {
+    stopSpeaking();
     if (listening) { stopDictation(); return; }
     micNote.hidden = true;
     const mode = chooseDictationMode({
@@ -1237,6 +1340,220 @@
     else if (mode === 'whisper') startRecorder();
     else showMicNote('micFailed');
   });
+
+  const TTS_STORE_KEY = 'bosphorly.mimo_tts';
+  function chooseTtsVoice(voices, langCode, localesMap) {
+    const map = localesMap || SPEECH_LOCALES;
+    if (!Array.isArray(voices) || !voices.length) return null;
+    const short = String(langCode || '').toLowerCase().replace(/_/g, '-').split('-')[0];
+    const target = map[short];
+    if (!target) return null;
+    const targetLower = target.toLowerCase();
+    const aliases = short === 'he' ? ['he', 'iw'] : (short === 'id' ? ['id', 'in'] : [short]);
+    const bases = new Set(aliases);
+    const norm = (v) => String(v && v.lang ? v.lang : '').toLowerCase().replace(/_/g, '-');
+    const exact = voices.filter((v) => norm(v) === targetLower);
+    if (exact.length) return exact.find((v) => v.localService) || exact[0];
+    const byBase = voices.filter((v) => {
+      const base = norm(v).split('-')[0];
+      return base && bases.has(base);
+    });
+    if (byBase.length) return byBase.find((v) => v.localService) || byBase[0];
+    return null;
+  }
+
+  function sanitizeSpeechText(raw) {
+    let s = String(raw || '');
+    s = s
+      .replace(/<\|channel>thought[\s\S]*?(?:<channel\|>|$)/gi, '')
+      .replace(/<\|channel>(?:thought)?|<channel\|>/gi, '')
+      .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
+      .replace(/\[\[\s*flags\s*:[\s\S]*?\]\]/gi, '');
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/gi, (_, label) => {
+      const lbl = String(label || '').trim();
+      if (!lbl || /^https?:\/\//i.test(lbl) || /^www\./i.test(lbl)) return '';
+      return lbl;
+    });
+    s = s.replace(/https?:\/\/[^\s<>\)\]"']+/gi, '');
+    s = s.replace(/\bwww\.[a-z0-9.-]+\.[a-z]{2,}(?:\/[^\s<>\)\]"']*)?/gi, '');
+    s = s.replace(/\bt\.me\/[A-Za-z0-9_]+(?:\/[^\s<>\)\]"']*)?/gi, '');
+    s = s.replace(/\bbosphorly\.com(?:\/[^\s<>\)\]"']*)?/gi, '');
+    s = s.replace(/\(\s*\)|\[\s*\]/g, '');
+    s = s.replace(/(?:[\u{1F1E6}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F|\uFE0E|\u200D\p{Extended_Pictographic}|\p{Emoji_Modifier})*|[\u200D\uFE0F\uFE0E\u20E3])/gu, ' ');
+    s = s.replace(/```[\s\S]*?```/g, ' ');
+    s = s.replace(/`([^`]*)`/g, '$1');
+    s = s.replace(/^[\t ]{0,3}#{1,6}[\t ]+/gm, '');
+    s = s.replace(/^[\t ]{0,3}(?:[-*•]+|\d+\.)[\t ]+/gm, '');
+    s = s.replace(/^[\t ]{0,3}>[\t ]?/gm, '');
+    s = s.replace(/\*\*([^*\n]+)\*\*/g, '$1');
+    s = s.replace(/__([^_\n]+)__/g, '$1');
+    s = s.replace(/\*([^*\n]+)\*/g, '$1');
+    s = s.replace(/_([^_\n]+)_/g, '$1');
+    s = s.replace(/[*_`~]+/g, '');
+    s = s.replace(/\s*[:\-–—]\s*(?=$|\n)/gm, '');
+    s = s.replace(/\s*\r?\n+\s*/g, '. ');
+    s = s.replace(/([.!?…])\s*\./g, '$1');
+    s = s.replace(/\s+([,.;!?…])/g, '$1');
+    s = s.replace(/[ \t]{2,}/g, ' ');
+    return s.replace(/^[\s.,;:!?-]+(?=\S)/, '').trim();
+  }
+
+  let ttsVoice = null;
+  let ttsActiveItem = null;
+  let ttsToken = 0;
+  let preSpeakHeadState = 'default';
+
+  function loadTtsPref() {
+    try { return localStorage.getItem(TTS_STORE_KEY) === '1'; } catch { return false; }
+  }
+  function saveTtsPref(on) {
+    try { localStorage.setItem(TTS_STORE_KEY, on ? '1' : '0'); } catch {}
+  }
+  function syncTtsToggleUi() {
+    ttsToggleBtn.setAttribute('aria-checked', ttsAutoEnabled ? 'true' : 'false');
+    ttsToggleIco.textContent = ttsAutoEnabled ? '🔊' : '🔇';
+  }
+  ttsAutoEnabled = loadTtsPref();
+  syncTtsToggleUi();
+
+  function clearSpeakingVisual() {
+    if (ttsActiveItem) {
+      const prev = ttsActiveItem;
+      ttsActiveItem = null;
+      if (prev.speakBtn) {
+        prev.speakBtn.classList.remove('is-speaking');
+        prev.speakBtn.setAttribute('aria-pressed', 'false');
+        prev.speakBtn.setAttribute('aria-label', tr('speakMsg'));
+        prev.speakBtn.textContent = '🔊';
+      }
+      if (prev.av) {
+        prev.av.classList.remove('bc-speaking');
+        const restoreState = prev.baseAvatarState || 'happy';
+        prev.av.src = mimoSrc(restoreState);
+        prev.av.dataset.state = restoreState;
+      }
+    }
+    headAvatar.classList.remove('bc-speaking');
+    const targetState = typingRow ? 'thinking' : (isChatClosed ? 'default' : (preSpeakHeadState || 'happy'));
+    headAvatar.src = mimoSrc(targetState);
+    headAvatar.dataset.state = targetState;
+  }
+
+  function setSpeakingVisual(item) {
+    if (!headAvatar.classList.contains('bc-speaking')) {
+      preSpeakHeadState = headAvatar.dataset.state || (typingRow ? 'thinking' : 'happy');
+    }
+    headAvatar.src = mimoSrc('speaking');
+    headAvatar.dataset.state = 'speaking';
+    headAvatar.classList.add('bc-speaking');
+    ttsActiveItem = item || null;
+    if (item && item.speakBtn) {
+      item.speakBtn.classList.add('is-speaking');
+      item.speakBtn.setAttribute('aria-pressed', 'true');
+      item.speakBtn.setAttribute('aria-label', tr('stopSpeak'));
+      item.speakBtn.textContent = '⏹️';
+    }
+    if (item && item.av) {
+      item.av.src = mimoSrc('speaking');
+      item.av.dataset.state = 'speaking';
+      item.av.classList.add('bc-speaking');
+    }
+  }
+
+  function stopSpeaking() {
+    ttsToken += 1;
+    clearSpeakingVisual();
+    try {
+      if (window.speechSynthesis && typeof window.speechSynthesis.cancel === 'function') {
+        window.speechSynthesis.cancel();
+      }
+    } catch {}
+  }
+
+  function resolveVoiceForLang(code) {
+    try {
+      const synth = window.speechSynthesis;
+      const Utter = window.SpeechSynthesisUtterance;
+      if (!synth || !Utter || typeof synth.getVoices !== 'function') return null;
+      return chooseTtsVoice(synth.getVoices(), code || lang);
+    } catch {
+      return null;
+    }
+  }
+
+  function refreshTtsAvailability() {
+    ttsVoice = resolveVoiceForLang(lang);
+    ttsAvailable = Boolean(ttsVoice);
+    ttsToggleBtn.hidden = !ttsAvailable;
+    for (const item of botItems) {
+      if (item && item.speakBtn) {
+        const hasVoice = Boolean(resolveVoiceForLang(item.lang || lang));
+        item.speakBtn.hidden = !hasVoice;
+      }
+    }
+    if (!ttsAvailable && ttsActiveItem && !resolveVoiceForLang(ttsActiveItem.lang || lang)) {
+      stopSpeaking();
+    }
+  }
+
+  function speakItem(item) {
+    if (!item || item.streaming) return;
+    const msgLang = item.lang || lang;
+    const voice = resolveVoiceForLang(msgLang);
+    if (!voice) {
+      if (item.speakBtn) item.speakBtn.hidden = true;
+      return;
+    }
+    const synth = window.speechSynthesis;
+    const Utter = window.SpeechSynthesisUtterance;
+    const clean = sanitizeSpeechText(item.text);
+    if (!clean || !synth || !Utter) return;
+    stopSpeaking();
+    const myToken = ttsToken;
+    const utter = new Utter(clean);
+    utter.lang = voice.lang || speechLocale(msgLang);
+    try { utter.voice = voice; } catch {}
+    utter.onend = () => {
+      if (ttsToken !== myToken) return;
+      clearSpeakingVisual();
+    };
+    utter.onerror = () => {
+      if (ttsToken !== myToken) return;
+      clearSpeakingVisual();
+    };
+    setSpeakingVisual(item);
+    try {
+      synth.speak(utter);
+    } catch {
+      if (ttsToken === myToken) clearSpeakingVisual();
+    }
+  }
+
+  function toggleSpeakItem(item) {
+    if (!item || item.streaming) return;
+    if (ttsActiveItem === item) {
+      stopSpeaking();
+      return;
+    }
+    speakItem(item);
+  }
+
+  ttsToggleBtn.addEventListener('click', () => {
+    ttsAutoEnabled = !ttsAutoEnabled;
+    saveTtsPref(ttsAutoEnabled);
+    syncTtsToggleUi();
+    if (!ttsAutoEnabled) stopSpeaking();
+  });
+
+  if (window.speechSynthesis && typeof window.speechSynthesis.addEventListener === 'function') {
+    window.speechSynthesis.addEventListener('voiceschanged', refreshTtsAvailability);
+  } else if (window.speechSynthesis && 'onvoiceschanged' in window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = refreshTtsAvailability;
+  }
+  refreshTtsAvailability();
+  window.addEventListener('pagehide', stopSpeaking);
+  window.addEventListener('beforeunload', stopSpeaking);
+
 
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', syncMobileViewport);
