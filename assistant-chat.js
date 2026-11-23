@@ -1590,7 +1590,7 @@
   }
 
   async function fetchPuckAudioBlob(clean, msgLang, myToken) {
-    if (!hasServerTtsForLang(msgLang)) return null;
+    if (!hasServerTtsForLang(msgLang) || !chatSession) return null;
     const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
     ttsFetchCtrl = ctrl;
     let timedOut = false;
@@ -1601,7 +1601,10 @@
     try {
       const res = await fetch(`${apiBase}/v1/tts`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          Authorization: `Bearer ${chatSession}`,
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ text: clean, lang: String(msgLang || lang || 'en').slice(0, 10) }),
         signal: ctrl ? ctrl.signal : undefined,
       });
@@ -1629,7 +1632,7 @@
     stopSpeaking();
     const myToken = ttsToken;
 
-    if (hasServerTtsForLang(msgLang)) {
+    if (hasServerTtsForLang(msgLang) && chatSession) {
       setSpeakingVisual(item);
       const blob = await fetchPuckAudioBlob(clean, msgLang, myToken);
       if (ttsToken !== myToken) return;

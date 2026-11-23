@@ -2,11 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import worker from '../backend/worker.js';
+import { createChatSessionToken } from '../backend/assistant.js';
 import {
   CHIRP_TTS_LOCALES,
   DEFAULT_TTS_MONTHLY_CHAR_CAP,
   TTS_MAX_CHARS,
+  TTS_PER_DAY_LIMIT,
   TTS_PER_MIN_LIMIT,
+  checkTtsActorRateLimit,
   handleTtsRoute,
   resolveChirpVoice,
   sanitizeSpeechText,
@@ -14,6 +17,7 @@ import {
 } from '../backend/tts.js';
 
 const ORIGIN = 'https://bosphorly.com';
+const CODE_PEPPER = 'test-tts-pepper';
 
 function createMockD1() {
   const usage = new Map();
@@ -70,10 +74,76 @@ function createMemoryCache() {
   };
 }
 
-test('wrangler.jsonc sets TTS_MONTHLY_CHAR_CAP to 800000', () => {
+async function authHeaders(ip, now = Date.now()) {
+  const token = await createChatSessionToken(CODE_PEPPER, ip, now);
+  return {
+    Origin: ORIGIN,
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    'CF-Connecting-IP': ip,
+  };
+}
+
+test('wrangler.jsonc sets TTS_MONTHLY_CHAR_CAP to 800000 and limits constants are configured', () => {
   const raw = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
   assert.match(raw, /"TTS_MONTHLY_CHAR_CAP"\s*:\s*"800000"/);
   assert.equal(DEFAULT_TTS_MONTHLY_CHAR_CAP, 800000);
+  assert.equal(TTS_PER_MIN_LIMIT, 10);
+  assert.equal(TTS_PER_DAY_LIMIT, 30);
+});
+
+test('POST /v1/tts rejects missing, forged, wrong-IP, or expired chatSession with 401 without calling Google or burning limits', async () => {
+  const db = createMockD1();
+  const env = {
+    PUBLIC_ORIGIN: ORIGIN,
+    CODE_PEPPER,
+    GOOGLE_TTS_API_KEY: 'key-123',
+    DB: db,
+    RATE_LIMITER: { limit: async () => ({ success: true }) },
+  };
+  let googleCalled = false;
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async () => { googleCalled = true; throw new Error('Google must not be called on 401'); };
+
+  try {
+    const ip = '203.0.113.10';
+    const wrongIpToken = await createChatSessionToken(CODE_PEPPER, '198.51.100.99');
+    const expiredToken = await createChatSessionToken(CODE_PEPPER, ip, Date.now() - 3600_000, 1000);
+
+    const invalidHeaders = [
+      { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+      { Origin: ORIGIN, Authorization: 'Bearer invalid.sig', 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+      { Origin: ORIGIN, Authorization: `Bearer ${wrongIpToken}`, 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+      { Origin: ORIGIN, Authorization: `Bearer ${expiredToken}`, 'Content-Type': 'application/json', 'CF-Connecting-IP': ip },
+    ];
+
+    for (const headers of invalidHeaders) {
+      const res = await worker.fetch(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ text: 'Merhaba', lang: 'tr' }),
+        }),
+        env
+      );
+      assert.equal(res.status, 401);
+      assert.deepEqual(await res.json(), { error: 'Chat session required' });
+    }
+    assert.equal(googleCalled, false);
+    assert.equal(db.limits.size, 0);
+
+    const optRes = await worker.fetch(
+      new Request('https://worker.example/v1/tts', {
+        method: 'OPTIONS',
+        headers: { Origin: ORIGIN },
+      }),
+      env
+    );
+    assert.equal(optRes.status, 204);
+    assert.match(optRes.headers.get('Access-Control-Allow-Headers') || '', /Authorization/i);
+  } finally {
+    globalThis.fetch = origFetch;
+  }
 });
 
 test('CHIRP_TTS_LOCALES maps all 20 supported languages and rejects fa/az/bs cleanly', async () => {
@@ -118,14 +188,17 @@ test('CHIRP_TTS_LOCALES maps all 20 supported languages and rejects fa/az/bs cle
   }
 
   let fetchCalled = false;
+  const now = Date.UTC(2026, 10, 22, 12, 0, 0);
+  const headers = await authHeaders('1.2.3.4', now);
   for (const lang of ['fa', 'az', 'bs']) {
     const req = new Request('https://api.example/v1/tts', {
       method: 'POST',
-      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': '1.2.3.4' },
+      headers,
       body: JSON.stringify({ text: 'Merhaba Boğaz turu', lang }),
     });
     const env = {
       PUBLIC_ORIGIN: ORIGIN,
+      CODE_PEPPER,
       GOOGLE_TTS_API_KEY: 'secret-key',
       DB: createMockD1(),
       RATE_LIMITER: { limit: async () => ({ success: true }) },
@@ -133,7 +206,7 @@ test('CHIRP_TTS_LOCALES maps all 20 supported languages and rejects fa/az/bs cle
     const origFetch = globalThis.fetch;
     globalThis.fetch = async () => { fetchCalled = true; throw new Error('Should not fetch'); };
     try {
-      const res = await handleTtsRoute(req, env);
+      const res = await handleTtsRoute(req, env, null, now);
       assert.equal(res.status, 200);
       assert.deepEqual(await res.json(), { fallback: true });
     } finally {
@@ -182,7 +255,6 @@ test('synthesizeTtsAudio sends API key strictly in X-Goog-Api-Key header (never 
       });
     };
 
-    // First call -> hits Google TTS, writes DB usage & 30d Cache API
     const r1 = await synthesizeTtsAudio({ env, text: secretPhrase, lang: 'tr', now, fetchImpl: mockFetch });
     assert.equal(r1.kind, 'audio');
     assert.equal(r1.cached, false);
@@ -205,7 +277,6 @@ test('synthesizeTtsAudio sends API key strictly in X-Goog-Api-Key header (never 
     const cachedEntry = [...cache.store.values()][0];
     assert.match(cachedEntry.headers.get('Cache-Control'), /max-age=2592000/);
 
-    // Second call -> served from Cache API, zero Google fetches, zero additional DB increments
     const r2 = await synthesizeTtsAudio({ env, text: secretPhrase, lang: 'tr', now, fetchImpl: mockFetch });
     assert.equal(r2.kind, 'audio');
     assert.equal(r2.cached, true);
@@ -213,7 +284,6 @@ test('synthesizeTtsAudio sends API key strictly in X-Goog-Api-Key header (never 
     assert.equal(fetchCalls.length, 1);
     assert.equal(db.usage.get('2026-11'), monthCharsAfterMiss);
 
-    // Privacy check: text must NEVER be logged
     assert.equal(logs.length, 2);
     for (const line of logs) {
       assert.ok(!line.includes('GizliPuckTestMetni12345'), 'TTS log must not contain spoken text');
@@ -232,23 +302,26 @@ test('monthly character cap blocks Google API call before spending and returns {
   const db = createMockD1();
   db.usage.set('2026-11', 799995);
   let googleCalled = false;
+  const now = Date.UTC(2026, 10, 22, 12, 0, 0);
   const env = {
     PUBLIC_ORIGIN: ORIGIN,
+    CODE_PEPPER,
     GOOGLE_TTS_API_KEY: 'test-key',
     TTS_MONTHLY_CHAR_CAP: '800000',
     DB: db,
     TTS_CACHE: createMemoryCache(),
     RATE_LIMITER: { limit: async () => ({ success: true }) },
   };
+  const headers = await authHeaders('10.0.0.1', now);
   const origFetch = globalThis.fetch;
   globalThis.fetch = async () => { googleCalled = true; throw new Error('Should not call Google when cap reached'); };
   try {
     const req = new Request('https://api.example/v1/tts', {
       method: 'POST',
-      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': '10.0.0.1' },
-      body: JSON.stringify({ text: 'Merhaba', lang: 'tr' }), // 7 chars -> 799995 + 7 > 800000
+      headers,
+      body: JSON.stringify({ text: 'Merhaba', lang: 'tr' }),
     });
-    const res = await handleTtsRoute(req, env, null, Date.UTC(2026, 10, 22, 12, 0, 0));
+    const res = await handleTtsRoute(req, env, null, now);
     assert.equal(res.status, 200);
     assert.deepEqual(await res.json(), { fallback: true });
     assert.equal(googleCalled, false);
@@ -260,8 +333,10 @@ test('monthly character cap blocks Google API call before spending and returns {
 
 test('missing secret or Google error returns 200 { fallback: true } and does not advance counter', async () => {
   const db = createMockD1();
+  const now = Date.UTC(2026, 10, 22, 12, 0, 0);
   const envNoKey = {
     PUBLIC_ORIGIN: ORIGIN,
+    CODE_PEPPER,
     DB: db,
     TTS_CACHE: createMemoryCache(),
     RATE_LIMITER: { limit: async () => ({ success: true }) },
@@ -269,16 +344,19 @@ test('missing secret or Google error returns 200 { fallback: true } and does not
   const rNoKey = await handleTtsRoute(
     new Request('https://api.example/v1/tts', {
       method: 'POST',
-      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': '10.0.0.2' },
+      headers: await authHeaders('10.0.0.2', now),
       body: JSON.stringify({ text: 'Hello', lang: 'en' }),
     }),
-    envNoKey
+    envNoKey,
+    null,
+    now
   );
   assert.equal(rNoKey.status, 200);
   assert.deepEqual(await rNoKey.json(), { fallback: true });
 
   const envErr = {
     PUBLIC_ORIGIN: ORIGIN,
+    CODE_PEPPER,
     GOOGLE_TTS_API_KEY: 'key',
     DB: db,
     TTS_CACHE: createMemoryCache(),
@@ -290,12 +368,12 @@ test('missing secret or Google error returns 200 { fallback: true } and does not
     const rErr = await handleTtsRoute(
       new Request('https://api.example/v1/tts', {
         method: 'POST',
-        headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': '10.0.0.3' },
+        headers: await authHeaders('10.0.0.3', now),
         body: JSON.stringify({ text: 'Hello', lang: 'en' }),
       }),
       envErr,
       null,
-      Date.UTC(2026, 10, 22, 12, 0, 0)
+      now
     );
     assert.equal(rErr.status, 200);
     assert.deepEqual(await rErr.json(), { fallback: true });
@@ -305,11 +383,12 @@ test('missing secret or Google error returns 200 { fallback: true } and does not
   }
 });
 
-test('POST /v1/tts enforces Origin/CORS, RATE_LIMITER, 10/min actor rate limit, and returns audio/mpeg headers on hit', async () => {
+test('POST /v1/tts enforces Origin/CORS, 10/min rate limit (429), and returns 200 { fallback: true } on 31st daily IP request', async () => {
   const db = createMockD1();
   const cache = createMemoryCache();
   const env = {
     PUBLIC_ORIGIN: ORIGIN,
+    CODE_PEPPER,
     GOOGLE_TTS_API_KEY: 'key-123',
     TTS_MONTHLY_CHAR_CAP: '800000',
     DB: db,
@@ -329,22 +408,23 @@ test('POST /v1/tts enforces Origin/CORS, RATE_LIMITER, 10/min actor rate limit, 
   assert.equal(badOriginRes.status, 403);
 
   const fakeMp3 = Buffer.from([0xff, 0xfb, 0x90, 0x64]);
+  let googleCalls = 0;
   const origFetch = globalThis.fetch;
-  globalThis.fetch = async () => new Response(JSON.stringify({ audioContent: fakeMp3.toString('base64') }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  globalThis.fetch = async () => {
+    googleCalls += 1;
+    return new Response(JSON.stringify({ audioContent: fakeMp3.toString('base64') }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  };
   try {
     // 10 allowed calls/min from same IP
+    const headersBurst = await authHeaders('198.51.100.7');
     for (let i = 0; i < TTS_PER_MIN_LIMIT; i += 1) {
       const okRes = await worker.fetch(
         new Request('https://worker.example/v1/tts', {
           method: 'POST',
-          headers: {
-            Origin: ORIGIN,
-            'Content-Type': 'application/json',
-            'CF-Connecting-IP': '198.51.100.7',
-          },
+          headers: headersBurst,
           body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
         }),
         env
@@ -360,17 +440,102 @@ test('POST /v1/tts enforces Origin/CORS, RATE_LIMITER, 10/min actor rate limit, 
     const limitedRes = await worker.fetch(
       new Request('https://worker.example/v1/tts', {
         method: 'POST',
-        headers: {
-          Origin: ORIGIN,
-          'Content-Type': 'application/json',
-          'CF-Connecting-IP': '198.51.100.7',
-        },
+        headers: headersBurst,
         body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
       }),
       env
     );
     assert.equal(limitedRes.status, 429);
+
+    // Daily limit (30/day): 30 requests across 3 minutes pass, 31st request returns 200 { fallback: true } without calling Google
+    const dayStart = Date.UTC(2026, 10, 22, 10, 0, 0);
+    const dayIp = '198.51.100.31';
+    const dayHeaders = await authHeaders(dayIp, dayStart);
+    const callsBeforeDayTest = googleCalls;
+    for (let i = 0; i < TTS_PER_DAY_LIMIT; i += 1) {
+      const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: dayHeaders,
+          body: JSON.stringify({ text: 'Daily quota test', lang: 'en' }),
+        }),
+        env,
+        null,
+        t
+      );
+      assert.equal(r.status, 200);
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+
+    const callsBefore31st = googleCalls;
+    assert.equal(callsBefore31st, callsBeforeDayTest + 1); // only first uncached request called Google
+    const res31 = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: dayHeaders,
+        body: JSON.stringify({ text: 'Uncached 31st request', lang: 'en' }),
+      }),
+      env,
+      null,
+      dayStart + 3 * 60_000
+    );
+    assert.equal(res31.status, 200);
+    assert.deepEqual(await res31.json(), { fallback: true });
+    assert.equal(googleCalls, callsBefore31st);
+
+    // Next UTC day resets daily quota
+    const nextDay = dayStart + 24 * 60 * 60_000;
+    const resNextDay = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: await authHeaders(dayIp, nextDay),
+        body: JSON.stringify({ text: 'Daily quota test', lang: 'en' }),
+      }),
+      env,
+      null,
+      nextDay
+    );
+    assert.equal(resNextDay.status, 200);
+    assert.equal(resNextDay.headers.get('Content-Type'), 'audio/mpeg');
   } finally {
     globalThis.fetch = origFetch;
   }
+});
+
+test('checkTtsActorRateLimit without env.DB tracks both minute and daily limits in memory and always returns boolean', async () => {
+  const baseTime = Date.UTC(2026, 10, 22, 8, 0, 0);
+
+  // Per-minute limit in memory path (env = {})
+  for (let i = 0; i < TTS_PER_MIN_LIMIT; i += 1) {
+    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-min', now: baseTime });
+    assert.strictEqual(ok, true);
+  }
+  const blockedMin = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-min', now: baseTime });
+  assert.strictEqual(blockedMin, false);
+
+  // Next minute resets min limit while preserving daily count
+  const okNextMin = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-min', now: baseTime + 60_000 });
+  assert.strictEqual(okNextMin, true);
+
+  // Daily limit (30/day) in memory path without DB
+  for (let i = 0; i < TTS_PER_DAY_LIMIT; i += 1) {
+    const t = baseTime + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-day', now: t });
+    assert.strictEqual(ok, true, `memory daily request ${i + 1} must be allowed`);
+  }
+  const blocked31 = await checkTtsActorRateLimit({
+    env: {},
+    actorKey: 'ip:mem-day',
+    now: baseTime + 3 * 60_000,
+  });
+  assert.strictEqual(blocked31, false, '31st daily request in memory path must return boolean false');
+
+  // Next UTC day resets in-memory daily counter
+  const nextDayAllowed = await checkTtsActorRateLimit({
+    env: {},
+    actorKey: 'ip:mem-day',
+    now: baseTime + 24 * 60 * 60_000,
+  });
+  assert.strictEqual(nextDayAllowed, true);
 });

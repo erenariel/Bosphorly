@@ -1072,8 +1072,10 @@ test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, a
   });
 
   const ttsBodies = [];
+  const ttsAuths = [];
   await page.route('**/v1/tts', async (route) => {
     ttsBodies.push(route.request().postDataJSON());
+    ttsAuths.push(route.request().headers().authorization || '');
     await route.fulfill({
       status: 200,
       headers: { 'Content-Type': 'audio/mpeg' },
@@ -1128,10 +1130,11 @@ test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, a
   expect(sbBox.width).toBeGreaterThanOrEqual(44);
   expect(sbBox.height).toBeGreaterThanOrEqual(44);
 
-  // Click 🔊 -> requests /v1/tts and plays Audio MP3, keeps speechSynthesis idle, switches Mimo avatar
+  // Click 🔊 -> requests /v1/tts with Bearer chatSession and plays Audio MP3, keeps speechSynthesis idle, switches Mimo avatar
   await speakBtn.click();
   await expect.poll(async () => page.evaluate(() => window.__audioMock.played)).toBe(1);
   expect(await page.evaluate(() => window.__ttsMock.spoken.length)).toBe(0);
+  expect(ttsAuths[0]).toBe('Bearer sess-tts');
   expect(ttsBodies[0].lang).toBe('tr');
   expect(ttsBodies[0].text).toContain('Sabah Boğaz Turu kişi başı 25 EUR');
   expect(ttsBodies[0].text).not.toMatch(/\*\*|🌊|⛵|https?:|bosphorly\.com|bağlantı|\[\[flags/i);
@@ -1232,7 +1235,13 @@ test('Mimo voice reply falls back silently to speechSynthesis (pitch=1.2, rate=1
   });
 
   let ttsMode = 'fallback';
+  const fbAuths = [];
   await page.route('**/v1/tts', async (route) => {
+    fbAuths.push(route.request().headers().authorization || '');
+    if (ttsMode === 'unauth') {
+      await route.fulfill({ status: 401, contentType: 'application/json', body: JSON.stringify({ error: 'Chat session required' }) });
+      return;
+    }
     if (ttsMode === 'fallback') {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ fallback: true }) });
       return;
@@ -1248,37 +1257,51 @@ test('Mimo voice reply falls back silently to speechSynthesis (pitch=1.2, rate=1
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ reply: 'Boğaz sabah turu 25 EUR 😊 Hadi çıkalım!', handoff: false, lang: 'tr' }),
+      body: JSON.stringify({ reply: 'Boğaz sabah turu 25 EUR 😊 Hadi çıkalım!', handoff: false, lang: 'tr', chatSession: 'sess-fb' }),
     });
   });
 
   await page.goto('/index.html?lang=tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
-  await panel.locator('.bc-speak-btn').first().click();
 
+  // Before any chatSession exists, clicking 🔊 skips /v1/tts and falls back silently to browser speechSynthesis
+  await panel.locator('.bc-speak-btn').first().click();
   await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(1);
+  expect(fbAuths.length).toBe(0);
   const s1 = await page.evaluate(() => window.__fbTts.spoken[0]);
   expect(s1.lang).toBe('tr-TR');
   expect(s1.pitch).toBeCloseTo(1.2, 2);
   expect(s1.rate).toBeCloseTo(1.05, 2);
 
-  // Sending a new message cancels browser speechSynthesis immediately
+  // Sending a new message cancels browser speechSynthesis immediately and receives chatSession
   const cancelsBeforeNewMsg = await page.evaluate(() => window.__fbTts.cancels);
   await panel.locator('.bc-input').fill('Yeni soru');
   await panel.locator('.bc-send').click();
   expect(await page.evaluate(() => window.__fbTts.cancels)).toBeGreaterThan(cancelsBeforeNewMsg);
   await expect(panel.locator('.bc-msg.bot').last()).toContainText('25 EUR');
 
+  // Now with chatSession, /v1/tts gets Bearer token; { fallback: true } falls back silently
+  await panel.locator('.bc-speak-btn').last().click();
+  await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(2);
+  expect(fbAuths[0]).toBe('Bearer sess-fb');
+
+  // Stop active playback UI, then verify 401 from /v1/tts also falls back silently to speechSynthesis
+  await panel.locator('.bc-speak-btn').last().click();
+  ttsMode = 'unauth';
+  await panel.locator('.bc-speak-btn').last().click();
+  await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(3);
+
   // When /v1/tts returns MP3 but Audio.play() is blocked, falls back silently without pageerror
+  await panel.locator('.bc-speak-btn').last().click();
   ttsMode = 'mp3';
   await page.evaluate(() => { window.__fbAudio.failPlay = true; });
   await panel.locator('.bc-speak-btn').last().click();
-  await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(2);
-  const s2 = await page.evaluate(() => window.__fbTts.spoken[1]);
-  expect(s2.text).toBe('Boğaz sabah turu 25 EUR. Hadi çıkalım!');
-  expect(s2.pitch).toBeCloseTo(1.2, 2);
-  expect(s2.rate).toBeCloseTo(1.05, 2);
+  await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(4);
+  const s4 = await page.evaluate(() => window.__fbTts.spoken[3]);
+  expect(s4.text).toBe('Boğaz sabah turu 25 EUR. Hadi çıkalım!');
+  expect(s4.pitch).toBeCloseTo(1.2, 2);
+  expect(s4.rate).toBeCloseTo(1.05, 2);
   expect(pageErrors).toEqual([]);
 });
 
@@ -1326,12 +1349,13 @@ test('Mimo voice reply waits for full SSE completion (never chunk-by-chunk), str
       if (String(url).includes('/v1/assistant')) {
         const stream = new ReadableStream({
           async start(c) {
+            c.enqueue(enc.encode('event: session\ndata: {"chatSession":"sess-sse"}\n\n'));
             c.enqueue(enc.encode('event: delta\ndata: {"t":"Gün batımı turu "}\n\n'));
             await new Promise((r) => setTimeout(r, 40));
             window.__spokenMidStream = window.__sseTts.spoken.length;
             c.enqueue(enc.encode('event: delta\ndata: {"t":"yaklaşık 20 EUR ⛵ "}\n\n'));
             await new Promise((r) => setTimeout(r, 40));
-            c.enqueue(enc.encode('event: done\ndata: {"reply":"Gün batımı turu yaklaşık 20 EUR ⛵ https://bosphorly.com/booking.html?service=bb-sunset&lang=tr\\n[[flags:abuse=0;handoff=0]]","handoff":false,"lang":"tr"}\n\n'));
+            c.enqueue(enc.encode('event: done\ndata: {"reply":"Gün batımı turu yaklaşık 20 EUR ⛵ https://bosphorly.com/booking.html?service=bb-sunset&lang=tr\\n[[flags:abuse=0;handoff=0]]","handoff":false,"lang":"tr","chatSession":"sess-sse"}\n\n'));
             c.close();
           },
         });
@@ -1393,7 +1417,7 @@ test('Mimo voice reply shows localized noVoiceDevice note when /v1/tts falls bac
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ reply: 'Transfer kostet 60 EUR.', handoff: false, lang: 'de' }),
+      body: JSON.stringify({ reply: 'Transfer kostet 60 EUR.', handoff: false, lang: 'de', chatSession: 'sess-de' }),
     });
   });
 

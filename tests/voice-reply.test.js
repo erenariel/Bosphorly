@@ -93,8 +93,10 @@ test('sanitizeSpeechText removes emojis, markdown syntax, and URLs without sayin
   assert.equal(sanitizeSpeechText('a'.repeat(700)).length, 600);
 });
 
-test('TTS tries POST /v1/tts with 4s timeout, falls back silently to speechSynthesis (pitch=1.2, rate=1.05), avoids innerHTML on notes, and stops on mic/send/close/pagehide', () => {
+test('TTS sends Bearer chatSession to POST /v1/tts with 4s timeout, falls back silently without session or on error to speechSynthesis (pitch=1.2, rate=1.05), avoids innerHTML on notes, and stops on mic/send/close/pagehide', () => {
   assert.match(chatJs, /fetch\(`\$\{apiBase\}\/v1\/tts`/);
+  assert.match(chatJs, /Authorization:\s*`Bearer \$\{chatSession\}`/);
+  assert.match(chatJs, /if \(!hasServerTtsForLang\(msgLang\) \|\| !chatSession\) return null;/);
   assert.match(chatJs, /TTS_FETCH_TIMEOUT_MS\s*=\s*4000/);
   assert.match(chatJs, /window\.Audio/);
   assert.match(chatJs, /utter\.pitch\s*=\s*1\.2/);

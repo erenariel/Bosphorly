@@ -1,8 +1,11 @@
 // Google Cloud Text-to-Speech ("Chirp 3 HD - Puck") proxy with per-actor rate limit,
 // D1 monthly character quota cap, Cloudflare Cache API caching, and silent fallback.
 
+import { chatSessionFromRequest, verifyChatSessionToken } from './assistant.js';
+
 const TTS_ENDPOINT = 'https://texttospeech.googleapis.com/v1/text:synthesize';
 export const TTS_PER_MIN_LIMIT = 10;
+export const TTS_PER_DAY_LIMIT = 30;
 export const TTS_MAX_CHARS = 600;
 export const DEFAULT_TTS_MONTHLY_CHAR_CAP = 800000;
 export const TTS_CACHE_TTL_SEC = 30 * 24 * 60 * 60; // 30 days
@@ -115,7 +118,7 @@ function base64ToUint8Array(b64) {
   return bytes;
 }
 
-async function checkTtsActorRateLimit({ env, actorKey, now = Date.now() }) {
+async function checkAndIncrementTtsLimits({ env, actorKey, now = Date.now() }) {
   const key = `tts:${actorKey}`;
   const minBucket = Math.floor(now / 60000);
   const dayBucket = new Date(now).toISOString().slice(0, 10);
@@ -132,13 +135,24 @@ async function checkTtsActorRateLimit({ env, actorKey, now = Date.now() }) {
        ON CONFLICT(key) DO UPDATE SET min_bucket = excluded.min_bucket, min_count = excluded.min_count,
          day_bucket = excluded.day_bucket, day_count = excluded.day_count`
     ).bind(key, minBucket, minCount, dayBucket, dayCount).run();
-    return minCount <= TTS_PER_MIN_LIMIT;
+    const minOk = minCount <= TTS_PER_MIN_LIMIT;
+    const dayOk = dayCount <= TTS_PER_DAY_LIMIT;
+    return { allowed: minOk && dayOk, minOk, dayOk };
   }
 
-  const prev = memoryTtsRateLimits.get(key) || { minBucket: 0, minCount: 0 };
+  if (memoryTtsRateLimits.size > 2000) memoryTtsRateLimits.clear();
+  const prev = memoryTtsRateLimits.get(key) || { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
   const minCount = prev.minBucket === minBucket ? prev.minCount + 1 : 1;
-  memoryTtsRateLimits.set(key, { minBucket, minCount });
-  return minCount <= TTS_PER_MIN_LIMIT;
+  const dayCount = prev.dayBucket === dayBucket ? prev.dayCount + 1 : 1;
+  memoryTtsRateLimits.set(key, { minBucket, minCount, dayBucket, dayCount });
+  const minOk = minCount <= TTS_PER_MIN_LIMIT;
+  const dayOk = dayCount <= TTS_PER_DAY_LIMIT;
+  return { allowed: minOk && dayOk, minOk, dayOk };
+}
+
+export async function checkTtsActorRateLimit({ env, actorKey, now = Date.now() }) {
+  const status = await checkAndIncrementTtsLimits({ env, actorKey, now });
+  return Boolean(status.allowed);
 }
 
 function getTtsMonthlyCap(env) {
@@ -354,8 +368,14 @@ export async function handleTtsRoute(request, env, _url, now = Date.now()) {
   if (request.method !== 'POST') return jsonResp({ error: 'Method not allowed' }, 405);
 
   const ip = (request.headers.get('CF-Connecting-IP') || 'unknown').trim() || 'unknown';
-  const allowed = await checkTtsActorRateLimit({ env, actorKey: `ip:${ip}`, now });
-  if (!allowed) {
+  const sessionOk = await verifyChatSessionToken(env?.CODE_PEPPER, chatSessionFromRequest(request), ip, now);
+  if (!sessionOk) return jsonResp({ error: 'Chat session required' }, 401);
+
+  const limit = await checkAndIncrementTtsLimits({ env, actorKey: `ip:${ip}`, now });
+  if (!limit.dayOk) {
+    return jsonResp({ fallback: true }, 200);
+  }
+  if (!limit.minOk) {
     return jsonResp({ error: 'Rate limited' }, 429);
   }
 
