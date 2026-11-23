@@ -196,10 +196,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       if ( pendingQuestion ) window.__bosphorlyInitialQuestion = pendingQuestion;
       const css = document.createElement('link');
       css.rel = 'stylesheet';
-      css.href = base + 'assistant-chat.css?v=20261123e';
+      css.href = base + 'assistant-chat.css?v=20261123f';
       document.head.appendChild(css);
       const js = document.createElement('script');
-      js.src = base + 'assistant-chat.js?v=20261123e';
+      js.src = base + 'assistant-chat.js?v=20261123f';
       js.defer = true;
       document.body.appendChild(js);
     };

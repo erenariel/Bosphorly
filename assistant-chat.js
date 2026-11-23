@@ -188,6 +188,9 @@
   const tgHeadHtml = tgUrl
     ? `<a class="bc-tg-link bc-tg-head" href="${tgUrl}" target="_blank" rel="noopener" aria-label="${tr('continueTg')}" title="${tr('continueTg')}"><img class="bc-tg-ico" src="${assetBase}assets/brand/telegram.svg" alt="" aria-hidden="true" width="22" height="22" loading="lazy" decoding="async"></a>`
     : '';
+  // Corporate WhatsApp Business line (quick questions only; requests stay on email). Keep in sync with social-links.js.
+  const WA_NUMBER = '16197386408';
+  const waHeadHtml = `<a class="bc-tg-link bc-wa-head" href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener" aria-label="WhatsApp +1 (619) 738-6408" title="WhatsApp +1 (619) 738-6408"><img class="bc-tg-ico" src="${assetBase}assets/brand/whatsapp.svg" alt="" aria-hidden="true" width="22" height="22" loading="lazy" decoding="async"></a>`;
   const mimoSrc = (stateName = 'default') => `${base}assets/brand/mimo/mimo-${stateName}.svg`;
 
   const panel = document.createElement('section');
@@ -198,7 +201,7 @@
   panel.innerHTML =
     `<div class="bc-head"><div class="bc-head-info"><img class="bc-head-avatar" src="${mimoSrc('default')}" data-state="default" alt="Mimo" width="36" height="36" loading="lazy" decoding="async">` +
     `<div class="bc-head-text"><div class="bc-title">${titleHtml}</div><div class="bc-sub">${tr('sub')}</div></div></div>` +
-    `<div class="bc-head-actions"><button type="button" class="bc-tts-toggle" role="switch" aria-checked="false" hidden><span class="bc-tts-ico" aria-hidden="true">🔇</span><span class="bc-tts-lbl"></span><span class="bc-tts-switch" aria-hidden="true"></span></button>${tgHeadHtml}<button type="button" class="bc-close" aria-label="${tr('close')}">×</button></div></div>` +
+    `<div class="bc-head-actions"><button type="button" class="bc-tts-toggle" role="switch" aria-checked="false" hidden><span class="bc-tts-ico" aria-hidden="true">🔇</span><span class="bc-tts-lbl"></span><span class="bc-tts-switch" aria-hidden="true"></span></button>${tgHeadHtml}${waHeadHtml}<button type="button" class="bc-close" aria-label="${tr('close')}">×</button></div></div>` +
     `<div class="bc-log" aria-live="polite"></div>` +
     `<div class="bc-quick">` +
     `<button type="button" class="bc-quick-btn" data-q="transfer">${tr('qTransfer')}</button>` +

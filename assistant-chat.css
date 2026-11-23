@@ -155,3 +155,5 @@
 @media (prefers-reduced-motion:reduce){
   .bc-head-avatar,.bc-bot-avatar,.bc-dot,.bc-speaking,.bc-tts-toggle,.bc-tts-switch,.bc-tts-switch::after{animation:none!important;transition:none!important}
 }
+/* Narrow phones: keep the voice switch (icon + toggle) but hide its text visually so the Mimo title stays readable next to Telegram and WhatsApp. The label stays available to screen readers. */
+@media (max-width:480px){.bc-tts-toggle .bc-tts-lbl{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}}

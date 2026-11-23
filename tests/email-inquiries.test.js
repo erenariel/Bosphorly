@@ -84,3 +84,11 @@ test('social links publish only the corporate WhatsApp Business line and Instagr
   // Requests still go by email: the social script never builds a prefilled request message.
   assert.doesNotMatch(social, /[?&]text=/);
 });
+
+test('Mimo panel links only the corporate WhatsApp Business line', () => {
+  const chat = read('assistant-chat.js');
+  assert.match(chat, /const WA_NUMBER = '16197386408';/);
+  assert.deepEqual([...chat.matchAll(/WA_NUMBER = '(\d+)'/g)].map(m => m[1]), ['16197386408']);
+  assert.doesNotMatch(chat, /wa\.me\/\d/);
+  assert.doesNotMatch(chat, /wa\.me[^`'"]*[?&]text=/);
+});
