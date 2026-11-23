@@ -50,6 +50,8 @@ export const GUEST_DAILY_LIMIT = 15;
 export const SILVER_DAILY_LIMIT = 60;
 export const GOLD_DAILY_LIMIT = 120;
 export const PLATINUM_DAILY_LIMIT = 120;
+// Site owner (OWNER_EMAILS): effectively unlimited per day; per-minute brake still applies.
+export const OWNER_DAILY_LIMIT = 1000000;
 export const IP_DAILY_LIMIT = 150;
 export const STT_PER_DAY_LIMIT = 40;
 const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
@@ -57,6 +59,8 @@ export const AI_TIMEOUT_MS = 9000;
 
 export function chatDailyLimitForTier(tier) {
   switch (String(tier || '').toLowerCase()) {
+    case 'owner':
+      return OWNER_DAILY_LIMIT;
     case 'platinum':
       return PLATINUM_DAILY_LIMIT;
     case 'gold':
@@ -1286,7 +1290,8 @@ export async function checkAndIncrementLimits({
   const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
     ? Number(ipDayLimit)
     : IP_DAILY_LIMIT;
-  const hasSeparateIpBrake = Boolean(ipActorKey && ipActorKey !== actorKey);
+  const isOwner = String(tier || '').toLowerCase() === 'owner';
+  const hasSeparateIpBrake = !isOwner && Boolean(ipActorKey && ipActorKey !== actorKey);
 
   if (hasSeparateIpBrake) {
     const ipPrev = await readCounter(env, ipActorKey);
@@ -1311,6 +1316,8 @@ export async function checkAndIncrementLimits({
     }
   }
 
+  // Owner testing neither consumes nor is blocked by the guests' shared daily budget.
+  if (isOwner) return { allowed: true };
   const globalLimit = Number(env && env.ASSISTANT_DAILY_LIMIT) || DEFAULT_GLOBAL_DAILY_LIMIT;
   const global = await incrementCounter(env, `global:${dayBucket}`, minBucket, dayBucket);
   if (global.dayCount > globalLimit) {
