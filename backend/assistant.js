@@ -54,11 +54,26 @@ export const PLATINUM_DAILY_LIMIT = 120;
 export const OWNER_DAILY_LIMIT = 1000000;
 export const IP_DAILY_LIMIT = 150;
 export const STT_PER_DAY_LIMIT = 40;
-const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
+const DEFAULT_GLOBAL_DAILY_LIMIT = 1000;
 export const AI_TIMEOUT_MS = 9000;
 
-export function chatDailyLimitForTier(tier) {
+export function normalizeTierName(tier) {
   switch (String(tier || '').toLowerCase()) {
+    case 'owner':
+      return 'owner';
+    case 'platinum':
+      return 'platinum';
+    case 'gold':
+      return 'gold';
+    case 'silver':
+      return 'silver';
+    default:
+      return 'guest';
+  }
+}
+
+export function chatDailyLimitForTier(tier) {
+  switch (normalizeTierName(tier)) {
     case 'owner':
       return OWNER_DAILY_LIMIT;
     case 'platinum':
@@ -1548,11 +1563,12 @@ async function runAiStreamWithRetry(env, messages, timeoutMs, temperature, extra
   throw new Error('AI timeout');
 }
 
-function logAssistantTiming({ channel, lang, path, streamed = false, totalMs, modelMs = null, ttftMs = null }) {
+function logAssistantTiming({ channel, lang, path, tier = null, streamed = false, totalMs, modelMs = null, ttftMs = null }) {
   try {
     const entry = {
       channel: channel || 'web',
       lang: lang || 'en',
+      ...(tier ? { tier: normalizeTierName(tier) } : {}),
       path: path || 'unknown',
       streamed: Boolean(streamed),
       totalMs: Math.max(0, Math.round(totalMs)),
@@ -1891,6 +1907,7 @@ async function prepareAssistantTurn({
   return {
     cleanMsg,
     lang,
+    tier: normalizeTierName(tier),
     effectiveActorKeys,
     effectiveChannel,
     guestName,
@@ -2068,6 +2085,7 @@ export async function runAssistant({
     logAssistantTiming({
       channel: prep.effectiveChannel,
       lang: prep.lang,
+      tier: normalizeTierName(tier),
       path: prep.path,
       streamed: false,
       totalMs: Date.now() - reqStart,
@@ -2102,6 +2120,7 @@ export async function runAssistant({
     logAssistantTiming({
       channel: prep.effectiveChannel,
       lang: prep.lang,
+      tier: normalizeTierName(tier),
       path: extraPath || (finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai'),
       streamed: false,
       totalMs: Date.now() - reqStart,
@@ -2114,6 +2133,7 @@ export async function runAssistant({
       logAssistantTiming({
         channel: prep.effectiveChannel,
         lang: prep.lang,
+        tier: normalizeTierName(tier),
         path: 'ai_gateway_429',
         streamed: false,
         totalMs: Date.now() - reqStart,
@@ -2130,6 +2150,7 @@ export async function runAssistant({
     logAssistantTiming({
       channel: prep.effectiveChannel,
       lang: prep.lang,
+      tier: normalizeTierName(tier),
       path: prep.aiIdentityAsked ? 'ai_identity_err' : 'ai_error',
       streamed: false,
       totalMs: Date.now() - reqStart,
@@ -2310,6 +2331,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         logAssistantTiming({
           channel: prep.effectiveChannel,
           lang: prep.lang,
+          tier: prep.tier,
           path: extraPath || (finalized.closed ? 'ai_abuse' : finalized.handoffOffer ? 'ai_handoff' : finalized.fallback ? 'ai_fallback' : 'ai'),
           streamed: true,
           totalMs: Date.now() - reqStart,
@@ -2470,7 +2492,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         const modelMs = Date.now() - aiStart;
         if (isAiGateway429Error(err)) {
           const tired = gatewayTiredResult(prep);
-          logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_gateway_429', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+          logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, tier: prep.tier, path: 'ai_gateway_429', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
           await observeResult(tired);
           sendEvent(controller, 'done', toHttpAssistantBody(tired, chatSession));
           controller.close();
@@ -2478,7 +2500,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         }
         if (prep.aiIdentityAsked) {
           const reply = `${prep.warnPrefix}${enforceMaxEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
-          logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+          logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, tier: prep.tier, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
           const identityRes = { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang };
           await observeResult(identityRes);
           sendEvent(controller, 'done', { ...identityRes, ...(chatSession ? { chatSession } : {}) });
@@ -2487,7 +2509,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         }
         logModelFailure(err, { aiIdentityAsked: false, durationMs: modelMs, parseFailed: false });
         const fallback = modelFallbackResult(prep);
-        logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+        logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, tier: prep.tier, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
         await observeResult(fallback);
         sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));
         controller.close();
@@ -2915,6 +2937,7 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
         logAssistantTiming({
           channel: prep.effectiveChannel,
           lang: prep.lang,
+          tier: resolvedTier,
           path: prep.path,
           streamed: false,
           totalMs: Date.now() - reqStart,
