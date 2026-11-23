@@ -28,7 +28,7 @@ test('mimo-speaking.svg exists under assets/brand/mimo/, uses #0a1753, and is < 
 
 test('voice reply UI labels exist for all 23 languages and default state is OFF with try/catch localStorage', () => {
   const ui = new Function(`return ${chatJs.match(/const UI = (\{[\s\S]*?\n  \});/)[1]}`)();
-  for (const key of ['voiceToggle', 'speakMsg', 'stopSpeak']) {
+  for (const key of ['voiceToggle', 'speakMsg', 'stopSpeak', 'noVoiceDevice']) {
     for (const lang of ALL_23) {
       assert.ok(ui[key][lang] && ui[key][lang].trim(), `${key}.${lang}`);
     }
@@ -36,6 +36,7 @@ test('voice reply UI labels exist for all 23 languages and default state is OFF 
   assert.equal(ui.voiceToggle.tr, 'Sesli cevap');
   assert.equal(ui.speakMsg.tr, 'Mesajı sesli oku');
   assert.equal(ui.stopSpeak.tr, 'Okumayı durdur');
+  assert.equal(ui.noVoiceDevice.tr, 'Bu dilde cihazında ses yok');
 
   assert.match(chatJs, /role="switch" aria-checked="false"/);
   assert.match(chatJs, /try \{ return localStorage\.getItem\(TTS_STORE_KEY\) === '1'; \} catch \{ return false; \}/);
@@ -70,7 +71,7 @@ test('voice selection uses SPEECH_LOCALES BCP-47 tags for all 23 langs and retur
   assert.equal(chooseTtsVoice([{ lang: 'in-ID', name: 'IdLegacy' }], 'id').name, 'IdLegacy');
 });
 
-test('sanitizeSpeechText removes emojis, markdown syntax, and URLs without saying "bağlantı" or "link"', () => {
+test('sanitizeSpeechText removes emojis, markdown syntax, and URLs without saying "bağlantı" or "link", separates emojis with ". ", and caps at 600 chars', () => {
   const { sanitizeSpeechText } = loadClientHelpers();
   const sample =
     '**Sabah Boğaz Turu** kişi başı yaklaşık *25 EUR* 🌊⛵💙🇹🇷\n' +
@@ -85,12 +86,27 @@ test('sanitizeSpeechText removes emojis, markdown syntax, and URLs without sayin
   assert.ok(clean.includes('Sabah Boğaz Turu kişi başı yaklaşık 25 EUR'));
   assert.ok(clean.includes('Telegram üzerinden'));
   assert.ok(clean.includes('BOS-123 referansı ile bilgi al.'));
+
+  assert.equal(sanitizeSpeechText('Merhaba 👋 Boğaz harika 😊✨ Tekne hazır'), 'Merhaba. Boğaz harika. Tekne hazır');
+  const cappedWords = sanitizeSpeechText('Tur '.repeat(250));
+  assert.ok(cappedWords.length > 500 && cappedWords.length <= 600);
+  assert.equal(sanitizeSpeechText('a'.repeat(700)).length, 600);
 });
 
-test('TTS uses client speechSynthesis only (no server TTS), meets 44px touch targets, reduced-motion, and stops on mic/send/close/pagehide', () => {
+test('TTS sends Bearer chatSession to POST /v1/tts with 4s timeout, falls back silently without session or on error to speechSynthesis (pitch=1.2, rate=1.05), avoids innerHTML on notes, and stops on mic/send/close/pagehide', () => {
+  assert.match(chatJs, /fetch\(`\$\{apiBase\}\/v1\/tts`/);
+  assert.match(chatJs, /Authorization:\s*`Bearer \$\{chatSession\}`/);
+  assert.match(chatJs, /if \(!hasServerTtsForLang\(msgLang\) \|\| !chatSession\) return null;/);
+  assert.match(chatJs, /TTS_FETCH_TIMEOUT_MS\s*=\s*4000/);
+  assert.match(chatJs, /window\.Audio/);
+  assert.match(chatJs, /utter\.pitch\s*=\s*1\.2/);
+  assert.match(chatJs, /utter\.rate\s*=\s*1\.05/);
   assert.match(chatJs, /window\.speechSynthesis/);
   assert.match(chatJs, /window\.SpeechSynthesisUtterance/);
-  assert.doesNotMatch(chatJs, /\/v1\/assistant\/(?:tts|speak|voice-reply)/i);
+
+  const showTtsNoteFn = chatJs.slice(chatJs.indexOf('function showTtsNote'), chatJs.indexOf('function loadTtsPref'));
+  assert.doesNotMatch(showTtsNoteFn, /innerHTML/);
+  assert.match(showTtsNoteFn, /ttsNoteEl\.textContent/);
 
   assert.match(chatCss, /\.bc-speak-btn\{[^}]*min-width:44px;min-height:44px/);
   assert.match(chatCss, /\.bc-tts-toggle\{[^}]*min-height:44px/);
@@ -107,17 +123,20 @@ test('TTS uses client speechSynthesis only (no server TTS), meets 44px touch tar
   assert.match(chatJs, /window\.addEventListener\('beforeunload', stopSpeaking\)/);
 });
 
-test('privacy.html TR and EN explain that browser speechSynthesis runs on-device and sends no audio/data to Bosphorly', () => {
-  assert.match(privacyHtml, /Sesli cevap okuma \(Tarayıcı SpeechSynthesis\)/);
-  assert.match(privacyHtml, /cihazınızdaki tarayıcının yerleşik konuşma sentezi \(<code>speechSynthesis<\/code>\)/);
-  assert.match(privacyHtml, /Bosphorly sunucusuna hiçbir ses veya veri gönderilmez/);
+test('privacy.html TR and EN disclose Google Cloud Text-to-Speech, reply-text-only transmission, 30d caching, and browser speechSynthesis fallback', () => {
+  assert.match(privacyHtml, /Sesli cevap okuma \(Google Cloud Text-to-Speech ve Tarayıcı SpeechSynthesis\)/);
+  assert.match(privacyHtml, /yalnızca asistanın kendi yanıt metni \(kullanıcı mesajları asla gönderilmez\)/);
+  assert.match(privacyHtml, /<b>Google Cloud Text-to-Speech<\/b>/);
+  assert.match(privacyHtml, /Cloudflare önbelleğinde en fazla 30 gün/);
+  assert.match(privacyHtml, /tarayıcının yerleşik konuşma sentezi \(<code>speechSynthesis<\/code>\) ile yerel olarak/);
 
-  assert.match(privacyHtml, /Voice replies \(Browser SpeechSynthesis\)/);
-  assert.match(privacyHtml, /browser’s built-in speech synthesis \(<code>speechSynthesis<\/code>\)/);
-  assert.match(privacyHtml, /no audio or speech data is sent to or stored on Bosphorly’s servers/);
+  assert.match(privacyHtml, /Voice replies \(Google Cloud Text-to-Speech &amp; Browser SpeechSynthesis\)/);
+  assert.match(privacyHtml, /only Mimo’s own reply text \(never your guest messages\)/);
+  assert.match(privacyHtml, /cached on Cloudflare for up to 30 days/);
+  assert.match(privacyHtml, /falls back locally to your browser’s built-in speech synthesis \(<code>speechSynthesis<\/code>\)/);
 });
 
-test('sanitizeSpeechText strips [[flags:...]] & thought blocks, chat avoids innerHTML on AI/user text, and config/api.js loads ?v=20261123d', () => {
+test('sanitizeSpeechText strips [[flags:...]] & thought blocks, chat avoids innerHTML on AI/user text, and config/api.js loads ?v=20261123e', () => {
   const { sanitizeSpeechText } = loadClientHelpers();
   const dirty = '<|channel>thought\nplan<channel|><think>secret</think>Akşam turu yaklaşık 20 EUR 💙 https://bosphorly.com/booking.html\n[[flags:abuse=0;handoff=0]]';
   const spoken = sanitizeSpeechText(dirty);
@@ -129,6 +148,6 @@ test('sanitizeSpeechText strips [[flags:...]] & thought blocks, chat avoids inne
   assert.match(setBodyFn, /textContent/);
 
   const apiJs = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
-  assert.match(apiJs, /assistant-chat\.css\?v=20261123d/);
-  assert.match(apiJs, /assistant-chat\.js\?v=20261123d/);
+  assert.match(apiJs, /assistant-chat\.css\?v=20261123e/);
+  assert.match(apiJs, /assistant-chat\.js\?v=20261123e/);
 });

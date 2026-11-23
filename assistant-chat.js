@@ -61,10 +61,13 @@
     humorEvening: { tr:'Boğaz’da gün batımı kızıllığı çıktı, martılar eve dönüyor!', en:'Sunset colors are warming up the Bosphorus while seagulls glide home!', ru:'Закат раскрасил Босфор, а чайки уже летят домой!', uk:'Захід сонця розфарбував Босфор, а чайки летять додому!', de:'Die Abendsonne taucht den Bosporus in Gold!', fr:'Le soleil se couche sur le Bosphore et les mouettes rentrent !', nl:'De avondzon kleurt de Bosporus goud!', ar:'شفق الغروب يلوّن البوسفور والنوارس تعود لأعشاشها!', he:'שקיעה יפה צובעת את הבוספורוס והשחפים חוזרים!', az:'Boğazda gün batımı qızarıb, qağayılar yuvaya dönür!', fa:'غروب بسفر طلایی شده و مرغ‌های دریایی برمی‌گردن!', es:'¡El atardecer tiñe de oro el Bósforo y las gaviotas vuelven a casa!', it:'Il tramonto accende il Bosforo e i gabbiani rientrano!', pt:'O pôr do sol tinge o Bósforo de dourado!', hr:'Zalazak sunca boji Bospor, a galebovi se vraćaju!', hu:'Aranyló naplemente borul a Boszporuszra!', bs:'Zalazak sunca boji Bosfor, a galebovi se vraćaju!', zh:'夕阳把博斯普鲁斯染成了金色，海鸥也回家啦！', ja:'ボスポラスが夕焼けに染まってカモメたちもお帰りの時間だよ！', ko:'보스포루스가 노을빛으로 물들고 갈매기들도 집으로 가네!', hi:'बोस्फोरस पर शाम का सुनहरा नज़ारा है और सीगल घर लौट रहे हैं!', bn:'বসফরাসে গোধূলির রঙ লেগেছে, সিগালরা ঘরে ফিরছে!', id:'Senja mewarnai Bosporus dan burung camar mulai pulang!' },
     voiceToggle: { tr:'Sesli cevap', en:'Voice reply', ru:'Голосовой ответ', uk:'Голосова відповідь', de:'Sprachantwort', fr:'Réponse vocale', nl:'Spraakantwoord', ar:'رد صوتي', he:'מענה קולי', az:'Səsli cavab', fa:'پاسخ صوتی', es:'Respuesta de voz', it:'Risposta vocale', pt:'Resposta por voz', hr:'Glasovni odgovor', hu:'Hangos válasz', bs:'Glasovni odgovor', zh:'语音朗读', ja:'音声読み上げ', ko:'음성 답변', hi:'वॉइस उत्तर', bn:'ভয়েস উত্তর', id:'Balasan suara' },
     speakMsg: { tr:'Mesajı sesli oku', en:'Read message aloud', ru:'Озвучить сообщение', uk:'Озвучити повідомлення', de:'Nachricht vorlesen', fr:'Lire le message à voix haute', nl:'Bericht voorlezen', ar:'قراءة الرسالة بصوت عالٍ', he:'הקראת ההודעה בקול', az:'Mesajı səslə oxu', fa:'خواندن پیام با صدا', es:'Leer mensaje en voz alta', it:'Leggi il messaggio ad alta voce', pt:'Ler mensagem em voz alta', hr:'Pročitaj poruku naglas', hu:'Üzenet felolvasása', bs:'Pročitaj poruku naglas', zh:'朗读消息', ja:'メッセージを読み上げる', ko:'메시지 소리 내어 읽기', hi:'संदेश ज़ोर से पढ़ें', bn:'বার্তাটি পড়ে শোনান', id:'Bacakan pesan' },
-    stopSpeak: { tr:'Okumayı durdur', en:'Stop reading', ru:'Остановить чтение', uk:'Зупинити читання', de:'Vorlesen stoppen', fr:'Arrêter la lecture', nl:'Stop met voorlezen', ar:'إيقاف القراءة', he:'עצירת ההקראה', az:'Oxumağı dayandır', fa:'توقف خواندن', es:'Detener lectura', it:'Interrompi lettura', pt:'Parar leitura', hr:'Zaustavi čitanje', hu:'Felolvasás leállítása', bs:'Zaustavi čitanje', zh:'停止朗读', ja:'読み上げを停止', ko:'읽기 중지', hi:'पढ़ना रोकें', bn:'পড়া বন্ধ করুন', id:'Hentikan pembacaan' }
+    stopSpeak: { tr:'Okumayı durdur', en:'Stop reading', ru:'Остановить чтение', uk:'Зупинити читання', de:'Vorlesen stoppen', fr:'Arrêter la lecture', nl:'Stop met voorlezen', ar:'إيقاف القراءة', he:'עצירת ההקראה', az:'Oxumağı dayandır', fa:'توقف خواندن', es:'Detener lectura', it:'Interrompi lettura', pt:'Parar leitura', hr:'Zaustavi čitanje', hu:'Felolvasás leállítása', bs:'Zaustavi čitanje', zh:'停止朗读', ja:'読み上げを停止', ko:'읽기 중지', hi:'पढ़ना रोकें', bn:'পড়া বন্ধ করুন', id:'Hentikan pembacaan' },
+    noVoiceDevice: { tr:'Bu dilde cihazında ses yok', en:'No voice available on your device for this language', ru:'На устройстве нет голоса для этого языка', uk:'На пристрої немає голосу для цієї мови', de:'Auf deinem Gerät ist keine Stimme für diese Sprache verfügbar', fr:'Aucune voix disponible sur votre appareil pour cette langue', nl:'Geen stem beschikbaar op je apparaat voor deze taal', ar:'لا يتوفر صوت لهذه اللغة على جهازك', he:'אין קול זמין במכשיר שלך לשפה זו', az:'Cihazınızda bu dil üçün səs yoxdur', fa:'صدایی برای این زبان روی دستگاه شما موجود نیست', es:'No hay una voz disponible en tu dispositivo para este idioma', it:'Nessuna voce disponibile sul tuo dispositivo per questa lingua', pt:'Nenhuma voz disponível no seu dispositivo para este idioma', hr:'Na tvom uređaju nema glasa za ovaj jezik', hu:'Nincs elérhető hang az eszközödön ehhez a nyelvhez', bs:'Na tvom uređaju nema glasa za ovaj jezik', zh:'你的设备上没有此语言的语音', ja:'この言語の音声はこの端末にありません', ko:'이 기기에서 이 언어의 음성을 사용할 수 없습니다', hi:'आपके डिवाइस पर इस भाषा के लिए कोई आवाज़ उपलब्ध नहीं है', bn:'এই ভাষার জন্য আপনার ডিভাইসে কোনো ভয়েস নেই', id:'Tidak ada suara di perangkatmu untuk bahasa ini' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
   const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
+  const PUCK_UNSUPPORTED = new Set(['fa', 'az', 'bs']);
+  const TTS_FETCH_TIMEOUT_MS = 4000;
   const speechLocale = (code) => SPEECH_LOCALES[String(code || '').slice(0, 2)] || 'en-US';
 
   const getIstanbulTimeSlot = () => {
@@ -204,7 +207,7 @@
     `<button type="button" class="bc-quick-btn" data-q="plan">${tr('qPlan')}</button>` +
     `</div>` +
     `<div class="bc-actions"><button type="button" class="bc-human-btn">💬 ${tr('human')}</button></div>` +
-    `<p class="bc-listen" hidden></p><p class="bc-mic-note" hidden></p>` +
+    `<p class="bc-listen" hidden></p><p class="bc-mic-note" hidden></p><p class="bc-tts-note" hidden></p>` +
     `<form class="bc-form"><button type="button" class="bc-quick-toggle" aria-label="${tr('quickToggle')}" title="${tr('quickToggle')}" aria-expanded="false" hidden>✨</button>` +
     `<input class="bc-input" type="text" maxlength="1000" placeholder="${tr('placeholder')}" autocomplete="off">` +
     `<button type="button" class="bc-mic" aria-label="${tr('mic')}" aria-pressed="false">🎤</button>` +
@@ -230,6 +233,7 @@
   const micBtn = panel.querySelector('.bc-mic');
   const listenEl = panel.querySelector('.bc-listen');
   const micNote = panel.querySelector('.bc-mic-note');
+  const ttsNoteEl = panel.querySelector('.bc-tts-note');
   listenEl.textContent = tr('listening');
   const botItems = [];
   let ttsAvailable = false;
@@ -581,7 +585,7 @@
       speakBtn.setAttribute('aria-label', tr('speakMsg'));
       speakBtn.setAttribute('aria-pressed', 'false');
       speakBtn.disabled = item.streaming;
-      speakBtn.hidden = !resolveVoiceForLang(item.lang);
+      speakBtn.hidden = !hasTtsForLang(item.lang);
       speakBtn.addEventListener('click', () => { toggleSpeakItem(item); });
       item.speakBtn = speakBtn;
       botItems.push(item);
@@ -993,7 +997,7 @@
           }
           if (streamMsg.speakBtn) {
             streamMsg.speakBtn.disabled = false;
-            streamMsg.speakBtn.hidden = !resolveVoiceForLang(msgLang);
+            streamMsg.speakBtn.hidden = !hasTtsForLang(msgLang);
           }
         } else {
           renderMsg('bot', closeReply, { noFeedback: true, avatarState: 'default', lang: msgLang });
@@ -1025,7 +1029,7 @@
         }
         if (streamMsg.speakBtn) {
           streamMsg.speakBtn.disabled = false;
-          streamMsg.speakBtn.hidden = !resolveVoiceForLang(msgLang);
+          streamMsg.speakBtn.hidden = !hasTtsForLang(msgLang);
         }
         logEl.scrollTop = logEl.scrollHeight;
         replyItem = streamMsg;
@@ -1054,7 +1058,7 @@
         }
         if (streamMsg.speakBtn) {
           streamMsg.speakBtn.disabled = false;
-          streamMsg.speakBtn.hidden = !resolveVoiceForLang(streamMsg.lang || lang);
+          streamMsg.speakBtn.hidden = !hasTtsForLang(streamMsg.lang || lang);
         }
       } else {
         renderMsg('bot', fallbackText);
@@ -1368,7 +1372,7 @@
       .replace(/<\|channel>thought[\s\S]*?(?:<channel\|>|$)/gi, '')
       .replace(/<\|channel>(?:thought)?|<channel\|>/gi, '')
       .replace(/<think>[\s\S]*?(?:<\/think>|$)/gi, '')
-      .replace(/\[\[\s*flags\s*:[\s\S]*?\]\]/gi, '');
+      .replace(/\[\[\s*flags\s*:[\s\S]*?(?:\]\]|$)/gi, '');
     s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/gi, (_, label) => {
       const lbl = String(label || '').trim();
       if (!lbl || /^https?:\/\//i.test(lbl) || /^www\./i.test(lbl)) return '';
@@ -1379,7 +1383,14 @@
     s = s.replace(/\bt\.me\/[A-Za-z0-9_]+(?:\/[^\s<>\)\]"']*)?/gi, '');
     s = s.replace(/\bbosphorly\.com(?:\/[^\s<>\)\]"']*)?/gi, '');
     s = s.replace(/\(\s*\)|\[\s*\]/g, '');
-    s = s.replace(/(?:[\u{1F1E6}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F|\uFE0E|\u200D\p{Extended_Pictographic}|\p{Emoji_Modifier})*|[\u200D\uFE0F\uFE0E\u20E3])/gu, ' ');
+    s = s.replace(
+      /(?:[\u{1F1E6}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F|\uFE0E|\u200D\p{Extended_Pictographic}|\p{Emoji_Modifier})*|[\u200D\uFE0F\uFE0E\u20E3])+(?=\s*[\p{L}\p{N}])/gu,
+      '. '
+    );
+    s = s.replace(
+      /(?:[\u{1F1E6}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F|\uFE0E|\u200D\p{Extended_Pictographic}|\p{Emoji_Modifier})*|[\u200D\uFE0F\uFE0E\u20E3])+/gu,
+      ' '
+    );
     s = s.replace(/```[\s\S]*?```/g, ' ');
     s = s.replace(/`([^`]*)`/g, '$1');
     s = s.replace(/^[\t ]{0,3}#{1,6}[\t ]+/gm, '');
@@ -1391,17 +1402,36 @@
     s = s.replace(/_([^_\n]+)_/g, '$1');
     s = s.replace(/[*_`~]+/g, '');
     s = s.replace(/\s*[:\-–—]\s*(?=$|\n)/gm, '');
+    s = s.replace(/([.!?…,:;])\s*\.+/g, '$1');
     s = s.replace(/\s*\r?\n+\s*/g, '. ');
     s = s.replace(/([.!?…])\s*\./g, '$1');
     s = s.replace(/\s+([,.;!?…])/g, '$1');
     s = s.replace(/[ \t]{2,}/g, ' ');
-    return s.replace(/^[\s.,;:!?-]+(?=\S)/, '').trim();
+    s = s.replace(/^[\s.,;:!?-]+(?=\S)/, '').trim();
+    if (s.length > 600) s = s.slice(0, 600).trim();
+    return s;
   }
 
   let ttsVoice = null;
   let ttsActiveItem = null;
   let ttsToken = 0;
   let preSpeakHeadState = 'default';
+  let activeAudio = null;
+  let activeAudioUrl = '';
+  let ttsFetchCtrl = null;
+  let ttsNoteTimer = null;
+
+  function hideTtsNote() {
+    if (ttsNoteTimer) { clearTimeout(ttsNoteTimer); ttsNoteTimer = null; }
+    if (ttsNoteEl) { ttsNoteEl.hidden = true; ttsNoteEl.textContent = ''; }
+  }
+  function showTtsNote(key) {
+    if (!ttsNoteEl) return;
+    if (ttsNoteTimer) { clearTimeout(ttsNoteTimer); ttsNoteTimer = null; }
+    ttsNoteEl.textContent = tr(key);
+    ttsNoteEl.hidden = false;
+    ttsNoteTimer = setTimeout(() => { hideTtsNote(); }, 4500);
+  }
 
   function loadTtsPref() {
     try { return localStorage.getItem(TTS_STORE_KEY) === '1'; } catch { return false; }
@@ -1462,6 +1492,25 @@
 
   function stopSpeaking() {
     ttsToken += 1;
+    if (ttsFetchCtrl) {
+      try { ttsFetchCtrl.abort(); } catch {}
+      ttsFetchCtrl = null;
+    }
+    if (activeAudio) {
+      const audio = activeAudio;
+      activeAudio = null;
+      try {
+        audio.onended = null;
+        audio.onerror = null;
+        audio.pause();
+        audio.removeAttribute('src');
+        if (typeof audio.load === 'function') audio.load();
+      } catch {}
+    }
+    if (activeAudioUrl) {
+      try { URL.revokeObjectURL(activeAudioUrl); } catch {}
+      activeAudioUrl = '';
+    }
     clearSpeakingVisual();
     try {
       if (window.speechSynthesis && typeof window.speechSynthesis.cancel === 'function') {
@@ -1481,37 +1530,46 @@
     }
   }
 
+  function hasServerTtsForLang(code) {
+    if (!apiBase) return false;
+    const short = String(code || lang || '').trim().toLowerCase().replace(/_/g, '-').split('-')[0];
+    return Boolean(short && SPEECH_LOCALES[short] && !PUCK_UNSUPPORTED.has(short));
+  }
+
+  function hasTtsForLang(code) {
+    return hasServerTtsForLang(code) || Boolean(resolveVoiceForLang(code));
+  }
+
   function refreshTtsAvailability() {
     ttsVoice = resolveVoiceForLang(lang);
-    ttsAvailable = Boolean(ttsVoice);
+    ttsAvailable = hasTtsForLang(lang);
     ttsToggleBtn.hidden = !ttsAvailable;
     for (const item of botItems) {
       if (item && item.speakBtn) {
-        const hasVoice = Boolean(resolveVoiceForLang(item.lang || lang));
-        item.speakBtn.hidden = !hasVoice;
+        item.speakBtn.hidden = !hasTtsForLang(item.lang || lang);
       }
     }
-    if (!ttsAvailable && ttsActiveItem && !resolveVoiceForLang(ttsActiveItem.lang || lang)) {
+    if (!ttsAvailable && ttsActiveItem && !hasTtsForLang(ttsActiveItem.lang || lang)) {
       stopSpeaking();
     }
   }
 
-  function speakItem(item) {
-    if (!item || item.streaming) return;
-    const msgLang = item.lang || lang;
+  function speakWithBrowser(clean, msgLang, item, myToken) {
+    if (ttsToken !== myToken) return true;
     const voice = resolveVoiceForLang(msgLang);
-    if (!voice) {
-      if (item.speakBtn) item.speakBtn.hidden = true;
-      return;
-    }
     const synth = window.speechSynthesis;
     const Utter = window.SpeechSynthesisUtterance;
-    const clean = sanitizeSpeechText(item.text);
-    if (!clean || !synth || !Utter) return;
-    stopSpeaking();
-    const myToken = ttsToken;
+    if (!voice || !synth || !Utter) {
+      if (ttsToken === myToken) {
+        clearSpeakingVisual();
+        showTtsNote('noVoiceDevice');
+      }
+      return false;
+    }
     const utter = new Utter(clean);
     utter.lang = voice.lang || speechLocale(msgLang);
+    utter.pitch = 1.2;
+    utter.rate = 1.05;
     try { utter.voice = voice; } catch {}
     utter.onend = () => {
       if (ttsToken !== myToken) return;
@@ -1524,9 +1582,104 @@
     setSpeakingVisual(item);
     try {
       synth.speak(utter);
+      return true;
     } catch {
       if (ttsToken === myToken) clearSpeakingVisual();
+      return false;
     }
+  }
+
+  async function fetchPuckAudioBlob(clean, msgLang, myToken) {
+    if (!hasServerTtsForLang(msgLang) || !chatSession) return null;
+    const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+    ttsFetchCtrl = ctrl;
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      if (ctrl) ctrl.abort();
+    }, TTS_FETCH_TIMEOUT_MS);
+    try {
+      const res = await fetch(`${apiBase}/v1/tts`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${chatSession}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: clean, lang: String(msgLang || lang || 'en').slice(0, 10) }),
+        signal: ctrl ? ctrl.signal : undefined,
+      });
+      if (ttsToken !== myToken || timedOut) return null;
+      if (!res || !res.ok) return null;
+      const ctype = String((res.headers && res.headers.get('Content-Type')) || '').toLowerCase();
+      if (!ctype.includes('audio/')) return null;
+      const blob = await res.blob();
+      if (ttsToken !== myToken || !blob || !blob.size) return null;
+      return blob;
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timer);
+      if (ttsFetchCtrl === ctrl) ttsFetchCtrl = null;
+    }
+  }
+
+  async function speakItem(item) {
+    if (!item || item.streaming) return;
+    const msgLang = item.lang || lang;
+    const clean = sanitizeSpeechText(item.text);
+    if (!clean) return;
+    hideTtsNote();
+    stopSpeaking();
+    const myToken = ttsToken;
+
+    if (hasServerTtsForLang(msgLang) && chatSession) {
+      setSpeakingVisual(item);
+      const blob = await fetchPuckAudioBlob(clean, msgLang, myToken);
+      if (ttsToken !== myToken) return;
+      if (blob && typeof window.Audio === 'function' && typeof URL.createObjectURL === 'function') {
+        const objUrl = URL.createObjectURL(blob);
+        const audio = new window.Audio(objUrl);
+        activeAudio = audio;
+        activeAudioUrl = objUrl;
+        const cleanupAudio = () => {
+          if (activeAudio === audio) activeAudio = null;
+          if (activeAudioUrl === objUrl) {
+            activeAudioUrl = '';
+          }
+          try { URL.revokeObjectURL(objUrl); } catch {}
+        };
+        audio.onended = () => {
+          cleanupAudio();
+          if (ttsToken !== myToken) return;
+          clearSpeakingVisual();
+        };
+        audio.onerror = () => {
+          cleanupAudio();
+          if (ttsToken !== myToken) return;
+          speakWithBrowser(clean, msgLang, item, myToken);
+        };
+        try {
+          const playPromise = audio.play();
+          if (playPromise && typeof playPromise.then === 'function') {
+            await playPromise;
+          }
+          if (ttsToken !== myToken) {
+            try { audio.pause(); } catch {}
+            cleanupAudio();
+            return;
+          }
+          return;
+        } catch {
+          cleanupAudio();
+          if (ttsToken !== myToken) return;
+          speakWithBrowser(clean, msgLang, item, myToken);
+          return;
+        }
+      }
+    }
+
+    if (ttsToken !== myToken) return;
+    speakWithBrowser(clean, msgLang, item, myToken);
   }
 
   function toggleSpeakItem(item) {
@@ -1542,6 +1695,7 @@
     ttsAutoEnabled = !ttsAutoEnabled;
     saveTtsPref(ttsAutoEnabled);
     syncTtsToggleUi();
+    hideTtsNote();
     if (!ttsAutoEnabled) stopSpeaking();
   });
 
