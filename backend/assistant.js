@@ -16,8 +16,8 @@ import {
 import {
   formatNoteForPrompt,
   loadConsentedNote,
-  memberIdFromBearer,
   observeAssistantTurn,
+  resolveMemberAuth,
   runInBackground,
   recordVoteMetric,
 } from './mimo.js';
@@ -45,10 +45,28 @@ export const SUPPORTED_LANGS = new Set([
   'hu', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'zh'
 ]);
 
-const PER_MIN_LIMIT = 6;
-const PER_DAY_LIMIT = 40;
+export const PER_MIN_LIMIT = 6;
+export const GUEST_DAILY_LIMIT = 15;
+export const SILVER_DAILY_LIMIT = 60;
+export const GOLD_DAILY_LIMIT = 120;
+export const PLATINUM_DAILY_LIMIT = 120;
+export const IP_DAILY_LIMIT = 150;
+export const STT_PER_DAY_LIMIT = 40;
 const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
 export const AI_TIMEOUT_MS = 9000;
+
+export function chatDailyLimitForTier(tier) {
+  switch (String(tier || '').toLowerCase()) {
+    case 'platinum':
+      return PLATINUM_DAILY_LIMIT;
+    case 'gold':
+      return GOLD_DAILY_LIMIT;
+    case 'silver':
+      return SILVER_DAILY_LIMIT;
+    default:
+      return GUEST_DAILY_LIMIT;
+  }
+}
 
 const memoryLimits = new Map();
 const memoryFeedback = new Map();
@@ -1144,6 +1162,18 @@ function isPreviousHandoffOffer(history) {
   return false;
 }
 
+async function readCounter(env, key) {
+  if (env && env.DB) {
+    const row = await env.DB.prepare(
+      'SELECT min_bucket, min_count, day_bucket, day_count FROM assistant_rate_limits WHERE key = ?'
+    ).bind(key).first();
+    return row
+      ? { minBucket: Number(row.min_bucket || 0), minCount: Number(row.min_count || 0), dayBucket: String(row.day_bucket || ''), dayCount: Number(row.day_count || 0) }
+      : { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
+  }
+  return memoryLimits.get(key) || { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
+}
+
 async function incrementCounter(env, key, minBucket, dayBucket) {
   if (env && env.DB) {
     const row = await env.DB.prepare(
@@ -1166,7 +1196,32 @@ async function incrementCounter(env, key, minBucket, dayBucket) {
   return { minCount, dayCount };
 }
 
-export async function checkAndIncrementLimits({ env, actorKey, now = Date.now(), perHour = 0, skipGlobal = false }) {
+async function incrementDayOnly(env, key, dayBucket) {
+  const prev = await readCounter(env, key);
+  const dayCount = prev.dayBucket === dayBucket ? prev.dayCount + 1 : 1;
+  if (env && env.DB) {
+    await env.DB.prepare(
+      `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(key) DO UPDATE SET day_bucket = excluded.day_bucket, day_count = excluded.day_count`
+    ).bind(key, prev.minBucket, prev.minCount, dayBucket, dayCount).run();
+    return { minCount: prev.minCount, dayCount };
+  }
+  memoryLimits.set(key, { minBucket: prev.minBucket, minCount: prev.minCount, dayBucket, dayCount });
+  return { minCount: prev.minCount, dayCount };
+}
+
+export async function checkAndIncrementLimits({
+  env,
+  actorKey,
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = IP_DAILY_LIMIT,
+  now = Date.now(),
+  perHour = 0,
+  skipGlobal = false,
+}) {
   const minBucket = Math.floor(now / 60000);
   const dayBucket = new Date(now).toISOString().slice(0, 10);
   if (perHour > 0) {
@@ -1175,10 +1230,34 @@ export async function checkAndIncrementLimits({ env, actorKey, now = Date.now(),
     if (hour.minCount > perHour) return { allowed: false, reason: 'actor_limit' };
     if (skipGlobal) return { allowed: true };
   }
+  const effectiveDayLimit = Number.isFinite(Number(dayLimit)) && Number(dayLimit) > 0
+    ? Number(dayLimit)
+    : chatDailyLimitForTier(tier);
+  const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
+    ? Number(ipDayLimit)
+    : IP_DAILY_LIMIT;
+  const hasSeparateIpBrake = Boolean(ipActorKey && ipActorKey !== actorKey);
+
+  if (hasSeparateIpBrake) {
+    const ipPrev = await readCounter(env, ipActorKey);
+    const ipDayCount = ipPrev.dayBucket === dayBucket ? ipPrev.dayCount : 0;
+    if (ipDayCount >= effectiveIpDayLimit) {
+      return { allowed: false, reason: 'ip_limit' };
+    }
+  }
+
   const actor = await incrementCounter(env, actorKey, minBucket, dayBucket);
-  if (actor.minCount > PER_MIN_LIMIT || actor.dayCount > PER_DAY_LIMIT) {
+  if (actor.minCount > PER_MIN_LIMIT || actor.dayCount > effectiveDayLimit) {
     return { allowed: false, reason: 'actor_limit' };
   }
+
+  if (hasSeparateIpBrake) {
+    const ipNext = await incrementDayOnly(env, ipActorKey, dayBucket);
+    if (ipNext.dayCount > effectiveIpDayLimit) {
+      return { allowed: false, reason: 'ip_limit' };
+    }
+  }
+
   const globalLimit = Number(env && env.ASSISTANT_DAILY_LIMIT) || DEFAULT_GLOBAL_DAILY_LIMIT;
   const global = await incrementCounter(env, `global:${dayBucket}`, minBucket, dayBucket);
   if (global.dayCount > globalLimit) {
@@ -1564,6 +1643,10 @@ async function prepareAssistantTurn({
   alreadyGreeted = false,
   env = {},
   actorKey = 'anon',
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = IP_DAILY_LIMIT,
   actorKeys = null,
   channel = '',
   now = Date.now(),
@@ -1613,7 +1696,15 @@ async function prepareAssistantTurn({
     };
   }
 
-  const limitRes = await checkAndIncrementLimits({ env, actorKey, now });
+  const limitRes = await checkAndIncrementLimits({
+    env,
+    actorKey,
+    ipActorKey,
+    tier,
+    dayLimit,
+    ipDayLimit,
+    now,
+  });
   if (!limitRes.allowed) {
     if (limitRes.reason === 'global_limit') {
       return {
@@ -1877,6 +1968,10 @@ export async function runAssistant({
   alreadyGreeted = false,
   env = {},
   actorKey = 'anon',
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = IP_DAILY_LIMIT,
   actorKeys = null,
   channel = '',
   now = Date.now(),
@@ -1885,7 +1980,22 @@ export async function runAssistant({
 }) {
   const reqStart = Date.now();
   const prep = await prepareAssistantTurn({
-    message, pageLang, telegramLang, history, alreadyGreeted, env, actorKey, actorKeys, channel, now, aiTimeoutMs, memberNote,
+    message,
+    pageLang,
+    telegramLang,
+    history,
+    alreadyGreeted,
+    env,
+    actorKey,
+    ipActorKey,
+    tier,
+    dayLimit,
+    ipDayLimit,
+    actorKeys,
+    channel,
+    now,
+    aiTimeoutMs,
+    memberNote,
   });
   if (prep.earlyResult) {
     logAssistantTiming({
@@ -2526,7 +2636,7 @@ export async function transcribeAudio({ env, audioBytes, lang = 'en', actorKey =
   const size = audioBytes ? audioBytes.byteLength : 0;
   if (!size) return { ok: false, status: 400, error: 'empty' };
   if (size > maxBytes) return { ok: false, status: 413, error: 'too_large' };
-  const limitRes = await checkAndIncrementLimits({ env, actorKey: `stt:${actorKey}`, now });
+  const limitRes = await checkAndIncrementLimits({ env, actorKey: `stt:${actorKey}`, dayLimit: STT_PER_DAY_LIMIT, now });
   if (!limitRes.allowed) return { ok: false, status: 429, error: 'rate_limit' };
   if (!env || !env.AI || typeof env.AI.run !== 'function') return { ok: false, status: 503, error: 'unavailable' };
   const locale = speechLocale(lang);
@@ -2705,22 +2815,29 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
     const rawAiTimeout = Number(env && env.ASSISTANT_AI_TIMEOUT_MS);
     const aiTimeoutMs = Number.isFinite(rawAiTimeout) && rawAiTimeout > 0 ? rawAiTimeout : AI_TIMEOUT_MS;
 
+    const reqStart = Date.now();
+    const now = Date.now();
+    let memberAuth = null;
     let memberNote = null;
     try {
-      const memberId = await memberIdFromBearer(env, request.headers.get('Authorization') || '');
-      if (memberId) memberNote = await loadConsentedNote(env, memberId);
+      memberAuth = await resolveMemberAuth(env, request.headers.get('Authorization') || '', now);
+      if (memberAuth) memberNote = await loadConsentedNote(env, memberAuth.memberId, now);
     } catch { /* a bad member token must not block the guest chat */ }
 
+    const ipActorKey = `ip:${ip}`;
+    const limitActorKey = memberAuth ? `member:${memberAuth.memberId}` : ipActorKey;
+    const resolvedTier = memberAuth ? memberAuth.tier : 'guest';
+
     if (wantsStream) {
-      const reqStart = Date.now();
-      const now = Date.now();
       const prep = await prepareAssistantTurn({
         message: body.message,
         pageLang,
         history: hist,
         alreadyGreeted,
         env,
-        actorKey: `ip:${ip}`,
+        actorKey: limitActorKey,
+        ipActorKey,
+        tier: resolvedTier,
         actorKeys,
         channel: 'web',
         now,
@@ -2736,7 +2853,7 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
           totalMs: Date.now() - reqStart,
         });
         try {
-          await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result: prep.earlyResult }));
+          await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result: prep.earlyResult, now }));
         } catch { /* stats are best-effort */ }
         if (!prep.earlyResult.ok) {
           const errBody = { error: prep.earlyResult.reply, handoff: true, lang: prep.earlyResult.lang };
@@ -2766,14 +2883,17 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
       history: hist,
       alreadyGreeted,
       env,
-      actorKey: `ip:${ip}`,
+      actorKey: limitActorKey,
+      ipActorKey,
+      tier: resolvedTier,
       actorKeys,
       channel: 'web',
+      now,
       aiTimeoutMs,
       memberNote,
     });
     try {
-      await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result }));
+      await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result, now }));
     } catch { /* stats are best-effort */ }
     if (!result.ok) {
       const errBody = { error: result.reply, handoff: true, lang: result.lang };

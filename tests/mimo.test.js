@@ -3,7 +3,18 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from '../backend/worker.js';
-import { checkAndIncrementLimits, createChatSessionToken, runAssistant } from '../backend/assistant.js';
+import {
+  GUEST_DAILY_LIMIT,
+  GOLD_DAILY_LIMIT,
+  IP_DAILY_LIMIT,
+  PER_MIN_LIMIT,
+  PLATINUM_DAILY_LIMIT,
+  SILVER_DAILY_LIMIT,
+  chatDailyLimitForTier,
+  checkAndIncrementLimits,
+  createChatSessionToken,
+  runAssistant,
+} from '../backend/assistant.js';
 import { computeTelegramWebhookSecret, handleTelegramWebhook } from '../backend/telegram.js';
 import {
   MIMO_YEAR_MS,
@@ -11,12 +22,14 @@ import {
   applySummary,
   buildWeeklyReportText,
   classifyTopic,
+  computeMemberTier,
   containsSensitive,
   forgetNote,
   isoWeekKey,
   observeAssistantTurn,
   previousIsoWeekKey,
   recordVoteMetric,
+  resolveMemberAuth,
   sanitizeNote,
   sendWeeklyMimoReport,
   setConsent,
@@ -483,4 +496,245 @@ test('applySummary does not call the model when consent is off', async () => {
   await setConsent(env, 'mem2', true);
   await forgetNote(env, 'mem2');
   assert.equal(env.DB.raw.prepare('SELECT note_json FROM mimo_profile WHERE member_id=?').get('mem2').note_json, '');
+});
+
+async function seedMember(env, {
+  id,
+  email,
+  token,
+  fulfilled = 0,
+  cancelled = 0,
+  expiresAt = '2099-01-01 00:00:00',
+}) {
+  const ref = `REF${id.replace(/[^a-z0-9]/gi, '').toUpperCase().padEnd(6, 'X').slice(0, 6)}`;
+  env.DB.raw.prepare(
+    `INSERT INTO members (id, email, lang, referral_code) VALUES (?, ?, 'tr', ?)`
+  ).run(id, email, ref);
+  const dig = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
+  const hash = [...new Uint8Array(dig)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  env.DB.raw.prepare(
+    `INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?, ?, ?)`
+  ).run(hash, id, expiresAt);
+  for (let i = 0; i < fulfilled; i += 1) {
+    env.DB.raw.prepare(
+      `INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, state) VALUES (?, ?, 'tour-1', '2026-12-01', 2, 'fulfilled')`
+    ).run(`${id}-f-${i}`.padEnd(8, '0'), id);
+  }
+  for (let i = 0; i < cancelled; i += 1) {
+    env.DB.raw.prepare(
+      `INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, state) VALUES (?, ?, 'tour-1', '2026-12-01', 2, 'cancelled')`
+    ).run(`${id}-c-${i}`.padEnd(8, '0'), id);
+  }
+}
+
+test('member tier chat limits (15 guest / 60 silver / 120 gold & platinum / 150 IP brake / 6 min) and D1 counter keys', async () => {
+  assert.equal(PER_MIN_LIMIT, 6);
+  assert.equal(GUEST_DAILY_LIMIT, 15);
+  assert.equal(SILVER_DAILY_LIMIT, 60);
+  assert.equal(GOLD_DAILY_LIMIT, 120);
+  assert.equal(PLATINUM_DAILY_LIMIT, 120);
+  assert.equal(IP_DAILY_LIMIT, 150);
+  assert.deepEqual([0, 1, 2, 4, 5, 8].map(computeMemberTier), ['silver', 'silver', 'gold', 'gold', 'platinum', 'platinum']);
+  assert.deepEqual(
+    ['guest', 'silver', 'gold', 'platinum', 'fake'].map(chatDailyLimitForTier),
+    [15, 60, 120, 120, 15]
+  );
+
+  const env = setup();
+  env.ASSISTANT_DAILY_LIMIT = '5000';
+  env.AI = {
+    run: async () => ({ response: JSON.stringify({ abuse: false, handoff: false, reply: 'Kısa bir yanıt.' }) }),
+  };
+
+  await seedMember(env, { id: 'sil1', email: 'sil1@example.com', token: 'tok-sil-1', fulfilled: 1, cancelled: 6 });
+  await seedMember(env, { id: 'gld1', email: 'gld1@example.com', token: 'tok-gld-1', fulfilled: 2, cancelled: 3 });
+  await seedMember(env, { id: 'plt1', email: 'plt1@example.com', token: 'tok-plt-1', fulfilled: 5 });
+  await seedMember(env, { id: 'plt2', email: 'plt2@example.com', token: 'tok-plt-2', fulfilled: 7 });
+  await seedMember(env, { id: 'exp1', email: 'exp1@example.com', token: 'tok-exp-1', fulfilled: 9, expiresAt: '2020-01-01 00:00:00' });
+
+  const t0 = Date.UTC(2026, 10, 22, 9, 0, 0);
+  assert.equal((await resolveMemberAuth(env, 'Bearer tok-sil-1', t0)).tier, 'silver');
+  assert.equal((await resolveMemberAuth(env, 'Bearer tok-gld-1', t0)).tier, 'gold');
+  assert.equal((await resolveMemberAuth(env, 'Bearer tok-plt-1', t0)).tier, 'platinum');
+  assert.equal(await resolveMemberAuth(env, 'Bearer tok-exp-1', t0), null);
+  assert.equal(await resolveMemberAuth(env, 'Bearer forged', t0), null);
+
+  // Guest: 15/day via ip:<ip>
+  for (let i = 0; i < GUEST_DAILY_LIMIT; i += 1) {
+    const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+    const r = await runAssistant({ message: 'Bogaz turu fiyat?', pageLang: 'tr', env, actorKey: 'ip:g1', ipActorKey: 'ip:g1', tier: 'guest', now: t });
+    assert.equal(r.ok, true, `guest message ${i + 1}`);
+  }
+  const g16 = await runAssistant({ message: 'Bogaz turu fiyat?', pageLang: 'tr', env, actorKey: 'ip:g1', ipActorKey: 'ip:g1', tier: 'guest', now: t0 + 3 * 60_000 });
+  assert.equal(g16.ok, false);
+  assert.equal(g16.status, 429);
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='ip:g1'`).get().day_count, 16);
+
+  // Silver: 60/day (cancelled requests do not bump tier)
+  for (let i = 0; i < SILVER_DAILY_LIMIT; i += 1) {
+    const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+    const r = await runAssistant({ message: 'Bogaz turu?', pageLang: 'tr', env, actorKey: 'member:sil1', ipActorKey: 'ip:s1', tier: 'silver', now: t });
+    assert.equal(r.ok, true, `silver ${i + 1}`);
+  }
+  const sil61 = await runAssistant({ message: 'Bogaz turu?', pageLang: 'tr', env, actorKey: 'member:sil1', ipActorKey: 'ip:s1', tier: 'silver', now: t0 + 11 * 60_000 });
+  assert.equal(sil61.ok, false);
+  assert.equal(sil61.status, 429);
+
+  // Gold (2 fulfilled): 120/day
+  for (let i = 0; i < GOLD_DAILY_LIMIT; i += 1) {
+    const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+    const r = await runAssistant({ message: 'Bogaz turu?', pageLang: 'tr', env, actorKey: 'member:gld1', ipActorKey: 'ip:gld', tier: 'gold', now: t });
+    assert.equal(r.ok, true, `gold ${i + 1}`);
+  }
+  const gld121 = await runAssistant({ message: 'Bogaz turu?', pageLang: 'tr', env, actorKey: 'member:gld1', ipActorKey: 'ip:gld', tier: 'gold', now: t0 + 21 * 60_000 });
+  assert.equal(gld121.ok, false);
+  assert.equal(gld121.status, 429);
+
+  // Platinum (5 fulfilled): 120/day + 6/min burst enforcement
+  for (let i = 0; i < PER_MIN_LIMIT; i += 1) {
+    const r = await runAssistant({ message: 'Hamam?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:plt-burst', tier: 'platinum', now: t0 });
+    assert.equal(r.ok, true);
+  }
+  const burst7 = await runAssistant({ message: 'Hamam?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:plt-burst', tier: 'platinum', now: t0 });
+  assert.equal(burst7.ok, false);
+  assert.equal(burst7.status, 429);
+
+  // Reset burst counters and verify Platinum reaches 120 on one day across minutes and fails 121st
+  env.DB.raw.prepare(`DELETE FROM assistant_rate_limits WHERE key IN ('member:plt1', 'ip:plt-burst')`).run();
+  for (let i = 0; i < PLATINUM_DAILY_LIMIT; i += 1) {
+    const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+    const r = await runAssistant({ message: 'Hamam?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:plt-full', tier: 'platinum', now: t });
+    assert.equal(r.ok, true, `plat ${i + 1}`);
+  }
+  const plt121 = await runAssistant({ message: 'Hamam?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:plt-full', tier: 'platinum', now: t0 + 21 * 60_000 });
+  assert.equal(plt121.ok, false);
+  assert.equal(plt121.status, 429);
+
+  // IP brake (150/day across members on shared Wi-Fi IP): plt1 already did 120 on another IP,
+  // reset plt1 + seed 2 Platinum members sharing 'ip:hotel-wifi' -> 80 + 70 = 150 ok, 151st fails without consuming plt2
+  env.DB.raw.prepare(`DELETE FROM assistant_rate_limits WHERE key = 'member:plt1'`).run();
+  for (let i = 0; i < 80; i += 1) {
+    const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+    const r = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t });
+    assert.equal(r.ok, true);
+  }
+  for (let i = 0; i < 70; i += 1) {
+    const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+    const r = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t });
+    assert.equal(r.ok, true);
+  }
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='ip:hotel-wifi'`).get().day_count, 150);
+  const brake151 = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t0 + 13 * 60_000 });
+  assert.equal(brake151.ok, false);
+  assert.equal(brake151.status, 429);
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:plt2'`).get().day_count, 70);
+  const plt2Clean = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:clean-ip', tier: 'platinum', now: t0 + 13 * 60_000 });
+  assert.equal(plt2Clean.ok, true);
+});
+
+test('HTTP /v1/assistant enforces tier quotas, ignores spoofed tier, and uses memberNote + observeAssistantTurn on SSE stream', async () => {
+  const env = setup();
+  env.TURNSTILE_SECRET = 'turnstile';
+  env.ASSISTANT_DAILY_LIMIT = '1000';
+  const ip = '203.0.113.88';
+  const chatSession = await createChatSessionToken(env.CODE_PEPPER, ip);
+  await seedMember(env, { id: 'silhttp', email: 'silhttp@example.com', token: 'tok-sil-http', fulfilled: 0, cancelled: 4 });
+  await setConsent(env, 'silhttp', true);
+  env.DB.raw.prepare(`UPDATE mimo_profile SET note_json = ? WHERE member_id = ?`)
+    .run(JSON.stringify(goodNote), 'silhttp');
+
+  const today = new Date().toISOString().slice(0, 10);
+  env.DB.raw.prepare(
+    `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count) VALUES (?, 0, 0, ?, 14)`
+  ).run(`ip:${ip}`, today);
+
+  const promptsSeen = [];
+  env.AI = {
+    run: async (_model, opts) => {
+      promptsSeen.push(JSON.stringify(opts.messages));
+      const enc = new TextEncoder();
+      return new ReadableStream({
+        start(controller) {
+          controller.enqueue(enc.encode(`data: ${JSON.stringify({ response: 'Boğaz akşam turu için seni bekliyoruz 💙 [[flags:abuse=0;handoff=0]]' })}\n\n`));
+          controller.enqueue(enc.encode('data: [DONE]\n\n'));
+          controller.close();
+        },
+      });
+    },
+  };
+
+  // 15th guest request passes, 16th with spoofed body tier + invalid bearer token fails 429 as guest
+  const waits1 = [];
+  const res15 = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu önerir misin?', lang: 'tr', stream: true, chatSession }),
+  }), env, { waitUntil(p) { waits1.push(p); } });
+  assert.equal(res15.status, 200);
+  const sse15 = await res15.text();
+  assert.match(sse15, /event: delta/);
+  assert.match(sse15, /event: done/);
+
+  const guest16 = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer forged-tok', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu?', lang: 'tr', tier: 'platinum', memberTier: 'platinum', chatSession }),
+  }), env);
+  assert.equal(guest16.status, 429);
+
+  // Valid Silver member on SAME IP (even though ip:<ip> is 16 < 150) succeeds on SSE stream with memberNote + observeAssistantTurn!
+  const waits2 = [];
+  const memberRes = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: {
+      Origin: ORIGIN,
+      'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
+      Authorization: 'Bearer tok-sil-http',
+      'CF-Connecting-IP': ip,
+    },
+    body: JSON.stringify({ message: 'Boğaz turu önerir misin?', lang: 'tr', stream: true, chatSession, tier: 'platinum' }),
+  }), env, { waitUntil(p) { waits2.push(p); } });
+  assert.equal(memberRes.status, 200);
+  const memberSse = await memberRes.text();
+  assert.match(memberSse, /event: done/);
+  await Promise.all([...waits1, ...waits2]);
+
+  assert.match(promptsSeen[promptsSeen.length - 1], /Boğaz akşam turu/);
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:silhttp'`).get().day_count, 1);
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key=?`).get(`ip:${ip}`).day_count, 17);
+  assert.ok(env.DB.raw.prepare(`SELECT count FROM assistant_metrics WHERE metric='topic:bogaz'`).get().count >= 2);
+});
+
+test('Telegram webhook applies linked D1 member tier under member:<id> while keeping tg:<chatId> abuse block', async () => {
+  const env = setup();
+  env.ASSISTANT_DAILY_LIMIT = '1000';
+  env.TELEGRAM_BOT_TOKEN = 'bot';
+  const secret = await computeTelegramWebhookSecret(env.CODE_PEPPER);
+  await seedMember(env, { id: 'tggold', email: 'tggold@example.com', token: 'tok-tg-gold', fulfilled: 2 });
+  env.DB.raw.exec(`INSERT INTO member_identities (provider, subject, member_id) VALUES ('telegram', '707', 'tggold')`);
+  env.AI = {
+    run: async () => ({ response: JSON.stringify({ abuse: false, handoff: false, reply: 'Boğazda görüşürüz.' }) }),
+  };
+
+  const prev = globalThis.fetch;
+  const sent = [];
+  globalThis.fetch = async (_u, init) => { sent.push(JSON.parse(init.body)); return Response.json({ ok: true }); };
+  try {
+    const t0 = Date.UTC(2026, 10, 22, 11, 0, 0);
+    for (let i = 0; i < 20; i += 1) {
+      const now = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
+      const r = await handleTelegramWebhook(new Request('https://api.example/v1/telegram/webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': secret },
+        body: JSON.stringify({ message: { chat: { id: 707, type: 'private' }, from: { id: 707, language_code: 'tr' }, text: 'Bogaz turu?' } }),
+      }), env, now);
+      assert.equal(r.status, 200);
+      assert.notEqual(sent[sent.length - 1].text.includes('limit'), true);
+    }
+    assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:tggold'`).get().day_count, 20);
+    assert.equal(env.DB.raw.prepare(`SELECT key FROM assistant_rate_limits WHERE key='tg:707'`).get() ?? null, null);
+  } finally {
+    globalThis.fetch = prev;
+  }
 });

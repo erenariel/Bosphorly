@@ -2,13 +2,32 @@
 // D1 monthly character quota cap, Cloudflare Cache API caching, and silent fallback.
 
 import { chatSessionFromRequest, verifyChatSessionToken } from './assistant.js';
+import { resolveMemberAuth } from './mimo.js';
 
 const TTS_ENDPOINT = 'https://texttospeech.googleapis.com/v1/text:synthesize';
 export const TTS_PER_MIN_LIMIT = 10;
 export const TTS_PER_DAY_LIMIT = 30;
+export const TTS_GUEST_DAILY_LIMIT = 5;
+export const TTS_SILVER_DAILY_LIMIT = 30;
+export const TTS_GOLD_DAILY_LIMIT = 60;
+export const TTS_PLATINUM_DAILY_LIMIT = 60;
+export const TTS_IP_DAILY_LIMIT = 60;
 export const TTS_MAX_CHARS = 600;
 export const DEFAULT_TTS_MONTHLY_CHAR_CAP = 800000;
 export const TTS_CACHE_TTL_SEC = 30 * 24 * 60 * 60; // 30 days
+
+export function ttsDailyLimitForTier(tier) {
+  switch (String(tier || '').toLowerCase()) {
+    case 'platinum':
+      return TTS_PLATINUM_DAILY_LIMIT;
+    case 'gold':
+      return TTS_GOLD_DAILY_LIMIT;
+    case 'silver':
+      return TTS_SILVER_DAILY_LIMIT;
+    default:
+      return TTS_GUEST_DAILY_LIMIT;
+  }
+}
 
 export const CHIRP_TTS_LOCALES = Object.freeze({
   tr: 'tr-TR',
@@ -118,11 +137,24 @@ function base64ToUint8Array(b64) {
   return bytes;
 }
 
-async function checkAndIncrementTtsLimits({ env, actorKey, now = Date.now() }) {
-  const key = `tts:${actorKey}`;
-  const minBucket = Math.floor(now / 60000);
-  const dayBucket = new Date(now).toISOString().slice(0, 10);
+async function readTtsCounter(env, key) {
+  if (env && env.DB) {
+    const row = await env.DB.prepare(
+      'SELECT min_bucket, min_count, day_bucket, day_count FROM assistant_rate_limits WHERE key = ?'
+    ).bind(key).first();
+    return row
+      ? {
+          minBucket: Number(row.min_bucket || 0),
+          minCount: Number(row.min_count || 0),
+          dayBucket: String(row.day_bucket || ''),
+          dayCount: Number(row.day_count || 0),
+        }
+      : { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
+  }
+  return memoryTtsRateLimits.get(key) || { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
+}
 
+async function incrementTtsCounter(env, key, minBucket, dayBucket) {
   if (env && env.DB) {
     const row = await env.DB.prepare(
       'SELECT min_bucket, min_count, day_bucket, day_count FROM assistant_rate_limits WHERE key = ?'
@@ -135,23 +167,88 @@ async function checkAndIncrementTtsLimits({ env, actorKey, now = Date.now() }) {
        ON CONFLICT(key) DO UPDATE SET min_bucket = excluded.min_bucket, min_count = excluded.min_count,
          day_bucket = excluded.day_bucket, day_count = excluded.day_count`
     ).bind(key, minBucket, minCount, dayBucket, dayCount).run();
-    const minOk = minCount <= TTS_PER_MIN_LIMIT;
-    const dayOk = dayCount <= TTS_PER_DAY_LIMIT;
-    return { allowed: minOk && dayOk, minOk, dayOk };
+    return { minCount, dayCount };
   }
-
   if (memoryTtsRateLimits.size > 2000) memoryTtsRateLimits.clear();
   const prev = memoryTtsRateLimits.get(key) || { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
   const minCount = prev.minBucket === minBucket ? prev.minCount + 1 : 1;
   const dayCount = prev.dayBucket === dayBucket ? prev.dayCount + 1 : 1;
   memoryTtsRateLimits.set(key, { minBucket, minCount, dayBucket, dayCount });
-  const minOk = minCount <= TTS_PER_MIN_LIMIT;
-  const dayOk = dayCount <= TTS_PER_DAY_LIMIT;
-  return { allowed: minOk && dayOk, minOk, dayOk };
+  return { minCount, dayCount };
 }
 
-export async function checkTtsActorRateLimit({ env, actorKey, now = Date.now() }) {
-  const status = await checkAndIncrementTtsLimits({ env, actorKey, now });
+async function incrementTtsDayOnly(env, key, dayBucket) {
+  const prev = await readTtsCounter(env, key);
+  const dayCount = prev.dayBucket === dayBucket ? prev.dayCount + 1 : 1;
+  if (env && env.DB) {
+    await env.DB.prepare(
+      `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(key) DO UPDATE SET day_bucket = excluded.day_bucket, day_count = excluded.day_count`
+    ).bind(key, prev.minBucket, prev.minCount, dayBucket, dayCount).run();
+    return { minCount: prev.minCount, dayCount };
+  }
+  if (memoryTtsRateLimits.size > 2000) memoryTtsRateLimits.clear();
+  memoryTtsRateLimits.set(key, { minBucket: prev.minBucket, minCount: prev.minCount, dayBucket, dayCount });
+  return { minCount: prev.minCount, dayCount };
+}
+
+async function checkAndIncrementTtsLimits({
+  env,
+  actorKey,
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = TTS_IP_DAILY_LIMIT,
+  now = Date.now(),
+}) {
+  const key = `tts:${actorKey}`;
+  const ipKey = ipActorKey ? `tts:${ipActorKey}` : null;
+  const minBucket = Math.floor(now / 60000);
+  const dayBucket = new Date(now).toISOString().slice(0, 10);
+  const effectiveDayLimit = Number.isFinite(Number(dayLimit)) && Number(dayLimit) > 0
+    ? Number(dayLimit)
+    : ttsDailyLimitForTier(tier);
+  const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
+    ? Number(ipDayLimit)
+    : TTS_IP_DAILY_LIMIT;
+  const hasSeparateIpBrake = Boolean(ipKey && ipKey !== key);
+
+  if (hasSeparateIpBrake) {
+    const ipPrev = await readTtsCounter(env, ipKey);
+    const ipDayCount = ipPrev.dayBucket === dayBucket ? ipPrev.dayCount : 0;
+    if (ipDayCount >= effectiveIpDayLimit) {
+      return { allowed: false, minOk: true, dayOk: false };
+    }
+  }
+
+  const actor = await incrementTtsCounter(env, key, minBucket, dayBucket);
+  const minOk = actor.minCount <= TTS_PER_MIN_LIMIT;
+  const dayOk = actor.dayCount <= effectiveDayLimit;
+  if (!minOk || !dayOk) {
+    return { allowed: false, minOk, dayOk };
+  }
+
+  if (hasSeparateIpBrake) {
+    const ipNext = await incrementTtsDayOnly(env, ipKey, dayBucket);
+    if (ipNext.dayCount > effectiveIpDayLimit) {
+      return { allowed: false, minOk: true, dayOk: false };
+    }
+  }
+
+  return { allowed: true, minOk: true, dayOk: true };
+}
+
+export async function checkTtsActorRateLimit({
+  env,
+  actorKey,
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = TTS_IP_DAILY_LIMIT,
+  now = Date.now(),
+}) {
+  const status = await checkAndIncrementTtsLimits({ env, actorKey, ipActorKey, tier, dayLimit, ipDayLimit, now });
   return Boolean(status.allowed);
 }
 
@@ -368,10 +465,24 @@ export async function handleTtsRoute(request, env, _url, now = Date.now()) {
   if (request.method !== 'POST') return jsonResp({ error: 'Method not allowed' }, 405);
 
   const ip = (request.headers.get('CF-Connecting-IP') || 'unknown').trim() || 'unknown';
-  const sessionOk = await verifyChatSessionToken(env?.CODE_PEPPER, chatSessionFromRequest(request), ip, now);
+  const explicitChatHeader = (request.headers.get('X-Chat-Session') || '').trim();
+  const rawChatSession = explicitChatHeader || chatSessionFromRequest(request);
+  const sessionOk = await verifyChatSessionToken(env?.CODE_PEPPER, rawChatSession, ip, now);
   if (!sessionOk) return jsonResp({ error: 'Chat session required' }, 401);
 
-  const limit = await checkAndIncrementTtsLimits({ env, actorKey: `ip:${ip}`, now });
+  const rawMemberHeader = request.headers.get('X-Member-Session')
+    || (explicitChatHeader ? request.headers.get('Authorization') : '')
+    || '';
+  let memberAuth = null;
+  try {
+    memberAuth = await resolveMemberAuth(env, rawMemberHeader, now);
+  } catch { /* invalid/expired member session safely falls back to guest tier */ }
+
+  const ipActorKey = `ip:${ip}`;
+  const actorKey = memberAuth ? `member:${memberAuth.memberId}` : ipActorKey;
+  const tier = memberAuth ? memberAuth.tier : 'guest';
+
+  const limit = await checkAndIncrementTtsLimits({ env, actorKey, ipActorKey, tier, now });
   if (!limit.dayOk) {
     return jsonResp({ fallback: true }, 200);
   }

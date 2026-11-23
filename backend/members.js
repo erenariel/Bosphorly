@@ -14,7 +14,7 @@ import {
   verifyAuthenticationResponse
 } from '@simplewebauthn/server';
 import { checkAndIncrementLimits } from './assistant.js';
-import { applySummary, forgetNote, getMimoState, saveNote, setConsent } from './mimo.js';
+import { applySummary, computeMemberTier, forgetNote, getMimoState, saveNote, setConsent } from './mimo.js';
 
 export const STAMPS_GOAL = 5;
 const SESSION_DAYS = 90;
@@ -135,10 +135,11 @@ function parseInterests(raw) {
 }
 function tierInfo(env, fulfilledCount) {
   const cap = maxBps(env);
-  if (fulfilledCount >= 5) {
+  const tier = computeMemberTier(fulfilledCount);
+  if (tier === 'platinum') {
     return { tier: 'platinum', nextTier: null, toursToNextTier: 0, vipPriorityDiscountBps: cap, freeUpgrade: 'priority' };
   }
-  if (fulfilledCount >= 2) {
+  if (tier === 'gold') {
     return { tier: 'gold', nextTier: 'platinum', toursToNextTier: 5 - fulfilledCount, vipPriorityDiscountBps: Math.min(500, cap), freeUpgrade: 'eligible' };
   }
   return { tier: 'silver', nextTier: 'gold', toursToNextTier: 2 - fulfilledCount, vipPriorityDiscountBps: 0, freeUpgrade: 'none' };

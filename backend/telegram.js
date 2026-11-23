@@ -16,6 +16,7 @@ import {
   applySummary,
   loadConsentedNote,
   memberIdFromTelegram,
+  memberTierById,
   observeAssistantTurn,
   runInBackground,
   MIMO_IDLE_MS,
@@ -482,9 +483,12 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
 
   const history = state ? state.history : [];
   let memberNote = null;
+  let memberId = null;
+  let tier = 'guest';
   try {
-    const memberId = await memberIdFromTelegram(env, telegramId);
+    memberId = await memberIdFromTelegram(env, telegramId);
     if (memberId) {
+      tier = await memberTierById(env, memberId);
       const idle = state && state.updatedAt > 0 && now - state.updatedAt >= MIMO_IDLE_MS;
       if (idle && history.length) {
         await runInBackground(ctx, applySummary(env, memberId, history, state.lang || lang, now));
@@ -498,8 +502,9 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
     telegramLang,
     history,
     env,
-    actorKey,
+    actorKey: memberId ? `member:${memberId}` : actorKey,
     actorKeys: [actorKey],
+    tier,
     channel: 'telegram',
     now,
     memberNote,

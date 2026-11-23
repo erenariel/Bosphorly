@@ -3,10 +3,15 @@
 // card, address, phone and email are dropped before anything is stored.
 // Mimo does not edit its knowledge base; the site owner runs tools/build_knowledge.py.
 
-const SUMMARY_MODEL = '@cf/zai-org/glm-4.7-flash';
+const SUMMARY_MODEL = '@cf/google/gemma-4-26b-a4b-it';
 const NOTE_MAX = 600;
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const IDLE_MS = 10 * 60 * 1000;
+
+function gatewayOpts(env) {
+  const id = (env && typeof env.AI_GATEWAY_ID === 'string' && env.AI_GATEWAY_ID.trim()) || 'mimo';
+  return { gateway: { id } };
+}
 
 const LANGS = new Set([
   'ar', 'az', 'bn', 'bs', 'de', 'en', 'es', 'fa', 'fr', 'he', 'hi', 'hr',
@@ -224,20 +229,72 @@ function parseStored(raw) {
   try { return sanitizeNote(JSON.parse(raw)); } catch { return null; }
 }
 
-export async function memberIdFromBearer(env, header) {
-  const m = /^Bearer\s+(\S+)$/.exec(String(header || ''));
-  if (!m || m[1].length > 100 || !env || !env.DB) return null;
+export function computeMemberTier(fulfilledCount) {
+  const n = Number(fulfilledCount || 0);
+  if (n >= 5) return 'platinum';
+  if (n >= 2) return 'gold';
+  return 'silver';
+}
+
+export async function memberTierById(env, memberId) {
+  if (!env || !env.DB || !memberId) return 'silver';
   try {
     const row = await dbFirst(
       env,
-      `SELECT member_id FROM sessions WHERE token_hash=? AND expires_at>?`,
-      await sha256(m[1]),
-      sqlTime(new Date()),
+      `SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`,
+      String(memberId),
     );
-    return row && row.member_id ? String(row.member_id) : null;
+    return computeMemberTier(row ? row.n : 0);
+  } catch {
+    return 'silver';
+  }
+}
+
+function extractSessionToken(tokenOrHeader) {
+  const raw = String(tokenOrHeader || '').trim();
+  if (!raw) return '';
+  const bearer = /^Bearer\s+(\S+)$/i.exec(raw);
+  if (bearer) return bearer[1];
+  return /\s/.test(raw) ? '' : raw;
+}
+
+export async function resolveMemberAuth(env, tokenOrHeader, now = Date.now()) {
+  const tok = extractSessionToken(tokenOrHeader);
+  if (!tok || tok.length > 100 || !env || !env.DB) return null;
+  try {
+    const nowMs = Number.isFinite(Number(now)) ? Number(now) : Date.now();
+    const row = await dbFirst(
+      env,
+      `SELECT m.id AS member_id FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`,
+      await sha256(tok),
+      sqlTime(new Date(nowMs)),
+    );
+    if (!row || !row.member_id) return null;
+    const memberId = String(row.member_id);
+    let fulfilledCount = 0;
+    try {
+      const cnt = await dbFirst(
+        env,
+        `SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`,
+        memberId,
+      );
+      fulfilledCount = Number(cnt ? cnt.n : 0) || 0;
+    } catch { /* older fixtures without member_requests treat authenticated member as silver */ }
+    return {
+      memberId,
+      tier: computeMemberTier(fulfilledCount),
+      fulfilledCount,
+    };
   } catch {
     return null;
   }
+}
+
+export async function memberIdFromBearer(env, header, now = Date.now()) {
+  const m = /^Bearer\s+(\S+)$/.exec(String(header || ''));
+  if (!m) return null;
+  const auth = await resolveMemberAuth(env, m[1], now);
+  return auth ? auth.memberId : null;
 }
 
 export async function memberIdFromTelegram(env, telegramId) {
@@ -352,7 +409,7 @@ export async function summarizeProfile(env, history, lang) {
       max_completion_tokens: 220,
       temperature: 0,
       chat_template_kwargs: { enable_thinking: false },
-    });
+    }, gatewayOpts(env));
     return sanitizeNote(parseModelJson(ai));
   } catch {
     return null;
@@ -411,10 +468,7 @@ export async function extractGapTitle(env, message) {
       temperature: 0,
       chat_template_kwargs: { enable_thinking: false },
     };
-    const gwId = env.AI_GATEWAY_ID && String(env.AI_GATEWAY_ID).trim();
-    const runPromise = gwId
-      ? env.AI.run(SUMMARY_MODEL, aiOpts, { gateway: { id: gwId } })
-      : env.AI.run(SUMMARY_MODEL, aiOpts);
+    const runPromise = env.AI.run(SUMMARY_MODEL, aiOpts, gatewayOpts(env));
     const timeoutPromise = new Promise((resolve) => {
       timer = setTimeout(() => resolve(null), timeoutMs);
     });

@@ -1687,12 +1687,15 @@
       if (ctrl) ctrl.abort();
     }, TTS_FETCH_TIMEOUT_MS);
     try {
+      const ttsHeaders = {
+        Authorization: `Bearer ${chatSession}`,
+        'Content-Type': 'application/json',
+      };
+      const mTok = memberToken();
+      if (mTok) ttsHeaders['X-Member-Session'] = mTok;
       const res = await fetch(`${apiBase}/v1/tts`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${chatSession}`,
-          'Content-Type': 'application/json',
-        },
+        headers: ttsHeaders,
         body: JSON.stringify({ text: clean, lang: String(msgLang || lang || 'en').slice(0, 10) }),
         signal: ctrl ? ctrl.signal : undefined,
       });

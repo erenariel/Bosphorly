@@ -11,7 +11,7 @@ export default {async fetch(request,env,ctx) {
  const isOauth=url.pathname.startsWith('/v1/auth/oauth/');
  // Deny browser cross-origin writes unless the exact deployment origin is configured (except OAuth form_post callbacks).
  if (!isOauth && origin && origin!==env.PUBLIC_ORIGIN) return json({error:'Origin denied'},403);
- if (request.method==='OPTIONS') return new Response(null,{status:204,headers:origin===env.PUBLIC_ORIGIN?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization','Vary':'Origin'}:{}});
+ if (request.method==='OPTIONS') return new Response(null,{status:204,headers:origin===env.PUBLIC_ORIGIN?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization, X-Member-Session, X-Chat-Session','Vary':'Origin'}:{}});
  // Membership, coupons, OAuth and partner check-in (backend/members.js), behind the same rate limit.
  if (isMemberRoute(url.pathname)) {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
