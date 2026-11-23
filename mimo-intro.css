@@ -21,3 +21,28 @@ body.mimo-introducing .bc-launcher, body.mimo-introducing .bc-bubble { opacity: 
   100% { transform: translate(var(--dock-x),var(--dock-y)) scale(var(--dock-scale)); }
 }
 @keyframes mimo-speech { 0%, 12%, 80%, 100% { opacity: 0; } 20%, 74% { opacity: 1; } }
+
+@media (width < 1024px) {
+  .bc-launcher .bc-fab { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .bc-launcher .bc-mobile-hop { animation: mimo-corner-hop 720ms ease-in-out both; }
+  .bc-mobile-welcome {
+    position: fixed; z-index: 939; right: 78px;
+    bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box; max-width: min(220px, calc(100vw - 94px));
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; pointer-events: none;
+    padding: 3px 8px; border: 1px solid #ffd565; border-radius: 16px;
+    background: #fff; color: #0a1753; font: 600 12px/1.2 system-ui;
+    animation: mimo-corner-greeting 2350ms both;
+  }
+  .bc-launcher[dir="rtl"] .bc-mobile-welcome { right: auto; left: 78px; }
+  body.bc-chat-open .bc-mobile-welcome { display: none; }
+}
+@keyframes mimo-corner-hop {
+  from { transform: translateY(0) rotate(0deg); }
+  48% { transform: translateY(-5px) rotate(175deg); }
+  to { transform: translateY(0) rotate(360deg); }
+}
+@keyframes mimo-corner-greeting {
+  0%, 100% { opacity: 0; }
+  9%, 87% { opacity: 1; }
+}

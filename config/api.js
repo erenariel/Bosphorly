@@ -50,14 +50,12 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
     const st = document.createElement('style');
     st.id = 'bc-fab-styles';
     st.textContent =
-      '@keyframes bc-mimo-pop{0%{transform:translateY(10px) scale(.9)}55%{transform:translateY(-7px) scale(1.07)}100%{transform:translateY(0) scale(1)}}' +
       '@keyframes bc-mimo-blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.92)}}' +
       '.bc-fab{position:fixed;bottom:16px;right:16px;z-index:940;width:54px;height:54px;padding:3px;border-radius:50%;border:2px solid #ffd565;background:#0a1753;color:#fff;cursor:pointer;box-shadow:0 8px 24px rgba(10,23,83,.32);display:grid;place-items:center;transition:transform .2s}' +
       '.bc-launcher{display:contents}.bc-launcher-label{display:none}body.bc-chat-open .bc-launcher{display:none}' +
       '@media(min-width:1024px){.bc-launcher{position:fixed;bottom:16px;right:16px;z-index:940;display:flex;align-items:center;gap:8px}.bc-launcher .bc-fab{position:static;box-sizing:border-box;width:76px;height:76px}.bc-launcher .bc-fab-avatar{width:62px;height:62px}.bc-launcher-label{display:block;cursor:pointer;border-radius:999px;padding:8px 12px;background:#0a1753;color:#fff;font:600 14px/1.3 system-ui;box-shadow:0 4px 16px #0a175333}.bc-bubble,.bc-bubble[dir="rtl"]{bottom:102px;right:16px;left:auto}}' +
       '.bc-fab:hover{transform:scale(1.05)}' +
       '.bc-fab[dir="rtl"]{right:auto;left:16px}' +
-      '.bc-fab.bc-fab-pop{animation:bc-mimo-pop .55s cubic-bezier(.34,1.56,.64,1)}' +
       '.bc-fab-avatar{width:44px;height:44px;display:block;border-radius:50%;animation:bc-mimo-blink 5.5s ease-in-out infinite;transform-origin:center 48%}' +
       '.bc-bubble{position:fixed;bottom:18px;right:78px;z-index:939;max-width:320px;background:#fff;color:#111d35;border:1.5px solid #ffd565;border-radius:16px;box-shadow:0 12px 32px rgba(10,23,83,.2);padding:11px 13px;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:13px;line-height:1.4;box-sizing:border-box}' +
       '.bc-bubble[dir="rtl"]{right:auto;left:78px;text-align:right}' +
@@ -87,7 +85,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       '.bc-bubble-chip:hover{background:#243a78}' +
       '}' +
       '@media(prefers-reduced-motion:reduce){' +
-      '.bc-fab,.bc-fab.bc-fab-pop,.bc-fab-avatar,.bc-bubble{animation:none!important;transition:none!important;transform:none!important}' +
+      '.bc-fab,.bc-fab-avatar,.bc-bubble{animation:none!important;transition:none!important;transform:none!important}' +
       '}';
     document.head.appendChild(st);
   };
@@ -198,10 +196,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       if ( pendingQuestion ) window.__bosphorlyInitialQuestion = pendingQuestion;
       const css = document.createElement('link');
       css.rel = 'stylesheet';
-      css.href = base + 'assistant-chat.css?v=20261123a';
+      css.href = base + 'assistant-chat.css?v=20261123b';
       document.head.appendChild(css);
       const js = document.createElement('script');
-      js.src = base + 'assistant-chat.js?v=20261123a';
+      js.src = base + 'assistant-chat.js?v=20261123b';
       js.defer = true;
       document.body.appendChild(js);
     };
@@ -266,23 +264,27 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
     launcher.append(btn, label);
     document.body.appendChild(launcher);
 
-    const reducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if (!reducedMotion && window.innerWidth < 1024) {
-      const popDelay = typeof window.__BOSPHORLY_MIMO_POP_MS === 'number' ? window.__BOSPHORLY_MIMO_POP_MS : 2000;
-      setTimeout(() => {
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        btn.classList.add('bc-fab-pop');
-        avatar.src = base + 'assets/brand/mimo/mimo-hello.svg';
-        setTimeout(() => {
-          avatar.src = base + 'assets/brand/mimo/mimo-default.svg';
-        }, 750);
-      }, popDelay);
+    const mobile = matchMedia('(width < 1024px)');
+    if (mobile.matches) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.media = mobile.media;
+      css.href = base + 'mimo-intro.css?v=20261123b';
+      document.head.appendChild(css);
+      const script = document.createElement('script');
+      script.src = base + 'mimo-intro.js?v=20261123b';
+      script.defer = true;
+      document.head.appendChild(script);
     }
 
     if (!hasSeenBubble()) {
       const bubbleDelay = typeof window.__BOSPHORLY_MIMO_BUBBLE_MS === 'number' ? window.__BOSPHORLY_MIMO_BUBBLE_MS : 5000;
       const collapseDelay = typeof window.__BOSPHORLY_MIMO_COLLAPSE_MS === 'number' ? window.__BOSPHORLY_MIMO_COLLAPSE_MS : 10000;
-      setTimeout(() => {
+      function showGreeting() {
+        if (document.querySelector('.bc-mobile-welcome')) {
+          document.addEventListener('mimo:welcome-end', showGreeting, {once:true});
+          return;
+        }
         if (hasSeenBubble() || loaded) return;
         if (formInteracted || isFormField(document.activeElement)) return;
         const panel = document.querySelector('.bc-panel');
@@ -294,6 +296,11 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
         collapseTimer = setTimeout(() => {
           bubble.hidden = true;
         }, collapseDelay);
+      }
+      setTimeout(() => {
+        if (mobile.matches && document.readyState !== 'complete') {
+          window.addEventListener('load', () => setTimeout(showGreeting, 0), {once:true});
+        } else showGreeting();
       }, bubbleDelay);
     }
   };

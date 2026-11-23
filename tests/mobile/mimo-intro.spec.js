@@ -31,12 +31,45 @@ test('reduced motion opens directly on the desktop launcher', async ({page}) => 
   expect(await page.evaluate(() => sessionStorage.getItem('bosphorly.mimo_intro'))).toBeNull();
 });
 
-test('390px layout keeps its 54px launcher without an introduction', async ({page}) => {
+test('390px corner welcome runs once and yields to the existing greeting', async ({page}) => {
   await page.setViewportSize({width:390,height:844});
-  await page.goto('/');
+  await page.addInitScript(() => { window.__BOSPHORLY_MIMO_BUBBLE_MS = 150; });
+  await page.goto('/?lang=tr');
+  const note = page.locator('.bc-mobile-welcome');
+  await expect(note).toHaveText('Hoş geldin, ben Mimo 👋');
+  await expect(note).toBeVisible();
+  await expect(note).toHaveCSS('pointer-events', 'none');
+  await expect(note).toHaveAttribute('aria-live', 'polite');
+  await expect(page.locator('.bc-fab-avatar')).toHaveCSS('animation-name','mimo-corner-hop');
   await expect(page.locator('.bc-fab')).toHaveCSS('width','54px');
-  await expect(page.locator('.bc-launcher-label')).toBeHidden();
   await expect(page.locator('.mimo-intro')).toHaveCount(0);
+  await expect(page.locator('.bc-bubble')).toBeHidden();
+  await expect(note).toHaveCount(0, {timeout:3000});
+  await expect(page.locator('.bc-bubble')).toBeVisible();
+  await page.reload();
+  await expect(note).toHaveCount(0);
+  await expect(page.locator('.bc-mobile-hop')).toHaveCount(0);
+});
+
+test('390px reduced motion bypasses the corner welcome', async ({page}) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.goto('/');
+  await expect(page.locator('.bc-mobile-welcome, .bc-mobile-hop')).toHaveCount(0);
+  expect(await page.evaluate(() => sessionStorage.getItem('bosphorly.mimo_intro'))).toBeNull();
+});
+
+test('390px launcher remains tappable during the RTL welcome', async ({page}) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('/?lang=ar');
+  const note = page.locator('.bc-mobile-welcome');
+  await expect(note).toBeVisible();
+  const fab = page.locator('.bc-fab');
+  const button = await fab.boundingBox();
+  expect((await note.boundingBox()).x).toBeGreaterThan(button.x + button.width);
+  await fab.click();
+  await expect(page.locator('.bc-panel')).toBeVisible();
+  await expect(note).toHaveCount(0);
 });
 
 test('RTL label sits to the left and an intro click reaches the page', async ({page}) => {
