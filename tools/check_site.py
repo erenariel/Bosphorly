@@ -231,7 +231,7 @@ def assert_knowledge():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "assistant-chat.js", "telegram-cta.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "backend/assistant.js", "backend/mimo-personality.js", "backend/telegram.js", "backend/worker.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "assistant-chat.js", "telegram-cta.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "backend/assistant.js", "backend/mimo-personality.js", "backend/mimo.js", "backend/tts.js", "backend/telegram.js", "backend/worker.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
     for name in script_sources:
         if name.endswith(".py"):
             continue

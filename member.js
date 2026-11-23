@@ -206,6 +206,8 @@
       return inflightProfile;
     },
     async update(fields) { return saveMember(await api('/v1/me', fields)); },
+    mimo: () => api('/v1/me/mimo'),
+    setMimo: (body) => api('/v1/me/mimo', body),
     async signOut() { try { await api('/v1/auth/logout', {}); } catch {} store.set(SESSION, null); syncedOnce = false; saveMember(null); },
     async remove() { await api('/v1/me/delete', {}); store.set(SESSION, null); syncedOnce = false; saveMember(null); },
     async registerRequest(data) {

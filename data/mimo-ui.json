@@ -1,0 +1,155 @@
+{
+  "title": {
+    "ar": "كيف يعرفك Mimo؟", "az": "Mimo səni necə tanıyır?", "bn": "Mimo তোমাকে কীভাবে চেনে?", "bs": "Kako te Mimo poznaje?",
+    "de": "Wie Mimo dich kennt", "en": "How Mimo knows you", "es": "Cómo te conoce Mimo", "fa": "Mimo شما را چگونه می‌شناسد؟",
+    "fr": "Comment Mimo vous connaît", "he": "איך Mimo מכיר אותך", "hi": "Mimo आपको कैसे जानता है", "hr": "Kako te Mimo poznaje?",
+    "hu": "Hogyan ismer téged a Mimo", "id": "Bagaimana Mimo mengenalmu", "it": "Come Mimo ti conosce", "ja": "Mimoが覚えていること",
+    "ko": "Mimo가 나를 어떻게 아나", "nl": "Hoe Mimo je kent", "pt": "Como o Mimo te conhece", "ru": "Как Mimo вас знает",
+    "tr": "Mimo seni nasıl tanıyor?", "uk": "Як Mimo тебе знає", "zh": "Mimo 如何认识你"
+  },
+  "consent": {
+    "ar": "ليتذكر Mimo أسلوب حديثي واهتماماتي 💙", "az": "Mimo danışıq tərzimi və maraqlarımı xatırlasın 💙",
+    "bn": "Mimo যেন আমার কথার ধরন ও আগ্রহ মনে রাখে 💙", "bs": "Neka Mimo zapamti moj ton i interese 💙",
+    "de": "Mimo darf meinen Ton und meine Interessen merken 💙", "en": "Let Mimo remember my tone and interests 💙",
+    "es": "Que Mimo recuerde mi tono y mis intereses 💙", "fa": "Mimo لحن گفتگو و علاقه‌هایم را به خاطر بسپارد 💙",
+    "fr": "Mimo peut retenir mon ton et mes centres d’intérêt 💙", "he": "ש־Mimo יזכור את סגנון הדיבור ואת תחומי העניין שלי 💙",
+    "hi": "Mimo मेरी बातचीत की शैली और रुचियाँ याद रखे 💙", "hr": "Neka Mimo zapamti moj ton i interese 💙",
+    "hu": "A Mimo emlékezzen a hangnememre és az érdeklődésemre 💙", "id": "Biarkan Mimo mengingat gaya bicara dan minat saya 💙",
+    "it": "Mimo ricordi il mio tono e i miei interessi 💙", "ja": "Mimoに話し方と興味を覚えておいてほしい 💙",
+    "ko": "Mimo가 내 말투와 관심사를 기억하도록 허용 💙", "nl": "Mimo mag mijn toon en interesses onthouden 💙",
+    "pt": "O Mimo pode lembrar o meu tom e os meus interesses 💙", "ru": "Пусть Mimo запоминает мой тон и интересы 💙",
+    "tr": "Mimo konuşma tarzımı ve ilgi alanlarımı hatırlasın 💙", "uk": "Нехай Mimo запам’ятовує мій стиль і інтереси 💙",
+    "zh": "让 Mimo 记住我的说话风格和兴趣 💙"
+  },
+  "forget": {
+    "ar": "انسَ كل شيء", "az": "Hər şeyi unut", "bn": "সব ভুলে যাও", "bs": "Zaboravi sve", "de": "Alles vergessen",
+    "en": "Forget everything", "es": "Olvidar todo", "fa": "همه را فراموش کن", "fr": "Tout oublier", "he": "שכח הכול",
+    "hi": "सब भूल जाओ", "hr": "Zaboravi sve", "hu": "Felejtsen el mindent", "id": "Lupakan semuanya", "it": "Dimentica tutto",
+    "ja": "すべて忘れる", "ko": "모두 잊기", "nl": "Alles vergeten", "pt": "Esquecer tudo", "ru": "Забыть всё",
+    "tr": "Hepsini unut", "uk": "Забути все", "zh": "全部忘记"
+  },
+  "empty": {
+    "ar": "لا توجد ملاحظة بعد.", "az": "Hələ qeyd yoxdur.", "bn": "এখনও কোনো নোট নেই।", "bs": "Još nema bilješke.",
+    "de": "Noch keine Notiz.", "en": "No note yet.", "es": "Aún no hay nota.", "fa": "هنوز یادداشتی نیست.",
+    "fr": "Pas encore de note.", "he": "עדיין אין פתק.", "hi": "अभी कोई नोट नहीं।", "hr": "Još nema bilješke.",
+    "hu": "Még nincs jegyzet.", "id": "Belum ada catatan.", "it": "Nessuna nota ancora.", "ja": "まだメモはありません。",
+    "ko": "아직 메모가 없습니다.", "nl": "Nog geen notitie.", "pt": "Ainda não há nota.", "ru": "Заметки пока нет.",
+    "tr": "Henüz bir not yok.", "uk": "Нотатки ще немає.", "zh": "还没有笔记。"
+  },
+  "off": {
+    "ar": "الإذن مغلق؛ لا يحفظ Mimo شيئًا.", "az": "İcazə bağlıdır; Mimo heç nə saxlamır.", "bn": "অনুমতি বন্ধ; Mimo কিছু রাখে না।",
+    "bs": "Saglasnost je isključena; Mimo ništa ne čuva.", "de": "Zustimmung ist aus; Mimo speichert nichts.",
+    "en": "Consent is off; Mimo stores nothing.", "es": "El permiso está desactivado; Mimo no guarda nada.",
+    "fa": "اجازه خاموش است؛ Mimo چیزی ذخیره نمی‌کند.", "fr": "Le consentement est désactivé ; Mimo ne conserve rien.",
+    "he": "ההסכמה כבויה; Mimo לא שומר דבר.", "hi": "अनुमति बंद है; Mimo कुछ नहीं रखता।",
+    "hr": "Privola je isključena; Mimo ništa ne sprema.", "hu": "A hozzájárulás ki van kapcsolva; a Mimo nem tárol semmit.",
+    "id": "Izin mati; Mimo tidak menyimpan apa pun.", "it": "Il consenso è disattivato; Mimo non salva nulla.",
+    "ja": "許可はオフです。Mimoは何も保存しません。", "ko": "동의가 꺼져 있습니다. Mimo는 아무것도 저장하지 않습니다.",
+    "nl": "Toestemming staat uit; Mimo bewaart niets.", "pt": "O consentimento está desligado; o Mimo não guarda nada.",
+    "ru": "Согласие выключено; Mimo ничего не хранит.", "tr": "İzin kapalı; Mimo bir şey saklamıyor.",
+    "uk": "Згоду вимкнено; Mimo нічого не зберігає.", "zh": "未开启许可；Mimo 不会保存任何内容。"
+  },
+  "save": {
+    "ar": "حفظ", "az": "Saxla", "bn": "সংরক্ষণ", "bs": "Sačuvaj", "de": "Speichern", "en": "Save", "es": "Guardar",
+    "fa": "ذخیره", "fr": "Enregistrer", "he": "שמירה", "hi": "सहेजें", "hr": "Spremi", "hu": "Mentés", "id": "Simpan",
+    "it": "Salva", "ja": "保存", "ko": "저장", "nl": "Opslaan", "pt": "Guardar", "ru": "Сохранить", "tr": "Kaydet",
+    "uk": "Зберегти", "zh": "保存"
+  },
+  "tone": {
+    "ar": "الأسلوب", "az": "Danışıq tərzi", "bn": "কথার ধরন", "bs": "Ton", "de": "Ton", "en": "Tone", "es": "Tono",
+    "fa": "لحن", "fr": "Ton", "he": "סגנון", "hi": "शैली", "hr": "Ton", "hu": "Hangnem", "id": "Nada", "it": "Tono",
+    "ja": "話し方", "ko": "말투", "nl": "Toon", "pt": "Tom", "ru": "Тон", "tr": "Konuşma tarzı", "uk": "Тон", "zh": "语气"
+  },
+  "emoji": {
+    "ar": "الرموز", "az": "Emoji", "bn": "ইমোজি", "bs": "Emoji", "de": "Emoji", "en": "Emoji", "es": "Emojis",
+    "fa": "ایموجی", "fr": "Émoji", "he": "אימוג׳י", "hi": "इमोजी", "hr": "Emoji", "hu": "Emoji", "id": "Emoji",
+    "it": "Emoji", "ja": "絵文字", "ko": "이모지", "nl": "Emoji", "pt": "Emoji", "ru": "Эмодзи", "tr": "Emoji",
+    "uk": "Емодзі", "zh": "表情"
+  },
+  "length": {
+    "ar": "طول الرد", "az": "Cavab uzunluğu", "bn": "উত্তরের দৈর্ঘ্য", "bs": "Dužina odgovora", "de": "Antwortlänge",
+    "en": "Answer length", "es": "Longitud de la respuesta", "fa": "طول پاسخ", "fr": "Longueur de la réponse",
+    "he": "אורך התשובה", "hi": "उत्तर की लंबाई", "hr": "Duljina odgovora", "hu": "Válasz hossza", "id": "Panjang jawaban",
+    "it": "Lunghezza della risposta", "ja": "返事の長さ", "ko": "답변 길이", "nl": "Antwoordlengte", "pt": "Tamanho da resposta",
+    "ru": "Длина ответа", "tr": "Cevap uzunluğu", "uk": "Довжина відповіді", "zh": "回答长度"
+  },
+  "lang": {
+    "ar": "اللغة المفضلة", "az": "Üstünlük verilən dil", "bn": "পছন্দের ভাষা", "bs": "Željeni jezik", "de": "Bevorzugte Sprache",
+    "en": "Preferred language", "es": "Idioma preferido", "fa": "زبان ترجیحی", "fr": "Langue préférée", "he": "שפה מועדפת",
+    "hi": "पसंदीदा भाषा", "hr": "Željeni jezik", "hu": "Előnyben részesített nyelv", "id": "Bahasa pilihan", "it": "Lingua preferita",
+    "ja": "希望の言語", "ko": "선호 언어", "nl": "Voorkeurstaal", "pt": "Idioma preferido", "ru": "Предпочитаемый язык",
+    "tr": "Tercih edilen dil", "uk": "Бажана мова", "zh": "偏好语言"
+  },
+  "interests": {
+    "ar": "الاهتمامات (حتى 8)", "az": "Maraqlar (ən çox 8)", "bn": "আগ্রহ (সর্বোচ্চ ৮)", "bs": "Interesi (najviše 8)",
+    "de": "Interessen (bis 8)", "en": "Interests (up to 8)", "es": "Intereses (hasta 8)", "fa": "علاقه‌ها (حداکثر ۸)",
+    "fr": "Centres d’intérêt (8 max.)", "he": "תחומי עניין (עד 8)", "hi": "रुचियाँ (अधिकतम 8)", "hr": "Interesi (najviše 8)",
+    "hu": "Érdeklődés (legfeljebb 8)", "id": "Minat (maks. 8)", "it": "Interessi (fino a 8)", "ja": "興味（最大8）",
+    "ko": "관심사(최대 8)", "nl": "Interesses (max. 8)", "pt": "Interesses (até 8)", "ru": "Интересы (до 8)",
+    "tr": "İlgi alanları (en fazla 8)", "uk": "Інтереси (до 8)", "zh": "兴趣（最多 8 个）"
+  },
+  "topics": {
+    "ar": "المواضيع الأخيرة (حتى 5)", "az": "Son mövzular (ən çox 5)", "bn": "সাম্প্রতিক বিষয় (সর্বোচ্চ ৫)",
+    "bs": "Nedavne teme (najviše 5)", "de": "Letzte Themen (bis 5)", "en": "Recent topics (up to 5)",
+    "es": "Temas recientes (hasta 5)", "fa": "موضوع‌های اخیر (حداکثر ۵)", "fr": "Sujets récents (5 max.)",
+    "he": "נושאים אחרונים (עד 5)", "hi": "हाल के विषय (अधिकतम 5)", "hr": "Nedavne teme (najviše 5)",
+    "hu": "Legutóbbi témák (legfeljebb 5)", "id": "Topik terbaru (maks. 5)", "it": "Argomenti recenti (fino a 5)",
+    "ja": "最近の話題（最大5）", "ko": "최근 주제(최대 5)", "nl": "Recente onderwerpen (max. 5)",
+    "pt": "Tópicos recentes (até 5)", "ru": "Недавние темы (до 5)", "tr": "Son konular (en fazla 5)",
+    "uk": "Останні теми (до 5)", "zh": "最近话题（最多 5 个）"
+  },
+  "warm": {
+    "ar": "ودي", "az": "səmimi", "bn": "বন্ধুত্বপূর্ণ", "bs": "prisno", "de": "herzlich", "en": "warm", "es": "cercano",
+    "fa": "صمیمی", "fr": "chaleureux", "he": "חברי", "hi": "अपनापन भरा", "hr": "prisno", "hu": "közvetlen", "id": "akrab",
+    "it": "caloroso", "ja": "親しみやすい", "ko": "다정하게", "nl": "warm", "pt": "caloroso", "ru": "дружелюбный",
+    "tr": "samimi", "uk": "невимушено", "zh": "亲切"
+  },
+  "formal": {
+    "ar": "رسمي", "az": "rəsmi", "bn": "আনুষ্ঠানিক", "bs": "formalno", "de": "förmlich", "en": "formal", "es": "formal",
+    "fa": "رسمی", "fr": "formel", "he": "רשמי", "hi": "औपचारिक", "hr": "formalno", "hu": "hivatalos", "id": "formal",
+    "it": "formale", "ja": "丁寧", "ko": "격식 있게", "nl": "formeel", "pt": "formal", "ru": "официальный",
+    "tr": "resmî", "uk": "офіційно", "zh": "正式"
+  },
+  "few": {
+    "ar": "قليل", "az": "az", "bn": "কম", "bs": "malo", "de": "wenig", "en": "few", "es": "pocos", "fa": "کم",
+    "fr": "peu", "he": "מעט", "hi": "कम", "hr": "malo", "hu": "kevés", "id": "sedikit", "it": "pochi", "ja": "少なめ",
+    "ko": "적게", "nl": "weinig", "pt": "poucos", "ru": "мало", "tr": "az", "uk": "мало", "zh": "少"
+  },
+  "mid": {
+    "ar": "متوسط", "az": "orta", "bn": "মাঝারি", "bs": "srednje", "de": "mittel", "en": "medium", "es": "medio",
+    "fa": "متوسط", "fr": "moyen", "he": "בינוני", "hi": "मध्यम", "hr": "srednje", "hu": "közepes", "id": "sedang",
+    "it": "medio", "ja": "ふつう", "ko": "보통", "nl": "gemiddeld", "pt": "médio", "ru": "средне", "tr": "orta",
+    "uk": "середньо", "zh": "适中"
+  },
+  "many": {
+    "ar": "كثير", "az": "çox", "bn": "বেশি", "bs": "puno", "de": "viel", "en": "many", "es": "muchos", "fa": "زیاد",
+    "fr": "beaucoup", "he": "הרבה", "hi": "अधिक", "hr": "puno", "hu": "sok", "id": "banyak", "it": "molti", "ja": "多め",
+    "ko": "많이", "nl": "veel", "pt": "muitos", "ru": "много", "tr": "çok", "uk": "багато", "zh": "多"
+  },
+  "short": {
+    "ar": "قصير", "az": "qısa", "bn": "সংক্ষিপ্ত", "bs": "kratko", "de": "kurz", "en": "short", "es": "breve",
+    "fa": "کوتاه", "fr": "court", "he": "קצר", "hi": "संक्षिप्त", "hr": "kratko", "hu": "rövid", "id": "singkat",
+    "it": "breve", "ja": "短め", "ko": "짧게", "nl": "kort", "pt": "curta", "ru": "кратко", "tr": "kısa", "uk": "коротко", "zh": "简短"
+  },
+  "detailed": {
+    "ar": "مفصّل", "az": "ətraflı", "bn": "বিস্তারিত", "bs": "detaljno", "de": "ausführlich", "en": "detailed",
+    "es": "detallada", "fa": "مفصل", "fr": "détaillé", "he": "מפורט", "hi": "विस्तृत", "hr": "detaljno", "hu": "részletes",
+    "id": "terperinci", "it": "dettagliata", "ja": "詳しめ", "ko": "자세히", "nl": "uitgebreid", "pt": "detalhada",
+    "ru": "подробно", "tr": "detaylı", "uk": "детально", "zh": "详细"
+  },
+  "saved": {
+    "ar": "تم الحفظ", "az": "Saxlanıldı", "bn": "সংরক্ষিত", "bs": "Sačuvano", "de": "Gespeichert", "en": "Saved",
+    "es": "Guardado", "fa": "ذخیره شد", "fr": "Enregistré", "he": "נשמר", "hi": "सहेजा गया", "hr": "Spremljeno",
+    "hu": "Mentve", "id": "Tersimpan", "it": "Salvato", "ja": "保存しました", "ko": "저장됨", "nl": "Opgeslagen",
+    "pt": "Guardado", "ru": "Сохранено", "tr": "Kaydedildi", "uk": "Збережено", "zh": "已保存"
+  },
+  "needConsent": {
+    "ar": "فعّل الإذن أولًا.", "az": "Əvvəlcə icazəni aç.", "bn": "আগে অনুমতি চালু করুন।", "bs": "Prvo uključi saglasnost.",
+    "de": "Bitte zuerst zustimmen.", "en": "Turn consent on first.", "es": "Activa el permiso primero.",
+    "fa": "ابتدا اجازه را روشن کنید.", "fr": "Activez d’abord le consentement.", "he": "הפעילו קודם את ההסכמה.",
+    "hi": "पहले अनुमति चालू करें।", "hr": "Najprije uključi privolu.", "hu": "Először kapcsold be a hozzájárulást.",
+    "id": "Nyalakan izin terlebih dahulu.", "it": "Attiva prima il consenso.", "ja": "先に許可をオンにしてください。",
+    "ko": "먼저 동의를 켜 주세요.", "nl": "Zet eerst toestemming aan.", "pt": "Ative primeiro o consentimento.",
+    "ru": "Сначала включите согласие.", "tr": "Önce izni aç.", "uk": "Спочатку увімкніть згоду.", "zh": "请先开启许可。"
+  }
+}

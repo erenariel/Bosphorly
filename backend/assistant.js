@@ -13,6 +13,14 @@ import {
   detectReplyLanguage,
   isRepetitiveAgainstHistory,
 } from './mimo-personality.js';
+import {
+  formatNoteForPrompt,
+  loadConsentedNote,
+  memberIdFromBearer,
+  observeAssistantTurn,
+  runInBackground,
+  recordVoteMetric,
+} from './mimo.js';
 
 const KB_PRICE_PAIRS = buildKbPriceIndex(knowledge);
 
@@ -1158,9 +1166,15 @@ async function incrementCounter(env, key, minBucket, dayBucket) {
   return { minCount, dayCount };
 }
 
-export async function checkAndIncrementLimits({ env, actorKey, now = Date.now() }) {
+export async function checkAndIncrementLimits({ env, actorKey, now = Date.now(), perHour = 0, skipGlobal = false }) {
   const minBucket = Math.floor(now / 60000);
   const dayBucket = new Date(now).toISOString().slice(0, 10);
+  if (perHour > 0) {
+    const hourBucket = Math.floor(now / 3600000);
+    const hour = await incrementCounter(env, actorKey, hourBucket, dayBucket);
+    if (hour.minCount > perHour) return { allowed: false, reason: 'actor_limit' };
+    if (skipGlobal) return { allowed: true };
+  }
   const actor = await incrementCounter(env, actorKey, minBucket, dayBucket);
   if (actor.minCount > PER_MIN_LIMIT || actor.dayCount > PER_DAY_LIMIT) {
     return { allowed: false, reason: 'actor_limit' };
@@ -1508,11 +1522,13 @@ function buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGr
   ].filter(Boolean).join('\n');
 }
 
-function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote = null }) {
   const examples = getFewShotsPromptBlock(lang);
+  const noteBlock = formatNoteForPrompt(memberNote);
   return [
     buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
     `Istanbul & catalog facts: use ONLY CONTEXT below for Bosphorly prices, tours, and transfers—never invent prices, hours, discounts, or currency conversions. When a CONTEXT item is marked "Mimo'nun favorisi 💙", recommend it warmly as your personal favorite. When answering a price question, start with the cheapest suitable option from CONTEXT first before higher tiers, sharing exact prices (confirmed upon request) and its https://bosphorly.com/... link from CONTEXT (with ?lang=${lang}), plus one light next step. For live museum hours/tickets, suggest checking the official site.`,
+    ...(noteBlock ? ['', noteBlock] : []),
     'EXAMPLES:',
     examples,
     '',
@@ -1523,11 +1539,13 @@ function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted,
   ].filter(Boolean).join('\n');
 }
 
-function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote = null }) {
   const examples = getFewShotsPromptBlock(lang);
+  const noteBlock = formatNoteForPrompt(memberNote);
   return [
     buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
     'Casual chat: talk warmly like a sweet Istanbul friend about their day, neighborhoods, food, seagulls, ferries, tiredness, or culture. Do not pitch tours in every message; at most once when it fits naturally (tired → ferry breeze or hammam, hungry → Kadıköy market). Never say "I don\'t know" to casual questions or pass small talk to a human.',
+    ...(noteBlock ? ['', noteBlock] : []),
     'EXAMPLES:',
     examples,
     '',
@@ -1550,6 +1568,7 @@ async function prepareAssistantTurn({
   channel = '',
   now = Date.now(),
   aiTimeoutMs = AI_TIMEOUT_MS,
+  memberNote = null,
 }) {
   const { text: cleanMsg, hadSensitive: msgSensitive } = redactSensitive(message);
   const lang = detectLanguage({ message: cleanMsg, pageLang, telegramLang });
@@ -1703,7 +1722,7 @@ async function prepareAssistantTurn({
     : chunks.length
       ? chunks.map(formatChunkForContext).join('\n\n')
       : '(No exact catalog match; answer from general Istanbul knowledge and mention Bosphorly only if relevant.)';
-  const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock };
+  const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote };
   const systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
   const messages = [
     { role: 'system', content: systemPrompt },
@@ -1862,10 +1881,11 @@ export async function runAssistant({
   channel = '',
   now = Date.now(),
   aiTimeoutMs = AI_TIMEOUT_MS,
+  memberNote = null,
 }) {
   const reqStart = Date.now();
   const prep = await prepareAssistantTurn({
-    message, pageLang, telegramLang, history, alreadyGreeted, env, actorKey, actorKeys, channel, now, aiTimeoutMs,
+    message, pageLang, telegramLang, history, alreadyGreeted, env, actorKey, actorKeys, channel, now, aiTimeoutMs, memberNote,
   });
   if (prep.earlyResult) {
     logAssistantTiming({
@@ -2025,7 +2045,7 @@ function findLastSentenceBoundary(text) {
   return last;
 }
 
-function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart, now }) {
+function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart, now, ctx = null, rawMessage = '' }) {
   const encoder = new TextEncoder();
   const sendEvent = (controller, event, data) => {
     controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
@@ -2036,6 +2056,11 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
       const part = words.slice(i, i + 6).join('');
       if (part) sendEvent(controller, 'delta', { t: part });
     }
+  };
+  const observeResult = async (result) => {
+    try {
+      await runInBackground(ctx, observeAssistantTurn(env, { message: rawMessage || prep.cleanMsg || '', result, now }));
+    } catch { /* stats are best-effort */ }
   };
 
   const stream = new ReadableStream({
@@ -2096,7 +2121,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         }
       };
 
-      const finishWithFinalized = (finalized, extraPath = null) => {
+      const finishWithFinalized = async (finalized, extraPath = null) => {
         if (!finalized.closed && !finalized.handoffOffer && !finalized.fallback && finalized.reply) {
           if (!emittedText) {
             sendWordDeltas(controller, finalized.reply);
@@ -2114,6 +2139,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           modelMs,
           ttftMs: ttftMs == null ? modelMs : ttftMs,
         });
+        await observeResult(finalized);
         sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
         controller.close();
       };
@@ -2149,7 +2175,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
             }
           }
           const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-          finishWithFinalized(finalized, extraPath);
+          await finishWithFinalized(finalized, extraPath);
           return;
         }
 
@@ -2210,7 +2236,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
                   const retryParsed = await regenerateInExpectedLanguage(env, prep, budget);
                   const chosen = retryParsed || parseModelOutput(rawAccum);
                   const finalized = await finalizeModelOutput({ parsed: chosen, prep, env, now });
-                  finishWithFinalized(finalized, retryParsed ? 'ai_lang_retry' : null);
+                  await finishWithFinalized(finalized, retryParsed ? 'ai_lang_retry' : null);
                   return;
                 }
               }
@@ -2224,7 +2250,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
                   const retryParsed = await regenerateFreshReply(env, prep, budget);
                   const chosen = retryParsed || parseModelOutput(rawAccum);
                   const finalized = await finalizeModelOutput({ parsed: chosen, prep, env, now });
-                  finishWithFinalized(finalized, retryParsed ? 'ai_repeat_retry' : null);
+                  await finishWithFinalized(finalized, retryParsed ? 'ai_repeat_retry' : null);
                   return;
                 }
                 varietyVerified = true;
@@ -2262,12 +2288,13 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           }
         }
         const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-        finishWithFinalized(finalized, extraPath);
+        await finishWithFinalized(finalized, extraPath);
       } catch (err) {
         const modelMs = Date.now() - aiStart;
         if (isAiGateway429Error(err)) {
           const tired = gatewayTiredResult(prep);
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_gateway_429', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+          await observeResult(tired);
           sendEvent(controller, 'done', toHttpAssistantBody(tired, chatSession));
           controller.close();
           return;
@@ -2275,13 +2302,16 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         if (prep.aiIdentityAsked) {
           const reply = `${prep.warnPrefix}${enforceMaxEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
-          sendEvent(controller, 'done', { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang, ...(chatSession ? { chatSession } : {}) });
+          const identityRes = { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang };
+          await observeResult(identityRes);
+          sendEvent(controller, 'done', { ...identityRes, ...(chatSession ? { chatSession } : {}) });
           controller.close();
           return;
         }
         logModelFailure(err, { aiIdentityAsked: false, durationMs: modelMs, parseFailed: false });
         const fallback = modelFallbackResult(prep);
         logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+        await observeResult(fallback);
         sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));
         controller.close();
       }
@@ -2562,7 +2592,7 @@ async function readAudioBody(request, maxBytes) {
   return { audio };
 }
 
-export async function handleAssistantRoutes(request, env, url) {
+export async function handleAssistantRoutes(request, env, url, ctx) {
   const origin = request.headers.get('Origin');
   const jsonResp = (body, status = 200) => {
     const headers = {
@@ -2648,6 +2678,7 @@ export async function handleAssistantRoutes(request, env, url) {
     if (!vote) return jsonResp({ error: 'Invalid vote' }, 400);
     const lang = normalizeLang(typeof body.lang === 'string' ? body.lang : '') || 'en';
     const recorded = await recordAssistantFeedback({ env, lang, vote });
+    try { await recordVoteMetric(env, vote, lang); } catch { /* weekly counters never block feedback */ }
     if (mintedSession) recorded.chatSession = mintedSession;
     return jsonResp(recorded, 200);
   }
@@ -2674,6 +2705,12 @@ export async function handleAssistantRoutes(request, env, url) {
     const rawAiTimeout = Number(env && env.ASSISTANT_AI_TIMEOUT_MS);
     const aiTimeoutMs = Number.isFinite(rawAiTimeout) && rawAiTimeout > 0 ? rawAiTimeout : AI_TIMEOUT_MS;
 
+    let memberNote = null;
+    try {
+      const memberId = await memberIdFromBearer(env, request.headers.get('Authorization') || '');
+      if (memberId) memberNote = await loadConsentedNote(env, memberId);
+    } catch { /* a bad member token must not block the guest chat */ }
+
     if (wantsStream) {
       const reqStart = Date.now();
       const now = Date.now();
@@ -2688,6 +2725,7 @@ export async function handleAssistantRoutes(request, env, url) {
         channel: 'web',
         now,
         aiTimeoutMs,
+        memberNote,
       });
       if (prep.earlyResult) {
         logAssistantTiming({
@@ -2697,6 +2735,9 @@ export async function handleAssistantRoutes(request, env, url) {
           streamed: false,
           totalMs: Date.now() - reqStart,
         });
+        try {
+          await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result: prep.earlyResult }));
+        } catch { /* stats are best-effort */ }
         if (!prep.earlyResult.ok) {
           const errBody = { error: prep.earlyResult.reply, handoff: true, lang: prep.earlyResult.lang };
           if (auth.chatSession) errBody.chatSession = auth.chatSession;
@@ -2714,6 +2755,8 @@ export async function handleAssistantRoutes(request, env, url) {
         headers: corsHeaders,
         reqStart,
         now,
+        ctx,
+        rawMessage: body.message,
       });
     }
 
@@ -2727,7 +2770,11 @@ export async function handleAssistantRoutes(request, env, url) {
       actorKeys,
       channel: 'web',
       aiTimeoutMs,
+      memberNote,
     });
+    try {
+      await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result }));
+    } catch { /* stats are best-effort */ }
     if (!result.ok) {
       const errBody = { error: result.reply, handoff: true, lang: result.lang };
       if (auth.chatSession) errBody.chatSession = auth.chatSession;

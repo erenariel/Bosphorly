@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build compact site knowledge chunks for the Bosphorly AI assistant (RAG)."""
+"""Build compact site knowledge chunks for the Bosphorly AI assistant (RAG).
+
+Mimo does not edit this file or backend/knowledge.json by itself.
+Additions are made only with the site owner's approval by running this script.
+"""
 from __future__ import annotations
 import json
 from pathlib import Path

@@ -3,8 +3,9 @@ import {handleMembers, isMemberRoute} from './members.js';
 import {handleAssistantRoutes} from './assistant.js';
 import {handleTtsRoute} from './tts.js';
 import {handleTelegramWebhook} from './telegram.js';
+import {sendWeeklyMimoReport} from './mimo.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
-export default {async fetch(request,env) {
+export default {async fetch(request,env,ctx) {
  const url=new URL(request.url);
  const origin=request.headers.get('Origin');
  const isOauth=url.pathname.startsWith('/v1/auth/oauth/');
@@ -19,11 +20,11 @@ export default {async fetch(request,env) {
  return r;
  }
  if (url.pathname==='/v1/telegram/webhook') {
- return handleTelegramWebhook(request,env);
+ return handleTelegramWebhook(request,env,Date.now(),ctx);
  }
  if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback' || url.pathname==='/v1/assistant/transcribe') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
- return handleAssistantRoutes(request,env,url);
+ return handleAssistantRoutes(request,env,url,ctx);
  }
  if (url.pathname==='/v1/tts') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
@@ -110,4 +111,10 @@ export default {async fetch(request,env) {
  } catch {response=json({error:'Invalid request or unavailable service'},400);}
  if(origin) {response.headers.set('Access-Control-Allow-Origin',origin);response.headers.set('Vary','Origin');}
  return response;
-}};
+},
+async scheduled(_event, env, ctx) {
+ const job = sendWeeklyMimoReport(env);
+ if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(job);
+ else await job;
+}
+};

@@ -13,6 +13,8 @@ import {
   generateAuthenticationOptions,
   verifyAuthenticationResponse
 } from '@simplewebauthn/server';
+import { checkAndIncrementLimits } from './assistant.js';
+import { applySummary, forgetNote, getMimoState, saveNote, setConsent } from './mimo.js';
 
 export const STAMPS_GOAL = 5;
 const SESSION_DAYS = 90;
@@ -177,7 +179,7 @@ async function profile(env, m) {
 }
 
 // --- routes -------------------------------------------------------------------------------------------
-const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/auth/oauth/prepare', '/v1/me', '/v1/me/requests', '/v1/me/requests/delete', '/v1/me/delete',
+const ROUTES = new Set(['/v1/auth/start', '/v1/auth/verify', '/v1/auth/logout', '/v1/auth/providers', '/v1/auth/oauth/prepare', '/v1/me', '/v1/me/mimo', '/v1/me/mimo/summary', '/v1/me/requests', '/v1/me/requests/delete', '/v1/me/delete',
   '/v1/newsletter/subscribe', '/v1/newsletter/unsubscribe', '/v1/admin/newsletter/send',
   '/v1/partner/lookup', '/v1/partner/fulfil', '/v1/partner/cancel', '/v1/admin/campaigns',
   '/v1/passkeys', '/v1/passkeys/register/options', '/v1/passkeys/register/verify',
@@ -518,6 +520,7 @@ export async function handleMembers(request, env, url) {
     if (p === '/v1/auth/providers' && request.method === 'GET') return json(enabledProviders(env));
     if (p.startsWith('/v1/auth/oauth/')) return await handleOAuth(request, env, url);
     if (request.method === 'GET' && p === '/v1/me') return json(await profile(env, await memberFromSession(request, env)));
+    if (request.method === 'GET' && p === '/v1/me/mimo') return json(await getMimoState(env, (await memberFromSession(request, env)).id));
     if (request.method === 'GET' && p === '/v1/passkeys') {
       const m = await memberFromSession(request, env);
       const list = (await env.DB.prepare(`SELECT credential_id AS id, created_at AS createdAt, last_used_at AS lastUsedAt, transports FROM passkeys WHERE member_id=? ORDER BY created_at DESC`).bind(m.id).all()).results;
@@ -534,7 +537,7 @@ export async function handleMembers(request, env, url) {
       return new Response('<!doctype html><meta charset="utf-8"><title>Bosphorly</title><body style="font-family:system-ui,sans-serif;max-width:520px;margin:60px auto;padding:24px;color:#111"><h1>Newsletter unsubscribed</h1><p>You have been unsubscribed from Bosphorly newsletter updates.</p></body>', { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
     }
     if (request.method !== 'POST') fail(405, 'Method not allowed');
-    const body = await readJson(request, p === '/v1/admin/newsletter/send' ? 65536 : 4096);
+    const body = await readJson(request, p === '/v1/admin/newsletter/send' ? 65536 : (p === '/v1/me/mimo/summary' ? 16384 : 4096));
 
     if (p === '/v1/auth/start') {
       if (!env.CODE_PEPPER) fail(503, 'Service unavailable');
@@ -757,8 +760,39 @@ export async function handleMembers(request, env, url) {
       return json({ removed: true, member: await profile(env, m) });
     }
 
+    if (p === '/v1/me/mimo') {
+      const m = await memberFromSession(request, env);
+      if (body.forget === true) return json(await forgetNote(env, m.id));
+      if (typeof body.consent === 'boolean' && body.note === undefined) return json(await setConsent(env, m.id, body.consent));
+      if (body.note !== undefined) {
+        const saved = await saveNote(env, m.id, body.note, Date.now(), { merge: false });
+        if (!saved.saved && saved.reason === 'no_consent') fail(403, 'Consent required');
+        if (!saved.saved) fail(400, 'Note does not match the schema');
+        return json(await getMimoState(env, m.id));
+      }
+      if (typeof body.consent === 'boolean') return json(await setConsent(env, m.id, body.consent));
+      fail(400, 'Invalid Mimo request');
+    }
+
+    if (p === '/v1/me/mimo/summary') {
+      const m = await memberFromSession(request, env);
+      const limit = await checkAndIncrementLimits({
+        env,
+        actorKey: `mimo-summary:${m.id}`,
+        perHour: 6,
+        skipGlobal: true,
+      });
+      if (!limit.allowed) fail(429, 'Too many summaries');
+      const result = await applySummary(env, m.id, body.history, typeof body.lang === 'string' ? body.lang : 'en');
+      if (!result.saved && result.reason === 'no_consent') return json({ saved: false, reason: 'no_consent' });
+      if (!result.saved) return json({ saved: false, reason: 'schema' });
+      return json({ saved: true, note: result.note });
+    }
+
     if (p === '/v1/me/delete') {
       const m = await memberFromSession(request, env);
+      // The familiarity note is removed even when an older database has no foreign key for it.
+      try { await env.DB.prepare(`DELETE FROM mimo_profile WHERE member_id=?`).bind(m.id).run(); } catch { /* table is absent until migration 0010 */ }
       // Requests and coupons go with the member (ON DELETE CASCADE); referrals by others are kept anonymous.
       await env.DB.batch([
         env.DB.prepare(`UPDATE members SET referred_by=NULL WHERE referred_by=?`).bind(m.id),
