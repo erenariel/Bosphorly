@@ -62,7 +62,7 @@
   }
   const authBar = header.querySelector('.sh-auth');
   const journey = platinumPromo('join-header', 'Silver → Gold → Platinum 💎 · ' + platinumCopy.join + ' ' + platinumCopy.benefits);
-  if (journey) authBar.append(journey);
+  if (journey) (document.querySelector('main') || document.body).prepend(journey);
   const memberBar = header.querySelector('.sh-member');
   const nameEl = memberBar.querySelector('.sh-member-name');
   const tierEl = memberBar.querySelector('.sh-member-tier');
