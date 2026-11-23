@@ -47,8 +47,8 @@ export const SUPPORTED_LANGS = new Set([
 
 export const PER_MIN_LIMIT = 6;
 export const GUEST_DAILY_LIMIT = 15;
-export const SILVER_DAILY_LIMIT = 60;
-export const GOLD_DAILY_LIMIT = 120;
+export const SILVER_DAILY_LIMIT = 30;
+export const GOLD_DAILY_LIMIT = 60;
 export const PLATINUM_DAILY_LIMIT = 120;
 // Site owner (OWNER_EMAILS): effectively unlimited per day; per-minute brake still applies.
 export const OWNER_DAILY_LIMIT = 1000000;

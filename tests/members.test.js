@@ -260,7 +260,7 @@ test('country, interests and progressive tiers (silver -> gold -> platinum) with
   const goldMe = (await call(env, '/v1/me', null, up.token, 'GET')).body;
   assert.equal(goldMe.tier, 'gold');
   assert.equal(goldMe.freeUpgrade, 'eligible');
-  assert.equal(goldMe.vipPriorityDiscountBps, 500);
+  assert.equal(goldMe.vipPriorityDiscountBps, 300);
   assert.equal(goldMe.toursToNextTier, 3);
 
   // Fulfil 3 more tours (5 total) -> Platinum (priority Free Upgrade + max 10% always-on VIP priority discount).

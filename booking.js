@@ -2195,7 +2195,7 @@
     const vipText = prof && prof.tier === 'platinum'
       ? (lang === 'tr' ? '💎 Platinum VIP ayrıcalığın aktif: Öncelikli Free Upgrade + VIP servislerde %10 indirim.' : '💎 Platinum VIP active: Priority Free Upgrade + 10% VIP priority discount.')
       : prof && prof.tier === 'gold'
-        ? (lang === 'tr' ? '🥇 Gold ayrıcalığın aktif: Müsaitliğe göre Free Upgrade + VIP servislerde %5 öncelik.' : '🥇 Gold tier active: Free Upgrade (subject to availability) + 5% VIP priority.')
+        ? (lang === 'tr' ? '🥇 Gold ayrıcalığın aktif: Müsaitliğe göre Free Upgrade + VIP servislerde %3 öncelik.' : '🥇 Gold tier active: Free Upgrade (subject to availability) + 3% VIP priority.')
         : '';
     if (!coupons.length) {
       if (vipText) { $('couponHintLink').textContent = vipText; $('couponHint').hidden = false; }
@@ -2251,7 +2251,7 @@
     const vipNote = memProf && memProf.tier === 'platinum'
       ? (lang === 'tr' ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount)')
       : memProf && memProf.tier === 'gold'
-        ? (lang === 'tr' ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %5 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 5% VIP priority)')
+        ? (lang === 'tr' ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %3 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 3% VIP priority)')
         : null;
     // The snapshot is what a server would store unchanged with the request.
     const snapshot = { reference, recordId: r.id, operator: r.operator, tour: r.title, option: selOption(r)?.name || null, durationMin: selDuration(r)?.min || null, time: $('time').value,

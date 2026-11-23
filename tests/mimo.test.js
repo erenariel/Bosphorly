@@ -528,17 +528,17 @@ async function seedMember(env, {
   }
 }
 
-test('member tier chat limits (15 guest / 60 silver / 120 gold & platinum / 150 IP brake / 6 min) and D1 counter keys', async () => {
+test('member tier chat limits (15 guest / 30 silver / 60 gold / 120 platinum / 150 IP brake / 6 min) and D1 counter keys', async () => {
   assert.equal(PER_MIN_LIMIT, 6);
   assert.equal(GUEST_DAILY_LIMIT, 15);
-  assert.equal(SILVER_DAILY_LIMIT, 60);
-  assert.equal(GOLD_DAILY_LIMIT, 120);
+  assert.equal(SILVER_DAILY_LIMIT, 30);
+  assert.equal(GOLD_DAILY_LIMIT, 60);
   assert.equal(PLATINUM_DAILY_LIMIT, 120);
   assert.equal(IP_DAILY_LIMIT, 150);
   assert.deepEqual([0, 1, 2, 4, 5, 8].map(computeMemberTier), ['silver', 'silver', 'gold', 'gold', 'platinum', 'platinum']);
   assert.deepEqual(
     ['guest', 'silver', 'gold', 'platinum', 'fake'].map(chatDailyLimitForTier),
-    [15, 60, 120, 120, 15]
+    [15, 30, 60, 120, 15]
   );
 
   const env = setup();
@@ -840,12 +840,12 @@ test('member logout drops session immediately back to guest chat limit (15/16) w
   assert.equal((await sixteenth.json()).error, ASSISTANT_MESSAGES.dayLimitGuest.tr);
   assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:memout'`).get().day_count, 1);
 
-  // Verify dayLimitMember (not guest upsell) is returned when signed-in Silver hits 60/61 boundary
+  // Verify dayLimitMember (not guest upsell) is returned when signed-in Silver hits 30/31 boundary
   await seedMember(env, { id: 'silbound', email: 'silbound@example.com', token: 'tok-sil-bound', fulfilled: 0 });
   const ipSil = '203.0.113.156';
   const silChat = await createChatSessionToken(env.CODE_PEPPER, ipSil);
   env.DB.raw.prepare(
-    `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count) VALUES ('member:silbound', 0, 0, ?, 59)`
+    `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count) VALUES ('member:silbound', 0, 0, ?, 29)`
   ).run(today);
   const sil60 = await worker.fetch(new Request('https://api.example/v1/assistant', {
     method: 'POST',

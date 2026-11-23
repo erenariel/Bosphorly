@@ -140,7 +140,7 @@ function tierInfo(env, fulfilledCount) {
     return { tier: 'platinum', nextTier: null, toursToNextTier: 0, vipPriorityDiscountBps: cap, freeUpgrade: 'priority' };
   }
   if (tier === 'gold') {
-    return { tier: 'gold', nextTier: 'platinum', toursToNextTier: 5 - fulfilledCount, vipPriorityDiscountBps: Math.min(500, cap), freeUpgrade: 'eligible' };
+    return { tier: 'gold', nextTier: 'platinum', toursToNextTier: 5 - fulfilledCount, vipPriorityDiscountBps: Math.min(300, cap), freeUpgrade: 'eligible' };
   }
   return { tier: 'silver', nextTier: 'gold', toursToNextTier: 2 - fulfilledCount, vipPriorityDiscountBps: 0, freeUpgrade: 'none' };
 }

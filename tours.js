@@ -110,7 +110,7 @@
   };
   const tierText = tier => {
     if (tier === 'platinum') return tr ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount)';
-    if (tier === 'gold') return tr ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %5 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 5% VIP priority)';
+    if (tier === 'gold') return tr ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %3 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 3% VIP priority)';
     return '🥈 Silver';
   };
   const refCode = () => { const a = new Uint8Array(4); crypto.getRandomValues(a); return 'BOS-' + [...a].map(b => b.toString(36).padStart(2, '0')).join('').toUpperCase().slice(0, 6); };

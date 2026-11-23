@@ -98,13 +98,13 @@ test('wrangler.jsonc sets TTS_MONTHLY_CHAR_CAP to 800000 and limits constants ar
   assert.equal('TTS_PER_DAY_LIMIT' in ttsModule, false);
   assert.equal(TTS_PER_MIN_LIMIT, 10);
   assert.equal(TTS_GUEST_DAILY_LIMIT, 5);
-  assert.equal(TTS_SILVER_DAILY_LIMIT, 30);
-  assert.equal(TTS_GOLD_DAILY_LIMIT, 60);
+  assert.equal(TTS_SILVER_DAILY_LIMIT, 15);
+  assert.equal(TTS_GOLD_DAILY_LIMIT, 25);
   assert.equal(TTS_PLATINUM_DAILY_LIMIT, 60);
   assert.equal(TTS_IP_DAILY_LIMIT, 60);
   assert.equal(ttsDailyLimitForTier('guest'), 5);
-  assert.equal(ttsDailyLimitForTier('silver'), 30);
-  assert.equal(ttsDailyLimitForTier('gold'), 60);
+  assert.equal(ttsDailyLimitForTier('silver'), 15);
+  assert.equal(ttsDailyLimitForTier('gold'), 25);
   assert.equal(ttsDailyLimitForTier('platinum'), 60);
   assert.equal(ttsDailyLimitForTier('forged'), 5);
 });
@@ -552,7 +552,7 @@ test('POST /v1/tts enforces Origin/CORS, X-Member-Session preflight, and guest 5
   }
 });
 
-test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platinum 60/day), enforces 60/day IP brake, and ignores forged claims', async () => {
+test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 15/day, Gold 25/day, Platinum 60/day), enforces 60/day IP brake, and ignores forged claims', async () => {
   const db = realSqlD1();
   const cache = createMemoryCache();
   const env = {
@@ -979,7 +979,7 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
   }
 });
 
-test('checkTtsActorRateLimit without env.DB tracks guest (5/day) and member tier (10/min, 30/day) in memory and always returns boolean', async () => {
+test('checkTtsActorRateLimit without env.DB tracks guest (5/day) and member tier (10/min, silver 15/day) in memory and always returns boolean', async () => {
   const baseTime = Date.UTC(2026, 10, 22, 8, 0, 0);
 
   // Guest default (5/day) in memory path without DB
