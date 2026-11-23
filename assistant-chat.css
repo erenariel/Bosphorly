@@ -85,8 +85,8 @@
 .bc-human-btn:hover:not(:disabled){background:#f0f4fa}
 .bc-listen{margin:0;padding:0 12px 2px;background:#fff;color:#b42318;font-size:12px;font-weight:700}
 .bc-listen[hidden]{display:none}
-.bc-mic-note{margin:0;padding:0 12px 4px;background:#fff;color:#5c6b82;font-size:12px;line-height:1.35}
-.bc-mic-note[hidden]{display:none}
+.bc-mic-note,.bc-tts-note{margin:0;padding:0 12px 4px;background:#fff;color:#5c6b82;font-size:12px;line-height:1.35}
+.bc-mic-note[hidden],.bc-tts-note[hidden]{display:none}
 .bc-form{display:flex;gap:6px;padding:6px 12px 10px;background:#fff;align-items:center}
 .bc-quick-toggle{flex:none;width:36px;height:40px;min-width:36px;min-height:40px;border:1px solid #c2cfe0;background:#fff;color:#0a1753;border-radius:10px;font-size:16px;line-height:1;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .bc-quick-toggle[hidden]{display:none}
@@ -148,9 +148,9 @@
   .bc-handoff button.bc-forward-btn,.bc-send,.bc-offer-btn{background:#2351c9;border-color:#2351c9;color:#fff}
   .bc-offer-btn.secondary,.bc-human-btn,.bc-quick-toggle,.bc-mic{background:#142247;color:#dbe6ff;border-color:#2b3f73}
   .bc-human-btn:hover:not(:disabled),.bc-quick-toggle:hover:not(:disabled),.bc-mic:hover:not(:disabled){background:#1c2f60}
-  .bc-actions,.bc-form,.bc-listen,.bc-mic-note,.bc-turnstile{background:#0f1a38;border-top-color:#1f2e52}
+  .bc-actions,.bc-form,.bc-listen,.bc-mic-note,.bc-tts-note,.bc-turnstile{background:#0f1a38;border-top-color:#1f2e52}
   .bc-listen{color:#ff8a80}
-  .bc-mic-note{color:#a9bad8}
+  .bc-mic-note,.bc-tts-note{color:#a9bad8}
 }
 @media (prefers-reduced-motion:reduce){
   .bc-head-avatar,.bc-bot-avatar,.bc-dot,.bc-speaking,.bc-tts-toggle,.bc-tts-switch,.bc-tts-switch::after{animation:none!important;transition:none!important}

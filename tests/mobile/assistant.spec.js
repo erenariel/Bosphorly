@@ -1001,7 +1001,7 @@ test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims 
   await expect(thanksImg).toHaveAttribute('src', /mimo-happy\.svg$/);
 });
 
-test('Mimo voice reply: default off, persists toggle in localStorage, 44px button, sanitizes text, animates avatar, stops on mic/send/close/pagehide', async ({ page }) => {
+test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, animates avatar, stops Audio on mic/send/close/pagehide', async ({ page }) => {
   await page.addInitScript(() => {
     window.__ttsMock = {
       voices: [
@@ -1012,11 +1012,33 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
       cancels: 0,
       lastUtterance: null,
     };
+    window.__audioMock = { played: 0, paused: 0, srcs: [], failPlay: false, last: null };
+    window.Audio = class MockAudio {
+      constructor(src) {
+        this.src = src;
+        this.onended = null;
+        this.onerror = null;
+        window.__audioMock.srcs.push(src);
+        window.__audioMock.last = this;
+      }
+      play() {
+        if (window.__audioMock.failPlay) {
+          return Promise.reject(new DOMException('Autoplay blocked', 'NotAllowedError'));
+        }
+        window.__audioMock.played += 1;
+        return Promise.resolve();
+      }
+      pause() { window.__audioMock.paused += 1; }
+      removeAttribute() {}
+      load() {}
+    };
     class MockUtterance {
       constructor(text) {
         this.text = text;
         this.lang = '';
         this.voice = null;
+        this.pitch = 1;
+        this.rate = 1;
         this.onend = null;
         this.onerror = null;
       }
@@ -1027,7 +1049,7 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
       value: {
         getVoices() { return window.__ttsMock.voices; },
         speak(u) {
-          window.__ttsMock.spoken.push({ text: u.text, lang: u.lang, voiceLang: u.voice && u.voice.lang });
+          window.__ttsMock.spoken.push({ text: u.text, lang: u.lang, voiceLang: u.voice && u.voice.lang, pitch: u.pitch, rate: u.rate });
           window.__ttsMock.lastUtterance = u;
         },
         cancel() {
@@ -1046,6 +1068,16 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
     await route.fulfill({
       contentType: 'text/javascript',
       body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-tts-1"),5);return 1},reset(){}};',
+    });
+  });
+
+  const ttsBodies = [];
+  await page.route('**/v1/tts', async (route) => {
+    ttsBodies.push(route.request().postDataJSON());
+    await route.fulfill({
+      status: 200,
+      headers: { 'Content-Type': 'audio/mpeg' },
+      body: Buffer.from([0x49, 0x44, 0x33, 0x04, 0x00, 0x01, 0x02, 0x03]),
     });
   });
 
@@ -1085,6 +1117,7 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
   await panel.locator('.bc-send').click();
   const botMsg = panel.locator('.bc-msg.bot').last();
   await expect(botMsg).toContainText('25 EUR');
+  expect(await page.evaluate(() => window.__audioMock.played)).toBe(0);
   expect(await page.evaluate(() => window.__ttsMock.spoken.length)).toBe(0);
 
   // Per-message 🔊 button has >= 44px touch target & localized aria-label
@@ -1095,13 +1128,13 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
   expect(sbBox.width).toBeGreaterThanOrEqual(44);
   expect(sbBox.height).toBeGreaterThanOrEqual(44);
 
-  // Click 🔊 -> speaks cleaned text in tr-TR, switches Mimo avatar to speaking state
+  // Click 🔊 -> requests /v1/tts and plays Audio MP3, keeps speechSynthesis idle, switches Mimo avatar
   await speakBtn.click();
-  const spoken1 = await page.evaluate(() => window.__ttsMock.spoken[0]);
-  expect(spoken1.lang).toBe('tr-TR');
-  expect(spoken1.voiceLang).toBe('tr-TR');
-  expect(spoken1.text).toContain('Sabah Boğaz Turu kişi başı 25 EUR');
-  expect(spoken1.text).not.toMatch(/\*\*|🌊|⛵|https?:|bosphorly\.com|bağlantı|\[\[flags/i);
+  await expect.poll(async () => page.evaluate(() => window.__audioMock.played)).toBe(1);
+  expect(await page.evaluate(() => window.__ttsMock.spoken.length)).toBe(0);
+  expect(ttsBodies[0].lang).toBe('tr');
+  expect(ttsBodies[0].text).toContain('Sabah Boğaz Turu kişi başı 25 EUR');
+  expect(ttsBodies[0].text).not.toMatch(/\*\*|🌊|⛵|https?:|bosphorly\.com|bağlantı|\[\[flags/i);
 
   await expect(speakBtn).toHaveAttribute('aria-pressed', 'true');
   await expect(speakBtn).toHaveAttribute('aria-label', 'Okumayı durdur');
@@ -1109,20 +1142,29 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
   await expect(panel.locator('.bc-head-avatar')).toHaveClass(/bc-speaking/);
   await expect(panel.locator('.bc-bot-avatar').last()).toHaveAttribute('src', /mimo-speaking\.svg$/);
 
-  // Click again -> stops speaking & resets avatar
+  // Click again -> pauses Audio, cancels speech, resets avatar
   await speakBtn.click();
-  expect(await page.evaluate(() => window.__ttsMock.cancels)).toBeGreaterThanOrEqual(2);
+  expect(await page.evaluate(() => window.__audioMock.paused)).toBeGreaterThanOrEqual(1);
   await expect(speakBtn).toHaveAttribute('aria-pressed', 'false');
   await expect(panel.locator('.bc-head-avatar')).not.toHaveClass(/bc-speaking/);
 
-  // Clicking mic button stops active playback immediately
+  // Clicking mic button stops active Audio immediately
   await speakBtn.click();
-  await expect(panel.locator('.bc-head-avatar')).toHaveClass(/bc-speaking/);
-  const cancelsBeforeMic = await page.evaluate(() => window.__ttsMock.cancels);
+  await expect.poll(async () => page.evaluate(() => window.__audioMock.played)).toBe(2);
+  const pausedBeforeMic = await page.evaluate(() => window.__audioMock.paused);
   await panel.locator('.bc-mic').click();
-  expect(await page.evaluate(() => window.__ttsMock.cancels)).toBeGreaterThan(cancelsBeforeMic);
+  expect(await page.evaluate(() => window.__audioMock.paused)).toBeGreaterThan(pausedBeforeMic);
   await expect(panel.locator('.bc-head-avatar')).not.toHaveClass(/bc-speaking/);
-  await page.locator('.bc-mic').click();
+  await panel.locator('.bc-mic').click();
+
+  // Sending a new message stops active Audio immediately
+  await speakBtn.click();
+  await expect.poll(async () => page.evaluate(() => window.__audioMock.played)).toBe(3);
+  const pausedBeforeSend = await page.evaluate(() => window.__audioMock.paused);
+  await panel.locator('.bc-input').fill('Transfer fiyatı nedir?');
+  await panel.locator('.bc-send').click();
+  expect(await page.evaluate(() => window.__audioMock.paused)).toBeGreaterThan(pausedBeforeSend);
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('60 EUR');
 
   // Enable "Sesli cevap" switch -> stored in localStorage and persists across reload
   await ttsToggle.click();
@@ -1133,29 +1175,117 @@ test('Mimo voice reply: default off, persists toggle in localStorage, 44px butto
   await page.locator('.bc-fab').click();
   await expect(panel.locator('.bc-tts-toggle')).toHaveAttribute('aria-checked', 'true');
 
-  // Sending message auto-speaks new reply; closing panel & pagehide stop speech
-  await panel.locator('.bc-input').fill('Transfer fiyatı nedir?');
+  // Auto-speaks new reply via /v1/tts Audio; closing panel & pagehide stop Audio
+  await panel.locator('.bc-input').fill('Transfer fiyatı tekrar?');
   await panel.locator('.bc-send').click();
-  await expect.poll(async () => page.evaluate(() => window.__ttsMock.spoken.length)).toBe(1);
-  const autoSpoken = await page.evaluate(() => window.__ttsMock.spoken[0].text);
-  expect(autoSpoken).toContain('IST transferi 60 EUR Bilgi');
-  expect(autoSpoken).not.toMatch(/https?:|bosphorly\.com|💙|\*\*|\[\[flags/);
+  await expect.poll(async () => page.evaluate(() => window.__audioMock.played)).toBe(1);
+  expect(ttsBodies[ttsBodies.length - 1].text).toContain('IST transferi 60 EUR Bilgi');
 
-  const cancelsBeforeClose = await page.evaluate(() => window.__ttsMock.cancels);
+  const pausedBeforeClose = await page.evaluate(() => window.__audioMock.paused);
   await panel.locator('.bc-close').click();
-  expect(await page.evaluate(() => window.__ttsMock.cancels)).toBeGreaterThan(cancelsBeforeClose);
+  expect(await page.evaluate(() => window.__audioMock.paused)).toBeGreaterThan(pausedBeforeClose);
 
   await page.locator('.bc-fab').click();
   await panel.locator('.bc-speak-btn').last().click();
-  const cancelsBeforeUnload = await page.evaluate(() => window.__ttsMock.cancels);
+  await expect.poll(async () => page.evaluate(() => window.__audioMock.played)).toBe(2);
+  const pausedBeforeUnload = await page.evaluate(() => window.__audioMock.paused);
   await page.evaluate(() => window.dispatchEvent(new Event('pagehide')));
-  expect(await page.evaluate(() => window.__ttsMock.cancels)).toBeGreaterThan(cancelsBeforeUnload);
+  expect(await page.evaluate(() => window.__audioMock.paused)).toBeGreaterThan(pausedBeforeUnload);
+});
+
+test('Mimo voice reply falls back silently to speechSynthesis (pitch=1.2, rate=1.05) on {fallback:true} or autoplay reject, and stops on new message', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(e.message));
+  await page.addInitScript(() => {
+    window.__fbTts = { spoken: [], cancels: 0 };
+    window.__fbAudio = { failPlay: false };
+    window.Audio = class MockAudio {
+      play() {
+        if (window.__fbAudio.failPlay) {
+          return Promise.reject(new DOMException('Autoplay blocked', 'NotAllowedError'));
+        }
+        return Promise.resolve();
+      }
+      pause() {}
+      removeAttribute() {}
+      load() {}
+    };
+    window.SpeechSynthesisUtterance = class {
+      constructor(t) { this.text = t; this.lang = ''; this.voice = null; this.pitch = 1; this.rate = 1; }
+    };
+    Object.defineProperty(window, 'speechSynthesis', {
+      configurable: true,
+      value: {
+        getVoices() { return [{ lang: 'tr-TR', name: 'Yelda', localService: true }]; },
+        speak(u) { window.__fbTts.spoken.push({ text: u.text, lang: u.lang, pitch: u.pitch, rate: u.rate }); },
+        cancel() { window.__fbTts.cancels += 1; },
+        addEventListener() {},
+      },
+    });
+  });
+
+  await page.route('https://challenges.cloudflare.com/**', async (route) => {
+    await route.fulfill({
+      contentType: 'text/javascript',
+      body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-fb-1"),5);return 1},reset(){}};',
+    });
+  });
+
+  let ttsMode = 'fallback';
+  await page.route('**/v1/tts', async (route) => {
+    if (ttsMode === 'fallback') {
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ fallback: true }) });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      headers: { 'Content-Type': 'audio/mpeg' },
+      body: Buffer.from([0x49, 0x44, 0x33, 0x04]),
+    });
+  });
+
+  await page.route('**/v1/assistant', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ reply: 'Boğaz sabah turu 25 EUR 😊 Hadi çıkalım!', handoff: false, lang: 'tr' }),
+    });
+  });
+
+  await page.goto('/index.html?lang=tr');
+  await page.locator('.bc-fab').click();
+  const panel = page.locator('.bc-panel');
+  await panel.locator('.bc-speak-btn').first().click();
+
+  await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(1);
+  const s1 = await page.evaluate(() => window.__fbTts.spoken[0]);
+  expect(s1.lang).toBe('tr-TR');
+  expect(s1.pitch).toBeCloseTo(1.2, 2);
+  expect(s1.rate).toBeCloseTo(1.05, 2);
+
+  // Sending a new message cancels browser speechSynthesis immediately
+  const cancelsBeforeNewMsg = await page.evaluate(() => window.__fbTts.cancels);
+  await panel.locator('.bc-input').fill('Yeni soru');
+  await panel.locator('.bc-send').click();
+  expect(await page.evaluate(() => window.__fbTts.cancels)).toBeGreaterThan(cancelsBeforeNewMsg);
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('25 EUR');
+
+  // When /v1/tts returns MP3 but Audio.play() is blocked, falls back silently without pageerror
+  ttsMode = 'mp3';
+  await page.evaluate(() => { window.__fbAudio.failPlay = true; });
+  await panel.locator('.bc-speak-btn').last().click();
+  await expect.poll(async () => page.evaluate(() => window.__fbTts.spoken.length)).toBe(2);
+  const s2 = await page.evaluate(() => window.__fbTts.spoken[1]);
+  expect(s2.text).toBe('Boğaz sabah turu 25 EUR. Hadi çıkalım!');
+  expect(s2.pitch).toBeCloseTo(1.2, 2);
+  expect(s2.rate).toBeCloseTo(1.05, 2);
+  expect(pageErrors).toEqual([]);
 });
 
 test('Mimo voice reply waits for full SSE completion (never chunk-by-chunk), strips [[flags]], and supports RTL header layout', async ({ page }) => {
   await page.addInitScript(() => {
     window.__sseTts = { spoken: [], cancels: 0 };
-    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.voice = null; } };
+    window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; this.lang = ''; this.voice = null; this.pitch = 1; this.rate = 1; } };
     Object.defineProperty(window, 'speechSynthesis', {
       configurable: true,
       value: {
@@ -1179,6 +1309,9 @@ test('Mimo voice reply waits for full SSE completion (never chunk-by-chunk), str
       contentType: 'text/javascript',
       body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-sse-tts"),5);return 1},reset(){}};',
     });
+  });
+  await page.route('**/v1/tts', async (route) => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ fallback: true }) });
   });
 
   await page.goto('/index.html?lang=tr');
@@ -1233,7 +1366,7 @@ test('Mimo voice reply waits for full SSE completion (never chunk-by-chunk), str
   }
 });
 
-test('Mimo voice reply disables animation in prefers-reduced-motion and hides controls when page language has no voice', async ({ page }) => {
+test('Mimo voice reply shows localized noVoiceDevice note when /v1/tts falls back without local voice, hides fa controls, and disables animation in reduced-motion', async ({ page }) => {
   await page.addInitScript(() => {
     window.__ttsSpokenNoVoice = 0;
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
@@ -1246,13 +1379,15 @@ test('Mimo voice reply disables animation in prefers-reduced-motion and hides co
         addEventListener() {},
       },
     });
-    try { localStorage.setItem('bosphorly.mimo_tts', '1'); } catch {}
   });
   await page.route('https://challenges.cloudflare.com/**', async (route) => {
     await route.fulfill({
       contentType: 'text/javascript',
       body: 'window.turnstile={render:(el,o)=>{setTimeout(()=>o.callback("ts-tts-2"),5);return 1},reset(){}};',
     });
+  });
+  await page.route('**/v1/tts', async (route) => {
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ fallback: true }) });
   });
   await page.route('**/v1/assistant', async (route) => {
     await route.fulfill({
@@ -1262,21 +1397,38 @@ test('Mimo voice reply disables animation in prefers-reduced-motion and hides co
     });
   });
 
+  // Chirp supports DE, so controls show; if /v1/tts returns fallback and device has no DE voice, .bc-tts-note explains cleanly
   await page.goto('/index.html?lang=de');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
-  await expect(panel.locator('.bc-tts-toggle')).toBeHidden();
-  await expect(panel.locator('.bc-speak-btn').first()).toBeHidden();
+  await expect(panel.locator('.bc-tts-toggle')).toBeVisible();
+  await expect(panel.locator('.bc-speak-btn').first()).toBeVisible();
 
   await panel.locator('.bc-input').fill('Transfer Preis?');
   await panel.locator('.bc-send').click();
   await expect(panel.locator('.bc-msg.bot').last()).toContainText('60 EUR');
-  await expect(panel.locator('.bc-speak-btn').last()).toBeHidden();
+  await panel.locator('.bc-speak-btn').last().click();
+  const ttsNote = panel.locator('.bc-tts-note');
+  await expect(ttsNote).toBeVisible();
+  await expect(ttsNote).toContainText('Auf deinem Gerät ist keine Stimme für diese Sprache verfügbar');
+  await expect(panel.locator('.bc-head-avatar')).not.toHaveClass(/bc-speaking/);
   expect(await page.evaluate(() => window.__ttsSpokenNoVoice)).toBe(0);
+
+  // Chirp does NOT support fa; when device also lacks Persian voice, controls remain hidden
+  await page.goto('/index.html?lang=fa');
+  await page.locator('.bc-fab').click();
+  await expect(panel.locator('.bc-tts-toggle')).toBeHidden();
+  await expect(panel.locator('.bc-speak-btn').first()).toBeHidden();
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => {
+    window.Audio = class MockAudio {
+      play() { return Promise.resolve(); }
+      pause() {}
+      removeAttribute() {}
+      load() {}
+    };
     window.SpeechSynthesisUtterance = class { constructor(t) { this.text = t; } };
     Object.defineProperty(window, 'speechSynthesis', {
       configurable: true,

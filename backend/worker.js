@@ -1,6 +1,7 @@
 import {plan, publicQuote} from './domain.js';
 import {handleMembers, isMemberRoute} from './members.js';
 import {handleAssistantRoutes} from './assistant.js';
+import {handleTtsRoute} from './tts.js';
 import {handleTelegramWebhook} from './telegram.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export default {async fetch(request,env) {
@@ -23,6 +24,10 @@ export default {async fetch(request,env) {
  if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback' || url.pathname==='/v1/assistant/transcribe') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  return handleAssistantRoutes(request,env,url);
+ }
+ if (url.pathname==='/v1/tts') {
+ if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
+ return handleTtsRoute(request,env,url);
  }
  let response;
  try {
