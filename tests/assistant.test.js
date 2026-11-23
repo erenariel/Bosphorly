@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
 import knowledge from '../backend/knowledge.json' with { type: 'json' };
 import {
+  ANTI_REPEAT_RULE,
   MIMO_FAVORITE_LABEL,
   PRICE_CHECK_BOOKING,
   TIME_HUMOR_NOTES,
@@ -15,6 +16,7 @@ import {
   extractFlagsTag,
   getFewShotEntryCount,
   getFewShotsPromptBlock,
+  isRepetitiveAgainstHistory,
   stripModelThinking,
 } from '../backend/mimo-personality.js';
 import worker from '../backend/worker.js';
@@ -35,6 +37,7 @@ import {
   isAbuseAgainstMimo,
   isAiIdentityQuestion,
   isCatalogQuestion,
+  isPriceQuery,
   isServiceComplaint,
   isSmallTalk,
   redactSensitive,
@@ -1590,25 +1593,44 @@ test('the canned welcome is only for an opening plain hello; a hello mid-convers
   }
 });
 
-test('Mimo 2.0 skips extra repeat-check second model call for faster latency', async () => {
+test('non-repetitive follow-ups keep 1-call latency while verbatim repeat triggers 1 regeneration', async () => {
   const calls = [];
-  const env = {
+  const envFresh = {
     AI: {
       run: async (_model, opts) => {
         calls.push(opts);
-        return { response: 'Harika bir gün! Sen nasılsın?\n[[flags:abuse=0;handoff=0]]' };
+        return { response: 'Kadıköy vapur iskelesi bugün çok hareketli! Hangi semti geziyorsun?\n[[flags:abuse=0;handoff=0]]' };
       },
     },
   };
-  const res = await runAssistant({
+  const freshRes = await runAssistant({
     message: 'nasılsın',
     pageLang: 'tr',
     history: [{ role: 'user', content: 'nasılsın' }, { role: 'assistant', content: 'Harika bir gün! Sen nasılsın?' }],
-    env,
+    env: envFresh,
     actorKey: 'no-repeat-fast',
   });
-  assert.equal(calls.length, 1, 'no second AI call triggered for repeat check');
-  assert.equal(res.reply, 'Harika bir gün! Sen nasılsın?');
+  assert.equal(calls.length, 1, 'non-repetitive follow-up should stay single AI call for fast latency');
+  assert.ok(freshRes.reply.includes('Kadıköy'));
+
+  let repCalls = 0;
+  const repRes = await runAssistant({
+    message: 'nasılsın',
+    pageLang: 'tr',
+    history: [{ role: 'user', content: 'nasılsın' }, { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' }],
+    env: {
+      AI: {
+        run: async () => {
+          repCalls += 1;
+          if (repCalls === 1) return { response: 'Süperim! Sabah simidimi martılarla paylaştım 😄\n[[flags:abuse=0;handoff=0]]' };
+          return { response: 'Keyfim yerinde! Az önce Karaköy kıyısında gün ışığını izliyordum, senin günün nasıl?\n[[flags:abuse=0;handoff=0]]' };
+        },
+      },
+    },
+    actorKey: 'repeat-regen-check',
+  });
+  assert.equal(repCalls, 2, 'repeated answer should regenerate once');
+  assert.ok(repRes.reply.includes('Karaköy'));
 });
 
 test('political questions: the prompt tells Mimo to change the subject kindly, and the reply is not a handoff', async () => {
@@ -1741,16 +1763,20 @@ test('model config disables thinking, caps tokens at 350, compacts prompt, and u
       },
     },
   };
-  await runAssistant({ message: 'Boğaz turu fiyatı ne kadar?', pageLang: 'tr', env, actorKey: 'cfg-check' });
+  await runAssistant({ message: 'Boğaz turu hakkında bilgi verir misin?', pageLang: 'tr', env, actorKey: 'cfg-check-info' });
   assert.equal(capturedModel, ASSISTANT_MODEL);
   assert.equal(capturedModel, '@cf/google/gemma-4-26b-a4b-it');
   assert.equal(capturedOpts.max_completion_tokens, 350);
   assert.deepEqual(capturedOpts.chat_template_kwargs, { enable_thinking: false });
-  const sys = capturedOpts.messages[0].content;
-  assert.ok(sys.includes('Samimi "sen" hitabı'));
-  assert.ok(sys.includes('EXAMPLES:'));
-  assert.ok(sys.includes('[[flags:abuse=0;handoff=0]]'));
-  assert.ok(sys.length < 4800, `Character prompt + 7 few-shots + 3 chunks stay compact (got ${sys.length})`);
+  const sysInfo = capturedOpts.messages[0].content;
+  assert.ok(sysInfo.includes('Samimi "sen" hitabı'));
+  assert.ok(sysInfo.includes('EXAMPLES:'));
+  assert.ok(sysInfo.includes('[[flags:abuse=0;handoff=0]]'));
+  assert.ok(sysInfo.length < 4800, `Character prompt + 7 few-shots + 3 chunks stay compact (got ${sysInfo.length})`);
+
+  await runAssistant({ message: 'Boğaz turu fiyatı ne kadar?', pageLang: 'tr', env, actorKey: 'cfg-check-price' });
+  const sysPrice = capturedOpts.messages[0].content;
+  assert.ok(sysPrice.length < 5600, `5-chunk price prompt stays compact (got ${sysPrice.length})`);
 });
 
 test('repeat greetings and "Ben Mimo" intros are suppressed on follow-up turns and web chat after initial welcome', async () => {
@@ -2110,9 +2136,11 @@ test('small talk ("nasılsın?", "Selam nasılsın") recovers non-JSON/truncated
 
 // ---------------- Mimo 2.0 Suite ----------------
 
-test('Mimo 2.0: retrieval defaults to 3 chunks and history trims to 4 messages', async () => {
-  const defaultChunks = retrieveChunks('Bosphorus sunset cruise price');
-  assert.equal(defaultChunks.length, 3, 'default retrieval k should be 3');
+test('Mimo 2.0: retrieval defaults to 3 chunks (5 for price queries) and history trims to 4 messages', async () => {
+  const defaultChunks = retrieveChunks('Bosphorus sunset cruise');
+  assert.equal(defaultChunks.length, 3, 'default retrieval k should be 3 for non-price queries');
+  const priceChunks = retrieveChunks('Bosphorus sunset cruise price');
+  assert.equal(priceChunks.length, 5, 'price retrieval k should expand to 5');
 
   let seenHistoryCount = -1;
   const env = {
@@ -2503,4 +2531,254 @@ test('AI Gateway 429 spend limit does not retry or time out and replies politely
   assert.equal(done.handoff, false);
   assert.equal(done.reply, ASSISTANT_MESSAGES.gatewayTired.tr);
 });
+
+test('Retrieval diversity: "Akşam Boğaz turu ne kadar?" includes sunset + dinner tours, <=2 per category, k=5, and RU/HE price queries include sunset', () => {
+  assert.equal(isPriceQuery('Akşam Boğaz turu ne kadar?'), true);
+  assert.equal(isPriceQuery('Сколько стоит вечерний круиз по Босфору?'), true);
+  assert.equal(isPriceQuery('כמה עולה שייט ערב בבוספורוס?'), true);
+  assert.equal(isPriceQuery('Boğaz turu nasıldır?'), false);
+
+  const trEvening = retrieveChunks('Akşam Boğaz turu ne kadar?');
+  assert.equal(trEvening.length, 5, 'price query should retrieve k=5 chunks');
+  assert.ok(trEvening.some((c) => c.id === 'tour-bb-sunset' || c.id === 'tour-sl-sunset'), 'TR evening price query must include a sunset cruise');
+  assert.ok(trEvening.some((c) => c.id === 'tour-sl-sunset'), 'TR evening price query must include the cheapest suitable option (tour-sl-sunset)');
+  assert.ok(trEvening.some((c) => c.id === 'tour-bb-sunset'), 'TR evening price query must include 20 EUR tour-bb-sunset');
+  assert.ok(trEvening.some((c) => c.category === 'dinner'), 'TR evening price query must also include a dinner cruise');
+
+  const verifyCatCap = (chunks, label) => {
+    const counts = new Map();
+    for (const c of chunks) {
+      if (!c.category) continue;
+      const next = (counts.get(c.category) || 0) + 1;
+      counts.set(c.category, next);
+      assert.ok(next <= 2, `${label}: category "${c.category}" exceeded max 2 chunks (${next})`);
+    }
+  };
+  verifyCatCap(trEvening, 'TR evening price');
+
+  const ruEvening = retrieveChunks('Сколько стоит вечерний круиз по Босфору?');
+  assert.equal(ruEvening.length, 5);
+  assert.ok(ruEvening.some((c) => c.id === 'tour-bb-sunset' || c.id === 'tour-sl-sunset'), 'RU evening cruise price must include a sunset cruise');
+  verifyCatCap(ruEvening, 'RU evening price');
+
+  const heEvening = retrieveChunks('כמה עולה שייט ערב בבוספורוס?');
+  assert.equal(heEvening.length, 5);
+  assert.ok(heEvening.some((c) => c.id === 'tour-bb-sunset' || c.id === 'tour-sl-sunset'), 'HE evening cruise price must include a sunset cruise');
+  verifyCatCap(heEvening, 'HE evening price');
+
+  const heSunset = retrieveChunks('כמה עולה שייט שקיעה בבוספורוס?');
+  assert.equal(heSunset.length, 5);
+  assert.ok(heSunset.some((c) => c.id === 'tour-bb-sunset' || c.id === 'tour-sl-sunset'), 'HE sunset cruise price must include a sunset cruise');
+  verifyCatCap(heSunset, 'HE sunset price');
+});
+
+test('Price prompt rule lists cheapest option first without shortening chunk text, and keeps price & ethical belts active', async () => {
+  let capturedPrompt = '';
+  const res = await runAssistant({
+    message: 'Akşam Boğaz turu ne kadar?',
+    pageLang: 'tr',
+    env: {
+      AI: {
+        run: async (_m, opts) => {
+          capturedPrompt = opts.messages[0].content;
+          return {
+            response: 'Gün batımı Boğaz turu yaklaşık 9 USD. Yemekli Boğaz turu yaklaşık 70 EUR. Almazsan çok üzülürüm! Özel VIP 999 EUR! https://bosphorly.com/booking.html?service=sl-sunset&lang=tr\n[[flags:abuse=0;handoff=0]]',
+          };
+        },
+      },
+    },
+    actorKey: 'price-first-order-check',
+  });
+  assert.ok(capturedPrompt.includes(ANTI_REPEAT_RULE), 'prompt includes ANTI_REPEAT_RULE');
+  assert.ok(/cheapest suitable option from CONTEXT first/i.test(capturedPrompt), 'prompt instructs cheapest option first');
+  assert.ok(capturedPrompt.includes('2 saat tekne + Asya yakasında 1 saat mola'), 'chunk text is preserved without extra truncation');
+  assert.ok(res.reply.includes('9 USD'), 'valid KB price kept');
+  assert.ok(res.reply.includes('70 EUR'), 'valid dinner KB price kept');
+  assert.ok(!res.reply.includes('999'), 'hallucinated 999 EUR stripped by enforcePriceSafetyBelt');
+  assert.ok(!/üzülürüm/i.test(res.reply), 'guilt phrase stripped by enforceEthicalBoundary');
+});
+
+test('Anti-repetition guard detects cross-lingual anecdote reuse across last 2 assistant turns, triggers 1 regen, and respects 9s+1 retry budget', async () => {
+  // Unit checks for isRepetitiveAgainstHistory (inspecting last 2 assistant replies, cross-lingual TR -> HE & keyword overlap)
+  assert.equal(
+    isRepetitiveAgainstHistory(
+      'מעולה! הבוקר חלקתי את הסימיט שלי עם השחפים ליד הרציף 😄',
+      [
+        { role: 'user', content: 'Selam nasılsın' },
+        { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' },
+      ],
+      'מה נשמע?',
+    ),
+    true,
+    'cross-lingual TR -> HE simit/seagulls anecdote triggers repetition detector',
+  );
+  assert.equal(
+    isRepetitiveAgainstHistory(
+      'מצוין! טיילתי הבוקר בקראקוי והים ממש רגוע, מה התוכנית שלך?',
+      [
+        { role: 'user', content: 'Selam nasılsın' },
+        { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' },
+      ],
+      'מה נשמע?',
+    ),
+    false,
+    'fresh Hebrew reply does not falsely trigger repetition detector',
+  );
+  // 2nd most recent assistant reply IS checked; 3rd most recent is outside the 2-reply window
+  assert.equal(
+    isRepetitiveAgainstHistory(
+      'Sabah simidimi çay eşliğinde yedim!',
+      [
+        { role: 'assistant', content: 'Sabah simidimi martılarla bölüştüm!' },
+        { role: 'user', content: 'Hava nasıl?' },
+        { role: 'assistant', content: 'Hava güneşli ve hafif rüzgarlı.' },
+      ],
+      'Naber?',
+    ),
+    true,
+    'checks 2nd most recent assistant message',
+  );
+  assert.equal(
+    isRepetitiveAgainstHistory(
+      'Sabah simidimi çay eşliğinde yedim!',
+      [
+        { role: 'assistant', content: 'Sabah simidimi martılarla bölüştüm!' },
+        { role: 'assistant', content: 'Hava güneşli.' },
+        { role: 'assistant', content: 'Vapur saatleri sık işliyor.' },
+      ],
+      'Naber?',
+    ),
+    false,
+    'ignores assistant messages older than last 2',
+  );
+
+  // Mock AI integration: TR -> HE "מה נשמע?" repeating anecdote triggers 1 regeneration
+  let heCalls = 0;
+  const heRes = await runAssistant({
+    message: 'מה נשמע?',
+    pageLang: 'he',
+    alreadyGreeted: true,
+    history: [
+      { role: 'user', content: 'Selam nasılsın' },
+      { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' },
+    ],
+    env: {
+      AI: {
+        run: async (_m, opts) => {
+          heCalls += 1;
+          if (heCalls === 1) {
+            return { response: 'הכל טוב! הבוקר חלקתי את הסימיט שלי עם השחפים ליד המזח 😄\n[[flags:abuse=0;handoff=0]]' };
+          }
+          assert.ok(opts.messages.some((m) => m.role === 'system' && /repeated an anecdote/i.test(m.content)));
+          return { response: 'מצוין! בדיוק עברתי ליד הגשר וראיתי דייגים בגשם קל. מה בא לך לראות היום?\n[[flags:abuse=0;handoff=0]]' };
+        },
+      },
+    },
+    actorKey: 'repeat-tr-he-regen',
+  });
+  assert.equal(heCalls, 2, 'repeated TR->HE anecdote triggers exactly 1 regeneration');
+  assert.ok(!heRes.reply.includes('סימיט'), 'repeated anecdote replaced');
+  assert.ok(heRes.reply.includes('דייגים'));
+
+  // Budget guard 1: if call 1 timed out and retry call 2 returned repetitive text, NEVER exceed 9s+1 retry budget (2 calls max)
+  let timeoutBudgetCalls = 0;
+  const budgetRes1 = await runAssistant({
+    message: 'מה נשמע?',
+    pageLang: 'he',
+    alreadyGreeted: true,
+    aiTimeoutMs: 40,
+    history: [
+      { role: 'user', content: 'Selam nasılsın' },
+      { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' },
+    ],
+    env: {
+      AI: {
+        run: async () => {
+          timeoutBudgetCalls += 1;
+          if (timeoutBudgetCalls === 1) {
+            await new Promise((r) => setTimeout(r, 80));
+            return { response: 'too late' };
+          }
+          return { response: 'נהדר! חלקתי סימיט עם השחפים הבוקר!\n[[flags:abuse=0;handoff=0]]' };
+        },
+      },
+    },
+    actorKey: 'repeat-budget-cap',
+  });
+  assert.equal(timeoutBudgetCalls, 2, 'must not make a 3rd AI call after timeout retry already spent the 1 retry budget');
+  assert.ok(budgetRes1.reply.includes('שחפים'), 'keeps first valid draft when retry budget is exhausted');
+
+  // Budget guard 2: if call 1 succeeds with repetitive reply and regen call 2 times out, fall back to draft #1
+  let regenTimeoutCalls = 0;
+  const budgetRes2 = await runAssistant({
+    message: 'מה נשמע?',
+    pageLang: 'he',
+    alreadyGreeted: true,
+    aiTimeoutMs: 50,
+    history: [
+      { role: 'user', content: 'Selam nasılsın' },
+      { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' },
+    ],
+    env: {
+      AI: {
+        run: async () => {
+          regenTimeoutCalls += 1;
+          if (regenTimeoutCalls === 1) {
+            return { response: 'הכל טוב! חלקתי סימיט עם השחפים הבוקר!\n[[flags:abuse=0;handoff=0]]' };
+          }
+          await new Promise((r) => setTimeout(r, 120));
+          return { response: 'too late' };
+        },
+      },
+    },
+    actorKey: 'repeat-regen-timeout-fallback',
+  });
+  assert.equal(regenTimeoutCalls, 2);
+  assert.equal(budgetRes2.ok, true);
+  assert.ok(budgetRes2.reply.includes('שחפים'), 'keeps first draft when repetition regen times out');
+
+  // SSE stream path also catches repeated anecdote before emitting delta and regenerates once
+  const pepper = 'repeat-sse-pepper';
+  const ip = '203.0.113.155';
+  const sessionTok = await createChatSessionToken(pepper, ip);
+  const enc = new TextEncoder();
+  let sseRepeatCalls = 0;
+  const sseRes = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Accept: 'text/event-stream', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({
+      message: 'מה נשמע?',
+      lang: 'he',
+      greeted: true,
+      stream: true,
+      history: [
+        { role: 'user', content: 'Selam nasılsın' },
+        { role: 'assistant', content: 'Süperim! Sabah simidimi martılarla paylaştım 😄' },
+      ],
+      chatSession: sessionTok,
+    }),
+  }), baseEnv({
+    CODE_PEPPER: pepper,
+    AI: {
+      run: async () => {
+        sseRepeatCalls += 1;
+        if (sseRepeatCalls === 1) {
+          return new ReadableStream({
+            start(c) {
+              c.enqueue(enc.encode('data: {"response":"הכל נהדר! הבוקר חלקתי את הסימיט שלי עם השחפים ליד המזח."}\n\n'));
+              c.enqueue(enc.encode('data: [DONE]\n\n'));
+              c.close();
+            },
+          });
+        }
+        return { response: 'מצוין! בדיוק יצאתי מסיור בבלט עם קפה חם. איך הטיול שלך?\n[[flags:abuse=0;handoff=0]]' };
+      },
+    },
+  }));
+  const sseBody = await sseRes.text();
+  assert.equal(sseRepeatCalls, 2, 'SSE repetition triggers 1 regeneration');
+  assert.ok(!sseBody.includes('הסימיט'), 'repeated draft must not leak into SSE deltas');
+  assert.ok(sseBody.includes('בלט'), 'fresh regenerated reply emitted on SSE');
+});
+
 

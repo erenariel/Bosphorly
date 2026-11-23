@@ -872,3 +872,114 @@ export function detectReplyLanguage(text = '', expectedLang = 'en') {
 
   return expectedLang;
 }
+
+// ---------- Anti-Repetition & Conversation Freshness Guard ----------
+
+export const ANTI_REPEAT_RULE =
+  'Variety: never repeat anecdotes or imagery from earlier in this chat (like simit/seagulls), even if the language switches.';
+
+const REPEAT_STOPWORDS = new Set([
+  // Domains & generic conversational filler across key languages
+  'mimo', 'bosphorly', 'istanbul', 'i̇stanbul', 'stambool', 'стамбул', 'איסטנבול', 'إسطنبول', 'اسطنبول',
+  'bosphorus', 'bosporus', 'boğaz', 'bogaz', 'босфор', 'בוספורוס', 'البوسفور', 'turu', 'tur', 'tour',
+  'cruise', 'cruises', 'круиз', 'שייט', 'eur', 'usd', 'try', 'fiyat', 'price', 'approx', 'yaklaşık',
+  'merhaba', 'selam', 'günaydın', 'hello', 'hey', 'hi', 'привет', 'שלום', 'היי', 'مرحبا', 'اهلا',
+  'the', 'and', 'for', 'you', 'your', 'with', 'are', 'that', 'this', 'here', 'from', 'have', 'what', 'how',
+  'ben', 'sen', 'senin', 'sana', 'bir', 'bu', 've', 'ile', 'için', 'gibi', 'çok', 'ama', 'var', 'yok', 'nasıl',
+  'да', 'нет', 'как', 'что', 'это', 'для', 'или', 'ты', 'тебе', 'тебя', 'меня', 'мне', 'очень', 'здесь',
+  'אני', 'אתה', 'את', 'של', 'על', 'עם', 'זה', 'מה', 'איך', 'גם', 'לא', 'כן', 'כל', 'יש', 'אין',
+]);
+
+// Signature anecdote/imagery motifs across languages so language switches cannot mask reused clichés.
+const ANECDOTE_MOTIFS = [
+  { id: 'simit', re: /\bsimit\p{L}*|\bsimid\p{L}*|симит\p{L}*|симіт\p{L}*|סימיט|سميت|سیمیت|sesame\s+bagel/iu },
+  { id: 'seagull', re: /\bmart[ıi]\p{L}*|seagull\p{L}*|\bgulls?\b|чайк\p{L}*|ча[єе]к|möwe\p{L}*|mouette\p{L}*|meeuw\p{L}*|gaviot\p{L}*|gabbian\p{L}*|gaivot\p{L}*|galeb\p{L}*|sirály\p{L}*|qağay\p{L}*|שחף|שחפים|نورس|نوارس|مرغ\s*دریایی|かもめ|カモメ|갈매기|海鸥/iu },
+  { id: 'ferry_whistle', re: /vapur\p{L}*\s*(?:düdü\p{L}*|ses\p{L}*)|ferry\s+whistl\p{L}*|гудок\s+паром\p{L}*|שריקת\s*(?:ה)?מעבורת/iu },
+  { id: 'bosphorus_breeze', re: /boğaz\s*esinti\p{L}*|bosporus\s+breeze|bosphorus\s+breeze|морск\p{L}*\s+бриз|בריז[הת]/iu },
+  { id: 'istanbul_hills', re: /istanbul\s*yokuş\p{L}*|yokuşlar\p{L}*|istanbul\s+hills|стамбульск\p{L}*\s+холм\p{L}*|גבעות\s+איסטנבול/iu },
+  { id: 'pier_anecdote', re: /iskele\p{L}*\s*(?:yanı|başı|kenar)|by\s+the\s+pier|у\s+причал\p{L}*|біля\s+причал\p{L}*|ליד\s*(?:ה)?רציף|מזח/iu },
+];
+
+const SINGLE_TRIGGER_MOTIFS = new Set(['simit', 'ferry_whistle', 'bosphorus_breeze', 'istanbul_hills']);
+
+function normalizeRepeatText(s) {
+  return String(s || '')
+    .replace(/https?:\/\/\S+/gi, ' ')
+    .replace(/\[\[\s*flags\s*:[\s\S]*?\]\]/gi, ' ')
+    .replace(/\bBOS-[A-Z0-9]+\b/gi, ' ')
+    .trim();
+}
+
+function extractRepeatKeywords(text) {
+  const cleaned = normalizeRepeatText(text).replace(/İ/g, 'i').toLowerCase();
+  const rawTokens = cleaned.match(/[\p{L}]{3,}|[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]{2,}/gu) || [];
+  const tokens = new Set();
+  for (const tok of rawTokens) {
+    if (REPEAT_STOPWORDS.has(tok)) continue;
+    // Strip common Hebrew single-letter proclitics so inflections align cleanly
+    if (/[\u0590-\u05FF]/.test(tok) && tok.length >= 4 && /^[בהוכלמש]/.test(tok)) {
+      const stem = tok.slice(1);
+      if (!REPEAT_STOPWORDS.has(stem)) tokens.add(stem);
+    }
+    tokens.add(tok);
+    if (/^[\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+$/.test(tok) && tok.length > 2) {
+      const chars = [...tok];
+      for (let i = 0; i < chars.length - 1; i++) tokens.add(chars[i] + chars[i + 1]);
+    }
+  }
+  return tokens;
+}
+
+function extractAnecdoteMotifs(text) {
+  const cleaned = normalizeRepeatText(text);
+  const found = new Set();
+  for (const m of ANECDOTE_MOTIFS) {
+    if (m.re.test(cleaned)) found.add(m.id);
+  }
+  return found;
+}
+
+export function isRepetitiveAgainstHistory(reply = '', history = [], currentUserMessage = '') {
+  const candidate = normalizeRepeatText(reply);
+  if (!candidate || !Array.isArray(history) || !history.length) return false;
+
+  const recentAssistant = history
+    .filter((h) => h && h.role === 'assistant' && typeof h.content === 'string' && h.content.trim())
+    .slice(-2);
+  if (!recentAssistant.length) return false;
+
+  const userMotifs = currentUserMessage ? extractAnecdoteMotifs(currentUserMessage) : new Set();
+  const candMotifs = extractAnecdoteMotifs(candidate);
+  const candWords = extractRepeatKeywords(candidate);
+  const candUrls = new Set((String(reply || '').match(/https:\/\/bosphorly\.com\/[^\s)\]]+/gi) || []).map((u) => u.split('&lang=')[0].split('?lang=')[0]));
+
+  for (const prevMsg of recentAssistant) {
+    const prevMotifs = extractAnecdoteMotifs(prevMsg.content);
+    const sharedMotifs = [];
+    for (const m of candMotifs) {
+      if (prevMotifs.has(m) && !userMotifs.has(m)) sharedMotifs.push(m);
+    }
+    if (sharedMotifs.length >= 2) return true;
+    if (sharedMotifs.length === 1 && SINGLE_TRIGGER_MOTIFS.has(sharedMotifs[0])) return true;
+
+    const prevWords = extractRepeatKeywords(prevMsg.content);
+    if (candWords.size >= 3 && prevWords.size >= 3) {
+      let shared = 0;
+      for (const w of candWords) {
+        if (prevWords.has(w)) shared += 1;
+      }
+      const overlap = shared / Math.min(candWords.size, prevWords.size);
+      // Avoid flagging two genuinely distinct service offers with different links
+      const prevUrls = new Set((String(prevMsg.content || '').match(/https:\/\/bosphorly\.com\/[^\s)\]]+/gi) || []).map((u) => u.split('&lang=')[0].split('?lang=')[0]));
+      const hasDistinctNewLink = [...candUrls].some((u) => !prevUrls.has(u));
+      if (hasDistinctNewLink) {
+        if (overlap >= 0.75 && shared >= 5) return true;
+      } else if ((shared >= 4 && overlap >= 0.45) || (shared >= 3 && overlap >= 0.6)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
