@@ -480,6 +480,56 @@ export const ASSISTANT_MESSAGES = {
     bn: 'তুমি খুব দ্রুত বার্তা পাঠাচ্ছ। একটু পরে আবার চেষ্টা করো বা আমাদের টিমে পাঠাও।',
     id: 'Kamu mengirim pesan terlalu cepat. Coba lagi sebentar atau teruskan pesan ke tim kami.',
   },
+  dayLimitGuest: {
+    tr: "Bugünkü misafir Mimo hakkın doldu 💙 Ücretsiz üye olursan günlük hakkın artar; dilersen sorunu ekibimize de iletebilirsin.",
+    en: "You've used today's guest chats with Mimo 💙 Become a free member to get more daily chats, or forward your question to our team.",
+    ru: "Гостевой лимит Mimo на сегодня исчерпан 💙 Стань бесплатным участником, чтобы получить больше сообщений в день, или передай вопрос нашей команде.",
+    uk: "Гостьовий ліміт Mimo на сьогодні вичерпано 💙 Стань безкоштовним учасником, щоб мати більше повідомлень на день, або передай питання нашій команді.",
+    de: "Dein Gast-Kontingent für heute ist aufgebraucht 💙 Werde kostenlos Mitglied für mehr Nachrichten pro Tag oder leite deine Frage an unser Team weiter.",
+    fr: "Tu as utilisé tes messages invités du jour avec Mimo 💙 Deviens membre gratuitement pour en avoir plus chaque jour, ou transmets ta question à notre équipe.",
+    nl: "Je gastberichten voor vandaag met Mimo zijn op 💙 Word gratis lid voor meer berichten per dag, of stuur je vraag door naar ons team.",
+    ar: "لقد استخدمت رسائل الضيف اليوم مع ميمو 💙 انضم كعضو مجانًا لتحصل على رسائل يومية أكثر، أو أرسل سؤالك إلى فريقنا.",
+    he: "ניצלת את הודעות האורח של היום עם מימו 💙 הצטרפו כחברים בחינם כדי לקבל יותר הודעות ביום, או העבירו את השאלה לצוות שלנו.",
+    az: "Bu günkü qonaq Mimo haqqın bitdi 💙 Pulsuz üzv olsan gündəlik haqqın artar; istəsən sualını komandamıza da göndərə bilərsən.",
+    fa: "سهمیه مهمان امروزت با میمو تمام شد 💙 با عضویت رایگان، پیام‌های روزانه بیشتری داری؛ یا سؤالت را برای تیم ما بفرست.",
+    es: "Has usado tus mensajes de invitado de hoy con Mimo 💙 Hazte miembro gratis para tener más mensajes al día, o envía tu pregunta a nuestro equipo.",
+    it: "Hai usato i messaggi ospite di oggi con Mimo 💙 Diventa membro gratis per averne di più ogni giorno, oppure inoltra la domanda al nostro team.",
+    pt: "Você usou as mensagens de convidado de hoje com o Mimo 💙 Torne-se membro grátis para ter mais mensagens por dia, ou encaminhe sua pergunta à nossa equipe.",
+    hr: "Iskoristio si današnje gostujuće poruke s Mimom 💙 Postani besplatni član za više poruka dnevno ili proslijedi pitanje našem timu.",
+    hu: "Elfogyott a mai vendégkereted Mimóval 💙 Légy ingyenes tag, hogy naponta több üzeneted legyen, vagy továbbítsd a kérdésed a csapatunknak.",
+    bs: "Iskoristio si današnje gostujuće poruke s Mimom 💙 Postani besplatni član za više poruka dnevno ili proslijedi pitanje našem timu.",
+    zh: "今天的访客 Mimo 对话次数已用完 💙 免费注册会员可获得更多每日次数，也可以把问题转交给我们的团队。",
+    ja: "今日のゲスト用Mimoメッセージは上限に達しました 💙 無料会員になると1日に使える回数が増えます。チームに質問を転送することもできます。",
+    ko: "오늘의 게스트 Mimo 대화 횟수를 모두 사용했어요 💙 무료 회원이 되면 하루 대화 횟수가 늘어나요. 질문을 팀에 전달할 수도 있어요.",
+    hi: "आज की मेहमान Mimo चैट सीमा पूरी हो गई 💙 मुफ़्त सदस्य बनो तो रोज़ ज़्यादा संदेश मिलेंगे, या अपना सवाल हमारी टीम को भेज दो।",
+    bn: "আজকের অতিথি Mimo চ্যাট সীমা শেষ 💙 বিনামূল্যে সদস্য হলে প্রতিদিন আরও বেশি বার্তা পাবে, অথবা প্রশ্নটি আমাদের টিমে পাঠাও।",
+    id: "Jatah chat tamu dengan Mimo hari ini sudah habis 💙 Jadi member gratis untuk dapat lebih banyak chat per hari, atau teruskan pertanyaanmu ke tim kami.",
+  },
+  dayLimitMember: {
+    tr: "Bugünkü Mimo hakkın doldu 💙 Yarın yenilenir; acil bir sorun varsa ekibimize iletebilirsin.",
+    en: "You've reached today's Mimo limit 💙 It resets tomorrow; if it's urgent, forward your question to our team.",
+    ru: "Дневной лимит Mimo исчерпан 💙 Он обновится завтра; если вопрос срочный, передай его нашей команде.",
+    uk: "Денний ліміт Mimo вичерпано 💙 Він оновиться завтра; якщо питання термінове, передай його нашій команді.",
+    de: "Dein Mimo-Kontingent für heute ist aufgebraucht 💙 Es erneuert sich morgen; wenn es dringend ist, leite deine Frage an unser Team weiter.",
+    fr: "Tu as atteint la limite Mimo du jour 💙 Elle se renouvelle demain ; si c'est urgent, transmets ta question à notre équipe.",
+    nl: "Je Mimo-limiet voor vandaag is bereikt 💙 Morgen wordt die vernieuwd; is het dringend, stuur je vraag dan door naar ons team.",
+    ar: "وصلت إلى حد ميمو اليومي 💙 يتجدد غدًا؛ وإذا كان الأمر عاجلًا فأرسل سؤالك إلى فريقنا.",
+    he: "הגעתם למגבלת מימו היומית 💙 היא מתחדשת מחר; אם זה דחוף, העבירו את השאלה לצוות שלנו.",
+    az: "Bu günkü Mimo haqqın bitdi 💙 Sabah yenilənir; təcili bir şey varsa sualını komandamıza göndər.",
+    fa: "سهمیه امروزت با میمو تمام شد 💙 فردا دوباره فعال می‌شود؛ اگر فوری است، سؤالت را برای تیم ما بفرست.",
+    es: "Has alcanzado el límite de Mimo de hoy 💙 Se renueva mañana; si es urgente, envía tu pregunta a nuestro equipo.",
+    it: "Hai raggiunto il limite di Mimo di oggi 💙 Si rinnova domani; se è urgente, inoltra la domanda al nostro team.",
+    pt: "Você atingiu o limite do Mimo de hoje 💙 Ele renova amanhã; se for urgente, encaminhe sua pergunta à nossa equipe.",
+    hr: "Dosegnuo si današnje ograničenje za Mimo 💙 Obnavlja se sutra; ako je hitno, proslijedi pitanje našem timu.",
+    hu: "Elérted a mai Mimo-keretet 💙 Holnap megújul; ha sürgős, továbbítsd a kérdésed a csapatunknak.",
+    bs: "Dostigao si današnje ograničenje za Mimo 💙 Obnavlja se sutra; ako je hitno, proslijedi pitanje našem timu.",
+    zh: "今天的 Mimo 对话次数已用完 💙 明天会重置；如有急事，可以把问题转交给我们的团队。",
+    ja: "今日のMimoの上限に達しました 💙 明日リセットされます。急ぎの場合はチームに質問を転送してください。",
+    ko: "오늘의 Mimo 한도에 도달했어요 💙 내일 다시 채워져요. 급한 일이라면 질문을 팀에 전달해 주세요.",
+    hi: "आज की Mimo सीमा पूरी हो गई 💙 कल फिर से शुरू होगी; ज़रूरी हो तो अपना सवाल हमारी टीम को भेज दो।",
+    bn: "আজকের Mimo সীমা শেষ 💙 কাল আবার চালু হবে; জরুরি হলে প্রশ্নটি আমাদের টিমে পাঠাও।",
+    id: "Batas Mimo hari ini sudah tercapai 💙 Besok akan diperbarui; kalau mendesak, teruskan pertanyaanmu ke tim kami.",
+  },
   abuseClose: {
     tr: 'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.',
     en: 'I cannot continue the conversation with this language. I am ending the chat here. If you have an issue, you can write to info@bosphorly.com.',
@@ -1247,8 +1297,11 @@ export async function checkAndIncrementLimits({
   }
 
   const actor = await incrementCounter(env, actorKey, minBucket, dayBucket);
-  if (actor.minCount > PER_MIN_LIMIT || actor.dayCount > effectiveDayLimit) {
+  if (actor.minCount > PER_MIN_LIMIT) {
     return { allowed: false, reason: 'actor_limit' };
+  }
+  if (actor.dayCount > effectiveDayLimit) {
+    return { allowed: false, reason: 'day_limit' };
   }
 
   if (hasSeparateIpBrake) {
@@ -1714,11 +1767,15 @@ async function prepareAssistantTurn({
         earlyResult: { ok: true, busy: true, handoff: true, lang, reply: msg('busy', lang) },
       };
     }
+    // Daily quota (per tier) or the shared IP brake: say "today's limit", not "too fast",
+    // and invite guests to sign up for a higher daily quota. Never promise "unlimited".
+    const dayCapped = limitRes.reason === 'day_limit' || limitRes.reason === 'ip_limit';
+    const limitKey = !dayCapped ? 'rateLimit' : (String(tier || 'guest').toLowerCase() === 'guest' ? 'dayLimitGuest' : 'dayLimitMember');
     return {
-      path: 'rate_limit',
+      path: dayCapped ? 'day_limit' : 'rate_limit',
       lang,
       effectiveChannel,
-      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg('rateLimit', lang) },
+      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg(limitKey, lang) },
     };
   }
 
