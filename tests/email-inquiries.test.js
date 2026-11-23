@@ -70,3 +70,17 @@ test('phone fields are labelled as phone, not "phone / email"', () => {
   for (const file of ['index.html','booking.js','account.js'])
     assert.doesNotMatch(read(file), /[\p{L}\p{N}] ?\/ ?(email|e-mail)\b|telefon-\/email|phone\/email/iu, file);
 });
+
+test('social links publish only the corporate WhatsApp Business line and Instagram', () => {
+  const social = read('social-links.js');
+  const numbers = [...social.matchAll(/WHATSAPP_NUMBER\s*=\s*'(\d+)'/g)].map(m => m[1]);
+  assert.deepEqual(numbers, ['16197386408']);
+  assert.match(social, /'https:\/\/wa\.me\/' \+ WHATSAPP_NUMBER/);
+  assert.doesNotMatch(social, /wa\.me\/\d/);
+  assert.match(social, /INSTAGRAM_HANDLE\s*=\s*'bosphorly'/);
+  assert.match(social, /rel = 'noopener'/);
+  for (const page of ['index.html','booking.html','account.html','prices.html'])
+    assert.match(read(page), /<script defer src="social-links\.js\?v=\w+"><\/script>/, page);
+  // Requests still go by email: the social script never builds a prefilled request message.
+  assert.doesNotMatch(social, /[?&]text=/);
+});
