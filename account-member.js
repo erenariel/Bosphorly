@@ -8,11 +8,12 @@
   const T = await M.texts(); const f = M.fill;
   const lang = window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const tr = lang === 'tr';
+  const P = window.BosphorlyPlatinum;
   const loc = lang === 'ar' ? 'ar-u-nu-latn' : lang;
   const pct = bps => new Intl.NumberFormat(loc, { style: 'percent', maximumFractionDigits: 1 }).format(bps / 10000);
   const day = s => { try { return new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(s.replace(' ', 'T') + 'Z')); } catch { return s; } };
   const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
-  const KIND = { welcome: T.kWelcome, referral: T.kReferral, hotel: T.kHotel, second_tour: T.kSecond, loyalty: T.kLoyalty };
+  const KIND = { welcome: T.kWelcome, referral: T.kReferral, hotel: T.kHotel, second_tour: T.kSecond, loyalty: T.kLoyalty, platinum: 'Platinum 💎' };
   const SIGNUP = { en: 'Create account', tr: 'Hesap oluştur', ru: 'Создать аккаунт', uk: 'Створити акаунт', de: 'Konto erstellen', fr: 'Créer un compte', nl: 'Account aanmaken', ar: 'إنشاء حساب', he: 'יצירת חשבון', az: 'Hesab yarat', fa: 'ایجاد حساب', es: 'Crear cuenta', it: 'Crea account', pt: 'Criar conta', hr: 'Izradi račun', hu: 'Fiók létrehozása', bs: 'Kreiraj račun', zh: '创建账户', ja: 'アカウント作成', ko: '계정 만들기', hi: 'खाता बनाएँ', bn: 'অ্যাকাউন্ট খুলুন', id: 'Buat akun' };
   const BADGE = { tr: 'BOSPHORLY ÜYELİK AYRICALIKLARI', en: 'BOSPHORLY MEMBER PRIVILEGES', ru: 'ПРИВИЛЕГИИ УЧАСТНИКА BOSPHORLY', uk: 'ПРИВІЛЕЇ УЧАСНИКА BOSPHORLY', de: 'BOSPHORLY MITGLIEDERVORTEILE', fr: 'PRIVILÈGES MEMBRE BOSPHORLY', nl: 'BOSPHORLY LEDENVOORDELEN', ar: 'مزايا عضوية BOSPHORLY', he: 'הטבות חברי BOSPHORLY', az: 'BOSPHORLY ÜZVLÜK İMTİYAZLARI', fa: 'مزایای عضویت BOSPHORLY', es: 'PRIVILEGIOS DE MIEMBRO BOSPHORLY', it: 'PRIVILEGI MEMBRI BOSPHORLY', pt: 'PRIVILÉGIOS DE MEMBRO BOSPHORLY', hr: 'BOSPHORLY POGODNOSTI ZA ČLANOVE', hu: 'BOSPHORLY TAGI KEDVEZMÉNYEK', bs: 'BOSPHORLY POGODNOSTI ZA ČLANOVE', zh: 'BOSPHORLY 会员礼遇', ja: 'BOSPHORLY 会員特典', ko: 'BOSPHORLY 멤버십 혜택', hi: 'BOSPHORLY सदस्य विशेषाधिकार', bn: 'BOSPHORLY সদস্য সুবিধা', id: 'KEUNTUNGAN ANGGOTA BOSPHORLY' };
   const NAME_ERR = { tr: 'Lütfen adınızı ve soyadınızı girin.', en: 'Please enter your full name.', ru: 'Пожалуйста, введите имя и фамилию.', uk: 'Будь ласка, введіть ім’я та прізвище.', de: 'Bitte geben Sie Ihren vollständigen Namen ein.', fr: 'Veuillez saisir votre nom complet.', nl: 'Vul alstublieft uw volledige naam in.', ar: 'يرجى إدخال الاسم الكامل.', he: 'אנא הזינו שם מלא.', az: 'Zəhmət olmasa ad və soyadınızı daxil edin.', fa: 'لطفاً نام و نام خانوادگی خود را وارد کنید.', es: 'Por favor, introduce tu nombre completo.', it: 'Inserisci nome e cognome.', pt: 'Por favor, insira seu nome completo.', hr: 'Molimo unesite ime i prezime.', hu: 'Kérjük, adja meg a teljes nevét.', bs: 'Molimo unesite ime i prezime.', zh: '请输入您的全名。', ja: 'お名前を入力してください。', ko: '성함을 입력해 주세요.', hi: 'कृपया अपना पूरा नाम दर्ज करें।', bn: 'অনুগ্রহ করে আপনার পুরো নাম লিখুন।', id: 'Silakan masukkan nama lengkap Anda.' };
@@ -24,7 +25,7 @@
     orEmail: tr ? 'veya e-posta adresiniz ve seyahat bilgilerinizle' : 'or continue with your e-mail & travel preferences',
     oauthTitle: tr ? '{p} ile bağlan' : 'Connect with {p}',
     oauthSub: tr ? 'Bosphorly hesabınıza erişim izni istiyor' : 'Bosphorly is requesting access to your account',
-    oauthPerm1: tr ? 'E-posta adresiniz ve adınız (üyelik hesabınızı oluşturmak ve %5 hoş geldin kuponunuzu tanımlamak için)' : 'Your email address and name (to create your membership account and issue your 5% welcome coupon)',
+    oauthPerm1: tr ? 'E-posta adresiniz ve adınız (üyelik hesabınızı oluşturmak ve %3 hoş geldin kuponunuzu tanımlamak için)' : 'Your email address and name (to create your membership account and issue your 3% welcome coupon)',
     oauthPerm2: tr ? 'Seyahat ve iletişim tercihleriniz (tur ve transfer taleplerinizi otomatik doldurmak için)' : 'Your travel and contact preferences (to pre-fill your tour and transfer requests)',
     oauthEmailLabel: tr ? '{p} e-posta adresiniz' : 'Your {p} email address',
     oauthAllow: tr ? 'İzin ver ve devam et' : 'Allow and continue',
@@ -48,11 +49,11 @@
       platinum: tr ? '💎 Platinum VIP' : '💎 Platinum VIP'
     },
     completedCount: tr ? '{n} tamamlanan tur' : '{n} completed tours',
-    toGold: tr ? 'Gold ayrıcalıkları (Free Upgrade & %5 VIP öncelik) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Gold (Free Upgrade & 5% VIP priority)',
+    toGold: tr ? 'Gold ayrıcalıkları (Free Upgrade & %3 VIP öncelik) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Gold (Free Upgrade & 3% VIP priority)',
     toPlatinum: tr ? 'Platinum VIP (her zaman öncelikli VIP indirim & Free Upgrade) için {n} tur kaldı' : '{n} more completed tour(s) to unlock Platinum VIP (always-on VIP priority discount & Free Upgrade)',
     atPlatinum: tr ? 'En yüksek üye seviyesi! Tüm VIP servislerde öncelikli indirim ve Free Upgrade aktif.' : 'Highest tier unlocked! Always-on VIP priority discount & Free Upgrade active on all services.',
-    tierPerkSilver: tr ? 'Silver: Hoş geldin kuponu (%5), sadakat programı ve ilgi alanınıza özel kampanyalar' : 'Silver: 5% welcome voucher, loyalty tier progress & tailored member campaigns',
-    tierPerkGold: tr ? 'Gold (2+ tur): Müsaitliğe göre Free Upgrade + VIP servislerde %5 öncelikli indirim' : 'Gold (2+ tours): Free Upgrade (subject to availability) + 5% VIP service priority',
+    tierPerkSilver: tr ? 'Silver: Hoş geldin kuponu (%3), sadakat programı ve ilgi alanınıza özel kampanyalar' : 'Silver: 3% welcome voucher, loyalty tier progress & tailored member campaigns',
+    tierPerkGold: tr ? 'Gold (2+ tur): Müsaitliğe göre Free Upgrade + VIP servislerde %3 öncelikli indirim' : 'Gold (2+ tours): Free Upgrade (subject to availability) + 3% VIP service priority',
     tierPerkPlatinum: tr ? 'Platinum (5+ tur): Öncelikli Free Upgrade + VIP servislerde her zaman maks. %10 öncelikli indirim' : 'Platinum (5+ tours): Priority Free Upgrade + always-on max 10% VIP service priority discount',
     usableBadge: tr ? '{n} kullanılabilir' : '{n} available',
     copyCode: tr ? 'Kopyala' : 'Copy',
@@ -60,7 +61,7 @@
     useTransfer: tr ? 'Transferde kullan →' : 'Use on transfer →',
     useTours: tr ? 'Özel turlarda kullan →' : 'Use on special tours →',
     vipCardBadge: tr ? 'ÖNCELİKLİ VIP' : 'VIP PRIORITY',
-    vipCardTitleGold: tr ? 'Free Upgrade · %5 VIP öncelik' : 'Free Upgrade · 5% VIP priority',
+    vipCardTitleGold: tr ? 'Free Upgrade · %3 VIP öncelik' : 'Free Upgrade · 3% VIP priority',
     vipCardTitlePlat: tr ? 'Öncelikli Free Upgrade + %10 VIP indirim' : 'Priority Free Upgrade + 10% VIP discount',
     vipCardDesc: tr ? 'VIP havalimanı transferi ve özel şoförlü / VIP turlarda geçerlidir.' : 'Automatically applies to VIP airport transfers and private VIP tours.',
     campaignsTitle: tr ? 'Size özel paket kampanyaları' : 'Personalized package campaigns',
@@ -221,6 +222,8 @@
 
     const body = el('div', 'm-brand-body');
     body.append(perks(), stampJourney());
+    const joinPromo = P?.promo('join-account', 'Silver → Gold → Platinum 💎 · ' + P.join + ' ' + P.benefits);
+    if (joinPromo) body.append(joinPromo);
     brand.append(hero, body);
 
     shell.append(auth, brand);
@@ -624,8 +627,22 @@
     else if (p.nextTier === 'platinum') msgText = f(UI.toPlatinum, { n: p.toursToNextTier || 1 });
 
     const ul = el('ul', 'm-tier-perks');
-    [UI.tierPerkSilver, UI.tierPerkGold, UI.tierPerkPlatinum].forEach(txt => ul.append(el('li', null, txt)));
+    [UI.tierPerkSilver, UI.tierPerkGold, P?.benefits || UI.tierPerkPlatinum].forEach(txt => ul.append(el('li', null, txt)));
+    if (tierKey === 'platinum' && p.platinumSince && !p.unlimited) {
+      const since = new Intl.DateTimeFormat(lang, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(p.platinumSince.replace(' ', 'T') + 'Z'));
+      top.append(el('span', 'm-fine', tr ? "Platinum üyesi — " + since + "'dan beri" : 'Platinum member — since ' + since));
+    }
+    if (tierKey !== 'platinum') {
+      msgText = (tierKey === 'gold' ? (tr ? 'Platinum’a çok yakınsın 💎 · ' : 'Platinum is close 💎 · ') : '') + (tr ? 'Platinum’a ' + Math.max(0, 5 - (p.fulfilledCount || 0)) + ' tur kaldı' : Math.max(0, 5 - (p.fulfilledCount || 0)) + ' tours to Platinum');
+      const preview = P?.promo('preview-' + tierKey, '🔒 ' + P.benefits);
+      if (preview) { preview.classList.add('platinum-preview'); card.append(preview); }
+    }
+    bar.setAttribute('role', 'progressbar'); bar.setAttribute('aria-label', 'Platinum'); bar.setAttribute('aria-valuemin', '0'); bar.setAttribute('aria-valuemax', '5'); bar.setAttribute('aria-valuenow', String(Math.min(5, p.fulfilledCount || 0)));
     card.append(top, bar, el('p', 'm-fine', msgText), ul);
+    if (tierKey === 'platinum' && !p.unlimited && p.platinumSince) {
+      const celebration = P?.promo('celebrate-' + p.email + '-' + p.platinumSince, tr ? "Artık Platinum'sun 💎 Bundan sonra her şey biraz daha özel." : "You're Platinum now 💎 From here on, everything is a little more special.", true);
+      if (celebration) card.append(celebration);
+    }
     return card;
   }
 

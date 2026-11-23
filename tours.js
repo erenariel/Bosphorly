@@ -109,8 +109,8 @@
     };
   };
   const tierText = tier => {
-    if (tier === 'platinum') return tr ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount)';
-    if (tier === 'gold') return tr ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %5 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 5% VIP priority)';
+    if (tier === 'platinum') return tr ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim) · günde 200 Mimo mesajı · Platinum’a ulaşınca %10 hediye kupon · 1 günlük eSIM hediyesi (yakında)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount) · 200 daily Mimo chats · 10% gift coupon on reaching Platinum · free 1-day eSIM data (coming soon)';
+    if (tier === 'gold') return tr ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %3 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 3% VIP priority)';
     return '🥈 Silver';
   };
   const refCode = () => { const a = new Uint8Array(4); crypto.getRandomValues(a); return 'BOS-' + [...a].map(b => b.toString(36).padStart(2, '0')).join('').toUpperCase().slice(0, 6); };
@@ -120,6 +120,8 @@
   function requestForm(s) {
     const box = el('form', 'tf'); box.hidden = true; box.noValidate = true;
     const prof = activeProfile();
+    const P = window.BosphorlyPlatinum;
+    if (M?.signedIn() && prof.tier !== 'platinum') { const hint = P?.promo('tour-step', P.step); if (hint) box.append(hint); }
     const saved = account ? account.profile() || {} : {};
     const inp = (type, name, attrs = {}) => { const i = el('input'); i.type = type; i.name = name; Object.assign(i, attrs); return i; };
     const date = inp('date', 'date', { min: today(), required: true });
@@ -132,7 +134,8 @@
     const ack = inp('checkbox', 'ack'); const ackL = el('label', 'tf-ack'); ackL.append(ack, el('span', null, t('toFAck')));
     const row = el('div', 'tf-row'); row.append(field(t('toFDate'), date), field(t('toFGuests'), guests));
     const err = el('p', 'tf-err'); err.hidden = true; err.setAttribute('role', 'alert');
-    const done = el('div', 'tf-done'); done.hidden = true; done.setAttribute('role', 'status');
+    const done = el('div', 'tf-done');
+ done.hidden = true; done.setAttribute('role', 'status');
     const send = el('button', 'btn wa tf-send', t('toFSend')); send.type = 'submit';
 
     if (prof.tier === 'gold' || prof.tier === 'platinum') {
@@ -218,6 +221,7 @@
       const again = el('a', 'btn wa', tr ? 'Gmail / e-posta taslağını aç' : 'Open Gmail / email draft'); again.href = url;
       const mine = el('a', 'btn', t('toMyReq')); mine.href = 'account.html';
       done.append(again, mine);
+      if (!M?.signedIn()) { const promo = P?.promo('join-tour', 'Silver → Gold → Platinum 💎 · ' + P.join + ' ' + P.benefits); if (promo) done.append(promo); }
       if (window.BosphorlyMimoThanks) window.BosphorlyMimoThanks.append(done, D.lang);
       // Optional direct delivery (mail Worker), no email account needed; the guest's email is the Reply-To.
       if (window.addDirectDelivery) window.addDirectDelivery(done, { reference: ref, kind: 'tour', service: s.name.slice(0, 160), name: name.value.trim(),

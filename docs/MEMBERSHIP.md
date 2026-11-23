@@ -6,11 +6,11 @@ Built and tested, **not deployed**. Until the API is deployed and its address is
 
 | Campaign | Who gets it | When | Default |
 |---|---|---|---|
-| Welcome | every new member | at sign-up | 5 %, 90 days |
+| Welcome | every new member | at sign-up | 3 %, 90 days |
 | Hotel | members who arrived through a partner hotel's link/QR (`?h=hotel-id`) | at sign-up | per hotel campaign |
-| Second tour | the member | when their first request is fulfilled | 7 %, 120 days |
-| Referral | the **inviter** (`?ref=CODE`) | when the invited friend's first request is fulfilled | 5 %, 120 days |
-| Loyalty | the member | every 5 fulfilled requests (stamps reset) | 10 %, 180 days |
+| Second tour | the member | when their first request is fulfilled | 5 %, 120 days |
+| Referral | the **inviter** (`?ref=CODE`) | when the invited friend's first request is fulfilled | 3 %, 120 days |
+| Loyalty | the member | every 5 fulfilled requests (stamps reset) | 7 %, 180 days |
 
 - **Who pays:** Bosphorly's commission (`funded_by = 'bosphorly'`). `MAX_DISCOUNT_BPS` (default 1000 = 10 %) caps every coupon, including coupons from older campaigns, so a discount never exceeds what the commission can carry. Set it below your lowest commission rate.
 - **One coupon per request.** A coupon is *held* when a signed-in member sends a request with it, *redeemed* when the partner marks the tour completed, and released if the request is cancelled.

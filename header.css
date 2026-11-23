@@ -151,3 +151,7 @@ footer.wrap.footer{display:flex;flex-direction:column;align-items:stretch;gap:10
 footer,.dc-foot{padding-bottom:84px}
 @media (min-width:1024px){footer.wrap.footer,footer,.dc-foot{padding-bottom:108px}}
 @media (max-width:560px){footer.wrap.footer{padding-top:20px}.footer-row{flex-direction:column;align-items:flex-start;gap:12px}}
+
+.platinum-promo{position:relative;padding:12px 40px 12px 14px;margin:12px 0;border:1px solid #aebbcf;border-radius:12px;background:#101d38;color:#e8edf5;font:14px/1.6 system-ui;white-space:normal}.platinum-promo p{margin:0}.platinum-promo button{position:absolute;right:8px;top:8px;background:transparent;border:0;color:inherit;font-size:22px;cursor:pointer}.platinum-preview{opacity:.7}.m-tier-card[data-tier=platinum]{background:linear-gradient(135deg,#0a1753,#202d43);border:1px solid #c0cad6;box-shadow:0 0 16px #b8c9df22}.m-tier-card[data-tier=platinum] .m-tier-badge{background:linear-gradient(135deg,#edf1f5,#aebac9);color:#0a1753;border-color:#dce4ed}.m-tier-card[data-tier=platinum] .m-tier-fill{background:linear-gradient(90deg,#aebac9,#edf1f5)}@media(prefers-reduced-motion:reduce){.platinum-promo,.m-tier-card[data-tier=platinum]{animation:none;transition:none}}
+
+.sh-auth{flex-wrap:wrap}.sh-auth>.platinum-promo{flex:1 0 100%;box-sizing:border-box;max-width:100%}.sh-member-tier[data-tier=platinum]{background:linear-gradient(135deg,#edf1f5,#aebac9);color:#0a1753;border:1px solid #c0cad6}

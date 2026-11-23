@@ -98,14 +98,14 @@ test('wrangler.jsonc sets TTS_MONTHLY_CHAR_CAP to 800000 and limits constants ar
   assert.equal('TTS_PER_DAY_LIMIT' in ttsModule, false);
   assert.equal(TTS_PER_MIN_LIMIT, 10);
   assert.equal(TTS_GUEST_DAILY_LIMIT, 5);
-  assert.equal(TTS_SILVER_DAILY_LIMIT, 30);
-  assert.equal(TTS_GOLD_DAILY_LIMIT, 60);
-  assert.equal(TTS_PLATINUM_DAILY_LIMIT, 60);
+  assert.equal(TTS_SILVER_DAILY_LIMIT, 15);
+  assert.equal(TTS_GOLD_DAILY_LIMIT, 25);
+  assert.equal(TTS_PLATINUM_DAILY_LIMIT, 100);
   assert.equal(TTS_IP_DAILY_LIMIT, 60);
   assert.equal(ttsDailyLimitForTier('guest'), 5);
-  assert.equal(ttsDailyLimitForTier('silver'), 30);
-  assert.equal(ttsDailyLimitForTier('gold'), 60);
-  assert.equal(ttsDailyLimitForTier('platinum'), 60);
+  assert.equal(ttsDailyLimitForTier('silver'), 15);
+  assert.equal(ttsDailyLimitForTier('gold'), 25);
+  assert.equal(ttsDailyLimitForTier('platinum'), 100);
   assert.equal(ttsDailyLimitForTier('forged'), 5);
 });
 
@@ -552,7 +552,7 @@ test('POST /v1/tts enforces Origin/CORS, X-Member-Session preflight, and guest 5
   }
 });
 
-test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platinum 60/day), enforces 60/day IP brake, and ignores forged claims', async () => {
+test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 15/day, Gold 25/day, Platinum 100/day), enforces 100/day Platinum IP brake, and ignores forged claims', async () => {
   const db = realSqlD1();
   const cache = createMemoryCache();
   const env = {
@@ -740,7 +740,7 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
       );
       assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
     }
-    for (let i = 0; i < 20; i += 1) {
+    for (let i = 0; i < 60; i += 1) {
       const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
       const r = await handleTtsRoute(
         new Request('https://worker.example/v1/tts', {
@@ -775,13 +775,13 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
       }),
       env,
       null,
-      dayStart + 5 * 60_000
+      dayStart + 20 * 60_000
     );
     assert.equal(brakeRes.status, 200);
     assert.deepEqual(await brakeRes.json(), { fallback: true });
     assert.equal(googleCalls, callsBeforeBrake);
     const plat2Row = db.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key = 'tts:member:plat2'`).get();
-    assert.equal(plat2Row.day_count, 20);
+    assert.equal(plat2Row.day_count, 60);
 
     // Moving Platinum2 to a clean IP still allows remaining member quota
     const cleanIp = '198.51.100.91';
@@ -800,7 +800,7 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
       }),
       env,
       null,
-      dayStart + 5 * 60_000
+      dayStart + 20 * 60_000
     );
     assert.equal(plat2Clean.headers.get('Content-Type'), 'audio/mpeg');
 
@@ -846,8 +846,8 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
     assert.equal(db.raw.prepare(`SELECT key FROM assistant_rate_limits WHERE key = 'tts:member:expired1'`).get() ?? null, null);
 
     // Complete Platinum2 remaining quota on cleanIp (already at 21 from cleanIp request #1 -> reach 60 -> 61st returns fallback)
-    for (let i = 21; i < TTS_PLATINUM_DAILY_LIMIT; i += 1) {
-      const t = dayStart + (6 + Math.floor((i - 21) / TTS_PER_MIN_LIMIT)) * 60_000;
+    for (let i = 61; i < TTS_PLATINUM_DAILY_LIMIT; i += 1) {
+      const t = dayStart + (21 + Math.floor((i - 61) / TTS_PER_MIN_LIMIT)) * 60_000;
       const r = await handleTtsRoute(
         new Request('https://worker.example/v1/tts', {
           method: 'POST',
@@ -880,7 +880,7 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
       }),
       env,
       null,
-      dayStart + 12 * 60_000
+      dayStart + 29 * 60_000
     );
     assert.equal(plat61.status, 200);
     assert.deepEqual(await plat61.json(), { fallback: true });
@@ -979,7 +979,7 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
   }
 });
 
-test('checkTtsActorRateLimit without env.DB tracks guest (5/day) and member tier (10/min, 30/day) in memory and always returns boolean', async () => {
+test('checkTtsActorRateLimit without env.DB tracks guest (5/day) and member tier (10/min, silver 15/day) in memory and always returns boolean', async () => {
   const baseTime = Date.UTC(2026, 10, 22, 8, 0, 0);
 
   // Guest default (5/day) in memory path without DB
