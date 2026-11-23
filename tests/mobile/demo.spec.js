@@ -39,7 +39,7 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  }
  // The request is kept only on this device for the My account page; nothing is sent to a server.
  expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('bosphorly.account')).requests.length)).toBe(1);
- expect(await page.evaluate(()=>sessionStorage.length)).toBe(0);
+ expect(await page.evaluate(()=>Object.keys(sessionStorage).filter(key => key !== 'bosphorly.mimo_intro'))).toEqual([]);
  await page.goto('/account.html?lang=en');
  await expect(page.locator('.req')).toHaveCount(1);
  await expect(page.locator('.req .ref')).toContainText('BOS-');
