@@ -1,8 +1,8 @@
 (() => {
-  const mobile = matchMedia('(width < 1024px)').matches;
-  // Mobile uses the versioned loader in config/api.js; desktop keeps its deferred HTML entry.
-  if (mobile && new URL(document.currentScript.src).searchParams.get('v') !== '20261123b') return;
-  const eligible = matchMedia((mobile ? '(width < 1024px)' : '(min-width:1024px)') +
+  if (window.__bosphorlyMimoIntroInit) return;
+  window.__bosphorlyMimoIntroInit = true;
+  const mobile = matchMedia('(max-width: 1023.98px)').matches;
+  const eligible = matchMedia((mobile ? '(max-width: 1023.98px)' : '(min-width:1024px)') +
     ' and (prefers-reduced-motion:no-preference)');
   if (!eligible.matches) return;
   const welcome = {
@@ -20,16 +20,18 @@
   function placeCornerNote(note, launcher) {
     const box = note.getBoundingClientRect();
     const obstacles = [];
-    const tree = document.createTreeWalker(document.body, NodeFilter.SHOW_ELEMENT, {
-      acceptNode(el) {
-        if (el === launcher || el.matches('.bc-bubble, script, style, [hidden]')) return NodeFilter.FILTER_REJECT;
-        return NodeFilter.FILTER_ACCEPT;
+    const nearby = new Set();
+    // Sample the note footprint and its vertical travel, then measure each hit once.
+    for (const x of [box.left + 1, box.left + box.width / 2, box.right - 1]) {
+      for (let y = box.top - 54; y <= box.bottom + 12; y += 8) {
+        for (const el of document.elementsFromPoint(x, y)) nearby.add(el);
       }
-    });
+    }
     const near = r => r.width && r.height && r.right > box.left && r.left < box.right &&
       r.bottom > box.top - 54 && r.top < box.bottom + 12;
     const range = document.createRange();
-    for (let el = tree.nextNode(); el; el = tree.nextNode()) {
+    for (const el of nearby) {
+      if (launcher.contains(el) || el.closest('.bc-bubble')) continue;
       const rect = el.getBoundingClientRect();
       if (!near(rect)) continue;
       const paintedControl = el.matches('a, button, [role="button"]') &&

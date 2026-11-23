@@ -22,7 +22,7 @@ body.mimo-introducing .bc-launcher, body.mimo-introducing .bc-bubble { opacity: 
 }
 @keyframes mimo-speech { 0%, 12%, 80%, 100% { opacity: 0; } 20%, 74% { opacity: 1; } }
 
-@media (width < 1024px) {
+@media (max-width: 1023.98px) {
   .bc-launcher .bc-fab { bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
   .bc-launcher .bc-mobile-hop { animation: mimo-corner-hop 720ms ease-in-out both; }
   .bc-mobile-welcome {

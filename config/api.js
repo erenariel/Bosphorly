@@ -196,10 +196,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
       if ( pendingQuestion ) window.__bosphorlyInitialQuestion = pendingQuestion;
       const css = document.createElement('link');
       css.rel = 'stylesheet';
-      css.href = base + 'assistant-chat.css?v=20261123b';
+      css.href = base + 'assistant-chat.css?v=20261123c';
       document.head.appendChild(css);
       const js = document.createElement('script');
-      js.src = base + 'assistant-chat.js?v=20261123b';
+      js.src = base + 'assistant-chat.js?v=20261123c';
       js.defer = true;
       document.body.appendChild(js);
     };
@@ -264,15 +264,15 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkir
     launcher.append(btn, label);
     document.body.appendChild(launcher);
 
-    const mobile = matchMedia('(width < 1024px)');
+    const mobile = matchMedia('(max-width: 1023.98px)');
     if (mobile.matches) {
       const css = document.createElement('link');
       css.rel = 'stylesheet';
       css.media = mobile.media;
-      css.href = base + 'mimo-intro.css?v=20261123b';
+      css.href = base + 'mimo-intro.css?v=20261123c';
       document.head.appendChild(css);
       const script = document.createElement('script');
-      script.src = base + 'mimo-intro.js?v=20261123b';
+      script.src = base + 'mimo-intro.js?v=20261123c';
       script.defer = true;
       document.head.appendChild(script);
     }

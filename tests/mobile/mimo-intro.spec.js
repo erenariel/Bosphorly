@@ -59,9 +59,21 @@ test('390px reduced motion bypasses the corner welcome', async ({page}) => {
   expect(await page.evaluate(() => sessionStorage.getItem('bosphorly.mimo_intro'))).toBeNull();
 });
 
-test('390px launcher remains tappable during the RTL welcome', async ({page}) => {
+// Real launcher and chat scripts, with deterministic free/occupied space beside the FAB.
+// The production home page may legitimately have no room after its fonts load.
+async function openCornerFixture(page, occupied = false) {
   await page.setViewportSize({width:390,height:844});
-  await page.goto('/?lang=ar');
+  await page.route('**/corner-fixture*', route => route.fulfill({
+    contentType:'text/html',
+    body:`<!doctype html><html dir="rtl" lang="ar"><meta name="viewport" content="width=device-width">
+      <body>${occupied ? '<button style="position:fixed;bottom:0;left:75px;width:300px;height:165px;background:white">Covered area</button>' : ''}
+      <script src="/config/api.js"></script><script defer src="/mimo-intro.js?v=html-entry"></script></body></html>`
+  }));
+  await page.goto('/corner-fixture?lang=ar');
+}
+
+test('390px launcher remains tappable during the RTL welcome', async ({page}) => {
+  await openCornerFixture(page);
   const note = page.locator('.bc-mobile-welcome');
   await expect(note).toBeVisible();
   const fab = page.locator('.bc-fab');
@@ -90,4 +102,22 @@ test('RTL label sits to the left and an intro click reaches the page', async ({p
   await page.locator('#intro-click-target').click();
   await expect(page.locator('#intro-click-target')).toHaveText('clicked');
   await expect(intro).toHaveCount(0);
+});
+
+test('an occupied corner keeps the welcome hidden and the launcher tappable', async ({page}) => {
+  await openCornerFixture(page, true);
+  await expect(page.locator('.bc-mobile-hop')).toHaveCount(1);
+  await expect(page.locator('.bc-mobile-welcome')).toBeHidden();
+  await page.locator('.bc-fab').click();
+  await expect(page.locator('.bc-panel')).toBeVisible();
+});
+
+test('a second script URL cannot start another introduction in the same document', async ({page}) => {
+  await openCornerFixture(page);
+  await expect(page.locator('.bc-mobile-welcome')).toBeVisible();
+  // Remove the session guard to exercise the independent document-level guard.
+  await page.evaluate(() => sessionStorage.removeItem('bosphorly.mimo_intro'));
+  await page.addScriptTag({url:'/mimo-intro.js?v=another-release'});
+  expect(await page.evaluate(() => sessionStorage.getItem('bosphorly.mimo_intro'))).toBeNull();
+  await expect(page.locator('.bc-mobile-welcome')).toHaveCount(1);
 });
