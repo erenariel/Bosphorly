@@ -54,6 +54,6 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect(page.locator('.place')).toHaveCount(33);
  await page.locator('#map').scrollIntoViewIfNeeded();
  await expect(page.locator('#mapFallback img')).toBeVisible();
- expect(await page.locator('#mapFallback img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
+ await expect.poll(()=>page.locator('#mapFallback img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });

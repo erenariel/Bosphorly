@@ -14,7 +14,7 @@ import {
   verifyAuthenticationResponse
 } from '@simplewebauthn/server';
 import { checkAndIncrementLimits } from './assistant.js';
-import { applySummary, computeMemberTier, forgetNote, getMimoState, saveNote, setConsent } from './mimo.js';
+import { applySummary, computeMemberTier, forgetNote, isOwnerEmail, getMimoState, saveNote, setConsent } from './mimo.js';
 
 export const STAMPS_GOAL = 5;
 const SESSION_DAYS = 90;
@@ -165,7 +165,10 @@ async function profile(env, m) {
     }));
   const doneRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
   const fulfilledCount = Number(doneRow?.n || 0);
-  const ti = tierInfo(env, fulfilledCount);
+  // Owner accounts see platinum in their own profile (display only; partner
+  // lookups and coupons keep using the real fulfilled-tour count).
+  const owner = isOwnerEmail(env, m.email);
+  const ti = owner ? { ...tierInfo(env, 5), unlimited: true } : tierInfo(env, fulfilledCount);
   let passkeys = [];
   try {
     passkeys = (await env.DB.prepare(
@@ -503,6 +506,8 @@ async function handleOAuth(request, env, url) {
       name = claims.name || '';
     }
     if (!validEmail(email)) throw 0;
+    // For owner social sign-in, require the verified Google mailbox above.
+    if (isOwnerEmail(env, email) && provider !== 'google') throw 0;
     const session = await createOrLoadMemberSession(env, email, {
       name, lang: st.lang, ref: pendingData?.ref, hotel: pendingData?.hotel,
       phone: pendingData?.phone, hotelName: pendingData?.hotelName,

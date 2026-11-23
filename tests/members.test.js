@@ -525,7 +525,7 @@ test('OAuth initiation strips PII from URLs and signed state via single-use oaut
 
   // Assert NO PII in the Google OAuth redirect URL or query parameters
   assert.doesNotMatch(location, /phone/i);
-  assert.doesNotMatch(location, /555/);
+  assert.doesNotMatch(decodeURIComponent(location.replaceAll('+', ' ')), /555\s*123\s*4567/);
   assert.doesNotMatch(location, /hotel/i);
   assert.doesNotMatch(location, /Four%20Seasons/i);
   assert.doesNotMatch(location, /country/i);

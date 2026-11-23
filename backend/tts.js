@@ -10,6 +10,7 @@ export const TTS_GUEST_DAILY_LIMIT = 5;
 export const TTS_SILVER_DAILY_LIMIT = 30;
 export const TTS_GOLD_DAILY_LIMIT = 60;
 export const TTS_PLATINUM_DAILY_LIMIT = 60;
+export const TTS_OWNER_DAILY_LIMIT = 1000000;
 export const TTS_IP_DAILY_LIMIT = 60;
 export const TTS_MAX_CHARS = 600;
 export const DEFAULT_TTS_MONTHLY_CHAR_CAP = 800000;
@@ -17,6 +18,8 @@ export const TTS_CACHE_TTL_SEC = 30 * 24 * 60 * 60; // 30 days
 
 export function normalizeTtsTier(tier) {
   switch (String(tier || '').toLowerCase()) {
+    case 'owner':
+      return 'owner';
     case 'platinum':
       return 'platinum';
     case 'gold':
@@ -30,6 +33,8 @@ export function normalizeTtsTier(tier) {
 
 export function ttsDailyLimitForTier(tier) {
   switch (normalizeTtsTier(tier)) {
+    case 'owner':
+      return TTS_OWNER_DAILY_LIMIT;
     case 'platinum':
       return TTS_PLATINUM_DAILY_LIMIT;
     case 'gold':
@@ -224,7 +229,8 @@ async function checkAndIncrementTtsLimits({
   const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
     ? Number(ipDayLimit)
     : TTS_IP_DAILY_LIMIT;
-  const hasSeparateIpBrake = Boolean(ipKey && ipKey !== key);
+  const isOwner = normalizeTtsTier(tier) === 'owner';
+  const hasSeparateIpBrake = !isOwner && Boolean(ipKey && ipKey !== key);
 
   if (hasSeparateIpBrake) {
     const ipPrev = await readTtsCounter(env, ipKey);
@@ -236,7 +242,7 @@ async function checkAndIncrementTtsLimits({
 
   const actor = await incrementTtsCounter(env, key, minBucket, dayBucket);
   const minOk = actor.minCount <= TTS_PER_MIN_LIMIT;
-  const dayOk = actor.dayCount <= effectiveDayLimit;
+  const dayOk = isOwner || actor.dayCount <= effectiveDayLimit;
   if (!minOk || !dayOk) {
     return { allowed: false, minOk, dayOk };
   }

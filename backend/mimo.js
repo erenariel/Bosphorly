@@ -236,9 +236,22 @@ export function computeMemberTier(fulfilledCount) {
   return 'silver';
 }
 
+// Site owners (comma-separated e-mails in the OWNER_EMAILS secret) are always
+// platinum and get the internal 'owner' limit tier so they can test freely.
+// The list lives in a Worker secret, never in this public repository.
+export function isOwnerEmail(env, email) {
+  const e = String(email || '').trim().toLowerCase();
+  if (!e || !env || !env.OWNER_EMAILS) return false;
+  return String(env.OWNER_EMAILS).split(',').some(x => x.trim().toLowerCase() === e);
+}
+
 export async function memberTierById(env, memberId) {
   if (!env || !env.DB || !memberId) return 'silver';
   try {
+    if (env.OWNER_EMAILS) {
+      const m = await dbFirst(env, `SELECT email FROM members WHERE id=?`, String(memberId));
+      if (m && isOwnerEmail(env, m.email)) return 'owner';
+    }
     const row = await dbFirst(
       env,
       `SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`,
@@ -265,12 +278,15 @@ export async function resolveMemberAuth(env, tokenOrHeader, now = Date.now()) {
     const nowMs = Number.isFinite(Number(now)) ? Number(now) : Date.now();
     const row = await dbFirst(
       env,
-      `SELECT m.id AS member_id FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`,
+      `SELECT m.id AS member_id, m.email AS email FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`,
       await sha256(tok),
       sqlTime(new Date(nowMs)),
     );
     if (!row || !row.member_id) return null;
     const memberId = String(row.member_id);
+    if (isOwnerEmail(env, row.email)) {
+      return { memberId, tier: 'owner', fulfilledCount: 0, owner: true };
+    }
     let fulfilledCount = 0;
     try {
       const cnt = await dbFirst(
