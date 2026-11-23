@@ -136,7 +136,7 @@ test('privacy.html TR and EN disclose Google Cloud Text-to-Speech, reply-text-on
   assert.match(privacyHtml, /falls back locally to your browser’s built-in speech synthesis \(<code>speechSynthesis<\/code>\)/);
 });
 
-test('sanitizeSpeechText strips [[flags:...]] & thought blocks, chat avoids innerHTML on AI/user text, and config/api.js loads ?v=20261123e', () => {
+test('sanitizeSpeechText strips [[flags:...]] & thought blocks, chat avoids innerHTML on AI/user text, and config/api.js loads ?v=20261123e/f', () => {
   const { sanitizeSpeechText } = loadClientHelpers();
   const dirty = '<|channel>thought\nplan<channel|><think>secret</think>Akşam turu yaklaşık 20 EUR 💙 https://bosphorly.com/booking.html\n[[flags:abuse=0;handoff=0]]';
   const spoken = sanitizeSpeechText(dirty);
@@ -148,6 +148,6 @@ test('sanitizeSpeechText strips [[flags:...]] & thought blocks, chat avoids inne
   assert.match(setBodyFn, /textContent/);
 
   const apiJs = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
-  assert.match(apiJs, /assistant-chat\.css\?v=20261123e/);
-  assert.match(apiJs, /assistant-chat\.js\?v=20261123e/);
+  assert.match(apiJs, /assistant-chat\.css\?v=20261123f/);
+  assert.match(apiJs, /assistant-chat\.js\?v=20261123f/);
 });
