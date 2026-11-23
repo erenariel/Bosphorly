@@ -129,3 +129,11 @@ section[id]{scroll-margin-top:170px}
 @media (max-width:560px){.hero .hero-actions>a{flex:1 1 100%;justify-content:center;text-align:center}.hero .hero-links{margin-top:14px}}
 @media (max-width:900px){.hero #heroAuth{display:none!important}}
 @media (max-width:560px){.hero .hero-links{flex-direction:column;align-items:flex-start;gap:0}}
+
+/* Footer social channels: WhatsApp Business and Instagram (quick questions; requests stay on email). */
+.social-links{display:inline-flex;flex-wrap:wrap;gap:8px;margin-inline-start:6px;vertical-align:middle}
+.social-btn{display:inline-flex;align-items:center;gap:7px;min-height:36px;padding:7px 13px;border-radius:999px;border:1px solid #d5e0ef;background:#fff;color:#16305f;font:700 12.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none!important;white-space:nowrap}
+.social-btn:hover{background:#f3f7fc;border-color:#aec3df}
+.social-btn:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
+.social-btn .social-ico{width:18px;height:18px;flex:none;display:block}
+@media (max-width:640px){.social-btn{min-height:44px}}
