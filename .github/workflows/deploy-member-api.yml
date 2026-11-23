@@ -26,6 +26,7 @@ jobs:
           CODE_PEPPER: ${{ secrets.CODE_PEPPER }}
           PARTNER_TOKEN: ${{ secrets.PARTNER_TOKEN }}
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          OWNER_EMAILS: ${{ secrets.OWNER_EMAILS }}
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           YANDEX_CLIENT_ID: ${{ secrets.YANDEX_CLIENT_ID }}
@@ -56,7 +57,7 @@ jobs:
           fi
           npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
           npx --yes wrangler@4.166.0 deploy --config "$config"
-          node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN","TURNSTILE_SECRET"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
+          node -e 'const keys=["ADMIN_TOKEN","OWNER_EMAILS","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN","TURNSTILE_SECRET"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
             npx --yes wrangler@4.166.0 secret bulk --config "$config"
       - name: Set Telegram webhook
         env:

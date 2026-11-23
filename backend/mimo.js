@@ -265,7 +265,7 @@ export async function resolveMemberAuth(env, tokenOrHeader, now = Date.now()) {
     const nowMs = Number.isFinite(Number(now)) ? Number(now) : Date.now();
     const row = await dbFirst(
       env,
-      `SELECT m.id AS member_id FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`,
+      `SELECT m.id AS member_id, m.email AS member_email FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`,
       await sha256(tok),
       sqlTime(new Date(nowMs)),
     );
@@ -282,6 +282,9 @@ export async function resolveMemberAuth(env, tokenOrHeader, now = Date.now()) {
     } catch { /* older fixtures without member_requests treat authenticated member as silver */ }
     return {
       memberId,
+      // Only a verified server-side member session may receive owner privileges.
+      // OWNER_EMAILS is a deployment secret, never a client-side setting.
+      isOwner: String(env.OWNER_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean).includes(String(row.member_email || '').trim().toLowerCase()),
       tier: computeMemberTier(fulfilledCount),
       fulfilledCount,
     };

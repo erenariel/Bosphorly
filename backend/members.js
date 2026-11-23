@@ -172,6 +172,7 @@ async function profile(env, m) {
       `SELECT credential_id AS id, created_at AS createdAt, last_used_at AS lastUsedAt FROM passkeys WHERE member_id=? ORDER BY created_at DESC`).bind(m.id).all()).results;
   } catch {}
   return {
+    isAdmin: String(env.OWNER_EMAILS || '').split(',').map(e => e.trim().toLowerCase()).filter(Boolean).includes(String(m.email || '').trim().toLowerCase()),
     email: m.email, name: m.name, phone: m.phone || null, hotel: m.hotel || null, room: m.room || null,
     lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
     referralCode: m.referral_code, marketing: !!m.marketing_consent,
