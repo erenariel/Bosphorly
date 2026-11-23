@@ -2188,12 +2188,15 @@
   async function setupCoupons() {
     if (!MB || !MB.enabled()) return;
     MT = await MB.texts();
-    if (!MB.signedIn()) { $('couponHintLink').textContent = MT.bSignInHint; $('couponHint').hidden = false; return; }
+    if (!MB.signedIn()) { const P = window.BosphorlyPlatinum; const promo = P?.promo('join-booking', 'Silver → Gold → Platinum 💎 · ' + P.join + ' ' + P.benefits); if (promo) $('result').append(promo); $('couponHintLink').textContent = MT.bSignInHint; $('couponHint').hidden = false; return; }
     let prof = null;
     try { prof = await MB.profile(); } catch {}
     coupons = await MB.usableCoupons();
+    const P = window.BosphorlyPlatinum;
+    const hint = prof && prof.tier !== 'platinum' ? P?.promo('booking-step', P.step) : null;
+    if (hint) $('result').append(hint);
     const vipText = prof && prof.tier === 'platinum'
-      ? (lang === 'tr' ? '💎 Platinum VIP ayrıcalığın aktif: Öncelikli Free Upgrade + VIP servislerde %10 indirim.' : '💎 Platinum VIP active: Priority Free Upgrade + 10% VIP priority discount.')
+      ? (lang === 'tr' ? '💎 Platinum VIP ayrıcalığın aktif: Öncelikli Free Upgrade + VIP servislerde %10 indirim. Günde 200 Mimo mesajı, Platinum’a ulaşınca %10 hediye kupon, 1 günlük eSIM hediyesi (yakında).' : '💎 Platinum VIP active: Priority Free Upgrade + 10% VIP priority discount. 200 daily Mimo chats, 10% gift coupon on reaching Platinum, free 1-day eSIM data (coming soon).')
       : prof && prof.tier === 'gold'
         ? (lang === 'tr' ? '🥇 Gold ayrıcalığın aktif: Müsaitliğe göre Free Upgrade + VIP servislerde %3 öncelik.' : '🥇 Gold tier active: Free Upgrade (subject to availability) + 3% VIP priority.')
         : '';
@@ -2249,7 +2252,7 @@
     }
     const memProf = MB && MB.signedIn() ? MB.cachedProfile() : null;
     const vipNote = memProf && memProf.tier === 'platinum'
-      ? (lang === 'tr' ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount)')
+      ? (lang === 'tr' ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim) · günde 200 Mimo mesajı · Platinum’a ulaşınca %10 hediye kupon · 1 günlük eSIM hediyesi (yakında)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount) · 200 daily Mimo chats · 10% gift coupon on reaching Platinum · free 1-day eSIM data (coming soon)')
       : memProf && memProf.tier === 'gold'
         ? (lang === 'tr' ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %3 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 3% VIP priority)')
         : null;
@@ -2259,6 +2262,9 @@
       basis: r.basis ?? null, priceSource: r.details?.source_url || r.source_url, priceChecked: r.details?.checked || null, shownAt: shownAt.toISOString() };
     const preview = window.BosphorlyBooking.preview({ experienceId: r.id, date: snapshot.date, guests: num });
     const box = $('result'); box.dataset.state = preview.state; box.replaceChildren();
+    const P = window.BosphorlyPlatinum;
+    const promo = P?.promo(MB?.signedIn() ? 'booking-result-step' : 'join-booking-result', MB?.signedIn() ? P.step : 'Silver → Gold → Platinum 💎 · ' + P.join + ' ' + P.benefits);
+    if (promo) box.append(promo);
     const h = document.createElement('h3'); h.textContent = t.resultTitle + ' · ' + snapshot.reference;
     const d = document.createElement('dl'); d.className = 'draft';
     const dateText = new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(snapshot.date + 'T12:00'));

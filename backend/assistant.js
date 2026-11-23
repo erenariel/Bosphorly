@@ -49,7 +49,7 @@ export const PER_MIN_LIMIT = 6;
 export const GUEST_DAILY_LIMIT = 15;
 export const SILVER_DAILY_LIMIT = 30;
 export const GOLD_DAILY_LIMIT = 60;
-export const PLATINUM_DAILY_LIMIT = 120;
+export const PLATINUM_DAILY_LIMIT = 200;
 // Site owner (OWNER_EMAILS): effectively unlimited per day; per-minute brake still applies.
 export const OWNER_DAILY_LIMIT = 1000000;
 export const IP_DAILY_LIMIT = 150;
@@ -1302,9 +1302,10 @@ export async function checkAndIncrementLimits({
   const effectiveDayLimit = Number.isFinite(Number(dayLimit)) && Number(dayLimit) > 0
     ? Number(dayLimit)
     : chatDailyLimitForTier(tier);
-  const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
+  let effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
     ? Number(ipDayLimit)
     : IP_DAILY_LIMIT;
+  if (String(tier || '').toLowerCase() === 'platinum') effectiveIpDayLimit = Math.max(effectiveIpDayLimit, PLATINUM_DAILY_LIMIT);
   const isOwner = String(tier || '').toLowerCase() === 'owner';
   const hasSeparateIpBrake = !isOwner && Boolean(ipActorKey && ipActorKey !== actorKey);
 
@@ -1798,7 +1799,7 @@ async function prepareAssistantTurn({
       path: dayCapped ? 'day_limit' : 'rate_limit',
       lang,
       effectiveChannel,
-      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg(limitKey, lang) },
+      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg(limitKey, lang) + (dayCapped && tier === 'guest' ? (lang === 'tr' ? ' Üye olursan daha fazla konuşabiliriz 💙' : ' Join and we can chat more 💙') : dayCapped && ['silver', 'gold'].includes(tier) ? (lang === 'tr' ? ' Turların arttıkça benimle daha çok konuşabilirsin; Platinum’da günde 200 mesaj 💎' : ' More tours unlock more chats with me; Platinum includes 200 daily messages 💎') : '') },
     };
   }
 
@@ -1894,7 +1895,9 @@ async function prepareAssistantTurn({
       ? chunks.map(formatChunkForContext).join('\n\n')
       : '(No exact catalog match; answer from general Istanbul knowledge and mention Bosphorly only if relevant.)';
   const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote };
-  const systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
+  let systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
+  systemPrompt += '\nDo not promote Platinum in normal conversation. Explain membership benefits only when the guest asks about membership or benefits.';
+  if (tier === 'platinum') systemPrompt += '\nBu misafir Platinum üye; ona sıcak, kişisel ve özenli davran, gerektiğinde önceliğini hissettir ama abartılı övgü yapma.';
   const messages = [
     { role: 'system', content: systemPrompt },
     ...safeHistory,

@@ -15,6 +15,7 @@ function d1() {
   db.exec(readFileSync(new URL('../backend/migrations/0004_member_sync_requests_details.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0005_identities_passkeys.sql', import.meta.url), 'utf8'));
   db.exec(readFileSync(new URL('../backend/migrations/0006_oauth_pending.sql', import.meta.url), 'utf8'));
+  db.exec(readFileSync(new URL('../backend/migrations/0012_platinum.sql', import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) ?? null,
@@ -735,3 +736,24 @@ test('account deletion deletes passkeys, passkey_challenges, and member_identiti
 
 
 
+
+
+test('Platinum gift: fifth completed tour, 10%, 180 days, once per member and separate from loyalty', async () => {
+  const env = setup();
+  const up = await signUp(env, 'platinum-gift@example.com');
+  for (let i = 1; i <= 10; i++) {
+    const ref = 'BOS-GIFT' + String(i).padStart(3, '0');
+    assert.equal((await call(env, '/v1/me/requests', { ref, serviceId: 'bb-morning', date: '2099-06-01', guests: 2 }, up.token)).status, 200);
+    const fulfilled = await call(env, '/v1/partner/fulfil', { ref }, 'partner-secret');
+    assert.equal(fulfilled.status, 200);
+    const me = (await call(env, '/v1/me', null, up.token, 'GET')).body;
+    const gifts = me.coupons.filter(c => c.kind === 'platinum');
+    assert.equal(gifts.length, i < 5 ? 0 : 1);
+    if (i >= 5) {
+      assert.equal(gifts[0].percentBps, 1000);
+      assert.ok(Math.abs(new Date(gifts[0].expiresAt.replace(' ', 'T') + 'Z').getTime() - Date.now() - 180 * 864e5) < 10000);
+      assert.ok(me.platinumSince);
+    }
+    if (i >= 5) assert.equal(me.coupons.filter(c => c.kind === 'loyalty').length, Math.floor(i / 5));
+  }
+});

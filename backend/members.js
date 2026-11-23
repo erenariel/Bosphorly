@@ -21,7 +21,7 @@ const SESSION_DAYS = 90;
 const CODE_MINUTES = 10;
 const CODE_MAX_TRIES = 5;
 const CODES_PER_15_MIN = 3;
-const ONCE = new Set(['welcome', 'hotel', 'second_tour']);
+const ONCE = new Set(['welcome', 'hotel', 'second_tour', 'platinum']);
 const LANGS = ['tr', 'en', 'ru', 'uk', 'de', 'fr', 'nl', 'ar', 'he', 'az', 'fa', 'es', 'it', 'pt', 'hr', 'hu', 'bs', 'zh', 'ja', 'ko', 'hi', 'bn', 'id'];
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O, 1/I
 
@@ -100,13 +100,13 @@ async function sendCode(env, email, code, lang) {
 async function issue(env, memberId, kind, hotelId = null) {
   const now = sqlTime(new Date());
   const c = await env.DB.prepare(
-    `SELECT id, percent_bps, valid_days FROM campaigns WHERE kind=? AND active=1 AND starts_at<=? AND (ends_at IS NULL OR ends_at>?)
-     AND (hotel_id IS ? OR hotel_id=?) ORDER BY starts_at DESC, id LIMIT 1`).bind(kind, now, now, hotelId, hotelId).first();
+    `SELECT id, percent_bps, valid_days FROM campaigns WHERE ((?='platinum' AND id='platinum-2026') OR (?!='platinum' AND kind=? AND id!='platinum-2026')) AND active=1 AND starts_at<=? AND (ends_at IS NULL OR ends_at>?)
+     AND (hotel_id IS ? OR hotel_id=?) ORDER BY starts_at DESC, id LIMIT 1`).bind(kind, kind, kind, now, now, hotelId, hotelId).first();
   if (!c) return null;
   const code = couponCode();
   const res = await env.DB.prepare(
     `INSERT OR IGNORE INTO coupons (id, code, member_id, campaign_id, percent_bps, expires_at, once_key) VALUES (?,?,?,?,?,?,?)`)
-    .bind(id(), code, memberId, c.id, Math.min(c.percent_bps, maxBps(env)), later(c.valid_days * 864e5), ONCE.has(kind) ? memberId + ':' + c.id : null).run();
+    .bind(id(), code, memberId, c.id, Math.min(c.percent_bps, maxBps(env)), later(c.valid_days * 864e5), ONCE.has(kind) ? memberId + ':' + (kind === 'platinum' ? 'platinum-2026' : c.id) : null).run();
   return res.meta.changes ? code : null;
 }
 
@@ -148,7 +148,7 @@ function tierInfo(env, fulfilledCount) {
 async function profile(env, m) {
   const now = sqlTime(new Date());
   const coupons = (await env.DB.prepare(
-    `SELECT c.code, c.percent_bps, c.status, c.expires_at, c.held_ref, k.kind FROM coupons c JOIN campaigns k ON k.id=c.campaign_id
+    `SELECT c.code, c.percent_bps, c.status, c.expires_at, c.held_ref, CASE WHEN k.id='platinum-2026' THEN 'platinum' ELSE k.kind END AS kind FROM coupons c JOIN campaigns k ON k.id=c.campaign_id
      WHERE c.member_id=? ORDER BY c.issued_at DESC, c.code`).bind(m.id).all()).results
     .map(c => ({ code: c.code, kind: c.kind, percentBps: c.percent_bps, expiresAt: c.expires_at, heldFor: c.held_ref,
       status: c.status === 'issued' && c.expires_at <= now ? 'expired' : c.status }));
@@ -165,6 +165,7 @@ async function profile(env, m) {
     }));
   const doneRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
   const fulfilledCount = Number(doneRow?.n || 0);
+  const platinumRow = fulfilledCount >= 5 ? await env.DB.prepare(`SELECT closed_at FROM member_requests WHERE member_id=? AND state='fulfilled' ORDER BY closed_at, ref LIMIT 1 OFFSET 4`).bind(m.id).first() : null;
   // Owner accounts see platinum in their own profile (display only; partner
   // lookups and coupons keep using the real fulfilled-tour count).
   const owner = isOwnerEmail(env, m.email);
@@ -178,7 +179,7 @@ async function profile(env, m) {
     email: m.email, name: m.name, phone: m.phone || null, hotel: m.hotel || null, room: m.room || null,
     lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
     referralCode: m.referral_code, marketing: !!m.marketing_consent,
-    stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, ...ti, coupons, requests, passkeys
+    stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, platinumSince: platinumRow?.closed_at || null, ...ti, coupons, requests, passkeys
   };
 }
 
@@ -849,6 +850,7 @@ export async function handleMembers(request, env, url) {
         const issued = [];
         const m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(r.member_id).first();
         const done = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
+        if (done.n >= 5 && await issue(env, m.id, 'platinum')) issued.push('platinum');
         if (done.n === 1 && await issue(env, m.id, 'second_tour')) issued.push('second_tour');
         if (m.stamps >= STAMPS_GOAL && await issue(env, m.id, 'loyalty')) {
           await env.DB.prepare(`UPDATE members SET stamps=stamps-? WHERE id=?`).bind(STAMPS_GOAL, m.id).run();
@@ -868,6 +870,7 @@ export async function handleMembers(request, env, url) {
       if (!env.ADMIN_TOKEN || !equal(bearer(request), env.ADMIN_TOKEN)) fail(401, 'Unauthorized');
       const cid = str(body.id, 60);
       const kinds = ['welcome', 'referral', 'hotel', 'second_tour', 'loyalty'];
+      if (cid === 'platinum-2026') fail(400, 'Reserved Platinum reward campaign');
       if (!cid || !kinds.includes(body.kind) || !Number.isInteger(body.percentBps) || body.percentBps < 1 || !Number.isInteger(body.validDays) || body.validDays < 1 || body.validDays > 730) fail(400, 'Invalid campaign');
       if (body.percentBps > maxBps(env)) fail(400, 'Discount above the commission cap (MAX_DISCOUNT_BPS)');
       if (body.kind === 'hotel' && !str(body.hotelId, 60)) fail(400, 'Hotel campaign needs hotelId');

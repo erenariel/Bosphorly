@@ -9,7 +9,7 @@ export const TTS_PER_MIN_LIMIT = 10;
 export const TTS_GUEST_DAILY_LIMIT = 5;
 export const TTS_SILVER_DAILY_LIMIT = 15;
 export const TTS_GOLD_DAILY_LIMIT = 25;
-export const TTS_PLATINUM_DAILY_LIMIT = 60;
+export const TTS_PLATINUM_DAILY_LIMIT = 100;
 export const TTS_OWNER_DAILY_LIMIT = 1000000;
 export const TTS_IP_DAILY_LIMIT = 60;
 export const TTS_MAX_CHARS = 600;
@@ -226,9 +226,10 @@ async function checkAndIncrementTtsLimits({
   const effectiveDayLimit = Number.isFinite(Number(dayLimit)) && Number(dayLimit) > 0
     ? Number(dayLimit)
     : ttsDailyLimitForTier(tier);
-  const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
+  let effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
     ? Number(ipDayLimit)
     : TTS_IP_DAILY_LIMIT;
+  if (String(tier || '').toLowerCase() === 'platinum') effectiveIpDayLimit = Math.max(effectiveIpDayLimit, TTS_PLATINUM_DAILY_LIMIT);
   const isOwner = normalizeTtsTier(tier) === 'owner';
   const hasSeparateIpBrake = !isOwner && Boolean(ipKey && ipKey !== key);
 

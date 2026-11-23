@@ -5,6 +5,21 @@
   if (!host) return;
   const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
+  const platinumCopy = {
+    benefits: lang === 'tr' ? 'Platinum: günde 200 Mimo mesajı, öncelikli Free Upgrade, %10 VIP indirim, Platinum’a ulaşınca tek seferlik %10 hediye kupon (180 gün). Bir sonraki İstanbul ziyaretin için 1 günlük ücretsiz eSIM internet 🎁 (yakında)' : 'Platinum: 200 daily Mimo chats, priority Free Upgrade, 10% VIP discount and a one-time 10% gift coupon upon reaching Platinum (180 days). Free 1-day eSIM data for your next Istanbul visit 🎁 (coming soon)',
+    join: lang === 'tr' ? 'Üye ol, turlarınla yüksel: Platinum’da günde 200 Mimo mesajı, %10 VIP indirim ve hediyeler.' : 'Join and rise with every tour: Platinum unlocks 200 daily Mimo chats, 10% VIP discount and gifts.',
+    step: lang === 'tr' ? 'Bu tur seni Platinum’a 1 adım yaklaştırır.' : 'This tour brings you one step closer to Platinum.'
+  };
+  function platinumPromo(key, text, permanent = false) {
+    const storageKey = 'bosphorly:platinum:' + key;
+    try { const seen = Number(localStorage.getItem(storageKey)); if (seen && (permanent || Date.now() - seen < 7 * 864e5)) return null; } catch {}
+    const card = document.createElement('aside'); card.className = 'platinum-promo';
+    const copy = document.createElement('p'); copy.textContent = text;
+    const close = document.createElement('button'); close.type = 'button'; close.textContent = '×'; close.setAttribute('aria-label', lang === 'tr' ? 'Kapat' : 'Dismiss');
+    close.addEventListener('click', () => { try { localStorage.setItem(storageKey, String(Date.now())); } catch {} card.remove(); });
+    card.append(copy, close); return card;
+  }
+  window.BosphorlyPlatinum = { ...platinumCopy, promo: platinumPromo };
   const L = {
     transfer: { en: "Transfer", tr: "Transfer", ru: "Трансфер", uk: "Трансфер", de: "Transfer", fr: "Transfert", nl: "Transfer", ar: "النقل", he: "הסעות", az: "Transfer", fa: "ترانسفر", es: "Traslado", it: "Transfer", pt: "Traslado", hr: "Transfer", hu: "Transzfer", bs: "Transfer", zh: "接送", ja: "空港送迎", ko: "공항 픽업", hi: "ट्रांसफ़र", bn: "ট্রান্সফার", id: "Transfer" },
     tours: { en: "Special tours", tr: "Özel turlar", ru: "Особые туры", uk: "Особливі тури", de: "Besondere Touren", fr: "Visites spéciales", nl: "Speciale tours", ar: "جولات خاصة", he: "סיורים מיוחדים", az: "Xüsusi turlar", fa: "تورهای ویژه", es: "Tours especiales", it: "Tour speciali", pt: "Passeios especiais", hr: "Posebne ture", hu: "Különleges túrák", bs: "Posebne ture", zh: "特色游览", ja: "特別ツアー", ko: "특별 투어", hi: "ख़ास टूर", bn: "বিশেষ ট্যুর", id: "Tur spesial" },
@@ -19,7 +34,7 @@
     signup: { en: 'Create account', tr: 'Hesap oluştur', ru: 'Создать аккаунт', uk: 'Створити акаунт', de: 'Konto erstellen', fr: 'Créer un compte', nl: 'Account aanmaken', ar: 'إنشاء حساب', he: 'יצירת חשבון', az: 'Hesab yarat', fa: 'ایجاد حساب', es: 'Crear cuenta', it: 'Crea account', pt: 'Criar conta', hr: 'Izradi račun', hu: 'Fiók létrehozása', bs: 'Kreiraj račun', zh: '创建账户', ja: 'アカウント作成', ko: '계정 만들기', hi: 'खाता बनाएँ', bn: 'অ্যাকাউন্ট খুলুন', id: 'Buat akun' },
     signout: { en: 'Sign out', tr: 'Çıkış', ru: 'Выйти', uk: 'Вийти', de: 'Abmelden', fr: 'Déconnexion', nl: 'Uitloggen', ar: 'خروج', he: 'יציאה', az: 'Çıxış', fa: 'خروج', es: 'Salir', it: 'Esci', pt: 'Sair', hr: 'Odjava', hu: 'Kilépés', bs: 'Odjava', zh: '退出', ja: 'ログアウト', ko: '로그아웃', hi: 'साइन आउट', bn: 'সাইন আউট', id: 'Keluar' },
     coupons: { en: 'coupons', tr: 'kupon', ru: 'купон.', uk: 'купон.', de: 'Gutscheine', fr: 'coupons', nl: 'coupons', ar: 'قسائم', he: 'קופונים', az: 'kupon', fa: 'کوپن', es: 'cupones', it: 'coupon', pt: 'cupons', hr: 'kupona', hu: 'kupon', bs: 'kupona', zh: '优惠券', ja: 'クーポン', ko: '쿠폰', hi: 'कूपन', bn: 'কুপন', id: 'kupon' },
-    perk: { en: 'Complimentary membership · 3% welcome privilege', tr: 'Ücretsiz üyelik · %3 hoş geldin ayrıcalığı', ru: 'Бесплатно · скидка −3% при регистрации', uk: 'Безкоштовно · знижка −3% за реєстрацію', de: 'Kostenlos · 3 % Willkommensvorteil', fr: 'Gratuit · privilège de bienvenue −3 %', nl: 'Gratis · 3% welkomstvoordeel', ar: 'عضوية مجانية · ميزة ترحيب 3%', he: 'חברות חינם · הטבת הצטרפות 3%', az: 'Pulsuz üzvlük · 3% xoş gəldin imtiyazı', fa: 'عضویت رایگان · ۳٪ امتیاز خوش‌آمد', es: 'Gratis · privilegio de bienvenida del 3 %', it: 'Gratis · privilegio di benvenuto del 3%', pt: 'Grátis · privilégio de boas-vindas de 3%', hr: 'Besplatno · 3% pogodnost dobrodošlice', hu: 'Ingyenes · 3% üdvözlő kedvezmény', bs: 'Besplatno · 3% pogodnost dobrodošlice', zh: '免费注册 · 享 97 折迎新礼遇', ja: '無料会員登録 · 3%OFFウェルカム特典', ko: '무료 회원가입 · 3% 웰컴 혜택', hi: 'मुफ़्त सदस्यता · 3% वेलकम लाभ', bn: 'বিনামূল্যে সদস্যপদ · ৫% স্বাগত সুবিধা', id: 'Gratis · keistimewaan selamat datang 3%' }
+    perk: { en: 'Complimentary membership · 3% welcome privilege', tr: 'Ücretsiz üyelik · %3 hoş geldin ayrıcalığı', ru: 'Бесплатно · скидка −3% при регистрации', uk: 'Безкоштовно · знижка −3% за реєстрацію', de: 'Kostenlos · 3 % Willkommensvorteil', fr: 'Gratuit · privilège de bienvenue −3 %', nl: 'Gratis · 3% welkomstvoordeel', ar: 'عضوية مجانية · ميزة ترحيب 3%', he: 'חברות חינם · הטבת הצטרפות 3%', az: 'Pulsuz üzvlük · 3% xoş gəldin imtiyazı', fa: 'عضویت رایگان · ۳٪ امتیاز خوش‌آمد', es: 'Gratis · privilegio de bienvenida del 3 %', it: 'Gratis · privilegio di benvenuto del 3%', pt: 'Grátis · privilégio de boas-vindas de 3%', hr: 'Besplatno · 3% pogodnost dobrodošlice', hu: 'Ingyenes · 3% üdvözlő kedvezmény', bs: 'Besplatno · 3% pogodnost dobrodošlice', zh: '免费注册 · 享 97 折迎新礼遇', ja: '無料会員登録 · 3%OFFウェルカム特典', ko: '무료 회원가입 · 3% 웰컴 혜택', hi: 'मुफ़्त सदस्यता · 3% वेलकम लाभ', bn: 'বিনামূল্যে সদস্যপদ · ৩% স্বাগত সুবিধা', id: 'Gratis · keistimewaan selamat datang 3%' }
   };
   const TIERS = {
     silver: ['🥈', 'Silver'],
@@ -46,6 +61,8 @@
     nav.append(a);
   }
   const authBar = header.querySelector('.sh-auth');
+  const journey = platinumPromo('join-header', 'Silver → Gold → Platinum 💎 · ' + platinumCopy.join + ' ' + platinumCopy.benefits);
+  if (journey) authBar.append(journey);
   const memberBar = header.querySelector('.sh-member');
   const nameEl = memberBar.querySelector('.sh-member-name');
   const tierEl = memberBar.querySelector('.sh-member-tier');

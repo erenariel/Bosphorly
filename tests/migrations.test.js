@@ -88,3 +88,24 @@ test('every FROM/INTO/UPDATE/JOIN table referenced in backend/*.js SQL queries i
     }
   }
 });
+
+test('0012 preserves campaign and issued coupon rows and foreign keys inside a migration transaction', () => {
+  const db = new DatabaseSync(':memory:');
+  const { sqlFiles } = collectDefinedTables();
+  for (const file of sqlFiles.filter(f => f < '0012')) db.exec(readFileSync(join(MIGRATIONS_DIR, file), 'utf8'));
+  db.exec(`INSERT INTO members (id,email,referral_code) VALUES ('m','m@example.com','REF123');
+    INSERT INTO coupons (id,code,member_id,campaign_id,percent_bps,expires_at,once_key)
+    VALUES ('old','BOS-OLD','m','welcome-2026',500,'2099-01-01','m:welcome-2026');`);
+  const campaigns = db.prepare('SELECT * FROM campaigns ORDER BY id').all();
+  const coupons = db.prepare('SELECT * FROM coupons ORDER BY id').all();
+  db.exec('BEGIN');
+  db.exec(readFileSync(join(MIGRATIONS_DIR, '0012_platinum.sql'), 'utf8'));
+  db.exec('COMMIT');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM campaigns').get().n, campaigns.length + 1);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM coupons').get().n, coupons.length);
+  assert.deepEqual(db.prepare("SELECT * FROM campaigns WHERE id!='platinum-2026' ORDER BY id").all(), campaigns);
+  assert.deepEqual(db.prepare('SELECT * FROM coupons ORDER BY id').all(), coupons);
+  assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(), []);
+  assert.equal(db.prepare("SELECT percent_bps FROM coupons WHERE id='old'").get().percent_bps, 500);
+  assert.equal(db.prepare("SELECT valid_days FROM campaigns WHERE id='platinum-2026'").get().valid_days, 180);
+});

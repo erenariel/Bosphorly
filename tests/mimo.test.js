@@ -528,17 +528,17 @@ async function seedMember(env, {
   }
 }
 
-test('member tier chat limits (15 guest / 30 silver / 60 gold / 120 platinum / 150 IP brake / 6 min) and D1 counter keys', async () => {
+test('member tier chat limits (15 guest / 30 silver / 60 gold / 200 platinum / 150 IP brake / 6 min) and D1 counter keys', async () => {
   assert.equal(PER_MIN_LIMIT, 6);
   assert.equal(GUEST_DAILY_LIMIT, 15);
   assert.equal(SILVER_DAILY_LIMIT, 30);
   assert.equal(GOLD_DAILY_LIMIT, 60);
-  assert.equal(PLATINUM_DAILY_LIMIT, 120);
+  assert.equal(PLATINUM_DAILY_LIMIT, 200);
   assert.equal(IP_DAILY_LIMIT, 150);
   assert.deepEqual([0, 1, 2, 4, 5, 8].map(computeMemberTier), ['silver', 'silver', 'gold', 'gold', 'platinum', 'platinum']);
   assert.deepEqual(
     ['guest', 'silver', 'gold', 'platinum', 'fake'].map(chatDailyLimitForTier),
-    [15, 30, 60, 120, 15]
+    [15, 30, 60, 200, 15]
   );
 
   const env = setup();
@@ -591,7 +591,7 @@ test('member tier chat limits (15 guest / 30 silver / 60 gold / 120 platinum / 1
   assert.equal(gld121.ok, false);
   assert.equal(gld121.status, 429);
 
-  // Platinum (5 fulfilled): 120/day + 6/min burst enforcement
+  // Platinum (5 fulfilled): 200/day + 6/min burst enforcement
   for (let i = 0; i < PER_MIN_LIMIT; i += 1) {
     const r = await runAssistant({ message: 'Hamam?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:plt-burst', tier: 'platinum', now: t0 });
     assert.equal(r.ok, true);
@@ -600,7 +600,7 @@ test('member tier chat limits (15 guest / 30 silver / 60 gold / 120 platinum / 1
   assert.equal(burst7.ok, false);
   assert.equal(burst7.status, 429);
 
-  // Reset burst counters and verify Platinum reaches 120 on one day across minutes and fails 121st
+  // Reset burst counters and verify Platinum reaches 200 on one day across minutes and fails 201st
   env.DB.raw.prepare(`DELETE FROM assistant_rate_limits WHERE key IN ('member:plt1', 'ip:plt-burst')`).run();
   for (let i = 0; i < PLATINUM_DAILY_LIMIT; i += 1) {
     const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
@@ -619,17 +619,17 @@ test('member tier chat limits (15 guest / 30 silver / 60 gold / 120 platinum / 1
     const r = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt1', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t });
     assert.equal(r.ok, true);
   }
-  for (let i = 0; i < 70; i += 1) {
+  for (let i = 0; i < 120; i += 1) {
     const t = t0 + Math.floor(i / PER_MIN_LIMIT) * 60_000;
     const r = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t });
     assert.equal(r.ok, true);
   }
-  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='ip:hotel-wifi'`).get().day_count, 150);
-  const brake151 = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t0 + 13 * 60_000 });
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='ip:hotel-wifi'`).get().day_count, 200);
+  const brake151 = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:hotel-wifi', tier: 'platinum', now: t0 + 30 * 60_000 });
   assert.equal(brake151.ok, false);
   assert.equal(brake151.status, 429);
-  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:plt2'`).get().day_count, 70);
-  const plt2Clean = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:clean-ip', tier: 'platinum', now: t0 + 13 * 60_000 });
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:plt2'`).get().day_count, 120);
+  const plt2Clean = await runAssistant({ message: 'Tur?', pageLang: 'tr', env, actorKey: 'member:plt2', ipActorKey: 'ip:clean-ip', tier: 'platinum', now: t0 + 30 * 60_000 });
   assert.equal(plt2Clean.ok, true);
 });
 
@@ -687,7 +687,7 @@ test('HTTP /v1/assistant enforces tier quotas, ignores spoofed tier, and uses me
     }), env);
     assert.equal(guest16.status, 429);
     const guest16Body = await guest16.json();
-    assert.equal(guest16Body.error, ASSISTANT_MESSAGES.dayLimitGuest.tr);
+    assert.equal(guest16Body.error, ASSISTANT_MESSAGES.dayLimitGuest.tr + ' Üye olursan daha fazla konuşabiliriz 💙');
     assert.match(guest16Body.error, /üye olursan günlük hakkın artar/i);
 
     // Valid Silver member on SAME IP (even though ip:<ip> is 16 < 150) succeeds on SSE stream with memberNote + observeAssistantTurn!
@@ -837,7 +837,7 @@ test('member logout drops session immediately back to guest chat limit (15/16) w
     body: JSON.stringify({ message: 'Boğaz turu?', lang: 'tr', chatSession }),
   }), env);
   assert.equal(sixteenth.status, 429);
-  assert.equal((await sixteenth.json()).error, ASSISTANT_MESSAGES.dayLimitGuest.tr);
+  assert.equal((await sixteenth.json()).error, ASSISTANT_MESSAGES.dayLimitGuest.tr + ' Üye olursan daha fazla konuşabiliriz 💙');
   assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:memout'`).get().day_count, 1);
 
   // Verify dayLimitMember (not guest upsell) is returned when signed-in Silver hits 30/31 boundary
@@ -859,5 +859,5 @@ test('member logout drops session immediately back to guest chat limit (15/16) w
     body: JSON.stringify({ message: 'Hamam?', lang: 'tr', chatSession: silChat }),
   }), env);
   assert.equal(sil61.status, 429);
-  assert.equal((await sil61.json()).error, ASSISTANT_MESSAGES.dayLimitMember.tr);
+  assert.equal((await sil61.json()).error, ASSISTANT_MESSAGES.dayLimitMember.tr + ' Turların arttıkça benimle daha çok konuşabilirsin; Platinum’da günde 200 mesaj 💎');
 });
