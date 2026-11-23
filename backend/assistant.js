@@ -1291,9 +1291,6 @@ export async function checkAndIncrementLimits({
   perHour = 0,
   skipGlobal = false,
 }) {
-  // Verified owner tier is exempt from application chat counters.
-  // Provider and infrastructure quotas remain in force.
-  if (String(tier || '').toLowerCase() === 'owner') return { allowed: true };
   const minBucket = Math.floor(now / 60000);
   const dayBucket = new Date(now).toISOString().slice(0, 10);
   if (perHour > 0) {
@@ -1323,7 +1320,7 @@ export async function checkAndIncrementLimits({
   if (actor.minCount > PER_MIN_LIMIT) {
     return { allowed: false, reason: 'actor_limit' };
   }
-  if (actor.dayCount > effectiveDayLimit) {
+  if (!isOwner && actor.dayCount > effectiveDayLimit) {
     return { allowed: false, reason: 'day_limit' };
   }
 

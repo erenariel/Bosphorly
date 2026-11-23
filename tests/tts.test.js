@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from '../backend/worker.js';
 import { createChatSessionToken } from '../backend/assistant.js';
+import * as ttsModule from '../backend/tts.js';
 import {
   CHIRP_TTS_LOCALES,
   DEFAULT_TTS_MONTHLY_CHAR_CAP,
@@ -11,7 +12,6 @@ import {
   TTS_GUEST_DAILY_LIMIT,
   TTS_IP_DAILY_LIMIT,
   TTS_MAX_CHARS,
-  TTS_PER_DAY_LIMIT,
   TTS_PER_MIN_LIMIT,
   TTS_PLATINUM_DAILY_LIMIT,
   TTS_SILVER_DAILY_LIMIT,
@@ -95,8 +95,8 @@ test('wrangler.jsonc sets TTS_MONTHLY_CHAR_CAP to 800000 and limits constants ar
   const raw = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
   assert.match(raw, /"TTS_MONTHLY_CHAR_CAP"\s*:\s*"800000"/);
   assert.equal(DEFAULT_TTS_MONTHLY_CHAR_CAP, 800000);
+  assert.equal('TTS_PER_DAY_LIMIT' in ttsModule, false);
   assert.equal(TTS_PER_MIN_LIMIT, 10);
-  assert.equal(TTS_PER_DAY_LIMIT, 30);
   assert.equal(TTS_GUEST_DAILY_LIMIT, 5);
   assert.equal(TTS_SILVER_DAILY_LIMIT, 30);
   assert.equal(TTS_GOLD_DAILY_LIMIT, 60);
@@ -844,6 +844,136 @@ test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platin
     );
     assert.deepEqual(await spoof6th.json(), { fallback: true });
     assert.equal(db.raw.prepare(`SELECT key FROM assistant_rate_limits WHERE key = 'tts:member:expired1'`).get() ?? null, null);
+
+    // Complete Platinum2 remaining quota on cleanIp (already at 21 from cleanIp request #1 -> reach 60 -> 61st returns fallback)
+    for (let i = 21; i < TTS_PLATINUM_DAILY_LIMIT; i += 1) {
+      const t = dayStart + (6 + Math.floor((i - 21) / TTS_PER_MIN_LIMIT)) * 60_000;
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${cleanChat}`,
+            'X-Member-Session': 'tok-plat-2',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': cleanIp,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+        }),
+        env,
+        null,
+        t
+      );
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    const plat61 = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          Authorization: `Bearer ${cleanChat}`,
+          'X-Member-Session': 'tok-plat-2',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': cleanIp,
+        },
+        body: JSON.stringify({ text: 'Platinum 61st', lang: 'en' }),
+      }),
+      env,
+      null,
+      dayStart + 12 * 60_000
+    );
+    assert.equal(plat61.status, 200);
+    assert.deepEqual(await plat61.json(), { fallback: true });
+
+    // Logging out revokes session in D1 and drops caller back to guest 5/day limit + privacy log emits only tier name and counts
+    await seedMemberSession(db, { memberId: 'logout1', token: 'tok-logout-1', fulfilledCount: 5 });
+    const logoutIp = '198.51.100.120';
+    const logoutChat = await createChatSessionToken(CODE_PEPPER, logoutIp, dayStart);
+    const logsCaptured = [];
+    const prevConsoleLog = console.log;
+    console.log = (...args) => logsCaptured.push(args.map((a) => String(a)).join(' '));
+    try {
+      const signedInRes = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${logoutChat}`,
+            'X-Member-Session': 'tok-logout-1',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': logoutIp,
+          },
+          body: JSON.stringify({ text: 'Secret guest spoken text logout1', lang: 'en' }),
+        }),
+        env,
+        null,
+        dayStart
+      );
+      assert.equal(signedInRes.headers.get('Content-Type'), 'audio/mpeg');
+      assert.equal(db.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key = 'tts:member:logout1'`).get().day_count, 1);
+
+      const outRes = await worker.fetch(
+        new Request('https://worker.example/v1/auth/logout', {
+          method: 'POST',
+          headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-logout-1' },
+          body: '{}',
+        }),
+        env
+      );
+      assert.equal(outRes.status, 200);
+      assert.deepEqual(await outRes.json(), { signedOut: true });
+
+      // Note: logoutIp already recorded day_count = 1 while signed in (from IP brake); 4 more as guest reach 5, 6th falls back!
+      for (let i = 1; i < TTS_GUEST_DAILY_LIMIT; i += 1) {
+        const r = await handleTtsRoute(
+          new Request('https://worker.example/v1/tts', {
+            method: 'POST',
+            headers: {
+              Origin: ORIGIN,
+              Authorization: `Bearer ${logoutChat}`,
+              'X-Member-Session': 'tok-logout-1',
+              'Content-Type': 'application/json',
+              'CF-Connecting-IP': logoutIp,
+            },
+            body: JSON.stringify({ text: 'After logout guest message', lang: 'en' }),
+          }),
+          env,
+          null,
+          dayStart + i * 1000
+        );
+        assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+      }
+      const afterLogout6 = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${logoutChat}`,
+            'X-Member-Session': 'tok-logout-1',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': logoutIp,
+          },
+          body: JSON.stringify({ text: 'After logout 6th', lang: 'en' }),
+        }),
+        env,
+        null,
+        dayStart + 10_000
+      );
+      assert.deepEqual(await afterLogout6.json(), { fallback: true });
+      assert.equal(db.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key = 'tts:member:logout1'`).get().day_count, 1);
+
+      const ttsLogs = logsCaptured.filter((l) => l.startsWith('assistant_tts '));
+      assert.ok(ttsLogs.length >= 2);
+      const parsedLogs = ttsLogs.map((l) => JSON.parse(l.replace(/^assistant_tts /, '')));
+      assert.equal(parsedLogs[0].tier, 'platinum');
+      assert.equal(parsedLogs[parsedLogs.length - 1].tier, 'guest');
+      const allJoined = ttsLogs.join('\n');
+      assert.equal(allJoined.includes('logout1'), false);
+      assert.equal(allJoined.includes('logout1@example.com'), false);
+      assert.equal(allJoined.includes('Secret guest spoken text'), false);
+    } finally {
+      console.log = prevConsoleLog;
+    }
   } finally {
     globalThis.fetch = origFetch;
   }

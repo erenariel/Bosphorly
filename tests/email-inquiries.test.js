@@ -92,3 +92,13 @@ test('Mimo panel links only the corporate WhatsApp Business line', () => {
   assert.doesNotMatch(chat, /wa\.me\/\d/);
   assert.doesNotMatch(chat, /wa\.me[^`'"]*[?&]text=/);
 });
+
+test('hero WhatsApp link covers all 23 languages and footer channel pills share identical CSS sizing', () => {
+  const social = read('social-links.js');
+  for (const lang of langs) {
+    assert.match(social, new RegExp(`\\b${lang}\\s*:`), `missing ASK_WA.${lang}`);
+  }
+  const css = read('header.css');
+  assert.match(css, /\.tg-btn\.tg-foot,\s*\.social-btn\s*\{/);
+  assert.match(css, /\.hero\s+\.hero-links\s+\.hero-map,\s*\.hero\s+\.hero-links\s+\.tg-btn\.tg-hero,\s*\.hero\s+\.hero-links\s+\.social-btn\.social-hero\s*\{/);
+});

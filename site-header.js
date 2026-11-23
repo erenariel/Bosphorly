@@ -118,17 +118,18 @@
     document.querySelectorAll('a.privacy-link, a[href="privacy.html"]').forEach(a => {
       if (!a.classList.contains('privacy-link') && !a.textContent.trim().startsWith('🔒')) return;
       a.textContent = '🔒 ' + (P[lang] || P.en) + ' · KVKK';
-      if (a.classList.contains('privacy-link') && !a.parentNode.querySelector('a.mail-link')) {
+      const scope = a.closest('footer, .dc-foot') || a.parentNode;
+      if (a.classList.contains('privacy-link') && !scope.querySelector('a.mail-link')) {
         // Corporate email next to it, once.
         const m = document.createElement('a');
         m.className = 'mail-link'; m.href = 'mailto:info@bosphorly.com'; m.textContent = '✉ info@bosphorly.com';
         m.style.textDecoration = 'underline'; m.style.whiteSpace = 'nowrap';
         a.after(' · ', m);
       }
-      if (a.classList.contains('privacy-link') && !a.parentNode.querySelector('a.tg-foot') && window.BosphorlyTelegram) {
+      if (a.classList.contains('privacy-link') && !scope.querySelector('a.tg-foot') && window.BosphorlyTelegram) {
         const tg = window.BosphorlyTelegram.createLink({ key: 'ask', lang, base, className: 'tg-foot' });
         if (tg) {
-          const anchor = a.parentNode.querySelector('a.mail-link') || a;
+          const anchor = scope.querySelector('a.mail-link') || a;
           anchor.after(' ', tg);
         }
       }

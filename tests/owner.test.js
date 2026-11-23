@@ -27,3 +27,9 @@ test('owner is not stopped by the daily or global limit', async () => {
     assert.equal(r.allowed, true, `request ${i} should pass`);
   }
 });
+
+test('owner chat keeps the six-per-minute brake even with the daily exemption', async () => {
+  const opts = { env: {}, actorKey: 'member:owner-minute', tier: 'owner', dayLimit: 1, now: Date.UTC(2026, 10, 23) };
+  for (let i = 0; i < 6; i++) assert.equal((await checkAndIncrementLimits(opts)).allowed, true);
+  assert.deepEqual(await checkAndIncrementLimits(opts), { allowed: false, reason: 'actor_limit' });
+});

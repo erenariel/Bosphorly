@@ -506,6 +506,8 @@ async function handleOAuth(request, env, url) {
       name = claims.name || '';
     }
     if (!validEmail(email)) throw 0;
+    // For owner social sign-in, require the verified Google mailbox above.
+    if (isOwnerEmail(env, email) && provider !== 'google') throw 0;
     const session = await createOrLoadMemberSession(env, email, {
       name, lang: st.lang, ref: pendingData?.ref, hotel: pendingData?.hotel,
       phone: pendingData?.phone, hotelName: pendingData?.hotelName,

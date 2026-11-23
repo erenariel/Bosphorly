@@ -211,6 +211,47 @@ test('Telegram CTAs render with language param, local SVG, >=44px touch target, 
   expect((await confirmTg.boundingBox()).height).toBeGreaterThanOrEqual(44);
 });
 
+test('Hero WhatsApp link matches Telegram link aesthetics and footer channel pills share identical dimensions', async ({ page }) => {
+  await page.goto('/index.html?lang=tr');
+  const heroTg = page.locator('#heroTelegram');
+  const heroWa = page.locator('.hero .social-hero');
+  const heroMap = page.locator('.hero .hero-map').first();
+  await expect(heroTg).toBeVisible();
+  await expect(heroWa).toBeVisible();
+  await expect(heroWa).toHaveAttribute('href', 'https://wa.me/16197386408');
+  await expect(heroWa).toHaveAttribute('target', '_blank');
+  await expect(heroWa).toHaveAttribute('rel', /noopener/);
+  await expect(heroWa).toContainText("WhatsApp'ta sor");
+  await expect(heroWa.locator('img[src*="assets/brand/whatsapp.svg"]')).toBeVisible();
+  const [tgBox, waBox, mapBox] = await Promise.all([heroTg.boundingBox(), heroWa.boundingBox(), heroMap.boundingBox()]);
+  expect(waBox.height).toBeGreaterThanOrEqual(44);
+  expect(Math.abs(waBox.height - tgBox.height)).toBeLessThanOrEqual(1);
+  expect(Math.abs(waBox.height - mapBox.height)).toBeLessThanOrEqual(1);
+  const [waStyle, tgStyle, mapStyle] = await page.evaluate(() => {
+    const pick = sel => {
+      const cs = getComputedStyle(document.querySelector(sel));
+      return { fontSize: cs.fontSize, fontWeight: cs.fontWeight, color: cs.color, bg: cs.backgroundColor };
+    };
+    return [pick('.hero .social-hero'), pick('#heroTelegram'), pick('.hero .hero-map')];
+  });
+  expect(waStyle).toEqual(tgStyle);
+  expect(waStyle).toEqual(mapStyle);
+
+  // Language switch updates hero WhatsApp label cleanly (including RTL Hebrew).
+  await page.locator('#language').selectOption('he');
+  await expect(heroWa).toContainText('שאלו בוואטסאפ');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+
+  // Footer Telegram, WhatsApp and Instagram pills share identical height and border styling.
+  const footButtons = page.locator('footer .tg-foot, footer .social-btn');
+  await expect(footButtons).toHaveCount(3);
+  const footBoxes = await Promise.all([0, 1, 2].map(i => footButtons.nth(i).boundingBox()));
+  for (const box of footBoxes) {
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(Math.abs(box.height - footBoxes[0].height)).toBeLessThanOrEqual(1);
+  }
+});
+
 test('all Telegram links stay hidden when telegramBot in config/api.js is empty', async ({ page }) => {
   await page.route('**/config/api.js*', (r) => r.fulfill({
     contentType: 'text/javascript',
