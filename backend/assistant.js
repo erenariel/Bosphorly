@@ -1285,6 +1285,9 @@ export async function checkAndIncrementLimits({
   perHour = 0,
   skipGlobal = false,
 }) {
+  // Owner is established from the authenticated server-side session, never user input.
+  // Provider, Cloudflare Worker and abuse-protection limits still apply.
+  if (tier === 'owner') return { allowed: true };
   const minBucket = Math.floor(now / 60000);
   const dayBucket = new Date(now).toISOString().slice(0, 10);
   if (perHour > 0) {
@@ -2903,7 +2906,7 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
 
     const ipActorKey = `ip:${ip}`;
     const limitActorKey = memberAuth ? `member:${memberAuth.memberId}` : ipActorKey;
-    const resolvedTier = memberAuth ? memberAuth.tier : 'guest';
+    const resolvedTier = memberAuth?.isOwner ? 'owner' : (memberAuth ? memberAuth.tier : 'guest');
 
     if (wantsStream) {
       const prep = await prepareAssistantTurn({
