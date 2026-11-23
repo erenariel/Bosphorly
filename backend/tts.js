@@ -6,7 +6,6 @@ import { resolveMemberAuth } from './mimo.js';
 
 const TTS_ENDPOINT = 'https://texttospeech.googleapis.com/v1/text:synthesize';
 export const TTS_PER_MIN_LIMIT = 10;
-export const TTS_PER_DAY_LIMIT = 30;
 export const TTS_GUEST_DAILY_LIMIT = 5;
 export const TTS_SILVER_DAILY_LIMIT = 30;
 export const TTS_GOLD_DAILY_LIMIT = 60;
@@ -16,8 +15,21 @@ export const TTS_MAX_CHARS = 600;
 export const DEFAULT_TTS_MONTHLY_CHAR_CAP = 800000;
 export const TTS_CACHE_TTL_SEC = 30 * 24 * 60 * 60; // 30 days
 
-export function ttsDailyLimitForTier(tier) {
+export function normalizeTtsTier(tier) {
   switch (String(tier || '').toLowerCase()) {
+    case 'platinum':
+      return 'platinum';
+    case 'gold':
+      return 'gold';
+    case 'silver':
+      return 'silver';
+    default:
+      return 'guest';
+  }
+}
+
+export function ttsDailyLimitForTier(tier) {
+  switch (normalizeTtsTier(tier)) {
     case 'platinum':
       return TTS_PLATINUM_DAILY_LIMIT;
     case 'gold':
@@ -291,10 +303,11 @@ function getCacheStore(env) {
   return null;
 }
 
-function logTtsUsage({ lang, chars, cached, fallback, ms }) {
-  // Never log message text or personal details — metrics only.
+function logTtsUsage({ lang, chars, cached, fallback, ms, tier = null }) {
+  // Never log message text, email, or member IDs — tier name and counts only.
   console.log('assistant_tts', JSON.stringify({
     lang: lang || 'unknown',
+    ...(tier ? { tier: normalizeTtsTier(tier) } : {}),
     chars: Math.max(0, Math.floor(Number(chars) || 0)),
     cached: Boolean(cached),
     fallback: Boolean(fallback),
@@ -330,8 +343,9 @@ async function readJsonBody(request, maxBytes = 8192) {
   }
 }
 
-export async function synthesizeTtsAudio({ env = {}, text = '', lang = 'en', now = Date.now(), fetchImpl = fetch }) {
+export async function synthesizeTtsAudio({ env = {}, text = '', lang = 'en', now = Date.now(), fetchImpl = fetch, tier = null }) {
   const startMs = Date.now();
+  const safeTier = tier ? normalizeTtsTier(tier) : null;
   const rawShortLang = String(lang || '').trim().toLowerCase().replace(/_/g, '-').split('-')[0] || 'unknown';
   const cleanText = sanitizeSpeechText(text, TTS_MAX_CHARS);
   if (!cleanText) {
@@ -341,6 +355,7 @@ export async function synthesizeTtsAudio({ env = {}, text = '', lang = 'en', now
   const finishFallback = (shortLang = rawShortLang) => {
     logTtsUsage({
       lang: shortLang,
+      tier: safeTier,
       chars: cleanText.length,
       cached: false,
       fallback: true,
@@ -366,6 +381,7 @@ export async function synthesizeTtsAudio({ env = {}, text = '', lang = 'en', now
         if (audioBuf && audioBuf.byteLength > 0) {
           logTtsUsage({
             lang: voice.shortLang,
+            tier: safeTier,
             chars: cleanText.length,
             cached: true,
             fallback: false,
@@ -437,6 +453,7 @@ export async function synthesizeTtsAudio({ env = {}, text = '', lang = 'en', now
 
   logTtsUsage({
     lang: voice.shortLang,
+    tier: safeTier,
     chars: cleanText.length,
     cached: false,
     fallback: false,
@@ -480,13 +497,15 @@ export async function handleTtsRoute(request, env, _url, now = Date.now()) {
 
   const ipActorKey = `ip:${ip}`;
   const actorKey = memberAuth ? `member:${memberAuth.memberId}` : ipActorKey;
-  const tier = memberAuth ? memberAuth.tier : 'guest';
+  const tier = normalizeTtsTier(memberAuth ? memberAuth.tier : 'guest');
 
   const limit = await checkAndIncrementTtsLimits({ env, actorKey, ipActorKey, tier, now });
   if (!limit.dayOk) {
+    logTtsUsage({ lang: 'unknown', tier, chars: 0, cached: false, fallback: true, ms: 0 });
     return jsonResp({ fallback: true }, 200);
   }
   if (!limit.minOk) {
+    logTtsUsage({ lang: 'unknown', tier, chars: 0, cached: false, fallback: false, ms: 0 });
     return jsonResp({ error: 'Rate limited' }, 429);
   }
 
@@ -498,7 +517,7 @@ export async function handleTtsRoute(request, env, _url, now = Date.now()) {
   }
 
   const lang = typeof body.lang === 'string' ? body.lang : 'en';
-  const result = await synthesizeTtsAudio({ env, text: body.text, lang, now });
+  const result = await synthesizeTtsAudio({ env, text: body.text, lang, now, tier });
   if (result.kind === 'empty') {
     return jsonResp({ fallback: true }, 200);
   }

@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import worker from '../backend/worker.js';
 import {
+  ASSISTANT_MESSAGES,
   GUEST_DAILY_LIMIT,
   GOLD_DAILY_LIMIT,
   IP_DAILY_LIMIT,
@@ -675,30 +676,51 @@ test('HTTP /v1/assistant enforces tier quotas, ignores spoofed tier, and uses me
   assert.match(sse15, /event: delta/);
   assert.match(sse15, /event: done/);
 
-  const guest16 = await worker.fetch(new Request('https://api.example/v1/assistant', {
-    method: 'POST',
-    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer forged-tok', 'CF-Connecting-IP': ip },
-    body: JSON.stringify({ message: 'Boğaz turu?', lang: 'tr', tier: 'platinum', memberTier: 'platinum', chatSession }),
-  }), env);
-  assert.equal(guest16.status, 429);
+  const timingLogs = [];
+  const prevLog = console.log;
+  console.log = (...args) => timingLogs.push(args.map((a) => String(a)).join(' '));
+  try {
+    const guest16 = await worker.fetch(new Request('https://api.example/v1/assistant', {
+      method: 'POST',
+      headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer forged-tok', 'CF-Connecting-IP': ip },
+      body: JSON.stringify({ message: 'Boğaz turu? PiiSecret16', lang: 'tr', tier: 'platinum', memberTier: 'platinum', chatSession }),
+    }), env);
+    assert.equal(guest16.status, 429);
+    const guest16Body = await guest16.json();
+    assert.equal(guest16Body.error, ASSISTANT_MESSAGES.dayLimitGuest.tr);
+    assert.match(guest16Body.error, /üye olursan günlük hakkın artar/i);
 
-  // Valid Silver member on SAME IP (even though ip:<ip> is 16 < 150) succeeds on SSE stream with memberNote + observeAssistantTurn!
-  const waits2 = [];
-  const memberRes = await worker.fetch(new Request('https://api.example/v1/assistant', {
-    method: 'POST',
-    headers: {
-      Origin: ORIGIN,
-      'Content-Type': 'application/json',
-      Accept: 'text/event-stream',
-      Authorization: 'Bearer tok-sil-http',
-      'CF-Connecting-IP': ip,
-    },
-    body: JSON.stringify({ message: 'Boğaz turu önerir misin?', lang: 'tr', stream: true, chatSession, tier: 'platinum' }),
-  }), env, { waitUntil(p) { waits2.push(p); } });
-  assert.equal(memberRes.status, 200);
-  const memberSse = await memberRes.text();
-  assert.match(memberSse, /event: done/);
-  await Promise.all([...waits1, ...waits2]);
+    // Valid Silver member on SAME IP (even though ip:<ip> is 16 < 150) succeeds on SSE stream with memberNote + observeAssistantTurn!
+    const waits2 = [];
+    const memberRes = await worker.fetch(new Request('https://api.example/v1/assistant', {
+      method: 'POST',
+      headers: {
+        Origin: ORIGIN,
+        'Content-Type': 'application/json',
+        Accept: 'text/event-stream',
+        Authorization: 'Bearer tok-sil-http',
+        'CF-Connecting-IP': ip,
+      },
+      body: JSON.stringify({ message: 'Boğaz turu önerir misin?', lang: 'tr', stream: true, chatSession, tier: 'platinum' }),
+    }), env, { waitUntil(p) { waits2.push(p); } });
+    assert.equal(memberRes.status, 200);
+    const memberSse = await memberRes.text();
+    assert.match(memberSse, /event: done/);
+    await Promise.all([...waits1, ...waits2]);
+
+    const parsedTiming = timingLogs
+      .filter((l) => l.startsWith('assistant_timing '))
+      .map((l) => JSON.parse(l.replace(/^assistant_timing /, '')));
+    assert.equal(parsedTiming[0].tier, 'guest');
+    assert.equal(parsedTiming[parsedTiming.length - 1].tier, 'silver');
+    const joinedLogs = timingLogs.join('\n');
+    assert.equal(joinedLogs.includes('silhttp'), false);
+    assert.equal(joinedLogs.includes('silhttp@example.com'), false);
+    assert.equal(joinedLogs.includes('PiiSecret16'), false);
+    assert.equal(joinedLogs.includes('Boğaz turu önerir misin?'), false);
+  } finally {
+    console.log = prevLog;
+  }
 
   assert.match(promptsSeen[promptsSeen.length - 1], /Boğaz akşam turu/);
   assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:silhttp'`).get().day_count, 1);
@@ -737,4 +759,105 @@ test('Telegram webhook applies linked D1 member tier under member:<id> while kee
   } finally {
     globalThis.fetch = prev;
   }
+});
+
+test('23-language daily limit copy includes guest upsell, never says unlimited/sınırsız, and wrangler configures ASSISTANT_DAILY_LIMIT=1000', () => {
+  const wrangler = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
+  assert.match(wrangler, /"ASSISTANT_DAILY_LIMIT"\s*:\s*"1000"/);
+
+  assert.match(ASSISTANT_MESSAGES.dayLimitGuest.tr, /üye olursan günlük hakkın artar/i);
+  assert.equal(ASSISTANT_MESSAGES.dayLimitMember.tr.includes('üye olursan'), false);
+
+  const forbiddenUnlimited = /sınırsız|unlimited|бесконеч|безлим|unbegrenzt|illimité|onbeperkt|بدون حدود|بلا حدود|ללא הגבלה|безгранич|bezgranič|korlátlan|无限|無制限|무제한|असीमित|অসীম|tanpa batas/iu;
+  for (const key of ['dayLimitGuest', 'dayLimitMember', 'rateLimit', 'busy']) {
+    for (const lang of LANGS) {
+      const txt = ASSISTANT_MESSAGES[key][lang];
+      assert.ok(txt && txt.trim(), `${key}.${lang}`);
+      assert.equal(forbiddenUnlimited.test(txt), false, `${key}.${lang} must not claim unlimited`);
+    }
+  }
+
+  const chat = readFileSync(new URL('../assistant-chat.js', import.meta.url), 'utf8');
+  const ui = new Function(`return ${chat.match(/const UI = (\{[\s\S]*?\n  \});/)[1]}`)();
+  const mimoUi = JSON.parse(readFileSync(new URL('../data/mimo-ui.json', import.meta.url), 'utf8'));
+  for (const lang of LANGS) {
+    for (const key of Object.keys(ui)) {
+      if (ui[key] && ui[key][lang]) {
+        assert.equal(forbiddenUnlimited.test(ui[key][lang]), false, `UI.${key}.${lang}`);
+      }
+    }
+    for (const key of Object.keys(mimoUi)) {
+      assert.equal(forbiddenUnlimited.test(mimoUi[key][lang]), false, `mimoUi.${key}.${lang}`);
+    }
+  }
+});
+
+test('member logout drops session immediately back to guest chat limit (15/16) with dayLimitGuest reply and leaves member daily limit intact', async () => {
+  const env = setup();
+  env.TURNSTILE_SECRET = 'turnstile';
+  env.ASSISTANT_DAILY_LIMIT = '1000';
+  env.AI = {
+    run: async () => ({ response: JSON.stringify({ abuse: false, handoff: false, reply: 'Kısa cevap.' }) }),
+  };
+
+  await seedMember(env, { id: 'memout', email: 'memout@example.com', token: 'tok-mem-out', fulfilled: 5 });
+  const ip = '203.0.113.155';
+  const chatSession = await createChatSessionToken(env.CODE_PEPPER, ip);
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Member sends 1 request while signed in (`member:memout` = 1, `ip:<ip>` = 1)
+  const signedIn = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-mem-out', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu?', lang: 'tr', chatSession }),
+  }), env);
+  assert.equal(signedIn.status, 200);
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:memout'`).get().day_count, 1);
+
+  // Sign out via /v1/auth/logout -> deletes session row in D1
+  const out = await worker.fetch(new Request('https://api.example/v1/auth/logout', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-mem-out' },
+    body: '{}',
+  }), env);
+  assert.equal(out.status, 200);
+
+  // Advance `ip:<ip>` counter to 14 -> 15th allowed, 16th rejected as guest with dayLimitGuest even with revoked Bearer
+  env.DB.raw.prepare(`UPDATE assistant_rate_limits SET min_count = 0, day_bucket = ?, day_count = 14 WHERE key = ?`).run(today, `ip:${ip}`);
+  const fifteenth = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-mem-out', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu?', lang: 'tr', chatSession }),
+  }), env);
+  assert.equal(fifteenth.status, 200);
+
+  const sixteenth = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-mem-out', 'CF-Connecting-IP': ip },
+    body: JSON.stringify({ message: 'Boğaz turu?', lang: 'tr', chatSession }),
+  }), env);
+  assert.equal(sixteenth.status, 429);
+  assert.equal((await sixteenth.json()).error, ASSISTANT_MESSAGES.dayLimitGuest.tr);
+  assert.equal(env.DB.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key='member:memout'`).get().day_count, 1);
+
+  // Verify dayLimitMember (not guest upsell) is returned when signed-in Silver hits 60/61 boundary
+  await seedMember(env, { id: 'silbound', email: 'silbound@example.com', token: 'tok-sil-bound', fulfilled: 0 });
+  const ipSil = '203.0.113.156';
+  const silChat = await createChatSessionToken(env.CODE_PEPPER, ipSil);
+  env.DB.raw.prepare(
+    `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count) VALUES ('member:silbound', 0, 0, ?, 59)`
+  ).run(today);
+  const sil60 = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-sil-bound', 'CF-Connecting-IP': ipSil },
+    body: JSON.stringify({ message: 'Hamam?', lang: 'tr', chatSession: silChat }),
+  }), env);
+  assert.equal(sil60.status, 200);
+  const sil61 = await worker.fetch(new Request('https://api.example/v1/assistant', {
+    method: 'POST',
+    headers: { Origin: ORIGIN, 'Content-Type': 'application/json', Authorization: 'Bearer tok-sil-bound', 'CF-Connecting-IP': ipSil },
+    body: JSON.stringify({ message: 'Hamam?', lang: 'tr', chatSession: silChat }),
+  }), env);
+  assert.equal(sil61.status, 429);
+  assert.equal((await sil61.json()).error, ASSISTANT_MESSAGES.dayLimitMember.tr);
 });
