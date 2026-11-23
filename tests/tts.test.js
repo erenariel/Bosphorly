@@ -1,19 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { DatabaseSync } from 'node:sqlite';
 import worker from '../backend/worker.js';
 import { createChatSessionToken } from '../backend/assistant.js';
 import {
   CHIRP_TTS_LOCALES,
   DEFAULT_TTS_MONTHLY_CHAR_CAP,
+  TTS_GOLD_DAILY_LIMIT,
+  TTS_GUEST_DAILY_LIMIT,
+  TTS_IP_DAILY_LIMIT,
   TTS_MAX_CHARS,
   TTS_PER_DAY_LIMIT,
   TTS_PER_MIN_LIMIT,
+  TTS_PLATINUM_DAILY_LIMIT,
+  TTS_SILVER_DAILY_LIMIT,
   checkTtsActorRateLimit,
   handleTtsRoute,
   resolveChirpVoice,
   sanitizeSpeechText,
   synthesizeTtsAudio,
+  ttsDailyLimitForTier,
 } from '../backend/tts.js';
 
 const ORIGIN = 'https://bosphorly.com';
@@ -90,6 +97,16 @@ test('wrangler.jsonc sets TTS_MONTHLY_CHAR_CAP to 800000 and limits constants ar
   assert.equal(DEFAULT_TTS_MONTHLY_CHAR_CAP, 800000);
   assert.equal(TTS_PER_MIN_LIMIT, 10);
   assert.equal(TTS_PER_DAY_LIMIT, 30);
+  assert.equal(TTS_GUEST_DAILY_LIMIT, 5);
+  assert.equal(TTS_SILVER_DAILY_LIMIT, 30);
+  assert.equal(TTS_GOLD_DAILY_LIMIT, 60);
+  assert.equal(TTS_PLATINUM_DAILY_LIMIT, 60);
+  assert.equal(TTS_IP_DAILY_LIMIT, 60);
+  assert.equal(ttsDailyLimitForTier('guest'), 5);
+  assert.equal(ttsDailyLimitForTier('silver'), 30);
+  assert.equal(ttsDailyLimitForTier('gold'), 60);
+  assert.equal(ttsDailyLimitForTier('platinum'), 60);
+  assert.equal(ttsDailyLimitForTier('forged'), 5);
 });
 
 test('POST /v1/tts rejects missing, forged, wrong-IP, or expired chatSession with 401 without calling Google or burning limits', async () => {
@@ -383,7 +400,59 @@ test('missing secret or Google error returns 200 { fallback: true } and does not
   }
 });
 
-test('POST /v1/tts enforces Origin/CORS, 10/min rate limit (429), and returns 200 { fallback: true } on 31st daily IP request', async () => {
+function realSqlD1() {
+  const db = new DatabaseSync(':memory:');
+  for (const file of [
+    '0001.sql',
+    '0002_members.sql',
+    '0003_member_preferences_newsletter.sql',
+    '0004_member_sync_requests_details.sql',
+    '0005_identities_passkeys.sql',
+    '0006_oauth_pending.sql',
+    '0007_assistant.sql',
+    '0008_assistant_blocks.sql',
+    '0009_tts_usage.sql',
+    '0010_mimo.sql',
+  ]) {
+    db.exec(readFileSync(new URL('../backend/migrations/' + file, import.meta.url), 'utf8'));
+  }
+  const stmt = (sql, args = []) => ({
+    bind: (...a) => stmt(sql, a),
+    first: async () => db.prepare(sql).get(...args) ?? null,
+    all: async () => ({ results: db.prepare(sql).all(...args) }),
+    run: async () => ({ meta: { changes: Number(db.prepare(sql).run(...args).changes) } }),
+  });
+  return { raw: db, prepare: (sql) => stmt(sql) };
+}
+
+async function seedMemberSession(db, {
+  memberId,
+  token,
+  fulfilledCount = 0,
+  cancelledCount = 0,
+  expiresAt = '2099-01-01 00:00:00',
+}) {
+  db.raw.prepare(
+    `INSERT INTO members (id, email, lang, referral_code) VALUES (?, ?, 'tr', ?)`
+  ).run(memberId, `${memberId}@example.com`, `REF${memberId.slice(0, 6).toUpperCase()}`);
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
+  const tokenHash = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  db.raw.prepare(
+    `INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?, ?, ?)`
+  ).run(tokenHash, memberId, expiresAt);
+  for (let i = 0; i < fulfilledCount; i += 1) {
+    db.raw.prepare(
+      `INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, state) VALUES (?, ?, 'tour-1', '2026-12-01', 2, 'fulfilled')`
+    ).run(`RF-${memberId}-${i}`, memberId);
+  }
+  for (let i = 0; i < cancelledCount; i += 1) {
+    db.raw.prepare(
+      `INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, state) VALUES (?, ?, 'tour-1', '2026-12-01', 2, 'cancelled')`
+    ).run(`RC-${memberId}-${i}`, memberId);
+  }
+}
+
+test('POST /v1/tts enforces Origin/CORS, X-Member-Session preflight, and guest 5/day { fallback: true }', async () => {
   const db = createMockD1();
   const cache = createMemoryCache();
   const env = {
@@ -395,6 +464,18 @@ test('POST /v1/tts enforces Origin/CORS, 10/min rate limit (429), and returns 20
     TTS_CACHE: cache,
     RATE_LIMITER: { limit: async () => ({ success: true }) },
   };
+
+  // Preflight exposes X-Member-Session and X-Chat-Session CORS headers
+  const preflight = await worker.fetch(
+    new Request('https://worker.example/v1/tts', {
+      method: 'OPTIONS',
+      headers: { Origin: ORIGIN },
+    }),
+    env
+  );
+  assert.equal(preflight.status, 204);
+  assert.match(preflight.headers.get('Access-Control-Allow-Headers') || '', /X-Member-Session/);
+  assert.match(preflight.headers.get('Access-Control-Allow-Headers') || '', /X-Chat-Session/);
 
   // Disallowed origin -> 403 via worker.fetch
   const badOriginRes = await worker.fetch(
@@ -418,79 +499,47 @@ test('POST /v1/tts enforces Origin/CORS, 10/min rate limit (429), and returns 20
     });
   };
   try {
-    // 10 allowed calls/min from same IP
-    const headersBurst = await authHeaders('198.51.100.7');
-    for (let i = 0; i < TTS_PER_MIN_LIMIT; i += 1) {
-      const okRes = await worker.fetch(
-        new Request('https://worker.example/v1/tts', {
-          method: 'POST',
-          headers: headersBurst,
-          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
-        }),
-        env
-      );
-      assert.equal(okRes.status, 200);
-      assert.equal(okRes.headers.get('Content-Type'), 'audio/mpeg');
-      assert.equal(okRes.headers.get('Cache-Control'), 'private, max-age=86400');
-      assert.equal(okRes.headers.get('Access-Control-Allow-Origin'), ORIGIN);
-      assert.deepEqual(Buffer.from(await okRes.arrayBuffer()), fakeMp3);
-    }
-
-    // 11th request in same minute -> 429
-    const limitedRes = await worker.fetch(
-      new Request('https://worker.example/v1/tts', {
-        method: 'POST',
-        headers: headersBurst,
-        body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
-      }),
-      env
-    );
-    assert.equal(limitedRes.status, 429);
-
-    // Daily limit (30/day): 30 requests across 3 minutes pass, 31st request returns 200 { fallback: true } without calling Google
     const dayStart = Date.UTC(2026, 10, 22, 10, 0, 0);
     const dayIp = '198.51.100.31';
-    const dayHeaders = await authHeaders(dayIp, dayStart);
-    const callsBeforeDayTest = googleCalls;
-    for (let i = 0; i < TTS_PER_DAY_LIMIT; i += 1) {
-      const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+    const guestHeaders = await authHeaders(dayIp, dayStart);
+    for (let i = 0; i < TTS_GUEST_DAILY_LIMIT; i += 1) {
       const r = await handleTtsRoute(
         new Request('https://worker.example/v1/tts', {
           method: 'POST',
-          headers: dayHeaders,
-          body: JSON.stringify({ text: 'Daily quota test', lang: 'en' }),
+          headers: guestHeaders,
+          body: JSON.stringify({ text: 'Guest quota test', lang: 'en' }),
         }),
         env,
         null,
-        t
+        dayStart + i * 1000
       );
       assert.equal(r.status, 200);
       assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
     }
 
-    const callsBefore31st = googleCalls;
-    assert.equal(callsBefore31st, callsBeforeDayTest + 1); // only first uncached request called Google
-    const res31 = await handleTtsRoute(
+    // 6th guest request same day -> silent { fallback: true } without calling Google
+    const callsBefore6th = googleCalls;
+    const res6 = await handleTtsRoute(
       new Request('https://worker.example/v1/tts', {
         method: 'POST',
-        headers: dayHeaders,
-        body: JSON.stringify({ text: 'Uncached 31st request', lang: 'en' }),
+        headers: guestHeaders,
+        body: JSON.stringify({ text: 'Uncached 6th guest request', lang: 'en' }),
       }),
       env,
       null,
-      dayStart + 3 * 60_000
+      dayStart + 60_000
     );
-    assert.equal(res31.status, 200);
-    assert.deepEqual(await res31.json(), { fallback: true });
-    assert.equal(googleCalls, callsBefore31st);
+    assert.equal(res6.status, 200);
+    assert.deepEqual(await res6.json(), { fallback: true });
+    assert.equal(googleCalls, callsBefore6th);
 
-    // Next UTC day resets daily quota
+    // Next UTC day resets guest quota
     const nextDay = dayStart + 24 * 60 * 60_000;
     const resNextDay = await handleTtsRoute(
       new Request('https://worker.example/v1/tts', {
         method: 'POST',
         headers: await authHeaders(dayIp, nextDay),
-        body: JSON.stringify({ text: 'Daily quota test', lang: 'en' }),
+        body: JSON.stringify({ text: 'Guest quota test', lang: 'en' }),
       }),
       env,
       null,
@@ -503,30 +552,342 @@ test('POST /v1/tts enforces Origin/CORS, 10/min rate limit (429), and returns 20
   }
 });
 
-test('checkTtsActorRateLimit without env.DB tracks both minute and daily limits in memory and always returns boolean', async () => {
+test('POST /v1/tts verifies D1 member tiers (Silver 10/min & 30/day, Gold/Platinum 60/day), enforces 60/day IP brake, and ignores forged claims', async () => {
+  const db = realSqlD1();
+  const cache = createMemoryCache();
+  const env = {
+    PUBLIC_ORIGIN: ORIGIN,
+    CODE_PEPPER,
+    GOOGLE_TTS_API_KEY: 'key-123',
+    TTS_MONTHLY_CHAR_CAP: '800000',
+    DB: db,
+    TTS_CACHE: cache,
+    RATE_LIMITER: { limit: async () => ({ success: true }) },
+  };
+
+  await seedMemberSession(db, { memberId: 'silver1', token: 'tok-silver-1', fulfilledCount: 1, cancelledCount: 5 });
+  await seedMemberSession(db, { memberId: 'gold1', token: 'tok-gold-1', fulfilledCount: 2 });
+  await seedMemberSession(db, { memberId: 'plat1', token: 'tok-plat-1', fulfilledCount: 5 });
+  await seedMemberSession(db, { memberId: 'plat2', token: 'tok-plat-2', fulfilledCount: 6 });
+  await seedMemberSession(db, {
+    memberId: 'expired1',
+    token: 'tok-expired-1',
+    fulfilledCount: 6,
+    expiresAt: '2020-01-01 00:00:00',
+  });
+
+  const fakeMp3 = Buffer.from([0xff, 0xfb, 0x90, 0x64]);
+  const origFetch = globalThis.fetch;
+  let googleCalls = 0;
+  globalThis.fetch = async () => {
+    googleCalls += 1;
+    return new Response(JSON.stringify({ audioContent: fakeMp3.toString('base64') }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  };
+
+  try {
+    const dayStart = Date.UTC(2026, 10, 22, 10, 0, 0);
+
+    // Silver: 10/min -> 11th returns 429; 30/day -> 31st returns { fallback: true }
+    const silverIp = '198.51.100.70';
+    const silverBurstChat = await createChatSessionToken(CODE_PEPPER, silverIp);
+    for (let i = 0; i < TTS_PER_MIN_LIMIT; i += 1) {
+      const r = await worker.fetch(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${silverBurstChat}`,
+            'X-Member-Session': 'tok-silver-1',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': silverIp,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+        }),
+        env
+      );
+      assert.equal(r.status, 200);
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    const silverBurst429 = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          Authorization: `Bearer ${silverBurstChat}`,
+          'X-Member-Session': 'tok-silver-1',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': silverIp,
+        },
+        body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+      }),
+      env,
+      null,
+      Date.now()
+    );
+    assert.equal(silverBurst429.status, 429);
+
+    // Remaining 20 requests across later minutes on same day (using X-Chat-Session + Bearer member token header variant)
+    const silverIpDay = '198.51.100.71';
+    const silverDayChat = await createChatSessionToken(CODE_PEPPER, silverIpDay, dayStart);
+    await db.raw.prepare(`DELETE FROM assistant_rate_limits WHERE key IN ('tts:member:silver1', 'tts:ip:198.51.100.70')`).run();
+    for (let i = 0; i < TTS_SILVER_DAILY_LIMIT; i += 1) {
+      const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            'X-Chat-Session': silverDayChat,
+            Authorization: 'Bearer tok-silver-1',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': silverIpDay,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+        }),
+        env,
+        null,
+        t
+      );
+      assert.equal(r.status, 200);
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    const silver31 = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          'X-Chat-Session': silverDayChat,
+          Authorization: 'Bearer tok-silver-1',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': silverIpDay,
+        },
+        body: JSON.stringify({ text: 'Hello Istanbul 31', lang: 'en' }),
+      }),
+      env,
+      null,
+      dayStart + 4 * 60_000
+    );
+    assert.equal(silver31.status, 200);
+    assert.deepEqual(await silver31.json(), { fallback: true });
+
+    // Gold: 60/day -> 61st returns { fallback: true }
+    const goldIp = '198.51.100.80';
+    const goldChat = await createChatSessionToken(CODE_PEPPER, goldIp, dayStart);
+    for (let i = 0; i < TTS_GOLD_DAILY_LIMIT; i += 1) {
+      const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${goldChat}`,
+            'X-Member-Session': 'tok-gold-1',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': goldIp,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+        }),
+        env,
+        null,
+        t
+      );
+      assert.equal(r.status, 200);
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    const gold61 = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          Authorization: `Bearer ${goldChat}`,
+          'X-Member-Session': 'tok-gold-1',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': goldIp,
+        },
+        body: JSON.stringify({ text: 'Gold 61', lang: 'en' }),
+      }),
+      env,
+      null,
+      dayStart + 7 * 60_000
+    );
+    assert.equal(gold61.status, 200);
+    assert.deepEqual(await gold61.json(), { fallback: true });
+
+    // IP brake (60/day independent of member): Platinum1 uses 40, Platinum2 uses 20 on sharedIp, 21st for Platinum2 returns { fallback: true }
+    // without wasting Platinum2's member quota when moving to a clean IP.
+    const sharedIp = '198.51.100.90';
+    const sharedChat = await createChatSessionToken(CODE_PEPPER, sharedIp, dayStart);
+    for (let i = 0; i < 40; i += 1) {
+      const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${sharedChat}`,
+            'X-Member-Session': 'tok-plat-1',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': sharedIp,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+        }),
+        env,
+        null,
+        t
+      );
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    for (let i = 0; i < 20; i += 1) {
+      const t = dayStart + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${sharedChat}`,
+            'X-Member-Session': 'tok-plat-2',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': sharedIp,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+        }),
+        env,
+        null,
+        t
+      );
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    const callsBeforeBrake = googleCalls;
+    const brakeRes = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          Authorization: `Bearer ${sharedChat}`,
+          'X-Member-Session': 'tok-plat-2',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': sharedIp,
+        },
+        body: JSON.stringify({ text: 'IP brake uncached', lang: 'en' }),
+      }),
+      env,
+      null,
+      dayStart + 5 * 60_000
+    );
+    assert.equal(brakeRes.status, 200);
+    assert.deepEqual(await brakeRes.json(), { fallback: true });
+    assert.equal(googleCalls, callsBeforeBrake);
+    const plat2Row = db.raw.prepare(`SELECT day_count FROM assistant_rate_limits WHERE key = 'tts:member:plat2'`).get();
+    assert.equal(plat2Row.day_count, 20);
+
+    // Moving Platinum2 to a clean IP still allows remaining member quota
+    const cleanIp = '198.51.100.91';
+    const cleanChat = await createChatSessionToken(CODE_PEPPER, cleanIp, dayStart);
+    const plat2Clean = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          Authorization: `Bearer ${cleanChat}`,
+          'X-Member-Session': 'tok-plat-2',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': cleanIp,
+        },
+        body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en' }),
+      }),
+      env,
+      null,
+      dayStart + 5 * 60_000
+    );
+    assert.equal(plat2Clean.headers.get('Content-Type'), 'audio/mpeg');
+
+    // Forged / expired member token + spoofed body tier fall back to guest 5/day limit
+    const spoofIp = '198.51.100.99';
+    const spoofChat = await createChatSessionToken(CODE_PEPPER, spoofIp, dayStart);
+    for (let i = 0; i < TTS_GUEST_DAILY_LIMIT; i += 1) {
+      const r = await handleTtsRoute(
+        new Request('https://worker.example/v1/tts', {
+          method: 'POST',
+          headers: {
+            Origin: ORIGIN,
+            Authorization: `Bearer ${spoofChat}`,
+            'X-Member-Session': i % 2 === 0 ? 'tok-expired-1' : 'forged-member-token',
+            'Content-Type': 'application/json',
+            'CF-Connecting-IP': spoofIp,
+          },
+          body: JSON.stringify({ text: 'Hello Istanbul', lang: 'en', tier: 'platinum', memberTier: 'platinum' }),
+        }),
+        env,
+        null,
+        dayStart + i * 1000
+      );
+      assert.equal(r.headers.get('Content-Type'), 'audio/mpeg');
+    }
+    const spoof6th = await handleTtsRoute(
+      new Request('https://worker.example/v1/tts', {
+        method: 'POST',
+        headers: {
+          Origin: ORIGIN,
+          Authorization: `Bearer ${spoofChat}`,
+          'X-Member-Session': 'tok-expired-1',
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': spoofIp,
+        },
+        body: JSON.stringify({ text: 'Spoofed 6th', lang: 'en', tier: 'platinum' }),
+      }),
+      env,
+      null,
+      dayStart + 10_000
+    );
+    assert.deepEqual(await spoof6th.json(), { fallback: true });
+    assert.equal(db.raw.prepare(`SELECT key FROM assistant_rate_limits WHERE key = 'tts:member:expired1'`).get() ?? null, null);
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+test('checkTtsActorRateLimit without env.DB tracks guest (5/day) and member tier (10/min, 30/day) in memory and always returns boolean', async () => {
   const baseTime = Date.UTC(2026, 10, 22, 8, 0, 0);
 
-  // Per-minute limit in memory path (env = {})
-  for (let i = 0; i < TTS_PER_MIN_LIMIT; i += 1) {
-    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-min', now: baseTime });
+  // Guest default (5/day) in memory path without DB
+  for (let i = 0; i < TTS_GUEST_DAILY_LIMIT; i += 1) {
+    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-guest', now: baseTime + i * 1000 });
     assert.strictEqual(ok, true);
   }
-  const blockedMin = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-min', now: baseTime });
+  assert.strictEqual(
+    await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-guest', now: baseTime + 60_000 }),
+    false
+  );
+  assert.strictEqual(
+    await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-guest', now: baseTime + 24 * 60 * 60_000 }),
+    true
+  );
+
+  // Per-minute limit (10/min) with Silver tier (30/day) in memory path (env = {})
+  for (let i = 0; i < TTS_PER_MIN_LIMIT; i += 1) {
+    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'member:mem-min', tier: 'silver', now: baseTime });
+    assert.strictEqual(ok, true);
+  }
+  const blockedMin = await checkTtsActorRateLimit({ env: {}, actorKey: 'member:mem-min', tier: 'silver', now: baseTime });
   assert.strictEqual(blockedMin, false);
 
   // Next minute resets min limit while preserving daily count
-  const okNextMin = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-min', now: baseTime + 60_000 });
+  const okNextMin = await checkTtsActorRateLimit({ env: {}, actorKey: 'member:mem-min', tier: 'silver', now: baseTime + 60_000 });
   assert.strictEqual(okNextMin, true);
 
-  // Daily limit (30/day) in memory path without DB
-  for (let i = 0; i < TTS_PER_DAY_LIMIT; i += 1) {
+  // Silver daily limit (30/day) in memory path without DB
+  for (let i = 0; i < TTS_SILVER_DAILY_LIMIT; i += 1) {
     const t = baseTime + Math.floor(i / TTS_PER_MIN_LIMIT) * 60_000;
-    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'ip:mem-day', now: t });
+    const ok = await checkTtsActorRateLimit({ env: {}, actorKey: 'member:mem-day', tier: 'silver', now: t });
     assert.strictEqual(ok, true, `memory daily request ${i + 1} must be allowed`);
   }
   const blocked31 = await checkTtsActorRateLimit({
     env: {},
-    actorKey: 'ip:mem-day',
+    actorKey: 'member:mem-day',
+    tier: 'silver',
     now: baseTime + 3 * 60_000,
   });
   assert.strictEqual(blocked31, false, '31st daily request in memory path must return boolean false');
@@ -534,7 +895,8 @@ test('checkTtsActorRateLimit without env.DB tracks both minute and daily limits 
   // Next UTC day resets in-memory daily counter
   const nextDayAllowed = await checkTtsActorRateLimit({
     env: {},
-    actorKey: 'ip:mem-day',
+    actorKey: 'member:mem-day',
+    tier: 'silver',
     now: baseTime + 24 * 60 * 60_000,
   });
   assert.strictEqual(nextDayAllowed, true);

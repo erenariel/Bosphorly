@@ -13,6 +13,14 @@ import {
   detectReplyLanguage,
   isRepetitiveAgainstHistory,
 } from './mimo-personality.js';
+import {
+  formatNoteForPrompt,
+  loadConsentedNote,
+  observeAssistantTurn,
+  resolveMemberAuth,
+  runInBackground,
+  recordVoteMetric,
+} from './mimo.js';
 
 const KB_PRICE_PAIRS = buildKbPriceIndex(knowledge);
 
@@ -37,10 +45,28 @@ export const SUPPORTED_LANGS = new Set([
   'hu', 'id', 'it', 'ja', 'ko', 'nl', 'pt', 'ru', 'tr', 'uk', 'zh'
 ]);
 
-const PER_MIN_LIMIT = 6;
-const PER_DAY_LIMIT = 40;
+export const PER_MIN_LIMIT = 6;
+export const GUEST_DAILY_LIMIT = 15;
+export const SILVER_DAILY_LIMIT = 60;
+export const GOLD_DAILY_LIMIT = 120;
+export const PLATINUM_DAILY_LIMIT = 120;
+export const IP_DAILY_LIMIT = 150;
+export const STT_PER_DAY_LIMIT = 40;
 const DEFAULT_GLOBAL_DAILY_LIMIT = 200;
 export const AI_TIMEOUT_MS = 9000;
+
+export function chatDailyLimitForTier(tier) {
+  switch (String(tier || '').toLowerCase()) {
+    case 'platinum':
+      return PLATINUM_DAILY_LIMIT;
+    case 'gold':
+      return GOLD_DAILY_LIMIT;
+    case 'silver':
+      return SILVER_DAILY_LIMIT;
+    default:
+      return GUEST_DAILY_LIMIT;
+  }
+}
 
 const memoryLimits = new Map();
 const memoryFeedback = new Map();
@@ -453,6 +479,56 @@ export const ASSISTANT_MESSAGES = {
     hi: 'तुम बहुत तेज़ी से संदेश भेज रहे हो। कृपया थोड़ी देर बाद प्रयास करो या हमारी टीम को भेजो।',
     bn: 'তুমি খুব দ্রুত বার্তা পাঠাচ্ছ। একটু পরে আবার চেষ্টা করো বা আমাদের টিমে পাঠাও।',
     id: 'Kamu mengirim pesan terlalu cepat. Coba lagi sebentar atau teruskan pesan ke tim kami.',
+  },
+  dayLimitGuest: {
+    tr: "Bugünkü misafir Mimo hakkın doldu 💙 Ücretsiz üye olursan günlük hakkın artar; dilersen sorunu ekibimize de iletebilirsin.",
+    en: "You've used today's guest chats with Mimo 💙 Become a free member to get more daily chats, or forward your question to our team.",
+    ru: "Гостевой лимит Mimo на сегодня исчерпан 💙 Стань бесплатным участником, чтобы получить больше сообщений в день, или передай вопрос нашей команде.",
+    uk: "Гостьовий ліміт Mimo на сьогодні вичерпано 💙 Стань безкоштовним учасником, щоб мати більше повідомлень на день, або передай питання нашій команді.",
+    de: "Dein Gast-Kontingent für heute ist aufgebraucht 💙 Werde kostenlos Mitglied für mehr Nachrichten pro Tag oder leite deine Frage an unser Team weiter.",
+    fr: "Tu as utilisé tes messages invités du jour avec Mimo 💙 Deviens membre gratuitement pour en avoir plus chaque jour, ou transmets ta question à notre équipe.",
+    nl: "Je gastberichten voor vandaag met Mimo zijn op 💙 Word gratis lid voor meer berichten per dag, of stuur je vraag door naar ons team.",
+    ar: "لقد استخدمت رسائل الضيف اليوم مع ميمو 💙 انضم كعضو مجانًا لتحصل على رسائل يومية أكثر، أو أرسل سؤالك إلى فريقنا.",
+    he: "ניצלת את הודעות האורח של היום עם מימו 💙 הצטרפו כחברים בחינם כדי לקבל יותר הודעות ביום, או העבירו את השאלה לצוות שלנו.",
+    az: "Bu günkü qonaq Mimo haqqın bitdi 💙 Pulsuz üzv olsan gündəlik haqqın artar; istəsən sualını komandamıza da göndərə bilərsən.",
+    fa: "سهمیه مهمان امروزت با میمو تمام شد 💙 با عضویت رایگان، پیام‌های روزانه بیشتری داری؛ یا سؤالت را برای تیم ما بفرست.",
+    es: "Has usado tus mensajes de invitado de hoy con Mimo 💙 Hazte miembro gratis para tener más mensajes al día, o envía tu pregunta a nuestro equipo.",
+    it: "Hai usato i messaggi ospite di oggi con Mimo 💙 Diventa membro gratis per averne di più ogni giorno, oppure inoltra la domanda al nostro team.",
+    pt: "Você usou as mensagens de convidado de hoje com o Mimo 💙 Torne-se membro grátis para ter mais mensagens por dia, ou encaminhe sua pergunta à nossa equipe.",
+    hr: "Iskoristio si današnje gostujuće poruke s Mimom 💙 Postani besplatni član za više poruka dnevno ili proslijedi pitanje našem timu.",
+    hu: "Elfogyott a mai vendégkereted Mimóval 💙 Légy ingyenes tag, hogy naponta több üzeneted legyen, vagy továbbítsd a kérdésed a csapatunknak.",
+    bs: "Iskoristio si današnje gostujuće poruke s Mimom 💙 Postani besplatni član za više poruka dnevno ili proslijedi pitanje našem timu.",
+    zh: "今天的访客 Mimo 对话次数已用完 💙 免费注册会员可获得更多每日次数，也可以把问题转交给我们的团队。",
+    ja: "今日のゲスト用Mimoメッセージは上限に達しました 💙 無料会員になると1日に使える回数が増えます。チームに質問を転送することもできます。",
+    ko: "오늘의 게스트 Mimo 대화 횟수를 모두 사용했어요 💙 무료 회원이 되면 하루 대화 횟수가 늘어나요. 질문을 팀에 전달할 수도 있어요.",
+    hi: "आज की मेहमान Mimo चैट सीमा पूरी हो गई 💙 मुफ़्त सदस्य बनो तो रोज़ ज़्यादा संदेश मिलेंगे, या अपना सवाल हमारी टीम को भेज दो।",
+    bn: "আজকের অতিথি Mimo চ্যাট সীমা শেষ 💙 বিনামূল্যে সদস্য হলে প্রতিদিন আরও বেশি বার্তা পাবে, অথবা প্রশ্নটি আমাদের টিমে পাঠাও।",
+    id: "Jatah chat tamu dengan Mimo hari ini sudah habis 💙 Jadi member gratis untuk dapat lebih banyak chat per hari, atau teruskan pertanyaanmu ke tim kami.",
+  },
+  dayLimitMember: {
+    tr: "Bugünkü Mimo hakkın doldu 💙 Yarın yenilenir; acil bir sorun varsa ekibimize iletebilirsin.",
+    en: "You've reached today's Mimo limit 💙 It resets tomorrow; if it's urgent, forward your question to our team.",
+    ru: "Дневной лимит Mimo исчерпан 💙 Он обновится завтра; если вопрос срочный, передай его нашей команде.",
+    uk: "Денний ліміт Mimo вичерпано 💙 Він оновиться завтра; якщо питання термінове, передай його нашій команді.",
+    de: "Dein Mimo-Kontingent für heute ist aufgebraucht 💙 Es erneuert sich morgen; wenn es dringend ist, leite deine Frage an unser Team weiter.",
+    fr: "Tu as atteint la limite Mimo du jour 💙 Elle se renouvelle demain ; si c'est urgent, transmets ta question à notre équipe.",
+    nl: "Je Mimo-limiet voor vandaag is bereikt 💙 Morgen wordt die vernieuwd; is het dringend, stuur je vraag dan door naar ons team.",
+    ar: "وصلت إلى حد ميمو اليومي 💙 يتجدد غدًا؛ وإذا كان الأمر عاجلًا فأرسل سؤالك إلى فريقنا.",
+    he: "הגעתם למגבלת מימו היומית 💙 היא מתחדשת מחר; אם זה דחוף, העבירו את השאלה לצוות שלנו.",
+    az: "Bu günkü Mimo haqqın bitdi 💙 Sabah yenilənir; təcili bir şey varsa sualını komandamıza göndər.",
+    fa: "سهمیه امروزت با میمو تمام شد 💙 فردا دوباره فعال می‌شود؛ اگر فوری است، سؤالت را برای تیم ما بفرست.",
+    es: "Has alcanzado el límite de Mimo de hoy 💙 Se renueva mañana; si es urgente, envía tu pregunta a nuestro equipo.",
+    it: "Hai raggiunto il limite di Mimo di oggi 💙 Si rinnova domani; se è urgente, inoltra la domanda al nostro team.",
+    pt: "Você atingiu o limite do Mimo de hoje 💙 Ele renova amanhã; se for urgente, encaminhe sua pergunta à nossa equipe.",
+    hr: "Dosegnuo si današnje ograničenje za Mimo 💙 Obnavlja se sutra; ako je hitno, proslijedi pitanje našem timu.",
+    hu: "Elérted a mai Mimo-keretet 💙 Holnap megújul; ha sürgős, továbbítsd a kérdésed a csapatunknak.",
+    bs: "Dostigao si današnje ograničenje za Mimo 💙 Obnavlja se sutra; ako je hitno, proslijedi pitanje našem timu.",
+    zh: "今天的 Mimo 对话次数已用完 💙 明天会重置；如有急事，可以把问题转交给我们的团队。",
+    ja: "今日のMimoの上限に達しました 💙 明日リセットされます。急ぎの場合はチームに質問を転送してください。",
+    ko: "오늘의 Mimo 한도에 도달했어요 💙 내일 다시 채워져요. 급한 일이라면 질문을 팀에 전달해 주세요.",
+    hi: "आज की Mimo सीमा पूरी हो गई 💙 कल फिर से शुरू होगी; ज़रूरी हो तो अपना सवाल हमारी टीम को भेज दो।",
+    bn: "আজকের Mimo সীমা শেষ 💙 কাল আবার চালু হবে; জরুরি হলে প্রশ্নটি আমাদের টিমে পাঠাও।",
+    id: "Batas Mimo hari ini sudah tercapai 💙 Besok akan diperbarui; kalau mendesak, teruskan pertanyaanmu ke tim kami.",
   },
   abuseClose: {
     tr: 'Bu dille konuşmaya devam edemem. Sohbeti burada sonlandırıyorum. Bir sorunun varsa info@bosphorly.com’a yazabilirsin.',
@@ -1136,6 +1212,18 @@ function isPreviousHandoffOffer(history) {
   return false;
 }
 
+async function readCounter(env, key) {
+  if (env && env.DB) {
+    const row = await env.DB.prepare(
+      'SELECT min_bucket, min_count, day_bucket, day_count FROM assistant_rate_limits WHERE key = ?'
+    ).bind(key).first();
+    return row
+      ? { minBucket: Number(row.min_bucket || 0), minCount: Number(row.min_count || 0), dayBucket: String(row.day_bucket || ''), dayCount: Number(row.day_count || 0) }
+      : { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
+  }
+  return memoryLimits.get(key) || { minBucket: 0, minCount: 0, dayBucket: '', dayCount: 0 };
+}
+
 async function incrementCounter(env, key, minBucket, dayBucket) {
   if (env && env.DB) {
     const row = await env.DB.prepare(
@@ -1158,13 +1246,71 @@ async function incrementCounter(env, key, minBucket, dayBucket) {
   return { minCount, dayCount };
 }
 
-export async function checkAndIncrementLimits({ env, actorKey, now = Date.now() }) {
+async function incrementDayOnly(env, key, dayBucket) {
+  const prev = await readCounter(env, key);
+  const dayCount = prev.dayBucket === dayBucket ? prev.dayCount + 1 : 1;
+  if (env && env.DB) {
+    await env.DB.prepare(
+      `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count)
+       VALUES (?, ?, ?, ?, ?)
+       ON CONFLICT(key) DO UPDATE SET day_bucket = excluded.day_bucket, day_count = excluded.day_count`
+    ).bind(key, prev.minBucket, prev.minCount, dayBucket, dayCount).run();
+    return { minCount: prev.minCount, dayCount };
+  }
+  memoryLimits.set(key, { minBucket: prev.minBucket, minCount: prev.minCount, dayBucket, dayCount });
+  return { minCount: prev.minCount, dayCount };
+}
+
+export async function checkAndIncrementLimits({
+  env,
+  actorKey,
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = IP_DAILY_LIMIT,
+  now = Date.now(),
+  perHour = 0,
+  skipGlobal = false,
+}) {
   const minBucket = Math.floor(now / 60000);
   const dayBucket = new Date(now).toISOString().slice(0, 10);
+  if (perHour > 0) {
+    const hourBucket = Math.floor(now / 3600000);
+    const hour = await incrementCounter(env, actorKey, hourBucket, dayBucket);
+    if (hour.minCount > perHour) return { allowed: false, reason: 'actor_limit' };
+    if (skipGlobal) return { allowed: true };
+  }
+  const effectiveDayLimit = Number.isFinite(Number(dayLimit)) && Number(dayLimit) > 0
+    ? Number(dayLimit)
+    : chatDailyLimitForTier(tier);
+  const effectiveIpDayLimit = Number.isFinite(Number(ipDayLimit)) && Number(ipDayLimit) > 0
+    ? Number(ipDayLimit)
+    : IP_DAILY_LIMIT;
+  const hasSeparateIpBrake = Boolean(ipActorKey && ipActorKey !== actorKey);
+
+  if (hasSeparateIpBrake) {
+    const ipPrev = await readCounter(env, ipActorKey);
+    const ipDayCount = ipPrev.dayBucket === dayBucket ? ipPrev.dayCount : 0;
+    if (ipDayCount >= effectiveIpDayLimit) {
+      return { allowed: false, reason: 'ip_limit' };
+    }
+  }
+
   const actor = await incrementCounter(env, actorKey, minBucket, dayBucket);
-  if (actor.minCount > PER_MIN_LIMIT || actor.dayCount > PER_DAY_LIMIT) {
+  if (actor.minCount > PER_MIN_LIMIT) {
     return { allowed: false, reason: 'actor_limit' };
   }
+  if (actor.dayCount > effectiveDayLimit) {
+    return { allowed: false, reason: 'day_limit' };
+  }
+
+  if (hasSeparateIpBrake) {
+    const ipNext = await incrementDayOnly(env, ipActorKey, dayBucket);
+    if (ipNext.dayCount > effectiveIpDayLimit) {
+      return { allowed: false, reason: 'ip_limit' };
+    }
+  }
+
   const globalLimit = Number(env && env.ASSISTANT_DAILY_LIMIT) || DEFAULT_GLOBAL_DAILY_LIMIT;
   const global = await incrementCounter(env, `global:${dayBucket}`, minBucket, dayBucket);
   if (global.dayCount > globalLimit) {
@@ -1508,11 +1654,13 @@ function buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGr
   ].filter(Boolean).join('\n');
 }
 
-function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote = null }) {
   const examples = getFewShotsPromptBlock(lang);
+  const noteBlock = formatNoteForPrompt(memberNote);
   return [
     buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
     `Istanbul & catalog facts: use ONLY CONTEXT below for Bosphorly prices, tours, and transfers—never invent prices, hours, discounts, or currency conversions. When a CONTEXT item is marked "Mimo'nun favorisi 💙", recommend it warmly as your personal favorite. When answering a price question, start with the cheapest suitable option from CONTEXT first before higher tiers, sharing exact prices (confirmed upon request) and its https://bosphorly.com/... link from CONTEXT (with ?lang=${lang}), plus one light next step. For live museum hours/tickets, suggest checking the official site.`,
+    ...(noteBlock ? ['', noteBlock] : []),
     'EXAMPLES:',
     examples,
     '',
@@ -1523,11 +1671,13 @@ function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted,
   ].filter(Boolean).join('\n');
 }
 
-function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock }) {
+function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote = null }) {
   const examples = getFewShotsPromptBlock(lang);
+  const noteBlock = formatNoteForPrompt(memberNote);
   return [
     buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }),
     'Casual chat: talk warmly like a sweet Istanbul friend about their day, neighborhoods, food, seagulls, ferries, tiredness, or culture. Do not pitch tours in every message; at most once when it fits naturally (tired → ferry breeze or hammam, hungry → Kadıköy market). Never say "I don\'t know" to casual questions or pass small talk to a human.',
+    ...(noteBlock ? ['', noteBlock] : []),
     'EXAMPLES:',
     examples,
     '',
@@ -1546,10 +1696,15 @@ async function prepareAssistantTurn({
   alreadyGreeted = false,
   env = {},
   actorKey = 'anon',
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = IP_DAILY_LIMIT,
   actorKeys = null,
   channel = '',
   now = Date.now(),
   aiTimeoutMs = AI_TIMEOUT_MS,
+  memberNote = null,
 }) {
   const { text: cleanMsg, hadSensitive: msgSensitive } = redactSensitive(message);
   const lang = detectLanguage({ message: cleanMsg, pageLang, telegramLang });
@@ -1594,7 +1749,15 @@ async function prepareAssistantTurn({
     };
   }
 
-  const limitRes = await checkAndIncrementLimits({ env, actorKey, now });
+  const limitRes = await checkAndIncrementLimits({
+    env,
+    actorKey,
+    ipActorKey,
+    tier,
+    dayLimit,
+    ipDayLimit,
+    now,
+  });
   if (!limitRes.allowed) {
     if (limitRes.reason === 'global_limit') {
       return {
@@ -1604,11 +1767,15 @@ async function prepareAssistantTurn({
         earlyResult: { ok: true, busy: true, handoff: true, lang, reply: msg('busy', lang) },
       };
     }
+    // Daily quota (per tier) or the shared IP brake: say "today's limit", not "too fast",
+    // and invite guests to sign up for a higher daily quota. Never promise "unlimited".
+    const dayCapped = limitRes.reason === 'day_limit' || limitRes.reason === 'ip_limit';
+    const limitKey = !dayCapped ? 'rateLimit' : (String(tier || 'guest').toLowerCase() === 'guest' ? 'dayLimitGuest' : 'dayLimitMember');
     return {
-      path: 'rate_limit',
+      path: dayCapped ? 'day_limit' : 'rate_limit',
       lang,
       effectiveChannel,
-      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg('rateLimit', lang) },
+      earlyResult: { ok: false, status: 429, handoff: true, lang, reply: msg(limitKey, lang) },
     };
   }
 
@@ -1703,7 +1870,7 @@ async function prepareAssistantTurn({
     : chunks.length
       ? chunks.map(formatChunkForContext).join('\n\n')
       : '(No exact catalog match; answer from general Istanbul knowledge and mention Bosphorly only if relevant.)';
-  const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock };
+  const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote };
   const systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
   const messages = [
     { role: 'system', content: systemPrompt },
@@ -1858,14 +2025,34 @@ export async function runAssistant({
   alreadyGreeted = false,
   env = {},
   actorKey = 'anon',
+  ipActorKey = null,
+  tier = 'guest',
+  dayLimit = null,
+  ipDayLimit = IP_DAILY_LIMIT,
   actorKeys = null,
   channel = '',
   now = Date.now(),
   aiTimeoutMs = AI_TIMEOUT_MS,
+  memberNote = null,
 }) {
   const reqStart = Date.now();
   const prep = await prepareAssistantTurn({
-    message, pageLang, telegramLang, history, alreadyGreeted, env, actorKey, actorKeys, channel, now, aiTimeoutMs,
+    message,
+    pageLang,
+    telegramLang,
+    history,
+    alreadyGreeted,
+    env,
+    actorKey,
+    ipActorKey,
+    tier,
+    dayLimit,
+    ipDayLimit,
+    actorKeys,
+    channel,
+    now,
+    aiTimeoutMs,
+    memberNote,
   });
   if (prep.earlyResult) {
     logAssistantTiming({
@@ -2025,7 +2212,7 @@ function findLastSentenceBoundary(text) {
   return last;
 }
 
-function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart, now }) {
+function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart, now, ctx = null, rawMessage = '' }) {
   const encoder = new TextEncoder();
   const sendEvent = (controller, event, data) => {
     controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
@@ -2036,6 +2223,11 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
       const part = words.slice(i, i + 6).join('');
       if (part) sendEvent(controller, 'delta', { t: part });
     }
+  };
+  const observeResult = async (result) => {
+    try {
+      await runInBackground(ctx, observeAssistantTurn(env, { message: rawMessage || prep.cleanMsg || '', result, now }));
+    } catch { /* stats are best-effort */ }
   };
 
   const stream = new ReadableStream({
@@ -2096,7 +2288,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         }
       };
 
-      const finishWithFinalized = (finalized, extraPath = null) => {
+      const finishWithFinalized = async (finalized, extraPath = null) => {
         if (!finalized.closed && !finalized.handoffOffer && !finalized.fallback && finalized.reply) {
           if (!emittedText) {
             sendWordDeltas(controller, finalized.reply);
@@ -2114,6 +2306,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           modelMs,
           ttftMs: ttftMs == null ? modelMs : ttftMs,
         });
+        await observeResult(finalized);
         sendEvent(controller, 'done', toHttpAssistantBody(finalized, chatSession));
         controller.close();
       };
@@ -2149,7 +2342,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
             }
           }
           const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-          finishWithFinalized(finalized, extraPath);
+          await finishWithFinalized(finalized, extraPath);
           return;
         }
 
@@ -2210,7 +2403,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
                   const retryParsed = await regenerateInExpectedLanguage(env, prep, budget);
                   const chosen = retryParsed || parseModelOutput(rawAccum);
                   const finalized = await finalizeModelOutput({ parsed: chosen, prep, env, now });
-                  finishWithFinalized(finalized, retryParsed ? 'ai_lang_retry' : null);
+                  await finishWithFinalized(finalized, retryParsed ? 'ai_lang_retry' : null);
                   return;
                 }
               }
@@ -2224,7 +2417,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
                   const retryParsed = await regenerateFreshReply(env, prep, budget);
                   const chosen = retryParsed || parseModelOutput(rawAccum);
                   const finalized = await finalizeModelOutput({ parsed: chosen, prep, env, now });
-                  finishWithFinalized(finalized, retryParsed ? 'ai_repeat_retry' : null);
+                  await finishWithFinalized(finalized, retryParsed ? 'ai_repeat_retry' : null);
                   return;
                 }
                 varietyVerified = true;
@@ -2262,12 +2455,13 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
           }
         }
         const finalized = await finalizeModelOutput({ parsed, prep, env, now });
-        finishWithFinalized(finalized, extraPath);
+        await finishWithFinalized(finalized, extraPath);
       } catch (err) {
         const modelMs = Date.now() - aiStart;
         if (isAiGateway429Error(err)) {
           const tired = gatewayTiredResult(prep);
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_gateway_429', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+          await observeResult(tired);
           sendEvent(controller, 'done', toHttpAssistantBody(tired, chatSession));
           controller.close();
           return;
@@ -2275,13 +2469,16 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         if (prep.aiIdentityAsked) {
           const reply = `${prep.warnPrefix}${enforceMaxEmojis(attachGuestName(msg('aiIdentity', prep.lang), prep.guestName), 2)}`;
           logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_identity_err', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
-          sendEvent(controller, 'done', { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang, ...(chatSession ? { chatSession } : {}) });
+          const identityRes = { reply, handoff: false, handoffOffer: false, busy: false, closed: false, lang: prep.lang };
+          await observeResult(identityRes);
+          sendEvent(controller, 'done', { ...identityRes, ...(chatSession ? { chatSession } : {}) });
           controller.close();
           return;
         }
         logModelFailure(err, { aiIdentityAsked: false, durationMs: modelMs, parseFailed: false });
         const fallback = modelFallbackResult(prep);
         logAssistantTiming({ channel: prep.effectiveChannel, lang: prep.lang, path: 'ai_error', streamed: true, totalMs: Date.now() - reqStart, modelMs, ttftMs });
+        await observeResult(fallback);
         sendEvent(controller, 'done', toHttpAssistantBody(fallback, chatSession));
         controller.close();
       }
@@ -2496,7 +2693,7 @@ export async function transcribeAudio({ env, audioBytes, lang = 'en', actorKey =
   const size = audioBytes ? audioBytes.byteLength : 0;
   if (!size) return { ok: false, status: 400, error: 'empty' };
   if (size > maxBytes) return { ok: false, status: 413, error: 'too_large' };
-  const limitRes = await checkAndIncrementLimits({ env, actorKey: `stt:${actorKey}`, now });
+  const limitRes = await checkAndIncrementLimits({ env, actorKey: `stt:${actorKey}`, dayLimit: STT_PER_DAY_LIMIT, now });
   if (!limitRes.allowed) return { ok: false, status: 429, error: 'rate_limit' };
   if (!env || !env.AI || typeof env.AI.run !== 'function') return { ok: false, status: 503, error: 'unavailable' };
   const locale = speechLocale(lang);
@@ -2562,7 +2759,7 @@ async function readAudioBody(request, maxBytes) {
   return { audio };
 }
 
-export async function handleAssistantRoutes(request, env, url) {
+export async function handleAssistantRoutes(request, env, url, ctx) {
   const origin = request.headers.get('Origin');
   const jsonResp = (body, status = 200) => {
     const headers = {
@@ -2648,6 +2845,7 @@ export async function handleAssistantRoutes(request, env, url) {
     if (!vote) return jsonResp({ error: 'Invalid vote' }, 400);
     const lang = normalizeLang(typeof body.lang === 'string' ? body.lang : '') || 'en';
     const recorded = await recordAssistantFeedback({ env, lang, vote });
+    try { await recordVoteMetric(env, vote, lang); } catch { /* weekly counters never block feedback */ }
     if (mintedSession) recorded.chatSession = mintedSession;
     return jsonResp(recorded, 200);
   }
@@ -2674,20 +2872,34 @@ export async function handleAssistantRoutes(request, env, url) {
     const rawAiTimeout = Number(env && env.ASSISTANT_AI_TIMEOUT_MS);
     const aiTimeoutMs = Number.isFinite(rawAiTimeout) && rawAiTimeout > 0 ? rawAiTimeout : AI_TIMEOUT_MS;
 
+    const reqStart = Date.now();
+    const now = Date.now();
+    let memberAuth = null;
+    let memberNote = null;
+    try {
+      memberAuth = await resolveMemberAuth(env, request.headers.get('Authorization') || '', now);
+      if (memberAuth) memberNote = await loadConsentedNote(env, memberAuth.memberId, now);
+    } catch { /* a bad member token must not block the guest chat */ }
+
+    const ipActorKey = `ip:${ip}`;
+    const limitActorKey = memberAuth ? `member:${memberAuth.memberId}` : ipActorKey;
+    const resolvedTier = memberAuth ? memberAuth.tier : 'guest';
+
     if (wantsStream) {
-      const reqStart = Date.now();
-      const now = Date.now();
       const prep = await prepareAssistantTurn({
         message: body.message,
         pageLang,
         history: hist,
         alreadyGreeted,
         env,
-        actorKey: `ip:${ip}`,
+        actorKey: limitActorKey,
+        ipActorKey,
+        tier: resolvedTier,
         actorKeys,
         channel: 'web',
         now,
         aiTimeoutMs,
+        memberNote,
       });
       if (prep.earlyResult) {
         logAssistantTiming({
@@ -2697,6 +2909,9 @@ export async function handleAssistantRoutes(request, env, url) {
           streamed: false,
           totalMs: Date.now() - reqStart,
         });
+        try {
+          await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result: prep.earlyResult, now }));
+        } catch { /* stats are best-effort */ }
         if (!prep.earlyResult.ok) {
           const errBody = { error: prep.earlyResult.reply, handoff: true, lang: prep.earlyResult.lang };
           if (auth.chatSession) errBody.chatSession = auth.chatSession;
@@ -2714,6 +2929,8 @@ export async function handleAssistantRoutes(request, env, url) {
         headers: corsHeaders,
         reqStart,
         now,
+        ctx,
+        rawMessage: body.message,
       });
     }
 
@@ -2723,11 +2940,18 @@ export async function handleAssistantRoutes(request, env, url) {
       history: hist,
       alreadyGreeted,
       env,
-      actorKey: `ip:${ip}`,
+      actorKey: limitActorKey,
+      ipActorKey,
+      tier: resolvedTier,
       actorKeys,
       channel: 'web',
+      now,
       aiTimeoutMs,
+      memberNote,
     });
+    try {
+      await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result, now }));
+    } catch { /* stats are best-effort */ }
     if (!result.ok) {
       const errBody = { error: result.reply, handoff: true, lang: result.lang };
       if (auth.chatSession) errBody.chatSession = auth.chatSession;

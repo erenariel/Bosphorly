@@ -629,6 +629,106 @@
     return card;
   }
 
+  async function mimoCard() {
+    let state;
+    try { state = await M.mimo(); } catch { return null; }
+    if (!state || typeof state.consent !== 'boolean') return null;
+    let copy = null;
+    try {
+      const r = await fetch((window.BOSPHORLY_BASE || '') + 'data/mimo-ui.json');
+      if (r.ok) copy = await r.json();
+    } catch {}
+    if (!copy) return null;
+    const mc = (k) => (copy[k] && (copy[k][lang] || copy[k].en)) || '';
+    const card = el('section', 'm-mimo');
+    card.style.cssText = 'border:1px solid #e4ebf4;border-radius:14px;padding:14px;margin:14px 0;max-width:100%;box-sizing:border-box';
+    card.append(el('h3', null, mc('title')));
+    const consentLabel = el('label', 'm-mimo-consent');
+    consentLabel.style.cssText = 'display:flex;align-items:center;gap:8px;min-height:44px;cursor:pointer';
+    const consentBox = el('input');
+    consentBox.type = 'checkbox';
+    consentBox.checked = !!state.consent;
+    consentBox.style.cssText = 'width:22px;height:22px;flex:none';
+    consentLabel.append(consentBox, el('span', null, mc('consent')));
+    const read = el('p', 'm-fine');
+    const status = el('p', 'm-fine');
+    const tone = el('select'); const emoji = el('select'); const length = el('select'); const pref = el('select');
+    const interests = el('input'); const topics = el('textarea');
+    topics.rows = 3;
+    const enums = [
+      [tone, [['samimi', 'warm'], ['resmî', 'formal']]],
+      [emoji, [['az', 'few'], ['orta', 'mid'], ['çok', 'many']]],
+      [length, [['kısa', 'short'], ['detaylı', 'detailed']]],
+    ];
+    enums.forEach(([sel, opts]) => opts.forEach(([value, key]) => {
+      const o = el('option', null, mc(key)); o.value = value; sel.append(o);
+    }));
+    ['tr','en','ru','uk','de','fr','nl','ar','he','az','fa','es','it','pt','hr','hu','bs','zh','ja','ko','hi','bn','id'].forEach((code) => {
+      const o = el('option', null, code); o.value = code; pref.append(o);
+    });
+    function paint(note) {
+      const n = note || { tone: 'samimi', emoji: 'orta', length: 'kısa', lang: lang || 'en', interests: [], lastTopics: [] };
+      tone.value = n.tone || 'samimi';
+      emoji.value = n.emoji || 'orta';
+      length.value = n.length || 'kısa';
+      pref.value = n.lang || 'en';
+      interests.value = (n.interests || []).join(', ');
+      topics.value = (n.lastTopics || []).join('\n');
+      const bits = [];
+      if (n.interests && n.interests.length) bits.push(mc('interests') + ': ' + n.interests.join(', '));
+      if (n.lastTopics && n.lastTopics.length) bits.push(mc('topics') + ': ' + n.lastTopics.join(' · '));
+      read.textContent = state.consent ? (bits.join(' · ') || mc('empty')) : mc('off');
+    }
+    paint(state.note);
+    function controlStyle(node) {
+      node.style.cssText = 'width:100%;box-sizing:border-box;min-height:44px;padding:8px;border:1px solid #c2cfe0;border-radius:8px;font:inherit';
+    }
+    [tone, emoji, length, pref, interests, topics].forEach(controlStyle);
+    function labeled(key, node) {
+      const wrap = el('label');
+      wrap.style.cssText = 'display:flex;flex-direction:column;gap:4px;font-size:13px;margin:8px 0;max-width:100%';
+      wrap.append(el('span', null, mc(key)), node);
+      return wrap;
+    }
+    const actions = el('div', 'actions');
+    const save = el('button', 'btn', mc('save')); save.type = 'button'; save.style.minHeight = '44px';
+    const forget = el('button', 'btn danger', mc('forget')); forget.type = 'button'; forget.style.minHeight = '44px';
+    actions.append(save, forget);
+    save.addEventListener('click', async () => {
+      if (!consentBox.checked) { status.textContent = mc('needConsent'); return; }
+      const note = {
+        tone: tone.value, emoji: emoji.value, length: length.value, lang: pref.value,
+        interests: interests.value.split(',').map(s => s.trim()).filter(Boolean).slice(0, 8),
+        lastTopics: topics.value.split('\n').map(s => s.trim()).filter(Boolean).slice(0, 5),
+      };
+      try {
+        const next = await M.setMimo({ note });
+        state = next;
+        paint(next.note);
+        status.textContent = mc('saved');
+      } catch { status.textContent = mc('needConsent'); }
+    });
+    forget.addEventListener('click', async () => {
+      try {
+        const next = await M.setMimo({ forget: true });
+        state = next;
+        paint(null);
+        read.textContent = mc('empty');
+        status.textContent = mc('saved');
+      } catch { status.textContent = T.mError || ''; }
+    });
+    consentBox.addEventListener('change', async () => {
+      try {
+        const next = await M.setMimo({ consent: consentBox.checked });
+        state = next;
+        paint(next.note);
+        status.textContent = '';
+      } catch { consentBox.checked = !!state.consent; }
+    });
+    card.append(consentLabel, read, labeled('tone', tone), labeled('emoji', emoji), labeled('length', length), labeled('lang', pref), labeled('interests', interests), labeled('topics', topics), actions, status);
+    return card;
+  }
+
   async function member() {
     let p;
     try { p = await M.profile(true); } catch { return M.signedIn() ? box.replaceChildren(head(), el('p', 'm-msg', T.mError)) : signInForm(); }
@@ -812,7 +912,8 @@
     const dashHead = el('div', 'm-dash-head');
     dashHead.append(corpBar(), hello, sub);
     const dashBody = el('div', 'm-dash-body');
-    dashBody.append(tierEl, h3, list, campHead, campSub, campGrid, prefs, passkeySec, st, inv, set);
+    const mimoEl = await mimoCard();
+    dashBody.append(tierEl, h3, list, campHead, campSub, campGrid, prefs, passkeySec, st, inv, ...(mimoEl ? [mimoEl] : []), set);
     dash.append(dashHead, dashBody);
     box.replaceChildren(dash);
   }

@@ -3,7 +3,8 @@
  "workers_dev": true, "preview_urls": false, "observability": {"enabled": true},
  "d1_databases": [{"binding":"DB","database_name":"bosphorly-booking","database_id":"e833157a-839a-4834-95b0-dc92a66598be","migrations_dir":"migrations"}],
  "ai": {"binding": "AI"},
- "vars": {"PUBLIC_ORIGIN":"https://bosphorly.com","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@notify.bosphorly.com>","ASSISTANT_DAILY_LIMIT":"200","AI_GATEWAY_ID":"mimo","TTS_MONTHLY_CHAR_CAP":"800000"},
+ "vars": {"PUBLIC_ORIGIN":"https://bosphorly.com","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@notify.bosphorly.com>","ASSISTANT_DAILY_LIMIT":"1000","AI_GATEWAY_ID":"mimo","TTS_MONTHLY_CHAR_CAP":"800000"},
  // Secrets (wrangler secret put): ADMIN_TOKEN, PARTNER_TOKEN, CODE_PEPPER, RESEND_API_KEY, TELEGRAM_BOT_TOKEN, TURNSTILE_SECRET, GOOGLE_TTS_API_KEY
+ "triggers": {"crons": ["0 6 * * 1"]},
  "ratelimits": [{"name":"RATE_LIMITER","namespace_id":"1001","simple":{"limit":30,"period":60}}]
 }

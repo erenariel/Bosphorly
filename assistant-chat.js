@@ -62,7 +62,9 @@
     voiceToggle: { tr:'Sesli cevap', en:'Voice reply', ru:'Голосовой ответ', uk:'Голосова відповідь', de:'Sprachantwort', fr:'Réponse vocale', nl:'Spraakantwoord', ar:'رد صوتي', he:'מענה קולי', az:'Səsli cavab', fa:'پاسخ صوتی', es:'Respuesta de voz', it:'Risposta vocale', pt:'Resposta por voz', hr:'Glasovni odgovor', hu:'Hangos válasz', bs:'Glasovni odgovor', zh:'语音朗读', ja:'音声読み上げ', ko:'음성 답변', hi:'वॉइस उत्तर', bn:'ভয়েস উত্তর', id:'Balasan suara' },
     speakMsg: { tr:'Mesajı sesli oku', en:'Read message aloud', ru:'Озвучить сообщение', uk:'Озвучити повідомлення', de:'Nachricht vorlesen', fr:'Lire le message à voix haute', nl:'Bericht voorlezen', ar:'قراءة الرسالة بصوت عالٍ', he:'הקראת ההודעה בקול', az:'Mesajı səslə oxu', fa:'خواندن پیام با صدا', es:'Leer mensaje en voz alta', it:'Leggi il messaggio ad alta voce', pt:'Ler mensagem em voz alta', hr:'Pročitaj poruku naglas', hu:'Üzenet felolvasása', bs:'Pročitaj poruku naglas', zh:'朗读消息', ja:'メッセージを読み上げる', ko:'메시지 소리 내어 읽기', hi:'संदेश ज़ोर से पढ़ें', bn:'বার্তাটি পড়ে শোনান', id:'Bacakan pesan' },
     stopSpeak: { tr:'Okumayı durdur', en:'Stop reading', ru:'Остановить чтение', uk:'Зупинити читання', de:'Vorlesen stoppen', fr:'Arrêter la lecture', nl:'Stop met voorlezen', ar:'إيقاف القراءة', he:'עצירת ההקראה', az:'Oxumağı dayandır', fa:'توقف خواندن', es:'Detener lectura', it:'Interrompi lettura', pt:'Parar leitura', hr:'Zaustavi čitanje', hu:'Felolvasás leállítása', bs:'Zaustavi čitanje', zh:'停止朗读', ja:'読み上げを停止', ko:'읽기 중지', hi:'पढ़ना रोकें', bn:'পড়া বন্ধ করুন', id:'Hentikan pembacaan' },
-    noVoiceDevice: { tr:'Bu dilde cihazında ses yok', en:'No voice available on your device for this language', ru:'На устройстве нет голоса для этого языка', uk:'На пристрої немає голосу для цієї мови', de:'Auf deinem Gerät ist keine Stimme für diese Sprache verfügbar', fr:'Aucune voix disponible sur votre appareil pour cette langue', nl:'Geen stem beschikbaar op je apparaat voor deze taal', ar:'لا يتوفر صوت لهذه اللغة على جهازك', he:'אין קול זמין במכשיר שלך לשפה זו', az:'Cihazınızda bu dil üçün səs yoxdur', fa:'صدایی برای این زبان روی دستگاه شما موجود نیست', es:'No hay una voz disponible en tu dispositivo para este idioma', it:'Nessuna voce disponibile sul tuo dispositivo per questa lingua', pt:'Nenhuma voz disponível no seu dispositivo para este idioma', hr:'Na tvom uređaju nema glasa za ovaj jezik', hu:'Nincs elérhető hang az eszközödön ehhez a nyelvhez', bs:'Na tvom uređaju nema glasa za ovaj jezik', zh:'你的设备上没有此语言的语音', ja:'この言語の音声はこの端末にありません', ko:'이 기기에서 이 언어의 음성을 사용할 수 없습니다', hi:'आपके डिवाइस पर इस भाषा के लिए कोई आवाज़ उपलब्ध नहीं है', bn:'এই ভাষার জন্য আপনার ডিভাইসে কোনো ভয়েস নেই', id:'Tidak ada suara di perangkatmu untuk bahasa ini' }
+    noVoiceDevice: { tr:'Bu dilde cihazında ses yok', en:'No voice available on your device for this language', ru:'На устройстве нет голоса для этого языка', uk:'На пристрої немає голосу для цієї мови', de:'Auf deinem Gerät ist keine Stimme für diese Sprache verfügbar', fr:'Aucune voix disponible sur votre appareil pour cette langue', nl:'Geen stem beschikbaar op je apparaat voor deze taal', ar:'لا يتوفر صوت لهذه اللغة على جهازك', he:'אין קול זמין במכשיר שלך לשפה זו', az:'Cihazınızda bu dil üçün səs yoxdur', fa:'صدایی برای این زبان روی دستگاه شما موجود نیست', es:'No hay una voz disponible en tu dispositivo para este idioma', it:'Nessuna voce disponibile sul tuo dispositivo per questa lingua', pt:'Nenhuma voz disponível no seu dispositivo para este idioma', hr:'Na tvom uređaju nema glasa za ovaj jezik', hu:'Nincs elérhető hang az eszközödön ehhez a nyelvhez', bs:'Na tvom uređaju nema glasa za ovaj jezik', zh:'你的设备上没有此语言的语音', ja:'この言語の音声はこの端末にありません', ko:'이 기기에서 이 언어의 음성을 사용할 수 없습니다', hi:'आपके डिवाइस पर इस भाषा के लिए कोई आवाज़ उपलब्ध नहीं है', bn:'এই ভাষার জন্য আপনার ডিভাইসে কোনো ভয়েস নেই', id:'Tidak ada suara di perangkatmu untuk bahasa ini' },
+    remember: { tr:'Mimo konuşma tarzımı ve ilgi alanlarımı hatırlasın 💙', en:'Let Mimo remember my tone and interests 💙', ru:'Пусть Mimo запоминает мой тон и интересы 💙', uk:'Нехай Mimo запам’ятовує мій стиль і інтереси 💙', de:'Mimo darf meinen Ton und meine Interessen merken 💙', fr:'Mimo peut retenir mon ton et mes centres d’intérêt 💙', nl:'Mimo mag mijn toon en interesses onthouden 💙', ar:'ليتذكر Mimo أسلوب حديثي واهتماماتي 💙', he:'ש־Mimo יזכור את סגנון הדיבור ואת תחומי העניין שלי 💙', az:'Mimo danışıq tərzimi və maraqlarımı xatırlasın 💙', fa:'Mimo لحن گفتگو و علاقه‌هایم را به خاطر بسپارد 💙', es:'Que Mimo recuerde mi tono y mis intereses 💙', it:'Mimo ricordi il mio tono e i miei interessi 💙', pt:'O Mimo pode lembrar o meu tom e os meus interesses 💙', hr:'Neka Mimo zapamti moj ton i interese 💙', hu:'A Mimo emlékezzen a hangnememre és az érdeklődésemre 💙', bs:'Neka Mimo zapamti moj ton i interese 💙', zh:'让 Mimo 记住我的说话风格和兴趣 💙', ja:'Mimoに話し方と興味を覚えておいてほしい 💙', ko:'Mimo가 내 말투와 관심사를 기억하도록 허용 💙', hi:'Mimo मेरी बातचीत की शैली और रुचियाँ याद रखे 💙', bn:'Mimo যেন আমার কথার ধরন ও আগ্রহ মনে রাখে 💙', id:'Biarkan Mimo mengingat gaya bicara dan minat saya 💙' },
+    rememberNo: { tr:'Şimdi değil', en:'Not now', ru:'Не сейчас', uk:'Не зараз', de:'Nicht jetzt', fr:'Pas maintenant', nl:'Niet nu', ar:'ليس الآن', he:'לא עכשיו', az:'İndi yox', fa:'حالا نه', es:'Ahora no', it:'Non ora', pt:'Agora não', hr:'Ne sada', hu:'Most nem', bs:'Ne sada', zh:'暂时不要', ja:'今はしない', ko:'지금은 아니요', hi:'अभी नहीं', bn:'এখন নয়', id:'Jangan sekarang' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
   const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
@@ -210,6 +212,8 @@
     `<button type="button" class="bc-quick-btn" data-q="plan">${tr('qPlan')}</button>` +
     `</div>` +
     `<div class="bc-actions"><button type="button" class="bc-human-btn">💬 ${tr('human')}</button></div>` +
+    `<div class="bc-remember" hidden><label class="bc-remember-label"><input class="bc-remember-input" type="checkbox"> <span>${tr('remember')}</span></label>` +
+    `<button type="button" class="bc-remember-no">${tr('rememberNo')}</button></div>` +
     `<p class="bc-listen" hidden></p><p class="bc-mic-note" hidden></p><p class="bc-tts-note" hidden></p>` +
     `<form class="bc-form"><button type="button" class="bc-quick-toggle" aria-label="${tr('quickToggle')}" title="${tr('quickToggle')}" aria-expanded="false" hidden>✨</button>` +
     `<input class="bc-input" type="text" maxlength="1000" placeholder="${tr('placeholder')}" autocomplete="off">` +
@@ -232,6 +236,9 @@
   const form = panel.querySelector('.bc-form');
   const input = panel.querySelector('.bc-input');
   const sendBtn = panel.querySelector('.bc-send');
+  const rememberBox = panel.querySelector('.bc-remember');
+  const rememberInput = panel.querySelector('.bc-remember-input');
+  const rememberNo = panel.querySelector('.bc-remember-no');
   const apiBase = window.BOSPHORLY_API && window.BOSPHORLY_API.base;
   const micBtn = panel.querySelector('.bc-mic');
   const listenEl = panel.querySelector('.bc-listen');
@@ -365,8 +372,11 @@
     try { sessionStorage.setItem(CLOSED_KEY, '1'); } catch {}
     panel.dataset.closed = 'true';
     panel.classList.add('bc-is-closed');
+    if (panel.querySelector('.bc-mic.listening')) stopDictation();
     input.value = '';
     input.disabled = true;
+    if (micBtn) micBtn.disabled = true;
+    if (rememberBox) rememberBox.hidden = true;
     sendBtn.disabled = true;
     humanBtn.disabled = true;
     quickToggleBtn.disabled = true;
@@ -847,6 +857,7 @@
       headers: {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream, application/json',
+        ...memberAuthHeaders(),
       },
       ...(abortCtrl ? { signal: abortCtrl.signal } : {}),
       body: JSON.stringify({
@@ -1017,6 +1028,7 @@
       const reply = sanitizeClientText(data.reply || data.error || '') || tr('offline');
       history.push({ role: 'user', content: message }, { role: 'assistant', content: reply });
       saveHistory();
+      armIdle();
       hideTyping();
       let replyItem = null;
       if (streamMsg) {
@@ -1079,6 +1091,75 @@
     syncMobileViewport();
   }
 
+  const IDLE_MS = 10 * 60 * 1000;
+  let rememberConsent = false;
+  let rememberResolved = false;
+  let idleTimer = 0;
+  function memberToken() {
+    try { return localStorage.getItem('bosphorly.session') || ''; } catch { return ''; }
+  }
+  function memberAuthHeaders() {
+    const token = memberToken();
+    return token ? { Authorization: 'Bearer ' + token } : {};
+  }
+  function postMimo(body) {
+    const token = memberToken();
+    if (!token || !apiBase) return;
+    fetch(`${apiBase}/v1/me/mimo`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify(body),
+    }).catch(() => {});
+  }
+  function maybeSummarize() {
+    if (!rememberConsent || !history.length) return;
+    const token = memberToken();
+    if (!token || !apiBase) return;
+    fetch(`${apiBase}/v1/me/mimo/summary`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ history: history.slice(-6), lang }),
+      keepalive: true,
+    }).catch(() => {});
+  }
+  function armIdle() {
+    if (idleTimer) clearTimeout(idleTimer);
+    if (!rememberConsent) return;
+    idleTimer = setTimeout(() => { maybeSummarize(); }, IDLE_MS);
+  }
+  async function loadRemember() {
+    if (!memberToken() || !apiBase || rememberResolved) return;
+    try {
+      const res = await fetch(`${apiBase}/v1/me/mimo`, { headers: { Authorization: 'Bearer ' + memberToken() } });
+      if (!res.ok || rememberResolved) return;
+      const data = await res.json();
+      rememberConsent = !!data.consent;
+      if (data.asked) {
+        rememberResolved = true;
+        rememberBox.hidden = true;
+        if (rememberConsent) armIdle();
+      } else {
+        rememberBox.hidden = false;
+        rememberInput.checked = false;
+      }
+    } catch {}
+  }
+  function dismissRemember(consent) {
+    rememberConsent = !!consent;
+    rememberResolved = true;
+    rememberBox.hidden = true;
+    rememberInput.checked = rememberConsent;
+    postMimo({ consent: rememberConsent });
+    if (rememberConsent) armIdle();
+    else if (idleTimer) clearTimeout(idleTimer);
+  }
+  function closePanel() {
+    stopDictation();
+    if (!rememberBox.hidden && !rememberInput.checked) dismissRemember(false);
+    maybeSummarize();
+    toggle(false);
+  }
+
   const toggle = (open) => {
     if (!open) {
       stopSpeaking();
@@ -1091,6 +1172,7 @@
       } else {
         loadTurnstile();
       }
+      loadRemember();
       logEl.scrollTop = logEl.scrollHeight;
       if (!isChatClosed && window.innerWidth > 480) input.focus();
     }
@@ -1105,8 +1187,11 @@
     if (q && !isChatClosed) submitMessage(q);
   };
 
-  closeBtn.addEventListener('click', () => { stopDictation(); toggle(false); });
-  panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') { stopDictation(); toggle(false); } });
+  closeBtn.addEventListener('click', () => closePanel());
+  panel.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePanel(); });
+  rememberInput.addEventListener('change', () => dismissRemember(rememberInput.checked));
+  rememberNo.addEventListener('click', () => dismissRemember(false));
+  window.addEventListener('pagehide', () => { maybeSummarize(); });
   humanBtn.addEventListener('click', () => {
     if (isChatClosed) return;
     if (logEl.querySelector('.bc-handoff')) {
@@ -1602,12 +1687,15 @@
       if (ctrl) ctrl.abort();
     }, TTS_FETCH_TIMEOUT_MS);
     try {
+      const ttsHeaders = {
+        Authorization: `Bearer ${chatSession}`,
+        'Content-Type': 'application/json',
+      };
+      const mTok = memberToken();
+      if (mTok) ttsHeaders['X-Member-Session'] = mTok;
       const res = await fetch(`${apiBase}/v1/tts`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${chatSession}`,
-          'Content-Type': 'application/json',
-        },
+        headers: ttsHeaders,
         body: JSON.stringify({ text: clean, lang: String(msgLang || lang || 'en').slice(0, 10) }),
         signal: ctrl ? ctrl.signal : undefined,
       });
@@ -1726,6 +1814,7 @@
 
   applyOpenState(true);
   loadTurnstile();
+  loadRemember();
   if (!isChatClosed && window.innerWidth > 480) input.focus();
   if (window.__bosphorlyInitialQuestion && !isChatClosed) {
     const q = window.__bosphorlyInitialQuestion;

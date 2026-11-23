@@ -12,6 +12,15 @@ import {
   runAssistant,
   transcribeAudio,
 } from './assistant.js';
+import {
+  applySummary,
+  loadConsentedNote,
+  memberIdFromTelegram,
+  memberTierById,
+  observeAssistantTurn,
+  runInBackground,
+  MIMO_IDLE_MS,
+} from './mimo.js';
 
 export const TG_TEXT = {
   welcome: {
@@ -287,6 +296,7 @@ async function getState(env, chatId, now = Date.now()) {
     pendingHandoff: Number(row.pending_handoff || 0),
     lang: row.lang || 'en',
     history: Array.isArray(history) ? history : [],
+    updatedAt: Number(row.updated_at || 0),
   };
 }
 
@@ -315,7 +325,7 @@ export function parseStartPayloadLang(text) {
   return SUPPORTED_LANGS.has(code) ? code : '';
 }
 
-export async function handleTelegramWebhook(request, env, now = Date.now()) {
+export async function handleTelegramWebhook(request, env, now = Date.now(), ctx) {
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
   }
@@ -398,6 +408,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now()) {
     await blockActors({ env, actorKeys: [actorKey], channel: 'telegram', now });
     const closeMsg = (ASSISTANT_MESSAGES.abuseClose && (ASSISTANT_MESSAGES.abuseClose[lang] || ASSISTANT_MESSAGES.abuseClose.en)) || '';
     await sendTelegramMessage(env, chatId, closeMsg);
+    try { await runInBackground(ctx, observeAssistantTurn(env, { message: text, result: { lang, closed: true, abuse: true }, now })); } catch {}
     return new Response(JSON.stringify({ ok: true, closed: true }), { status: 200 });
   }
 
@@ -471,17 +482,34 @@ export async function handleTelegramWebhook(request, env, now = Date.now()) {
   }
 
   const history = state ? state.history : [];
+  let memberNote = null;
+  let memberId = null;
+  let tier = 'guest';
+  try {
+    memberId = await memberIdFromTelegram(env, telegramId);
+    if (memberId) {
+      tier = await memberTierById(env, memberId);
+      const idle = state && state.updatedAt > 0 && now - state.updatedAt >= MIMO_IDLE_MS;
+      if (idle && history.length) {
+        await runInBackground(ctx, applySummary(env, memberId, history, state.lang || lang, now));
+      }
+      memberNote = await loadConsentedNote(env, memberId, now);
+    }
+  } catch { /* an unlinked or unknown Telegram id keeps no note */ }
   const res = await runAssistant({
     message: text,
     pageLang: savedLang,
     telegramLang,
     history,
     env,
-    actorKey,
+    actorKey: memberId ? `member:${memberId}` : actorKey,
     actorKeys: [actorKey],
+    tier,
     channel: 'telegram',
     now,
+    memberNote,
   });
+  try { await runInBackground(ctx, observeAssistantTurn(env, { message: text, result: res, now })); } catch {}
 
   if (res.closed) {
     await clearState(env, chatId);
