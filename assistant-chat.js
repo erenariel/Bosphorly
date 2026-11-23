@@ -190,7 +190,7 @@
     : '';
   // Corporate WhatsApp Business line (quick questions only; requests stay on email). Keep in sync with social-links.js.
   const WA_NUMBER = '16197386408';
-  const waHeadHtml = `<a class="bc-tg-link bc-wa-head" href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener" aria-label="WhatsApp +1 (619) 738-6408" title="WhatsApp +1 (619) 738-6408"><img class="bc-tg-ico" src="${assetBase}assets/brand/whatsapp.svg" alt="" aria-hidden="true" width="22" height="22" loading="lazy" decoding="async"></a>`;
+  const waHeadHtml = `<a class="bc-wa-link bc-wa-head" href="https://wa.me/${WA_NUMBER}" target="_blank" rel="noopener" aria-label="WhatsApp +1 (619) 738-6408" title="WhatsApp +1 (619) 738-6408"><img class="bc-wa-ico" src="${assetBase}assets/brand/whatsapp.svg" alt="" aria-hidden="true" width="22" height="22" loading="lazy" decoding="async"></a>`;
   const mimoSrc = (stateName = 'default') => `${base}assets/brand/mimo/mimo-${stateName}.svg`;
 
   const panel = document.createElement('section');
