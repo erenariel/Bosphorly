@@ -1678,7 +1678,7 @@ function buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGr
   ].filter(Boolean).join('\n');
 }
 
-function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote = null }) {
+export function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote = null }) {
   const examples = getFewShotsPromptBlock(lang);
   const noteBlock = formatNoteForPrompt(memberNote);
   return [

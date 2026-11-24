@@ -1,3 +1,4 @@
+import {adminWhatsApp} from './whatsapp.js';
 import {
   ASSISTANT_MESSAGES,
   SUPPORTED_LANGS,
@@ -351,6 +352,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
   }
 
   const chatId = String(msg.chat.id);
+  if (await adminWhatsApp(env,chatId,msg.from?.id,msg.text)) return new Response('{"ok":true}');
   const actorKey = `tg:${chatId}`;
 
   const blockStatus = await getBlockStatus({ env, actorKeys: [actorKey], now });

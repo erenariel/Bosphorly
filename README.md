@@ -138,3 +138,7 @@ Forwarding real requests, reference codes, passenger details, commissions and cu
 - The homepage includes subtle animated water flourishes through CSS, respecting the visitor's reduced-motion preference. No heavy animated GIF is required.
 
 **Data rule:** A company's published list price must never silently become a requestable price. Only prices the company has approved in a signed agreement can be requested, and they must not exceed what the traveler would pay the company directly (price parity). Price approvals and request forwarding need the secure backend planned in Issue #1.
+
+### Mimo WhatsApp (Telnyx coexistence)
+
+Kurulum, secret'lar, messaging profile webhook ayarları ve canlı test adımları: [WhatsApp kurulum rehberi](backend/README-whatsapp.md).
