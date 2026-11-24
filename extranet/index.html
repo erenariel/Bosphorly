@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="tr" data-no-mimo="1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#07143f">
+  <title>Bosphorly Extranet · Yönetim Paneli</title>
+  <meta name="description" content="Bosphorly yetkili operasyon ve rezervasyon yönetim paneli.">
+  <link rel="icon" href="../assets/brand/approved-icon.webp">
+  <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png">
+  <link rel="stylesheet" href="extranet.css">
+</head>
+<body>
+  <!-- Giriş + Zorunlu Passkey Kurulum / Doğrulama Ekranı -->
+  <div id="gateScreen" class="ex-gate-wrap">
+    <section class="ex-gate-card" aria-labelledby="gateHeading">
+      <header class="ex-gate-head">
+        <div class="ex-brand">
+          <img src="../assets/brand/approved-icon.webp" alt="Bosphorly logosu" width="44" height="44" loading="lazy" decoding="async">
+          <div>
+            <div class="ex-brand-title">Bosphorly</div>
+            <span class="ex-brand-sub">Extranet Yönetim Paneli</span>
+          </div>
+        </div>
+        <h1 id="gateHeading">Güvenli Yönetici Girişi</h1>
+        <p id="gateSub">Mevcut Bosphorly üye hesabınız ve zorunlu Passkey doğrulaması ile oturum açın.</p>
+      </header>
+
+      <div class="ex-gate-body">
+        <div id="gateAlert" class="ex-alert" role="status" aria-live="polite" hidden></div>
+
+        <!-- Adım A: Doğrudan Passkey veya Üye Girişi -->
+        <div id="stepSignIn">
+          <button type="button" id="btnDirectPasskey" class="ex-btn ex-btn-gold ex-btn-block">
+            🔐 Passkey ile Hızlı Giriş Yap
+          </button>
+
+          <div class="ex-divider">veya üye e-postası ile doğrula</div>
+
+          <div id="existingMemberBox" class="ex-alert ex-alert-info" hidden>
+            <div id="existingMemberText" style="margin-bottom:8px"></div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" id="btnUseMemberSession" class="ex-btn ex-btn-primary ex-btn-sm">Bu Hesapla Devam Et</button>
+              <button type="button" id="btnSwitchAccount" class="ex-btn ex-btn-secondary ex-btn-sm">Farklı E-posta Kullan</button>
+            </div>
+          </div>
+
+          <form id="emailStartForm" novalidate>
+            <label class="ex-field" style="margin-bottom:10px">
+              <span>Yetkili üye e-posta adresi</span>
+              <input id="loginEmail" type="email" autocomplete="email" placeholder="ad@ornek.com" maxlength="254" required>
+            </label>
+            <button type="submit" id="btnSendCode" class="ex-btn ex-btn-primary ex-btn-block">
+              Tek Kullanımlık Giriş Kodu Gönder
+            </button>
+          </form>
+
+          <form id="emailVerifyForm" novalidate hidden style="margin-top:12px">
+            <label class="ex-field" style="margin-bottom:10px">
+              <span>E-postanıza gelen 6 haneli kod</span>
+              <input id="loginCode" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="000000" required>
+            </label>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="submit" id="btnVerifyCode" class="ex-btn ex-btn-primary" style="flex:1">Kodu Doğrula</button>
+              <button type="button" id="btnBackEmail" class="ex-btn ex-btn-secondary">Geri</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Adım B: İlk Girişte Zorunlu Passkey Kurulumu -->
+        <div id="stepSetupPasskey" hidden>
+          <div class="ex-alert ex-alert-warn" style="margin-bottom:12px">
+            <strong>Passkey Kurulumu Zorunlu:</strong> Extranet güvenliği gereği ilk girişinizde bu cihazda biyometrik doğrulama (Touch ID / Face ID / Windows Hello) veya güvenlik anahtarı tanımlamanız gerekir.
+          </div>
+          <p id="setupUserSummary" style="margin:0 0 12px;font-size:13.5px;color:#4a5e7d"></p>
+          <button type="button" id="btnEnrollPasskey" class="ex-btn ex-btn-gold ex-btn-block">
+            🔑 Passkey Oluştur ve Panele Gir
+          </button>
+          <button type="button" id="btnCancelPasskeySetup" class="ex-btn ex-btn-secondary ex-btn-block" style="margin-top:8px">
+            İptal Et
+          </button>
+        </div>
+
+        <!-- Adım C: Kayıtlı Kullanıcı İçin Passkey İkinci Doğrulama -->
+        <div id="stepVerifyPasskey" hidden>
+          <div class="ex-alert ex-alert-info" style="margin-bottom:12px">
+            Üye kimliğiniz doğrulandı. Extranet oturumunu başlatmak için lütfen kayıtlı Passkey anahtarınızı onaylayın.
+          </div>
+          <p id="verifyUserSummary" style="margin:0 0 12px;font-size:13.5px;color:#4a5e7d"></p>
+          <button type="button" id="btnStepUpPasskey" class="ex-btn ex-btn-gold ex-btn-block">
+            🔐 Passkey Doğrula ve Devam Et
+          </button>
+          <button type="button" id="btnCancelPasskeyVerify" class="ex-btn ex-btn-secondary ex-btn-block" style="margin-top:8px">
+            Geri Dön
+          </button>
+        </div>
+
+        <footer class="ex-gate-foot">
+          <span>30 dk hareketsizlik koruması aktif</span>
+          <a href="../index.html">← Ana siteye dön</a>
+        </footer>
+      </div>
+    </section>
+  </div>
+
+  <!-- Ana Extranet Çalışma Alanı -->
+  <div id="appShell" class="ex-shell" hidden>
+    <aside class="ex-sidebar" aria-label="Extranet menüsü">
+      <div class="ex-sidebar-top">
+        <a href="../index.html" class="ex-brand">
+          <img src="../assets/brand/approved-icon.webp" alt="Bosphorly logosu" width="40" height="40" loading="lazy" decoding="async">
+          <div>
+            <div class="ex-brand-title">Bosphorly</div>
+            <span class="ex-brand-sub">Extranet</span>
+          </div>
+        </a>
+      </div>
+
+      <span class="ex-nav-label">Yönetim Modülleri</span>
+      <nav class="ex-nav">
+        <button type="button" class="ex-nav-btn" id="navDashboard" data-view="dashboard" aria-current="page">
+          <span>◫</span> Gösterge Paneli
+        </button>
+        <button type="button" class="ex-nav-btn" id="navBookings" data-view="bookings">
+          <span>▤</span> Rezervasyonlar
+        </button>
+      </nav>
+
+      <div class="ex-side-user">
+        <div class="ex-user-top">
+          <span id="currentUserName" class="ex-user-name">—</span>
+          <span id="currentUserRole" class="ex-role-badge" data-role="staff">staff</span>
+        </div>
+        <div class="ex-session-timer">
+          <span>Oturum süresi:</span>
+          <strong id="idleCountdown">30:00</strong>
+        </div>
+        <div class="ex-side-actions">
+          <a href="../account.html" class="ex-side-link">Üye Hesabım</a>
+          <button type="button" id="btnLogout" class="ex-btn ex-btn-danger ex-btn-sm">Çıkış</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="ex-main">
+      <div id="globalBanner" class="ex-alert" role="status" aria-live="polite" hidden style="margin-bottom:16px"></div>
+
+      <!-- GÖRÜNÜM 1: GÖSTERGE PANELİ -->
+      <section id="viewDashboard" aria-labelledby="dashHeading">
+        <header class="ex-page-head">
+          <div>
+            <div class="ex-eyebrow">Operasyon Özeti</div>
+            <h1 id="dashHeading">Gösterge Paneli</h1>
+            <p>Bugün, bu hafta ve bu ay için talep, onay, iptal, yeni üyelik ve tahmini komisyon göstergeleri.</p>
+          </div>
+          <div class="ex-head-tools">
+            <div class="ex-segmented" role="group" aria-label="Dönem seçimi">
+              <button type="button" class="ex-seg-btn" data-period="today" aria-pressed="true">Bugün</button>
+              <button type="button" class="ex-seg-btn" data-period="week" aria-pressed="false">Bu Hafta</button>
+              <button type="button" class="ex-seg-btn" data-period="month" aria-pressed="false">Bu Ay</button>
+            </div>
+            <button type="button" id="btnRefreshDashboard" class="ex-btn ex-btn-secondary ex-btn-sm">↻ Yenile</button>
+          </div>
+        </header>
+
+        <div class="ex-kpi-grid" id="kpiGrid">
+          <article class="ex-kpi-card">
+            <span class="ex-kpi-label">Yeni Talep</span>
+            <strong class="ex-kpi-val" id="kpiNewRequests">0</strong>
+            <span class="ex-kpi-sub" id="kpiNewRequestsSub">—</span>
+          </article>
+          <article class="ex-kpi-card">
+            <span class="ex-kpi-label">Onaylanan / Tamamlanan</span>
+            <strong class="ex-kpi-val" id="kpiConfirmed">0</strong>
+            <span class="ex-kpi-sub" id="kpiConfirmedSub">—</span>
+          </article>
+          <article class="ex-kpi-card">
+            <span class="ex-kpi-label">İptal Edilen</span>
+            <strong class="ex-kpi-val" id="kpiCancelled">0</strong>
+            <span class="ex-kpi-sub" id="kpiCancelledSub">—</span>
+          </article>
+          <article class="ex-kpi-card">
+            <span class="ex-kpi-label">Yeni Üye Sayısı</span>
+            <strong class="ex-kpi-val" id="kpiNewMembers">0</strong>
+            <span class="ex-kpi-sub" id="kpiNewMembersSub">—</span>
+          </article>
+          <article class="ex-kpi-card">
+            <span class="ex-kpi-label">Tahmini Komisyon</span>
+            <strong class="ex-kpi-val" id="kpiCommission">€0</strong>
+            <span class="ex-kpi-sub" id="kpiCommissionSub">—</span>
+          </article>
+        </div>
+
+        <section class="ex-panel">
+          <div class="ex-panel-head">
+            <h2>Genel Durum Dağılımı</h2>
+            <button type="button" id="btnGoAllBookings" class="ex-btn ex-btn-secondary ex-btn-sm">Tüm Rezervasyonları Aç →</button>
+          </div>
+          <div id="statusSummaryPills" class="ex-status-pills"></div>
+        </section>
+
+        <section class="ex-panel">
+          <div class="ex-panel-head">
+            <h2>Son Gelen Talepler ve Rezervasyonlar</h2>
+          </div>
+          <div id="recentBookingsWrap"></div>
+        </section>
+      </section>
+
+      <!-- GÖRÜNÜM 2: REZERVASYON LİSTESİ -->
+      <section id="viewBookings" aria-labelledby="bookingsHeading" hidden>
+        <header class="ex-page-head">
+          <div>
+            <div class="ex-eyebrow">Operasyon & Tedarikçi Takibi</div>
+            <h1 id="bookingsHeading">Rezervasyonlar</h1>
+            <p>Tüm tur, hamam ve havalimanı transferi taleplerini filtreleyin, durumlarını ve tedarikçilerini yönetin.</p>
+          </div>
+          <div class="ex-head-tools">
+            <button type="button" id="btnExportCsv" class="ex-btn ex-btn-gold ex-btn-sm" hidden>⬇ CSV Dışa Aktar (Owner)</button>
+            <button type="button" id="btnRefreshBookings" class="ex-btn ex-btn-secondary ex-btn-sm">↻ Yenile</button>
+          </div>
+        </header>
+
+        <section class="ex-panel">
+          <form id="bookingsFilterForm" class="ex-filter-bar" novalidate>
+            <div class="ex-search-row">
+              <input id="filterSearch" type="search" placeholder="Referans kodu, misafir adı, ürün, otel veya kupon kodu ara…" maxlength="120" aria-label="Rezervasyonlarda ara">
+              <button type="submit" id="btnApplyFilters" class="ex-btn ex-btn-primary">Ara ve Filtrele</button>
+              <button type="button" id="btnResetFilters" class="ex-btn ex-btn-secondary">Temizle</button>
+            </div>
+
+            <div class="ex-filters-grid">
+              <label class="ex-field">
+                <span>Tarih Türü</span>
+                <select id="filterDateType">
+                  <option value="service">Hizmet Tarihi</option>
+                  <option value="created">Kayıt Tarihi</option>
+                </select>
+              </label>
+              <label class="ex-field">
+                <span>Başlangıç Tarihi</span>
+                <input id="filterDateFrom" type="date">
+              </label>
+              <label class="ex-field">
+                <span>Bitiş Tarihi</span>
+                <input id="filterDateTo" type="date">
+              </label>
+              <label class="ex-field">
+                <span>Durum</span>
+                <select id="filterStatus">
+                  <option value="">Tümü</option>
+                  <option value="new">Yeni</option>
+                  <option value="in_progress">İşlemde</option>
+                  <option value="confirmed">Onaylandı</option>
+                  <option value="completed">Tamamlandı</option>
+                  <option value="cancelled">İptal</option>
+                </select>
+              </label>
+              <label class="ex-field">
+                <span>Ürün / Deneyim</span>
+                <select id="filterProduct">
+                  <option value="">Tümü</option>
+                </select>
+              </label>
+              <label class="ex-field">
+                <span>Kaynak</span>
+                <select id="filterSource">
+                  <option value="">Tümü</option>
+                  <option value="web">Web</option>
+                  <option value="member">Üye Paneli</option>
+                  <option value="hotel_qr">Otel QR</option>
+                  <option value="telegram">Telegram</option>
+                  <option value="partner">Partner</option>
+                </select>
+              </label>
+              <label class="ex-field">
+                <span>Dil</span>
+                <select id="filterLang">
+                  <option value="">Tümü</option>
+                  <option value="tr">Türkçe (TR)</option>
+                  <option value="en">İngilizce (EN)</option>
+                  <option value="ru">Rusça (RU)</option>
+                  <option value="de">Almanca (DE)</option>
+                  <option value="ar">Arapça (AR)</option>
+                  <option value="fr">Fransızca (FR)</option>
+                  <option value="es">İspanyolca (ES)</option>
+                  <option value="it">İtalyanca (IT)</option>
+                  <option value="nl">Felemenkçe (NL)</option>
+                  <option value="uk">Ukraynaca (UK)</option>
+                  <option value="he">İbranice (HE)</option>
+                  <option value="fa">Farsça (FA)</option>
+                  <option value="az">Azerbaycanca (AZ)</option>
+                  <option value="zh">Çince (ZH)</option>
+                  <option value="ja">Japonca (JA)</option>
+                  <option value="ko">Korece (KO)</option>
+                </select>
+              </label>
+              <label class="ex-field">
+                <span>Üye Seviyesi</span>
+                <select id="filterTier">
+                  <option value="">Tümü</option>
+                  <option value="platinum">💎 Platinum</option>
+                  <option value="gold">🥇 Gold</option>
+                  <option value="silver">🥈 Silver</option>
+                  <option value="guest">Misafir (Üye Değil)</option>
+                </select>
+              </label>
+            </div>
+          </form>
+
+          <div id="bookingsTableContainer"></div>
+
+          <div id="bookingsPagination" class="ex-pagination">
+            <span id="paginationInfo" class="ex-page-info">0 kayıt</span>
+            <div class="ex-page-controls">
+              <label style="font-size:12.5px;color:#5b6f8e;display:inline-flex;align-items:center;gap:6px">
+                Sayfa boyutu:
+                <select id="filterPageSize" style="padding:6px 8px;border-radius:8px;border:1px solid #c4d4ea;background:#fff">
+                  <option value="10">10</option>
+                  <option value="20" selected>20</option>
+                  <option value="50">50</option>
+                </select>
+              </label>
+              <button type="button" id="btnPrevPage" class="ex-btn ex-btn-secondary ex-btn-sm">← Önceki</button>
+              <span id="pageIndicator" style="font-size:13px;font-weight:800;padding:0 6px">1 / 1</span>
+              <button type="button" id="btnNextPage" class="ex-btn ex-btn-secondary ex-btn-sm">Sonraki →</button>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- REZERVASYON DETAY ÇEKMECESİ (<dialog>) -->
+  <dialog id="bookingDetailDrawer" class="ex-drawer" aria-labelledby="drawerTitle">
+    <div class="ex-drawer-inner">
+      <header class="ex-drawer-head">
+        <div>
+          <span class="ex-brand-sub" id="drawerSubtitle">Rezervasyon Detayı</span>
+          <h2 id="drawerTitle">—</h2>
+        </div>
+        <button type="button" id="btnCloseDrawer" class="ex-btn ex-btn-secondary ex-btn-sm">✕ Kapat</button>
+      </header>
+      <div id="drawerBody" class="ex-drawer-body"></div>
+    </div>
+  </dialog>
+
+  <script src="../config/api.js"></script>
+  <script src="../assets/vendor/simplewebauthn-browser.min.js"></script>
+  <script src="extranet.js"></script>
+</body>
+</html>

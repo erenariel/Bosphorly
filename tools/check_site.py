@@ -145,9 +145,17 @@ def assert_seo():
     """Verify robots.txt, sitemap.xml, unique titles/descriptions, canonicals, visible-only JSON-LD and image attributes."""
     robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
     assert "User-agent: *" in robots and "Allow: /" in robots
+    assert "Disallow: /extranet/" in robots
     assert "Sitemap: https://bosphorly.com/sitemap.xml" in robots
 
+    extranet_html = (ROOT / "extranet/index.html").read_text(encoding="utf-8")
+    extranet_js = (ROOT / "extranet/extranet.js").read_text(encoding="utf-8")
+    assert re.search(r'<meta name="robots" content="[^"]*noindex', extranet_html), "extranet/index.html must be noindex"
+    assert "ADMIN_TOKEN" not in extranet_html and "ADMIN_TOKEN" not in extranet_js, "ADMIN_TOKEN must never appear in Extranet frontend"
+    assert "ADMIN_OWNER_EMAIL" not in extranet_html and "ADMIN_OWNER_EMAIL" not in extranet_js, "ADMIN_OWNER_EMAIL must never appear in Extranet frontend"
+
     sitemap = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+    assert "/extranet" not in sitemap, "extranet must not appear in sitemap.xml"
     entries = re.findall(r"<url><loc>([^<]+)</loc><lastmod>(\d{4}-\d{2}-\d{2})</lastmod></url>", sitemap)
     assert entries, "sitemap.xml has no valid <url> entries"
     locs = [loc for loc, _ in entries]
@@ -231,7 +239,7 @@ def assert_knowledge():
 
 
 def assert_js_parses():
-    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "assistant-chat.js", "telegram-cta.js", "social-links.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "backend/assistant.js", "backend/mimo-personality.js", "backend/mimo.js", "backend/tts.js", "backend/telegram.js", "backend/worker.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
+    script_sources = ["booking.js", "dashboard.js", "prices.js", "tours.js", "hotel-lookup.js", "config/maps-public.js", "config/contact.js", "lang.js", "currency.js", "account-store.js", "account.js", "site-header.js", "assistant-chat.js", "telegram-cta.js", "social-links.js", "discover-common.js", "google-rating.js", "weather.js", "member.js", "account-member.js", "config/api.js", "backend/members.js", "backend/extranet.js", "backend/assistant.js", "backend/mimo-personality.js", "backend/mimo.js", "backend/tts.js", "backend/telegram.js", "backend/worker.js", "extranet/extranet.js", "explore.js", "route.js", "search.js", "tools/build_discover.py", "tools/build_seo.py"]
     for name in script_sources:
         if name.endswith(".py"):
             continue

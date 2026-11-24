@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /extranet/
 
 Sitemap: https://bosphorly.com/sitemap.xml
