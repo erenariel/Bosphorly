@@ -237,8 +237,10 @@ function addDirectDelivery(box, request, lang) {
       // Signal accepted requests only; no contact details or booking references.
       // Does not load analytics or grant tracking consent.
       try {
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({event: 'bosphorly_booking_request_accepted'});
+        if (window.BosphorlyAdsConsent?.allowed()) {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({event: 'bosphorly_booking_request_accepted'});
+        }
       } catch { /* Measurement must never affect request delivery. */ }
     } catch {
       button.disabled = false; button.textContent = label;
