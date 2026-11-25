@@ -359,3 +359,11 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
   };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountFab); else mountFab();
 })();
+
+// Load optional analytics on public pages of the production site.
+if (location.hostname === 'bosphorly.com' &&
+    !/^\/(?:extranet(?:\/|$)|(?:account|dashboard|partner|presentation|404)\.html$)/.test(location.pathname)) {
+  const analytics = document.createElement('script');
+  analytics.src = new URL('../site-analytics.js', document.currentScript.src).href;
+  document.head.append(analytics);
+}
