@@ -241,14 +241,16 @@ export function computeMemberTier(fulfilledCount) {
 // The list lives in a Worker secret, never in this public repository.
 export function isOwnerEmail(env, email) {
   const e = String(email || '').trim().toLowerCase();
-  if (!e || !env || !env.OWNER_EMAILS) return false;
+  if (!e || !env) return false;
+  if (typeof env.ADMIN_OWNER_EMAIL === 'string' && env.ADMIN_OWNER_EMAIL.trim().toLowerCase() === e) return true;
+  if (!env.OWNER_EMAILS) return false;
   return String(env.OWNER_EMAILS).split(',').some(x => x.trim().toLowerCase() === e);
 }
 
 export async function memberTierById(env, memberId) {
   if (!env || !env.DB || !memberId) return 'silver';
   try {
-    if (env.OWNER_EMAILS) {
+    if (env.OWNER_EMAILS || env.ADMIN_OWNER_EMAIL) {
       const m = await dbFirst(env, `SELECT email FROM members WHERE id=?`, String(memberId));
       if (m && isOwnerEmail(env, m.email)) return 'owner';
     }

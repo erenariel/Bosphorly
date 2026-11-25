@@ -110,6 +110,25 @@ async function issue(env, memberId, kind, hotelId = null) {
   return res.meta.changes ? code : null;
 }
 
+export async function awardFulfilledMemberRewards(env, memberId) {
+  const issued = [];
+  const m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(memberId).first();
+  if (!m) return { issued, fulfilledCount: 0 };
+  const done = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
+  const fulfilledCount = Number(done?.n || 0);
+  if (fulfilledCount >= 5 && await issue(env, m.id, 'platinum')) issued.push('platinum');
+  if (fulfilledCount === 1 && await issue(env, m.id, 'second_tour')) issued.push('second_tour');
+  if (m.stamps >= STAMPS_GOAL && await issue(env, m.id, 'loyalty')) {
+    await env.DB.prepare(`UPDATE members SET stamps=stamps-? WHERE id=?`).bind(STAMPS_GOAL, m.id).run();
+    issued.push('loyalty');
+  }
+  if (m.referred_by && !m.referral_rewarded) {
+    const ok = await env.DB.prepare(`UPDATE members SET referral_rewarded=1 WHERE id=? AND referral_rewarded=0`).bind(m.id).run();
+    if (ok.meta.changes && await issue(env, m.referred_by, 'referral')) issued.push('referral');
+  }
+  return { issued, fulfilledCount };
+}
+
 async function memberFromSession(request, env) {
   const t = bearer(request);
   if (!t || t.length > 100) fail(401, 'Sign in required');
@@ -117,6 +136,19 @@ async function memberFromSession(request, env) {
     `SELECT m.* FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`).bind(await sha256(t), sqlTime(new Date())).first();
   if (!m) fail(401, 'Sign in required');
   return m;
+}
+
+async function isProtectedExtranetMember(env, m) {
+  if (!m) return false;
+  if (typeof env.ADMIN_OWNER_EMAIL === 'string' && env.ADMIN_OWNER_EMAIL.trim().toLowerCase() === String(m.email || '').trim().toLowerCase()) {
+    return true;
+  }
+  try {
+    const row = await env.DB.prepare(`SELECT active FROM extranet_users WHERE member_id=?`).bind(m.id).first();
+    return !!(row && Number(row.active) === 1);
+  } catch {
+    return false;
+  }
 }
 
 const ALLOWED_INTERESTS = new Set(['cruise', 'transfer', 'oldcity', 'hammam', 'private']);
@@ -590,6 +622,7 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/register/options') {
       const m = await memberFromSession(request, env);
+      if (await isProtectedExtranetMember(env, m)) fail(403, 'Extranet accounts must manage passkeys via Extranet');
       const rpID = 'bosphorly.com';
       const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(m.id).all()).results;
       const excludeCredentials = existing.map(k => ({
@@ -613,6 +646,7 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/register/verify') {
       const m = await memberFromSession(request, env);
+      if (await isProtectedExtranetMember(env, m)) fail(403, 'Extranet accounts must manage passkeys via Extranet');
       const rpID = 'bosphorly.com';
       const originList = ['https://bosphorly.com', 'https://www.bosphorly.com'];
 
@@ -638,6 +672,8 @@ export async function handleMembers(request, env, url) {
       const credentialID = credential.id;
       const publicKey = uint8ArrayToB64(credential.publicKey);
       const counter = credential.counter || 0;
+      const rawTransports = Array.isArray(body?.response?.transports) ? body.response.transports : (Array.isArray(credential.transports) ? credential.transports : null);
+      const transports = rawTransports ? JSON.stringify(rawTransports.filter(t => typeof t === 'string').slice(0, 8)) : null;
       const now = sqlTime(new Date());
       await env.DB.prepare(`INSERT OR REPLACE INTO passkeys (credential_id, member_id, public_key, counter, transports, created_at) VALUES (?,?,?,?,?,?)`)
         .bind(credentialID, m.id, publicKey, counter, transports, now).run();
@@ -702,6 +738,7 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/delete') {
       const m = await memberFromSession(request, env);
+      if (await isProtectedExtranetMember(env, m)) fail(403, 'Extranet accounts must manage passkeys via Extranet');
       const credId = str(body?.id, 255);
       if (!credId) fail(400, 'Invalid credential id');
       await env.DB.prepare(`DELETE FROM passkeys WHERE credential_id=? AND member_id=?`).bind(credId, m.id).run();
@@ -798,8 +835,14 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/me/delete') {
       const m = await memberFromSession(request, env);
-      // The familiarity note is removed even when an older database has no foreign key for it.
+      // The familiarity note and optional extranet rows are removed even when an older database lacks them.
       try { await env.DB.prepare(`DELETE FROM mimo_profile WHERE member_id=?`).bind(m.id).run(); } catch { /* table is absent until migration 0010 */ }
+      try {
+        await env.DB.prepare(`DELETE FROM extranet_sessions WHERE member_id=?`).bind(m.id).run();
+        await env.DB.prepare(`DELETE FROM extranet_users WHERE member_id=?`).bind(m.id).run();
+        await env.DB.prepare(`UPDATE extranet_users SET created_by=NULL WHERE created_by=?`).bind(m.id).run();
+        await env.DB.prepare(`UPDATE extranet_booking_meta SET member_id=NULL WHERE member_id=?`).bind(m.id).run();
+      } catch { /* extranet tables absent until migration 0013 */ }
       // Requests and coupons go with the member (ON DELETE CASCADE); referrals by others are kept anonymous.
       await env.DB.batch([
         env.DB.prepare(`UPDATE members SET referred_by=NULL WHERE referred_by=?`).bind(m.id),
@@ -847,20 +890,8 @@ export async function handleMembers(request, env, url) {
           env.DB.prepare(`UPDATE coupons SET status='redeemed', redeemed_at=? WHERE held_ref=? AND status='held'`).bind(now, ref),
           env.DB.prepare(`UPDATE members SET stamps=stamps+1 WHERE id=?`).bind(r.member_id)
         ]);
-        const issued = [];
-        const m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(r.member_id).first();
-        const done = await env.DB.prepare(`SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`).bind(m.id).first();
-        if (done.n >= 5 && await issue(env, m.id, 'platinum')) issued.push('platinum');
-        if (done.n === 1 && await issue(env, m.id, 'second_tour')) issued.push('second_tour');
-        if (m.stamps >= STAMPS_GOAL && await issue(env, m.id, 'loyalty')) {
-          await env.DB.prepare(`UPDATE members SET stamps=stamps-? WHERE id=?`).bind(STAMPS_GOAL, m.id).run();
-          issued.push('loyalty');
-        }
-        if (m.referred_by && !m.referral_rewarded) {
-          const ok = await env.DB.prepare(`UPDATE members SET referral_rewarded=1 WHERE id=? AND referral_rewarded=0`).bind(m.id).run();
-          if (ok.meta.changes && await issue(env, m.referred_by, 'referral')) issued.push('referral');
-        }
-        const nextTier = tierInfo(env, Number(done.n || 0));
+        const { issued, fulfilledCount } = await awardFulfilledMemberRewards(env, r.member_id);
+        const nextTier = tierInfo(env, fulfilledCount);
         return json({ ...view, state: 'fulfilled', tier: nextTier.tier, freeUpgrade: nextTier.freeUpgrade, vipPriorityDiscountBps: nextTier.vipPriorityDiscountBps,
           coupon: view.coupon ? { ...view.coupon, status: 'redeemed' } : null, issued });
       }

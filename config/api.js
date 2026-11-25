@@ -1,7 +1,7 @@
 // Address of the Bosphorly API (backend/worker.js on Cloudflare Workers), e.g. "https://api.bosphorly.com".
 // Leave empty until the API is deployed: membership and coupons then show as "coming soon" and the site
 // keeps working with device-only requests.
-window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
+window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extranetBase: '', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
 
 // Lightweight floating Mimo assistant button + non-intrusive greeting bubble (lazy-loads assistant-chat.js & CSS when opened).
 (() => {

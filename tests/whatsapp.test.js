@@ -16,8 +16,8 @@ test('signed raw payload, tampering, stale/future timestamps and invalid key',as
  const h=new Headers({'telnyx-timestamp':ts,'telnyx-signature-ed25519':sig});
  assert.equal(await verifyTelnyx(raw,h,pub),true);
  assert.equal(await verifyTelnyx(raw+' ',h,pub),false);
- assert.equal(await verifyTelnyx(raw,h,pub,Date.now()+301000),false);
- assert.equal(await verifyTelnyx(raw,h,pub,Date.now()-301000),false);
+ assert.equal(await verifyTelnyx(raw,h,pub,Number(ts)*1000+301000),false);
+ assert.equal(await verifyTelnyx(raw,h,pub,Number(ts)*1000-301000),false);
  assert.equal(await verifyTelnyx(raw,h,'invalid'),false);
  assert.equal((await handleWhatsApp(new Request('https://example.com',{method:'POST',body:raw}),{},{})).status,401);
 });

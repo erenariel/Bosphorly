@@ -7,20 +7,36 @@ import {handleAssistantRoutes} from './assistant.js';
 import {handleTtsRoute} from './tts.js';
 import {handleTelegramWebhook} from './telegram.js';
 import {sendWeeklyMimoReport} from './mimo.js';
+import {handleExtranetRoutes, isExtranetRoute} from './extranet.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+function isAllowedOrigin(origin, env) {
+ if (!origin || !env?.PUBLIC_ORIGIN) return false;
+ if (origin===env.PUBLIC_ORIGIN) return true;
+ if (env.PUBLIC_ORIGIN==='https://bosphorly.com' && origin==='https://www.bosphorly.com') return true;
+ if (typeof env.ALLOWED_ORIGINS==='string') return env.ALLOWED_ORIGINS.split(',').some(o=>o.trim()===origin);
+ return false;
+}
 export default {async fetch(request,env,ctx) {
  const url=new URL(request.url);
  if (url.pathname==='/webhooks/whatsapp/telnyx') return handleWhatsApp(request,env,ctx);
  const origin=request.headers.get('Origin');
+ const allowedOrigin=isAllowedOrigin(origin, env);
  const isOauth=url.pathname.startsWith('/v1/auth/oauth/');
- // Deny browser cross-origin writes unless the exact deployment origin is configured (except OAuth form_post callbacks).
- if (!isOauth && origin && origin!==env.PUBLIC_ORIGIN) return json({error:'Origin denied'},403);
- if (request.method==='OPTIONS') return new Response(null,{status:204,headers:origin===env.PUBLIC_ORIGIN?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization, X-Member-Session, X-Chat-Session','Vary':'Origin'}:{}});
+ // Deny browser cross-origin writes unless an allowed deployment origin is matched (except OAuth form_post callbacks).
+ if (!isOauth && origin && !allowedOrigin) return json({error:'Origin denied'},403);
+ if (request.method==='OPTIONS') return new Response(null,{status:204,headers:allowedOrigin?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization, X-Member-Session, X-Chat-Session, X-CSRF-Token','Vary':'Origin',...(isExtranetRoute(url.pathname)?{'Access-Control-Allow-Credentials':'true'}:{})}:{}});
+ if (isExtranetRoute(url.pathname)) {
+ if (request.headers.get('Sec-Fetch-Site')==='cross-site') return json({error:'Cross-site denied'},403);
+ if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
+ const r=await handleExtranetRoutes(request,env,url);
+ if(allowedOrigin) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Access-Control-Allow-Credentials','true');r.headers.set('Vary','Origin');}
+ return r;
+ }
  // Membership, coupons, OAuth and partner check-in (backend/members.js), behind the same rate limit.
  if (isMemberRoute(url.pathname)) {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  const r=await handleMembers(request,env,url);
- if(origin===env.PUBLIC_ORIGIN) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
+ if(allowedOrigin) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
  return r;
  }
  if (url.pathname==='/v1/telegram/webhook') {
@@ -28,11 +44,15 @@ export default {async fetch(request,env,ctx) {
  }
  if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback' || url.pathname==='/v1/assistant/transcribe') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
- return handleAssistantRoutes(request,env,url,ctx);
+ const r=await handleAssistantRoutes(request,env,url,ctx);
+ if(allowedOrigin && !r.headers.has('Access-Control-Allow-Origin')) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
+ return r;
  }
  if (url.pathname==='/v1/tts') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
- return handleTtsRoute(request,env,url);
+ const r=await handleTtsRoute(request,env,url);
+ if(allowedOrigin && !r.headers.has('Access-Control-Allow-Origin')) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
+ return r;
  }
  let response;
  try {
@@ -40,7 +60,7 @@ export default {async fetch(request,env,ctx) {
  // A missing managed rate limiter fails closed, before reading any body.
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
  if (url.pathname==='/v1/requests') {
-  const requestJson=(body,status)=>{const result=json(body,status); if(origin){result.headers.set('Access-Control-Allow-Origin',origin);result.headers.set('Vary','Origin')}return result};
+  const requestJson=(body,status)=>{const result=json(body,status); if(allowedOrigin){result.headers.set('Access-Control-Allow-Origin',origin);result.headers.set('Vary','Origin')}return result};
   // Explicit deployment gate: no delivery without verified provider credentials and rate limiter.
   if (env.ENABLE_EMAIL_REQUESTS !== 'true' || !env.RESEND_API_KEY || !env.REQUEST_FROM_EMAIL || !env.TURNSTILE_SECRET) return requestJson({error:'Email requests are not configured'},503);
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) return requestJson({error:'JSON required'},415);
