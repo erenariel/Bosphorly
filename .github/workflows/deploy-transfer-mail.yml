@@ -14,6 +14,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+      - name: Install dependencies
+        run: npm ci
       - name: Test transfer mail
         run: node --test tests/transfer-email.test.js
       - name: Deploy Worker and configure mail delivery
