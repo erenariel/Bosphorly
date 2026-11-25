@@ -67,6 +67,23 @@ test('reply is posted to Telnyx with the business number, sender and messaging p
   assert.equal(TELNYX_MESSAGING_PROFILE_ID,'4001a210-1b06-40b0-be85-2cc64e97452d');
  } finally {globalThis.fetch=old}
 });
+test('a rejected Telnyx send does not mute the customer for 12 hours',async()=>{
+ const f=fixture();
+ const pair=await crypto.subtle.generateKey('Ed25519',true,['sign','verify']);
+ f.env.TELNYX_PUBLIC_KEY=Buffer.from(await crypto.subtle.exportKey('raw',pair.publicKey)).toString('base64');
+ const raw=JSON.stringify(payload('Merhaba','retry-after-reject'));
+ const ts=String(Math.floor(Date.now()/1000));
+ const sig=Buffer.from(await crypto.subtle.sign('Ed25519',pair.privateKey,new TextEncoder().encode(`${ts}|${raw}`))).toString('base64');
+ const old=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({errors:[{code:'10004',title:'Missing required parameter',detail:'Invalid source number'}]},{status:400});
+ const jobs=[];
+ try {
+  const res=await handleWhatsApp(new Request('https://example.com/webhooks/whatsapp/telnyx',{method:'POST',body:raw,headers:{'telnyx-timestamp':ts,'telnyx-signature-ed25519':sig}}),f.env,{waitUntil(p){jobs.push(p)}});
+  assert.equal(res.status,200);
+  await Promise.all(jobs);
+  assert.equal(f.controls.size,0);
+ } finally {globalThis.fetch=old}
+});
 test('Telnyx 40008 outside the 24-hour window is logged and does not throw',async()=>{
  const f=fixture(); const old=globalThis.fetch;
  globalThis.fetch=async()=>Response.json({errors:[{code:'40008',title:'WhatsApp delivery failed',detail:'Outside the 24 hour window'}]},{status:400});

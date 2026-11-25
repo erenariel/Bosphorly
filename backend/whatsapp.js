@@ -115,7 +115,10 @@ async function saveRequest(env, m, proposal) {
 export async function processWhatsApp(env, m) {
   const now = Date.now();
   if (m.echo) { await mute(env,m.phone,now+12*3600000); return; }
-  if (await muted(env,m.phone)) return;
+  if (await muted(env,m.phone)) {
+    console.log(JSON.stringify({channel:'whatsapp',event:'muted_skip',phone:maskPhone(m.phone)}));
+    return;
+  }
   // Atomic lease serializes each conversation; D1 claims prevent concurrent duplicate replies across isolates.
   const lease = await env.DB.prepare('INSERT INTO whatsapp_leases(phone,until_ms) VALUES(?,?) ON CONFLICT(phone) DO UPDATE SET until_ms=excluded.until_ms WHERE until_ms<? RETURNING phone').bind(m.phone,now+60000,now).first();
   if (!lease) throw new Error('conversation_busy');
@@ -205,9 +208,11 @@ export async function handleWhatsApp(request,env,ctx) {
   if (!env.WHATSAPP_KV || !env.DB || !env.TELNYX_API_KEY || !env.TELEGRAM_ADMIN_CHAT_ID || !env.RESEND_API_KEY || !env.REQUEST_FROM_EMAIL) return new Response('Not configured',{status:503});
   let m; try { m=parseWhatsApp(JSON.parse(raw),env.WHATSAPP_PHONE_NUMBER); } catch { return new Response('Invalid JSON',{status:400}); }
   if (m) ctx.waitUntil(processWhatsApp(env,m).catch(async(err)=>{
-    console.error(JSON.stringify({channel:'whatsapp',event:'processing_failed',phone:maskPhone(m.phone),error:String(err?.message||err).slice(0,400)}));
-    await mute(env,m.phone,Date.now()+12*3600000);
-    await notify(env,`WhatsApp işlem hatası, kontrol edin: ${maskPhone(m.phone)}`).catch(()=>{});
+    const error = String(err?.message||err).slice(0,400);
+    console.error(JSON.stringify({channel:'whatsapp',event:'processing_failed',phone:maskPhone(m.phone),error}));
+    // A Telnyx rejection must not silence the sender. The next inbound still needs a reply.
+    if (!error.startsWith('send_failed_') && error !== 'telnyx_api_key_missing') await mute(env,m.phone,Date.now()+12*3600000);
+    await notify(env,`WhatsApp işlem hatası, kontrol edin: ${maskPhone(m.phone)} ${error.slice(0,160)}`).catch(()=>{});
   }));
   return new Response('OK');
 }
