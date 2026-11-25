@@ -5,7 +5,7 @@
   const D = window.BosphorlyDiscover, $ = id => document.getElementById(id), el = D.el, lang = D.lang;
   let pack, tours = [];
   try {
-    [pack, tours] = await Promise.all([D.load(), fetch('data/public-market-prices.json', { cache: 'no-cache' }).then(r => r.json()).then(j => j.records || []).catch(() => [])]);
+    [pack, tours] = await Promise.all([D.load(), (window.BosphorlyCatalog?window.BosphorlyCatalog.fetch('data/public-market-prices.json'):fetch('data/public-market-prices.json', { cache: 'no-cache' })).then(r => r.json()).then(j => j.records || []).catch(() => [])]);
   } catch { $('results').append(el('div', 'empty', 'Could not load the search index. Please reload.')); return; }
   const { data, t } = pack;
   for (const k of ['srTitle', 'srLead']) $(k).textContent = t(k);

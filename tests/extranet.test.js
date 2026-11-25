@@ -1350,3 +1350,40 @@ test('Stage 3: handoff priority and channel filters expose only captured convers
 test('Stage 3: shared partner bearer is disabled by default, existing compatibility requires an explicit switch',async()=>{
  const env=createTestEnv();const response=await callWorker(env,'/v1/partner/lookup',{method:'POST',bearer:env.PARTNER_TOKEN,body:{ref:'BOS-ANY'}});assert.equal(response.status,410);
 });
+
+test('Stage 4: catalog mutations require manager auth and CSRF, preserve version history, warn about missing translations and feed the live Mimo context',async()=>{
+ const {liveCatalogContext}=await import('../backend/catalog-store.js');const {runAssistant}=await import('../backend/assistant.js');
+ const env=createTestEnv(),admin=await createExtranetActor(env,'catalog-admin@test.example','admin'),staff=await createExtranetActor(env,'catalog-staff@test.example','staff');
+ for(const path of ['/catalog','/settings','/usage']){assert.equal((await callWorker(env,'/v1/extranet'+path)).status,401);assert.equal((await callWorker(env,'/v1/extranet'+path,{cookie:staff.cookie})).status,403);}
+ const list=await callWorker(env,'/v1/extranet/catalog',{cookie:admin.cookie});assert.equal(list.body.records.length,39);assert.equal(list.body.languages.length,23);
+ const record=list.body.records.find(x=>x.id==='bb-morning');record.price=123;record.title_he='';const post={method:'POST',cookie:admin.cookie,csrf:admin.csrf,body:{record,active:true,revision:record.revision}};
+ assert.equal((await callWorker(env,'/v1/extranet/catalog/bb-morning',{...post,csrf:''})).status,403);
+ const changed=await callWorker(env,'/v1/extranet/catalog/bb-morning',post);assert.equal(changed.body.saved,true);assert.ok(changed.body.missingTranslations.includes('he'));
+ assert.equal((await callWorker(env,'/v1/extranet/catalog/bb-morning',post)).status,409);
+ assert.throws(()=>env.DB.raw.exec("DELETE FROM extranet_catalog_versions WHERE id='bb-morning'"),/immutable/);
+ const context=await liveCatalogContext(env,'Morning Bosphorus Cruise',[{id:'tour-bb-morning',title:'Old',text:'25 EUR'}]);assert.ok(context.chunks.some(x=>x.id==='tour-bb-morning'&&x.text.includes('123 EUR')));assert.ok(!context.chunks.some(x=>x.text==='25 EUR'));
+ let prompt='';env.AI={run:async(_model,options)=>{prompt=options.messages[0].content;return{response:'The Morning Bosphorus Cruise is 123 EUR. [[flags:abuse=0;handoff=0]]'};}};
+ const answer=await runAssistant({env,actorKey:'catalog-guest',message:'How much is the Morning Bosphorus Cruise?',pageLang:'en'});assert.match(prompt,/123 EUR/);assert.match(answer.reply,/123 EUR/);
+ const publicData=await callWorker(env,'/v1/catalog');assert.equal(publicData.status,200);assert.equal(publicData.body.records.find(x=>x.id==='bb-morning').price,123);
+ assert.equal((await callWorker(env,'/v1/extranet/catalog/bb-morning',{...post,body:{record,active:false,revision:changed.body.revision}})).status,200);
+ assert.ok(!(await liveCatalogContext(env,'Morning Bosphorus Cruise',context.chunks)).chunks.some(x=>x.id==='tour-bb-morning'));
+});
+
+test('Stage 4: only owners can set operational limits below unchanged deployment caps; affiliate URLs and unknown settings are rejected',async()=>{
+ const {withConsoleRuntime}=await import('../backend/console-runtime.js');const {checkAndIncrementLimits}=await import('../backend/assistant.js');
+ const env=createTestEnv({ASSISTANT_DAILY_LIMIT:'1000',TTS_MONTHLY_CHAR_CAP:'800000'}),owner=await createExtranetActor(env,'owner@test.example','owner'),admin=await createExtranetActor(env,'settings-admin@test.example','admin');
+ const post=(actor,body)=>({method:'POST',cookie:actor.cookie,csrf:actor.csrf,body});
+ assert.equal((await callWorker(env,'/v1/extranet/settings',post(admin,{assistantDailyLimit:10}))).status,403);
+ for(const body of [{assistantDailyLimit:1001},{ttsMonthlyChars:800001},{OWNER_EMAILS:'attacker@test.example'},{airaloUrl:'javascript:alert(1)'}])assert.equal((await callWorker(env,'/v1/extranet/settings',post(owner,body))).status,400);
+ assert.equal((await callWorker(env,'/v1/extranet/settings',post(owner,{assistantDailyLimit:10,ttsMonthlyChars:2000,airaloUrl:'https://airalo.pxf.io/bosphorly',esimComingSoon:false}))).status,200);
+ const effective=await withConsoleRuntime(env);assert.equal(effective.ASSISTANT_DAILY_LIMIT,'10');assert.equal(effective.TTS_MONTHLY_CHAR_CAP,'2000');assert.equal(env.ASSISTANT_DAILY_LIMIT,'1000');assert.equal(env.TTS_MONTHLY_CHAR_CAP,'800000');assert.equal((await checkAndIncrementLimits({env:effective,actorKey:'owner-example',tier:'owner'})).allowed,true);
+ const pub=await callWorker(env,'/v1/catalog');assert.equal(pub.body.esim.comingSoon,false);assert.equal(pub.body.esim.url,'https://airalo.pxf.io/bosphorly');
+});
+
+test('Stage 4: usage stores only aggregate counts, prices estimates explicitly, and warns against the configured monthly target',async()=>{
+ const {withConsoleRuntime,recordTtsUsage}=await import('../backend/console-runtime.js');const env=createTestEnv(),owner=await createExtranetActor(env,'owner@test.example','owner');env.AI={run:async()=>({response:'Private reply',usage:{prompt_tokens:1000000,completion_tokens:100}})};
+ const effective=await withConsoleRuntime(env);await effective.AI.run('model',{messages:[{role:'user',content:'Private user text +19998887777'}]});await recordTtsUsage(effective,100,Date.now());
+ const day=new Date().toISOString().slice(0,10),stored=env.DB.raw.prepare('SELECT * FROM extranet_usage_daily WHERE day=?').get(day);assert.equal(stored.ai_calls,1);assert.equal(stored.tts_chars,100);assert.ok(!JSON.stringify(stored).includes('Private'));
+ const post={method:'POST',cookie:owner.cookie,csrf:owner.csrf,body:{monthlyBudgetUsd:1,inputUsdPerMillion:2,outputUsdPerMillion:3,ttsUsdPerMillion:4}};assert.equal((await callWorker(env,'/v1/extranet/settings',post)).status,200);
+ const usage=await callWorker(env,'/v1/extranet/usage',{cookie:owner.cookie});assert.equal(usage.body.warning,'budget_warning');assert.ok(usage.body.estimatedCostUsd>=2);assert.equal(usage.body.monthly.ai_calls,1);
+});

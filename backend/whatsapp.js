@@ -1,3 +1,5 @@
+import {withConsoleRuntime} from './console-runtime.js';
+import {liveCatalogContext} from './catalog-store.js';
 import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
 import {buildKbPriceIndex, enforcePriceSafetyBelt} from './mimo-personality.js';
@@ -76,6 +78,7 @@ async function saveRequest(env, m, proposal) {
   await notify(env,`WhatsApp talebi: ${proposal.name} · ${proposal.service} · ${proposal.date} · ${proposal.guests} kişi · ${maskPhone(m.phone)}`);
 }
 export async function processWhatsApp(env, m) {
+  env=await withConsoleRuntime(env);
   const now = Date.now();
   if (m.echo) { await mute(env,m.phone,now+12*3600000); return; }
   if (await muted(env,m.phone)) return;
@@ -117,7 +120,8 @@ export async function processWhatsApp(env, m) {
       await notify(env,`WhatsApp insana devir · ${maskPhone(m.phone)} · ${clean.text.slice(0,500)}`);
     }
     if (clean.hadSensitive) output.reply = (ASSISTANT_MESSAGES.sensitiveWarn[lang] || ASSISTANT_MESSAGES.sensitiveWarn.en) + '\n\n' + output.reply;
-    output.reply = enforcePriceSafetyBelt(output.reply,lang,prices).text;
+    const catalog=await liveCatalogContext(env,clean.text,retrieveChunks(clean.text),lang);
+    output.reply = enforcePriceSafetyBelt(output.reply,lang,catalog.managed?buildKbPriceIndex(catalog.chunks):prices).text;
     const sent = await sendWhatsApp(env,m.phone,output.reply,m.at);
     if (handoff) await mute(env,m.phone,now+12*3600000);
     state.history=[...state.history,{role:'user',content:clean.text,at:now},{role:'assistant',content:redactSensitive(output.reply).text,at:now}].slice(-10);
@@ -151,7 +155,8 @@ export function parseModelJson(rawText) {
 }
 async function model(env,lang,state,text) {
   // The site prompt asks for plain text + [[flags]]; drop those lines so the WhatsApp JSON contract wins.
-  const prompt = buildCatalogPrompt({lang,contextBlock:JSON.stringify(retrieveChunks(text)),hasGreeted:!!state.history.length})
+  const catalog=await liveCatalogContext(env,text,retrieveChunks(text),lang);
+  const prompt = buildCatalogPrompt({lang,contextBlock:JSON.stringify(catalog.chunks),hasGreeted:!!state.history.length})
     .split('\n').filter(l => !/OUTPUT FORMAT:|\[\[flags:/.test(l)).join('\n');
   let timer;
   const call = env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY},...state.history.slice(-10).map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}});

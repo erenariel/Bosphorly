@@ -350,3 +350,18 @@ test('Partner workspace only opens its assigned bookings and asks confirmation b
  await page.goto('/extranet/');await expect(page.locator('#partnerContent')).toContainText('BOS-OWN');await expect(page.locator('#navMembers')).toBeHidden();await expect(page.locator('#navBookings')).toBeHidden();await expect(page.locator('#navCampaigns')).toBeHidden();expect(paths).not.toContain('/v1/extranet/dashboard');
  page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'Turu tamamlandı işaretle'}).click();await expect(page.locator('#partnerContent')).toContainText('Ödenecek');expect(completed).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });
+
+test('Catalog editor preserves revision/CSRF and settings remain owner-only in the mobile console',async({page})=>{
+ let role='admin',saved=false;
+ const record={id:'test-tour',title:'Test Tour',title_tr:'Test Turu',operator:'Bosphorly',price:42,currency:'EUR',details:{duration:'2 hours',summary:'City visit',tr:{summary:'Şehir gezisi'}},photos:[],active:true,revision:1,missingTranslations:['he']};
+ await page.route('https://**/v1/extranet/**',async route=>{const path=new URL(route.request().url()).pathname;let body={};
+ if(path.endsWith('/session'))body={authenticated:true,csrfToken:'catalog-csrf',user:{id:'u',role}};
+ else if(path.endsWith('/dashboard'))body={periods:{today:{},week:{},month:{}},recentBookings:[],statusBreakdown:{}};
+ else if(path.endsWith('/catalog/test-tour')){expect(route.request().headers()['x-csrf-token']).toBe('catalog-csrf');const b=route.request().postDataJSON();expect(b.revision).toBe(1);expect(b.record.title).toBe('Updated Tour');saved=true;record.title=b.record.title;body={saved:true,revision:2,missingTranslations:['he']};}
+ else if(path.endsWith('/catalog'))body={records:[record],languages:['tr','en','he']};
+ else if(path.endsWith('/settings'))body={settings:{},deploymentCaps:{assistant:1000,tts:800000}};
+ else if(path.endsWith('/usage'))body={daily:{ai_calls:5},monthly:{ai_calls:50,tts_chars:100},estimatedCostUsd:null,budgetUsd:9,warning:'cost_rates_missing',note:'Tahmini maliyet fatura değildir.'};
+ await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});});
+ await page.goto('/extranet/');await page.locator('#navCatalog').click();await expect(page.locator('#catalogContent')).toContainText('Eksik çeviriler: he');await page.getByRole('button',{name:'Düzenle: test-tour'}).click();await page.getByText('EN çeviri',{exact:true}).click();await page.getByLabel('EN başlık',{exact:true}).fill('Updated Tour');await page.getByRole('button',{name:'Katalog kaydını kaydet'}).click();await expect.poll(()=>saved).toBe(true);
+ await page.locator('#navSettings').click();await expect(page.locator('#settingsContent')).toContainText('yalnız owner');await expect(page.getByRole('button',{name:'Ayarları kaydet'})).toHaveCount(0);role='owner';await page.reload();await page.locator('#navSettings').click();await expect(page.getByRole('button',{name:'Ayarları kaydet'})).toBeVisible();await expect(page.getByLabel('Mimo operasyonel günlük tavan',{exact:true})).toHaveAttribute('max','1000');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+});

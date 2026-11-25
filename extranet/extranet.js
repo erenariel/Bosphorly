@@ -328,9 +328,9 @@
     startIdleWatchdog();
 
     const partner=currentUser.role==='partner';
-    for(const id of ['navDashboard','navBookings','navMembers','navInbox','navCampaigns'])$(id).hidden=partner;
+    for(const id of ['navDashboard','navBookings','navMembers','navInbox','navCampaigns','navCatalog','navSettings'])$(id).hidden=partner;
     if(partner){$('navPartners').hidden=false;await switchView('partners');}
-    else { $('navPartners').hidden=!manager();$('navCampaigns').hidden=!manager();await switchView('dashboard'); }
+    else { $('navCatalog').hidden=!manager();$('navSettings').hidden=!manager();$('navPartners').hidden=!manager();$('navCampaigns').hidden=!manager();await switchView('dashboard'); }
   }
 
   async function checkMemberExtranetStatus(memberBearer) {
@@ -461,6 +461,28 @@
 
   // --- Navigation & Views ---
 
+  async function loadCatalogue(){
+    const host=$('catalogContent');host.replaceChildren();
+    try{const data=await extranetApi('/v1/extranet/catalog');const editor=node('section');host.append(button('Yeni tur ekle',()=>edit({id:'',title:'',operator:'Bosphorly',currency:'EUR',price:null,basis:'per_person',details:{},photos:[],active:true,revision:0})),editor);
+      function edit(record){editor.replaceChildren(node('h2',record.id?'Turu düzenle: '+record.id:'Yeni tur'));const form=node('form'),id=input('Tur ID','text',record.id),operator=input('Operatör','text',record.operator),price=input('Fiyat (boş: ekip teyidi)','number',record.price??''),currency=input('Para birimi','text',record.currency),duration=input('Süre (EN)','text',record.details.duration||''),active=input('Tur aktif','checkbox');id.field.required=true;id.field.pattern='[a-z0-9-]+';id.field.readOnly=!!record.id;operator.field.required=true;price.field.min=0;price.field.step=.01;active.field.checked=record.active;
+        const area=(label,value)=>{const l=node('label',label),field=node('textarea');field.setAttribute('aria-label',label);field.value=value||'';l.append(field);return{label:l,field};};const included=area('Dahil olanlar (EN, her satır bir madde)',(record.details.included||[]).join('\n')),photos=area('Fotoğraflar (her satır HTTPS veya /assets/ adresi)',(record.photos||[]).join('\n'));form.append(id.label,operator.label,price.label,currency.label,duration.label,included.label,photos.label,active.label);
+        const variantFields=[];for(const [oi,option]of (record.options||[]).entries())for(const [di,d]of option.durations.entries()){const f=input(option.name+' · '+d.min+' dakika fiyatı','number',d.price);f.field.min=0;f.field.step=.01;variantFields.push({oi,di,field:f.field});form.append(f.label);}
+        const translations=[];for(const lang of data.languages){const section=node('details'),title=input(lang.toUpperCase()+' başlık','text',lang==='en'?record.title:record['title_'+lang]||''),summary=area(lang.toUpperCase()+' açıklama',lang==='en'?record.details.summary:record.details[lang]?.summary);if(lang==='en')title.field.required=true;section.append(node('summary',lang.toUpperCase()+' çeviri'),title.label,summary.label);form.append(section);const localDuration=lang==='en'?null:input(lang.toUpperCase()+' süre','text',record.details[lang]?.duration||''),localIncluded=lang==='en'?null:area(lang.toUpperCase()+' dahil olanlar (her satır bir madde)',(record.details[lang]?.included||[]).join('\n'));if(localDuration)section.append(localDuration.label,localIncluded.label);translations.push({lang,title:title.field,summary:summary.field,duration:localDuration?.field,included:localIncluded?.field});}
+        const save=node('button','Katalog kaydını kaydet','ex-btn');save.type='submit';form.append(save);form.onsubmit=async e=>{e.preventDefault();save.disabled=true;try{const next=structuredClone(record);Object.assign(next,{id:id.field.value,title:next.title,operator:operator.field.value,price:price.field.value===''?null:Number(price.field.value),currency:currency.field.value.toUpperCase(),photos:photos.field.value.split('\n').map(x=>x.trim()).filter(Boolean)});next.details.duration=duration.field.value;next.details.included=included.field.value.split('\n').map(x=>x.trim()).filter(Boolean);for(const v of variantFields)next.options[v.oi].durations[v.di].price=Number(v.field.value);for(const t of translations){if(t.lang==='en'){next.title=t.title.value;next.details.summary=t.summary.value;}else{next['title_'+t.lang]=t.title.value;next.details[t.lang]={...(next.details[t.lang]||{}),summary:t.summary.value};if(t.duration.value)next.details[t.lang].duration=t.duration.value;else delete next.details[t.lang].duration;if(t.included.value.trim())next.details[t.lang].included=t.included.value.split('\n').filter(Boolean);else delete next.details[t.lang].included;}}await extranetApi('/v1/extranet/catalog/'+next.id,{method:'POST',body:{record:next,active:active.field.checked,revision:record.revision}});await loadCatalogue();}catch(e){alert(e.message);save.disabled=false;}};editor.append(form);editor.scrollIntoView({block:'start'});
+      }
+      for(const r of data.records){const row=node('section');row.append(node('h2',r.title),node('p',(r.active?'Aktif':'Pasif')+' · '+(r.price===null?'Fiyat teyit edilecek':r.price+' '+r.currency)),node('p','Eksik çeviriler: '+(r.missingTranslations.join(', ')||'Yok')),button('Düzenle: '+r.id,()=>edit(r)));host.append(row);}
+    }catch(e){host.append(node('p',e.message));}
+  }
+  async function loadSettings(){
+    const host=$('settingsContent');host.replaceChildren();
+    try{const [data,usage]=await Promise.all([extranetApi('/v1/extranet/settings'),extranetApi('/v1/extranet/usage')]);const s=data.settings;
+      host.append(node('h2','Kullanım ve tahmini bütçe'),node('p',`Bugün: ${usage.daily.ai_calls||0} AI çağrısı · ${usage.daily.tts_chars||0} TTS karakteri. Bu ay: ${usage.monthly.ai_calls||0} AI çağrısı · ${usage.monthly.tts_chars||0} TTS karakteri.`),node('p',usage.estimatedCostUsd===null?'Maliyet bilinmiyor: sağlayıcı birim fiyatlarını girin.':`Tahmini maliyet $${usage.estimatedCostUsd.toFixed(2)} / $${usage.budgetUsd} hedef`),node('p',usage.warning==='budget_warning'?'Uyarı: aylık hedefin en az %80’ine ulaşıldı.':usage.note));
+      if(currentUser.role!=='owner'){host.append(node('p','Limitleri ve ayarları yalnız owner değiştirebilir.'));return;}
+      const form=node('form'),fields={};for(const [key,label,value,max] of [['assistantDailyLimit','Mimo operasyonel günlük tavan',s.assistantDailyLimit??data.deploymentCaps.assistant,data.deploymentCaps.assistant],['ttsMonthlyChars','TTS operasyonel aylık karakter tavanı',s.ttsMonthlyChars??data.deploymentCaps.tts,data.deploymentCaps.tts],['monthlyBudgetUsd','Aylık bütçe hedefi (USD)',s.monthlyBudgetUsd??9,10000],['inputUsdPerMillion','AI giriş milyon token fiyatı (USD)',s.inputUsdPerMillion??'',10000],['outputUsdPerMillion','AI çıkış milyon token fiyatı (USD)',s.outputUsdPerMillion??'',10000],['ttsUsdPerMillion','TTS milyon karakter fiyatı (USD)',s.ttsUsdPerMillion??'',10000]]){const f=input(label,'number',value);f.field.min=0;f.field.max=max;f.field.step=key.includes('Limit')||key==='ttsMonthlyChars'?1:.0001;fields[key]=f.field;form.append(f.label);}
+      host.append(node('p',`Deployment tavanları: AI ${data.deploymentCaps.assistant}/gün, TTS ${data.deploymentCaps.tts}/ay. Panel bunları yükseltemez; owner ayrıcalıkları korunur.`));
+      const url=input('Airalo affiliate HTTPS bağlantısı','url',s.airaloUrl||''),soon=input('eSIM yakında etiketi','checkbox');soon.field.checked=s.esimComingSoon!==false;form.append(url.label,soon.label);const save=node('button','Ayarları kaydet','ex-btn');save.type='submit';form.append(save);form.onsubmit=async e=>{e.preventDefault();try{const payload={airaloUrl:url.field.value,esimComingSoon:soon.field.checked};for(const [key,f]of Object.entries(fields))if(f.value!=='')payload[key]=Number(f.value);await extranetApi('/v1/extranet/settings',{method:'POST',body:payload});await loadSettings();}catch(e){alert(e.message);}};host.append(form);
+    }catch(e){host.append(node('p',e.message));}
+  }
   async function loadPartners(){
     const host=$('partnerContent');host.replaceChildren();
     try{const own=currentUser.role==='partner';
@@ -612,6 +634,8 @@
 
   async function switchView(viewName) {
     activeView = viewName;
+    $('viewCatalog').hidden=viewName!=='catalog';$('viewSettings').hidden=viewName!=='settings';
+    if(viewName==='catalog')await loadCatalogue();if(viewName==='settings')await loadSettings();
     $('viewPartners').hidden=viewName!=='partners';
     if(viewName==='partners')await loadPartners();
     $('viewCampaigns').hidden=viewName!=='campaigns';
@@ -1363,6 +1387,7 @@
     };
 
     $('navDashboard').onclick = () => switchView('dashboard');
+    $('navCatalog').onclick=()=>switchView('catalog');$('navSettings').onclick=()=>switchView('settings');
     $('navPartners').onclick=()=>switchView('partners');
     $('showHandoffs').onclick=async()=>{try{const r=await extranetApi('/v1/extranet/message-handoffs');$('priorityHandoffs').replaceChildren(node('h2','Öncelikli insana devirler'));for(const m of r.messages)$('priorityHandoffs').append(button(m.subject+' · '+m.channel,()=>openMessage(m.id)));}catch(e){alert(e.message);}};
     $('inboxChannel').onchange=()=>loadInbox(1);$('inboxAssigned').onchange=()=>loadInbox(1);

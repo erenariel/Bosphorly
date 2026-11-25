@@ -367,3 +367,10 @@ if (location.hostname === 'bosphorly.com' &&
   analytics.src = new URL('../site-analytics.js', document.currentScript.src).href;
   document.head.append(analytics);
 }
+
+// Managed catalog; the bundled snapshot remains a compatibility fallback before rollout.
+window.BosphorlyCatalog=(()=>{let pending;return{fetch:async legacy=>{
+ const base=String(window.BOSPHORLY_API?.base||'').replace(/\/+$/,'');
+ if(base){try{pending ||= fetch(base+'/v1/catalog',{cache:'no-store',credentials:'omit',signal:AbortSignal.timeout(1800)}).then(async r=>{if(!r.ok)throw Error('catalog');return r.json();});const data=await pending;return new Response(JSON.stringify(data),{headers:{'Content-Type':'application/json'}});}catch{}}
+ return fetch(legacy,{cache:'no-cache'});
+}};})();

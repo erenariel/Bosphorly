@@ -1,3 +1,4 @@
+import {catalogRoutes} from './extranet-catalog.js';
 import {partnerRoutes} from './extranet-partners.js';
 import {campaignRoutes} from './extranet-campaigns.js';
 import {operationsRoutes} from './extranet-operations.js';
@@ -1725,6 +1726,8 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // --- Authenticated Extranet Endpoints (sliding cookie refreshed on every valid call) ---
 
+    const catalog=await catalogRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,cookie:buildSessionCookie,containsCard:containsCardNumber});
+    if(catalog)return catalog;
     const partners=await partnerRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,containsCard:containsCardNumber,reservation:loadSingleReservation,changeStatus:changeReservationStatus,ownerEmail:isOwnerEmail});
     if(partners)return partners;
     const campaigns=await campaignRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,containsCard:containsCardNumber});

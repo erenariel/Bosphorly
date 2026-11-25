@@ -1098,3 +1098,5 @@ dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 #viewCampaigns { overflow-wrap:anywhere; } #viewCampaigns form { display:flex; flex-wrap:wrap; gap:12px; margin:16px 0; } #viewCampaigns input { max-width:100%; min-width:0; padding:10px; } #viewCampaigns pre { white-space:pre-wrap; }
 
 #viewPartners { overflow-wrap:anywhere; } #viewPartners form {display:flex;flex-wrap:wrap;gap:12px;margin:16px 0;} #viewPartners input {max-width:100%;min-width:0;padding:10px;}
+
+#viewCatalog,#viewSettings{overflow-wrap:anywhere} #viewCatalog form,#viewSettings form{display:grid;gap:14px;max-width:100%} #viewCatalog input,#viewSettings input,#viewCatalog textarea{display:block;max-width:100%;width:100%;padding:10px;min-width:0} #viewCatalog textarea{min-height:90px} #viewCatalog details{padding:10px;border:1px solid #ccd8e8;border-radius:8px}
