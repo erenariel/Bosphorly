@@ -1096,3 +1096,5 @@ dialog p { white-space: pre-wrap; }
 dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 
 #viewCampaigns { overflow-wrap:anywhere; } #viewCampaigns form { display:flex; flex-wrap:wrap; gap:12px; margin:16px 0; } #viewCampaigns input { max-width:100%; min-width:0; padding:10px; } #viewCampaigns pre { white-space:pre-wrap; }
+
+#viewPartners { overflow-wrap:anywhere; } #viewPartners form {display:flex;flex-wrap:wrap;gap:12px;margin:16px 0;} #viewPartners input {max-width:100%;min-width:0;padding:10px;}

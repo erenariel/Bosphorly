@@ -123,6 +123,7 @@
           <span>▤</span> Rezervasyonlar
         </button>
         <button type="button" class="ex-nav-btn" id="navMembers" data-view="members"><span>♙</span> Üyeler ve Seviyeler</button>
+        <button type="button" class="ex-nav-btn" id="navPartners">Partnerler</button>
         <button type="button" class="ex-nav-btn" id="navCampaigns">Kampanyalar ve kuponlar</button>
         <button type="button" class="ex-nav-btn" id="navInbox">✉ Mesajlar</button>
       </nav>
@@ -147,6 +148,7 @@
     <main class="ex-main">
       <div id="globalBanner" class="ex-alert" role="status" aria-live="polite" hidden style="margin-bottom:16px"></div>
 
+      <section id="viewPartners" class="ex-card" hidden><h1>Partnerler ve Rezervasyonlar</h1><div id="partnerContent"></div></section>
       <section id="viewCampaigns" class="ex-card" hidden><h1>Kampanyalar ve Kuponlar</h1><p>Oran değişiklikleri owner onayıyla uygulanır. Verilmiş kuponların oranı sabittir.</p><div id="campaignContent"></div></section>
       <!-- GÖRÜNÜM 1: GÖSTERGE PANELİ -->
       <section id="viewDashboard" aria-labelledby="dashHeading">
@@ -347,7 +349,11 @@
           <button id="membersPrev" type="button" class="ex-btn">Önceki</button><span id="membersPage"></span><button id="membersNext" type="button" class="ex-btn">Sonraki</button>
         </section>
       <section id="viewInbox" hidden><h1>Mesajlar</h1><p>Yalnızca form talepleri, insana aktarılan, şikâyet edilen ve engellenen konuşma kayıtları. Diğer Mimo sohbetleri gösterilmez.</p>
-      <label>Durum <select id="inboxStatus"><option value="">Tümü</option><option value="new">Yeni</option><option value="read">Okundu</option><option value="replied">Yanıtlandı</option><option value="archived">Arşiv</option></select></label>
+      <label>Durum <select id="inboxStatus"><option value="">Tümü</option><option value="new">Yeni</option><option value="read">Okundu</option><option value="replied">Yanıtlandı</option><option value="archived">Kapandı</option></select></label>
+      <label>Kanal <select id="inboxChannel"><option value="">Tümü</option><option value="web">Web</option><option value="whatsapp">WhatsApp</option><option value="telegram">Telegram</option><option value="email">E-posta</option></select></label>
+      <label>Atama <select id="inboxAssigned"><option value="">Tümü</option><option value="me">Bana atanan</option></select></label>
+      <button type="button" id="showHandoffs" class="ex-btn">Öncelikli insana devirler</button>
+      <div id="priorityHandoffs"></div>
       <label>Kaynak <select id="inboxSource"><option value="">Tümü</option><option value="form">Site formu</option><option value="handoff">İnsana devir</option><option value="complaint">Şikâyet</option><option value="blocked">Engellenen</option></select></label>
       <p id="inboxCount" role="status"></p><div id="messageDetail"></div><div id="inboxList"></div><button id="inboxPrev" type="button" class="ex-btn">Önceki</button><button id="inboxNext" type="button" class="ex-btn">Sonraki</button></section>
     </main>
@@ -369,6 +375,6 @@
 
   <script src="../config/api.js"></script>
   <script src="../assets/vendor/simplewebauthn-browser.min.js"></script>
-  <script src="extranet.js?v=20261125-campaigns2"></script>
+  <script src="extranet.js?v=20261125-partners3"></script>
 </body>
 </html>

@@ -2579,7 +2579,7 @@ export async function forwardConversationEmail({ env, email, lang = 'en', histor
     }),
   });
   if (!res.ok) return { ok: false, status: 502, error: 'Email provider rejected request' };
-  await captureMessage(env,{source:'handoff',reference:ref,email:cleanEmail,subject,body:lines.join('\n')});
+  await captureMessage(env,{source:'handoff',reference:ref,email:cleanEmail,channel:source,subject,body:lines.join('\n')});
   return { ok: true, reference: ref };
 }
 

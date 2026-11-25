@@ -329,8 +329,8 @@
 
     const partner=currentUser.role==='partner';
     for(const id of ['navDashboard','navBookings','navMembers','navInbox','navCampaigns'])$(id).hidden=partner;
-    if(partner){$('viewDashboard').hidden=true;showBanner('Partner hesabınız doğrulandı. Size atanan rezervasyonlar partner aşamasında açılacak.');}
-    else { $('navCampaigns').hidden=!manager();await switchView('dashboard'); }
+    if(partner){$('navPartners').hidden=false;await switchView('partners');}
+    else { $('navPartners').hidden=!manager();$('navCampaigns').hidden=!manager();await switchView('dashboard'); }
   }
 
   async function checkMemberExtranetStatus(memberBearer) {
@@ -461,6 +461,21 @@
 
   // --- Navigation & Views ---
 
+  async function loadPartners(){
+    const host=$('partnerContent');host.replaceChildren();
+    try{const own=currentUser.role==='partner';
+      if(!own){const data=await extranetApi('/v1/extranet/partners');
+        for(const p of data.partners)host.append(node('p',p.name+' · ID: '+p.member_id+' · Komisyon %'+p.commission_bps/100+' · '+(p.active?'Aktif':'Kapalı')));
+        const form=node('form'),member=input('Partner üye ID'),provider=input('Partner tedarikçi ID'),name=input('Partner adı'),rate=input('Partner komisyon (%)','number','10'),active=input('Partner hesabı aktif','checkbox');active.field.checked=true;rate.field.min=0;rate.field.max=100;rate.field.step=.01;const save=node('button','Partner hesabını kaydet','ex-btn');save.type='submit';form.append(member.label,provider.label,name.label,rate.label,active.label,save);form.onsubmit=async e=>{e.preventDefault();try{await extranetApi('/v1/extranet/partners',{method:'POST',body:{memberId:member.field.value,providerId:provider.field.value,name:name.field.value,commissionBps:Math.round(Number(rate.field.value)*100),active:active.field.checked}});await loadPartners();}catch(e){alert(e.message);}};host.append(form);
+        const assign=node('form'),partner=input('Atanacak partner üye ID'),booking=input('Rezervasyon UID (mr:BOS-... / bk:...)'),submit=node('button','Rezervasyonu partnere ata','ex-btn');submit.type='submit';assign.append(partner.label,booking.label,submit);assign.onsubmit=async e=>{e.preventDefault();try{await extranetApi('/v1/extranet/partners/assign',{method:'POST',body:{memberId:partner.field.value,bookingUid:booking.field.value}});await loadPartners();}catch(e){alert(e.message);}};host.append(assign);
+      }
+      const data=await extranetApi(own?'/v1/extranet/partner/bookings':'/v1/extranet/partners/bookings');host.append(node('h2',own?'Size atanan rezervasyonlar':'Partner komisyon takibi'));
+      for(const b of data.bookings){const card=node('section');card.append(node('h3',b.displayRef+' · '+b.productTitle),node('p',b.serviceDate+' · '+b.guests+' kişi · '+b.bookingStatus),node('p','Komisyon '+b.amount_minor/100+' '+b.currency+' · '+(b.status==='paid'?'Ödendi':b.payable?'Ödenecek':'Turun tamamlanması bekleniyor')));
+        if(own&&b.bookingStatus==='confirmed')card.append(button('Turu tamamlandı işaretle',async()=>{if(!confirm('Tur gerçekten tamamlandı mı? Kupon kullanılacak ve kademe hesabına katılacak.'))return;try{await extranetApi('/v1/extranet/partner/bookings/'+encodeURIComponent(b.booking_uid)+'/complete',{method:'POST',body:{confirm:true}});await loadPartners();}catch(e){alert(e.message);}}));
+        if(!own&&b.payable&&b.status==='unpaid')card.append(button('Komisyon ödendi kaydet',async()=>{const reference=prompt('Banka/sağlayıcı ödeme referansı (kart verisi yazmayın)');if(!reference||!confirm('Bu ödeme gerçekten yapıldı mı?'))return;try{await extranetApi('/v1/extranet/partners/bookings/'+encodeURIComponent(b.booking_uid)+'/paid',{method:'POST',body:{reference,confirm:true}});await loadPartners();}catch(e){alert(e.message);}}));host.append(card);
+      }
+    }catch(e){host.append(node('p',e.message));}
+  }
   async function loadCampaigns(){
     const host=$('campaignContent');host.replaceChildren();
     try{const data=await extranetApi('/v1/extranet/campaigns');
@@ -525,16 +540,17 @@
   let inboxPage=1;
   async function loadInbox(page=1) {
     const list=$('inboxList');list.replaceChildren();
-    try{const data=await extranetApi('/v1/extranet/messages?page='+page+'&status='+$('inboxStatus').value+'&source='+$('inboxSource').value);inboxPage=data.page;
+    try{const data=await extranetApi('/v1/extranet/messages?page='+page+'&status='+$('inboxStatus').value+'&source='+$('inboxSource').value+'&channel='+$('inboxChannel').value+'&assignedTo='+$('inboxAssigned').value);inboxPage=data.page;
       $('inboxCount').textContent=data.total+' mesaj · Sayfa '+data.page;
-      for(const item of data.messages){const card=node('section',null,'ex-detail-section');card.append(node('h2',item.subject),node('p',item.source+' · '+item.status+' · '+item.created_at+' · '+(item.email||'')),button('Mesajı aç',()=>openMessage(item.id)));list.append(card);}
+      for(const item of data.messages){const card=node('section',null,'ex-detail-section');card.append(node('h2',item.subject),node('p',item.source+' · '+(item.channel||'web')+' · Atanan: '+(item.assigned_to||'yok')+' · '+item.status+' · '+item.created_at+' · '+(item.email||'')),button('Mesajı aç',()=>openMessage(item.id)));list.append(card);}
       $('inboxPrev').disabled=page<=1;$('inboxNext').disabled=page*20>=data.total;
     }catch(e){list.append(node('p',e.message));}
   }
   async function openMessage(id) {
     const box=$('messageDetail');box.replaceChildren();
     try{const data=await extranetApi('/v1/extranet/messages/'+id);box.append(node('h2',data.subject),node('p',data.email||'E-posta yok'),node('pre',data.body));
-      for(const state of [['new','Yeni'],['read','Okundu'],['replied','Yanıtlandı'],['archived','Arşiv']])box.append(button(state[1],async()=>{await extranetApi('/v1/extranet/messages/'+id+'/status',{method:'POST',body:{status:state[0]}});await loadInbox(inboxPage);}));
+      for(const state of [['new','Yeni'],['read','Okundu'],['replied','Yanıtlandı'],['archived','Kapandı']])box.append(button(state[1],async()=>{await extranetApi('/v1/extranet/messages/'+id+'/status',{method:'POST',body:{status:state[0]}});await loadInbox(inboxPage);}));
+      const assignment=button('Mesajı bana ata',async()=>{await extranetApi('/v1/extranet/messages/'+id+'/assignment',{method:'POST',body:{memberId:currentUser.id}});await loadInbox(inboxPage);});box.append(assignment);
       for(const note of data.notes)box.append(node('p','İç not: '+note.body));
       for(const reply of data.replies)box.append(node('p','Yanıt ('+reply.status+'): '+reply.subject+' — '+reply.body));
       const note=node('form'),text=input('İç not');text.field.required=true;text.field.maxLength=2000;const add=node('button','Not ekle','ex-btn');add.type='submit';note.append(text.label,add);note.onsubmit=async e=>{e.preventDefault();try{await extranetApi('/v1/extranet/messages/'+id+'/note',{method:'POST',body:{body:text.field.value}});await openMessage(id);}catch(error){alert(error.message);}};box.append(note);
@@ -596,6 +612,8 @@
 
   async function switchView(viewName) {
     activeView = viewName;
+    $('viewPartners').hidden=viewName!=='partners';
+    if(viewName==='partners')await loadPartners();
     $('viewCampaigns').hidden=viewName!=='campaigns';
     if(viewName==='campaigns')await loadCampaigns();
     $('viewDashboard').hidden = viewName !== 'dashboard';
@@ -1345,6 +1363,9 @@
     };
 
     $('navDashboard').onclick = () => switchView('dashboard');
+    $('navPartners').onclick=()=>switchView('partners');
+    $('showHandoffs').onclick=async()=>{try{const r=await extranetApi('/v1/extranet/message-handoffs');$('priorityHandoffs').replaceChildren(node('h2','Öncelikli insana devirler'));for(const m of r.messages)$('priorityHandoffs').append(button(m.subject+' · '+m.channel,()=>openMessage(m.id)));}catch(e){alert(e.message);}};
+    $('inboxChannel').onchange=()=>loadInbox(1);$('inboxAssigned').onchange=()=>loadInbox(1);
     $('navCampaigns').onclick=()=>switchView('campaigns');
     $('navInbox').onclick=()=>switchView('inbox');
     $('inboxStatus').onchange=()=>loadInbox(1);$('inboxSource').onchange=()=>loadInbox(1);$('inboxPrev').onclick=()=>loadInbox(inboxPage-1);$('inboxNext').onclick=()=>loadInbox(inboxPage+1);

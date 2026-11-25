@@ -339,3 +339,14 @@ test('Campaign proposals show old/new values, need owner confirmation and remain
  page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Kampanya değişikliğini onayla'}).click();await expect.poll(()=>approved).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
  role='staff';await page.reload();await expect(page.locator('#navCampaigns')).toBeHidden();
 });
+
+test('Partner workspace only opens its assigned bookings and asks confirmation before completion',async({page})=>{
+ let completed=false;const paths=[];
+ await page.route('https://**/v1/extranet/**',async route=>{const path=new URL(route.request().url()).pathname;paths.push(path);let body={};
+ if(path.endsWith('/session'))body={authenticated:true,csrfToken:'partner-csrf',user:{id:'agency',name:'Tur acentesi',role:'partner'}};
+ else if(path.endsWith('/complete')){expect(route.request().headers()['x-csrf-token']).toBe('partner-csrf');expect(route.request().postDataJSON().confirm).toBe(true);completed=true;body={completed:true};}
+ else if(path.endsWith('/partner/bookings'))body={bookings:[{booking_uid:'mr:BOS-OWN',displayRef:'BOS-OWN',productTitle:'Boğaz turu',serviceDate:'2027-01-01',guests:2,bookingStatus:completed?'completed':'confirmed',amount_minor:1000,currency:'EUR',status:'unpaid',payable:completed}]};
+ await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});});
+ await page.goto('/extranet/');await expect(page.locator('#partnerContent')).toContainText('BOS-OWN');await expect(page.locator('#navMembers')).toBeHidden();await expect(page.locator('#navBookings')).toBeHidden();await expect(page.locator('#navCampaigns')).toBeHidden();expect(paths).not.toContain('/v1/extranet/dashboard');
+ page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'Turu tamamlandı işaretle'}).click();await expect(page.locator('#partnerContent')).toContainText('Ödenecek');expect(completed).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+});

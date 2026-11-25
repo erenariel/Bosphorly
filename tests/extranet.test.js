@@ -1319,3 +1319,34 @@ test('Stage 2 KVKK: export/reveal are audited and unavailable to staff; confirme
  assert.equal(env.DB.raw.prepare("SELECT guest_email FROM extranet_booking_meta WHERE record_id='contact-only'").get().guest_email,null);
  assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='kvkk_export'").get().n,1);
 });
+
+test('Stage 3: partner accounts isolate bookings, complete only assigned tours once, and earn a snapshotted payable commission',async()=>{
+ const env=createTestEnv(),owner=await createExtranetActor(env,'owner@test.example','owner'),p1=await createExtranetActor(env,'agency-one@test.example','partner'),p2=await createExtranetActor(env,'agency-two@test.example','partner'),guest=await signUpMember(env,'partner-guest@test.example');
+ const post=(actor,body)=>({method:'POST',cookie:actor.cookie,csrf:actor.csrf,body});
+ for(const partner of [p1,p2])assert.equal((await callWorker(env,'/v1/extranet/partners',post(owner,{memberId:partner.memberId,providerId:'prov-bosphorus',name:'Tur Firması',commissionBps:1000}))).status,200);
+ const coupon=env.DB.raw.prepare("SELECT id FROM coupons WHERE member_id=? AND status='issued' LIMIT 1").get(guest.id);env.DB.raw.prepare("UPDATE coupons SET status='held',held_ref='BOS-PARTNER' WHERE id=?").run(coupon.id);
+ env.DB.raw.prepare("INSERT INTO member_requests(ref,member_id,service_id,service_date,guests,coupon_id,state,total_text) VALUES('BOS-PARTNER',?,'bb-sunset','2027-01-01',2,?,'requested','€100')").run(guest.id,coupon.id);
+ env.DB.raw.exec("INSERT INTO extranet_booking_meta(record_type,record_id,workflow_status,assigned_provider_id) VALUES('member_request','BOS-PARTNER','confirmed','prov-bosphorus')");
+ const assigned=await callWorker(env,'/v1/extranet/partners/assign',post(owner,{memberId:p1.memberId,bookingUid:'mr:BOS-PARTNER'}));assert.equal(assigned.status,200);
+ const path='/v1/extranet/partner/bookings/mr:BOS-PARTNER/complete';assert.equal((await callWorker(env,path,post(p2,{confirm:true}))).status,404);
+ assert.equal((await callWorker(env,'/v1/extranet/partners/bookings/mr:BOS-PARTNER/paid',post(owner,{reference:'BANK-1',confirm:true}))).status,409);
+ const first=await callWorker(env,path,post(p1,{confirm:true}));assert.equal(first.body.completed,true);assert.equal((await callWorker(env,path,post(p1,{confirm:true}))).status,409);
+ assert.equal(env.DB.raw.prepare('SELECT stamps FROM members WHERE id=?').get(guest.id).stamps,1);assert.equal(env.DB.raw.prepare('SELECT status FROM coupons WHERE id=?').get(coupon.id).status,'redeemed');
+ const own=await callWorker(env,'/v1/extranet/partner/bookings',{cookie:p1.cookie});assert.equal(own.body.bookings.length,1);assert.equal(own.body.bookings[0].amount_minor,1000);assert.equal(own.body.bookings[0].payable,true);assert.ok(!JSON.stringify(own.body).includes('partner-guest@test.example'));
+ assert.equal((await callWorker(env,'/v1/extranet/partner/bookings',{cookie:p2.cookie})).body.bookings.length,0);assert.equal((await callWorker(env,'/v1/extranet/bookings',{cookie:p1.cookie})).status,403);
+ assert.equal((await callWorker(env,'/v1/extranet/partners/bookings/mr:BOS-PARTNER/paid',post(owner,{reference:'BANK-1',confirm:true}))).body.paid,true);
+});
+
+test('Stage 3: handoff priority and channel filters expose only captured conversations; assignment needs active staff and CSRF',async()=>{
+ const {captureMessage}=await import('../backend/message-store.js');const env=createTestEnv(),staff=await createExtranetActor(env,'assign-staff@test.example','staff');
+ const normal=await captureMessage(env,{source:'form',subject:'Form',body:'Talep'}),handoff=await captureMessage(env,{source:'handoff',channel:'telegram',subject:'Devir',body:'İnsan desteği gerekli'});
+ assert.equal((await callWorker(env,'/v1/extranet/message-handoffs')).status,401);
+ const priority=await callWorker(env,'/v1/extranet/message-handoffs',{cookie:staff.cookie});assert.deepEqual(priority.body.messages.map(x=>x.id),[handoff]);
+ const path='/v1/extranet/messages/'+handoff+'/assignment';assert.equal((await callWorker(env,path,{method:'POST',cookie:staff.cookie,body:{memberId:staff.memberId}})).status,403);
+ assert.equal((await callWorker(env,path,{method:'POST',cookie:staff.cookie,csrf:staff.csrf,body:{memberId:staff.memberId}})).status,200);
+ const mine=await callWorker(env,'/v1/extranet/messages?channel=telegram&assignedTo=me',{cookie:staff.cookie});assert.deepEqual(mine.body.messages.map(x=>x.id),[handoff]);assert.ok(!mine.body.messages.some(x=>x.id===normal));
+});
+
+test('Stage 3: shared partner bearer is disabled by default, existing compatibility requires an explicit switch',async()=>{
+ const env=createTestEnv();const response=await callWorker(env,'/v1/partner/lookup',{method:'POST',bearer:env.PARTNER_TOKEN,body:{ref:'BOS-ANY'}});assert.equal(response.status,410);
+});

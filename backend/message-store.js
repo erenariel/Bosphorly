@@ -29,7 +29,7 @@ export async function captureMessage(env, data, now = Date.now()) {
   const id = data.id || crypto.randomUUID();
   try {
     await env.DB.prepare(
-      `INSERT OR IGNORE INTO extranet_messages(id,source,reference,member_id,name,email,phone,subject,body,created_at,expires_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT OR IGNORE INTO extranet_messages(id,source,reference,member_id,name,email,phone,subject,body,created_at,expires_at,channel) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)`,
     )
       .bind(
         id,
@@ -43,6 +43,7 @@ export async function captureMessage(env, data, now = Date.now()) {
         redactCards(data.body).slice(0, 16000),
         new Date(now).toISOString(),
         expires.toISOString(),
+        ['web','whatsapp','telegram','email'].includes(data.channel)?data.channel:/whatsapp|^wa:/i.test(String(data.reference)+' '+data.subject)?'whatsapp':/telegram|^tg:/i.test(String(data.reference)+' '+data.subject)?'telegram':'web',
       )
       .run();
   } catch (error) {
