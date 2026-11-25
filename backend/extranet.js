@@ -1,3 +1,6 @@
+import {stage2Routes} from './extranet-stage2.js';
+import {MemberSuspendedError,assertMemberActive,recordMemberLogin} from './member-controls.js';
+import {membershipTier, MEMBER_TIERS} from './membership-tier.js';
 // Bosphorly Extranet API (/v1/extranet/*) — Stage 1: Authentication, RBAC (owner/admin/staff),
 // Mandatory Passkey (WebAuthn), HttpOnly+Secure+SameSite=Strict Session with 30m Idle Timeout,
 // CSRF Protection, Immutable Audit Log, Dashboard KPIs, and Reservations Management.
@@ -342,6 +345,7 @@ async function ensureExtranetRoleForMember(env, member, ipAddress, nowMs = Date.
 }
 
 async function createExtranetSession(env, request, member, role, nowMs = Date.now()) {
+  await recordMemberLogin(env,member);
   const rawToken = randomToken(32);
   const tokenHash = await sha256(rawToken);
   const csrfToken = randomToken(32);
@@ -373,6 +377,7 @@ async function requireExtranetAuth(request, env, allowedRoles, nowMs = Date.now(
     fail(401, 'Geçersiz Extranet oturumu.', 'UNAUTHENTICATED', true);
   }
 
+  await assertMemberActive(env,{id:row.member_id,email:row.email});
   const idleElapsed = nowMs - Number(row.last_active_at || 0);
   if (nowMs > Number(row.expires_at || 0) || idleElapsed > EXTRANET_IDLE_MS) {
     await env.DB.prepare(`DELETE FROM extranet_sessions WHERE token_hash=?`).bind(tokenHash).run();
@@ -479,10 +484,10 @@ function formatMinorPrice(totalMinor, currency) {
   return `${sym}${major}`;
 }
 
-function computeEffectiveTier(env, memberId, email, fulfilledCount) {
+function computeEffectiveTier(env, memberId, email, fulfilledCount, override) {
   if (!memberId) return 'guest';
   if (email && isOwnerEmail(env, email)) return 'platinum';
-  return computeMemberTier(Number(fulfilledCount || 0));
+  return MEMBER_TIERS.has(override) ? override : computeMemberTier(Number(fulfilledCount || 0));
 }
 
 function defaultCommissionBps(env) {
@@ -500,7 +505,7 @@ function normalizeBookingRow(env, b) {
   const guestRoom = b.guest_room || b.mem_room || null;
   const lang = b.meta_lang || b.mem_lang || 'en';
   const source = b.meta_source || (b.referral_hash ? 'hotel_qr' : (b.meta_member_id ? 'member' : 'web'));
-  const memberTier = computeEffectiveTier(env, b.meta_member_id, b.mem_email, b.mem_fulfilled_count);
+  const memberTier = computeEffectiveTier(env, b.meta_member_id, b.mem_email, b.mem_fulfilled_count,b.mem_manual_tier);
   const providerId = b.assigned_provider_id || b.exp_provider_id || null;
   const commBps = Number.isInteger(b.commission_bps) ? b.commission_bps : defaultCommissionBps(env);
   const couponBps = b.coupon_code && b.coupon_status !== 'void' ? Number(b.coupon_bps || 0) : 0;
@@ -566,7 +571,7 @@ function normalizeMemberRequestRow(env, r) {
   const parsedPrice = parseTotalText(r.total_text);
   const lang = r.meta_lang || r.mem_lang || 'en';
   const source = r.meta_source || (r.mem_hotel_id ? 'hotel_qr' : 'member');
-  const memberTier = computeEffectiveTier(env, r.member_id, r.mem_email, r.mem_fulfilled_count);
+  const memberTier = computeEffectiveTier(env, r.member_id, r.mem_email, r.mem_fulfilled_count,r.mem_manual_tier);
   const commBps = defaultCommissionBps(env);
   const couponBps = r.coupon_code && r.coupon_status !== 'void' ? Number(r.coupon_bps || 0) : 0;
   const grossCommMinor =
@@ -680,6 +685,7 @@ async function loadAllReservations(env, sqlDateFilter = null) {
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
             (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            COALESCE((SELECT CASE WHEN expires_at IS NOT NULL AND datetime(expires_at)<=datetime('now') THEN previous_tier ELSE tier END FROM member_tier_overrides WHERE member_id=m.id),(SELECT CASE WHEN automatic_disabled=1 THEN frozen_tier END FROM member_controls WHERE member_id=m.id)) AS mem_manual_tier,
             c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id,
             cm.amount_minor AS accrued_commission_minor, cm.status AS accrued_commission_status
      FROM booking_requests b
@@ -702,6 +708,7 @@ async function loadAllReservations(env, sqlDateFilter = null) {
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
             (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            COALESCE((SELECT CASE WHEN expires_at IS NOT NULL AND datetime(expires_at)<=datetime('now') THEN previous_tier ELSE tier END FROM member_tier_overrides WHERE member_id=m.id),(SELECT CASE WHEN automatic_disabled=1 THEN frozen_tier END FROM member_controls WHERE member_id=m.id)) AS mem_manual_tier,
             c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id
      FROM member_requests r
      JOIN members m ON m.id = r.member_id
@@ -748,6 +755,7 @@ async function loadSingleReservation(env, rawId) {
               m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
               m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
               (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            COALESCE((SELECT CASE WHEN expires_at IS NOT NULL AND datetime(expires_at)<=datetime('now') THEN previous_tier ELSE tier END FROM member_tier_overrides WHERE member_id=m.id),(SELECT CASE WHEN automatic_disabled=1 THEN frozen_tier END FROM member_controls WHERE member_id=m.id)) AS mem_manual_tier,
               c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id,
               cm.amount_minor AS accrued_commission_minor, cm.status AS accrued_commission_status
        FROM booking_requests b
@@ -772,6 +780,7 @@ async function loadSingleReservation(env, rawId) {
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
             (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            COALESCE((SELECT CASE WHEN expires_at IS NOT NULL AND datetime(expires_at)<=datetime('now') THEN previous_tier ELSE tier END FROM member_tier_overrides WHERE member_id=m.id),(SELECT CASE WHEN automatic_disabled=1 THEN frozen_tier END FROM member_controls WHERE member_id=m.id)) AS mem_manual_tier,
             c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id
      FROM member_requests r
      JOIN members m ON m.id = r.member_id
@@ -1567,6 +1576,9 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // --- Authenticated Extranet Endpoints (sliding cookie refreshed on every valid call) ---
 
+    const stage2 = await stage2Routes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,ownerEmail:isOwnerEmail,maskEmail,maskPhone,cookie:buildSessionCookie});
+    if(stage2)return stage2;
+
     // 6. Dashboard (GET /v1/extranet/dashboard)
     if (method === 'GET' && path === '/v1/extranet/dashboard') {
       const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
@@ -2114,6 +2126,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     fail(404, 'Extranet uç noktası bulunamadı.');
   } catch (e) {
+    if(e instanceof MemberSuspendedError)return jsonResponse({error:e.message},403,{'Set-Cookie':buildClearSessionCookie()});
     if (e instanceof ExtranetError) {
       const extra = e.clearCookie ? { 'Set-Cookie': buildClearSessionCookie() } : {};
       return jsonResponse({ error: e.message, ...(e.code ? { code: e.code } : {}) }, e.status, extra);

@@ -1,3 +1,4 @@
+import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
 import {buildKbPriceIndex, enforcePriceSafetyBelt} from './mimo-personality.js';
 import {deliverInquiryEmail} from './request-email.js';
@@ -108,9 +109,10 @@ export async function processWhatsApp(env, m) {
       state.pending=validProposal(output.proposal) ? output.proposal : null;
     }
     const abuse = output.abuse || isAbuseAgainstMimo(clean.text);
-    if (abuse && ++state.warnings>=2) { await mute(env,m.phone,now+DAY*1000); await persist(); return; }
+    if (abuse && ++state.warnings>=2) { await captureMessage(env,{source:'blocked',reference:'wa-block:'+m.id,phone:m.phone,subject:'WhatsApp engellenen konuşma',body:clean.text}); await mute(env,m.phone,now+DAY*1000); await persist(); return; }
     const handoff = output.handoff || isHumanOrHandoffTopic(clean.text) || isServiceComplaint(clean.text);
     if (handoff) {
+      await captureMessage(env,{source:'handoff',reference:'wa:'+m.id,phone:m.phone,subject:'WhatsApp insana devir',body:clean.text});
       state.pending=null;
       await notify(env,`WhatsApp insana devir · ${maskPhone(m.phone)} · ${clean.text.slice(0,500)}`);
     }

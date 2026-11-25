@@ -126,6 +126,8 @@
         <button type="button" class="ex-nav-btn" id="navBookings" data-view="bookings">
           <span>▤</span> Rezervasyonlar
         </button>
+        <button type="button" class="ex-nav-btn" id="navMembers" data-view="members"><span>♙</span> Üyeler ve Seviyeler</button>
+        <button type="button" class="ex-nav-btn" id="navInbox">✉ Mesajlar</button>
       </nav>
 
       <div class="ex-side-user">
@@ -334,6 +336,22 @@
           </div>
         </section>
       </section>
+        <section id="viewMembers" hidden aria-labelledby="membersHeading">
+          <h1 id="membersHeading">Üyeler ve Seviyeler</h1>
+          <p>Silver: 0–1, Gold: 2–4, Platinum: 5 ve üzeri tamamlanan tur. Elle atama kaldırılana kadar önceliklidir. Kuponlar ve tur geçmişi değişmez.</p>
+          <form id="memberSearchForm"><label>İsim veya e-posta <input id="memberSearch" type="search" maxlength="120"></label><button class="ex-btn" type="submit">Ara</button></form>
+          <label>Hesap durumu <select id="memberStatus"><option value="">Tümü</option><option value="active">Aktif</option><option value="suspended">Askıda</option></select></label>
+          <label>Giriş yöntemi <select id="memberProvider"><option value="">Tümü</option><option value="email">E-posta</option><option value="passkey">Passkey</option><option value="google">Google</option><option value="telegram">Telegram</option></select></label>
+          <div id="memberManagement" hidden><label>Seviye filtresi <select id="memberTierFilter"><option value="">Tümü</option><option>silver</option><option>gold</option><option>platinum</option></select></label>
+          <h2>Seçili üyelerde toplu işlem</h2><select id="bulkTier" aria-label="Toplu seviye"><option value="silver">Silver</option><option value="gold">Gold</option><option value="platinum">Platinum</option><option value="automatic">Otomatik</option></select><input id="bulkDays" aria-label="Toplu işlem süresi" type="number" min="1" max="730" placeholder="Gün (boş: süresiz)"><input id="bulkReason" aria-label="Toplu işlem gerekçesi" placeholder="Zorunlu gerekçe" maxlength="500"><button id="memberBulk" type="button" class="ex-btn">Etkilenecek üyeleri önizle</button></div>
+          <div id="membersDetail"></div>
+          <p id="membersMessage" role="status"></p><div id="membersList"></div>
+          <button id="membersPrev" type="button" class="ex-btn">Önceki</button><span id="membersPage"></span><button id="membersNext" type="button" class="ex-btn">Sonraki</button>
+        </section>
+      <section id="viewInbox" hidden><h1>Mesajlar</h1><p>Yalnızca form talepleri, insana aktarılan, şikâyet edilen ve engellenen konuşma kayıtları. Diğer Mimo sohbetleri gösterilmez.</p>
+      <label>Durum <select id="inboxStatus"><option value="">Tümü</option><option value="new">Yeni</option><option value="read">Okundu</option><option value="replied">Yanıtlandı</option><option value="archived">Arşiv</option></select></label>
+      <label>Kaynak <select id="inboxSource"><option value="">Tümü</option><option value="form">Site formu</option><option value="handoff">İnsana devir</option><option value="complaint">Şikâyet</option><option value="blocked">Engellenen</option></select></label>
+      <p id="inboxCount" role="status"></p><div id="messageDetail"></div><div id="inboxList"></div><button id="inboxPrev" type="button" class="ex-btn">Önceki</button><button id="inboxNext" type="button" class="ex-btn">Sonraki</button></section>
     </main>
   </div>
 

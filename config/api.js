@@ -91,7 +91,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
   };
 
   const mountFab = () => {
-    if (!document.body || document.querySelector('.bc-fab')) return;
+    if (!document.body || document.documentElement.hasAttribute('data-no-mimo') || document.querySelector('.bc-fab')) return;
     injectFabStyles();
     const lang = pickLang();
     const rtl = ['ar', 'he', 'fa'].includes(lang);

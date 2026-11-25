@@ -1,3 +1,5 @@
+import {memberControls} from './member-controls.js';
+import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
 import {
   TIME_HUMOR_NOTES,
@@ -1036,7 +1038,7 @@ export async function getBlockStatus({ env, actorKeys = [], now = Date.now() }) 
   return { blocked: false, blockedUntil: 0, strikeCount: 0 };
 }
 
-export async function blockActors({ env, actorKeys = [], channel = 'web', now = Date.now() }) {
+export async function blockActors({ env, actorKeys = [], channel = 'web', now = Date.now(), message = '' }) {
   const keys = (Array.isArray(actorKeys) ? actorKeys : [actorKeys]).filter(Boolean);
   const pepper = (env && env.CODE_PEPPER) || '';
   let lastBlockedUntil = 0;
@@ -1072,6 +1074,7 @@ export async function blockActors({ env, actorKeys = [], channel = 'web', now = 
          ON CONFLICT(actor_hash) DO UPDATE SET blocked_until = excluded.blocked_until,
            strike_count = excluded.strike_count, updated_at = excluded.updated_at`
       ).bind(actorHash, blockedUntil, strikeCount, now).run();
+      await captureMessage(env,{source:'blocked',reference:'block:'+actorHash+':'+now,subject:'Engellenen Mimo konuşması',body:message?redactSensitive(message).text:'Engel bitişi: '+new Date(blockedUntil).toISOString()},now);
     } else {
       memoryBlocks.set(actorHash, { blockedUntil, strikeCount, updatedAt: now });
     }
@@ -1299,6 +1302,9 @@ export async function checkAndIncrementLimits({
     if (hour.minCount > perHour) return { allowed: false, reason: 'actor_limit' };
     if (skipGlobal) return { allowed: true };
   }
+  const customLimit = tier!=='owner' && String(actorKey).startsWith('member:') ? (await memberControls(env,String(actorKey).slice(7))).mimo_daily_limit : null;
+  if(customLimit===0)return {allowed:false,reason:'day_limit'};
+  if(Number.isInteger(customLimit))dayLimit=customLimit;
   const effectiveDayLimit = Number.isFinite(Number(dayLimit)) && Number(dayLimit) > 0
     ? Number(dayLimit)
     : chatDailyLimitForTier(tier);
@@ -1755,7 +1761,7 @@ async function prepareAssistantTurn({
   }
 
   if (isAbuseAgainstMimo(cleanMsg)) {
-    await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
+    await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now, message:cleanMsg });
     return {
       path: 'abuse',
       lang,
@@ -1803,6 +1809,7 @@ async function prepareAssistantTurn({
     };
   }
 
+  if(isServiceComplaint(cleanMsg))await captureMessage(env,{source:'complaint',subject:'Mimo hizmet şikâyeti',body:cleanMsg},now);
   const warnPrefix = msgSensitive ? msg('sensitiveWarn', lang) + '\n\n' : '';
 
   const safeHistory = (Array.isArray(history) ? history : [])
@@ -1931,7 +1938,7 @@ async function finalizeModelOutput({
 }) {
   const { cleanMsg, lang, effectiveActorKeys, effectiveChannel, guestName, aiIdentityAsked, hasGreeted, warnPrefix, chunks, smallTalkKind, safeHistory } = prep;
   if (parsed.abuse && !isServiceComplaint(cleanMsg)) {
-    await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now });
+    await blockActors({ env, actorKeys: effectiveActorKeys, channel: effectiveChannel, now, message:cleanMsg });
     return {
       ok: true,
       closed: true,
@@ -2572,6 +2579,7 @@ export async function forwardConversationEmail({ env, email, lang = 'en', histor
     }),
   });
   if (!res.ok) return { ok: false, status: 502, error: 'Email provider rejected request' };
+  await captureMessage(env,{source:'handoff',reference:ref,email:cleanEmail,subject,body:lines.join('\n')});
   return { ok: true, reference: ref };
 }
 

@@ -1,3 +1,4 @@
+import {captureMessage,cleanupInbox,redactCards} from './message-store.js';
 import {deliverInquiryEmail} from './request-email.js';
 import {purgeWhatsApp} from './whatsapp.js';
 import {handleWhatsApp} from './whatsapp.js';
@@ -88,6 +89,7 @@ export default {async fetch(request,env,ctx) {
     method:'POST', body:new URLSearchParams({secret:env.TURNSTILE_SECRET,response:b.turnstileToken,remoteip:request.headers.get('CF-Connecting-IP') || ''})
   });
   if (!verification.ok || !(await verification.json()).success) return requestJson({error:'Bot verification failed'},403);
+  await captureMessage(env,{source:'form',reference:b.reference,name:b.name,email:b.email,phone:b.phone,subject:b.service,body:JSON.stringify({service:b.service,date:b.date,guests:b.guests,message:b.message})});
   const subject = 'Bosphorly ' + b.kind + ' inquiry · ' + b.reference;
   const replyTo = b.email.trim();
   const content = [subject,'Service: '+b.service,'Date: '+b.date,'Guests: '+b.guests,'Name: '+b.name,'Phone: '+b.phone,
@@ -134,6 +136,7 @@ export default {async fetch(request,env,ctx) {
  return response;
 },
 async scheduled(event, env, ctx) {
+ ctx.waitUntil(cleanupInbox(env));
  if (event.cron === '0 * * * *') { ctx.waitUntil(purgeWhatsApp(env)); return; }
  const job = sendWeeklyMimoReport(env);
  if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(job);
