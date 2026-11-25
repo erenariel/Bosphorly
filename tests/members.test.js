@@ -181,10 +181,10 @@ test('deployment config has D1 database_id, live api base, secret-only workflow 
   const wrangler = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
   assert.match(wrangler, /"database_id"\s*:\s*"[0-9a-f-]{36}"/);
   const apiConfig = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
-  assert.match(apiConfig, /\bbase:\s*'https:\/\/bosphorly-booking\.erennkirazz98\.workers\.dev'/);
+  assert.match(apiConfig, /\bbase:\s*'https:\/\/api\.bosphorly\.com'/);
   const workflow = readFileSync(new URL('../.github/workflows/deploy-member-api.yml', import.meta.url), 'utf8');
   assert.match(workflow, /name:\s*Deploy member API/);
-  assert.match(workflow, /on:\s*workflow_dispatch/);
+  assert.match(workflow, /on:\s*workflow_dispatch:/);
   assert.match(workflow, /secrets\.CLOUDFLARE_ACCOUNT_ID\s*\|\|\s*secrets\.CLAUDFLARE_ACCOUNT_ID/);
   assert.match(workflow, /secrets\.CLOUDFLARE_API_TOKEN/);
   assert.match(workflow, /secrets\.RESEND_API_KEY/);
@@ -756,4 +756,19 @@ test('Platinum gift: fifth completed tour, 10%, 180 days, once per member and se
     }
     if (i >= 5) assert.equal(me.coupons.filter(c => c.kind === 'loyalty').length, Math.floor(i / 5));
   }
+});
+
+
+test('Yandex can be temporarily disabled with credentials retained and re-enabled by configuration', async () => {
+  const env = { ...setup(), YANDEX_CLIENT_ID: 'y-client', YANDEX_CLIENT_SECRET: 'y-secret', YANDEX_DISABLED: '1' };
+  const providers = await call(env, '/v1/auth/providers', null, null, 'GET');
+  assert.equal(providers.body.yandex, false);
+  const start = await worker.fetch(new Request('https://api.example/v1/auth/oauth/yandex?lang=tr'), env);
+  assert.equal(start.status, 302);
+  assert.equal(new URL(start.headers.get('Location')).hostname, 'example.com');
+  assert.equal(new URL(start.headers.get('Location')).searchParams.get('oauth_error'), 'yandex');
+  env.YANDEX_DISABLED = '0';
+  assert.equal((await call(env, '/v1/auth/providers', null, null, 'GET')).body.yandex, true);
+  const config = readFileSync(new URL('../backend/wrangler.jsonc', import.meta.url), 'utf8');
+  assert.match(config, /"YANDEX_DISABLED"\s*:\s*"1"/);
 });
