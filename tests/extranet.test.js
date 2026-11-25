@@ -266,7 +266,7 @@ test('unauthenticated requests and non-extranet members are denied across all /v
   assert.equal(deniedAudits.length, 2);
 });
 
-test('ADMIN_OWNER_EMAIL bootstraps initial owner, enforces mandatory first-login passkey setup, and revokes session if passkey is removed', async () => {
+test('ADMIN_OWNER_EMAIL bootstraps initial owner, supports optional Passkeys and retains cookie sessions without a Passkey', async () => {
   const env = createTestEnv({ ADMIN_OWNER_EMAIL: 'FirstOwner@Bosphorly.Example' });
   const ownerMember = await signUpMember(env, 'firstowner@bosphorly.example', { name: 'İlk Owner' });
 
@@ -323,9 +323,8 @@ test('ADMIN_OWNER_EMAIL bootstraps initial owner, enforces mandatory first-login
 
   env.DB.raw.prepare(`DELETE FROM passkeys WHERE member_id = ?`).run(actor.memberId);
   const afterDel = await callWorker(env, '/v1/extranet/dashboard', { cookie: actor.cookie });
-  assert.equal(afterDel.status, 403);
-  assert.equal(afterDel.body.code, 'PASSKEY_REQUIRED');
-  assert.match(afterDel.headers.get('Set-Cookie') || '', /Max-Age=0/);
+  assert.equal(afterDel.status, 200);
+  assert.match(afterDel.headers.get('Set-Cookie') || '', /Max-Age=1800/);
 });
 
 test("passkey'i olan üye, sadece bearer token ile yeni passkey kaydedemez; yeni passkey yalnızca geçerli extranet oturumu + CSRF ile eklenir ve ADMIN_OWNER_EMAIL'e bildirilir", async (t) => {
@@ -1204,7 +1203,7 @@ test('Stage 2 custom Mimo limits apply to members while owner is exempt',async()
  assert.equal((await checkAndIncrementLimits({...request,tier:'owner'})).allowed,true);
 });
 
-test('configured secondary admin bootstraps after verified member sign-in and never bypasses Passkey or reactivates a disabled role',async()=>{
+test('configured secondary admin bootstraps after verified member sign-in and never admits an old member token or reactivates a disabled role',async()=>{
  const env=createTestEnv({EXTRANET_ADMIN_EMAILS:'secondary@test.example'});
  const member=await signUpMember(env,'secondary@test.example');
  const status=await callWorker(env,'/v1/extranet/auth/status',{method:'POST',bearer:member.token,body:{}});
@@ -1212,4 +1211,24 @@ test('configured secondary admin bootstraps after verified member sign-in and ne
  assert.equal((await callWorker(env,'/v1/extranet/dashboard',{bearer:member.token})).status,401);
  env.DB.raw.prepare('UPDATE extranet_users SET active=0 WHERE member_id=?').run(member.id);
  assert.equal((await callWorker(env,'/v1/extranet/auth/status',{method:'POST',bearer:member.token,body:{}})).status,403);
+});
+
+test('fresh one-use email OTP admits authorized owners without Passkeys; old/member tokens, replay, expired proofs and ordinary users cannot enter',async()=>{
+ const {signState}=await import('../backend/members.js');
+ const env=createTestEnv();
+ async function verified(email){const s=await callWorker(env,'/v1/auth/start',{method:'POST',body:{email,lang:'tr'}});const v=await callWorker(env,'/v1/auth/verify',{method:'POST',body:{email,code:s.body.devCode,extranet:true}});assert.equal(v.status,200);return v.body;}
+ const owner=await verified('owner@test.example');const guest=await verified('ordinary@test.example');
+ const login=(token,ticket)=>callWorker(env,'/v1/extranet/auth/email',{method:'POST',bearer:token,body:{ticket}});
+ assert.equal((await login(owner.token,undefined)).status,401);
+ assert.equal((await login(guest.token,owner.extranetTicket)).status,401);
+ assert.equal((await login(guest.token,guest.extranetTicket)).status,403);
+ const payload=JSON.parse(Buffer.from(owner.extranetTicket.split('.')[0],'base64url').toString());
+ const expired=await signState(env.CODE_PEPPER,{...payload,t:Date.now()-6*60000});assert.equal((await login(owner.token,expired)).status,401);
+ const authenticated=await login(owner.token,owner.extranetTicket);assert.equal(authenticated.status,200);assert.equal(authenticated.body.authenticated,true);assert.equal(authenticated.body.user.role,'owner');assert.ok(authenticated.body.csrfToken);
+ assert.equal(env.DB.raw.prepare('SELECT COUNT(*) AS n FROM passkeys').get().n,0);
+ const cookie=authenticated.headers.get('Set-Cookie').split(';')[0];
+ assert.equal((await callWorker(env,'/v1/extranet/dashboard',{cookie})).status,200);
+ assert.equal((await callWorker(env,'/v1/extranet/logout',{method:'POST',cookie,body:{}})).status,403);
+ assert.equal((await login(owner.token,owner.extranetTicket)).status,401);
+ assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='login_email'").get().n,1);
 });

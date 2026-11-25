@@ -25,7 +25,7 @@
           </div>
         </div>
         <h1 id="gateHeading">Güvenli Yönetici Girişi</h1>
-        <p id="gateSub">Mevcut Bosphorly üye hesabınız ve zorunlu Passkey doğrulaması ile oturum açın.</p>
+        <p id="gateSub">Yetkili e-posta adresinize gelen kodla giriş yapın. Passkey kullanımı isteğe bağlıdır.</p>
       </header>
 
       <div class="ex-gate-body">
@@ -33,16 +33,10 @@
 
         <!-- Adım A: Doğrudan Passkey veya Üye Girişi -->
         <div id="stepSignIn">
-          <button type="button" id="btnDirectPasskey" class="ex-btn ex-btn-gold ex-btn-block">
-            🔐 Passkey ile Hızlı Giriş Yap
-          </button>
-
-          <div class="ex-divider">veya üye e-postası ile doğrula</div>
-
           <div id="existingMemberBox" class="ex-alert ex-alert-info" hidden>
             <div id="existingMemberText" style="margin-bottom:8px"></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button type="button" id="btnUseMemberSession" class="ex-btn ex-btn-primary ex-btn-sm">Bu Hesapla Devam Et</button>
+              <button type="button" id="btnUseMemberSession" class="ex-btn ex-btn-primary ex-btn-sm">E-posta koduyla devam et</button>
               <button type="button" id="btnSwitchAccount" class="ex-btn ex-btn-secondary ex-btn-sm">Farklı E-posta Kullan</button>
             </div>
           </div>
@@ -67,12 +61,14 @@
               <button type="button" id="btnBackEmail" class="ex-btn ex-btn-secondary">Geri</button>
             </div>
           </form>
+          <div class="ex-divider">isteğe bağlı hızlı giriş</div>
+          <button type="button" id="btnDirectPasskey" class="ex-btn ex-btn-secondary ex-btn-block">Passkey ile Giriş Yap (İsteğe Bağlı)</button>
         </div>
 
-        <!-- Adım B: İlk Girişte Zorunlu Passkey Kurulumu -->
+        <!-- Adım B: İsteğe Bağlı Passkey Kurulumu -->
         <div id="stepSetupPasskey" hidden>
           <div class="ex-alert ex-alert-warn" style="margin-bottom:12px">
-            <strong>Passkey Kurulumu Zorunlu:</strong> Extranet güvenliği gereği ilk girişinizde bu cihazda biyometrik doğrulama (Touch ID / Face ID / Windows Hello) veya güvenlik anahtarı tanımlamanız gerekir.
+            <strong>İsteğe Bağlı Passkey Kurulumu:</strong> İsterseniz bu cihazda Passkey tanımlayabilirsiniz. E-posta koduyla giriş yapmak için geri dönebilirsiniz.
           </div>
           <p id="setupUserSummary" style="margin:0 0 12px;font-size:13.5px;color:#4a5e7d"></p>
           <button type="button" id="btnEnrollPasskey" class="ex-btn ex-btn-gold ex-btn-block">
@@ -109,7 +105,7 @@
   <div id="appShell" class="ex-shell" hidden>
     <aside class="ex-sidebar" aria-label="Extranet menüsü">
       <div class="ex-sidebar-top">
-        <a href="../index.html" class="ex-brand">
+        <a href="/extranet/" class="ex-brand">
           <img src="../assets/brand/approved-icon.webp" alt="Bosphorly logosu" width="40" height="40" loading="lazy" decoding="async">
           <div>
             <div class="ex-brand-title">Bosphorly</div>
@@ -371,6 +367,6 @@
 
   <script src="../config/api.js"></script>
   <script src="../assets/vendor/simplewebauthn-browser.min.js"></script>
-  <script src="extranet.js"></script>
+  <script src="extranet.js?v=20261125-email-login"></script>
 </body>
 </html>

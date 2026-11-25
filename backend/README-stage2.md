@@ -1,3 +1,5 @@
+> Güncel giriş: Passkey isteğe bağlıdır. E-posta kodu doğrulamasından sonra beş dakikalık, tek kullanımlık ve üye token'ına bağlı HMAC kanıtıyla Extranet oturumu açılır. Eski üyelik token'ı tek başına giriş sağlamaz. Cookie, CSRF ve rol kontrolleri korunur.
+
 # Extranet Aşama 2: Üyeler ve Mesajlar
 
 Bu branch `feat/extranet-stage-1` üzerine açılmıştır. Aşama 1'in Passkey, HttpOnly oturum, CSRF, owner/admin/staff, rate limit, PII maskeleme ve değiştirilemez audit yapısını kullanır. Yayın veya canlı D1 işlemi yapılmamıştır.
@@ -79,4 +81,4 @@ Tümü `/v1/extranet` altında, Aşama 1 auth ve rol kontrollerinden geçer:
 
 ## İlk yönetici erişimi
 
-`ADMIN_OWNER_EMAIL` doğrulanmış ilk üye girişinde owner rolünü oluşturur. İsteğe bağlı `EXTRANET_ADMIN_EMAILS` Worker secret'ı virgülle ayrılmış ek admin adreslerini kabul eder. Bu adresler sadece başarılı üye e-posta doğrulamasından sonra, daha önce Extranet rol kaydı yoksa admin olarak başlatılır; kapatılmış bir rolü yeniden açmaz. İki durumda da Passkey kurulmadan Extranet oturumu verilmez. Adresleri kaynak koda yazmayın.
+`ADMIN_OWNER_EMAIL` doğrulanmış ilk üye girişinde owner rolünü oluşturur. İsteğe bağlı `EXTRANET_ADMIN_EMAILS` Worker secret'ı virgülle ayrılmış ek admin adreslerini kabul eder. Bu adresler sadece başarılı üye e-posta doğrulamasından sonra, daha önce Extranet rol kaydı yoksa admin olarak başlatılır; kapatılmış bir rolü yeniden açmaz. İki durumda da yeni e-posta kodu veya kayıtlı Passkey ile doğrulama gerekir. Adresleri kaynak koda yazmayın.

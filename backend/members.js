@@ -624,6 +624,10 @@ export async function handleMembers(request, env, url) {
           }
         }
       }
+      if(body.extranet===true){
+        const member=await env.DB.prepare('SELECT id FROM members WHERE email=?').bind(email).first();
+        sessionResult.extranetTicket=await signState(env.CODE_PEPPER,{p:'extranet_email',memberId:member.id,tokenHash:await sha256(sessionResult.token),codeId:row.id,t:Date.now()});
+      }
       return json(sessionResult);
     }
 
