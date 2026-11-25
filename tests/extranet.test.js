@@ -1082,3 +1082,13 @@ test('dashboard periods use Europe/Istanbul timezone, commission shows coupon-de
     assert.equal(sess.headers.get('Access-Control-Allow-Credentials'), 'true');
   }
 });
+
+test('configured secondary admin bootstraps after verified member sign-in and never bypasses Passkey or reactivates a disabled role',async()=>{
+ const env=createTestEnv({EXTRANET_ADMIN_EMAILS:'secondary@test.example'});
+ const member=await signUpMember(env,'secondary@test.example');
+ const status=await callWorker(env,'/v1/extranet/auth/status',{method:'POST',bearer:member.token,body:{}});
+ assert.equal(status.status,200);assert.equal(status.body.user.role,'admin');assert.equal(status.body.hasPasskey,false);assert.equal(status.body.step,'setup_passkey');
+ assert.equal((await callWorker(env,'/v1/extranet/dashboard',{bearer:member.token})).status,401);
+ env.DB.raw.prepare('UPDATE extranet_users SET active=0 WHERE member_id=?').run(member.id);
+ assert.equal((await callWorker(env,'/v1/extranet/auth/status',{method:'POST',bearer:member.token,body:{}})).status,403);
+});
