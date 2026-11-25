@@ -1,18 +1,39 @@
-export const MEMBER_TIERS = new Set(['silver', 'gold', 'platinum']);
+import { memberControls } from "./member-controls.js";
+export const MEMBER_TIERS = new Set(["silver", "gold", "platinum"]);
 export function automaticTier(count) {
-  return Number(count || 0) >= 5 ? 'platinum' : Number(count || 0) >= 2 ? 'gold' : 'silver';
+  return Number(count || 0) >= 5
+    ? "platinum"
+    : Number(count || 0) >= 2
+      ? "gold"
+      : "silver";
 }
-export async function membershipTier(env, memberId, count) {
-  let manualTier = null;
-  if (memberId && env?.DB) {
+export async function membershipTier(env, id, count, now = Date.now()) {
+  let row = null;
+  if (id && env?.DB)
     try {
-      const row = await env.DB.prepare('SELECT tier FROM member_tier_overrides WHERE member_id=?').bind(memberId).first();
-      if (MEMBER_TIERS.has(row?.tier)) manualTier = row.tier;
-    } catch (error) {
-      // Before migration 0015, existing members retain automatic levels.
-      if (!/no such table.*member_tier_overrides/i.test(String(error?.message))) throw error;
+      row = await env.DB.prepare(
+        "SELECT * FROM member_tier_overrides WHERE member_id=?",
+      )
+        .bind(id)
+        .first();
+    } catch (e) {
+      if (!/no such table.*member_tier_overrides/i.test(String(e.message)))
+        throw e;
     }
-  }
-  const automatic = automaticTier(count);
-  return { tier: manualTier || automatic, automaticTier: automatic, manualTier, tierSource: manualTier ? 'manual' : 'automatic' };
+  const controls = id ? await memberControls(env, id) : {};
+  const expired = row?.expires_at && Date.parse(row.expires_at) <= now;
+  const manual = expired ? row.previous_tier : row?.tier;
+  const frozen = controls.automatic_disabled ? controls.frozen_tier : null;
+  const manualTier = MEMBER_TIERS.has(manual)
+    ? manual
+    : MEMBER_TIERS.has(frozen)
+      ? frozen
+      : null;
+  return {
+    tier: manualTier || automaticTier(count),
+    automaticTier: automaticTier(count),
+    manualTier: manualTier || null,
+    tierSource: manualTier ? "manual" : "automatic",
+    expiresAt: expired ? null : row?.expires_at || null,
+  };
 }

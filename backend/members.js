@@ -1,3 +1,4 @@
+import {MemberSuspendedError,assertMemberActive,recordMemberLogin} from './member-controls.js';
 import {membershipTier} from './membership-tier.js';
 // Membership, sign-in by e-mailed one-time code, campaigns and coupons.
 // Discounts are funded from Bosphorly's commission; MAX_DISCOUNT_BPS (default 10 %) caps every coupon
@@ -136,6 +137,7 @@ async function memberFromSession(request, env) {
   const m = await env.DB.prepare(
     `SELECT m.* FROM sessions s JOIN members m ON m.id=s.member_id WHERE s.token_hash=? AND s.expires_at>?`).bind(await sha256(t), sqlTime(new Date())).first();
   if (!m) fail(401, 'Sign in required');
+  await assertMemberActive(env,m);
   return m;
 }
 
@@ -315,6 +317,7 @@ async function createOrLoadMemberSession(env, rawEmail, body = {}) {
     }
   }
   const t = token();
+  await recordMemberLogin(env,m);
   await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
   return { token: t, created, member: await profile(env, m) };
 }
@@ -456,6 +459,7 @@ async function handleOAuth(request, env, url) {
       const m = await env.DB.prepare(`SELECT * FROM members WHERE id=?`).bind(ident.member_id).first();
       if (m) {
         const t = token();
+        await recordMemberLogin(env,m);
         await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
         return redirect(`${pubOrigin}/account.html#oauth_token=${encodeURIComponent(t)}&oauth_provider=telegram`);
       }
@@ -735,6 +739,7 @@ export async function handleMembers(request, env, url) {
         .bind(verification.authenticationInfo.newCounter, sqlTime(new Date()), passkey.credential_id).run();
 
       const t = token();
+      await recordMemberLogin(env,m);
       await env.DB.prepare(`INSERT INTO sessions (token_hash, member_id, expires_at) VALUES (?,?,?)`).bind(await sha256(t), m.id, later(SESSION_DAYS * 864e5)).run();
       return json({ token: t, member: await profile(env, m) });
     }
@@ -1001,6 +1006,7 @@ export async function handleMembers(request, env, url) {
     }
     fail(404, 'Not found');
   } catch (e) {
+    if(e instanceof MemberSuspendedError)return json({error:e.message},403);
     if (e instanceof HttpError) return json({ error: e.message }, e.status);
     return json({ error: 'Invalid request or unavailable service' }, 400);
   }

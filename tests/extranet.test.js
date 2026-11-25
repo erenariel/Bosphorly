@@ -1124,3 +1124,82 @@ test('tier update rolls back when its audit record cannot be written', async()=>
   const result=await callWorker(env,`/v1/extranet/members/${guest.id}/tier`,{method:'POST',cookie:owner.cookie,csrf:owner.csrf,body:{tier:'platinum',reason:'Test atomic change'}});
   assert.notEqual(result.status,200);assert.equal(env.DB.raw.prepare('SELECT * FROM member_tier_overrides WHERE member_id=?').get(guest.id),undefined);
 });
+
+test('Stage 2: staff management forbidden; admin cannot affect owner; timed levels restore and bulk skips owner',async()=>{
+ const {membershipTier}=await import('../backend/membership-tier.js');
+ const env=createTestEnv(),owner=await createExtranetActor(env,'owner@test.example','owner'),admin=await createExtranetActor(env,'admin@test.example','admin'),staff=await createExtranetActor(env,'staff@test.example','staff'),guest=await signUpMember(env,'stage2@test.example');
+ const post=(path,body,actor=admin)=>callWorker(env,path,{method:'POST',body,cookie:actor.cookie,csrf:actor.csrf});
+ const base='/v1/extranet/members/'+guest.id;
+ for(const [operation,body] of [['tier',{tier:'gold',reason:'Test change'}],['coupon',{percentBps:500,validDays:30,reason:'Test coupon'}],['controls',{suspended:true,reason:'Test suspend'}]]) assert.equal((await post(base+'/'+operation,body,staff)).status,403);
+ const profile=await callWorker(env,base,{cookie:staff.cookie});assert.equal(profile.status,200);assert.equal(profile.body.history,undefined);assert.equal(profile.body.levels,undefined);assert.equal(profile.body.controls,undefined);
+ for(const [operation,body] of [['tier',{tier:'silver',reason:'Test change'}],['controls',{suspended:true,reason:'Test suspend'}]])assert.equal((await post('/v1/extranet/members/'+owner.memberId+'/'+operation,body)).status,403);
+ assert.equal((await post(base+'/tier',{tier:'gold',reason:'Persistent grant'})).status,200);
+ assert.equal((await post(base+'/tier',{tier:'platinum',days:30,reason:'Temporary grant'})).status,200);
+ assert.equal((await membershipTier(env,guest.id,0)).tier,'platinum');assert.equal((await membershipTier(env,guest.id,0,Date.now()+31*86400000)).tier,'gold');
+ env.DB.raw.prepare("UPDATE member_tier_overrides SET expires_at='2000-01-01 00:00:00' WHERE member_id=?").run(guest.id);assert.equal((await callWorker(env,'/v1/me',{bearer:guest.token})).body.tier,'gold');
+ const bulk=await post('/v1/extranet/members/tier-bulk-preview',{ids:[owner.memberId,guest.id],tier:'silver',reason:'Bulk change'});assert.equal(bulk.status,200);assert.equal(bulk.body.preview.count,1);assert.equal(bulk.body.preview.skipped,1);
+ const confirm='/v1/extranet/actions/'+bulk.body.confirmationId+'/confirm';assert.equal((await post(confirm,{confirm:true},staff)).status,409);assert.equal((await post(confirm,{confirm:true})).body.updated,1);assert.equal((await post(confirm,{confirm:true})).status,409);
+ assert.equal((await membershipTier(env,guest.id,0)).tier,'silver');
+ assert.equal((await post(base+'/controls',{suspended:true,reason:'Abuse review'})).status,200);
+ assert.equal((await callWorker(env,'/v1/me',{bearer:guest.token})).status,401);
+ const start=await callWorker(env,'/v1/auth/start',{method:'POST',body:{email:'stage2@test.example'}});
+ const login=await callWorker(env,'/v1/auth/verify',{method:'POST',body:{email:'stage2@test.example',code:start.body.devCode}});assert.equal(login.status,403);
+ assert.equal((await post(base+'/controls',{suspended:false,automaticDisabled:true,mimoDailyLimit:2,reason:'Restore account'})).status,200);
+ const frozen=(await membershipTier(env,guest.id,8)).tier;assert.equal(frozen,'silver');
+ assert.equal((await post(base+'/tier',{tier:'automatic',reason:'Automatic restore'})).body.tier,'silver');
+ assert.equal((await post(base+'/coupon',{percentBps:500,validDays:30,reason:'Goodwill gesture'})).status,200);
+ assert.equal((await post(base+'/delete-preview',{reason:'Privacy request'})).status,403);
+ const deletion=await post(base+'/delete-preview',{reason:'Privacy request'},owner);assert.equal(deletion.status,200);
+ const deleted=await post('/v1/extranet/actions/'+deletion.body.confirmationId+'/confirm',{confirm:true},owner);assert.equal(deleted.status,200);assert.equal(env.DB.raw.prepare('SELECT id FROM members WHERE id=?').get(guest.id),undefined);
+});
+
+test('Stage 2 inbox: no normal chats, card redaction, reply previews, staff send, actor binding and audit',async()=>{
+ const {captureMessage,cleanupInbox}=await import('../backend/message-store.js');
+ const env=createTestEnv({RESEND_API_KEY:'test',REQUEST_FROM_EMAIL:'test@example.com'});
+ // Avoid changing signup to provider-only mode while provisioning test actors.
+ delete env.RESEND_API_KEY;
+ const staff=await createExtranetActor(env,'inbox@test.example','staff');env.RESEND_API_KEY='test';
+ const post=(path,body)=>callWorker(env,path,{method:'POST',body,cookie:staff.cookie,csrf:staff.csrf});
+ env.DB.raw.prepare("INSERT INTO telegram_handoff_state(chat_id,context_json) VALUES('normal-chat','[\"PRIVATE NORMAL CHAT\"]')").run();
+ const form=await captureMessage(env,{source:'form',reference:'FORM-TEST',name:'Guest',email:'guest@test.example',subject:'Transfer',body:'Card 4111 1111 1111 1111 email visitor@private.example tel +905551234567'});
+ await assert.rejects(()=>captureMessage(env,{source:'normal',body:'normal chat'}));
+ const list=await callWorker(env,'/v1/extranet/messages',{cookie:staff.cookie});assert.equal(list.status,200);assert.equal(list.body.messages.length,1);assert.ok(!JSON.stringify(list.body).includes('PRIVATE NORMAL CHAT'));
+ const detail=await callWorker(env,'/v1/extranet/messages/'+form,{cookie:staff.cookie});assert.ok(detail.body.body.includes('[CARD REDACTED]'));assert.ok(!detail.body.body.includes('visitor@private.example'));assert.ok(!detail.body.body.includes('+905551234567'));assert.ok(!JSON.stringify(detail.body).includes('PRIVATE NORMAL CHAT'));
+ assert.equal((await callWorker(env,'/v1/extranet/messages/normal-chat',{cookie:staff.cookie})).status,404);
+ assert.equal((await post('/v1/extranet/messages/'+form+'/note',{body:'Internal note'})).status,200);
+ assert.equal((await post('/v1/extranet/messages/'+form+'/status',{status:'read'})).status,200);
+ const preview=await post('/v1/extranet/messages/'+form+'/reply-preview',{lang:'ru'});assert.equal(preview.status,200);
+ let calls=0;const original=globalThis.fetch;globalThis.fetch=async(url,options)=>{calls++;const b=JSON.parse(options.body);assert.deepEqual(b.to,['guest@test.example']);assert.ok(b.text.includes('Здравствуйте'));return Response.json({id:'mail-1'});};
+ try {
+ const confirm='/v1/extranet/actions/'+preview.body.confirmationId+'/confirm';assert.equal((await post(confirm,{confirm:false})).status,400);assert.equal(calls,0);
+ assert.equal((await post(confirm,{confirm:true})).status,200);assert.equal(calls,1);assert.equal((await post(confirm,{confirm:true})).status,409);assert.equal(calls,1);
+ }finally{globalThis.fetch=original;}
+ const record=env.DB.raw.prepare('SELECT status FROM extranet_messages WHERE id=?').get(form);assert.equal(record.status,'replied');assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='send_email'").get().n,1);
+ await cleanupInbox(env,Date.now()+25*31*86400000);assert.equal(env.DB.raw.prepare('SELECT * FROM extranet_messages WHERE id=?').get(form),undefined);
+ assert.equal(env.DB.raw.prepare("SELECT context_json FROM telegram_handoff_state WHERE chat_id='normal-chat'").get().context_json,'["PRIVATE NORMAL CHAT"]');
+});
+
+test('Stage 2 form requests preserve mail delivery and store only card-redacted inquiry; no ordinary model chat is captured',async()=>{
+ const {runAssistant}=await import('../backend/assistant.js');
+ const env=createTestEnv({ENABLE_EMAIL_REQUESTS:'true',RESEND_API_KEY:'test',REQUEST_FROM_EMAIL:'test@example.com',TURNSTILE_SECRET:'test'});
+ const original=globalThis.fetch;let sent=0;
+ globalThis.fetch=async(url)=>{if(String(url).includes('siteverify'))return Response.json({success:true});sent++;return Response.json({id:'provider-test'});};
+ try {
+ const payload={reference:'FORM-DB-TEST',kind:'transfer',name:'Guest',phone:'+905555551234',email:'visitor@test.example',service:'Airport',date:'2027-01-01',guests:2,message:'PAN 4111111111111111',consent:true,turnstileToken:'test'};
+ const res=await callWorker(env,'/v1/requests',{method:'POST',body:payload});assert.equal(res.status,202);assert.equal(sent,1);
+ const stored=env.DB.raw.prepare('SELECT body FROM extranet_messages WHERE reference=?').get(payload.reference);assert.ok(stored.body.includes('[CARD REDACTED]'));assert.ok(!stored.body.includes('4111111111111111'));
+ }finally{globalThis.fetch=original;}
+ env.AI={run:async()=>({response:'İstanbul turu için yardımcı olabilirim. [[flags:abuse=0;handoff=0]]'})};
+ const before=env.DB.raw.prepare('SELECT COUNT(*) AS n FROM extranet_messages').get().n;
+ await runAssistant({env,message:'Boğaz turları hakkında bilgi istiyorum',actorKey:'privacy-ordinary',channel:'web'});
+ assert.equal(env.DB.raw.prepare('SELECT COUNT(*) AS n FROM extranet_messages').get().n,before);
+});
+
+test('Stage 2 custom Mimo limits apply to members while owner is exempt',async()=>{
+ const {checkAndIncrementLimits}=await import('../backend/assistant.js');const env=createTestEnv();const guest=await signUpMember(env,'limit@test.example');
+ env.DB.raw.prepare('INSERT INTO member_controls(member_id,mimo_daily_limit) VALUES(?,1)').run(guest.id);
+ const request={env,actorKey:'member:'+guest.id,tier:'silver'};
+ assert.equal((await checkAndIncrementLimits(request)).allowed,true);assert.equal((await checkAndIncrementLimits(request)).reason,'day_limit');
+ env.DB.raw.prepare('UPDATE member_controls SET mimo_daily_limit=0 WHERE member_id=?').run(guest.id);
+ assert.equal((await checkAndIncrementLimits({...request,tier:'owner'})).allowed,true);
+});

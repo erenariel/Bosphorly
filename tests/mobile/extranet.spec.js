@@ -281,3 +281,25 @@ test('Membership manual level and automatic reset use CSRF and remain read-only 
   role='staff';await page.reload();await page.locator('#navMembers').click();
   await expect(page.locator('#membersMessage')).toHaveText('1 üye');await expect(page.getByRole('button',{name:'Seviyeyi kaydet'})).toHaveCount(0);
 });
+
+test('Stage 2 inbox reply requires preview and second confirmation; mobile layout remains usable',async({page})=>{
+ let sent=false;
+ const template={subject:'Talebiniz',body:'Merhaba, talebinizi aldık.'};
+ await page.route('https://**/v1/extranet/**',async route=>{
+  const path=new URL(route.request().url()).pathname;let body={};
+  if(path.endsWith('/session'))body={authenticated:true,csrfToken:'stage2-csrf',user:{id:'staff',name:'Staff',email:'staff@test.example',role:'staff'}};
+  else if(path.endsWith('/dashboard'))body={periods:{today:{},week:{},month:{}},recentBookings:[],statusBreakdown:{}};
+  else if(path.endsWith('/messages'))body={messages:[{id:'inbox1',subject:'Transfer talebi',source:'form',status:sent?'replied':'new',email:'g***@test.example',created_at:'2026-11-25'}],total:1,page:1,pageSize:20};
+  else if(path.endsWith('/messages/inbox1'))body={subject:'Transfer talebi',body:'Havalimanı transferi için bilgi istiyorum.',email:'g***@test.example',notes:[],replies:[]};
+  else if(path.endsWith('/reply-templates'))body={tr:template,en:template,ru:template};
+  else if(path.endsWith('/reply-preview')){expect(route.request().headers()['x-csrf-token']).toBe('stage2-csrf');body={confirmationId:'confirm-mail',preview:{to:'g***@test.example',subject:'Talebiniz',body:'Merhaba, talebinizi aldık.'},requiresConfirmation:true};}
+  else if(path.endsWith('/actions/confirm-mail/confirm')){expect(route.request().postDataJSON().confirm).toBe(true);sent=true;body={sent:true};}
+  else if(path.endsWith('/members'))body={members:[],total:0,page:1,pageSize:20};
+  await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+ });
+ await page.goto('/extranet/');await page.locator('#navInbox').click();await page.getByRole('button',{name:'Mesajı aç'}).click();
+ await expect(page.getByLabel('Yanıt metni')).toHaveValue(template.body);
+ await page.getByRole('button',{name:'Yanıtı önizle'}).click();await expect(page.locator('dialog[open]')).toContainText(template.body);expect(sent).toBe(false);
+ await page.getByRole('button',{name:'Onayla ve uygula'}).click();await expect(page.locator('dialog[open]')).toHaveCount(0);expect(sent).toBe(true);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+});

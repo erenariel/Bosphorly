@@ -1,3 +1,4 @@
+import {memberControls} from './member-controls.js';
 import {membershipTier, automaticTier} from './membership-tier.js';
 // Consented member familiarity notes and anonymous Mimo development counters.
 // Raw chat is never written. Health, religion, politics, orientation, passport,
@@ -252,6 +253,7 @@ export async function memberTierById(env, memberId) {
       const m = await dbFirst(env, `SELECT email FROM members WHERE id=?`, String(memberId));
       if (m && isOwnerEmail(env, m.email)) return 'owner';
     }
+    if((await memberControls(env,memberId)).suspended)return 'guest';
     const row = await dbFirst(
       env,
       `SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`,
@@ -284,6 +286,7 @@ export async function resolveMemberAuth(env, tokenOrHeader, now = Date.now()) {
     );
     if (!row || !row.member_id) return null;
     const memberId = String(row.member_id);
+    if(!isOwnerEmail(env,row.email)&&(await memberControls(env,memberId)).suspended)return null;
     if (isOwnerEmail(env, row.email)) {
       return { memberId, tier: 'owner', fulfilledCount: 0, owner: true };
     }

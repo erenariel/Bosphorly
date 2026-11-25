@@ -1,3 +1,5 @@
+> Tam Aşama 2 kapsamı, süreli atamalar, mesaj kutusu ve kurulum için [README-stage2.md](README-stage2.md) esas alınmalıdır.
+
 # Extranet üyelik yönetimi
 
 Bu çalışma Aşama 1 (#106) üzerine kuruludur. Aşama 1 migration'ı `0014_extranet_stage1.sql`, üyelik yönetimi migration'ı `0015_extranet_stage2.sql` sırasıyla uygulanmalıdır. Bu PR canlı migration veya yayın yapmaz.
@@ -7,7 +9,7 @@ Panelde **Üyeler ve Seviyeler** altında isim/e-posta araması ve 20 kayıtlık
 İki çalışma biçimi:
 
 - **Otomatik:** tamamlanan 0–1 tur Silver, 2–4 tur Gold, 5 ve üzeri Platinum.
-- **Elle atama:** Silver/Gold/Platinum seçimi otomatik seviyenin önüne geçer. Süresizdir; otomatiğe dön seçeneğiyle kaldırılır. Yeni turlar otomatik seviyeyi hesaplamaya devam eder, manuel seçimi değiştirmez.
+- **Elle atama:** Silver/Gold/Platinum seçimi otomatik seviyenin önüne geçer. Kalıcı veya süreli atanabilir; süre dolunca önceki ayara döner, otomatiğe dön seçeneğiyle de kaldırılır. Yeni turlar otomatik seviyeyi hesaplamaya devam eder, manuel seçimi değiştirmez.
 
 Panel ikisini ve geçerli seviyeyi birlikte gösterir. İşletme sahibi hesabı korunur: üye seviyesi ayarı yönetici yetkisi kazandırmaz ve owner limitlerini değiştirmez.
 

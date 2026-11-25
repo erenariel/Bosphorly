@@ -456,6 +456,75 @@
 
   // --- Navigation & Views ---
 
+  const manager = () => currentUser && ['owner','admin'].includes(currentUser.role);
+  function node(tag,text,cls) {const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;}
+  function input(labelText,type='text',value='') {const label=node('label',labelText+' '),field=document.createElement('input');field.type=type;field.value=value;field.setAttribute('aria-label',labelText);label.append(field);return {label,field};}
+  function button(text,fn){const b=node('button',text,'ex-btn');b.type='button';b.onclick=fn;return b;}
+  async function previewAndConfirm(path,body) {
+    const result=await extranetApi(path,{method:'POST',body});
+    const dialog=document.createElement('dialog'),title=node('h2','İşlemi onayla'),preview=result.preview;
+    dialog.append(title);
+    const names={count:'Etkilenecek üye sayısı',skipped:'Atlanacak korunan hesap',tier:'Seviye',days:'Gün',reason:'Gerekçe',to:'Alıcı',subject:'Konu',body:'E-posta metni',member:'Üye',message:'İşlem'};
+    for(const [key,value] of Object.entries(preview))dialog.append(node('p',(names[key]||key)+': '+(value??'Süresiz')));
+    const status=node('p');dialog.append(status);
+    const cancel=button('Vazgeç',()=>{dialog.close();dialog.remove();});
+    const send=button('Onayla ve uygula',async()=>{
+      send.disabled=true;try{await extranetApi('/v1/extranet/actions/'+result.confirmationId+'/confirm',{method:'POST',body:{confirm:true}});dialog.close();dialog.remove();if(activeView==='inbox'){await loadInbox(inboxPage);}else{await loadMembers(memberPage);}}
+      catch(error){status.textContent=error.message;send.disabled=false;}
+    });dialog.append(cancel,send);document.body.append(dialog);dialog.showModal();
+  }
+  async function memberDetail(id) {
+    const container=$('membersDetail');container.replaceChildren();
+    try {
+      const data=await extranetApi('/v1/extranet/members/'+encodeURIComponent(id));
+      container.append(node('h2',data.name||'Üye'),node('p',data.email+' · '+(data.phone||'')+' · Kayıt: '+data.createdAt+' · Son giriş: '+(data.lastLogin||'Kayıt yok')));
+      const show=(title,items,render)=>{container.append(node('h3',title));if(!items.length)container.append(node('p','Kayıt yok.'));for(const item of items)container.append(node('p',render(item)));};
+      show('Talepler',data.requests,r=>r.ref+' · '+r.service_date+' · '+r.state);
+      show('Kuponlar',data.coupons,r=>r.code+' · %'+r.percent_bps/100+' · '+r.status+' · '+r.expires_at);
+      container.append(node('p','Mimo günlük kullanım sayacı: '+(data.mimo?.messagesToday||0)+' · Sayaç günü: '+(data.mimo?.counterDay||'yok')+'. Sohbet içeriği gösterilmez.'));
+      if(manager()&&data.levels){
+        show('Seviye geçmişi',data.history,r=>r.created_at+' · '+r.reason+' · '+JSON.parse(r.new_json).tier);
+        if(data.owner){container.append(node('p','İşletme sahibi: Platinum, sınırsız. Bu hesap seviye veya askıya alma işlemleriyle değiştirilemez.'));return;}
+        const controls=node('form'),reason=input('İşlem gerekçesi'),suspended=input('Hesap askıda','checkbox'),disabled=input('Otomatik seviye kuralını durdur','checkbox'),limit=input('Mimo günlük mesaj limiti','number',data.controls.mimo_daily_limit??'');
+        suspended.field.checked=!!data.controls.suspended;disabled.field.checked=!!data.controls.automatic_disabled;limit.field.min=0;limit.field.max=10000;limit.field.placeholder='Seviyenin varsayılan limiti';
+        reason.field.required=true;reason.field.minLength=3;
+        controls.append(suspended.label,disabled.label,limit.label,reason.label);
+        const save=node('button','Hesap ayarlarını kaydet','ex-btn');save.type='submit';controls.append(save);
+        controls.onsubmit=async event=>{event.preventDefault();try{await extranetApi('/v1/extranet/members/'+id+'/controls',{method:'POST',body:{reason:reason.field.value,suspended:suspended.field.checked,automaticDisabled:disabled.field.checked,mimoDailyLimit:limit.field.value===''?null:Number(limit.field.value)}});await memberDetail(id);}catch(e){alert(e.message);}};container.append(controls);
+        container.append(button('Tüm oturumları kapat',async()=>{const why=prompt('Oturumları kapatma gerekçesi');if(!why)return;try{await extranetApi('/v1/extranet/members/'+id+'/controls',{method:'POST',body:{reason:why,revokeSessions:true}});alert('Oturumlar kapatıldı.');}catch(e){alert(e.message);}}));
+        const coupon=node('form'),percent=input('Kupon indirimi (%)','number','5'),days=input('Kupon geçerlilik günü','number','30'),why=input('Kupon gerekçesi');percent.field.min=1;percent.field.max=10;days.field.min=1;days.field.max=730;why.field.required=true;why.field.minLength=3;const grant=node('button','Kupon tanımla','ex-btn');grant.type='submit';coupon.append(percent.label,days.label,why.label,grant);
+        coupon.onsubmit=async event=>{event.preventDefault();try{await extranetApi('/v1/extranet/members/'+id+'/coupon',{method:'POST',body:{percentBps:Math.round(Number(percent.field.value)*100),validDays:Number(days.field.value),reason:why.field.value}});await memberDetail(id);}catch(e){alert(e.message);}};container.append(coupon);
+        container.append(button('Seviye bildirim e-postasını önizle',()=>previewAndConfirm('/v1/extranet/members/'+id+'/tier-mail-preview',{lang:prompt('Dil: tr / en / ru','tr')||'tr'}).catch(e=>alert(e.message))));
+        if(currentUser.role==='owner')container.append(button('KVKK silme talebini işle',()=>{const why=prompt('Silme talebi gerekçesi');if(why)previewAndConfirm('/v1/extranet/members/'+id+'/delete-preview',{reason:why}).catch(e=>alert(e.message));}));
+      }
+      container.scrollIntoView({block:'start'});
+    }catch(e){container.append(node('p',e.message));}
+  }
+  let inboxPage=1;
+  async function loadInbox(page=1) {
+    const list=$('inboxList');list.replaceChildren();
+    try{const data=await extranetApi('/v1/extranet/messages?page='+page+'&status='+$('inboxStatus').value+'&source='+$('inboxSource').value);inboxPage=data.page;
+      $('inboxCount').textContent=data.total+' mesaj · Sayfa '+data.page;
+      for(const item of data.messages){const card=node('section',null,'ex-detail-section');card.append(node('h2',item.subject),node('p',item.source+' · '+item.status+' · '+item.created_at+' · '+(item.email||'')),button('Mesajı aç',()=>openMessage(item.id)));list.append(card);}
+      $('inboxPrev').disabled=page<=1;$('inboxNext').disabled=page*20>=data.total;
+    }catch(e){list.append(node('p',e.message));}
+  }
+  async function openMessage(id) {
+    const box=$('messageDetail');box.replaceChildren();
+    try{const data=await extranetApi('/v1/extranet/messages/'+id);box.append(node('h2',data.subject),node('p',data.email||'E-posta yok'),node('pre',data.body));
+      for(const state of [['new','Yeni'],['read','Okundu'],['replied','Yanıtlandı'],['archived','Arşiv']])box.append(button(state[1],async()=>{await extranetApi('/v1/extranet/messages/'+id+'/status',{method:'POST',body:{status:state[0]}});await loadInbox(inboxPage);}));
+      for(const note of data.notes)box.append(node('p','İç not: '+note.body));
+      for(const reply of data.replies)box.append(node('p','Yanıt ('+reply.status+'): '+reply.subject+' — '+reply.body));
+      const note=node('form'),text=input('İç not');text.field.required=true;text.field.maxLength=2000;const add=node('button','Not ekle','ex-btn');add.type='submit';note.append(text.label,add);note.onsubmit=async e=>{e.preventDefault();try{await extranetApi('/v1/extranet/messages/'+id+'/note',{method:'POST',body:{body:text.field.value}});await openMessage(id);}catch(error){alert(error.message);}};box.append(note);
+      if(data.email){const templates=await extranetApi('/v1/extranet/reply-templates'),form=node('form'),lang=document.createElement('select');lang.setAttribute('aria-label','Yanıt dili');for(const code of ['tr','en','ru']){const o=node('option',code.toUpperCase());o.value=code;lang.append(o);}
+        const subject=input('Yanıt konusu'),body=document.createElement('textarea');body.setAttribute('aria-label','Yanıt metni');body.required=true;body.maxLength=12000;
+        const fill=()=>{subject.field.value=templates[lang.value].subject;body.value=templates[lang.value].body;};lang.onchange=fill;fill();const preview=node('button','Yanıtı önizle','ex-btn');preview.type='submit';form.append(lang,subject.label,body,preview);
+        form.onsubmit=e=>{e.preventDefault();previewAndConfirm('/v1/extranet/messages/'+id+'/reply-preview',{lang:lang.value,subject:subject.field.value,body:body.value}).catch(error=>alert(error.message));};box.append(form);
+      }
+      box.scrollIntoView({block:'start'});
+    }catch(e){box.append(node('p',e.message));}
+  }
+
   let memberPage = 1;
   let membersBusy = false;
   async function loadMembers(page) {
@@ -463,13 +532,17 @@
     membersBusy = true;
     $('membersMessage').textContent = 'Yükleniyor…';
     try {
-      const data = await extranetApi('/v1/extranet/members?q='+encodeURIComponent($('memberSearch').value)+'&page='+Math.max(1,page));
+      const data = await extranetApi('/v1/extranet/members?q='+encodeURIComponent($('memberSearch').value)+'&status='+$('memberStatus').value+'&provider='+$('memberProvider').value+'&tier='+$('memberTierFilter').value+'&page='+Math.max(1,page));
       memberPage = data.page;
       const list = $('membersList'); list.replaceChildren();
+      $('memberManagement').hidden=!manager();
       for (const member of data.members) {
         const card = document.createElement('section'); card.className='ex-detail-section';
         const title = document.createElement('h2');title.textContent=member.name+' · '+member.email;card.append(title);
-        const info = document.createElement('p');info.textContent='Geçerli: '+(member.owner?'Platinum (işletme sahibi)':member.tier)+' · Otomatik: '+member.automaticTier+' · Tamamlanan tur: '+member.fulfilledCount+' · '+(member.manualTier?'Elle atandı':'Otomatik');card.append(info);
+        card.append(button('Üye profili',()=>memberDetail(member.id)));
+        if(manager()&&!member.owner){const choice=input('Toplu işlem için seç','checkbox');choice.field.dataset.memberId=member.id;card.append(choice.label);}
+        const dates=node('p','Kayıt: '+(member.createdAt||'')+' · Son giriş: '+(member.lastLogin||'Yok')+' · Talep: '+(member.requestCount||0)+' · Giriş: '+(member.methods||[]).join(', '));card.append(dates);
+        const info = document.createElement('p');info.textContent=(manager()?'Geçerli: '+(member.owner?'Platinum (işletme sahibi)':member.tier)+' · Otomatik: '+member.automaticTier+' · Tamamlanan tur: '+member.fulfilledCount+' · '+(member.manualTier?'Elle atandı':'Otomatik')+(member.expiresAt?' · Süre sonu: '+member.expiresAt:''):'Üye profili görüntülenebilir.');card.append(info);
         if (!member.owner && ['owner','admin'].includes(currentUser.role)) {
           const form=document.createElement('form');
           const label=document.createElement('label');label.textContent='Üyelik seviyesi ';
@@ -480,12 +553,13 @@
           select.value=member.manualTier||'automatic';label.append(select);
           const reason=document.createElement('input');reason.placeholder='İşlem gerekçesi';reason.setAttribute('aria-label','İşlem gerekçesi');reason.required=true;reason.minLength=3;reason.maxLength=500;
           const save=document.createElement('button');save.type='submit';save.className='ex-btn';save.textContent='Seviyeyi kaydet';
-          form.append(label,reason,save);card.append(form);
+          const duration=input('Seviye süresi (gün)','number');duration.field.min=1;duration.field.max=730;duration.field.placeholder='Süresiz';
+          form.append(label,duration.label,reason,save);card.append(form);
           form.onsubmit=async event=>{
             event.preventDefault();
             if (!confirm(member.name+' için '+select.options[select.selectedIndex].text+' uygulanacak. Onaylıyor musunuz?')) return;
             save.disabled=true;
-            try {await extranetApi('/v1/extranet/members/'+encodeURIComponent(member.id)+'/tier',{method:'POST',body:{tier:select.value,reason:reason.value}});await loadMembers(memberPage);}
+            try {await extranetApi('/v1/extranet/members/'+encodeURIComponent(member.id)+'/tier',{method:'POST',body:{tier:select.value,reason:reason.value,days:duration.field.value?Number(duration.field.value):null}});await loadMembers(memberPage);}
             catch(error){$('membersMessage').textContent=error.message;} finally {save.disabled=false;}
           };
         }
@@ -502,6 +576,8 @@
     activeView = viewName;
     $('viewDashboard').hidden = viewName !== 'dashboard';
     $('viewBookings').hidden = viewName !== 'bookings';
+    $('viewInbox').hidden=viewName!=='inbox';
+    $('navInbox').setAttribute('aria-current',viewName==='inbox'?'page':'false');
     $('viewMembers').hidden = viewName !== 'members';
     $('navMembers').setAttribute('aria-current',viewName==='members'?'page':'false');
     $('navDashboard').setAttribute('aria-current', viewName === 'dashboard' ? 'page' : 'false');
@@ -509,6 +585,8 @@
 
     if (viewName === 'dashboard') {
       await loadDashboard();
+    } else if (viewName === 'inbox') {
+      await loadInbox(1);
     } else if (viewName === 'members') {
       await loadMembers(1);
     } else if (viewName === 'bookings') {
@@ -1227,6 +1305,10 @@
     };
 
     $('navDashboard').onclick = () => switchView('dashboard');
+    $('navInbox').onclick=()=>switchView('inbox');
+    $('inboxStatus').onchange=()=>loadInbox(1);$('inboxSource').onchange=()=>loadInbox(1);$('inboxPrev').onclick=()=>loadInbox(inboxPage-1);$('inboxNext').onclick=()=>loadInbox(inboxPage+1);
+    $('memberTierFilter').onchange=()=>loadMembers(1);$('memberStatus').onchange=()=>loadMembers(1);$('memberProvider').onchange=()=>loadMembers(1);
+    $('memberBulk').onclick=()=>{const ids=[...document.querySelectorAll('[data-member-id]:checked')].map(n=>n.dataset.memberId);previewAndConfirm('/v1/extranet/members/tier-bulk-preview',{ids,tier:$('bulkTier').value,days:$('bulkDays').value?Number($('bulkDays').value):null,reason:$('bulkReason').value}).catch(e=>alert(e.message));};
     $('navMembers').onclick = () => switchView('members');
     $('memberSearchForm').onsubmit = e => {e.preventDefault();loadMembers(1);};
     $('membersPrev').onclick = () => loadMembers(memberPage-1);

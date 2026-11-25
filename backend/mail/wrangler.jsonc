@@ -4,13 +4,31 @@
   "compatibility_date": "2026-11-16",
   "workers_dev": true,
   "preview_urls": false,
-  "observability": {"enabled": false},
+  "observability": {
+    "enabled": false
+  },
   "vars": {
     "PUBLIC_ORIGIN": "https://bosphorly.com",
     "ENABLE_EMAIL_REQUESTS": "true",
-    "REQUEST_FROM_EMAIL": "Bosphorly Travel <requests@notify.bosphorly.com>"
+    "REQUEST_FROM_EMAIL": "Bosphorly Travel <requests@notify.bosphorly.com>",
+    "MESSAGE_RETENTION_MONTHS": "24"
   },
   "ratelimits": [
-    {"name":"RATE_LIMITER","namespace_id":"1047","simple":{"limit":10,"period":60}}
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "1047",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bosphorly-booking",
+      "database_id": "e833157a-839a-4834-95b0-dc92a66598be",
+      "migrations_dir": "../migrations"
+    }
   ]
 }
