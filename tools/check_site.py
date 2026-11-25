@@ -18,7 +18,8 @@ GUIDE_PAIRS = [
     ("en/old-city.html", "tr/tarihi-yarimada.html"),
     ("en/bosphorus-cruises.html", "tr/bogaz-turlari.html"),
 ]
-ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair]
+MIMO_PAGES = [f"mimo/{lang}.html" for lang in json.loads((ROOT / "data/faq.json").read_text())]
+ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair] + MIMO_PAGES + ["he/airport-transfer.html"]
 
 
 class References(HTMLParser):
@@ -136,7 +137,11 @@ def assert_hreflang():
             "tr": f"https://bosphorly.com/{tr_page}",
             "x-default": f"https://bosphorly.com/{en_page}",
         }
-        for page in (en_page, tr_page):
+        pages = [en_page, tr_page]
+        if en_page == "en/airport-transfer.html":
+            pages.append("he/airport-transfer.html")
+            expected["he"] = "https://bosphorly.com/he/airport-transfer.html"
+        for page in pages:
             found = dict(re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', (ROOT / page).read_text(encoding="utf-8")))
             assert found == expected, (page, found)
 

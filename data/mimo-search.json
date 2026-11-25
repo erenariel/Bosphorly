@@ -1,0 +1,163 @@
+{
+  "en": {
+    "language": "English",
+    "title": "Mimo, your Istanbul travel assistant",
+    "description": "Ask Mimo about Istanbul airport transfers, Bosphorus cruises and hammams on the web, Telegram or WhatsApp.",
+    "example": "I land at IST and my hotel is in Sultanahmet. What should I check before requesting a transfer?",
+    "chat": "Chat with Mimo"
+  },
+  "tr": {
+    "language": "Türkçe",
+    "title": "Mimo ile İstanbul gezi planı",
+    "description": "İstanbul havalimanı transferleri, Boğaz turları ve hamamlar hakkında Mimo’ya web, Telegram veya WhatsApp üzerinden Türkçe sor.",
+    "example": "Uçağım İstanbul Havalimanı’na iniyor, otelim Sultanahmet’te. Transfer istemeden önce neyi kontrol etmeliyim?",
+    "chat": "Mimo ile konuş"
+  },
+  "he": {
+    "language": "עברית",
+    "title": "מימו, עוזר הנסיעות שלך באיסטנבול",
+    "description": "אפשר לשאול את מימו בעברית על הסעות משדות התעופה, שייט בבוספורוס וחמאם באיסטנבול, באתר, בטלגרם או בוואטסאפ.",
+    "example": "הטיסה שלי נוחתת בשדה התעופה IST והמלון שלי בסולטנאחמט. מה כדאי לבדוק לפני שמבקשים הסעה?",
+    "chat": "לשיחה עם מימו"
+  },
+  "ru": {
+    "language": "Русский",
+    "title": "Мимо — помощник для поездки в Стамбул",
+    "description": "Спросите Мимо о трансфере из аэропорта, прогулке по Босфору или хаммаме на сайте, в Telegram или WhatsApp.",
+    "example": "Я прилетаю в IST, а мой отель в Султанахмете. Что уточнить перед заказом трансфера?",
+    "chat": "Спросить Мимо"
+  },
+  "uk": {
+    "language": "Українська",
+    "title": "Мімо — помічник для подорожі до Стамбула",
+    "description": "Запитайте Мімо про трансфер з аеропорту, прогулянку Босфором або хамам на сайті, у Telegram чи WhatsApp.",
+    "example": "Я прилітаю в IST, а мій готель у Султанахметі. Що варто уточнити перед замовленням трансферу?",
+    "chat": "Запитати Мімо"
+  },
+  "de": {
+    "language": "Deutsch",
+    "title": "Mimo, dein Reiseassistent für Istanbul",
+    "description": "Frag Mimo auf der Website, auf Telegram oder auf WhatsApp nach Flughafentransfers, Bosporusfahrten und Hamams in Istanbul.",
+    "example": "Ich lande am Flughafen IST und mein Hotel liegt in Sultanahmet. Was sollte ich vor der Transferanfrage klären?",
+    "chat": "Mit Mimo chatten"
+  },
+  "fr": {
+    "language": "Français",
+    "title": "Mimo, votre assistant de voyage à Istanbul",
+    "description": "Posez vos questions sur les transferts, les croisières sur le Bosphore et les hammams à Mimo sur le site, Telegram ou WhatsApp.",
+    "example": "J’arrive à l’aéroport IST et mon hôtel se trouve à Sultanahmet. Que vérifier avant de demander un transfert ?",
+    "chat": "Discuter avec Mimo"
+  },
+  "ar": {
+    "language": "العربية",
+    "title": "ميمو، مساعدك للسفر إلى إسطنبول",
+    "description": "اسأل ميمو بالعربية عن النقل من المطار ورحلات البوسفور والحمامات التركية عبر الموقع أو تيليجرام أو واتساب.",
+    "example": "سأصل إلى مطار إسطنبول وفندقي في السلطان أحمد. ما الذي ينبغي التأكد منه قبل طلب سيارة؟",
+    "chat": "تحدث مع ميمو"
+  },
+  "nl": {
+    "language": "Nederlands",
+    "title": "Mimo, je reisassistent voor Istanbul",
+    "description": "Vraag Mimo op de website, via Telegram of WhatsApp naar luchthaventransfers, boottochten op de Bosporus en hamams.",
+    "example": "Ik land op IST en mijn hotel ligt in Sultanahmet. Wat moet ik weten voordat ik een transfer aanvraag?",
+    "chat": "Chat met Mimo"
+  },
+  "az": {
+    "language": "Azərbaycanca",
+    "title": "Mimo ilə İstanbul səyahəti",
+    "description": "İstanbulda hava limanından transfer, Boğaz turları və hamamlar barədə Mimoya saytda, Telegram və ya WhatsApp vasitəsilə sual ver.",
+    "example": "İstanbul Hava Limanına enirəm, otelim Sultanahmetdədir. Transfer istəməzdən əvvəl nəyi dəqiqləşdirməliyəm?",
+    "chat": "Mimo ilə söhbət et"
+  },
+  "fa": {
+    "language": "فارسی",
+    "title": "میمو، دستیار سفر به استانبول",
+    "description": "دربارهٔ ترانسفر فرودگاه، گشت بسفر و حمام ترکی در وب‌سایت، تلگرام یا واتساپ از میمو به فارسی بپرسید.",
+    "example": "پروازم در فرودگاه استانبول می‌نشیند و هتلم در سلطان‌احمد است. پیش از درخواست ترانسفر چه چیزهایی را بررسی کنم؟",
+    "chat": "گفت‌وگو با میمو"
+  },
+  "es": {
+    "language": "Español",
+    "title": "Mimo, tu asistente de viaje en Estambul",
+    "description": "Pregunta a Mimo sobre traslados desde el aeropuerto, cruceros por el Bósforo y baños turcos en la web, en Telegram o en WhatsApp.",
+    "example": "Aterrizo en IST y mi hotel está en Sultanahmet. ¿Qué debo comprobar antes de solicitar un traslado?",
+    "chat": "Hablar con Mimo"
+  },
+  "it": {
+    "language": "Italiano",
+    "title": "Mimo, il tuo assistente di viaggio a Istanbul",
+    "description": "Chiedi a Mimo informazioni sui transfer aeroportuali, le crociere sul Bosforo e gli hammam sul sito, su Telegram o su WhatsApp.",
+    "example": "Atterro a IST e il mio hotel è a Sultanahmet. Cosa devo verificare prima di richiedere un transfer?",
+    "chat": "Parla con Mimo"
+  },
+  "pt": {
+    "language": "Português",
+    "title": "Mimo, seu assistente de viagem em Istambul",
+    "description": "Pergunte ao Mimo sobre traslados do aeroporto, passeios pelo Bósforo e banhos turcos no site, no Telegram ou no WhatsApp.",
+    "example": "Meu voo chega ao aeroporto IST e meu hotel fica em Sultanahmet. O que devo verificar antes de pedir um traslado?",
+    "chat": "Conversar com Mimo"
+  },
+  "hr": {
+    "language": "Hrvatski",
+    "title": "Mimo, tvoj vodič za putovanje u Istanbul",
+    "description": "Pitaj Mima o prijevozu iz zračne luke, krstarenju Bosporom i hamamima na stranici, Telegramu ili WhatsAppu.",
+    "example": "Slijećem u zračnu luku IST, a hotel mi je u Sultanahmetu. Što provjeriti prije nego što zatražim prijevoz?",
+    "chat": "Razgovaraj s Mimom"
+  },
+  "hu": {
+    "language": "Magyar",
+    "title": "Mimo, az isztambuli utazási segítőd",
+    "description": "Kérdezd Mimót az isztambuli reptéri transzferről, a boszporuszi hajóutakról vagy a törökfürdőkről a weboldalon, Telegramon vagy WhatsAppon.",
+    "example": "Az IST repülőtérre érkezem, a szállásom Sultanahmetben van. Mit érdemes tisztázni, mielőtt transzfert kérek?",
+    "chat": "Beszélgetés Mimóval"
+  },
+  "bs": {
+    "language": "Bosanski",
+    "title": "Mimo, tvoj pomoćnik za put u Istanbul",
+    "description": "Pitaj Mima o prijevozu s aerodroma, izletima brodom po Bosforu i hamamima putem stranice, Telegrama ili WhatsAppa.",
+    "example": "Slijećem na aerodrom IST, a hotel mi je u Sultanahmetu. Šta trebam provjeriti prije nego što zatražim prijevoz?",
+    "chat": "Pitaj Mima"
+  },
+  "zh": {
+    "language": "中文",
+    "title": "Mimo 伊斯坦布尔旅行助手",
+    "description": "在网站、Telegram 或 WhatsApp 上用中文向 Mimo 咨询伊斯坦布尔机场接送、博斯普鲁斯海峡游船和土耳其浴。",
+    "example": "我的航班抵达伊斯坦布尔机场（IST），酒店在苏丹艾哈迈德区。申请接机前要确认哪些信息？",
+    "chat": "与 Mimo 聊天"
+  },
+  "ja": {
+    "language": "日本語",
+    "title": "イスタンブール旅行の相談相手、Mimo",
+    "description": "空港送迎、ボスポラス海峡クルーズ、ハマムについて、ウェブサイト、Telegram、WhatsAppでMimoに日本語で相談できます。",
+    "example": "イスタンブール空港（IST）に着きます。ホテルはスルタンアフメット地区です。送迎を依頼する前に何を確認すればいいですか？",
+    "chat": "Mimoに相談する"
+  },
+  "ko": {
+    "language": "한국어",
+    "title": "이스탄불 여행 도우미 미모",
+    "description": "웹사이트, 텔레그램, 왓츠앱에서 미모에게 이스탄불 공항 픽업, 보스포루스 해협 크루즈, 하맘에 대해 한국어로 물어보세요.",
+    "example": "이스탄불 공항(IST)에 도착하고 숙소는 술탄아흐메트에 있어요. 픽업을 요청하기 전에 무엇을 확인해야 하나요?",
+    "chat": "미모와 대화하기"
+  },
+  "hi": {
+    "language": "हिन्दी",
+    "title": "मिमो, इस्तांबुल की यात्रा में आपका सहायक",
+    "description": "इस्तांबुल में एयरपोर्ट ट्रांसफ़र, बॉस्फ़ोरस क्रूज़ और हमाम के बारे में वेबसाइट, Telegram या WhatsApp पर मिमो से हिन्दी में पूछें।",
+    "example": "मेरी उड़ान IST एयरपोर्ट पर उतरती है और मेरा होटल सुल्तानअहमेत में है। ट्रांसफ़र का अनुरोध करने से पहले क्या जाँचूँ?",
+    "chat": "मिमो से बात करें"
+  },
+  "bn": {
+    "language": "বাংলা",
+    "title": "মিমো, ইস্তাম্বুল ভ্রমণে আপনার সহকারী",
+    "description": "বিমানবন্দর থেকে যাতায়াত, বসফরাসে নৌভ্রমণ ও হামাম নিয়ে ওয়েবসাইট, টেলিগ্রাম বা হোয়াটসঅ্যাপে মিমোকে বাংলায় জিজ্ঞেস করুন।",
+    "example": "আমার ফ্লাইট IST বিমানবন্দরে নামবে আর হোটেল সুলতানাহমেতে। গাড়ির অনুরোধ করার আগে কী কী যাচাই করব?",
+    "chat": "মিমোর সঙ্গে কথা বলুন"
+  },
+  "id": {
+    "language": "Bahasa Indonesia",
+    "title": "Mimo, asisten perjalanan Anda di Istanbul",
+    "description": "Tanyakan kepada Mimo tentang antar-jemput bandara, wisata kapal di Selat Bosporus, dan hamam melalui situs web, Telegram, atau WhatsApp.",
+    "example": "Saya tiba di bandara IST dan hotel saya di Sultanahmet. Apa yang perlu saya pastikan sebelum meminta penjemputan?",
+    "chat": "Mengobrol dengan Mimo"
+  }
+}
