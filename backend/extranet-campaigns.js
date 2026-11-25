@@ -7,6 +7,8 @@ export async function campaignRoutes(request, env, url, nowMs, h) {
     !/^\/v1\/extranet\/members\/[^/]+\/(data-export|reveal-pii)$/.test(path)
   )
     return null;
+  const configuredCap=Number(env.MAX_DISCOUNT_BPS||1000);
+  const maxDiscountBps=Number.isInteger(configuredCap)&&configuredCap>=1&&configuredCap<=5000?configuredCap:1000;
   const actor = await h.auth(request, env, ["owner", "admin"], nowMs),
     now = new Date(nowMs).toISOString().replace("T", " ").slice(0, 19);
   const stmt = (sql, ...args) => env.DB.prepare(sql).bind(...args),
@@ -90,6 +92,7 @@ export async function campaignRoutes(request, env, url, nowMs, h) {
   if (request.method === "GET" && path === "/v1/extranet/campaigns") {
     await audit("list_campaigns", "campaign", null, null, null).run();
     return response({
+      maxDiscountBps,
       campaigns: await rows(
         "SELECT c.*,(SELECT COUNT(*) FROM coupons p WHERE p.campaign_id=c.id) AS issued,(SELECT COUNT(*) FROM coupons p WHERE p.campaign_id=c.id AND p.status='redeemed') AS redeemed FROM campaigns c ORDER BY starts_at DESC LIMIT 200",
       ),
@@ -138,7 +141,7 @@ export async function campaignRoutes(request, env, url, nowMs, h) {
       if (
         !Number.isInteger(b.percentBps) ||
         b.percentBps < 1 ||
-        b.percentBps > 5000 ||
+        b.percentBps > maxDiscountBps ||
         !Number.isInteger(b.validDays) ||
         b.validDays < 1 ||
         b.validDays > 730 ||
@@ -174,6 +177,7 @@ export async function campaignRoutes(request, env, url, nowMs, h) {
       ]);
       return response({ proposalId: id, ownerApprovalRequired: true });
     }
+    if(c.percent_bps>maxDiscountBps)h.fail(400,'Kampanya mevcut indirim tavanını aşıyor.');
     if (!c.active || c.starts_at > now || (c.ends_at && c.ends_at <= now))
       h.fail(409, "Kampanya etkin değil.");
     if (Object.keys(b).some((k) => !["memberId", "reason"].includes(k)))
@@ -226,6 +230,7 @@ export async function campaignRoutes(request, env, url, nowMs, h) {
       approval[1],
     ).first();
     if (!proposal) h.fail(409, "Talep bulunamadı veya sonuçlandırılmış.");
+    if(JSON.parse(proposal.new_json).percent_bps>maxDiscountBps)h.fail(400,'Öneri mevcut indirim tavanını aşıyor.');
     const current = await stmt(
       "SELECT revision FROM campaigns WHERE id=?",
       proposal.campaign_id,

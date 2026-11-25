@@ -1295,12 +1295,15 @@ test('Stage 2 campaigns: owner approval, immutable issued rates, coupon issue/re
  assert.equal((await callWorker(env,'/v1/extranet/campaigns')).status,401);assert.equal((await callWorker(env,'/v1/extranet/campaigns',{cookie:staff.cookie})).status,403);
  const campaigns=await callWorker(env,'/v1/extranet/campaigns',{cookie:admin.cookie});assert.equal(campaigns.status,200);const c=campaigns.body.campaigns.find(x=>x.active&&x.kind!=='hotel');
  const issued=await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/issue',auth(admin,{memberId:guest.id,reason:'Misafir talebi'}));assert.equal(issued.status,200);
- const proposal=await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/proposal',auth(admin,{percentBps:1100,validDays:45,active:true,reason:'Sezon kampanyası'}));assert.equal(proposal.status,200);const path='/v1/extranet/campaign-proposals/'+proposal.body.proposalId+'/approve';
+ assert.equal((await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/proposal',auth(owner,{percentBps:1001,validDays:45,active:true,reason:'Tavanı aşma'}))).status,400);
+ const proposal=await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/proposal',auth(admin,{percentBps:800,validDays:45,active:true,reason:'Sezon kampanyası'}));assert.equal(proposal.status,200);const path='/v1/extranet/campaign-proposals/'+proposal.body.proposalId+'/approve';
  assert.equal((await callWorker(env,path,auth(admin,{confirm:true}))).status,403);assert.equal((await callWorker(env,path,auth(owner,{confirm:true}))).body.approved,true);
- assert.equal(env.DB.raw.prepare('SELECT percent_bps FROM campaigns WHERE id=?').get(c.id).percent_bps,1100);
+ assert.equal(env.DB.raw.prepare('SELECT percent_bps FROM campaigns WHERE id=?').get(c.id).percent_bps,800);
  assert.equal(env.DB.raw.prepare('SELECT percent_bps FROM coupons WHERE id=?').get(issued.body.id).percent_bps,c.percent_bps);
  assert.throws(()=>env.DB.raw.prepare('UPDATE coupons SET percent_bps=1200 WHERE id=?').run(issued.body.id),/immutable/);
  assert.equal((await callWorker(env,path,auth(owner,{confirm:true}))).status,409);
+ env.DB.raw.prepare('UPDATE campaigns SET percent_bps=1100 WHERE id=?').run(c.id);
+ assert.equal((await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/issue',auth(owner,{memberId:guest.id,reason:'Mevcut tavan testi'}))).status,400);
  assert.equal((await callWorker(env,'/v1/extranet/coupon-management/'+issued.body.id+'/revoke',auth(admin,{reason:'Misafir vazgeçti'}))).body.revoked,true);
 });
 
