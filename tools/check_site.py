@@ -19,7 +19,8 @@ GUIDE_PAIRS = [
     ("en/bosphorus-cruises.html", "tr/bogaz-turlari.html"),
 ]
 MIMO_PAGES = [f"mimo/{lang}.html" for lang in json.loads((ROOT / "data/faq.json").read_text())]
-ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair] + MIMO_PAGES + ["he/airport-transfer.html"]
+AIRPORT_EXTRA = {"he": "he/airport-transfer.html", "de": "de/flughafentransfer-istanbul.html", "fr": "fr/transfert-aeroport-istanbul.html"}
+ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair] + MIMO_PAGES + list(AIRPORT_EXTRA.values())
 
 
 class References(HTMLParser):
@@ -139,8 +140,8 @@ def assert_hreflang():
         }
         pages = [en_page, tr_page]
         if en_page == "en/airport-transfer.html":
-            pages.append("he/airport-transfer.html")
-            expected["he"] = "https://bosphorly.com/he/airport-transfer.html"
+            pages.extend(AIRPORT_EXTRA.values())
+            expected.update({lang: f"https://bosphorly.com/{path}" for lang, path in AIRPORT_EXTRA.items()})
         for page in pages:
             found = dict(re.findall(r'hreflang="([\w-]+)" href="([^"]+)"', (ROOT / page).read_text(encoding="utf-8")))
             assert found == expected, (page, found)
@@ -172,6 +173,9 @@ def assert_seo():
         if p not in {"404.html", "account.html", "dashboard.html", "partner.html", "presentation.html", "map.html"}
     }
     assert set(locs) == expected_public, (set(locs) ^ expected_public)
+    home = (ROOT / "index.html").read_text(encoding="utf-8")
+    for path in ["booking.html", *AIRPORT_EXTRA.values(), "mimo/en.html"]:
+        assert f'href="{path}"' in home, (path, "missing crawlable homepage link")
 
     titles, descs = {}, {}
     forbidden_ld_keys = {"aggregateRating", "review", "reviews", "ratingValue", "reviewCount", "availability"}
