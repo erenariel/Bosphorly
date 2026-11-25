@@ -1,5 +1,6 @@
 {
  "name": "bosphorly-booking", "main": "worker.js", "compatibility_date": "2026-11-16",
+ "routes": [{"pattern":"api.bosphorly.com","custom_domain":true}],
  "workers_dev": true, "preview_urls": false, "observability": {"enabled": true,"traces":{"enabled":true}},
  "d1_databases": [{"binding":"DB","database_name":"bosphorly-booking","database_id":"e833157a-839a-4834-95b0-dc92a66598be","migrations_dir":"migrations"}],
  "kv_namespaces": [{"binding":"WHATSAPP_KV","id":"2c6ec0d0591b4e6e8098d54a8c7c20b8"}],
