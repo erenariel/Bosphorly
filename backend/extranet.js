@@ -1,3 +1,4 @@
+import {membershipTier, MEMBER_TIERS} from './membership-tier.js';
 // Bosphorly Extranet API (/v1/extranet/*) — Stage 1: Authentication, RBAC (owner/admin/staff),
 // Mandatory Passkey (WebAuthn), HttpOnly+Secure+SameSite=Strict Session with 30m Idle Timeout,
 // CSRF Protection, Immutable Audit Log, Dashboard KPIs, and Reservations Management.
@@ -471,10 +472,10 @@ function formatMinorPrice(totalMinor, currency) {
   return `${sym}${major}`;
 }
 
-function computeEffectiveTier(env, memberId, email, fulfilledCount) {
+function computeEffectiveTier(env, memberId, email, fulfilledCount, override) {
   if (!memberId) return 'guest';
   if (email && isOwnerEmail(env, email)) return 'platinum';
-  return computeMemberTier(Number(fulfilledCount || 0));
+  return MEMBER_TIERS.has(override) ? override : computeMemberTier(Number(fulfilledCount || 0));
 }
 
 function defaultCommissionBps(env) {
@@ -492,7 +493,7 @@ function normalizeBookingRow(env, b) {
   const guestRoom = b.guest_room || b.mem_room || null;
   const lang = b.meta_lang || b.mem_lang || 'en';
   const source = b.meta_source || (b.referral_hash ? 'hotel_qr' : (b.meta_member_id ? 'member' : 'web'));
-  const memberTier = computeEffectiveTier(env, b.meta_member_id, b.mem_email, b.mem_fulfilled_count);
+  const memberTier = computeEffectiveTier(env, b.meta_member_id, b.mem_email, b.mem_fulfilled_count,b.mem_manual_tier);
   const providerId = b.assigned_provider_id || b.exp_provider_id || null;
   const commBps = Number.isInteger(b.commission_bps) ? b.commission_bps : defaultCommissionBps(env);
   const couponBps = b.coupon_code && b.coupon_status !== 'void' ? Number(b.coupon_bps || 0) : 0;
@@ -558,7 +559,7 @@ function normalizeMemberRequestRow(env, r) {
   const parsedPrice = parseTotalText(r.total_text);
   const lang = r.meta_lang || r.mem_lang || 'en';
   const source = r.meta_source || (r.mem_hotel_id ? 'hotel_qr' : 'member');
-  const memberTier = computeEffectiveTier(env, r.member_id, r.mem_email, r.mem_fulfilled_count);
+  const memberTier = computeEffectiveTier(env, r.member_id, r.mem_email, r.mem_fulfilled_count,r.mem_manual_tier);
   const commBps = defaultCommissionBps(env);
   const couponBps = r.coupon_code && r.coupon_status !== 'void' ? Number(r.coupon_bps || 0) : 0;
   const grossCommMinor =
@@ -672,6 +673,7 @@ async function loadAllReservations(env, sqlDateFilter = null) {
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
             (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            (SELECT tier FROM member_tier_overrides WHERE member_id=m.id) AS mem_manual_tier,
             c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id,
             cm.amount_minor AS accrued_commission_minor, cm.status AS accrued_commission_status
      FROM booking_requests b
@@ -694,6 +696,7 @@ async function loadAllReservations(env, sqlDateFilter = null) {
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
             (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            (SELECT tier FROM member_tier_overrides WHERE member_id=m.id) AS mem_manual_tier,
             c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id
      FROM member_requests r
      JOIN members m ON m.id = r.member_id
@@ -740,6 +743,7 @@ async function loadSingleReservation(env, rawId) {
               m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
               m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
               (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            (SELECT tier FROM member_tier_overrides WHERE member_id=m.id) AS mem_manual_tier,
               c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id,
               cm.amount_minor AS accrued_commission_minor, cm.status AS accrued_commission_status
        FROM booking_requests b
@@ -764,6 +768,7 @@ async function loadSingleReservation(env, rawId) {
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
             (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS mem_fulfilled_count,
+            (SELECT tier FROM member_tier_overrides WHERE member_id=m.id) AS mem_manual_tier,
             c.code AS coupon_code, c.percent_bps AS coupon_bps, c.status AS coupon_status, k.kind AS campaign_kind, k.id AS campaign_id
      FROM member_requests r
      JOIN members m ON m.id = r.member_id
@@ -1558,6 +1563,41 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
     }
 
     // --- Authenticated Extranet Endpoints (sliding cookie refreshed on every valid call) ---
+
+    if (method === 'GET' && path === '/v1/extranet/members') {
+      const auth = await requireExtranetAuth(request,env,['owner','admin','staff'],nowMs);
+      const q = (url.searchParams.get('q') || '').trim().slice(0,120);
+      const page = Math.max(1,Math.min(10000,parseInt(url.searchParams.get('page') || '1',10)||1));
+      const pattern = '%' + q.replace(/[\\%_]/g, c => '\\'+c) + '%';
+      const where = "WHERE m.name LIKE ? ESCAPE '\\' OR m.email LIKE ? ESCAPE '\\'";
+      const total = await env.DB.prepare('SELECT COUNT(*) AS n FROM members m '+where).bind(pattern,pattern).first();
+      const rows = (await env.DB.prepare(`SELECT m.id,m.name,m.email,m.created_at,
+        (SELECT COUNT(*) FROM member_requests r WHERE r.member_id=m.id AND r.state='fulfilled') AS fulfilled_count
+        FROM members m ${where} ORDER BY m.created_at DESC,m.id LIMIT 20 OFFSET ?`).bind(pattern,pattern,(page-1)*20).all()).results;
+      const members = [];
+      for (const row of rows) members.push({id:row.id,name:row.name,email:maskEmail(row.email),fulfilledCount:Number(row.fulfilled_count),
+        ...(await membershipTier(env,row.id,row.fulfilled_count)),owner:isOwnerEmail(env,row.email)});
+      await writeAudit(env,{actorMemberId:auth.memberId,actorRole:auth.role,action:'list_members',targetType:'member',ipAddress:auth.ipAddress,nowSql});
+      return jsonResponse({members,total:Number(total.n),page,pageSize:20},200,{'Set-Cookie':buildSessionCookie(auth.rawCookie)});
+    }
+    const tierMatch = path.match(/^\/v1\/extranet\/members\/([^/]+)\/tier$/);
+    if (method === 'POST' && tierMatch) {
+      const auth = await requireExtranetAuth(request,env,['owner','admin'],nowMs);
+      const body = await readJsonBody(request,2048);
+      const id = decodeURIComponent(tierMatch[1]);
+      if (!['automatic',...MEMBER_TIERS].includes(body.tier) || typeof body.reason !== 'string' || body.reason.trim().length<3 || body.reason.length>500 || containsCardNumber(body.reason)) fail(400,'Geçerli seviye ve 3–500 karakter işlem gerekçesi gerekli.');
+      const member = await env.DB.prepare('SELECT id,email FROM members WHERE id=?').bind(id).first();
+      if (!member) fail(404,'Üye bulunamadı.');
+      if (isOwnerEmail(env,member.email)) fail(403,'İşletme sahibi hesabının seviyesi buradan değiştirilemez.');
+      const old = await env.DB.prepare('SELECT tier,reason,updated_by,updated_at FROM member_tier_overrides WHERE member_id=?').bind(id).first();
+      const mutation = body.tier==='automatic'
+        ? env.DB.prepare('DELETE FROM member_tier_overrides WHERE member_id=?').bind(id)
+        : env.DB.prepare(`INSERT INTO member_tier_overrides(member_id,tier,reason,updated_by,updated_at) VALUES(?,?,?,?,?)
+            ON CONFLICT(member_id) DO UPDATE SET tier=excluded.tier,reason=excluded.reason,updated_by=excluded.updated_by,updated_at=excluded.updated_at`).bind(id,body.tier,body.reason.trim(),auth.memberId,nowSql);
+      await env.DB.batch([mutation,buildAuditStatement(env,{actorMemberId:auth.memberId,actorRole:auth.role,action:'set_member_tier',targetType:'member',targetId:id,oldValue:old,newValue:{tier:body.tier,reason:body.reason.trim()},ipAddress:auth.ipAddress,nowSql})]);
+      const count = await env.DB.prepare("SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'").bind(id).first();
+      return jsonResponse(await membershipTier(env,id,count.n),200,{'Set-Cookie':buildSessionCookie(auth.rawCookie)});
+    }
 
     // 6. Dashboard (GET /v1/extranet/dashboard)
     if (method === 'GET' && path === '/v1/extranet/dashboard') {

@@ -1,3 +1,4 @@
+import {membershipTier, automaticTier} from './membership-tier.js';
 // Consented member familiarity notes and anonymous Mimo development counters.
 // Raw chat is never written. Health, religion, politics, orientation, passport,
 // card, address, phone and email are dropped before anything is stored.
@@ -230,10 +231,7 @@ function parseStored(raw) {
 }
 
 export function computeMemberTier(fulfilledCount) {
-  const n = Number(fulfilledCount || 0);
-  if (n >= 5) return 'platinum';
-  if (n >= 2) return 'gold';
-  return 'silver';
+  return automaticTier(fulfilledCount);
 }
 
 // Site owners (comma-separated e-mails in the OWNER_EMAILS secret) are always
@@ -259,7 +257,7 @@ export async function memberTierById(env, memberId) {
       `SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'`,
       String(memberId),
     );
-    return computeMemberTier(row ? row.n : 0);
+    return (await membershipTier(env, memberId, row ? row.n : 0)).tier;
   } catch {
     return 'silver';
   }
@@ -300,7 +298,7 @@ export async function resolveMemberAuth(env, tokenOrHeader, now = Date.now()) {
     } catch { /* older fixtures without member_requests treat authenticated member as silver */ }
     return {
       memberId,
-      tier: computeMemberTier(fulfilledCount),
+      tier: (await membershipTier(env, memberId, fulfilledCount)).tier,
       fulfilledCount,
     };
   } catch {

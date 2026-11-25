@@ -1,3 +1,4 @@
+import {membershipTier} from './membership-tier.js';
 // Membership, sign-in by e-mailed one-time code, campaigns and coupons.
 // Discounts are funded from Bosphorly's commission; MAX_DISCOUNT_BPS (default 10 %) caps every coupon
 // so a discount can never exceed what the commission can carry.
@@ -165,9 +166,9 @@ function parseInterests(raw) {
   if (!raw) return [];
   try { return sanitizeInterests(JSON.parse(raw)); } catch { return []; }
 }
-function tierInfo(env, fulfilledCount) {
+function tierInfo(env, fulfilledCount, resolvedTier = null) {
   const cap = maxBps(env);
-  const tier = computeMemberTier(fulfilledCount);
+  const tier = resolvedTier || computeMemberTier(fulfilledCount);
   if (tier === 'platinum') {
     return { tier: 'platinum', nextTier: null, toursToNextTier: 0, vipPriorityDiscountBps: cap, freeUpgrade: 'priority' };
   }
@@ -201,7 +202,9 @@ async function profile(env, m) {
   // Owner accounts see platinum in their own profile (display only; partner
   // lookups and coupons keep using the real fulfilled-tour count).
   const owner = isOwnerEmail(env, m.email);
-  const ti = owner ? { ...tierInfo(env, 5), unlimited: true } : tierInfo(env, fulfilledCount);
+  const levels = await membershipTier(env, m.id, fulfilledCount);
+  const ti = owner ? { ...tierInfo(env, 5), unlimited: true } : tierInfo(env, fulfilledCount, levels.tier);
+  if (levels.manualTier && !owner) Object.assign(ti,{nextTier:null,toursToNextTier:0});
   let passkeys = [];
   try {
     passkeys = (await env.DB.prepare(
@@ -211,7 +214,7 @@ async function profile(env, m) {
     email: m.email, name: m.name, phone: m.phone || null, hotel: m.hotel || null, room: m.room || null,
     lang: m.lang, country: m.country || null, interests: parseInterests(m.interests),
     referralCode: m.referral_code, marketing: !!m.marketing_consent,
-    stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, platinumSince: platinumRow?.closed_at || null, ...ti, coupons, requests, passkeys
+    ...levels, stamps: m.stamps, stampsGoal: STAMPS_GOAL, fulfilledCount, platinumSince: platinumRow?.closed_at || null, ...ti, coupons, requests, passkeys
   };
 }
 
@@ -869,7 +872,7 @@ export async function handleMembers(request, env, url) {
                 (SELECT COUNT(*) FROM member_requests x WHERE x.member_id=m.id AND x.state='fulfilled') AS fulfilled_count
          FROM member_requests r JOIN members m ON m.id=r.member_id LEFT JOIN coupons c ON c.id=r.coupon_id WHERE r.ref=?`).bind(ref).first();
       if (!r) fail(404, 'Unknown reference');
-      const ti = tierInfo(env, Number(r.fulfilled_count || 0));
+      const ti = tierInfo(env, Number(r.fulfilled_count || 0), (await membershipTier(env,r.member_id,r.fulfilled_count)).tier);
       const view = { ref: r.ref, serviceId: r.service_id, date: r.service_date, guests: r.guests, state: r.state,
         firstName: r.member_name ? r.member_name.split(/\s+/)[0] : null,
         tier: ti.tier, freeUpgrade: ti.freeUpgrade, vipPriorityDiscountBps: ti.vipPriorityDiscountBps,
@@ -891,7 +894,7 @@ export async function handleMembers(request, env, url) {
           env.DB.prepare(`UPDATE members SET stamps=stamps+1 WHERE id=?`).bind(r.member_id)
         ]);
         const { issued, fulfilledCount } = await awardFulfilledMemberRewards(env, r.member_id);
-        const nextTier = tierInfo(env, fulfilledCount);
+        const nextTier = tierInfo(env, fulfilledCount, (await membershipTier(env,r.member_id,fulfilledCount)).tier);
         return json({ ...view, state: 'fulfilled', tier: nextTier.tier, freeUpgrade: nextTier.freeUpgrade, vipPriorityDiscountBps: nextTier.vipPriorityDiscountBps,
           coupon: view.coupon ? { ...view.coupon, status: 'redeemed' } : null, issued });
       }
@@ -953,12 +956,13 @@ export async function handleMembers(request, env, url) {
                 (SELECT COUNT(*) FROM member_requests r WHERE r.member_id=m.id AND r.state='fulfilled') AS fulfilled_count
          FROM newsletter_subscribers ns LEFT JOIN members m ON m.email=ns.email
          WHERE ns.active=1`).all()).results;
+      for (const row of rows) row.effectiveTier = (await membershipTier(env,row.member_id,row.fulfilled_count)).tier;
       const recipients = rows.filter(r => {
         if (targetLang && r.lang !== targetLang) return false;
         if (targetInterest && !parseInterests(r.interests).includes(targetInterest)) return false;
         if (targetTier) {
           if (!r.member_id) return false;
-          if (tierInfo(env, Number(r.fulfilled_count || 0)).tier !== targetTier) return false;
+          if (r.effectiveTier !== targetTier) return false;
         }
         return true;
       });
@@ -970,7 +974,7 @@ export async function handleMembers(request, env, url) {
       let sent = 0, failed = 0;
       const from = env.MAIL_FROM || 'Bosphorly <no-reply@bosphorly.com>';
       for (const r of recipients) {
-        const tierLabel = r.member_id ? tierInfo(env, Number(r.fulfilled_count || 0)).tier : 'guest';
+        const tierLabel = r.member_id ? r.effectiveTier : 'guest';
         const firstName = r.member_name ? r.member_name.split(/\s+/)[0] : '';
         const personalText = (textBody || '').replace(/\{name\}/g, firstName || 'Guest').replace(/\{tier\}/g, tierLabel.toUpperCase());
         const personalHtml = (htmlBody || '').replace(/\{name\}/g, escHtml(firstName || 'Guest')).replace(/\{tier\}/g, tierLabel.toUpperCase());

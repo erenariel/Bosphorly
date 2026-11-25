@@ -1082,3 +1082,45 @@ test('dashboard periods use Europe/Istanbul timezone, commission shows coupon-de
     assert.equal(sess.headers.get('Access-Control-Allow-Credentials'), 'true');
   }
 });
+
+test('members: manual override and automatic return propagate to profile, chat and reservations, with RBAC/CSRF/audit', async () => {
+  const {memberTierById,resolveMemberAuth}=await import('../backend/mimo.js');
+  const env=createTestEnv();
+  const owner=await createExtranetActor(env,'owner@test.example','owner');
+  const staff=await createExtranetActor(env,'staff@test.example','staff');
+  const guest=await signUpMember(env,'guest@member.example',{name:'Guest Member'});
+  const path=`/v1/extranet/members/${guest.id}/tier`;
+  const change=(tier,actor=owner,reason='Özel misafir ataması')=>callWorker(env,path,{method:'POST',cookie:actor.cookie,csrf:actor.csrf,body:{tier,reason}});
+  assert.equal((await callWorker(env,'/v1/extranet/members')).status,401);
+  const list=await callWorker(env,'/v1/extranet/members?q=Guest',{cookie:staff.cookie});
+  assert.equal(list.status,200);assert.equal(list.body.members.length,1);assert.notEqual(list.body.members[0].email,'guest@member.example');
+  assert.equal((await change('platinum',staff)).status,403);
+  assert.equal((await callWorker(env,path,{method:'POST',cookie:owner.cookie,body:{tier:'platinum',reason:'Test reason'}})).status,403);
+  assert.equal((await change('owner')).status,400);
+  assert.equal((await change('gold',owner,'4111 1111 1111 1111')).status,400);
+  assert.equal((await change('platinum')).body.tier,'platinum');
+  assert.equal(await memberTierById(env,guest.id),'platinum');
+  assert.equal((await resolveMemberAuth(env,guest.token)).tier,'platinum');
+  let me=await callWorker(env,'/v1/me',{bearer:guest.token});
+  assert.equal(me.body.tier,'platinum');assert.equal(me.body.automaticTier,'silver');assert.equal(me.body.tierSource,'manual');
+  assert.equal(me.body.nextTier,null);
+  for(let i=0;i<2;i++) env.DB.raw.prepare("INSERT INTO member_requests(ref,member_id,service_id,service_date,guests,state) VALUES(?,?,'bb-sunset','2026-12-01',2,'fulfilled')").run('manual-test-'+i,guest.id);
+  assert.equal(await memberTierById(env,guest.id),'platinum','new tours cannot overwrite manual setting');
+  const bookings=await callWorker(env,'/v1/extranet/bookings',{cookie:owner.cookie});
+  assert.equal(bookings.status,200);assert.ok(JSON.stringify(bookings.body).includes('platinum'));
+  const restored=await change('automatic');assert.equal(restored.body.tier,'gold');assert.equal(restored.body.tierSource,'automatic');
+  me=await callWorker(env,'/v1/me',{bearer:guest.token});assert.equal(me.body.tier,'gold');assert.equal(await memberTierById(env,guest.id),'gold');
+  assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM member_requests WHERE member_id=? AND state='fulfilled'").get(guest.id).n,2);
+  assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='set_member_tier' AND target_id=?").get(guest.id).n,2);
+  const protectedOwner=await callWorker(env,`/v1/extranet/members/${owner.memberId}/tier`,{method:'POST',cookie:owner.cookie,csrf:owner.csrf,body:{tier:'silver',reason:'Test reason'}});
+  assert.equal(protectedOwner.status,403);
+  const wildcard=await callWorker(env,'/v1/extranet/members?q=%25',{cookie:owner.cookie});assert.equal(wildcard.status,200);assert.equal(wildcard.body.total,0);
+});
+
+test('tier update rolls back when its audit record cannot be written', async()=>{
+  const env=createTestEnv();const owner=await createExtranetActor(env,'owner@test.example','owner');
+  const guest=await signUpMember(env,'rollback@test.example');
+  env.DB.raw.exec("CREATE TRIGGER reject_tier_audit BEFORE INSERT ON extranet_audit WHEN NEW.action='set_member_tier' BEGIN SELECT RAISE(ABORT,'audit unavailable'); END");
+  const result=await callWorker(env,`/v1/extranet/members/${guest.id}/tier`,{method:'POST',cookie:owner.cookie,csrf:owner.csrf,body:{tier:'platinum',reason:'Test atomic change'}});
+  assert.notEqual(result.status,200);assert.equal(env.DB.raw.prepare('SELECT * FROM member_tier_overrides WHERE member_id=?').get(guest.id),undefined);
+});

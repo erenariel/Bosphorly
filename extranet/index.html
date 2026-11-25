@@ -126,6 +126,7 @@
         <button type="button" class="ex-nav-btn" id="navBookings" data-view="bookings">
           <span>▤</span> Rezervasyonlar
         </button>
+        <button type="button" class="ex-nav-btn" id="navMembers" data-view="members"><span>♙</span> Üyeler ve Seviyeler</button>
       </nav>
 
       <div class="ex-side-user">
@@ -334,6 +335,13 @@
           </div>
         </section>
       </section>
+        <section id="viewMembers" hidden aria-labelledby="membersHeading">
+          <h1 id="membersHeading">Üyeler ve Seviyeler</h1>
+          <p>Silver: 0–1, Gold: 2–4, Platinum: 5 ve üzeri tamamlanan tur. Elle atama kaldırılana kadar önceliklidir. Kuponlar ve tur geçmişi değişmez.</p>
+          <form id="memberSearchForm"><label>İsim veya e-posta <input id="memberSearch" type="search" maxlength="120"></label><button class="ex-btn" type="submit">Ara</button></form>
+          <p id="membersMessage" role="status"></p><div id="membersList"></div>
+          <button id="membersPrev" type="button" class="ex-btn">Önceki</button><span id="membersPage"></span><button id="membersNext" type="button" class="ex-btn">Sonraki</button>
+        </section>
     </main>
   </div>
 
