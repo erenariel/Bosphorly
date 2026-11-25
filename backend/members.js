@@ -138,6 +138,19 @@ async function memberFromSession(request, env) {
   return m;
 }
 
+async function isProtectedExtranetMember(env, m) {
+  if (!m) return false;
+  if (typeof env.ADMIN_OWNER_EMAIL === 'string' && env.ADMIN_OWNER_EMAIL.trim().toLowerCase() === String(m.email || '').trim().toLowerCase()) {
+    return true;
+  }
+  try {
+    const row = await env.DB.prepare(`SELECT active FROM extranet_users WHERE member_id=?`).bind(m.id).first();
+    return !!(row && Number(row.active) === 1);
+  } catch {
+    return false;
+  }
+}
+
 const ALLOWED_INTERESTS = new Set(['cruise', 'transfer', 'oldcity', 'hammam', 'private']);
 function sanitizeInterests(val) {
   if (!Array.isArray(val)) return [];
@@ -609,6 +622,7 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/register/options') {
       const m = await memberFromSession(request, env);
+      if (await isProtectedExtranetMember(env, m)) fail(403, 'Extranet accounts must manage passkeys via Extranet');
       const rpID = 'bosphorly.com';
       const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(m.id).all()).results;
       const excludeCredentials = existing.map(k => ({
@@ -632,6 +646,7 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/register/verify') {
       const m = await memberFromSession(request, env);
+      if (await isProtectedExtranetMember(env, m)) fail(403, 'Extranet accounts must manage passkeys via Extranet');
       const rpID = 'bosphorly.com';
       const originList = ['https://bosphorly.com', 'https://www.bosphorly.com'];
 
@@ -723,15 +738,10 @@ export async function handleMembers(request, env, url) {
 
     if (p === '/v1/passkeys/delete') {
       const m = await memberFromSession(request, env);
+      if (await isProtectedExtranetMember(env, m)) fail(403, 'Extranet accounts must manage passkeys via Extranet');
       const credId = str(body?.id, 255);
       if (!credId) fail(400, 'Invalid credential id');
       await env.DB.prepare(`DELETE FROM passkeys WHERE credential_id=? AND member_id=?`).bind(credId, m.id).run();
-      try {
-        const rem = await env.DB.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id=?`).bind(m.id).first();
-        if (!rem || Number(rem.n || 0) === 0) {
-          await env.DB.prepare(`DELETE FROM extranet_sessions WHERE member_id=?`).bind(m.id).run();
-        }
-      } catch { /* extranet_sessions absent in older test fixtures */ }
       return json({ deleted: true });
     }
 

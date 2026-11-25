@@ -66,10 +66,33 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
       contentType: 'application/json',
       body: JSON.stringify({
         generatedAt: '2026-11-24 12:00:00',
+        timezone: 'Europe/Istanbul',
+        localDate: '2026-11-24',
         periods: {
-          today: { newRequests: 4, confirmed: 2, cancelled: 1, newMembers: 3, estimatedCommission: { EUR: 3600, TRY: 0, USD: 0, GBP: 0 } },
-          week: { newRequests: 15, confirmed: 9, cancelled: 2, newMembers: 11, estimatedCommission: { EUR: 14500, TRY: 0, USD: 0, GBP: 0 } },
-          month: { newRequests: 48, confirmed: 31, cancelled: 4, newMembers: 29, estimatedCommission: { EUR: 52000, TRY: 0, USD: 0, GBP: 0 } },
+          today: {
+            newRequests: 4,
+            confirmed: 2,
+            cancelled: 1,
+            newMembers: 3,
+            estimatedCommission: { EUR: 3240, TRY: 0, USD: 0, GBP: 0 },
+            grossCommission: { EUR: 3600, TRY: 0, USD: 0, GBP: 0 },
+          },
+          week: {
+            newRequests: 15,
+            confirmed: 9,
+            cancelled: 2,
+            newMembers: 11,
+            estimatedCommission: { EUR: 13050, TRY: 0, USD: 0, GBP: 0 },
+            grossCommission: { EUR: 14500, TRY: 0, USD: 0, GBP: 0 },
+          },
+          month: {
+            newRequests: 48,
+            confirmed: 31,
+            cancelled: 4,
+            newMembers: 29,
+            estimatedCommission: { EUR: 46800, TRY: 0, USD: 0, GBP: 0 },
+            grossCommission: { EUR: 52000, TRY: 0, USD: 0, GBP: 0 },
+          },
         },
         statusBreakdown: { new: 2, in_progress: 1, confirmed: 2, completed: 5, cancelled: 1 },
         recentBookings: [
@@ -190,8 +213,10 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
 
   await page.goto('/extranet/');
   await expect(page.locator('#appShell')).toBeVisible();
+  await expect(page.locator('#btnAddPasskey')).toBeVisible();
   await expect(page.locator('#kpiNewRequests')).toHaveText('4');
-  await expect(page.locator('#kpiCommission')).toContainText('€36');
+  await expect(page.locator('#kpiCommission')).toContainText('€32,4');
+  await expect(page.locator('#kpiCommissionGross')).toHaveText('brüt €36');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
 
   // Switch to Reservations view & check Owner CSV button

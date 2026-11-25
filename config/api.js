@@ -1,7 +1,7 @@
-// Address of the Bosphorly API (backend/worker.js on Cloudflare Workers), e.g. "https://api.bosphorly.com".
-// Leave empty until the API is deployed: membership and coupons then show as "coming soon" and the site
-// keeps working with device-only requests.
-window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkirazz98.workers.dev', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
+// Address of the Bosphorly API (backend/worker.js on Cloudflare Workers).
+// Switch base (or extranetBase) to 'https://api.bosphorly.com' once custom domain DNS is active;
+// keeps working on workers.dev until cutover.
+window.BOSPHORLY_API = Object.freeze({ base: 'https://bosphorly-booking.erennkirazz98.workers.dev', extranetBase: '', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
 
 // Lightweight floating Mimo assistant button + non-intrusive greeting bubble (lazy-loads assistant-chat.js & CSS when opened).
 (() => {

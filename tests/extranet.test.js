@@ -8,6 +8,7 @@ import worker from '../backend/worker.js';
 import {
   EXTRANET_COOKIE_NAME,
   EXTRANET_IDLE_MS,
+  computePeriodBoundaries,
   containsCardNumber,
   escapeCsvCell,
   handleExtranetRoutes,
@@ -17,6 +18,60 @@ import {
 
 const MIGRATIONS_DIR = new URL('../backend/migrations/', import.meta.url).pathname;
 const ORIGIN = 'https://example.com';
+
+async function buildWebAuthnRegistrationResponse({ challenge, origin = ORIGIN, rpID = 'example.com' }) {
+  const { publicKey } = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, ['sign', 'verify']);
+  const jwk = await crypto.subtle.exportKey('jwk', publicKey);
+  const x = Buffer.from(jwk.x, 'base64url');
+  const y = Buffer.from(jwk.y, 'base64url');
+
+  // COSE_Key EC2 ES256: { 1: 2, 3: -7, -1: 1, -2: x(32), -3: y(32) }
+  const coseKey = Buffer.concat([
+    Buffer.from([0xa5, 0x01, 0x02, 0x03, 0x26, 0x20, 0x01, 0x21, 0x58, 0x20]),
+    x,
+    Buffer.from([0x22, 0x58, 0x20]),
+    y,
+  ]);
+
+  const rpIdHash = crypto.createHash('sha256').update(rpID).digest();
+  const flags = Buffer.from([0x45]); // UP (0x01) | UV (0x04) | AT (0x40)
+  const signCount = Buffer.alloc(4, 0);
+  const aaguid = Buffer.alloc(16, 0);
+  const credentialId = crypto.randomBytes(16);
+  const credIdLen = Buffer.from([0x00, credentialId.length]);
+
+  const authData = Buffer.concat([rpIdHash, flags, signCount, aaguid, credIdLen, credentialId, coseKey]);
+  // CBOR map(3): { "fmt": "none", "attStmt": {}, "authData": bstr(authData) }
+  const attestationObject = Buffer.concat([
+    Buffer.from([0xa3, 0x63]),
+    Buffer.from('fmt'),
+    Buffer.from([0x64]),
+    Buffer.from('none'),
+    Buffer.from([0x67]),
+    Buffer.from('attStmt'),
+    Buffer.from([0xa0, 0x68]),
+    Buffer.from('authData'),
+    Buffer.from([0x58, authData.length]),
+    authData,
+  ]);
+
+  const clientDataJSON = Buffer.from(
+    JSON.stringify({ type: 'webauthn.create', challenge, origin, crossOrigin: false })
+  ).toString('base64url');
+  const credIdB64 = credentialId.toString('base64url');
+
+  return {
+    id: credIdB64,
+    rawId: credIdB64,
+    type: 'public-key',
+    response: {
+      clientDataJSON,
+      attestationObject: attestationObject.toString('base64url'),
+      transports: ['internal'],
+    },
+    clientExtensionResults: {},
+  };
+}
 
 function createD1() {
   const db = new DatabaseSync(':memory:');
@@ -175,6 +230,8 @@ test('unauthenticated requests and non-extranet members are denied across all /v
     ['POST', '/v1/extranet/bookings/bk:b-1/payment'],
     ['POST', '/v1/extranet/bookings/bk:b-1/provider'],
     ['POST', '/v1/extranet/bookings/bk:b-1/notes'],
+    ['POST', '/v1/extranet/passkeys/add/options'],
+    ['POST', '/v1/extranet/passkeys/add/verify'],
     ['POST', '/v1/extranet/logout'],
   ];
 
@@ -229,7 +286,7 @@ test('ADMIN_OWNER_EMAIL bootstraps initial owner, enforces mandatory first-login
   const userRow = env.DB.raw.prepare(`SELECT role, active FROM extranet_users WHERE member_id = ?`).get(ownerMember.id);
   assert.deepEqual({ ...userRow }, { role: 'owner', active: 1 });
 
-  // 2. Owner can request passkey registration options (single-use challenge)
+  // 2. Owner with 0 passkeys can request initial passkey registration options
   const opts = await callWorker(env, '/v1/extranet/passkey/register/options', {
     method: 'POST',
     body: {},
@@ -252,19 +309,207 @@ test('ADMIN_OWNER_EMAIL bootstraps initial owner, enforces mandatory first-login
   assert.equal(st2.body.hasPasskey, true);
   assert.equal(st2.body.step, 'verify_passkey');
 
-  // 4. If an active extranet user deletes their last passkey, their extranet session is terminated
+  // 4. Member Bearer token cannot delete an Extranet account's passkey via /v1/passkeys/delete (403);
+  //    and if all passkeys are ever removed from DB directly, the Extranet session is immediately terminated.
   const actor = await createExtranetActor(env, 'admin-pk@example.com', 'admin');
   assert.equal((await callWorker(env, '/v1/extranet/dashboard', { cookie: actor.cookie })).status, 200);
 
-  const delPk = await callWorker(env, '/v1/passkeys/delete', {
+  const delPkBearer = await callWorker(env, '/v1/passkeys/delete', {
     method: 'POST',
     body: { id: `pk-${actor.memberId}` },
     bearer: actor.memberBearer,
   });
-  assert.equal(delPk.status, 200);
+  assert.equal(delPkBearer.status, 403, 'Extranet passkeys cannot be deleted with only a member bearer token');
 
+  env.DB.raw.prepare(`DELETE FROM passkeys WHERE member_id = ?`).run(actor.memberId);
   const afterDel = await callWorker(env, '/v1/extranet/dashboard', { cookie: actor.cookie });
-  assert.equal(afterDel.status, 401);
+  assert.equal(afterDel.status, 403);
+  assert.equal(afterDel.body.code, 'PASSKEY_REQUIRED');
+  assert.match(afterDel.headers.get('Set-Cookie') || '', /Max-Age=0/);
+});
+
+test("passkey'i olan üye, sadece bearer token ile yeni passkey kaydedemez; yeni passkey yalnızca geçerli extranet oturumu + CSRF ile eklenir ve ADMIN_OWNER_EMAIL'e bildirilir", async (t) => {
+  const sentEmails = [];
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (input, init) => {
+    const urlStr = typeof input === 'string' ? input : input.url;
+    if (urlStr === 'https://api.resend.com/emails') {
+      sentEmails.push({
+        headers: Object.fromEntries(new Headers(init?.headers).entries()),
+        body: JSON.parse(init?.body || '{}'),
+      });
+      return new Response(JSON.stringify({ id: `mail-${sentEmails.length}` }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    return origFetch(input, init);
+  };
+  t.after(() => {
+    globalThis.fetch = origFetch;
+  });
+
+  const env = createTestEnv({
+    ADMIN_OWNER_EMAIL: 'owner-alert@test.example',
+    RESEND_API_KEY: 're_test_extranet_notify',
+  });
+
+  // 1. Provision an Extranet admin who initially has 0 passkeys (only email-code member session exists; RESEND disabled during signup code)
+  const signupEnv = { ...env, RESEND_API_KEY: '' };
+  const adminUser = await signUpMember(signupEnv, 'sec-admin@test.example', { name: 'Güvenlik Admin' });
+  env.DB.raw
+    .prepare(`INSERT INTO extranet_users (member_id, role, active) VALUES (?, 'admin', 1)`)
+    .run(adminUser.id);
+
+  // Pre-mint a second registration challenge while 0 passkeys exist to also test race/replay defense on /register/verify
+  const preRaceOpts = await callWorker(env, '/v1/extranet/passkey/register/options', {
+    method: 'POST',
+    body: {},
+    bearer: adminUser.token,
+  });
+  assert.equal(preRaceOpts.status, 200);
+
+  // Initial enrollment with 0 passkeys succeeds via /v1/extranet/passkey/register/options + /verify
+  const initOpts = await callWorker(env, '/v1/extranet/passkey/register/options', {
+    method: 'POST',
+    body: {},
+    bearer: adminUser.token,
+  });
+  assert.equal(initOpts.status, 200);
+
+  const initAttestation = await buildWebAuthnRegistrationResponse({
+    challenge: initOpts.body.challenge,
+    origin: ORIGIN,
+    rpID: 'example.com',
+  });
+  const initVerify = await callWorker(env, '/v1/extranet/passkey/register/verify', {
+    method: 'POST',
+    body: initAttestation,
+    bearer: adminUser.token,
+    ip: '198.51.100.44',
+  });
+  assert.equal(initVerify.status, 200);
+  assert.equal(initVerify.body.authenticated, true);
+  assert.ok(initVerify.body.csrfToken);
+
+  const setCookieHeader = initVerify.headers.get('Set-Cookie') || '';
+  const sessionCookie = setCookieHeader.split(';')[0];
+  assert.match(sessionCookie, /^__Host-bosphorly_extranet=/);
+
+  // Verify ADMIN_OWNER_EMAIL received notification email and extranet_audit logged initial passkey registration
+  assert.equal(sentEmails.length, 1);
+  assert.deepEqual(sentEmails[0].body.to, ['owner-alert@test.example']);
+  assert.match(sentEmails[0].body.subject, /Yeni Passkey Kaydedildi/);
+  assert.match(sentEmails[0].body.text, /sec-admin@test\.example/);
+
+  const firstAudit = env.DB.raw
+    .prepare(`SELECT * FROM extranet_audit WHERE actor_member_id = ? AND action = 'passkey_register'`)
+    .all(adminUser.id);
+  assert.equal(firstAudit.length, 1);
+  assert.equal(JSON.parse(firstAudit[0].new_value).flow, 'initial_enroll');
+  assert.equal(JSON.parse(firstAudit[0].new_value).ownerNotified, true);
+
+  // 2. CRITICAL SECURITY CHECK: User now has 1 passkey.
+  //    An attacker holding ONLY the member Bearer token CANNOT register a new passkey anywhere!
+  const bearerOptsBlocked = await callWorker(env, '/v1/extranet/passkey/register/options', {
+    method: 'POST',
+    body: {},
+    bearer: adminUser.token,
+  });
+  assert.equal(bearerOptsBlocked.status, 403);
+  assert.equal(bearerOptsBlocked.body.code, 'PASSKEY_ALREADY_EXISTS');
+
+  const raceAttestation = await buildWebAuthnRegistrationResponse({
+    challenge: preRaceOpts.body.challenge,
+    origin: ORIGIN,
+    rpID: 'example.com',
+  });
+  const bearerVerifyBlocked = await callWorker(env, '/v1/extranet/passkey/register/verify', {
+    method: 'POST',
+    body: raceAttestation,
+    bearer: adminUser.token,
+  });
+  assert.equal(bearerVerifyBlocked.status, 403);
+  assert.equal(bearerVerifyBlocked.body.code, 'PASSKEY_ALREADY_EXISTS');
+
+  // Public member passkey endpoints ALSO block Extranet accounts with 403
+  const publicMemberRegOpts = await callWorker(env, '/v1/passkeys/register/options', {
+    method: 'POST',
+    body: {},
+    bearer: adminUser.token,
+  });
+  assert.equal(publicMemberRegOpts.status, 403);
+
+  const publicMemberRegVerify = await callWorker(env, '/v1/passkeys/register/verify', {
+    method: 'POST',
+    body: raceAttestation,
+    bearer: adminUser.token,
+  });
+  assert.equal(publicMemberRegVerify.status, 403);
+
+  // Calling the separate /v1/extranet/passkeys/add/* endpoint with ONLY Bearer token (no Extranet session cookie) returns 401
+  const addWithBearerOnly = await callWorker(env, '/v1/extranet/passkeys/add/options', {
+    method: 'POST',
+    body: {},
+    bearer: adminUser.token,
+  });
+  assert.equal(addWithBearerOnly.status, 401);
+
+  // Calling /v1/extranet/passkeys/add/options with Extranet session cookie but missing CSRF returns 403
+  const addWithoutCsrf = await callWorker(env, '/v1/extranet/passkeys/add/options', {
+    method: 'POST',
+    body: {},
+    cookie: sessionCookie,
+  });
+  assert.equal(addWithoutCsrf.status, 403);
+  assert.equal(addWithoutCsrf.body.code, 'CSRF_INVALID');
+
+  // Confirm still only 1 passkey in DB after all attack attempts
+  assert.equal(
+    env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id = ?`).get(adminUser.id).n,
+    1
+  );
+
+  // 3. Adding a second passkey succeeds ONLY via valid Extranet session cookie + valid X-CSRF-Token
+  const addOpts = await callWorker(env, '/v1/extranet/passkeys/add/options', {
+    method: 'POST',
+    body: {},
+    cookie: sessionCookie,
+    csrf: initVerify.body.csrfToken,
+  });
+  assert.equal(addOpts.status, 200);
+  assert.equal(addOpts.body.excludeCredentials.length, 1);
+  assert.equal(addOpts.body.excludeCredentials[0].id, initAttestation.id);
+
+  const secondAttestation = await buildWebAuthnRegistrationResponse({
+    challenge: addOpts.body.challenge,
+    origin: ORIGIN,
+    rpID: 'example.com',
+  });
+  const addVerify = await callWorker(env, '/v1/extranet/passkeys/add/verify', {
+    method: 'POST',
+    body: secondAttestation,
+    cookie: sessionCookie,
+    csrf: initVerify.body.csrfToken,
+    ip: '198.51.100.45',
+  });
+  assert.equal(addVerify.status, 200);
+  assert.equal(addVerify.body.verified, true);
+  assert.equal(addVerify.body.ownerNotified, true);
+
+  assert.equal(
+    env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id = ?`).get(adminUser.id).n,
+    2
+  );
+  assert.equal(sentEmails.length, 2);
+  assert.match(sentEmails[1].body.text, /Ek Passkey Kaydı/);
+
+  const allPkAudits = env.DB.raw
+    .prepare(`SELECT * FROM extranet_audit WHERE actor_member_id = ? AND action = 'passkey_register' ORDER BY rowid ASC`)
+    .all(adminUser.id);
+  assert.equal(allPkAudits.length, 2);
+  assert.equal(JSON.parse(allPkAudits[0].new_value).flow, 'initial_enroll');
+  assert.equal(JSON.parse(allPkAudits[1].new_value).flow, 'extranet_session_add');
 });
 
 test('cookie flags (HttpOnly + Secure + SameSite=Strict), CSRF protection, cross-origin rejection, and 30m idle session expiry', async () => {
@@ -756,4 +1001,84 @@ test('every view and mutation writes complete extranet_audit records, structured
   });
   assert.equal(outRes.status, 200);
   assert.equal((await callWorker(env, '/v1/extranet/session', { cookie: owner.cookie })).status, 401);
+});
+
+test('dashboard periods use Europe/Istanbul timezone, commission shows coupon-deducted net + gross, and CORS supports api.bosphorly.com origins', async () => {
+  const baseEnv = createTestEnv();
+  const env = { ...baseEnv, PUBLIC_ORIGIN: 'https://bosphorly.com' };
+  // 2026-11-24 21:30:00 UTC === 2026-11-25 00:30:00 Europe/Istanbul (Wednesday)
+  const istanbulAfterMidnightUtcMs = Date.UTC(2026, 10, 24, 21, 30, 0);
+
+  const bounds = computePeriodBoundaries(istanbulAfterMidnightUtcMs);
+  assert.equal(bounds.timezone, 'Europe/Istanbul');
+  assert.equal(bounds.localDate, '2026-11-25');
+  assert.equal(bounds.todayStart, '2026-11-24 21:00:00'); // 2026-11-25 00:00:00+03:00 in UTC
+  assert.equal(bounds.weekStart, '2026-11-22 21:00:00');  // Monday 2026-11-23 00:00:00+03:00 in UTC
+  assert.equal(bounds.monthStart, '2026-10-31 21:00:00'); // 2026-11-01 00:00:00+03:00 in UTC
+
+  const owner = await createExtranetActor(baseEnv, 'owner@test.example', 'owner', istanbulAfterMidnightUtcMs);
+  const member = await signUpMember(baseEnv, 'netgross@guest.example', { name: 'Net Brüt Test' });
+
+  // Welcome coupon: 3% (300 bps) funded from Bosphorly's 10% (1000 bps) commission on €120:
+  // Gross commission = €12.00 (1200 minor), Coupon = €3.60 (360 minor) -> Net commission = €8.40 (840 minor)
+  const cpRow = env.DB.raw.prepare(`SELECT id, percent_bps FROM coupons WHERE member_id = ? LIMIT 1`).get(member.id);
+  assert.equal(cpRow.percent_bps, 300);
+  env.DB.raw.exec(`
+    UPDATE coupons SET status = 'redeemed', redeemed_at = '2026-11-24 21:15:00', held_ref = 'BOS-IST-TODAY' WHERE id = '${cpRow.id}';
+
+    INSERT INTO member_requests (ref, member_id, service_id, service_date, guests, coupon_id, state, total_text, created_at)
+    VALUES
+      ('BOS-IST-TODAY', '${member.id}', 'bb-sunset', '2026-12-10', 2, '${cpRow.id}', 'fulfilled', '€120', '2026-11-24 21:15:00'),
+      ('BOS-IST-YESTERDAY', '${member.id}', 'ist-transfer', '2026-12-11', 2, NULL, 'fulfilled', '€60', '2026-11-24 20:45:00');
+  `);
+
+  const dashReq = new Request('https://api.bosphorly.com/v1/extranet/dashboard', {
+    method: 'GET',
+    headers: {
+      Origin: 'https://bosphorly.com',
+      Cookie: owner.cookie,
+      'CF-Connecting-IP': '203.0.113.55',
+    },
+  });
+  const dashRes = await handleExtranetRoutes(dashReq, env, new URL(dashReq.url), istanbulAfterMidnightUtcMs);
+  assert.equal(dashRes.status, 200);
+  const dash = await dashRes.json();
+
+  assert.equal(dash.timezone, 'Europe/Istanbul');
+  assert.equal(dash.localDate, '2026-11-25');
+  // Only BOS-IST-TODAY (00:15 Istanbul) falls in 'today'; BOS-IST-YESTERDAY (23:45 prev day Istanbul) falls in 'week' & 'month'
+  assert.equal(dash.periods.today.newRequests, 1);
+  assert.equal(dash.periods.today.confirmed, 1);
+  assert.equal(dash.periods.today.estimatedCommission.EUR, 840);  // Net after 3% coupon deduction (€8.40)
+  assert.equal(dash.periods.today.grossCommission.EUR, 1200);     // Gross before coupon (€12.00)
+
+  assert.equal(dash.periods.week.newRequests, 2);
+  assert.equal(dash.periods.week.estimatedCommission.EUR, 1440);  // 840 + 600
+  assert.equal(dash.periods.week.grossCommission.EUR, 1800);      // 1200 + 600
+
+  // CORS verification for both https://bosphorly.com and https://www.bosphorly.com on api.bosphorly.com
+  const liveOwner = await createExtranetActor(baseEnv, 'owner2@test.example', 'owner');
+  for (const allowedOrig of ['https://bosphorly.com', 'https://www.bosphorly.com']) {
+    const preflight = await worker.fetch(
+      new Request('https://api.bosphorly.com/v1/extranet/session', {
+        method: 'OPTIONS',
+        headers: { Origin: allowedOrig },
+      }),
+      env
+    );
+    assert.equal(preflight.status, 204);
+    assert.equal(preflight.headers.get('Access-Control-Allow-Origin'), allowedOrig);
+    assert.equal(preflight.headers.get('Access-Control-Allow-Credentials'), 'true');
+
+    const sess = await worker.fetch(
+      new Request('https://api.bosphorly.com/v1/extranet/session', {
+        method: 'GET',
+        headers: { Origin: allowedOrig, Cookie: liveOwner.cookie, 'CF-Connecting-IP': '203.0.113.56' },
+      }),
+      env
+    );
+    assert.equal(sess.status, 200);
+    assert.equal(sess.headers.get('Access-Control-Allow-Origin'), allowedOrig);
+    assert.equal(sess.headers.get('Access-Control-Allow-Credentials'), 'true');
+  }
 });

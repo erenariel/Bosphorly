@@ -137,6 +137,7 @@
           <span>Oturum süresi:</span>
           <strong id="idleCountdown">30:00</strong>
         </div>
+        <button type="button" id="btnAddPasskey" class="ex-side-link" style="width:100%;background:transparent">🔑 Yeni Passkey Ekle</button>
         <div class="ex-side-actions">
           <a href="../account.html" class="ex-side-link">Üye Hesabım</a>
           <button type="button" id="btnLogout" class="ex-btn ex-btn-danger ex-btn-sm">Çıkış</button>
@@ -151,9 +152,9 @@
       <section id="viewDashboard" aria-labelledby="dashHeading">
         <header class="ex-page-head">
           <div>
-            <div class="ex-eyebrow">Operasyon Özeti</div>
+            <div class="ex-eyebrow">Operasyon Özeti · Europe/Istanbul</div>
             <h1 id="dashHeading">Gösterge Paneli</h1>
-            <p>Bugün, bu hafta ve bu ay için talep, onay, iptal, yeni üyelik ve tahmini komisyon göstergeleri.</p>
+            <p>İstanbul saatine göre bugün, bu hafta ve bu ay için talep, onay, iptal, yeni üyelik ve tahmini komisyon.</p>
           </div>
           <div class="ex-head-tools">
             <div class="ex-segmented" role="group" aria-label="Dönem seçimi">
@@ -187,8 +188,11 @@
             <span class="ex-kpi-sub" id="kpiNewMembersSub">—</span>
           </article>
           <article class="ex-kpi-card">
-            <span class="ex-kpi-label">Tahmini Komisyon</span>
-            <strong class="ex-kpi-val" id="kpiCommission">€0</strong>
+            <span class="ex-kpi-label">Tahmini Komisyon (Net)</span>
+            <div class="ex-kpi-val-row">
+              <strong class="ex-kpi-val" id="kpiCommission">€0</strong>
+              <small class="ex-kpi-gross" id="kpiCommissionGross">brüt €0</small>
+            </div>
             <span class="ex-kpi-sub" id="kpiCommissionSub">—</span>
           </article>
         </div>

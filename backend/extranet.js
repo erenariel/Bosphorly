@@ -496,6 +496,7 @@ function normalizeBookingRow(env, b) {
   const providerId = b.assigned_provider_id || b.exp_provider_id || null;
   const commBps = Number.isInteger(b.commission_bps) ? b.commission_bps : defaultCommissionBps(env);
   const couponBps = b.coupon_code && b.coupon_status !== 'void' ? Number(b.coupon_bps || 0) : 0;
+  const grossCommMinor = Math.floor((Number(b.total_minor || 0) * commBps) / 10000);
   const estimatedCommMinor =
     b.accrued_commission_status && b.accrued_commission_status !== 'reversed' && Number.isFinite(b.accrued_commission_minor)
       ? Number(b.accrued_commission_minor)
@@ -541,6 +542,7 @@ function normalizeBookingRow(env, b) {
         }
       : null,
     estimatedCommissionMinor: estimatedCommMinor,
+    grossCommissionMinor: grossCommMinor,
     createdAt: b.created_at,
     updatedAt: b.meta_updated_at || b.created_at,
     _rawEmail: rawEmail,
@@ -559,6 +561,8 @@ function normalizeMemberRequestRow(env, r) {
   const memberTier = computeEffectiveTier(env, r.member_id, r.mem_email, r.mem_fulfilled_count);
   const commBps = defaultCommissionBps(env);
   const couponBps = r.coupon_code && r.coupon_status !== 'void' ? Number(r.coupon_bps || 0) : 0;
+  const grossCommMinor =
+    parsedPrice.totalMinor !== null ? Math.floor((parsedPrice.totalMinor * commBps) / 10000) : 0;
   const estimatedCommMinor =
     parsedPrice.totalMinor !== null
       ? Math.floor((parsedPrice.totalMinor * Math.max(0, commBps - couponBps)) / 10000)
@@ -604,6 +608,7 @@ function normalizeMemberRequestRow(env, r) {
         }
       : null,
     estimatedCommissionMinor: estimatedCommMinor,
+    grossCommissionMinor: grossCommMinor,
     createdAt: r.created_at,
     updatedAt: r.closed_at || r.meta_updated_at || r.created_at,
     _rawEmail: rawEmail,
@@ -840,29 +845,67 @@ function applyReservationFilters(items, filters) {
   });
 }
 
-function computePeriodBoundaries(nowMs = Date.now()) {
-  const d = new Date(nowMs);
-  const todayStart = `${d.toISOString().slice(0, 10)} 00:00:00`;
+const ISTANBUL_DATE_FMT = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/Istanbul',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+});
 
-  const weekUtc = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
-  const dayOfWeek = weekUtc.getUTCDay() || 7; // Monday = 1 .. Sunday = 7
-  weekUtc.setUTCDate(weekUtc.getUTCDate() - (dayOfWeek - 1));
-  const weekStart = `${weekUtc.toISOString().slice(0, 10)} 00:00:00`;
+const ISTANBUL_PARTS_FMT = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'Europe/Istanbul',
+  hourCycle: 'h23',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+});
 
-  const monthStart = `${d.toISOString().slice(0, 7)}-01 00:00:00`;
+function formatIstanbulTimestamp(ms) {
+  const parts = {};
+  for (const p of ISTANBUL_PARTS_FMT.formatToParts(new Date(ms))) {
+    if (p.type !== 'literal') parts[p.type] = p.value;
+  }
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`;
+}
 
-  return { todayStart, weekStart, monthStart };
+function istanbulMidnightToUtcSql(yyyyMmDd) {
+  const probeUtc = Date.parse(`${yyyyMmDd}T00:00:00Z`);
+  const localStr = formatIstanbulTimestamp(probeUtc).replace(' ', 'T') + 'Z';
+  const localAsUtc = Date.parse(localStr);
+  const offsetMs = Number.isFinite(localAsUtc) ? localAsUtc - probeUtc : 3 * 3600 * 1000;
+  return sqlTime(new Date(probeUtc - offsetMs));
+}
+
+export function computePeriodBoundaries(nowMs = Date.now()) {
+  const localDate = ISTANBUL_DATE_FMT.format(new Date(nowMs)); // YYYY-MM-DD in Europe/Istanbul
+  const [y, m, d] = localDate.split('-').map(Number);
+
+  const calUtc = new Date(Date.UTC(y, m - 1, d));
+  const dayOfWeek = calUtc.getUTCDay() || 7; // Monday = 1 .. Sunday = 7
+  calUtc.setUTCDate(calUtc.getUTCDate() - (dayOfWeek - 1));
+  const weekLocalDate = calUtc.toISOString().slice(0, 10);
+  const monthLocalDate = `${localDate.slice(0, 7)}-01`;
+
+  return {
+    timezone: 'Europe/Istanbul',
+    localDate,
+    todayStart: istanbulMidnightToUtcSql(localDate),
+    weekStart: istanbulMidnightToUtcSql(weekLocalDate),
+    monthStart: istanbulMidnightToUtcSql(monthLocalDate),
+  };
 }
 
 async function computeDashboardMetrics(env, nowMs = Date.now()) {
-  const { todayStart, weekStart, monthStart } = computePeriodBoundaries(nowMs);
+  const { timezone, localDate, todayStart, weekStart, monthStart } = computePeriodBoundaries(nowMs);
   const earliest = weekStart < monthStart ? weekStart : monthStart;
   const allRecent = await loadAllReservations(env, {
     dateFrom: earliest.slice(0, 10),
     dateTo: null,
     dateType: 'created',
   });
-  // Also include reservations created earlier whose status updated within this month/week
   const allItems = await loadAllReservations(env, null);
   const byUid = new Map();
   for (const x of [...allRecent, ...allItems]) byUid.set(x.uid, x);
@@ -873,6 +916,7 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
     let confirmed = 0;
     let cancelled = 0;
     const estimatedCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
+    const grossCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
 
     for (const item of merged) {
       const createdInPeriod = String(item.createdAt || '') >= startSql;
@@ -884,6 +928,7 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
         confirmed++;
         if (item.currency && Object.prototype.hasOwnProperty.call(estimatedCommission, item.currency)) {
           estimatedCommission[item.currency] += Number(item.estimatedCommissionMinor || 0);
+          grossCommission[item.currency] += Number(item.grossCommissionMinor || 0);
         }
       }
       if (item.status === 'cancelled' && updatedInPeriod) {
@@ -899,6 +944,7 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
       cancelled,
       newMembers: Number(memRow?.n || 0),
       estimatedCommission,
+      grossCommission,
     };
   };
 
@@ -917,10 +963,59 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
 
   return {
     generatedAt: sqlTime(new Date(nowMs)),
+    timezone,
+    localDate,
     periods: { today, week, month },
     statusBreakdown,
     recentBookings: allItems.slice(0, 6).map(stripInternalFields),
   };
+}
+
+async function sendOwnerPasskeyNotification(env, { memberEmail, role, credentialId, flow, ipAddress, nowMs }) {
+  const ownerEmail = typeof env?.ADMIN_OWNER_EMAIL === 'string' ? env.ADMIN_OWNER_EMAIL.trim().toLowerCase() : '';
+  if (!ownerEmail || !validEmail(ownerEmail) || !env?.RESEND_API_KEY) {
+    return { sent: false, reason: 'not_configured' };
+  }
+  const fromAddr = env.MAIL_FROM || env.REQUEST_FROM_EMAIL || 'Bosphorly <no-reply@notify.bosphorly.com>';
+  const flowLabel =
+    flow === 'initial_enroll'
+      ? 'İlk Giriş Zorunlu Passkey Kurulumu'
+      : 'Açık Extranet Oturumu Üzerinden Ek Passkey Kaydı';
+  const istTime = formatIstanbulTimestamp(nowMs);
+  const utcTime = sqlTime(new Date(nowMs));
+  const shortCred = String(credentialId || '').slice(0, 20);
+  const subject = '[Bosphorly Extranet Güvenlik] Yeni Passkey Kaydedildi';
+  const text = [
+    'Bosphorly Extranet üzerinde yeni bir Passkey (WebAuthn anahtarı) kaydedildi.',
+    '',
+    `Hesap: ${memberEmail} (${role})`,
+    `İşlem Türü: ${flowLabel}`,
+    `Passkey Özeti: ${shortCred}...`,
+    `Zaman (İstanbul): ${istTime} (Europe/Istanbul)`,
+    `Zaman (UTC): ${utcTime} UTC`,
+    `IP Adresi: ${ipAddress || 'unknown'}`,
+    '',
+    'Bu işlemi siz veya yetkili ekip üyesi gerçekleştirmediyse derhal Extranet üzerinden hesap yetkilerini ve oturumları kontrol edin.',
+  ].join('\n');
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: fromAddr,
+        to: [ownerEmail],
+        subject,
+        text,
+      }),
+    });
+    return { sent: !!res.ok, reason: res.ok ? null : 'provider_rejected' };
+  } catch {
+    return { sent: false, reason: 'network_error' };
+  }
 }
 
 async function loadReservationDetailBundle(env, rawId) {
@@ -1062,23 +1157,37 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       });
     }
 
-    // 3. Mandatory first-time Passkey registration for Extranet users
+    // 3. Initial Passkey enrollment ONLY when the Extranet user has 0 passkeys.
+    //    If the member already has >= 1 passkey, bearer-only enrollment MUST return 403.
     if (method === 'POST' && path === '/v1/extranet/passkey/register/options') {
       await checkD1RateLimit(env, `extranet:auth:${ip}`, 10, nowMs);
       const m = await resolveMemberFromBearer(request, env, nowMs);
-      await ensureExtranetRoleForMember(env, m, ip, nowMs);
+      const role = await ensureExtranetRoleForMember(env, m, ip, nowMs);
+      const pkCountRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id=?`).bind(m.id).first();
+      if (Number(pkCountRow?.n || 0) >= 1) {
+        await writeAudit(env, {
+          actorMemberId: m.id,
+          actorRole: role,
+          action: 'access_denied',
+          targetType: 'passkey',
+          targetId: m.id,
+          newValue: { reason: 'passkey_already_exists_bearer_rejected', endpoint: path },
+          ipAddress: ip,
+          nowSql,
+        });
+        fail(
+          403,
+          'Bu hesapta zaten kayıtlı bir passkey bulunuyor. Yeni passkey yalnızca mevcut passkey ile açılmış Extranet oturumu üzerinden eklenebilir.',
+          'PASSKEY_ALREADY_EXISTS'
+        );
+      }
       const { rpID } = resolveWebAuthnConfig(env);
-      const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(m.id).all()).results || [];
-      const excludeCredentials = existing.map((k) => ({
-        id: k.credential_id,
-        transports: k.transports ? JSON.parse(k.transports) : undefined,
-      }));
       const options = await generateRegistrationOptions({
         rpName: 'Bosphorly Extranet',
         rpID,
         userName: m.email,
         userID: enc.encode(m.id),
-        excludeCredentials,
+        excludeCredentials: [],
         timeout: 60000,
         attestationType: 'none',
         authenticatorSelection: { residentKey: 'preferred', userVerification: 'required' },
@@ -1087,7 +1196,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       await env.DB.prepare(
         `INSERT OR REPLACE INTO passkey_challenges (id, challenge, member_id, purpose, expires_at, created_at)
          VALUES (?, ?, ?, 'registration', ?, ?)`
-      ).bind(uuid(), options.challenge, m.id, expSql, nowSql).run();
+      ).bind(`ex-init:${uuid()}`, options.challenge, m.id, expSql, nowSql).run();
       return jsonResponse(options);
     }
 
@@ -1095,6 +1204,24 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       await checkD1RateLimit(env, `extranet:auth:${ip}`, 10, nowMs);
       const m = await resolveMemberFromBearer(request, env, nowMs);
       const role = await ensureExtranetRoleForMember(env, m, ip, nowMs);
+      const pkCountRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id=?`).bind(m.id).first();
+      if (Number(pkCountRow?.n || 0) >= 1) {
+        await writeAudit(env, {
+          actorMemberId: m.id,
+          actorRole: role,
+          action: 'access_denied',
+          targetType: 'passkey',
+          targetId: m.id,
+          newValue: { reason: 'passkey_already_exists_bearer_rejected', endpoint: path },
+          ipAddress: ip,
+          nowSql,
+        });
+        fail(
+          403,
+          'Bu hesapta zaten kayıtlı bir passkey bulunuyor. Yeni passkey yalnızca mevcut passkey ile açılmış Extranet oturumu üzerinden eklenebilir.',
+          'PASSKEY_ALREADY_EXISTS'
+        );
+      }
       const body = await readJsonBody(request, 16384);
       const { rpID, expectedOrigin } = resolveWebAuthnConfig(env);
 
@@ -1112,7 +1239,9 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       const chRow = await env.DB.prepare(
         `SELECT * FROM passkey_challenges WHERE challenge=? AND member_id=? AND purpose='registration' AND expires_at>?`
       ).bind(ch, m.id, nowSql).first();
-      if (!chRow) fail(400, 'Geçersiz veya süresi dolmuş passkey isteği.');
+      if (!chRow || !String(chRow.id || '').startsWith('ex-init:')) {
+        fail(400, 'Geçersiz veya süresi dolmuş passkey isteği.');
+      }
       await env.DB.prepare(`DELETE FROM passkey_challenges WHERE id=?`).bind(chRow.id).run();
 
       const verification = await verifyRegistrationResponse({
@@ -1127,6 +1256,9 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
       const { credential } = verification.registrationInfo;
       const credentialID = credential.id;
+      const dup = await env.DB.prepare(`SELECT 1 AS x FROM passkeys WHERE credential_id=?`).bind(credentialID).first();
+      if (dup) fail(409, 'Bu passkey zaten kayıtlı.');
+
       const publicKey = uint8ArrayToB64(credential.publicKey);
       const counter = credential.counter || 0;
       const rawTransports = Array.isArray(body?.response?.transports)
@@ -1137,18 +1269,32 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       const transports = rawTransports ? JSON.stringify(rawTransports.filter((t) => typeof t === 'string').slice(0, 8)) : null;
 
       await env.DB.prepare(
-        `INSERT OR REPLACE INTO passkeys (credential_id, member_id, public_key, counter, transports, created_at, last_used_at)
+        `INSERT INTO passkeys (credential_id, member_id, public_key, counter, transports, created_at, last_used_at)
          VALUES (?, ?, ?, ?, ?, ?, ?)`
       ).bind(credentialID, m.id, publicKey, counter, transports, nowSql, nowSql).run();
 
       const session = await createExtranetSession(env, request, m, role, nowMs);
+      const mailAlert = await sendOwnerPasskeyNotification(env, {
+        memberEmail: m.email,
+        role,
+        credentialId: credentialID,
+        flow: 'initial_enroll',
+        ipAddress: session.ip,
+        nowMs,
+      });
+
       await writeAudit(env, {
         actorMemberId: m.id,
         actorRole: role,
-        action: 'passkey_enroll_login',
-        targetType: 'session',
+        action: 'passkey_register',
+        targetType: 'passkey',
         targetId: credentialID,
-        newValue: { passkeyEnrolled: true, role },
+        newValue: {
+          flow: 'initial_enroll',
+          role,
+          ownerNotified: mailAlert.sent,
+          ...(mailAlert.reason ? { notifyStatus: mailAlert.reason } : {}),
+        },
         ipAddress: session.ip,
         nowSql,
       });
@@ -1162,6 +1308,125 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
         },
         200,
         { 'Set-Cookie': buildSessionCookie(session.rawToken) }
+      );
+    }
+
+    // 3b. Separate endpoint to add a new passkey when the user ALREADY has >= 1 passkey:
+    //     Requires an active passkey-verified Extranet cookie session + valid X-CSRF-Token!
+    if (method === 'POST' && path === '/v1/extranet/passkeys/add/options') {
+      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
+      await checkD1RateLimit(env, `extranet:pkadd:${auth.memberId}`, 10, nowMs);
+      const { rpID } = resolveWebAuthnConfig(env);
+      const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(auth.memberId).all()).results || [];
+      const excludeCredentials = existing.map((k) => ({
+        id: k.credential_id,
+        transports: k.transports ? JSON.parse(k.transports) : undefined,
+      }));
+      const options = await generateRegistrationOptions({
+        rpName: 'Bosphorly Extranet',
+        rpID,
+        userName: auth.email,
+        userID: enc.encode(auth.memberId),
+        excludeCredentials,
+        timeout: 60000,
+        attestationType: 'none',
+        authenticatorSelection: { residentKey: 'preferred', userVerification: 'required' },
+      });
+      const expSql = sqlTime(new Date(nowMs + 5 * 60 * 1000));
+      await env.DB.prepare(
+        `INSERT OR REPLACE INTO passkey_challenges (id, challenge, member_id, purpose, expires_at, created_at)
+         VALUES (?, ?, ?, 'registration', ?, ?)`
+      ).bind(`ex-add:${uuid()}`, options.challenge, auth.memberId, expSql, nowSql).run();
+      return jsonResponse(options, 200, { 'Set-Cookie': buildSessionCookie(auth.rawCookie) });
+    }
+
+    if (method === 'POST' && path === '/v1/extranet/passkeys/add/verify') {
+      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
+      await checkD1RateLimit(env, `extranet:pkadd:${auth.memberId}`, 10, nowMs);
+      const body = await readJsonBody(request, 16384);
+      const { rpID, expectedOrigin } = resolveWebAuthnConfig(env);
+
+      const clientDataRaw = body?.response?.clientDataJSON;
+      if (!clientDataRaw) fail(400, 'Geçersiz passkey yanıtı.');
+      let clientData;
+      try {
+        clientData = JSON.parse(b64urlDecode(clientDataRaw));
+      } catch {
+        fail(400, 'Geçersiz clientDataJSON.');
+      }
+      const ch = clientData?.challenge;
+      if (!ch) fail(400, 'Passkey doğrulama kodu eksik.');
+
+      const chRow = await env.DB.prepare(
+        `SELECT * FROM passkey_challenges WHERE challenge=? AND member_id=? AND purpose='registration' AND expires_at>?`
+      ).bind(ch, auth.memberId, nowSql).first();
+      if (!chRow || !String(chRow.id || '').startsWith('ex-add:')) {
+        fail(400, 'Geçersiz veya süresi dolmuş passkey ekleme isteği.');
+      }
+      await env.DB.prepare(`DELETE FROM passkey_challenges WHERE id=?`).bind(chRow.id).run();
+
+      const verification = await verifyRegistrationResponse({
+        response: body,
+        expectedChallenge: ch,
+        expectedOrigin,
+        expectedRPID: rpID,
+      });
+      if (!verification.verified || !verification.registrationInfo) {
+        fail(400, 'Passkey doğrulaması başarısız.');
+      }
+
+      const { credential } = verification.registrationInfo;
+      const credentialID = credential.id;
+      const dup = await env.DB.prepare(`SELECT 1 AS x FROM passkeys WHERE credential_id=?`).bind(credentialID).first();
+      if (dup) fail(409, 'Bu passkey zaten kayıtlı.');
+
+      const publicKey = uint8ArrayToB64(credential.publicKey);
+      const counter = credential.counter || 0;
+      const rawTransports = Array.isArray(body?.response?.transports)
+        ? body.response.transports
+        : Array.isArray(credential.transports)
+        ? credential.transports
+        : null;
+      const transports = rawTransports ? JSON.stringify(rawTransports.filter((t) => typeof t === 'string').slice(0, 8)) : null;
+
+      await env.DB.prepare(
+        `INSERT INTO passkeys (credential_id, member_id, public_key, counter, transports, created_at, last_used_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(credentialID, auth.memberId, publicKey, counter, transports, nowSql, nowSql).run();
+
+      const mailAlert = await sendOwnerPasskeyNotification(env, {
+        memberEmail: auth.email,
+        role: auth.role,
+        credentialId: credentialID,
+        flow: 'extranet_session_add',
+        ipAddress: auth.ipAddress,
+        nowMs,
+      });
+
+      await writeAudit(env, {
+        actorMemberId: auth.memberId,
+        actorRole: auth.role,
+        action: 'passkey_register',
+        targetType: 'passkey',
+        targetId: credentialID,
+        newValue: {
+          flow: 'extranet_session_add',
+          role: auth.role,
+          ownerNotified: mailAlert.sent,
+          ...(mailAlert.reason ? { notifyStatus: mailAlert.reason } : {}),
+        },
+        ipAddress: auth.ipAddress,
+        nowSql,
+      });
+
+      return jsonResponse(
+        {
+          verified: true,
+          ownerNotified: mailAlert.sent,
+          passkey: { id: credentialID, createdAt: nowSql },
+        },
+        200,
+        { 'Set-Cookie': buildSessionCookie(auth.rawCookie) }
       );
     }
 

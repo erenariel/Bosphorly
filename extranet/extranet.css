@@ -546,12 +546,26 @@ textarea:focus-visible {
   color: var(--ex-muted);
 }
 
+.ex-kpi-val-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .ex-kpi-val {
   font-size: clamp(24px, 2.4vw, 32px);
   font-weight: 850;
   color: var(--ex-navy);
   letter-spacing: -0.6px;
   line-height: 1.15;
+}
+
+.ex-kpi-gross {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ex-muted);
+  white-space: nowrap;
 }
 
 .ex-kpi-sub {

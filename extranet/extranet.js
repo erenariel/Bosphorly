@@ -56,7 +56,8 @@
   };
 
   const apiBase = () => {
-    const cfg = window.BOSPHORLY_API && window.BOSPHORLY_API.base;
+    const apiCfg = window.BOSPHORLY_API || {};
+    const cfg = apiCfg.extranetBase || apiCfg.base;
     return String(cfg || '').replace(/\/+$/, '');
   };
 
@@ -413,6 +414,36 @@
     }
   }
 
+  async function runAdditionalPasskeyEnrollment() {
+    const swa = window.SimpleWebAuthnBrowser;
+    if (!swa || typeof swa.startRegistration !== 'function') {
+      showBanner('Tarayıcınız Passkey (WebAuthn) desteklemiyor.', 'err');
+      return;
+    }
+    const btn = $('btnAddPasskey');
+    if (btn) btn.disabled = true;
+    try {
+      const options = await extranetApi('/v1/extranet/passkeys/add/options', {
+        method: 'POST',
+        body: {},
+      });
+      const attResp = await swa.startRegistration({ optionsJSON: options });
+      await extranetApi('/v1/extranet/passkeys/add/verify', {
+        method: 'POST',
+        body: attResp,
+      });
+      showBanner('Yeni passkey hesabınıza eklendi ve denetim kaydına (audit) işlendi.', 'ok');
+    } catch (e) {
+      const msg =
+        e && e.name === 'NotAllowedError'
+          ? 'Yeni passkey kaydı iptal edildi.'
+          : e.message || 'Yeni passkey eklenemedi.';
+      showBanner(msg, 'err');
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
   async function performLogout(customMessage = '') {
     try {
       if (csrfToken) {
@@ -459,7 +490,15 @@
     $('kpiNewMembersSub').textContent = `Bugün: ${p.today.newMembers} · Hafta: ${p.week.newMembers} · Ay: ${p.month.newMembers}`;
 
     $('kpiCommission').textContent = formatCommissionObj(cur.estimatedCommission);
-    $('kpiCommissionSub').textContent = `Hafta: ${formatCommissionObj(p.week.estimatedCommission)} · Ay: ${formatCommissionObj(p.month.estimatedCommission)}`;
+    const grossEl = $('kpiCommissionGross');
+    if (grossEl) {
+      grossEl.textContent = `brüt ${formatCommissionObj(cur.grossCommission || cur.estimatedCommission)}`;
+    }
+    const wkNet = formatCommissionObj(p.week.estimatedCommission);
+    const wkGross = formatCommissionObj(p.week.grossCommission || p.week.estimatedCommission);
+    const moNet = formatCommissionObj(p.month.estimatedCommission);
+    const moGross = formatCommissionObj(p.month.grossCommission || p.month.estimatedCommission);
+    $('kpiCommissionSub').textContent = `Hafta: ${wkNet} (brüt ${wkGross}) · Ay: ${moNet} (brüt ${moGross})`;
 
     // Status pills
     const pillsWrap = $('statusSummaryPills');
@@ -1147,6 +1186,8 @@
       $('filterStatus').value = '';
       switchView('bookings');
     };
+    const addPkBtn = $('btnAddPasskey');
+    if (addPkBtn) addPkBtn.onclick = () => runAdditionalPasskeyEnrollment();
     $('btnLogout').onclick = () => performLogout('');
 
     document.querySelectorAll('.ex-seg-btn').forEach((btn) => {
