@@ -321,7 +321,7 @@ export async function stage2Routes(request, env, url, nowMs, h) {
           id,
         ),
         coupons: await rows(
-          "SELECT code,percent_bps,status,expires_at FROM coupons WHERE member_id=? ORDER BY issued_at DESC LIMIT 100",
+          "SELECT id,code,percent_bps,status,expires_at FROM coupons WHERE member_id=? ORDER BY issued_at DESC LIMIT 100",
           id,
         ),
         mimo: await first(
@@ -720,6 +720,7 @@ export async function stage2Routes(request, env, url, nowMs, h) {
           m.email,
         ),
         stmt("DELETE FROM extranet_replies WHERE recipient=?", m.email),
+        stmt("UPDATE extranet_booking_meta SET guest_email=NULL,guest_phone=NULL,guest_name=NULL,guest_hotel=NULL,guest_room=NULL,member_id=NULL WHERE member_id=? OR guest_email=? OR (guest_phone IS NOT NULL AND guest_phone=?)",id,m.email,m.phone||null),
         stmt("DELETE FROM assistant_rate_limits WHERE key=?", "member:" + id),
       );
       for (const table of [

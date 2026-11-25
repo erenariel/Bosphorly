@@ -324,3 +324,18 @@ test('Booking email preview never sends before the second confirmation',async({p
  await expect(page.locator('dialog.ex-card[open]')).toContainText('Your booking has been confirmed.');expect(sent).toBe(false);await page.getByRole('button',{name:'Onayla ve gönder'}).click();await expect.poll(()=>sent).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });
+
+test('Campaign proposals show old/new values, need owner confirmation and remain hidden for staff',async({page})=>{
+ let role='owner',proposed=false,approved=false;
+ await page.route('https://**/v1/extranet/**',async route=>{const path=new URL(route.request().url()).pathname;let body={};
+ if(path.endsWith('/session'))body={authenticated:true,csrfToken:'campaign-csrf',user:{id:'owner',role}};
+ else if(path.endsWith('/dashboard'))body={periods:{today:{},week:{},month:{}},recentBookings:[],statusBreakdown:{}};
+ else if(path.endsWith('/campaigns'))body={campaigns:[{id:'welcome',percent_bps:approved?500:300,valid_days:30,active:1,issued:1,redeemed:0}],proposals:proposed&&!approved?[{id:'proposal',campaign_id:'welcome',reason:'Sezon kampanyası',old_json:'{"percent_bps":300}',new_json:'{"percent_bps":500}'}]:[]};
+ else if(path.endsWith('/proposal')){expect(route.request().headers()['x-csrf-token']).toBe('campaign-csrf');proposed=true;body={proposalId:'proposal'};}
+ else if(path.endsWith('/approve')){expect(route.request().postDataJSON().confirm).toBe(true);approved=true;body={approved:true};}
+ else if(path.endsWith('/coupon-management'))body={coupons:[]};
+ await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});});
+ await page.goto('/extranet/');await page.locator('#navCampaigns').click();await page.getByLabel('Kampanya oranı (%)',{exact:true}).fill('5');await page.getByLabel('Değişiklik gerekçesi',{exact:true}).fill('Sezon kampanyası');await page.getByRole('button',{name:'Owner onayına sun'}).click();await expect(page.locator('#campaignContent')).toContainText('Önce:');expect(approved).toBe(false);
+ page.once('dialog',d=>d.accept());await page.getByRole('button',{name:'Kampanya değişikliğini onayla'}).click();await expect.poll(()=>approved).toBe(true);expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+ role='staff';await page.reload();await expect(page.locator('#navCampaigns')).toBeHidden();
+});
