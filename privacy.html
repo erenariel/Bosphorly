@@ -27,7 +27,7 @@
 <link rel="alternate" hreflang="tr" href="https://bosphorly.com/privacy.html?lang=tr">
 <link rel="alternate" hreflang="en" href="https://bosphorly.com/privacy.html?lang=en">
 <link rel="alternate" hreflang="x-default" href="https://bosphorly.com/privacy.html">
-</head>
+<script defer src="/ads-consent.js?v=20261125"></script></head>
 <body>
 <div id="siteHeader"></div>
 <script src="config/api.js?v=20261123a"></script><link rel="stylesheet" media="(min-width:1024px)" href="mimo-intro.css?v=20261123a"><script defer src="mimo-intro.js?v=20261123a"></script>
@@ -44,7 +44,7 @@
 
   <h2>2. Verileriniz bize ne zaman ulaşır?</h2>
   <p>Taslak Gmail veya e-posta uygulamanızda gönderdiğinizde iletilir. Doğrudan gönderim sunulduğunda, onayınızla talep Cloudflare ve e-posta sağlayıcımız Resend üzerinden Google Workspace posta kutumuza iletilir.</p>
-  <p>Cihazınızda tutulan bilgileri “Hesabım → Bu cihazdaki her şeyi sil” ile istediğiniz an silebilirsiniz. Sitede reklam veya takip çerezi kullanılmaz; dil, para birimi, talep taslaklarınız ve üye girişi yaptıysanız oturum anahtarınız tarayıcınızın yerel depolamasında tutulur.</p>
+  <p>Cihazınızda tutulan bilgileri “Hesabım → Bu cihazdaki her şeyi sil” ile istediğiniz an silebilirsiniz. İsteğe bağlı reklam ölçümü varsayılan olarak kapalıdır; dil, para birimi, talep taslaklarınız ve üye girişi yaptıysanız oturum anahtarınız tarayıcınızın yerel depolamasında tutulur.</p>
 
   <h2>3. Hangi verileri işliyoruz?</h2>
   <ul>
@@ -114,7 +114,7 @@
     <li>Site yalnızca şifreli bağlantıyla (HTTPS) açılır ve talepleriniz bu bağlantıyla iletilir. Taslağı kendi e-posta uygulamanızla gönderirseniz ileti sizin e-posta sağlayıcınız üzerinden geçer; e-posta, uçtan uca şifreli mesajlaşmayla aynı güvenlik garantisini vermez.</li>
     <li>Doğrudan gönderimde talep, onayınızla Cloudflare ve e-posta sağlayıcımız Resend üzerinden Google Workspace posta kutumuza iletilir; kötüye kullanıma karşı Cloudflare Turnstile doğrulaması yapılır.</li>
     <li>Üyelikte şifre kullanılmaz; e-postanıza gönderilen tek kullanımlık, 10 dakika geçerli bir kodla veya passkey ile giriş yapılır. Passkey’de biyometrik veriniz cihazınızdan çıkmaz; sunucuda yalnızca açık anahtar saklanır. Kodlar ve oturum anahtarları geri döndürülemez biçimde (“hash”) saklanır; çok sayıda hatalı denemede giriş geçici olarak durdurulur.</li>
-    <li>Sitede veri toplayan reklam veya izleme araçları yoktur.</li>
+    <li><b>İsteğe bağlı Google Ads ölçümü:</b> Açık izninizle Google Tag Manager ve Google Ads, reklam tıklamalarını başarılı rezervasyon talepleriyle ilişkilendirmek için çerezleri (ör. _gcl_ önekli çerezler), IP ve tarayıcı/cihaz bilgileri ile reklam tıklama tanımlayıcılarını işleyebilir. Başarılı talep etkinliği ad, e-posta, telefon veya rezervasyon numarası içermez. Kişiselleştirilmiş reklam ve Analytics bu izinle etkinleştirilmez. Google verileri yurt dışında işleyebilir. Tercih 180 gün tarayıcıda tutulur; Google çerezlerinin süreleri çereze göre değişir. İzni sayfanın altındaki Gizlilik tercihleri düğmesinden istediğiniz zaman geri çekebilirsiniz; reddetmek hizmeti etkilemez. <a href="https://policies.google.com/privacy">Google gizlilik politikası</a>.</li>
     <li>Acentelere yalnızca hizmet için gereken bilgiler iletilir; üyelik bilgileriniz acentelerle paylaşılmaz.</li>
   </ul>
 
@@ -137,7 +137,7 @@
 
   <h2>2. When does your data reach us?</h2>
   <p>Drafts are delivered when you send them in Gmail or your email application. Where direct submission is available, your request is sent with your consent via Cloudflare and our mail provider Resend to our Google Workspace mailbox.</p>
-  <p>You can delete what is kept on your device at any time with “My account → Delete everything on this device”. The site uses no advertising or tracking cookies; your language, currency, request drafts and, if you are signed in, your session key are kept in your browser’s local storage.</p>
+  <p>You can delete what is kept on your device at any time with “My account → Delete everything on this device”. Optional advertising measurement is off by default; your language, currency, request drafts and, if you are signed in, your session key are kept in your browser’s local storage.</p>
 
   <h2>3. What we process</h2>
   <ul>
@@ -207,7 +207,7 @@
     <li>The site opens only over an encrypted connection (HTTPS), and your requests travel over it. If you send the draft from your own email app, it travels through your email provider; email does not give the same guarantees as end-to-end encrypted messaging.</li>
     <li>With direct submission, your request is sent with your consent via Cloudflare and our mail provider Resend to our Google Workspace mailbox, with a Cloudflare Turnstile check against abuse.</li>
     <li>Membership uses no passwords: you sign in with a one-time code sent to your email, valid for 10 minutes, or with a passkey. With passkeys, your biometric data never leaves your device; only the public key is stored on the server. Codes and session keys are stored only as one-way hashes, and sign-in is paused after repeated wrong attempts.</li>
-    <li>The site has no advertising or tracking tools that collect data.</li>
+    <li><b>Optional Google Ads measurement:</b> With your opt-in, Google Tag Manager and Google Ads may process cookies (e.g. _gcl_ cookies), IP and browser/device information and ad click identifiers to associate ad clicks with accepted booking requests. The booking event contains no name, email, phone or reference. Personalized ads and Analytics are not enabled by this consent. Google may process data abroad. Your choice is stored in your browser for 180 days; Google cookie lifetimes vary. Withdraw your permission via Privacy settings at the bottom of the page; refusing does not affect services. <a href="https://policies.google.com/privacy">Google privacy policy</a>.</li>
     <li>Agencies receive only what they need for the service; your membership data is not shared with them.</li>
   </ul>
 
