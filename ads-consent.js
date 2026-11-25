@@ -64,15 +64,14 @@
     settings.onclick=()=>{panel.hidden=!panel.hidden;if(!panel.hidden) allow.focus();};
     const select = allowed => {
       choice=allowed;
-      let stored = false;
-      try {localStorage.setItem(key,JSON.stringify({allowed,expires:Date.now()+ttl}));stored=true;}catch{}
+      try {localStorage.setItem(key,JSON.stringify({allowed,expires:Date.now()+ttl}));}catch{}
       panel.hidden=true;
       if(allowed) load(); else {
         clearCookies();
         if(loaded) {
           function consent(){window.dataLayer.push(arguments);}
           consent('consent','update',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
-          if(stored) location.reload();
+          location.reload();
         }
       }
     };
