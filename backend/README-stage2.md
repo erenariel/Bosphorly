@@ -76,3 +76,7 @@ Tümü `/v1/extranet` altında, Aşama 1 auth ve rol kontrollerinden geçer:
 2. Süreli üyelik e-postalarının marka metinleri ve imzası için tercih edilen ifadeler var mı?
 3. Canlıya alma öncesi hangi yetkili hesaplarla owner/admin/staff kabul testi yapılacak? E-posta adresleri secret/yetkili yapılandırmada tutulmalıdır.
 4. Finansal/audit kayıtlarında yasal saklama zorunluluğu ve harici iletişim kopyalarının silme süreci nasıl işletilecek?
+
+## İlk yönetici erişimi
+
+`ADMIN_OWNER_EMAIL` doğrulanmış ilk üye girişinde owner rolünü oluşturur. İsteğe bağlı `EXTRANET_ADMIN_EMAILS` Worker secret'ı virgülle ayrılmış ek admin adreslerini kabul eder. Bu adresler sadece başarılı üye e-posta doğrulamasından sonra, daha önce Extranet rol kaydı yoksa admin olarak başlatılır; kapatılmış bir rolü yeniden açmaz. İki durumda da Passkey kurulmadan Extranet oturumu verilmez. Adresleri kaynak koda yazmayın.
