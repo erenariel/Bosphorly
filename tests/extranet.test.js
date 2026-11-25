@@ -165,11 +165,11 @@ async function signUpMember(env, email, extra = {}) {
   assert.equal(s.status, 200);
   const v = await callWorker(env, '/v1/auth/verify', {
     method: 'POST',
-    body: { email, code: s.body.devCode, lang: 'tr', ...extra },
+    body: { email, code: s.body.devCode, lang: 'tr', extranet:true, ...extra },
   });
   assert.equal(v.status, 200);
   const memberRow = env.DB.raw.prepare(`SELECT * FROM members WHERE email = ?`).get(email.toLowerCase());
-  return { token: v.body.token, member: v.body.member, id: memberRow.id };
+  return { token: v.body.token, ticket:v.body.extranetTicket, member: v.body.member, id: memberRow.id };
 }
 
 /**
@@ -289,7 +289,7 @@ test('ADMIN_OWNER_EMAIL bootstraps initial owner, supports optional Passkeys and
   // 2. Owner with 0 passkeys can request initial passkey registration options
   const opts = await callWorker(env, '/v1/extranet/passkey/register/options', {
     method: 'POST',
-    body: {},
+    body: {ticket:ownerMember.ticket},
     bearer: ownerMember.token,
   });
   assert.equal(opts.status, 200);
@@ -363,7 +363,7 @@ test("passkey'i olan üye, sadece bearer token ile yeni passkey kaydedemez; yeni
   // Pre-mint a second registration challenge while 0 passkeys exist to also test race/replay defense on /register/verify
   const preRaceOpts = await callWorker(env, '/v1/extranet/passkey/register/options', {
     method: 'POST',
-    body: {},
+    body: {ticket:adminUser.ticket},
     bearer: adminUser.token,
   });
   assert.equal(preRaceOpts.status, 200);
@@ -371,7 +371,7 @@ test("passkey'i olan üye, sadece bearer token ile yeni passkey kaydedemez; yeni
   // Initial enrollment with 0 passkeys succeeds via /v1/extranet/passkey/register/options + /verify
   const initOpts = await callWorker(env, '/v1/extranet/passkey/register/options', {
     method: 'POST',
-    body: {},
+    body: {ticket:adminUser.ticket},
     bearer: adminUser.token,
   });
   assert.equal(initOpts.status, 200);
@@ -383,7 +383,7 @@ test("passkey'i olan üye, sadece bearer token ile yeni passkey kaydedemez; yeni
   });
   const initVerify = await callWorker(env, '/v1/extranet/passkey/register/verify', {
     method: 'POST',
-    body: initAttestation,
+    body: {...initAttestation,ticket:adminUser.ticket},
     bearer: adminUser.token,
     ip: '198.51.100.44',
   });
@@ -1056,6 +1056,7 @@ test('dashboard periods use Europe/Istanbul timezone, commission shows coupon-de
   assert.equal(dash.periods.week.grossCommission.EUR, 1800);      // 1200 + 600
 
   // CORS verification for both https://bosphorly.com and https://www.bosphorly.com on api.bosphorly.com
+  env.OWNER_EMAILS='owner2@test.example';
   const liveOwner = await createExtranetActor(baseEnv, 'owner2@test.example', 'owner');
   for (const allowedOrig of ['https://bosphorly.com', 'https://www.bosphorly.com']) {
     const preflight = await worker.fetch(
@@ -1231,4 +1232,33 @@ test('fresh one-use email OTP admits authorized owners without Passkeys; old/mem
  assert.equal((await callWorker(env,'/v1/extranet/logout',{method:'POST',cookie,body:{}})).status,403);
  assert.equal((await login(owner.token,owner.extranetTicket)).status,401);
  assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='login_email'").get().n,1);
+});
+
+test('Stage 0: OWNER_EMAILS owners bootstrap, database owner forgery is denied, partner grants never access staff APIs',async()=>{
+ const env=createTestEnv({OWNER_EMAILS:'second-owner@test.example'});
+ const owner=await signUpMember(env,'second-owner@test.example');
+ const st=await callWorker(env,'/v1/extranet/auth/status',{method:'POST',bearer:owner.token,body:{}});
+ assert.equal(st.body.user.role,'owner');
+ const forged=await createExtranetActor(env,'forged@test.example','owner');
+ assert.equal((await callWorker(env,'/v1/extranet/dashboard',{cookie:forged.cookie})).status,403);
+ const partner=await createExtranetActor(env,'partner-account@test.example','partner');
+ const session=await callWorker(env,'/v1/extranet/session',{cookie:partner.cookie});assert.equal(session.body.user.role,'partner');assert.match(session.headers.get('X-Robots-Tag'),/noindex/);
+ for(const path of ['/dashboard','/bookings','/members','/messages','/providers'])assert.equal((await callWorker(env,'/v1/extranet'+path,{cookie:partner.cookie})).status,403,path);
+ assert.equal((await callWorker(env,'/v1/extranet/logout',{method:'POST',cookie:partner.cookie,csrf:partner.csrf,body:{}})).status,200);
+});
+
+test('Stage 0: audit is append-only at the SQL layer and preserves old/new values',async()=>{
+ const env=createTestEnv();const owner=await createExtranetActor(env,'owner@test.example','owner');
+ await callWorker(env,'/v1/extranet/dashboard',{cookie:owner.cookie});
+ const before=env.DB.raw.prepare('SELECT COUNT(*) AS n FROM extranet_audit').get().n;
+ assert.ok(before>0);assert.throws(()=>env.DB.raw.exec("UPDATE extranet_audit SET action='tampered'"),/append-only/);
+ assert.throws(()=>env.DB.raw.exec('DELETE FROM extranet_audit'),/append-only/);
+ assert.equal(env.DB.raw.prepare('SELECT COUNT(*) AS n FROM extranet_audit').get().n,before);
+});
+
+test('Stage 0: first passkey enrollment rejects bearer-only access and unrecognized endpoints still require authentication',async()=>{
+ const env=createTestEnv();const owner=await signUpMember(env,'owner@test.example');
+ const denied=await callWorker(env,'/v1/extranet/passkey/register/options',{method:'POST',bearer:owner.token,body:{}});
+ assert.equal(denied.status,401);assert.equal(denied.body.code,'FRESH_OTP_REQUIRED');
+ assert.equal((await callWorker(env,'/v1/extranet/unknown')).status,401);
 });

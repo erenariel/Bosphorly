@@ -19,7 +19,7 @@ export const EXTRANET_COOKIE_NAME = '__Host-bosphorly_extranet';
 export const EXTRANET_IDLE_MS = 30 * 60 * 1000; // 30 minutes inactivity timeout
 export const EXTRANET_MAX_SESSION_MS = 12 * 60 * 60 * 1000; // 12 hours absolute cap
 
-const ROLES = new Set(['owner', 'admin', 'staff']);
+const ROLES = new Set(['owner', 'admin', 'staff', 'partner']);
 const WORKFLOW_STATUSES = ['new', 'in_progress', 'confirmed', 'completed', 'cancelled'];
 const PAYMENT_STATUSES = ['pending', 'paid', 'refunded'];
 const SUPPORTED_LANGS = new Set([
@@ -103,6 +103,7 @@ function jsonResponse(body, status = 200, extraHeaders = {}) {
       'Cache-Control': 'no-store',
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
+      'X-Robots-Tag': 'noindex, nofollow, noarchive',
       ...extraHeaders,
     },
   });
@@ -150,10 +151,10 @@ async function readJsonBody(request, maxBytes = 8192) {
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) {
     fail(415, 'JSON içerik türü gerekli.');
   }
-  const text = await request.text();
-  if (enc.encode(text).length > maxBytes) {
-    fail(413, 'İstek gövdesi çok büyük.');
-  }
+  const reader=request.body?.getReader();let size=0;const chunks=[];
+  if(reader)try{for(;;){const {done,value}=await reader.read();if(done)break;size+=value.byteLength;if(size>maxBytes){await reader.cancel();fail(413,'İstek gövdesi çok büyük.');}chunks.push(value);}}finally{reader.releaseLock();}
+  const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}
+  const text=new TextDecoder().decode(bytes);
   try {
     const parsed = JSON.parse(text || '{}');
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw 0;
@@ -248,15 +249,12 @@ function resolveWebAuthnConfig(env) {
 async function checkD1RateLimit(env, key, maxPerMinute, nowMs = Date.now()) {
   const minBucket = Math.floor(nowMs / 60000);
   const dayBucket = new Date(nowMs).toISOString().slice(0, 10);
-  const row = await env.DB.prepare(`SELECT min_bucket, min_count FROM assistant_rate_limits WHERE key=?`).bind(key).first();
-  const nextCount = row && Number(row.min_bucket) === minBucket ? Number(row.min_count || 0) + 1 : 1;
-  if (nextCount > maxPerMinute) {
-    fail(429, 'Çok fazla istek gönderildi. Lütfen biraz bekleyin.', 'RATE_LIMITED');
-  }
-  await env.DB.prepare(
-    `INSERT INTO assistant_rate_limits (key, min_bucket, min_count, day_bucket, day_count) VALUES (?, ?, ?, ?, 1)
-     ON CONFLICT(key) DO UPDATE SET min_bucket=excluded.min_bucket, min_count=excluded.min_count, day_bucket=excluded.day_bucket`
-  ).bind(key, minBucket, nextCount, dayBucket).run();
+  const row = await env.DB.prepare(`INSERT INTO assistant_rate_limits(key,min_bucket,min_count,day_bucket,day_count)
+    VALUES(?,?,1,?,1) ON CONFLICT(key) DO UPDATE SET
+    min_count=CASE WHEN min_bucket=excluded.min_bucket THEN min_count+1 ELSE 1 END,
+    min_bucket=excluded.min_bucket,day_bucket=excluded.day_bucket RETURNING min_count`)
+    .bind(key,minBucket,dayBucket).first();
+  if(Number(row.min_count)>maxPerMinute)fail(429,'Çok fazla istek gönderildi. Lütfen biraz bekleyin.','RATE_LIMITED');
 }
 
 function buildAuditStatement(env, { actorMemberId, actorRole, action, targetType, targetId = null, oldValue = null, newValue = null, ipAddress, nowSql }) {
@@ -298,7 +296,7 @@ async function resolveMemberFromBearer(request, env, nowMs = Date.now()) {
 
 async function ensureExtranetRoleForMember(env, member, ipAddress, nowMs = Date.now()) {
   const nowSql = sqlTime(new Date(nowMs));
-  if (isAdminOwnerEmail(env, member.email)) {
+  if (isOwnerEmail(env, member.email)) {
     const existing = await env.DB.prepare(`SELECT role, active FROM extranet_users WHERE member_id=?`).bind(member.id).first();
     if (!existing || existing.role !== 'owner' || Number(existing.active) !== 1) {
       await env.DB.prepare(
@@ -328,7 +326,7 @@ async function ensureExtranetRoleForMember(env, member, ipAddress, nowMs = Date.
     ]);
     row=await env.DB.prepare(`SELECT role,active FROM extranet_users WHERE member_id=?`).bind(member.id).first();
   }
-  if (!row || Number(row.active) !== 1 || !ROLES.has(row.role)) {
+  if (!row || Number(row.active) !== 1 || !ROLES.has(row.role) || row.role === 'owner') {
     await writeAudit(env, {
       actorMemberId: member.id,
       actorRole: 'unauthorized',
@@ -342,6 +340,14 @@ async function ensureExtranetRoleForMember(env, member, ipAddress, nowMs = Date.
     fail(403, 'Bu üye hesabının Extranet erişim yetkisi bulunmuyor.', 'FORBIDDEN');
   }
   return row.role;
+}
+
+async function requireFreshEnrollment(request,env,member,ticketValue,nowMs) {
+  const ticket=await verifyState(env.CODE_PEPPER,ticketValue);
+  if(!ticket||ticket.p!=='extranet_email'||ticket.memberId!==member.id||ticket.tokenHash!==await sha256(bearerToken(request))||Math.abs(nowMs-ticket.t)>5*60000)
+    fail(401,'İlk passkey kurulumu için yeni e-posta koduyla doğrulayın.','FRESH_OTP_REQUIRED');
+  const proof=await env.DB.prepare('SELECT id FROM login_codes WHERE id=? AND email=? AND used=1').bind(ticket.codeId,member.email).first();
+  if(!proof)fail(401,'Yeni e-posta doğrulaması gerekli.','FRESH_OTP_REQUIRED');
 }
 
 async function createExtranetSession(env, request, member, role, nowMs = Date.now()) {
@@ -385,9 +391,9 @@ async function requireExtranetAuth(request, env, allowedRoles, nowMs = Date.now(
   }
 
   let effectiveRole = row.role;
-  if (isAdminOwnerEmail(env, row.email)) {
+  if (isOwnerEmail(env, row.email)) {
     effectiveRole = 'owner';
-  } else if (!effectiveRole || Number(row.active) !== 1 || !ROLES.has(effectiveRole)) {
+  } else if (!effectiveRole || Number(row.active) !== 1 || !ROLES.has(effectiveRole) || effectiveRole === 'owner') {
     await env.DB.prepare(`DELETE FROM extranet_sessions WHERE token_hash=?`).bind(tokenHash).run();
     fail(403, 'Extranet erişim yetkiniz kaldırılmış.', 'FORBIDDEN', true);
   }
@@ -1139,7 +1145,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // 1. Session check (GET /v1/extranet/session)
     if (method === 'GET' && path === '/v1/extranet/session') {
-      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
+      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff', 'partner'], nowMs);
       return jsonResponse(
         {
           authenticated: true,
@@ -1207,6 +1213,8 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
           'PASSKEY_ALREADY_EXISTS'
         );
       }
+      const enrollmentBody=await readJsonBody(request);
+      await requireFreshEnrollment(request,env,m,enrollmentBody.ticket,nowMs);
       const { rpID } = resolveWebAuthnConfig(env);
       const options = await generateRegistrationOptions({
         rpName: 'Bosphorly Extranet',
@@ -1249,6 +1257,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
         );
       }
       const body = await readJsonBody(request, 16384);
+      await requireFreshEnrollment(request,env,m,body.ticket,nowMs);
       const { rpID, expectedOrigin } = resolveWebAuthnConfig(env);
 
       const clientDataRaw = body?.response?.clientDataJSON;
@@ -1285,6 +1294,9 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       const dup = await env.DB.prepare(`SELECT 1 AS x FROM passkeys WHERE credential_id=?`).bind(credentialID).first();
       if (dup) fail(409, 'Bu passkey zaten kayıtlı.');
 
+      const proof=await verifyState(env.CODE_PEPPER,body.ticket);
+      const consumed=await env.DB.prepare('DELETE FROM login_codes WHERE id=? AND email=? AND used=1 RETURNING id').bind(proof.codeId,m.email).first();
+      if(!consumed)fail(401,'E-posta doğrulaması kullanılmış.');
       const publicKey = uint8ArrayToB64(credential.publicKey);
       const counter = credential.counter || 0;
       const rawTransports = Array.isArray(body?.response?.transports)
@@ -1340,7 +1352,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
     // 3b. Separate endpoint to add a new passkey when the user ALREADY has >= 1 passkey:
     //     Requires an active passkey-verified Extranet cookie session + valid X-CSRF-Token!
     if (method === 'POST' && path === '/v1/extranet/passkeys/add/options') {
-      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
+      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff', 'partner'], nowMs);
       await checkD1RateLimit(env, `extranet:pkadd:${auth.memberId}`, 10, nowMs);
       const { rpID } = resolveWebAuthnConfig(env);
       const existing = (await env.DB.prepare(`SELECT credential_id, transports FROM passkeys WHERE member_id=?`).bind(auth.memberId).all()).results || [];
@@ -1367,7 +1379,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
     }
 
     if (method === 'POST' && path === '/v1/extranet/passkeys/add/verify') {
-      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
+      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff', 'partner'], nowMs);
       await checkD1RateLimit(env, `extranet:pkadd:${auth.memberId}`, 10, nowMs);
       const body = await readJsonBody(request, 16384);
       const { rpID, expectedOrigin } = resolveWebAuthnConfig(env);
@@ -1567,7 +1579,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // 5. Logout (POST /v1/extranet/logout)
     if (method === 'POST' && path === '/v1/extranet/logout') {
-      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
+      const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff', 'partner'], nowMs);
       await env.DB.batch([
         env.DB.prepare(`DELETE FROM extranet_sessions WHERE token_hash=?`).bind(auth.tokenHash),
         buildAuditStatement(env, {
@@ -2133,6 +2145,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       fail(405, 'Desteklenmeyen HTTP metodu.');
     }
 
+    await requireExtranetAuth(request,env,[...ROLES],nowMs);
     fail(404, 'Extranet uç noktası bulunamadı.');
   } catch (e) {
     if(e instanceof MemberSuspendedError)return jsonResponse({error:e.message},403,{'Set-Cookie':buildClearSessionCookie()});
