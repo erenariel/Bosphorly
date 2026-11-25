@@ -184,7 +184,7 @@ test('deployment config has D1 database_id, live api base, secret-only workflow 
   assert.match(apiConfig, /\bbase:\s*'https:\/\/api\.bosphorly\.com'/);
   const workflow = readFileSync(new URL('../.github/workflows/deploy-member-api.yml', import.meta.url), 'utf8');
   assert.match(workflow, /name:\s*Deploy member API/);
-  assert.match(workflow, /on:\s*workflow_dispatch/);
+  assert.match(workflow, /on:\s*workflow_dispatch:/);
   assert.match(workflow, /secrets\.CLOUDFLARE_ACCOUNT_ID\s*\|\|\s*secrets\.CLAUDFLARE_ACCOUNT_ID/);
   assert.match(workflow, /secrets\.CLOUDFLARE_API_TOKEN/);
   assert.match(workflow, /secrets\.RESEND_API_KEY/);
