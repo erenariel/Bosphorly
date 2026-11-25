@@ -456,15 +456,61 @@
 
   // --- Navigation & Views ---
 
+  let memberPage = 1;
+  let membersBusy = false;
+  async function loadMembers(page) {
+    if (membersBusy) return;
+    membersBusy = true;
+    $('membersMessage').textContent = 'Yükleniyor…';
+    try {
+      const data = await extranetApi('/v1/extranet/members?q='+encodeURIComponent($('memberSearch').value)+'&page='+Math.max(1,page));
+      memberPage = data.page;
+      const list = $('membersList'); list.replaceChildren();
+      for (const member of data.members) {
+        const card = document.createElement('section'); card.className='ex-detail-section';
+        const title = document.createElement('h2');title.textContent=member.name+' · '+member.email;card.append(title);
+        const info = document.createElement('p');info.textContent='Geçerli: '+(member.owner?'Platinum (işletme sahibi)':member.tier)+' · Otomatik: '+member.automaticTier+' · Tamamlanan tur: '+member.fulfilledCount+' · '+(member.manualTier?'Elle atandı':'Otomatik');card.append(info);
+        if (!member.owner && ['owner','admin'].includes(currentUser.role)) {
+          const form=document.createElement('form');
+          const label=document.createElement('label');label.textContent='Üyelik seviyesi ';
+          const select=document.createElement('select');select.setAttribute('aria-label','Üyelik seviyesi');
+          for (const [value,text] of [['automatic','Otomatik hesaba dön'],['silver','Silver'],['gold','Gold'],['platinum','Platinum']]) {
+            const option=document.createElement('option');option.value=value;option.textContent=text;select.append(option);
+          }
+          select.value=member.manualTier||'automatic';label.append(select);
+          const reason=document.createElement('input');reason.placeholder='İşlem gerekçesi';reason.setAttribute('aria-label','İşlem gerekçesi');reason.required=true;reason.minLength=3;reason.maxLength=500;
+          const save=document.createElement('button');save.type='submit';save.className='ex-btn';save.textContent='Seviyeyi kaydet';
+          form.append(label,reason,save);card.append(form);
+          form.onsubmit=async event=>{
+            event.preventDefault();
+            if (!confirm(member.name+' için '+select.options[select.selectedIndex].text+' uygulanacak. Onaylıyor musunuz?')) return;
+            save.disabled=true;
+            try {await extranetApi('/v1/extranet/members/'+encodeURIComponent(member.id)+'/tier',{method:'POST',body:{tier:select.value,reason:reason.value}});await loadMembers(memberPage);}
+            catch(error){$('membersMessage').textContent=error.message;} finally {save.disabled=false;}
+          };
+        }
+        list.append(card);
+      }
+      $('membersPage').textContent=' '+data.page+' / '+Math.max(1,Math.ceil(data.total/data.pageSize))+' ';
+      $('membersPrev').disabled=data.page<=1;$('membersNext').disabled=data.page*data.pageSize>=data.total;
+      $('membersMessage').textContent=data.total+' üye';
+    } catch(error) {$('membersMessage').textContent=error.message;$('membersList').replaceChildren();}
+    finally {membersBusy=false;}
+  }
+
   async function switchView(viewName) {
     activeView = viewName;
     $('viewDashboard').hidden = viewName !== 'dashboard';
     $('viewBookings').hidden = viewName !== 'bookings';
+    $('viewMembers').hidden = viewName !== 'members';
+    $('navMembers').setAttribute('aria-current',viewName==='members'?'page':'false');
     $('navDashboard').setAttribute('aria-current', viewName === 'dashboard' ? 'page' : 'false');
     $('navBookings').setAttribute('aria-current', viewName === 'bookings' ? 'page' : 'false');
 
     if (viewName === 'dashboard') {
       await loadDashboard();
+    } else if (viewName === 'members') {
+      await loadMembers(1);
     } else if (viewName === 'bookings') {
       await loadBookings(1);
     }
@@ -1181,6 +1227,10 @@
     };
 
     $('navDashboard').onclick = () => switchView('dashboard');
+    $('navMembers').onclick = () => switchView('members');
+    $('memberSearchForm').onsubmit = e => {e.preventDefault();loadMembers(1);};
+    $('membersPrev').onclick = () => loadMembers(memberPage-1);
+    $('membersNext').onclick = () => loadMembers(memberPage+1);
     $('navBookings').onclick = () => switchView('bookings');
     $('btnGoAllBookings').onclick = () => {
       $('filterStatus').value = '';

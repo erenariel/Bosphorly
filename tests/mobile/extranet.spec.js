@@ -253,3 +253,31 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
   await page.locator('#bookingsTableContainer button', { hasText: 'Detay' }).click();
   await expect(page.locator('#drawerBody')).toContainText('yalnızca Owner ve Admin rolleri değiştirebilir');
 });
+
+test('Membership manual level and automatic reset use CSRF and remain read-only for staff', async ({page}) => {
+  let role='owner', manualTier=null;
+  await page.route('https://**/v1/extranet/**',async route=>{
+    const path=new URL(route.request().url()).pathname;
+    let body={};
+    if(path.endsWith('/session')) body={authenticated:true,csrfToken:'member-csrf',user:{id:'owner',name:'Owner',email:'owner@test.example',role}};
+    else if(path.endsWith('/members/m1/tier')) {
+      expect(route.request().headers()['x-csrf-token']).toBe('member-csrf');
+      const update=route.request().postDataJSON();expect(update.reason).toBe('Özel misafir');manualTier=update.tier==='automatic'?null:update.tier;
+      body={tier:manualTier||'silver'};
+    } else if(path.endsWith('/members')) body={members:[{id:'m1',name:'Guest',email:'g***@test.example',tier:manualTier||'silver',automaticTier:'silver',manualTier,fulfilledCount:0}],total:1,page:1,pageSize:20};
+    else if(path.endsWith('/dashboard')) body={periods:{today:{},week:{},month:{}},recentBookings:[],statusBreakdown:{}};
+    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+  });
+  await page.goto('/extranet/');await page.locator('#navMembers').click();
+  await expect(page.locator('#membersMessage')).toHaveText('1 üye');
+  page.on('dialog',dialog=>dialog.accept());
+  await page.getByLabel('Üyelik seviyesi',{exact:true}).selectOption('platinum');
+  await page.getByLabel('İşlem gerekçesi').fill('Özel misafir');await page.getByRole('button',{name:'Seviyeyi kaydet'}).click();
+  await expect(page.locator('#membersList')).toContainText('Elle atandı');
+  await page.getByLabel('Üyelik seviyesi',{exact:true}).selectOption('automatic');
+  await page.getByLabel('İşlem gerekçesi').fill('Özel misafir');await page.getByRole('button',{name:'Seviyeyi kaydet'}).click();
+  await expect(page.locator('#membersList')).toContainText('Geçerli: silver');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+  role='staff';await page.reload();await page.locator('#navMembers').click();
+  await expect(page.locator('#membersMessage')).toHaveText('1 üye');await expect(page.getByRole('button',{name:'Seviyeyi kaydet'})).toHaveCount(0);
+});

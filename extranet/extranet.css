@@ -1078,3 +1078,8 @@ textarea:focus-visible {
     text-align: left;
   }
 }
+
+#viewMembers { overflow-wrap: anywhere; }
+#viewMembers form { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+#viewMembers input, #viewMembers select { max-width: 100%; min-width: 0; padding: 10px; }
+#membersList > section { padding: 16px; margin: 14px 0; border: 1px solid #d5e0ed; border-radius: 12px; }
