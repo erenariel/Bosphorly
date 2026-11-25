@@ -1,5 +1,12 @@
 name: Deploy member API
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      apply_migrations:
+        description: 'Apply pending D1 migrations (explicit opt-in)'
+        type: boolean
+        default: false
+        required: false
 permissions:
   contents: read
 concurrency:
@@ -20,6 +27,7 @@ jobs:
         run: node --test tests/members.test.js tests/booking.test.js && python3 tests/schema.py
       - name: Apply D1 migrations, deploy Worker and configure secrets
         env:
+          APPLY_MIGRATIONS: ${{ inputs.apply_migrations }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || secrets.CLAUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
@@ -46,6 +54,9 @@ jobs:
           python3 tools/build_knowledge.py
           config=backend/wrangler.jsonc
           if grep -q 'REPLACE_BEFORE_DEPLOYMENT' "$config"; then
+            if [[ "$APPLY_MIGRATIONS" != "true" ]]; then
+              echo "::error::Database provisioning requires explicit migration opt-in"; exit 1
+            fi
             db_id=$(npx --yes wrangler@4.166.0 d1 list --json | node -e 'const list=JSON.parse(require("fs").readFileSync(0,"utf8")); const db=list.find(d=>d.name==="bosphorly-booking"); if(db) process.stdout.write(db.uuid);')
             if [[ -z "$db_id" ]]; then
               npx --yes wrangler@4.166.0 d1 create bosphorly-booking --location weur
@@ -55,7 +66,12 @@ jobs:
             echo "Resolved D1 database_id: $db_id"
             DB_ID="$db_id" CONFIG="$config" node -e 'const fs=require("fs"); const p=process.env.CONFIG; fs.writeFileSync(p, fs.readFileSync(p,"utf8").replace("REPLACE_BEFORE_DEPLOYMENT", process.env.DB_ID));'
           fi
-          npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
+          npx --yes wrangler@4.166.0 d1 migrations list bosphorly-booking --remote --config "$config"
+          if [[ "$APPLY_MIGRATIONS" == "true" ]]; then
+            npx --yes wrangler@4.166.0 d1 migrations apply bosphorly-booking --remote --config "$config"
+          else
+            echo "D1 migrations were listed only; no migrations applied." >> "$GITHUB_STEP_SUMMARY"
+          fi
           npx --yes wrangler@4.166.0 deploy --config "$config"
           node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN","TURNSTILE_SECRET","OWNER_EMAILS"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
             npx --yes wrangler@4.166.0 secret bulk --config "$config"
