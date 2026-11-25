@@ -21,7 +21,7 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
     r.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ token: 'mem-tok-1', member: { email: 'staff@bosphorly.example' } }),
+      body: JSON.stringify({ token: 'mem-tok-1', extranetTicket:'fresh-proof', member: { email: 'staff@bosphorly.example' } }),
     })
   );
   await page.route('https://**/v1/extranet/auth/status', (r) =>
@@ -37,13 +37,15 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
     })
   );
 
+  await page.route('https://**/v1/extranet/auth/email',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({authenticated:true,csrfToken:'email-csrf',user:{id:'u1',email:'staff@bosphorly.example',role:'staff'}})}));
+  await page.route('https://**/v1/extranet/dashboard',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({periods:{today:{},week:{},month:{}},recentBookings:[],statusBreakdown:{}})}));
   await page.locator('#loginEmail').fill('staff@bosphorly.example');
   await page.locator('#btnSendCode').click();
   await expect(page.locator('#emailVerifyForm')).toBeVisible();
   await page.locator('#loginCode').fill('123456');
   await page.locator('#btnVerifyCode').click();
-  await expect(page.locator('#stepSetupPasskey')).toBeVisible();
-  await expect(page.locator('#btnEnrollPasskey')).toBeVisible();
+  await expect(page.locator('#appShell')).toBeVisible();
+  await expect(page.locator('#gateScreen')).toBeHidden();
 
   // 3. Authenticated Workspace (Owner role): Dashboard, Bookings, Masked PII reveal with X-CSRF-Token, and zero overflow
   let sentCsrfHeader = '';
@@ -270,6 +272,8 @@ test('Membership manual level and automatic reset use CSRF and remain read-only 
   });
   await page.goto('/extranet/');await page.locator('#navMembers').click();
   await expect(page.locator('#membersMessage')).toHaveText('1 üye');
+  await expect(page.locator('.ex-sidebar .ex-brand')).toHaveAttribute('href','/extranet/');
+  await page.locator('.ex-sidebar .ex-brand').click();await expect(page.locator('#viewDashboard')).toBeVisible();expect(new URL(page.url()).pathname).toBe('/extranet/');await page.locator('#navMembers').click();await expect(page.locator('#membersMessage')).toHaveText('1 üye');
   page.on('dialog',dialog=>dialog.accept());
   await page.getByLabel('Üyelik seviyesi',{exact:true}).selectOption('platinum');
   await page.getByLabel('İşlem gerekçesi').fill('Özel misafir');await page.getByRole('button',{name:'Seviyeyi kaydet'}).click();

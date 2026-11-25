@@ -1231,6 +1231,7 @@
   // --- Event Listeners & Initialization ---
 
   function wireEvents() {
+    document.querySelector('.ex-sidebar .ex-brand').onclick=e=>{e.preventDefault();switchView('dashboard');};
     $('btnDirectPasskey').onclick = () => runPasskeyLogin(null);
 
     $('emailStartForm').onsubmit = async (ev) => {
@@ -1279,10 +1280,11 @@
       btn.disabled = true;
       showGateAlert('');
       try {
-        const res = await memberApi('/v1/auth/verify', { email: pendingEmail, code, lang: 'tr' }, '');
+        const res = await memberApi('/v1/auth/verify', { email: pendingEmail, code, lang: 'tr', extranet: true }, '');
         writeMemberBearer(res.token);
         $('loginCode').value = '';
-        await checkMemberExtranetStatus(res.token);
+        const session=await extranetApi('/v1/extranet/auth/email',{method:'POST',body:{ticket:res.extranetTicket},bearer:res.token});
+        await enterWorkspace(session);
       } catch (e) {
         showGateAlert(e.message || 'Kod doğrulanamadı.', 'err');
       } finally {
@@ -1390,7 +1392,7 @@
           $('existingMemberText').textContent = `Açık üye oturumu algılandı: ${me.email}`;
           box.hidden = false;
           $('emailStartForm').hidden = true;
-          $('btnUseMemberSession').onclick = () => checkMemberExtranetStatus(existingBearer);
+          $('btnUseMemberSession').onclick = () => {box.hidden=true;$('emailStartForm').hidden=false;$('loginEmail').value=me.email;$('emailStartForm').requestSubmit();};
           $('btnSwitchAccount').onclick = () => {
             box.hidden = true;
             $('emailStartForm').hidden = false;

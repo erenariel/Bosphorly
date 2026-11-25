@@ -2,7 +2,7 @@ import {stage2Routes} from './extranet-stage2.js';
 import {MemberSuspendedError,assertMemberActive,recordMemberLogin} from './member-controls.js';
 import {membershipTier, MEMBER_TIERS} from './membership-tier.js';
 // Bosphorly Extranet API (/v1/extranet/*) — Stage 1: Authentication, RBAC (owner/admin/staff),
-// Mandatory Passkey (WebAuthn), HttpOnly+Secure+SameSite=Strict Session with 30m Idle Timeout,
+// Fresh email OTP or optional Passkey (WebAuthn), HttpOnly+Secure+SameSite=Strict Session with 30m Idle Timeout,
 // CSRF Protection, Immutable Audit Log, Dashboard KPIs, and Reservations Management.
 
 import {
@@ -12,7 +12,7 @@ import {
   verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
 import { transition } from './domain.js';
-import { awardFulfilledMemberRewards, sqlTime, validEmail } from './members.js';
+import { awardFulfilledMemberRewards, sqlTime, validEmail, verifyState } from './members.js';
 import { computeMemberTier, isOwnerEmail } from './mimo.js';
 
 export const EXTRANET_COOKIE_NAME = '__Host-bosphorly_extranet';
@@ -390,12 +390,6 @@ async function requireExtranetAuth(request, env, allowedRoles, nowMs = Date.now(
   } else if (!effectiveRole || Number(row.active) !== 1 || !ROLES.has(effectiveRole)) {
     await env.DB.prepare(`DELETE FROM extranet_sessions WHERE token_hash=?`).bind(tokenHash).run();
     fail(403, 'Extranet erişim yetkiniz kaldırılmış.', 'FORBIDDEN', true);
-  }
-
-  const pkRow = await env.DB.prepare(`SELECT COUNT(*) AS n FROM passkeys WHERE member_id=?`).bind(row.member_id).first();
-  if (!pkRow || Number(pkRow.n || 0) < 1) {
-    await env.DB.prepare(`DELETE FROM extranet_sessions WHERE token_hash=?`).bind(tokenHash).run();
-    fail(403, 'Extranet kullanımı için kayıtlı bir passkey zorunludur.', 'PASSKEY_REQUIRED', true);
   }
 
   if (request.method !== 'GET') {
@@ -1168,10 +1162,25 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       return jsonResponse({
         authorized: true,
         hasPasskey,
-        passkeyRequired: true,
+        passkeyRequired: false,
         step: hasPasskey ? 'verify_passkey' : 'setup_passkey',
         user: { id: m.id, email: m.email, name: m.name || null, role },
       });
+    }
+
+    // Email login requires a fresh, single-use OTP proof bound to this exact member token.
+    if(method==='POST' && path==='/v1/extranet/auth/email'){
+      await checkD1RateLimit(env,`extranet:email:${ip}`,15,nowMs);
+      const body=await readJsonBody(request,8192);
+      const m=await resolveMemberFromBearer(request,env,nowMs);
+      const ticket=await verifyState(env.CODE_PEPPER,body.ticket);
+      if(!ticket||ticket.p!=='extranet_email'||ticket.memberId!==m.id||ticket.tokenHash!==await sha256(bearerToken(request))||Math.abs(nowMs-ticket.t)>5*60000)fail(401,'Yeni bir e-posta giriş kodu ile doğrulayın.');
+      const role=await ensureExtranetRoleForMember(env,m,ip,nowMs);
+      const consumed=await env.DB.prepare('DELETE FROM login_codes WHERE id=? AND email=? AND used=1 RETURNING id').bind(ticket.codeId,m.email).first();
+      if(!consumed)fail(401,'Bu giriş doğrulaması kullanılmış. Yeni kod isteyin.');
+      const session=await createExtranetSession(env,request,m,role,nowMs);
+      await writeAudit(env,{actorMemberId:m.id,actorRole:role,action:'login_email',targetType:'session',targetId:m.id,newValue:{method:'email_otp',role},ipAddress:ip,nowSql});
+      return jsonResponse({authenticated:true,csrfToken:session.csrfToken,idleTimeoutSeconds:Math.floor(EXTRANET_IDLE_MS/1000),user:{id:m.id,email:m.email,name:m.name,role}},200,{'Set-Cookie':buildSessionCookie(session.rawToken)});
     }
 
     // 3. Initial Passkey enrollment ONLY when the Extranet user has 0 passkeys.
