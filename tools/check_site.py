@@ -18,7 +18,8 @@ GUIDE_PAIRS = [
     ("en/old-city.html", "tr/tarihi-yarimada.html"),
     ("en/bosphorus-cruises.html", "tr/bogaz-turlari.html"),
 ]
-ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair]
+MIMO_PAGES = [f"mimo/{lang}.html" for lang in json.loads((ROOT / "data/faq.json").read_text())]
+ALL_PAGES = PAGES + [p for pair in GUIDE_PAIRS for p in pair] + MIMO_PAGES
 
 
 class References(HTMLParser):
