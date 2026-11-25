@@ -1,3 +1,6 @@
+import {deliverInquiryEmail} from './request-email.js';
+import {purgeWhatsApp} from './whatsapp.js';
+import {handleWhatsApp} from './whatsapp.js';
 import {plan, publicQuote} from './domain.js';
 import {handleMembers, isMemberRoute} from './members.js';
 import {handleAssistantRoutes} from './assistant.js';
@@ -7,6 +10,7 @@ import {sendWeeklyMimoReport} from './mimo.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 export default {async fetch(request,env,ctx) {
  const url=new URL(request.url);
+ if (url.pathname==='/webhooks/whatsapp/telnyx') return handleWhatsApp(request,env,ctx);
  const origin=request.headers.get('Origin');
  const isOauth=url.pathname.startsWith('/v1/auth/oauth/');
  // Deny browser cross-origin writes unless the exact deployment origin is configured (except OAuth form_post callbacks).
@@ -68,10 +72,7 @@ export default {async fetch(request,env,ctx) {
   const replyTo = b.email.trim();
   const content = [subject,'Service: '+b.service,'Date: '+b.date,'Guests: '+b.guests,'Name: '+b.name,'Phone: '+b.phone,
     'Email: '+replyTo, '', b.message].filter(Boolean).join('\n');
-  const delivered = await fetch('https://api.resend.com/emails', {
-    method:'POST', headers:{Authorization:'Bearer '+env.RESEND_API_KEY,'Content-Type':'application/json','Idempotency-Key':b.reference},
-    body:JSON.stringify({from:env.REQUEST_FROM_EMAIL,to:['info@bosphorly.com'],subject,text:content,reply_to:replyTo})
-  });
+  const delivered = await deliverInquiryEmail(env,{reference:b.reference,kind:b.kind,text:content,email:replyTo});
   if (!delivered.ok) return requestJson({error:'Email delivery provider rejected request'},502);
   const result = await delivered.json();
   return requestJson({accepted:true,reference:b.reference,providerId:result.id},202);
@@ -112,7 +113,8 @@ export default {async fetch(request,env,ctx) {
  if(origin) {response.headers.set('Access-Control-Allow-Origin',origin);response.headers.set('Vary','Origin');}
  return response;
 },
-async scheduled(_event, env, ctx) {
+async scheduled(event, env, ctx) {
+ if (event.cron === '0 * * * *') { ctx.waitUntil(purgeWhatsApp(env)); return; }
  const job = sendWeeklyMimoReport(env);
  if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(job);
  else await job;
