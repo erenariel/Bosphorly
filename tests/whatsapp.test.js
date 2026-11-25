@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {verifyTelnyx,parseWhatsApp,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY} from '../backend/whatsapp.js';
+import {verifyTelnyx,parseWhatsApp,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY,WHATSAPP_FROM,TELNYX_MESSAGING_PROFILE_ID} from '../backend/whatsapp.js';
 const business='+13125551234', customer='+18655550001';
 function payload(text='Boğaz turu istiyorum',id='message-1') {return {data:{event_type:'message.received',payload:{id,type:'WHATSAPP',direction:'inbound',from:{phone_number:customer},to:business,body:{type:'text',timestamp:String(Math.floor(Date.now()/1000)),text:{body:text}}}}};}
 function fixture() {
@@ -46,6 +46,32 @@ test('normal tour, repeated message ID, card redaction, off-topic policy and ech
 test('expired service window never sends, unauthorized Telegram cannot change controls',async()=>{
  const f=fixture();assert.equal(await sendWhatsApp(f.env,customer,'hello',Date.now()-86400001),false);
  assert.equal(await adminWhatsApp(f.env,'999','999',`/mimo_off ${customer}`),true);assert.equal(f.controls.size,0);
+});
+test('reply is posted to Telnyx with the business number, sender and messaging profile',async()=>{
+ const f=fixture(); const old=globalThis.fetch; let captured;
+ globalThis.fetch=async(url,opts)=>{captured={url,headers:opts.headers,body:JSON.parse(opts.body)};return Response.json({data:{id:'out-1'}});};
+ try {
+  assert.equal(await sendWhatsApp(f.env,customer,'Merhaba\n\nBoğaz turu için tarih bakar mısınız?',Date.now()),true);
+  assert.equal(captured.url,'https://api.telnyx.com/v2/messages/whatsapp');
+  assert.equal(captured.headers.Authorization,'Bearer test');
+  assert.equal(captured.headers['Content-Type'],'application/json');
+  assert.deepEqual(captured.body,{
+   type:'WHATSAPP',
+   from:WHATSAPP_FROM,
+   to:customer,
+   messaging_profile_id:TELNYX_MESSAGING_PROFILE_ID,
+   whatsapp_message:{type:'text',text:{body:'Merhaba\n\nBoğaz turu için tarih bakar mısınız?',preview_url:false}},
+  });
+  assert.equal(captured.body.from,'+16197386408');
+  assert.notEqual(captured.body.from,f.env.WHATSAPP_PHONE_NUMBER);
+  assert.equal(TELNYX_MESSAGING_PROFILE_ID,'4001a210-1b06-40b0-be85-2cc64e97452d');
+ } finally {globalThis.fetch=old}
+});
+test('Telnyx 40008 outside the 24-hour window is logged and does not throw',async()=>{
+ const f=fixture(); const old=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({errors:[{code:'40008',title:'WhatsApp delivery failed',detail:'Outside the 24 hour window'}]},{status:400});
+ try { assert.equal(await sendWhatsApp(f.env,customer,'Merhaba',Date.now()),false); }
+ finally {globalThis.fetch=old}
 });
 test('confirmation persists WhatsApp source and reuses form delivery without requiring email',async()=>{
  const f=fixture(); const old=globalThis.fetch;const requests=[];

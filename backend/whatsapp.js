@@ -48,15 +48,52 @@ async function muted(env, phone) {
 async function mute(env, phone, until) {
   await env.DB.prepare('INSERT INTO whatsapp_control(phone,until_ms) VALUES(?,?) ON CONFLICT(phone) DO UPDATE SET until_ms=MAX(until_ms,excluded.until_ms)').bind(phone,until).run();
 }
+// WhatsApp Business line. Outbound "from" is always this number; "to" is the inbound sender.
+export const WHATSAPP_FROM = '+16197386408';
+// Required when the from-number is not SMS-enabled. Telnyx rejects the send without it.
+export const TELNYX_MESSAGING_PROFILE_ID = '4001a210-1b06-40b0-be85-2cc64e97452d';
+
+function maskPhones(value) {
+  return String(value || '').replace(/\+[1-9]\d{6,14}/g, (p) => maskPhone(p));
+}
+
+function logTelnyx(status, raw) {
+  let body = maskPhones(raw).slice(0, 2000);
+  try { body = JSON.parse(maskPhones(raw)); } catch { /* keep the masked text */ }
+  console.log(JSON.stringify({channel:'whatsapp', event:'telnyx_send', status, body}));
+}
+
 export async function sendWhatsApp(env, phone, reply, at) {
-  if (Date.now()-at >= DAY*1000 || at > Date.now()+300000 || await muted(env,phone)) {
-    console.log(JSON.stringify({channel:'whatsapp',event:'send_suppressed',phone:maskPhone(phone)})); return false;
+  if (!phoneOK(phone) || Date.now()-at >= DAY*1000 || at > Date.now()+300000 || await muted(env,phone)) {
+    console.log(JSON.stringify({channel:'whatsapp',event:'send_suppressed',phone:maskPhone(phone),reason:'window_or_muted'})); return false;
   }
-  const r = await fetch('https://api.telnyx.com/v2/messages/whatsapp',{method:'POST',signal:AbortSignal.timeout(5000),headers:{Authorization:`Bearer ${env.TELNYX_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({from:env.WHATSAPP_PHONE_NUMBER,to:phone,whatsapp_message:{type:'text',text:{body:redactSensitive(reply).text.split(/\n\s*\n/).slice(0,5).join('\n\n').slice(0,3000)}}})});
+  if (!env.TELNYX_API_KEY) throw new Error('telnyx_api_key_missing');
+  const text = redactSensitive(reply).text.split(/\n\s*\n/).slice(0,5).join('\n\n').slice(0,3000);
+  if (!text.trim()) return false;
+  const payload = {
+    type: 'WHATSAPP',
+    from: WHATSAPP_FROM,
+    to: phone,
+    messaging_profile_id: TELNYX_MESSAGING_PROFILE_ID,
+    whatsapp_message: { type: 'text', text: { body: text, preview_url: false } },
+  };
+  const r = await fetch('https://api.telnyx.com/v2/messages/whatsapp', {
+    method: 'POST',
+    signal: AbortSignal.timeout(8000),
+    headers: { Authorization: `Bearer ${env.TELNYX_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const raw = await r.text();
+  logTelnyx(r.status, raw);
   if (!r.ok) {
-    // Provider error codes/titles only (no message content) to diagnose rejected sends.
-    let why = '';
-    try { why = ((await r.json()).errors || []).map(e => `${e.code||''}:${e.title||''}:${String(e.detail||'').slice(0,120)}`).join('|'); } catch {}
+    let errors = [];
+    try { errors = JSON.parse(raw).errors || []; } catch { /* body already logged */ }
+    // 40008 is Telnyx's catch-all, including a closed 24-hour customer-care window.
+    if (errors.some(e => String(e.code) === '40008')) {
+      console.log(JSON.stringify({channel:'whatsapp', event:'window_closed', phone:maskPhone(phone), code:'40008'}));
+      return false;
+    }
+    const why = errors.map(e => `${e.code||''}:${e.title||''}:${maskPhones(e.detail).slice(0,120)}`).join('|');
     throw new Error(`send_failed_${r.status} ${why}`.trim());
   }
   return true;
