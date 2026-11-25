@@ -1,12 +1,12 @@
 {
  "name": "bosphorly-booking", "main": "worker.js", "compatibility_date": "2026-11-16",
+ "routes": [{"pattern":"api.bosphorly.com","custom_domain":true}],
  "workers_dev": true, "preview_urls": false, "observability": {"enabled": true,"traces":{"enabled":true}},
  "d1_databases": [{"binding":"DB","database_name":"bosphorly-booking","database_id":"e833157a-839a-4834-95b0-dc92a66598be","migrations_dir":"migrations"}],
  "kv_namespaces": [{"binding":"WHATSAPP_KV","id":"2c6ec0d0591b4e6e8098d54a8c7c20b8"}],
  "ai": {"binding": "AI"},
- "vars": {"MESSAGE_RETENTION_MONTHS":"24","PUBLIC_ORIGIN":"https://bosphorly.com","ALLOWED_ORIGINS":"https://bosphorly.com,https://www.bosphorly.com","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@notify.bosphorly.com>","REQUEST_FROM_EMAIL":"Bosphorly <no-reply@notify.bosphorly.com>","ASSISTANT_DAILY_LIMIT":"1000","AI_GATEWAY_ID":"mimo","TTS_MONTHLY_CHAR_CAP":"800000","WHATSAPP_PHONE_NUMBER":"+16197386408"},
- // Custom domain (uncomment after api.bosphorly.com DNS is active): "routes": [{"pattern":"api.bosphorly.com","custom_domain":true}],
- // Secrets (wrangler secret put): ADMIN_TOKEN, ADMIN_OWNER_EMAIL, PARTNER_TOKEN, CODE_PEPPER, RESEND_API_KEY, TELEGRAM_BOT_TOKEN, TURNSTILE_SECRET, GOOGLE_TTS_API_KEY, TELNYX_API_KEY, TELNYX_PUBLIC_KEY, TELEGRAM_ADMIN_CHAT_ID
+ "vars": {"MESSAGE_RETENTION_MONTHS":"24","YANDEX_DISABLED":"1","PUBLIC_ORIGIN":"https://bosphorly.com","ALLOWED_ORIGINS":"https://bosphorly.com,https://www.bosphorly.com","MAX_DISCOUNT_BPS":"1000","MAIL_FROM":"Bosphorly <no-reply@notify.bosphorly.com>","REQUEST_FROM_EMAIL":"Bosphorly <no-reply@notify.bosphorly.com>","ASSISTANT_DAILY_LIMIT":"1000","AI_GATEWAY_ID":"mimo","TTS_MONTHLY_CHAR_CAP":"800000","WHATSAPP_PHONE_NUMBER":"+16197386408"},
+ // Secrets (wrangler secret put): ADMIN_TOKEN, ADMIN_OWNER_EMAIL, EXTRANET_ADMIN_EMAILS, PARTNER_TOKEN, CODE_PEPPER, RESEND_API_KEY, TELEGRAM_BOT_TOKEN, TURNSTILE_SECRET, GOOGLE_TTS_API_KEY, TELNYX_API_KEY, TELNYX_PUBLIC_KEY, TELEGRAM_ADMIN_CHAT_ID
  "triggers": {"crons": ["0 6 * * 1", "0 * * * *"]},
  "ratelimits": [{"name":"RATE_LIMITER","namespace_id":"1001","simple":{"limit":30,"period":60}}]
 }

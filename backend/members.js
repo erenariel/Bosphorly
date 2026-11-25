@@ -239,7 +239,7 @@ const b64urlDecode = s => {
 function enabledProviders(env) {
   return {
     google: !!(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET),
-    yandex: !!(env.YANDEX_CLIENT_ID && env.YANDEX_CLIENT_SECRET),
+    yandex: env.YANDEX_DISABLED !== '1' && !!(env.YANDEX_CLIENT_ID && env.YANDEX_CLIENT_SECRET),
     facebook: !!(env.FACEBOOK_CLIENT_ID && env.FACEBOOK_CLIENT_SECRET),
     apple: !!env.APPLE_CLIENT_ID,
     microsoft: !!(env.MICROSOFT_CLIENT_ID && env.MICROSOFT_CLIENT_SECRET),
