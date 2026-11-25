@@ -35,6 +35,7 @@
 
   const SOURCE_LABELS = {
     web: 'Web',
+    whatsapp: 'WhatsApp',
     member: 'Üye Paneli',
     hotel_qr: 'Otel QR',
     telegram: 'Telegram',
@@ -644,6 +645,13 @@
       pillsWrap.appendChild(btn);
     });
 
+    let analytics=$('dashboardAnalytics');if(!analytics){analytics=el('div','ex-card');analytics.id='dashboardAnalytics';$('viewDashboard').append(analytics);}
+    analytics.replaceChildren(el('h2',null,'Dönüşüm ve dağılımlar'));
+    const conversion=cur.conversion||{};
+    analytics.append(el('p',null,`Talep → onay → tamamlandı: ${conversion.requests||0} → ${conversion.confirmed||0} → ${conversion.completed||0} · Onay %${Math.round((conversion.confirmationRate||0)*100)} · Tamamlanma %${Math.round((conversion.completionRate||0)*100)}`));
+    analytics.append(el('p',null,'Kademeler: '+Object.entries(dashboardCache.tierDistribution||{}).map(([k,v])=>k+': '+v).join(' · ')));
+    analytics.append(el('p',null,'Diller: '+Object.entries(dashboardCache.languageDistribution||{}).map(([k,v])=>k+': '+v).join(' · ')));
+    const top=el('ol');for(const tour of dashboardCache.topTours||[])top.append(el('li',null,tour.title+' · '+tour.count+' talep'));analytics.append(top);
     // Recent bookings table
     renderBookingsTable($('recentBookingsWrap'), dashboardCache.recentBookings || []);
   }
@@ -1210,6 +1218,13 @@
       secEvents.appendChild(el('p', 'ex-cell-sub', 'Bu kayıt için henüz durum değişikliği olayı bulunmuyor.'));
     }
     body.appendChild(secEvents);
+    const mail=el('section','ex-detail-section');mail.append(el('h3',null,'Misafire e-posta'));
+    if(b.hasEmail){
+      const lang=el('select');lang.setAttribute('aria-label','Rezervasyon e-posta dili');for(const code of ['tr','en','ru']){const o=el('option',null,code.toUpperCase());o.value=code;lang.append(o);}
+      const template=el('select');template.setAttribute('aria-label','Rezervasyon e-posta şablonu');for(const [key,title] of [['confirmation','Onay'],['reminder','Hatırlatma']]){const o=el('option',null,title);o.value=key;template.append(o);}
+      mail.append(lang,template,button('E-postayı önizle',async()=>{try{const path='/v1/extranet/bookings/'+encodeURIComponent(b.uid);const draft=await extranetApi(path+'/email-preview',{method:'POST',body:{lang:lang.value,template:template.value}});const dialog=el('dialog','ex-card');dialog.append(el('h3',null,draft.preview.subject),el('p',null,draft.preview.to),el('pre',null,draft.preview.body));dialog.append(button('Vazgeç',()=>dialog.close()),button('Onayla ve gönder',async()=>{try{const result=await extranetApi(path+'/email-confirm',{method:'POST',body:{confirmationId:draft.confirmationId,confirm:true}});showBanner(result.sent?'E-posta gönderildi.':'E-posta gönderilemedi.',result.sent?'ok':'err');dialog.close();}catch(e){showBanner(e.message,'err');}}));dialog.addEventListener('close',()=>dialog.remove());document.body.append(dialog);dialog.showModal();}catch(e){showBanner(e.message,'err');}}));
+    }
+    for(const entry of b.emailHistory||[])mail.append(el('p',null,entry.created_at+' · '+entry.subject+' · '+entry.status));body.append(mail);
   }
 
   async function openBookingDetail(uid) {

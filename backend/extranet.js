@@ -1,3 +1,4 @@
+import {operationsRoutes} from './extranet-operations.js';
 import {stage2Routes} from './extranet-stage2.js';
 import {MemberSuspendedError,assertMemberActive,recordMemberLogin} from './member-controls.js';
 import {membershipTier, MEMBER_TIERS} from './membership-tier.js';
@@ -932,6 +933,7 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
     let newRequests = 0;
     let confirmed = 0;
     let cancelled = 0;
+    let completed=0,cohortConfirmed=0,cohortCompleted=0;
     const estimatedCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
     const grossCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
 
@@ -940,6 +942,8 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
       const updatedInPeriod = String(item.updatedAt || item.createdAt || '') >= startSql;
       if (createdInPeriod) {
         newRequests++;
+        if(['confirmed','completed'].includes(item.status))cohortConfirmed++;
+        if(item.status==='completed')cohortCompleted++;
       }
       if ((item.status === 'confirmed' || item.status === 'completed') && updatedInPeriod) {
         confirmed++;
@@ -948,6 +952,7 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
           grossCommission[item.currency] += Number(item.grossCommissionMinor || 0);
         }
       }
+      if(item.status==='completed'&&updatedInPeriod)completed++;
       if (item.status === 'cancelled' && updatedInPeriod) {
         cancelled++;
       }
@@ -957,6 +962,8 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
     return {
       startAt: startSql,
       newRequests,
+      completed,
+      conversion:{requests:newRequests,confirmed:cohortConfirmed,completed:cohortCompleted,confirmationRate:newRequests?cohortConfirmed/newRequests:0,completionRate:newRequests?cohortCompleted/newRequests:0},
       confirmed,
       cancelled,
       newMembers: Number(memRow?.n || 0),
@@ -978,12 +985,18 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
     }
   }
 
+  const tierDistribution={silver:0,gold:0,platinum:0};
+  const memberRows=(await env.DB.prepare("SELECT m.id,m.email,(SELECT COUNT(*) FROM member_requests r WHERE r.member_id=m.id AND r.state='fulfilled') AS n FROM members m").all()).results||[];
+  for(const m of memberRows){const level=isOwnerEmail(env,m.email)?'platinum':(await membershipTier(env,m.id,m.n,nowMs)).tier;tierDistribution[level]=(tierDistribution[level]||0)+1;}
+  const languageDistribution={},tourCounts=new Map();
+  for(const item of allItems){languageDistribution[item.lang]=(languageDistribution[item.lang]||0)+1;const old=tourCounts.get(item.productId)||{id:item.productId,title:item.productTitle,count:0};old.count++;tourCounts.set(item.productId,old);}
   return {
     generatedAt: sqlTime(new Date(nowMs)),
     timezone,
     localDate,
     periods: { today, week, month },
     statusBreakdown,
+    tierDistribution,languageDistribution,topTours:[...tourCounts.values()].sort((a,b)=>b.count-a.count).slice(0,10),
     recentBookings: allItems.slice(0, 6).map(stripInternalFields),
   };
 }
@@ -1597,6 +1610,9 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // --- Authenticated Extranet Endpoints (sliding cookie refreshed on every valid call) ---
 
+    const operations=await operationsRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,reservation:loadSingleReservation});
+    if(operations)return operations;
+
     const stage2 = await stage2Routes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,ownerEmail:isOwnerEmail,maskEmail,maskPhone,cookie:buildSessionCookie});
     if(stage2)return stage2;
 
@@ -1822,6 +1838,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       if (!subAction && method === 'GET') {
         const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
         const bundle = await loadReservationDetailBundle(env, rawBookingId);
+        bundle.booking.emailHistory=(await env.DB.prepare("SELECT id,actor_id,subject,status,created_at FROM extranet_booking_emails WHERE record_type=? AND record_id=? ORDER BY created_at DESC").bind(bundle.booking.recordType,bundle.booking.recordId).all()).results||[];
         await writeAudit(env, {
           actorMemberId: auth.memberId,
           actorRole: auth.role,
@@ -1908,7 +1925,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
             ).bind(
               uuid(),
               item.recordId,
-              uuid(),
+              `extranet-status:${item.uid}:${fromStatus}:${toStatus}`,
               fromStatus,
               toStatus,
               auth.memberId,
@@ -1936,7 +1953,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
                VALUES (?, NULL, ?, ?, ?, ?, ?, ?)`
             ).bind(
               uuid(),
-              uuid(),
+              `extranet-status:${item.uid}:${fromStatus}:${toStatus}`,
               fromStatus,
               toStatus,
               auth.memberId,
