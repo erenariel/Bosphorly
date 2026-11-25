@@ -234,6 +234,12 @@ function addDirectDelivery(box, request, lang) {
       if (response.status !== 202 || !(await response.json()).accepted) throw new Error();
       button.textContent = label; button.hidden = true;
       status.dataset.state = 'ok'; status.textContent = '✅ ' + T.ok;
+      // Signal accepted requests only; no contact details or booking references.
+      // Does not load analytics or grant tracking consent.
+      try {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({event: 'bosphorly_booking_request_accepted'});
+      } catch { /* Measurement must never affect request delivery. */ }
     } catch {
       button.disabled = false; button.textContent = label;
       status.dataset.state = 'error'; status.textContent = T.fail;
