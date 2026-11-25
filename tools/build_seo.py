@@ -13,6 +13,8 @@ What it maintains:
 """
 from __future__ import annotations
 
+from build_mimo_pages import build as build_mimo_pages
+
 import datetime as dt
 import html
 import json
@@ -46,6 +48,7 @@ FAQ_LINKS = {2: ("transfer", "index.html#booking"), 6: ("privacy", "privacy.html
 def site_pages() -> list[str]:
     """Every page of the site (root, en/, tr/), as paths relative to the repository."""
     files = list(ROOT.glob("*.html")) + list((ROOT / "en").glob("*.html")) + list((ROOT / "tr").glob("*.html"))
+    files.extend((ROOT / "mimo").glob("*.html"))
     return sorted(p.relative_to(ROOT).as_posix() for p in files)
 
 
@@ -202,6 +205,7 @@ def build_faq() -> None:
 
 if __name__ == "__main__":
     if "--sitemap-only" not in sys.argv:
+        build_mimo_pages()
         build_links()
         build_faq()
     build_sitemap()
