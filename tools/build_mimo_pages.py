@@ -23,6 +23,7 @@ def build():
         title, desc, example, chat = (escape(item[k]) for k in ("title", "description", "example", "chat"))
         question, answer = map(escape, faq[code]["qa"][1])
         direction = "rtl" if code in {"ar", "fa", "he"} else "ltr"
+        guide_link = '<a href="../he/airport-transfer.html">מדריך הסעות לסולטנאחמט</a> · ' if code == "he" else ""
         page = f"""<!doctype html>
 <html lang="{code}" dir="{direction}">
 <head>
@@ -48,7 +49,7 @@ def build():
 <blockquote>{example}</blockquote>
 <p><a id="web-chat" href="../?lang={code}#heroMimoAsk">{chat}</a> · <a href="https://t.me/{bot}?start={code}">Telegram</a> · <a href="https://wa.me/{phone}">WhatsApp</a></p>
 <h2>{question}</h2><p>{answer}</p>
-<p><a href="../?lang={code}#booking">{escape(faq[code]['links']['transfer'])}</a> · <a href="../faq.html?lang={code}">{escape(faq[code]['nav'])}</a></p>
+<p>{guide_link}<a href="../?lang={code}#booking">{escape(faq[code]['links']['transfer'])}</a> · <a href="../faq.html?lang={code}">{escape(faq[code]['nav'])}</a></p>
 </main>
 <footer><nav>{languages}</nav></footer>
 </body></html>
