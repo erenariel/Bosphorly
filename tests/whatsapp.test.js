@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {verifyTelnyx,parseWhatsApp,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY} from '../backend/whatsapp.js';
+import {verifyTelnyx,parseWhatsApp,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY,whatsappActor} from '../backend/whatsapp.js';
 const business='+13125551234', customer='+18655550001';
 function payload(text='Boğaz turu istiyorum',id='message-1') {return {data:{event_type:'message.received',payload:{id,type:'WHATSAPP',direction:'inbound',from:{phone_number:customer},to:business,body:{type:'text',timestamp:String(Math.floor(Date.now()/1000)),text:{body:text}}}}};}
 function fixture() {
@@ -40,7 +40,7 @@ test('normal tour, repeated message ID, card redaction, off-topic policy and ech
   assert.ok(f.outputs.at(-1).messages[0].content.includes(WHATSAPP_POLICY));
   await processWhatsApp(f.env,{echo:true,phone:customer,id:'echo'});
   await processWhatsApp(f.env,parseWhatsApp(payload('hello','after-echo'),business));
-  assert.equal(f.calls,3);assert.ok(f.controls.get(customer)>Date.now()+11*3600000);
+  assert.equal(f.calls,3);assert.ok(f.controls.get(await whatsappActor(f.env,customer))>Date.now()+11*3600000);
  } finally {globalThis.fetch=old}
 });
 test('expired service window never sends, unauthorized Telegram cannot change controls',async()=>{
@@ -50,7 +50,7 @@ test('expired service window never sends, unauthorized Telegram cannot change co
 test('confirmation persists WhatsApp source and reuses form delivery without requiring email',async()=>{
  const f=fixture(); const old=globalThis.fetch;const requests=[];
  const proposal={service:'Boğaz turu',date:'2026-12-01',guests:2,pickup:'Hotel Test',name:'Test Guest'};
- f.kv.set(`chat:${customer}`,JSON.stringify({history:[],pending:proposal,warnings:0}));
+ f.kv.set(`chat:${await whatsappActor(f.env,customer)}`,JSON.stringify({history:[],pending:proposal,warnings:0}));
  globalThis.fetch=async(url,opts)=>{requests.push({url,body:JSON.parse(opts.body)});return Response.json({ok:true,id:'test'})};
  try {
   await processWhatsApp(f.env,parseWhatsApp(payload('evet','confirmed'),business));
@@ -58,7 +58,7 @@ test('confirmation persists WhatsApp source and reuses form delivery without req
   assert.equal(mail.body.reply_to,undefined);
   assert.equal(JSON.parse(mail.body.text).channel,'whatsapp');
   assert.equal(JSON.parse(mail.body.text).phone,customer);
-  assert.equal(JSON.parse(f.kv.get(`chat:${customer}`)).pending,null);
+  assert.equal(JSON.parse(f.kv.get(`chat:${await whatsappActor(f.env,customer)}`)).pending,null);
   await processWhatsApp(f.env,parseWhatsApp(payload('evet','confirmed'),business));
   assert.equal(requests.filter(r=>r.url.includes('resend.com')).length,1);
  } finally {globalThis.fetch=old}
@@ -71,8 +71,8 @@ test('abuse warning then 24-hour suppression and per-number rate limit',async()=
   await processWhatsApp(f.env,parseWhatsApp(payload('rude','abuse1'),business));
   assert.equal(f.controls.size,0);
   await processWhatsApp(f.env,parseWhatsApp(payload('rude','abuse2'),business));
-  assert.ok(f.controls.get(customer)>Date.now()+23*3600000);
-  const g=fixture();g.kv.set(`chat:${customer}`,JSON.stringify({history:[],minute:Math.floor(Date.now()/60000),minuteCount:10,day:0}));
+  assert.ok(f.controls.get(await whatsappActor(f.env,customer))>Date.now()+23*3600000);
+  const g=fixture();g.kv.set(`chat:${await whatsappActor(g.env,customer)}`,JSON.stringify({history:[],minute:Math.floor(Date.now()/60000),minuteCount:10,day:0}));
   await processWhatsApp(g.env,parseWhatsApp(payload('tour','rate'),business));assert.equal(g.calls,0);
  } finally {globalThis.fetch=old}
 });
