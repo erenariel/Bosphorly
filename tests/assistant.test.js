@@ -887,7 +887,7 @@ test('telegram webhook /start <lang> sends welcome in payload lang, saves chat l
     }),
   }), env);
   assert.equal(resFollow.status, 200);
-  assert.ok(tgReplies[1].text.includes(ASSISTANT_MESSAGES.greeting.he), 'saved /start language is used for the next message');
+  assert.ok(tgReplies[1].text.includes(ASSISTANT_MESSAGES.greeting.en), 'the current English message overrides the saved Hebrew start locale');
 
   // 2. /start without payload uses from.language_code ("tr") and saves "tr"
   const resTr = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
@@ -2108,7 +2108,8 @@ test('small talk ("nasılsın?", "Selam nasılsın") recovers non-JSON/truncated
     const errCall = errorLogs.find((e) => e[0] === 'assistant_ai_call_failed');
     assert.ok(errCall);
     assert.equal(errCall[1].errorType, 'TimeoutError');
-    assert.ok(typeof errCall[1].message === 'string' && errCall[1].message.length > 0 && errCall[1].message.length <= 200);
+    assert.equal(errCall[1].error,'model_call_failed');
+    assert.equal(errCall[1].message,undefined);
     assert.ok(typeof errCall[1].durationMs === 'number' && errCall[1].durationMs >= 0);
     assert.equal(typeof errCall[1].parseFailed, 'boolean');
     assert.equal(JSON.stringify(errorLogs).includes('UNLOGGED_TOKEN_ABC'), false);
@@ -2407,7 +2408,7 @@ test('Mimo 2.0: all 23 languages have 7 few-shot mini conversations, ethical fil
   for (const lang of ALL_23_LANGS) {
     assert.equal(getFewShotEntryCount(lang), 7, `expected 7 few-shot mini chats for ${lang}`);
     const block = getFewShotsPromptBlock(lang);
-    assert.ok(block.includes('20 EUR'), `price few-shot present in ${lang}`);
+    assert.ok(!block.includes('20 EUR'), `few-shots must not inject a hardcoded service price in ${lang}`);
 
     const ethical = enforceEthicalBoundary(guiltSamples[lang], lang, declines[lang], []);
     assert.equal(ethical.strippedEthical, true, `guilt stripped in ${lang}`);
