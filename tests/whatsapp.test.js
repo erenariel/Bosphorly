@@ -93,6 +93,15 @@ test('Telnyx send keeps the WhatsApp type and messaging profile',async()=>{
   assert.equal(sent.body.messaging_profile_id,'profile-override');
  } finally {globalThis.fetch=old}
 });
+test('a model that answers after 12 seconds still sends',async()=>{
+ const f=fixture(); const old=globalThis.fetch; let sent=0;
+ globalThis.fetch=async()=>{sent++;return Response.json({ok:true});};
+ f.env.AI.run=()=>new Promise(resolve=>setTimeout(()=>resolve({response:JSON.stringify({reply:'Hangi tarih için düşünüyorsunuz?',handoff:false,abuse:false,proposal:null})}),12000));
+ try {
+  assert.equal(await processWhatsApp(f.env,parseWhatsApp(payload('Boğaz turu','slow-12'),business)),true);
+  assert.equal(sent,1);
+ } finally {globalThis.fetch=old}
+});
 test('a model failure still replies and does not mute the guest',async()=>{
  const f=fixture();
  const pair=await crypto.subtle.generateKey('Ed25519',true,['sign','verify']);
