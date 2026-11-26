@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+async function openHeaderMenu(page){
+ const toggle=page.locator('.hf-menu-toggle');
+ if(await toggle.isVisible() && await toggle.getAttribute('aria-expanded')==='false')await toggle.click();
+}
+
 test('without an API, My account shows membership as coming soon', async ({ page }) => {
   await page.route('**/config/api.js*', r => r.fulfill({ contentType: 'text/javascript', body: 'window.BOSPHORLY_API=Object.freeze({base:""});' }));
   await page.goto('/account.html?lang=tr');
@@ -169,6 +174,7 @@ test('signed-in member persists in top-right header across pages, hides Create a
   // Sign out restores signed-out state cleanly.
   await page.click('#hmSignOut');
   await expect(page.locator('#headerMember')).toBeHidden();
+  await openHeaderMenu(page);
   await expect(page.locator('#headerAuth')).toBeVisible();
 });
 

@@ -34,7 +34,7 @@ test('reduced motion opens directly on the desktop launcher', async ({page}) => 
 test('390px corner welcome runs once and yields to the existing greeting', async ({page}) => {
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(() => { window.__BOSPHORLY_MIMO_BUBBLE_MS = 150; });
-  await page.goto('/?lang=tr');
+  await openCornerFixture(page, false, 'tr');
   const note = page.locator('.bc-mobile-welcome');
   await expect(note).toHaveText('Hoş geldin, ben Mimo 👋');
   await expect(note).toBeVisible();
@@ -61,15 +61,15 @@ test('390px reduced motion bypasses the corner welcome', async ({page}) => {
 
 // Real launcher and chat scripts, with deterministic free/occupied space beside the FAB.
 // The production home page may legitimately have no room after its fonts load.
-async function openCornerFixture(page, occupied = false) {
+async function openCornerFixture(page, occupied = false, lang = 'ar') {
   await page.setViewportSize({width:390,height:844});
   await page.route('**/corner-fixture*', route => route.fulfill({
     contentType:'text/html',
-    body:`<!doctype html><html dir="rtl" lang="ar"><meta name="viewport" content="width=device-width">
+    body:`<!doctype html><html dir="${['ar','he','fa'].includes(lang)?'rtl':'ltr'}" lang="${lang}"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
       <body>${occupied ? '<button style="position:fixed;bottom:0;left:75px;width:300px;height:165px;background:white">Covered area</button>' : ''}
       <script src="/config/api.js"></script><script defer src="/mimo-intro.js?v=html-entry"></script></body></html>`
   }));
-  await page.goto('/corner-fixture?lang=ar');
+  await page.goto('/corner-fixture?lang='+lang);
 }
 
 test('390px launcher remains tappable during the RTL welcome', async ({page}) => {

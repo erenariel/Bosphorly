@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+async function openHeaderMenu(page){
+ const toggle=page.locator('.hf-menu-toggle');
+ if(await toggle.isVisible() && await toggle.getAttribute('aria-expanded')==='false')await toggle.click();
+}
+
 async function expectChatPanelLayout(page, panel) {
   const vp = page.viewportSize();
   const isMobile = vp.width <= 480;
@@ -166,6 +171,7 @@ test('Telegram CTAs render with language param, local SVG, >=44px touch target, 
   // Home page hero + footer in Hebrew (RTL)
   await page.goto('/index.html?lang=he');
   await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  await page.locator('.hf-utilities summary').click();
   for (const sel of ['#heroTelegram', '#footerTelegram']) {
     const link = page.locator(sel);
     await expect(link).toBeVisible();
@@ -213,9 +219,10 @@ test('Telegram CTAs render with language param, local SVG, >=44px touch target, 
 
 test('Hero WhatsApp link matches Telegram link aesthetics and footer channel pills share identical dimensions', async ({ page }) => {
   await page.goto('/index.html?lang=tr');
+  await page.locator('.hf-utilities summary').click();
   const heroTg = page.locator('#heroTelegram');
-  const heroWa = page.locator('.hero .social-hero');
-  const heroMap = page.locator('.hero .hero-map').first();
+  const heroWa = page.locator('.hf-utilities .social-hero');
+  const heroMap = page.locator('.hf-utilities .hero-map').first();
   await expect(heroTg).toBeVisible();
   await expect(heroWa).toBeVisible();
   await expect(heroWa).toHaveAttribute('href', 'https://wa.me/16197386408');
@@ -232,12 +239,13 @@ test('Hero WhatsApp link matches Telegram link aesthetics and footer channel pil
       const cs = getComputedStyle(document.querySelector(sel));
       return { fontSize: cs.fontSize, fontWeight: cs.fontWeight, color: cs.color, bg: cs.backgroundColor };
     };
-    return [pick('.hero .social-hero'), pick('#heroTelegram'), pick('.hero .hero-map')];
+    return [pick('.hf-utilities .social-hero'), pick('#heroTelegram'), pick('.hf-utilities .hero-map')];
   });
   expect(waStyle).toEqual(tgStyle);
   expect(waStyle).toEqual(mapStyle);
 
   // Language switch updates hero WhatsApp label cleanly (including RTL Hebrew).
+  await openHeaderMenu(page);
   await page.locator('#language').selectOption('he');
   await expect(heroWa).toContainText('שאלו בוואטסאפ');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();

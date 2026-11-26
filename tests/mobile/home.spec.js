@@ -1,16 +1,24 @@
 import {test,expect} from '@playwright/test';
+
+async function openHeaderMenu(page){
+ const toggle=page.locator('.hf-menu-toggle');
+ if(await toggle.isVisible() && await toggle.getAttribute('aria-expanded')==='false')await toggle.click();
+}
 test('homepage polish preserves local planning, language and reduced motion',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/');
  await expect(page.locator('.tour-card')).toHaveCount(6);
  await expect(page.locator('.hero-cta')).toHaveAttribute('href','#experiences');
  await expect(page.locator('.hero-photo img')).toBeVisible();
+ await page.locator('.hf-filter-menu summary').click();
  await page.locator('.filter[data-filter="city"]').click();
  await expect(page.locator('.tour-card')).toHaveCount(1);
  await expect(page.locator('.tour-card a[href*="booking.html"]')).toHaveAttribute('href',/booking.html\?service=bb-oldcity/);
+ await openHeaderMenu(page);
  await page.locator('#language').selectOption('tr');
  await expect(page.locator('.hero-cta')).toHaveText('Deneyimleri keşfet');
  for(const lang of ['en','tr','ar']) {
+ await openHeaderMenu(page);
  await page.locator('#language').selectOption(lang);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBe(page.viewportSize().width);
  }
@@ -23,11 +31,13 @@ test('homepage polish preserves local planning, language and reduced motion',asy
  await page.goto('/booking.html?service=alaturka-massage&lang=ar');
  await expect(page.locator('html')).toHaveAttribute('dir','rtl');
  await expect(page.locator('#labelOption')).toHaveText('نوع التدليك');
+ await openHeaderMenu(page);
  await page.locator('.lang-select').selectOption('ru');
  await expect(page.locator('#labelOption')).toHaveText('Вид массажа');
  // Every page carries the shared header; guide articles switch to their counterpart in the other language.
  await page.goto('/en/istanbul-guide.html');
  await expect(page.locator('.site-header .lang-select')).toHaveValue('en');
+ await openHeaderMenu(page);
  await Promise.all([page.waitForURL(/tr\/istanbul-rehberi\.html/),page.locator('.site-header .lang-select').selectOption('tr')]);
  await page.goto('/prices.html?lang=tr');
  await expect(page.locator('.hb-card')).toHaveCount(1);
