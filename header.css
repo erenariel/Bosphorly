@@ -2,7 +2,10 @@
 .site-header{display:block;padding:0;margin:0;background:#0a1753;color:#fff;position:sticky;top:0;z-index:1100;box-shadow:0 2px 12px #0a175326}
 .sh-inner{max-width:1180px;margin:0 auto;padding:10px 20px;display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"brand nav tools" "auth auth auth";align-items:center;column-gap:18px;row-gap:8px}
 .sh-brand{grid-area:brand;display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font:900 20px/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.5px}
+.sh-brand img,.sidebar .logo img{border:1px solid rgba(255,255,255,.32);box-sizing:border-box}
 .sh-brand img{width:38px;height:38px;border-radius:10px;display:block}
+.sh-word{direction:ltr;unicode-bidi:isolate;white-space:nowrap}
+.sh-tld{font-size:.6em;color:#f47458;letter-spacing:-.2px;vertical-align:baseline}
 .sh-brand small{display:block;font-size:8px;letter-spacing:2.2px;color:#9fb6dc;font-weight:700;margin-top:4px}
 .sh-nav{grid-area:nav;display:flex;gap:6px;justify-content:center;flex-wrap:nowrap;min-width:0}
 .sh-nav a{color:#d5e3f5;text-decoration:none;white-space:nowrap;font:650 13.5px/1 system-ui,-apple-system,"Segoe UI",sans-serif;padding:9px 12px;border-radius:999px}
