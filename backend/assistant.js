@@ -1,3 +1,4 @@
+import {liveCatalogContext} from './catalog-store.js';
 import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
 import {captureMessage} from './message-store.js';
@@ -1902,7 +1903,8 @@ async function prepareAssistantTurn({
     return { path, lang, effectiveChannel, earlyResult };
   }
 
-  const chunks = smallTalkKind ? [] : retrieveChunks(cleanMsg);
+  const catalog=await liveCatalogContext(env,cleanMsg,smallTalkKind?[]:retrieveChunks(cleanMsg),lang);
+  const chunks=smallTalkKind?[]:catalog.chunks;
   const contextBlock = smallTalkKind
     ? '(Small talk: no catalog context needed.)'
     : chunks.length
@@ -1930,6 +1932,7 @@ async function prepareAssistantTurn({
     warnPrefix,
     chunks,
     messages,
+    catalogPriceIndex:catalog.managed?buildKbPriceIndex(chunks):KB_PRICE_PAIRS,
     smallTalkKind,
     safeHistory,
     timeoutMs,
@@ -1982,7 +1985,7 @@ async function finalizeModelOutput({
     };
   }
   reply = enforceEthicalBoundary(reply, lang, cleanMsg, safeHistory).text;
-  reply = enforcePriceSafetyBelt(reply, lang, KB_PRICE_PAIRS).text;
+  reply = enforcePriceSafetyBelt(reply, lang, prep.catalogPriceIndex||KB_PRICE_PAIRS).text;
   if (hasGreeted && !aiIdentityAsked) {
     reply = stripRepeatIntroAndGreeting(reply);
   }
@@ -2320,7 +2323,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
 
         let cleaned = stripFakeUrgency(stripExternalLinks(redactSensitive(cut).text));
         cleaned = enforceEthicalBoundary(cleaned, prep.lang, prep.cleanMsg, prep.safeHistory).text;
-        cleaned = enforcePriceSafetyBelt(cleaned, prep.lang, KB_PRICE_PAIRS).text;
+        cleaned = enforcePriceSafetyBelt(cleaned, prep.lang, prep.catalogPriceIndex||KB_PRICE_PAIRS).text;
         cleaned = enforceMaxEmojis(cleaned, 2);
         if (/\s$/.test(cut) && cleaned && !/\s$/.test(cleaned)) {
           cleaned += ' ';

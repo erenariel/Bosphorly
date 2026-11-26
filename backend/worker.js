@@ -1,3 +1,5 @@
+import {withConsoleRuntime} from './console-runtime.js';
+import {publicCatalog} from './extranet-catalog.js';
 import {captureMessage,cleanupInbox,redactCards} from './message-store.js';
 import {deliverInquiryEmail} from './request-email.js';
 import {purgeWhatsApp} from './whatsapp.js';
@@ -26,6 +28,7 @@ export default {async fetch(request,env,ctx) {
  // Deny browser cross-origin writes unless an allowed deployment origin is matched (except OAuth form_post callbacks).
  if (!isOauth && origin && !allowedOrigin) return json({error:'Origin denied'},403);
  if (request.method==='OPTIONS') return new Response(null,{status:204,headers:allowedOrigin?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization, X-Member-Session, X-Chat-Session, X-CSRF-Token','Vary':'Origin',...(isExtranetRoute(url.pathname)?{'Access-Control-Allow-Credentials':'true'}:{})}:{}});
+ if(url.pathname==='/v1/catalog'&&request.method==='GET'){let r;try{r=await publicCatalog(env);}catch{r=json({error:'Catalog unavailable'},503);}if(allowedOrigin){r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}return r;}
  if (isExtranetRoute(url.pathname)) {
  if (request.headers.get('Sec-Fetch-Site')==='cross-site') return json({error:'Cross-site denied'},403);
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
@@ -45,12 +48,14 @@ export default {async fetch(request,env,ctx) {
  }
  if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback' || url.pathname==='/v1/assistant/transcribe') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
+ try{env=await withConsoleRuntime(env);}catch{return json({error:'Configuration unavailable'},503);}
  const r=await handleAssistantRoutes(request,env,url,ctx);
  if(allowedOrigin && !r.headers.has('Access-Control-Allow-Origin')) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
  return r;
  }
  if (url.pathname==='/v1/tts') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
+ try{env=await withConsoleRuntime(env);}catch{return json({error:'Configuration unavailable'},503);}
  const r=await handleTtsRoute(request,env,url);
  if(allowedOrigin && !r.headers.has('Access-Control-Allow-Origin')) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
  return r;

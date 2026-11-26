@@ -1,3 +1,4 @@
+import {recordTtsUsage} from './console-runtime.js';
 // Google Cloud Text-to-Speech ("Chirp 3 HD - Puck") proxy with per-actor rate limit,
 // D1 monthly character quota cap, Cloudflare Cache API caching, and silent fallback.
 
@@ -442,6 +443,7 @@ export async function synthesizeTtsAudio({ env = {}, text = '', lang = 'en', now
   }
 
   await incrementMonthlyChars(env, month, cleanText.length);
+  await recordTtsUsage(env,cleanText.length,now);
 
   if (cache) {
     try {

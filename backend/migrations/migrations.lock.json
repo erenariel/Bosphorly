@@ -17,5 +17,6 @@
   "0016_extranet_security.sql": "ad56a62d84ee910e087791293d4bd9d3e6a622ab1da2c0dda19d1438899acb75",
   "0017_extranet_booking_emails.sql": "9302c35c297e8c312cf64a94fdb1cd29ae4012e37b41cab4c5f9b505e50fc36a",
   "0018_extranet_campaign_approval.sql": "0d8214a24c4dc43c4f4d288b283ce58d5ef00b3814043cfc86d2b22d000c5ac2",
-  "0019_extranet_partners_inbox.sql": "6ce595941d6402b41c0ef676106dc42b6fa7da013261396b64c6a0058ff776f5"
+  "0019_extranet_partners_inbox.sql": "6ce595941d6402b41c0ef676106dc42b6fa7da013261396b64c6a0058ff776f5",
+  "0020_extranet_catalog_settings.sql": "c541f1a075d7e87dbc7a7c931e210a2896748459789a14fc0896c35d4358d102"
 }

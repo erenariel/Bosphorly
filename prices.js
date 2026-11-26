@@ -1092,7 +1092,7 @@
   $('operator').addEventListener('change', show);
   $('currency').addEventListener('change', show);
   Q.addEventListener('input', show);
-  fetch('data/public-market-prices.json')
+  (window.BosphorlyCatalog?window.BosphorlyCatalog.fetch('data/public-market-prices.json'):fetch('data/public-market-prices.json'))
     .then(r => { if (!r.ok) throw Error('fetch'); return r.json(); })
     .then(d => {
       rows = d.records || [];

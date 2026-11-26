@@ -1,3 +1,4 @@
+import {withConsoleRuntime} from './console-runtime.js';
 import {messageLanguage} from './channel-policy.js';
 import {adminWhatsApp} from './whatsapp.js';
 import {
@@ -341,6 +342,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
+  env=await withConsoleRuntime(env);
   let update;
   try {
     update = await request.json();

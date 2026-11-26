@@ -2142,7 +2142,7 @@
 
   async function load() {
     try {
-      const resp = await fetch('data/public-market-prices.json', { cache: 'no-cache' });
+      const resp = await (window.BosphorlyCatalog?window.BosphorlyCatalog.fetch('data/public-market-prices.json'):fetch('data/public-market-prices.json', { cache: 'no-cache' }));
       if (!resp.ok) throw new Error('catalog');
       const data = await resp.json();
       records = (data.records || []).filter(x => x && typeof x.id === 'string');
