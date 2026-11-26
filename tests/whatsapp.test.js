@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {verifyTelnyx,parseWhatsApp,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY,DEFAULT_TELNYX_MESSAGING_PROFILE_ID} from '../backend/whatsapp.js';
+import {verifyTelnyx,parseWhatsApp,whatsAppSkip,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY,DEFAULT_TELNYX_MESSAGING_PROFILE_ID} from '../backend/whatsapp.js';
 const business='+13125551234', customer='+18655550001';
 function payload(text='Boğaz turu istiyorum',id='message-1') {return {data:{event_type:'message.received',payload:{id,type:'WHATSAPP',direction:'inbound',from:{phone_number:customer},to:business,body:{type:'text',timestamp:String(Math.floor(Date.now()/1000)),text:{body:text}}}}};}
 function fixture() {
@@ -27,6 +27,46 @@ test('documented inbound and echo shapes; ignore edits, SMS and other business n
  assert.equal(parseWhatsApp(e,business).echo,true);
  const p=payload();p.data.payload.body.type='edit';assert.equal(parseWhatsApp(p,business),null);
  assert.equal(parseWhatsApp(payload(),'+19999999999'),null);
+});
+test('a hidden WhatsApp number is answered at its BSUID, and an array recipient still matches',async()=>{
+ const id='US.13491208655302741918';
+ const hidden=payload('Merhaba','hidden-1');
+ hidden.data.payload.from={phone_number:''};
+ hidden.data.payload.body.from='';
+ hidden.data.payload.body.from_user_id=id;
+ assert.equal(parseWhatsApp(hidden,business).phone,id);
+ const shortId='US.13491208';
+ const short=payload('Merhaba','short-bsuid');
+ short.data.payload.from={phone_number:shortId};
+ short.data.payload.body.from='';
+ short.data.payload.body.from_user_id=shortId;
+ assert.equal(parseWhatsApp(short,business).phone,shortId);
+ const echo=payload();
+ Object.assign(echo.data,{event_type:'message.echo'});
+ Object.assign(echo.data.payload,{origin:'whatsapp_business_app',direction:'outbound',from:{phone_number:business},to:id});
+ assert.equal(parseWhatsApp(echo,business).phone,id);
+ const listed=payload('Merhaba','listed-to');
+ listed.data.payload.to=[{phone_number:business}];
+ assert.equal(parseWhatsApp(listed,business).phone,customer);
+ const other=payload();
+ other.data.payload.to=[{phone_number:'+19998887777'}];
+ assert.equal(parseWhatsApp(other,business),null);
+ const skip=whatsAppSkip(other,business);
+ assert.equal(skip.to_match,false);
+ assert.equal(skip.from_kind,'e164');
+ assert.equal(JSON.stringify(skip).includes(customer),false);
+ assert.equal(whatsAppSkip({data:{event_type:'message.sent',payload:{id:'s',type:'WHATSAPP'}}},business),null);
+ const f=fixture(); const old=globalThis.fetch; let body;
+ globalThis.fetch=async(_u,init)=>{body=JSON.parse(init.body);return Response.json({ok:true});};
+ f.env.AI.run=()=>new Promise(resolve=>setTimeout(()=>resolve({response:JSON.stringify({reply:'Hangi tarih için düşünüyorsunuz?',handoff:false,abuse:false,proposal:null})}),12000));
+ try {
+  assert.equal(await processWhatsApp(f.env,parseWhatsApp(hidden,business)),true);
+  assert.equal(body.type,'WHATSAPP');
+  assert.equal(body.from,business);
+  assert.equal(body.to,id);
+  assert.equal(body.messaging_profile_id,DEFAULT_TELNYX_MESSAGING_PROFILE_ID);
+  assert.equal(body.whatsapp_message.text.preview_url,false);
+ } finally {globalThis.fetch=old}
 });
 test('normal tour, repeated message ID, card redaction, off-topic policy and echo suppression',async()=>{
  const f=fixture(); const old=globalThis.fetch;let sends=0;
