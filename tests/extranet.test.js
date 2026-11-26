@@ -893,7 +893,7 @@ test('dashboard metrics (today/week/month), multi-criteria filters (date range, 
   assert.ok(dash.body.periods.today.newRequests >= 3);
   assert.ok(dash.body.periods.today.confirmed >= 2);
   assert.ok(dash.body.periods.today.newMembers >= 2);
-  assert.ok(dash.body.periods.today.estimatedCommission.EUR > 0);
+  assert.equal(dash.body.periods.today.finalizedCommission.EUR, 0);
 });
 
 test('unit helpers: maskEmail, maskPhone, containsCardNumber, escapeCsvCell, and SEO/static guards', () => {
@@ -1030,6 +1030,8 @@ test('dashboard periods use Europe/Istanbul timezone, commission shows coupon-de
       ('BOS-IST-TODAY', '${member.id}', 'bb-sunset', '2026-12-10', 2, '${cpRow.id}', 'fulfilled', '€120', '2026-11-24 21:15:00'),
       ('BOS-IST-YESTERDAY', '${member.id}', 'ist-transfer', '2026-12-11', 2, NULL, 'fulfilled', '€60', '2026-11-24 20:45:00');
   `);
+
+  env.DB.raw.exec(`INSERT INTO extranet_booking_meta(record_type,record_id,workflow_status,payment_status,updated_at) VALUES ('member_request','BOS-IST-TODAY','completed','paid','2026-11-24 21:15:00'), ('member_request','BOS-IST-YESTERDAY','completed','paid','2026-11-24 20:45:00');`);
 
   const dashReq = new Request('https://api.bosphorly.com/v1/extranet/dashboard', {
     method: 'GET',
@@ -1386,4 +1388,36 @@ test('Stage 4: usage stores only aggregate counts, prices estimates explicitly, 
  const day=new Date().toISOString().slice(0,10),stored=env.DB.raw.prepare('SELECT * FROM extranet_usage_daily WHERE day=?').get(day);assert.equal(stored.ai_calls,1);assert.equal(stored.tts_chars,100);assert.ok(!JSON.stringify(stored).includes('Private'));
  const post={method:'POST',cookie:owner.cookie,csrf:owner.csrf,body:{monthlyBudgetUsd:1,inputUsdPerMillion:2,outputUsdPerMillion:3,ttsUsdPerMillion:4}};assert.equal((await callWorker(env,'/v1/extranet/settings',post)).status,200);
  const usage=await callWorker(env,'/v1/extranet/usage',{cookie:owner.cookie});assert.equal(usage.body.warning,'budget_warning');assert.ok(usage.body.estimatedCostUsd>=2);assert.equal(usage.body.monthly.ai_calls,1);
+});
+
+test('commission dashboard excludes unpaid, refunded, cancelled and test requests, prorates partial refunds', async () => {
+  const env = createTestEnv();
+  const owner = await createExtranetActor(env, 'owner@test.example', 'owner');
+  const guest = await signUpMember(env, 'commission@guest.example');
+  for (const [ref, state, workflow, payment, isTest, refund] of [
+    ['BOS-EARNED', 'fulfilled', 'completed', 'paid', 0, 0],
+    ['BOS-PARTIAL', 'fulfilled', 'completed', 'paid', 0, 2500],
+    ['BOS-REFUND', 'fulfilled', 'completed', 'refunded', 0, 0],
+    ['BOS-CANCEL', 'cancelled', 'cancelled', 'paid', 0, 0],
+    ['BOS-TEST', 'fulfilled', 'completed', 'paid', 1, 0],
+    ['BOS-UNPAID', 'fulfilled', 'completed', 'pending', 0, 0],
+    ['BOS-EXPECTED', 'requested', 'confirmed', 'paid', 0, 0],
+  ]) {
+    env.DB.raw.prepare(`INSERT INTO member_requests(ref,member_id,service_id,service_date,guests,state,total_text,is_test) VALUES(?,?,'bb-sunset','2026-12-01',2,?,'€100',?)`).run(ref, guest.id, state, isTest);
+    env.DB.raw.prepare(`INSERT INTO extranet_booking_meta(record_type,record_id,workflow_status,payment_status,refunded_minor) VALUES('member_request',?,?,?,?)`).run(ref, workflow, payment, refund);
+  }
+  const dash = await callWorker(env, '/v1/extranet/dashboard', { cookie: owner.cookie });
+  assert.equal(dash.status, 200);
+  assert.equal(dash.body.periods.today.finalizedCommission.EUR, 1750);
+  assert.equal(dash.body.periods.today.grossCommission.EUR, 1750);
+  assert.equal(dash.body.periods.today.expectedCommission.EUR, 1000);
+  const path = '/v1/extranet/bookings/mr:BOS-PARTIAL/payment';
+  const post = { method: 'POST', cookie: owner.cookie, csrf: owner.csrf };
+  for (const refundedMinor of [-1, 10001, 1.5, '2500']) {
+    assert.equal((await callWorker(env, path, { ...post, body: { paymentStatus: 'paid', refundedMinor } })).status, 400);
+  }
+  const changed = await callWorker(env, path, { ...post, body: { paymentStatus: 'paid', refundedMinor: 5000 } });
+  assert.equal(changed.status, 200);
+  assert.equal(changed.body.booking.refundedMinor, 5000);
+  assert.ok(env.DB.raw.prepare("SELECT new_value FROM extranet_audit WHERE action='update_payment_status'").all().some(r => JSON.parse(r.new_value).refundedMinor === 5000));
 });

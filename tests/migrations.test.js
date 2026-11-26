@@ -109,3 +109,19 @@ test('0012 preserves campaign and issued coupon rows and foreign keys inside a m
   assert.equal(db.prepare("SELECT percent_bps FROM coupons WHERE id='old'").get().percent_bps, 500);
   assert.equal(db.prepare("SELECT valid_days FROM campaigns WHERE id='platinum-2026'").get().valid_days, 180);
 });
+
+test('0021 preserves existing booking requests and adds safe commission defaults', () => {
+  const db = new DatabaseSync(':memory:');
+  const { sqlFiles } = collectDefinedTables();
+  for (const file of sqlFiles.filter(f => f < '0021')) db.exec(readFileSync(join(MIGRATIONS_DIR, file), 'utf8'));
+  db.exec(`INSERT INTO members(id,email,referral_code) VALUES('m','m@example.com','MREF');
+    INSERT INTO member_requests(ref,member_id,service_id,service_date,guests,state,total_text) VALUES('BOS-OLD','m','tour','2026-12-01',1,'fulfilled','€100');
+    INSERT INTO extranet_booking_meta(record_type,record_id,payment_status) VALUES('member_request','BOS-OLD','paid');`);
+  const before = db.prepare('SELECT * FROM member_requests').get();
+  db.exec(readFileSync(join(MIGRATIONS_DIR, '0021_commission_basis.sql'), 'utf8'));
+  const { is_test, ...after } = db.prepare('SELECT * FROM member_requests').get();
+  assert.equal(is_test, 0);
+  assert.deepEqual(after, { ...before });
+  assert.equal(db.prepare('SELECT refunded_minor FROM extranet_booking_meta').get().refunded_minor, 0);
+  assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(), []);
+});

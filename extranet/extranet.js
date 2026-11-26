@@ -679,6 +679,7 @@
     $('kpiNewMembers').textContent = String(cur.newMembers ?? 0);
     $('kpiNewMembersSub').textContent = `Bugün: ${p.today.newMembers} · Hafta: ${p.week.newMembers} · Ay: ${p.month.newMembers}`;
 
+    $('kpiCommissionExpected').textContent = 'Beklenen (onaylı): ' + formatCommissionObj(cur.expectedCommission || {});
     $('kpiCommission').textContent = formatCommissionObj(cur.estimatedCommission);
     const grossEl = $('kpiCommissionGross');
     if (grossEl) {
@@ -1124,6 +1125,10 @@
       });
       payLabel.appendChild(paySelect);
 
+      const refundLabel = el('label', 'ex-field');
+      refundLabel.appendChild(el('span', null, `Kümülatif iade (${b.currency || 'para birimi'}, kuruş/cent)`));
+      const refundInput = el('input'); refundInput.type = 'number'; refundInput.min = '0'; refundInput.step = '1'; refundInput.value = b.refundedMinor || 0;
+      refundLabel.appendChild(refundInput);
       const btnSavePay = el('button', 'ex-btn ex-btn-primary', 'Ödeme Kaydını Güncelle');
       btnSavePay.type = 'button';
       btnSavePay.onclick = async () => {
@@ -1131,7 +1136,7 @@
         try {
           const res = await extranetApi(`/v1/extranet/bookings/${encodeURIComponent(b.uid)}/payment`, {
             method: 'POST',
-            body: { paymentStatus: paySelect.value },
+            body: { paymentStatus: paySelect.value, refundedMinor: Number(refundInput.value) },
           });
           renderBookingDetailDrawer(res);
           showBanner('Ödeme durumu kaydı güncellendi.', 'ok');
@@ -1141,7 +1146,7 @@
           showBanner(e.message, 'err');
         }
       };
-      payForm.append(payLabel, btnSavePay);
+      payForm.append(payLabel, refundLabel, btnSavePay);
       secPay.appendChild(payForm);
     } else {
       secPay.appendChild(el('p', 'ex-cell-sub', 'Ödeme durumu kaydını yalnızca Owner ve Admin rolleri değiştirebilir.'));
