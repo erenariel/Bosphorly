@@ -45,7 +45,8 @@ async function hash(s) {
 }
 const claimPattern =
   /(?:ilettim|ilettik|iletilmiştir|iletildi|iletiyorum|gönderdim|gönderdik|gönderildi|aktardım|aktarıyorum|kaydettim|kaydedildi|talebin(?:iz|izi|i)?\s+(?:alındı|aldım|aldık|oluşturuldu|oluşturdum)|(?:I(?:'ve| have)?|we(?:'ve| have)?)\s+(?:successfully\s+)?(?:forwarded|submitted|sent|saved|registered|recorded)|(?:request|booking).{0,30}(?:has been|was|is)\s+(?:sent|saved|submitted|forwarded|created)|передал[аи]?|отправил[аи]?|تم إرسال|تم تسجيل|已提交|已发送|j.ai transmis|j.ai envoyé|weitergeleitet|enviado|inoltrato)/iu;
-export const unsupportedClaim = (text) =>
+export const unsupportedClaim = (text, knownText = "") =>
+  (String(text).match(/\bBOS-[A-Z0-9-]{3,}/gi)||[]).some(ref=>!String(knownText).toLowerCase().includes(ref.toLowerCase())) ||
   claimPattern.test(String(text)) ||
   Object.values(SUPPORT_MESSAGES).some((m) =>
     String(text).toLowerCase().includes(m[0].toLowerCase()),
@@ -337,5 +338,5 @@ export async function finishSupportTurn(
       supportFailed: !result.ok,
     };
   }
-  return { reply: unsupportedClaim(reply) ? unsupportedReply(lang) : reply };
+  return { reply: unsupportedClaim(reply,[...history.filter(h=>h.role==="user").map(h=>h.content),message].join("\n")) ? unsupportedReply(lang) : reply };
 }

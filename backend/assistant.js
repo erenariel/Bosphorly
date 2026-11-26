@@ -2001,7 +2001,7 @@ async function finalizeModelOutput({
   reply=unsafeReply(reply)||(prep.effectiveChannel==='telegram'&&detectReplyLanguage(reply,lang)!==lang)?safeFallback(lang):tidyReply(reply,safeHistory,false);
   if (guestName) reply = attachGuestName(reply, guestName);
   reply = enforceMaxEmojis(capWords(reply, 120), 2);
-  if(unsupportedClaim(reply))reply=unsupportedReply(lang);
+  if(unsupportedClaim(reply,[...safeHistory.filter(h=>h.role==='user').map(h=>h.content),cleanMsg].join('\n')))reply=unsupportedReply(lang);
   return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
 }
 

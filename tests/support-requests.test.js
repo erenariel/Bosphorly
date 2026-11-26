@@ -187,6 +187,7 @@ test("model-only forwarding claims are blocked and DB failure never returns a re
   for (const reply of [
     "Talebini destek ekibimize ilettim.",
     "I have forwarded your request.",
+      "Referans numaran BOS-FAKE123.",
   ]) {
     const result = await finishSupportTurn(env, {
       ...input(),
