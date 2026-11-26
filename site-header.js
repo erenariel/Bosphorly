@@ -120,7 +120,7 @@
   window.addEventListener('bosphorly:member-changed', syncMemberBar);
   window.addEventListener('storage', e => { if (!e.key || e.key.startsWith('bosphorly.')) syncMemberBar(); });
   host.replaceWith(header);
-  if (!document.querySelector('script[src$="header-fit.js"]')) { const fit = document.createElement('script'); fit.src = base + 'header-fit.js'; fit.defer = true; document.head.append(fit); }
+  if (!document.querySelector('script[src*="header-fit.js"]')) { const fit = document.createElement('script'); fit.src = base + 'header-fit.js?v=20261126logo'; fit.defer = true; document.head.append(fit); }
   if (window.BosphorlyLang && window.BosphorlyLang.mount) window.BosphorlyLang.mount();
 })();
 
