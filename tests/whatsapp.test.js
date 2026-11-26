@@ -76,3 +76,69 @@ test('abuse warning then 24-hour suppression and per-number rate limit',async()=
   await processWhatsApp(g.env,parseWhatsApp(payload('tour','rate'),business));assert.equal(g.calls,0);
  } finally {globalThis.fetch=old}
 });
+
+test('slow model still answers after 8 seconds and does not mute the guest',async t=>{
+ const f=fixture(),sent=[];
+ t.mock.method(globalThis,'fetch',async(url,opts)=>{if(String(url).includes('telnyx.com'))sent.push(JSON.parse(opts.body));return Response.json({ok:true});});
+ f.env.AI.run=async()=>{await new Promise(resolve=>setTimeout(resolve,8200));return{response:JSON.stringify({reply:'I can help you plan your visit to Istanbul.'})};};
+ await processWhatsApp(f.env,parseWhatsApp(payload('Can you help me plan an Istanbul visit?','slow-model'),business));
+ assert.equal(sent.length,1);assert.match(sent[0].whatsapp_message.text.body,/plan your visit/);assert.equal(f.controls.size,0);
+});
+
+test('model rejection sends a localized guest fallback before owner notice, preserves explicit language preference, and permits the next message',async t=>{
+ const f=fixture(),requests=[];
+ t.mock.method(globalThis,'fetch',async(url,opts)=>{requests.push({url:String(url),body:JSON.parse(opts.body)});return Response.json({ok:true});});
+ f.env.AI.run=async()=>{throw Error('private provider message '+customer)};
+ f.kv.set('chat:'+await whatsappActor(f.env,customer),JSON.stringify({history:[],languagePreference:'en'}));
+ assert.equal(await processWhatsApp(f.env,parseWhatsApp(payload('Nereleri gezebilirim?','model-error'),business)),true);
+ const response=requests[0];assert.match(response.url,/telnyx/);assert.match(response.body.whatsapp_message.text.body,/try again shortly/);assert.match(response.body.whatsapp_message.text.body,/info@bosphorly.com/);assert.equal(f.controls.size,0);
+ f.env.AI.run=async()=>({response:JSON.stringify({reply:'I can help you plan your visit to Istanbul.'})});
+ await processWhatsApp(f.env,parseWhatsApp(payload('Can you help me?','next-message'),business));assert.equal(requests.filter(x=>x.url.includes('telnyx')).length,2);
+});
+
+test('retry is skipped when the overall model budget is exhausted, without another model call',async t=>{
+ const f=fixture(),sends=[];const realNow=Date.now;let clock=realNow();let calls=0;
+ t.mock.method(Date,'now',()=>clock);
+ t.mock.method(globalThis,'fetch',async(url,opts)=>{if(String(url).includes('telnyx'))sends.push(JSON.parse(opts.body));return Response.json({ok:true});});
+ f.env.AI.run=async()=>{calls++;clock+=24000;return{response:JSON.stringify({reply:'Üzgünüm, sadece Türkçe konuşabiliyorum.'})};};
+ await processWhatsApp(f.env,parseWhatsApp(payload('Can you help me plan my Istanbul visit?','skip-retry'),business));assert.equal(calls,1);assert.equal(sends.length,1);assert.ok(!sends[0].whatsapp_message.text.body.includes('sadece'));
+});
+
+test('Telnyx diagnostics contain only HTTP status and provider numeric code, never title, detail, phone or message',async t=>{
+ const f=fixture(),logs=[];t.mock.method(console,'error',line=>logs.push(line));
+ t.mock.method(globalThis,'fetch',async()=>Response.json({errors:[{code:'40001',title:'Private '+customer,detail:'private message content'},{code:customer}]},{status:422}));
+ await assert.rejects(sendWhatsApp(f.env,customer,'private outgoing content',Date.now()),/send_failed_422/);
+ const event=JSON.parse(logs[0]);assert.equal(event.status,422);assert.deepEqual(event.providerCodes,['40001']);assert.ok(!/Private|private|18655550001/.test(logs.join(' ')));
+});
+
+test('a fallback delivery failure is logged, does not reject the background task, and never creates a mute',async t=>{
+ const f=fixture(),logs=[];t.mock.method(console,'error',line=>logs.push(line));
+ f.env.AI.run=async()=>{throw Error('ai_timeout')};
+ t.mock.method(globalThis,'fetch',async url=>String(url).includes('telnyx')?Response.json({errors:[{code:'40001'}]},{status:503}):Response.json({ok:true}));
+ assert.equal(await processWhatsApp(f.env,parseWhatsApp(payload('Can you help me?','fallback-send-error'),business)),false);assert.equal(f.controls.size,0);
+ assert.ok(logs.some(x=>JSON.parse(x).event==='fallback_failed'));assert.ok(!logs.join(' ').includes(customer));
+});
+
+test('a database failure can still send a safe fallback, while a known admin mute remains respected',async t=>{
+ const f=fixture();let sends=0;t.mock.method(globalThis,'fetch',async url=>{if(String(url).includes('telnyx'))sends++;return Response.json({ok:true});});
+ f.env.DB={prepare(){throw Error('D1_ERROR no such table private-content')}};
+ assert.equal(await processWhatsApp(f.env,parseWhatsApp(payload('Can you help me?','sql-error'),business)),true);assert.equal(sends,1);
+ const g=fixture();g.controls.set(await whatsappActor(g.env,customer),Number.MAX_SAFE_INTEGER);g.env.AI.run=async()=>{throw Error('must not run')};
+ await processWhatsApp(g.env,parseWhatsApp(payload('Can you help me?','intentional-mute'),business));assert.equal(sends,1);
+});
+
+test('actual 20-second model timeout delivers a guest fallback rather than a silent 12-hour mute',async t=>{
+ const f=fixture(),sent=[];let ready;const started=new Promise(resolve=>{ready=resolve});
+ t.mock.timers.enable({apis:['setTimeout']});
+ t.mock.method(globalThis,'fetch',async(url,opts)=>{if(String(url).includes('telnyx'))sent.push(JSON.parse(opts.body));return Response.json({ok:true});});
+ f.env.AI.run=()=>{ready();return new Promise(()=>{});};
+ const task=processWhatsApp(f.env,parseWhatsApp(payload('Can you help me?','actual-timeout'),business));await started;t.mock.timers.tick(20001);assert.equal(await task,true);assert.equal(sent.length,1);assert.match(sent[0].whatsapp_message.text.body,/try again shortly/);assert.equal(f.controls.size,0);
+});
+
+test('signed webhook acknowledges immediately and its waitUntil task recovers from model failure',async t=>{
+ const f=fixture(),waits=[],sent=[];const pair=await crypto.subtle.generateKey('Ed25519',true,['sign','verify']);f.env.TELNYX_PUBLIC_KEY=Buffer.from(await crypto.subtle.exportKey('raw',pair.publicKey)).toString('base64');
+ f.env.AI.run=async()=>{throw Error('ai_timeout')};t.mock.method(globalThis,'fetch',async(url,opts)=>{if(String(url).includes('telnyx'))sent.push(JSON.parse(opts.body));return Response.json({ok:true});});
+ const raw=JSON.stringify(payload('Can you help me?','webhook-failure')),ts=String(Math.floor(Date.now()/1000)),signature=Buffer.from(await crypto.subtle.sign('Ed25519',pair.privateKey,new TextEncoder().encode(ts+'|'+raw))).toString('base64');
+ const ack=await handleWhatsApp(new Request('https://api.example/webhooks/whatsapp/telnyx',{method:'POST',headers:{'telnyx-timestamp':ts,'telnyx-signature-ed25519':signature},body:raw}),f.env,{waitUntil:p=>waits.push(p)});
+ assert.equal(ack.status,200);await Promise.all(waits);assert.equal(sent.length,1);assert.match(sent[0].whatsapp_message.text.body,/info@bosphorly.com/);assert.equal(f.controls.size,0);
+});
