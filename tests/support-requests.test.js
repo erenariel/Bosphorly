@@ -8,7 +8,7 @@ import {
   supportRecipients,
 } from "../backend/support-requests.js";
 import { runAssistant } from "../backend/assistant.js";
-import { processWhatsApp, whatsappActor } from "../backend/whatsapp.js";
+import { processWhatsApp } from "../backend/whatsapp.js";
 import worker from "../backend/worker.js";
 const details = {
   service: "Sunset cruise",
