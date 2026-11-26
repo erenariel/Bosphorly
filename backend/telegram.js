@@ -1,10 +1,12 @@
 import {withConsoleRuntime} from './console-runtime.js';
+import {messageLanguage} from './channel-policy.js';
 import {adminWhatsApp} from './whatsapp.js';
 import {
   ASSISTANT_MESSAGES,
   SUPPORTED_LANGS,
   blockActors,
   detectLanguage,
+  hashActorKey,
   forwardConversationEmail,
   getBlockStatus,
   isAbuseAgainstMimo,
@@ -405,7 +407,12 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
 
   const state = await getState(env, chatId, now);
   const savedLang = state && state.lang ? state.lang : '';
-  const lang = detectLanguage({ message: text, pageLang: savedLang, telegramLang });
+  const preferenceKey='tg-language:'+await hashActorKey(actorKey,env.CODE_PEPPER||'');
+  const persistentPreference=env.WHATSAPP_KV?await env.WHATSAPP_KV.get(preferenceKey,'json'):null;
+  const preference=persistentPreference?.language||[...(state?.history||[])].reverse().find(h=>h.languagePreference)?.languagePreference||'';
+  const language=messageLanguage(text,preference,detectLanguage);
+  const lang=language.lang;
+  if(language.preference&&env.WHATSAPP_KV)await env.WHATSAPP_KV.put(preferenceKey,JSON.stringify({language:language.preference}),{expirationTtl:30*86400});
 
   if (isAbuseAgainstMimo(text)) {
     await clearState(env, chatId);
@@ -502,8 +509,9 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
   } catch { /* an unlinked or unknown Telegram id keeps no note */ }
   const res = await runAssistant({
     message: text,
-    pageLang: savedLang,
-    telegramLang,
+    pageLang: '',
+    telegramLang: '',
+    responseLanguage:lang,
     history,
     env,
     actorKey: memberId ? `member:${memberId}` : actorKey,
@@ -525,7 +533,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
   const nextHistory = [
     ...history,
     { role: 'user', content: cleanUser },
-    { role: 'assistant', content: res.reply },
+    { role: 'assistant', content: res.reply, languagePreference:language.preference },
   ].slice(-4);
 
   if (res.handoffOffer) {

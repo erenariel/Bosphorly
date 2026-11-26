@@ -1,4 +1,5 @@
 import {liveCatalogContext} from './catalog-store.js';
+import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
 import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
@@ -1673,13 +1674,13 @@ function modelFallbackResult({ aiIdentityAsked, smallTalkKind, cleanMsg, lang, g
 function buildMimoCharacterHeader({ lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked }) {
   const reg = REGISTER_GUIDES[lang] || REGISTER_GUIDES.en;
   return [
-    'You are Mimo ("Bosphorly’nin yapay zekâ asistanı Mimo"), a curious, cheerful, slightly playful little mascot born on the Bosphorus ferries who adores Istanbul, seagulls, morning simit, and ferry whistles. Be a warm local friend—and always be honest that you are an AI assistant, never human.',
+    'You are Mimo (Bosphorly’nin yapay zekâ asistanı Mimo), a cheerful AI mascot of the Bosphorus ferries. You love Istanbul, simit and seagulls. Be warm and honest: you are AI, never human.',
     `Reply strictly in language "${lang}". ${reg}`,
     hasGreeted && !aiIdentityAsked
       ? 'Continuing chat: you already greeted earlier—jump straight into your answer without "hello/merhaba" or "I am Mimo".'
       : `First turn vibe: ${timeGreet}! (${timeHumor}) Introduce yourself as Mimo once only if natural.`,
     guestName ? `Guest name is "${guestName}"—use it warmly.` : '',
-    'Casual chat & voice: write 1–3 short lively sentences (<90 words total), ask a natural follow-up question when helpful, remember and refer back to details the guest shared earlier (like their partner, neighborhood, or plans), and use at most 2 emojis.',
+    'Casual chat: write 1–3 short sentences (<90 words), with at most 2 emojis. Ask follow-ups only when useful; remember guest travel details.',
     ANTI_REPEAT_RULE,
     'Ethics & honesty: never use guilt or sadness ("almazsan üzülürüm"), never invent fake urgency, and if the guest declines a tour, do not insist again—just wish them a warm trip ("İyi gezmeler!"). Stay out of politics/religion, give no medical/legal/financial advice, and never ask for card or passport numbers.',
   ].filter(Boolean).join('\n');
@@ -1698,6 +1699,7 @@ export function buildCatalogPrompt({ lang, timeGreet, timeHumor, guestName, hasG
     'CONTEXT:',
     contextBlock,
     '',
+    CHANNEL_POLICY,
     'OUTPUT FORMAT: Reply directly in plain text for the guest (NOT JSON). End your message on a new last line with this exact hidden tag: [[flags:abuse=0;handoff=0]] — set abuse=1 ONLY for profanity/threats against Mimo; set handoff=1 ONLY for service complaints, refunds, booking edits, or explicit human requests.',
   ].filter(Boolean).join('\n');
 }
@@ -1715,6 +1717,7 @@ function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreete
     'CONTEXT:',
     contextBlock,
     '',
+    CHANNEL_POLICY,
     'OUTPUT FORMAT: Reply directly in plain text for the guest (NOT JSON). End on a new last line with: [[flags:abuse=0;handoff=0]] (use abuse=1 only if the guest insults/threatens Mimo; keep handoff=0 in small talk).',
   ].filter(Boolean).join('\n');
 }
@@ -1722,6 +1725,7 @@ function buildSmallTalkPrompt({ lang, timeGreet, timeHumor, guestName, hasGreete
 async function prepareAssistantTurn({
   message,
   pageLang = '',
+  responseLanguage = '',
   telegramLang = '',
   history = [],
   alreadyGreeted = false,
@@ -1738,7 +1742,7 @@ async function prepareAssistantTurn({
   memberNote = null,
 }) {
   const { text: cleanMsg, hadSensitive: msgSensitive } = redactSensitive(message);
-  const lang = detectLanguage({ message: cleanMsg, pageLang, telegramLang });
+  const lang = SUPPORTED_LANGS.has(responseLanguage)?responseLanguage:detectLanguage({ message: cleanMsg, pageLang, telegramLang });
   const effectiveActorKeys = Array.isArray(actorKeys) && actorKeys.length ? actorKeys : [actorKey];
   const effectiveChannel = channel || (String(actorKey).startsWith('tg:') ? 'telegram' : 'web');
 
@@ -1835,7 +1839,10 @@ async function prepareAssistantTurn({
     }
   }
 
-  if (isHumanOrHandoffTopic(cleanMsg)) {
+  if(wantsCityList(cleanMsg))return {path:'city_guide',lang,effectiveChannel,earlyResult:{ok:true,lang,reply:cityList(lang)}};
+  const boundary=boundaryIntent(cleanMsg);
+  if(boundary)return {path:'boundary_'+boundary,lang,effectiveChannel,earlyResult:{ok:true,lang,reply:channelText(lang,boundary)}};
+  if (isHumanOrHandoffTopic(cleanMsg)||identityDiscount(cleanMsg)) {
     return {
       path: 'handoff_offer',
       lang,
@@ -1983,6 +1990,7 @@ async function finalizeModelOutput({
     reply = stripRepeatIntroAndGreeting(reply);
   }
   reply = ensurePriceLink(reply, chunks, cleanMsg, lang);
+  reply=unsafeReply(reply)||(prep.effectiveChannel==='telegram'&&detectReplyLanguage(reply,lang)!==lang)?safeFallback(lang):tidyReply(reply,safeHistory,false);
   if (guestName) reply = attachGuestName(reply, guestName);
   reply = enforceMaxEmojis(capWords(reply, 120), 2);
   return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
@@ -1993,7 +2001,7 @@ function logModelFailure(err, { aiIdentityAsked = false, durationMs = 0, parseFa
   console.error('assistant_ai_call_failed', {
     model: ASSISTANT_MODEL,
     errorType: err && err.name ? String(err.name) : 'Error',
-    message: redactSensitive(String(err && err.message ? err.message : '')).text.slice(0, 200),
+    error: 'model_call_failed',
     durationMs: Math.max(0, Math.round(durationMs)),
     parseFailed: Boolean(parseFailed),
   });
@@ -2057,6 +2065,7 @@ function gatewayTiredResult({ lang, warnPrefix = '' }) {
 export async function runAssistant({
   message,
   pageLang = '',
+  responseLanguage = '',
   telegramLang = '',
   history = [],
   alreadyGreeted = false,
@@ -2076,6 +2085,7 @@ export async function runAssistant({
   const prep = await prepareAssistantTurn({
     message,
     pageLang,
+    responseLanguage,
     telegramLang,
     history,
     alreadyGreeted,
