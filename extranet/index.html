@@ -123,6 +123,7 @@
           <span>▤</span> Rezervasyonlar
         </button>
         <button type="button" class="ex-nav-btn" id="navMembers" data-view="members"><span>♙</span> Üyeler ve Seviyeler</button>
+        <button type="button" class="ex-nav-btn" id="navCampaigns">Kampanyalar ve kuponlar</button>
         <button type="button" class="ex-nav-btn" id="navInbox">✉ Mesajlar</button>
       </nav>
 
@@ -146,6 +147,7 @@
     <main class="ex-main">
       <div id="globalBanner" class="ex-alert" role="status" aria-live="polite" hidden style="margin-bottom:16px"></div>
 
+      <section id="viewCampaigns" class="ex-card" hidden><h1>Kampanyalar ve Kuponlar</h1><p>Oran değişiklikleri owner onayıyla uygulanır. Verilmiş kuponların oranı sabittir.</p><div id="campaignContent"></div></section>
       <!-- GÖRÜNÜM 1: GÖSTERGE PANELİ -->
       <section id="viewDashboard" aria-labelledby="dashHeading">
         <header class="ex-page-head">
@@ -367,6 +369,6 @@
 
   <script src="../config/api.js"></script>
   <script src="../assets/vendor/simplewebauthn-browser.min.js"></script>
-  <script src="extranet.js?v=20261125-operations1"></script>
+  <script src="extranet.js?v=20261125-campaigns2"></script>
 </body>
 </html>

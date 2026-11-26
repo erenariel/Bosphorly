@@ -1,3 +1,4 @@
+import {campaignRoutes} from './extranet-campaigns.js';
 import {operationsRoutes} from './extranet-operations.js';
 import {stage2Routes} from './extranet-stage2.js';
 import {MemberSuspendedError,assertMemberActive,recordMemberLogin} from './member-controls.js';
@@ -1610,6 +1611,8 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // --- Authenticated Extranet Endpoints (sliding cookie refreshed on every valid call) ---
 
+    const campaigns=await campaignRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,containsCard:containsCardNumber});
+    if(campaigns)return campaigns;
     const operations=await operationsRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,reservation:loadSingleReservation});
     if(operations)return operations;
 

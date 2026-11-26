@@ -328,9 +328,9 @@
     startIdleWatchdog();
 
     const partner=currentUser.role==='partner';
-    for(const id of ['navDashboard','navBookings','navMembers','navInbox'])$(id).hidden=partner;
+    for(const id of ['navDashboard','navBookings','navMembers','navInbox','navCampaigns'])$(id).hidden=partner;
     if(partner){$('viewDashboard').hidden=true;showBanner('Partner hesabınız doğrulandı. Size atanan rezervasyonlar partner aşamasında açılacak.');}
-    else await switchView('dashboard');
+    else { $('navCampaigns').hidden=!manager();await switchView('dashboard'); }
   }
 
   async function checkMemberExtranetStatus(memberBearer) {
@@ -461,6 +461,19 @@
 
   // --- Navigation & Views ---
 
+  async function loadCampaigns(){
+    const host=$('campaignContent');host.replaceChildren();
+    try{const data=await extranetApi('/v1/extranet/campaigns');
+      for(const c of data.campaigns){const card=node('section');card.append(node('h2',c.id),node('p',`%${c.percent_bps/100} · ${c.valid_days} gün · Verilen: ${c.issued} · Kullanılan: ${c.redeemed}`));
+        const form=node('form'),rate=input('Kampanya oranı (%)','number',c.percent_bps/100),days=input('Kampanya süresi (gün)','number',c.valid_days),active=input('Kampanya aktif','checkbox'),why=input('Değişiklik gerekçesi');active.field.checked=!!c.active;rate.field.min=.01;rate.field.max=(data.maxDiscountBps||1000)/100;rate.field.step=.01;days.field.min=1;days.field.max=730;why.field.required=true;const submit=node('button','Owner onayına sun','ex-btn');submit.type='submit';form.append(rate.label,days.label,active.label,why.label,submit);form.onsubmit=async e=>{e.preventDefault();try{await extranetApi('/v1/extranet/campaigns/'+encodeURIComponent(c.id)+'/proposal',{method:'POST',body:{percentBps:Math.round(Number(rate.field.value)*100),validDays:Number(days.field.value),active:active.field.checked,reason:why.field.value}});await loadCampaigns();}catch(e){alert(e.message);}};card.append(form);
+        card.append(button('Kampanyadan üyeye kupon üret',async()=>{const memberId=prompt('Üye ID'),reason=prompt('Kupon gerekçesi');if(!memberId||!reason)return;try{const r=await extranetApi('/v1/extranet/campaigns/'+encodeURIComponent(c.id)+'/issue',{method:'POST',body:{memberId,reason}});alert(r.code);await loadCampaigns();}catch(e){alert(e.message);}}));host.append(card);
+      }
+      host.append(node('h2','Owner onayı bekleyenler'));
+      for(const p of data.proposals){const section=node('section');section.append(node('p',p.campaign_id+' · '+p.reason),node('pre','Önce: '+p.old_json+'\nSonra: '+p.new_json));if(currentUser.role==='owner')section.append(button('Kampanya değişikliğini onayla',async()=>{if(!confirm('Gösterilen eski/yeni oranları onaylıyor musunuz? Verilmiş kuponlar değişmeyecek.'))return;try{await extranetApi('/v1/extranet/campaign-proposals/'+p.id+'/approve',{method:'POST',body:{confirm:true}});await loadCampaigns();}catch(e){alert(e.message);}}));host.append(section);}
+      const coupons=await extranetApi('/v1/extranet/coupon-management');host.append(node('h2','Son kuponlar'));
+      for(const c of coupons.coupons){const row=node('section');row.append(node('p',c.code+' · %'+c.percent_bps/100+' · '+c.status));if(c.status==='issued')row.append(button('Kuponu iptal et',async()=>{const reason=prompt('İptal gerekçesi');if(!reason)return;try{await extranetApi('/v1/extranet/coupon-management/'+c.id+'/revoke',{method:'POST',body:{reason}});await loadCampaigns();}catch(e){alert(e.message);}}));host.append(row);}
+    }catch(e){host.append(node('p',e.message));}
+  }
   const manager = () => currentUser && ['owner','admin'].includes(currentUser.role);
   function node(tag,text,cls) {const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;}
   function input(labelText,type='text',value='') {const label=node('label',labelText+' '),field=document.createElement('input');field.type=type;field.value=value;field.setAttribute('aria-label',labelText);label.append(field);return {label,field};}
@@ -487,6 +500,10 @@
       show('Talepler',data.requests,r=>r.ref+' · '+r.service_date+' · '+r.state);
       show('Kuponlar',data.coupons,r=>r.code+' · %'+r.percent_bps/100+' · '+r.status+' · '+r.expires_at);
       container.append(node('p','Mimo günlük kullanım sayacı: '+(data.mimo?.messagesToday||0)+' · Sayaç günü: '+(data.mimo?.counterDay||'yok')+'. Sohbet içeriği gösterilmez.'));
+      if(manager()){
+        container.append(button('Kişisel verileri dışa aktar',async()=>{try{const reason=prompt('Veri dışa aktarma talebi gerekçesi');if(!reason)return;const exported=await extranetApi('/v1/extranet/members/'+id+'/data-export',{method:'POST',body:{reason}});const url=URL.createObjectURL(new Blob([JSON.stringify(exported,null,2)],{type:'application/json'}));const a=node('a','İndir');a.href=url;a.download='bosphorly-member-data.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){alert(e.message);}}));
+        for(const field of ['email','phone'])container.append(button(field==='email'?'Üye e-postasını göster':'Üye telefonunu göster',async()=>{try{const r=await extranetApi('/v1/extranet/members/'+id+'/reveal-pii',{method:'POST',body:{field,reason:'Operasyon için iletişim bilgisi görüntüleme'}});container.append(node('p',r.value||'Kayıt yok'));}catch(e){alert(e.message);}}));
+      }
       if(manager()&&data.levels){
         show('Seviye geçmişi',data.history,r=>r.created_at+' · '+r.reason+' · '+JSON.parse(r.new_json).tier);
         if(data.owner){container.append(node('p','İşletme sahibi: Platinum, sınırsız. Bu hesap seviye veya askıya alma işlemleriyle değiştirilemez.'));return;}
@@ -579,6 +596,8 @@
 
   async function switchView(viewName) {
     activeView = viewName;
+    $('viewCampaigns').hidden=viewName!=='campaigns';
+    if(viewName==='campaigns')await loadCampaigns();
     $('viewDashboard').hidden = viewName !== 'dashboard';
     $('viewBookings').hidden = viewName !== 'bookings';
     $('viewInbox').hidden=viewName!=='inbox';
@@ -1326,6 +1345,7 @@
     };
 
     $('navDashboard').onclick = () => switchView('dashboard');
+    $('navCampaigns').onclick=()=>switchView('campaigns');
     $('navInbox').onclick=()=>switchView('inbox');
     $('inboxStatus').onchange=()=>loadInbox(1);$('inboxSource').onchange=()=>loadInbox(1);$('inboxPrev').onclick=()=>loadInbox(inboxPage-1);$('inboxNext').onclick=()=>loadInbox(inboxPage+1);
     $('memberTierFilter').onchange=()=>loadMembers(1);$('memberStatus').onchange=()=>loadMembers(1);$('memberProvider').onchange=()=>loadMembers(1);

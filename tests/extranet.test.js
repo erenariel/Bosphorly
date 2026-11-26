@@ -1288,3 +1288,34 @@ test('Stage 1: booking mail requires auth, CSRF, valid status, actor-bound previ
  const detail=await callWorker(env,base,{cookie:staff.cookie});assert.equal(detail.body.booking.emailHistory[0].status,'sent');
  assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='booking_email_result'").get().n,1);
 });
+
+test('Stage 2 campaigns: owner approval, immutable issued rates, coupon issue/revoke and staff isolation',async()=>{
+ const env=createTestEnv();const owner=await createExtranetActor(env,'owner@test.example','owner'),admin=await createExtranetActor(env,'campaign-admin@test.example','admin'),staff=await createExtranetActor(env,'campaign-staff@test.example','staff'),guest=await signUpMember(env,'campaign-guest@test.example');
+ const auth=(a,body)=>({method:'POST',cookie:a.cookie,csrf:a.csrf,body});
+ assert.equal((await callWorker(env,'/v1/extranet/campaigns')).status,401);assert.equal((await callWorker(env,'/v1/extranet/campaigns',{cookie:staff.cookie})).status,403);
+ const campaigns=await callWorker(env,'/v1/extranet/campaigns',{cookie:admin.cookie});assert.equal(campaigns.status,200);const c=campaigns.body.campaigns.find(x=>x.active&&x.kind!=='hotel');
+ const issued=await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/issue',auth(admin,{memberId:guest.id,reason:'Misafir talebi'}));assert.equal(issued.status,200);
+ assert.equal((await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/proposal',auth(owner,{percentBps:1001,validDays:45,active:true,reason:'Tavanı aşma'}))).status,400);
+ const proposal=await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/proposal',auth(admin,{percentBps:800,validDays:45,active:true,reason:'Sezon kampanyası'}));assert.equal(proposal.status,200);const path='/v1/extranet/campaign-proposals/'+proposal.body.proposalId+'/approve';
+ assert.equal((await callWorker(env,path,auth(admin,{confirm:true}))).status,403);assert.equal((await callWorker(env,path,auth(owner,{confirm:true}))).body.approved,true);
+ assert.equal(env.DB.raw.prepare('SELECT percent_bps FROM campaigns WHERE id=?').get(c.id).percent_bps,800);
+ assert.equal(env.DB.raw.prepare('SELECT percent_bps FROM coupons WHERE id=?').get(issued.body.id).percent_bps,c.percent_bps);
+ assert.throws(()=>env.DB.raw.prepare('UPDATE coupons SET percent_bps=1200 WHERE id=?').run(issued.body.id),/immutable/);
+ assert.equal((await callWorker(env,path,auth(owner,{confirm:true}))).status,409);
+ env.DB.raw.prepare('UPDATE campaigns SET percent_bps=1100 WHERE id=?').run(c.id);
+ assert.equal((await callWorker(env,'/v1/extranet/campaigns/'+c.id+'/issue',auth(owner,{memberId:guest.id,reason:'Mevcut tavan testi'}))).status,400);
+ assert.equal((await callWorker(env,'/v1/extranet/coupon-management/'+issued.body.id+'/revoke',auth(admin,{reason:'Misafir vazgeçti'}))).body.revoked,true);
+});
+
+test('Stage 2 KVKK: export/reveal are audited and unavailable to staff; confirmed deletion removes reservation contacts',async()=>{
+ const env=createTestEnv(),owner=await createExtranetActor(env,'owner@test.example','owner'),admin=await createExtranetActor(env,'export-admin@test.example','admin'),staff=await createExtranetActor(env,'export-staff@test.example','staff'),guest=await signUpMember(env,'export-guest@test.example');
+ const post=(actor,body)=>({method:'POST',cookie:actor.cookie,csrf:actor.csrf,body});const path='/v1/extranet/members/'+guest.id;
+ assert.equal((await callWorker(env,path+'/data-export',post(staff,{reason:'Üye talebi'}))).status,403);
+ const exported=await callWorker(env,path+'/data-export',post(admin,{reason:'Üye talebi'}));assert.equal(exported.status,200);assert.equal(exported.body.member.email,'export-guest@test.example');assert.ok(!JSON.stringify(exported.body).includes('token_hash'));
+ assert.equal((await callWorker(env,path+'/reveal-pii',post(admin,{field:'email',reason:'Üye iletişimi'}))).body.value,'export-guest@test.example');
+ env.DB.raw.prepare("INSERT INTO extranet_booking_meta(record_type,record_id,member_id,guest_email) VALUES('booking','contact-only',?,?)").run(guest.id,'export-guest@test.example');
+ const preview=await callWorker(env,path+'/delete-preview',post(owner,{reason:'KVKK üye talebi'}));assert.equal(preview.status,200);assert.match(JSON.stringify(preview.body),/geri alınamaz/);
+ const result=await callWorker(env,'/v1/extranet/actions/'+preview.body.confirmationId+'/confirm',post(owner,{confirm:true}));assert.equal(result.body.deleted,true);
+ assert.equal(env.DB.raw.prepare("SELECT guest_email FROM extranet_booking_meta WHERE record_id='contact-only'").get().guest_email,null);
+ assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='kvkk_export'").get().n,1);
+});
