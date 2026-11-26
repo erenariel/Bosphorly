@@ -34,7 +34,9 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}dt{color:#5
 <main>
   <h1 data-tr="İş ortağı girişi" data-en="Partner check-in">İş ortağı girişi</h1>
   <p class="lead" data-tr="Tur firmaları ve otel resepsiyonu için: talep kodunu gir, misafirin kuponunu gör ve tur bittiğinde tamamlandı olarak işaretle." data-en="For tour companies and hotel reception: enter the request code, see the guest's coupon and mark the tour completed when it is done.">Tur firmaları ve otel resepsiyonu için.</p>
-  <section class="card">
+  <p><a class="primary" href="/extranet/">Kişisel partner hesabımla giriş / Sign in to partner account</a></p>
+  <p>Yeni partner işlemleri kişisel hesapla Extranet üzerinden yapılır. Ortak anahtarlı eski ekran yalnız geçiş dönemi içindir.</p>
+  <section class="card" id="legacyPartner">
     <label><span data-tr="İş ortağı anahtarı" data-en="Partner key">İş ortağı anahtarı</span><input id="key" type="password" autocomplete="off"></label>
     <label><span data-tr="Talep kodu (ör. BOS-7K2M9Q)" data-en="Request code (e.g. BOS-7K2M9Q)">Talep kodu</span><input id="ref" autocomplete="off" autocapitalize="characters"></label>
     <button class="primary" id="find" data-tr="Talebi bul" data-en="Find request">Talebi bul</button>
@@ -51,6 +53,7 @@ dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0}dt{color:#5
   const L = tr
     ? { service: 'Hizmet', date: 'Tarih', guests: 'Kişi', guest: 'Misafir', tier: 'Üye seviyesi', tiers: { silver: '🥈 Silver', gold: '🥇 Gold · Free Upgrade (müsaitlik) · VIP %5', platinum: '💎 Platinum VIP · Öncelikli Free Upgrade · VIP %10' }, state: 'Durum', coupon: 'Kupon', off: 'indirim', fulfil: 'Tur tamamlandı', cancel: 'İptal edildi', done: 'Kaydedildi.', noApi: 'API henüz yapılandırılmadı (config/api.js).', fail: 'Bulunamadı ya da anahtar hatalı.', closed: 'Bu talep zaten kapatılmış.', states: { requested: 'Bekliyor', fulfilled: 'Tamamlandı', cancelled: 'İptal' }, cs: { held: 'ayrıldı, tur tamamlanınca kullanılmış sayılır', redeemed: 'kullanıldı', issued: 'serbest' }, confirm: 'Tur tamamlandı olarak işaretlensin mi? Kupon kullanılmış sayılacak.' }
     : { service: 'Service', date: 'Date', guests: 'Guests', guest: 'Guest', tier: 'Member tier', tiers: { silver: '🥈 Silver', gold: '🥇 Gold · Free Upgrade (availability) · VIP 5%', platinum: '💎 Platinum VIP · Priority Free Upgrade · VIP 10%' }, state: 'Status', coupon: 'Coupon', off: 'off', fulfil: 'Tour completed', cancel: 'Cancelled', done: 'Saved.', noApi: 'The API is not configured yet (config/api.js).', fail: 'Not found, or the key is wrong.', closed: 'This request is already closed.', states: { requested: 'Open', fulfilled: 'Completed', cancelled: 'Cancelled' }, cs: { held: 'reserved; counts as used when the tour is completed', redeemed: 'used', issued: 'free' }, confirm: 'Mark the tour as completed? The coupon will count as used.' };
+  if(new URLSearchParams(location.search).get('legacy')!=='1'){document.getElementById('legacyPartner').hidden=true;}
   const $ = id => document.getElementById(id);
   const base = ((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '');
   try { $('key').value = sessionStorage.getItem('bosphorly.partner') || ''; } catch {}

@@ -540,6 +540,7 @@ export async function stage2Routes(request, env, url, nowMs, h) {
     for (const [name, allowed] of [
       ["status", ["new", "read", "replied", "archived"]],
       ["source", ["form", "handoff", "complaint", "blocked"]],
+      ["channel", ["web","whatsapp","telegram","email"]],
     ]) {
       const v = url.searchParams.get(name);
       if (allowed.includes(v)) {
@@ -547,14 +548,16 @@ export async function stage2Routes(request, env, url, nowMs, h) {
         args.push(v);
       }
     }
+    const assigned=url.searchParams.get('assignedTo');
+    if(assigned==='me'){where+=' AND assigned_to=?';args.push(actor.memberId);}
     const total = await first(
         "SELECT COUNT(*) AS n FROM extranet_messages " + where,
         ...args,
       ),
       items = await rows(
-        "SELECT id,source,subject,status,name,email,created_at FROM extranet_messages " +
+        "SELECT id,source,channel,assigned_to,subject,status,name,email,created_at FROM extranet_messages " +
           where +
-          " ORDER BY created_at DESC LIMIT 20 OFFSET ?",
+          " ORDER BY CASE WHEN source='handoff' AND status NOT IN('replied','archived') THEN 0 ELSE 1 END,created_at DESC LIMIT 20 OFFSET ?",
         ...args,
         (page - 1) * 20,
       );

@@ -872,7 +872,8 @@ export async function handleMembers(request, env, url) {
     }
 
     if (p.startsWith('/v1/partner/')) {
-      // Tour companies and hotel reception: look up a request by reference, apply the coupon, close it.
+      if(env.ALLOW_LEGACY_PARTNER_TOKEN!=='1')fail(410,'Partner işlemleri için kişisel Extranet hesabıyla giriş yapın.');
+      // Optional, temporary compatibility during partner account migration.
       if (!env.PARTNER_TOKEN || !equal(bearer(request), env.PARTNER_TOKEN)) fail(401, 'Unauthorized');
       const ref = str(body.ref, 40);
       if (!ref) fail(400, 'Invalid reference');

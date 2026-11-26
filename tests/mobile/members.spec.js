@@ -93,7 +93,7 @@ test('partner check-in looks up a request, shows the coupon and marks the tour c
     r.fulfill({ status: ok ? 200 : 401, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(ok ? view : { error: 'Unauthorized' }) });
   });
   page.on('dialog', d => d.accept());
-  await page.goto('/partner.html?lang=tr');
+  await page.goto('/partner.html?lang=tr&legacy=1');
   await page.fill('#key', 'wrong'); await page.fill('#ref', 'bos-7k2m9q');
   await page.click('#find');
   await expect(page.locator('#msg')).toHaveText('Bulunamadı ya da anahtar hatalı.');

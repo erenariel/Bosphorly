@@ -1,3 +1,4 @@
+import {partnerRoutes} from './extranet-partners.js';
 import {campaignRoutes} from './extranet-campaigns.js';
 import {operationsRoutes} from './extranet-operations.js';
 import {stage2Routes} from './extranet-stage2.js';
@@ -1147,6 +1148,119 @@ function upsertMetaStatement(env, item, patch, nowSql) {
   ).bind(item.recordType, item.recordId, nextWorkflow, nextPayment, nextProvider, nowSql);
 }
 
+async function changeReservationStatus(request,env,auth,rawBookingId,nowSql) {
+        const body = await readJsonBody(request, 4096);
+        const toStatus = str(body.toStatus, 24);
+        const reasonNote = body.note !== undefined && body.note !== null ? str(String(body.note), 500) : null;
+        if (!toStatus || !WORKFLOW_STATUSES.includes(toStatus)) {
+          fail(400, 'Geçersiz hedef durum.');
+        }
+        if (reasonNote && containsCardNumber(reasonNote)) {
+          fail(400, 'Güvenlik kuralı: Kart numarası hiçbir alana girilemez ve kaydedilemez.');
+        }
+
+        const item = await loadSingleReservation(env, rawBookingId);
+        const fromStatus = item.status;
+        if (!ALLOWED_STATUS_TRANSITIONS[fromStatus]?.includes(toStatus)) {
+          fail(409, `Geçersiz durum geçişi: ${fromStatus} → ${toStatus}`);
+        }
+
+        const stmts = [];
+        const toDbState = STATUS_TO_BOOKING_STATE[toStatus];
+
+        if (item.recordType === 'booking') {
+          const currentDbState = item.dbState === 'draft' && toStatus !== 'cancelled' ? 'requested' : item.dbState;
+          if (item.dbState === 'draft' && toStatus === 'in_progress') {
+            stmts.push(env.DB.prepare(`UPDATE booking_requests SET state='supplier_pending' WHERE id=? AND state='draft'`).bind(item.recordId));
+          } else {
+            transition(currentDbState, toDbState, 'admin', `extranet:${auth.role}:${toStatus}`);
+            stmts.push(
+              env.DB.prepare(`UPDATE booking_requests SET state=? WHERE id=? AND state=?`).bind(toDbState, item.recordId, item.dbState)
+            );
+          }
+          stmts.push(upsertMetaStatement(env, item, { workflowStatus: toStatus }, nowSql));
+          stmts.push(
+            env.DB.prepare(
+              `INSERT INTO booking_events (id, booking_id, idempotency_key, from_state, to_state, actor_id, evidence_reference, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+            ).bind(
+              uuid(),
+              item.recordId,
+              `extranet-status:${item.uid}:${fromStatus}:${toStatus}`,
+              fromStatus,
+              toStatus,
+              auth.memberId,
+              `extranet:bk:${item.recordId}:status:${fromStatus}->${toStatus}`,
+              nowSql
+            )
+          );
+        } else {
+          stmts.push(upsertMetaStatement(env, item, { workflowStatus: toStatus }, nowSql));
+          if (toStatus === 'completed' && item.dbState === 'requested') {
+            stmts.push(
+              env.DB.prepare(`UPDATE member_requests SET state='fulfilled', closed_at=? WHERE ref=? AND state='requested'`).bind(nowSql, item.recordId),
+              env.DB.prepare(`UPDATE coupons SET status='redeemed', redeemed_at=? WHERE held_ref=? AND status='held'`).bind(nowSql, item.recordId),
+              env.DB.prepare(`UPDATE members SET stamps=stamps+1 WHERE id=?`).bind(item.memberId)
+            );
+          } else if (toStatus === 'cancelled' && item.dbState === 'requested') {
+            stmts.push(
+              env.DB.prepare(`UPDATE member_requests SET state='cancelled', closed_at=? WHERE ref=? AND state='requested'`).bind(nowSql, item.recordId),
+              env.DB.prepare(`UPDATE coupons SET status='issued', held_ref=NULL WHERE held_ref=? AND status='held'`).bind(item.recordId)
+            );
+          }
+          stmts.push(
+            env.DB.prepare(
+              `INSERT INTO booking_events (id, booking_id, idempotency_key, from_state, to_state, actor_id, evidence_reference, created_at)
+               VALUES (?, NULL, ?, ?, ?, ?, ?, ?)`
+            ).bind(
+              uuid(),
+              `extranet-status:${item.uid}:${fromStatus}:${toStatus}`,
+              fromStatus,
+              toStatus,
+              auth.memberId,
+              `extranet:mr:${item.recordId}:status:${fromStatus}->${toStatus}`,
+              nowSql
+            )
+          );
+        }
+
+        if (reasonNote) {
+          stmts.push(
+            env.DB.prepare(
+              `INSERT INTO extranet_booking_notes (id, record_type, record_id, author_member_id, author_role, note, created_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?)`
+            ).bind(uuid(), item.recordType, item.recordId, auth.memberId, auth.role, `[Durum: ${fromStatus} → ${toStatus}] ${reasonNote}`, nowSql)
+          );
+        }
+
+        stmts.push(
+          buildAuditStatement(env, {
+            actorMemberId: auth.memberId,
+            actorRole: auth.role,
+            action: 'update_booking_status',
+            targetType: 'booking',
+            targetId: item.uid,
+            oldValue: { status: fromStatus },
+            newValue: { status: toStatus, hasNote: !!reasonNote },
+            ipAddress: auth.ipAddress,
+            nowSql,
+          })
+        );
+
+        await env.DB.batch(stmts);
+
+        if (item.recordType === 'member_request' && toStatus === 'completed' && item.dbState === 'requested' && item.memberId) {
+          await awardFulfilledMemberRewards(env, item.memberId);
+        }
+
+        const updated = await loadReservationDetailBundle(env, item.uid);
+        return jsonResponse(
+          { booking: updated.booking, availableProviders: updated.availableProviders },
+          200,
+          { 'Set-Cookie': buildSessionCookie(auth.rawCookie) }
+        );
+}
+
 // --- Main Route Handler -----------------------------------------------------------------------------
 
 export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()) {
@@ -1611,6 +1725,8 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     // --- Authenticated Extranet Endpoints (sliding cookie refreshed on every valid call) ---
 
+    const partners=await partnerRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,containsCard:containsCardNumber,reservation:loadSingleReservation,changeStatus:changeReservationStatus,ownerEmail:isOwnerEmail});
+    if(partners)return partners;
     const campaigns=await campaignRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,containsCard:containsCardNumber});
     if(campaigns)return campaigns;
     const operations=await operationsRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,maskEmail,cookie:buildSessionCookie,reservation:loadSingleReservation});
@@ -1890,117 +2006,8 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       // 10c. Update Reservation Workflow Status (POST /v1/extranet/bookings/:id/status)
       // Allowed roles: owner, admin, staff
       if (subAction === 'status' && method === 'POST') {
-        const auth = await requireExtranetAuth(request, env, ['owner', 'admin', 'staff'], nowMs);
-        const body = await readJsonBody(request, 4096);
-        const toStatus = str(body.toStatus, 24);
-        const reasonNote = body.note !== undefined && body.note !== null ? str(String(body.note), 500) : null;
-        if (!toStatus || !WORKFLOW_STATUSES.includes(toStatus)) {
-          fail(400, 'Geçersiz hedef durum.');
-        }
-        if (reasonNote && containsCardNumber(reasonNote)) {
-          fail(400, 'Güvenlik kuralı: Kart numarası hiçbir alana girilemez ve kaydedilemez.');
-        }
-
-        const item = await loadSingleReservation(env, rawBookingId);
-        const fromStatus = item.status;
-        if (!ALLOWED_STATUS_TRANSITIONS[fromStatus]?.includes(toStatus)) {
-          fail(409, `Geçersiz durum geçişi: ${fromStatus} → ${toStatus}`);
-        }
-
-        const stmts = [];
-        const toDbState = STATUS_TO_BOOKING_STATE[toStatus];
-
-        if (item.recordType === 'booking') {
-          const currentDbState = item.dbState === 'draft' && toStatus !== 'cancelled' ? 'requested' : item.dbState;
-          if (item.dbState === 'draft' && toStatus === 'in_progress') {
-            stmts.push(env.DB.prepare(`UPDATE booking_requests SET state='supplier_pending' WHERE id=? AND state='draft'`).bind(item.recordId));
-          } else {
-            transition(currentDbState, toDbState, 'admin', `extranet:${auth.role}:${toStatus}`);
-            stmts.push(
-              env.DB.prepare(`UPDATE booking_requests SET state=? WHERE id=? AND state=?`).bind(toDbState, item.recordId, item.dbState)
-            );
-          }
-          stmts.push(upsertMetaStatement(env, item, { workflowStatus: toStatus }, nowSql));
-          stmts.push(
-            env.DB.prepare(
-              `INSERT INTO booking_events (id, booking_id, idempotency_key, from_state, to_state, actor_id, evidence_reference, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-            ).bind(
-              uuid(),
-              item.recordId,
-              `extranet-status:${item.uid}:${fromStatus}:${toStatus}`,
-              fromStatus,
-              toStatus,
-              auth.memberId,
-              `extranet:bk:${item.recordId}:status:${fromStatus}->${toStatus}`,
-              nowSql
-            )
-          );
-        } else {
-          stmts.push(upsertMetaStatement(env, item, { workflowStatus: toStatus }, nowSql));
-          if (toStatus === 'completed' && item.dbState === 'requested') {
-            stmts.push(
-              env.DB.prepare(`UPDATE member_requests SET state='fulfilled', closed_at=? WHERE ref=? AND state='requested'`).bind(nowSql, item.recordId),
-              env.DB.prepare(`UPDATE coupons SET status='redeemed', redeemed_at=? WHERE held_ref=? AND status='held'`).bind(nowSql, item.recordId),
-              env.DB.prepare(`UPDATE members SET stamps=stamps+1 WHERE id=?`).bind(item.memberId)
-            );
-          } else if (toStatus === 'cancelled' && item.dbState === 'requested') {
-            stmts.push(
-              env.DB.prepare(`UPDATE member_requests SET state='cancelled', closed_at=? WHERE ref=? AND state='requested'`).bind(nowSql, item.recordId),
-              env.DB.prepare(`UPDATE coupons SET status='issued', held_ref=NULL WHERE held_ref=? AND status='held'`).bind(item.recordId)
-            );
-          }
-          stmts.push(
-            env.DB.prepare(
-              `INSERT INTO booking_events (id, booking_id, idempotency_key, from_state, to_state, actor_id, evidence_reference, created_at)
-               VALUES (?, NULL, ?, ?, ?, ?, ?, ?)`
-            ).bind(
-              uuid(),
-              `extranet-status:${item.uid}:${fromStatus}:${toStatus}`,
-              fromStatus,
-              toStatus,
-              auth.memberId,
-              `extranet:mr:${item.recordId}:status:${fromStatus}->${toStatus}`,
-              nowSql
-            )
-          );
-        }
-
-        if (reasonNote) {
-          stmts.push(
-            env.DB.prepare(
-              `INSERT INTO extranet_booking_notes (id, record_type, record_id, author_member_id, author_role, note, created_at)
-               VALUES (?, ?, ?, ?, ?, ?, ?)`
-            ).bind(uuid(), item.recordType, item.recordId, auth.memberId, auth.role, `[Durum: ${fromStatus} → ${toStatus}] ${reasonNote}`, nowSql)
-          );
-        }
-
-        stmts.push(
-          buildAuditStatement(env, {
-            actorMemberId: auth.memberId,
-            actorRole: auth.role,
-            action: 'update_booking_status',
-            targetType: 'booking',
-            targetId: item.uid,
-            oldValue: { status: fromStatus },
-            newValue: { status: toStatus, hasNote: !!reasonNote },
-            ipAddress: auth.ipAddress,
-            nowSql,
-          })
-        );
-
-        await env.DB.batch(stmts);
-
-        if (item.recordType === 'member_request' && toStatus === 'completed' && item.dbState === 'requested' && item.memberId) {
-          await awardFulfilledMemberRewards(env, item.memberId);
-        }
-
-        const updated = await loadReservationDetailBundle(env, item.uid);
-        return jsonResponse(
-          { booking: updated.booking, availableProviders: updated.availableProviders },
-          200,
-          { 'Set-Cookie': buildSessionCookie(auth.rawCookie) }
-        );
+        const auth=await requireExtranetAuth(request,env,['owner','admin','staff'],nowMs);
+        return await changeReservationStatus(request,env,auth,rawBookingId,nowSql);
       }
 
       // 10d. Manual Payment Status Record — owner & admin only (POST /v1/extranet/bookings/:id/payment)

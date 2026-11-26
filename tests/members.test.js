@@ -35,7 +35,7 @@ function setup() {
   const DB = d1();
   DB.raw.exec(`INSERT INTO hotels VALUES ('hotel-a','verified','EUR',1000,'contract');
                INSERT INTO campaigns (id, kind, percent_bps, valid_days, hotel_id) VALUES ('hotel-a-2026','hotel',500,60,'hotel-a');`);
-  return { DB, PUBLIC_ORIGIN: ORIGIN, RATE_LIMITER: { limit: async () => ({ success: true }) }, CODE_PEPPER: 'test-pepper', DEV_RETURN_CODE: '1', PARTNER_TOKEN: 'partner-secret', ADMIN_TOKEN: 'admin-secret' };
+  return { DB, PUBLIC_ORIGIN: ORIGIN, RATE_LIMITER: { limit: async () => ({ success: true }) }, CODE_PEPPER: 'test-pepper', DEV_RETURN_CODE: '1', PARTNER_TOKEN: 'partner-secret', ALLOW_LEGACY_PARTNER_TOKEN:'1', ADMIN_TOKEN: 'admin-secret' };
 }
 const call = async (env, path, body, token, method = 'POST') => {
   const headers = { Origin: ORIGIN, ...(body ? { 'Content-Type': 'application/json' } : {}), ...(token ? { Authorization: 'Bearer ' + token } : {}) };
