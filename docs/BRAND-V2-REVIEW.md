@@ -73,3 +73,5 @@ Geometri karşılaştırması: 390/768/1440 pikselde ana başlık, ana fotoğraf
 Performans: aynı Chromium, 1440x900, sürümler arasında dönüşümlü 5 yerel/mok yanıtlı ölçüm yapıldı. Bunlar üretim Core Web Vitals sonuçları değildir. DCL medyanı ana sayfada 1007→796 ms, fiyatlarda 389→384 ms, Extranet'te 213→278 ms. CLS ana sayfada 0.096→0.096, fiyatlarda 0.131→0.140, Extranet'te 0→0. Ek stil dosyası ve yeni SVG kaynakları dışında sayfa yapısı korunur; Extranet ek marka CSS isteği alır. Ölçümler makine yüküne duyarlıdır; sahada performans artışı iddia edilmez.
 
 Demo statik kontrolü: 52/52 HTML sayfasında noindex, CSP ve guard mevcut. İzolasyon tarayıcı testinde altı temsili sayfa kontrol edildi; canlı ağ isteği kaçışı yok, yazma denemeleri 403 döndü. Tüm 52 sayfa için canlı API entegrasyonlarının işlevsel çalıştığı iddia edilmez.
+
+Son tam Playwright tekrarında 186/186 test geçti. `brand-identity-v2` dalı GitHub'a başarıyla gönderildi. Main'e push/merge veya mevcut üretim workflow'larını çalıştırma yapılmadı. İlk görsel turdaki üç eski-logo beklentisi hatası, yeni SVG yoluna uyarlanan tek test beklentisiyle giderildi; son tam tur başarılıdır.
