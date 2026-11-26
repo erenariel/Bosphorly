@@ -374,7 +374,7 @@ test('email handoff stays out of DOM until requested, opens inline under matchin
   await card.locator('input[type="email"]').fill('guest@example.org');
   await card.locator('.bc-forward-btn').click();
   await expect(panel.locator('.bc-handoff')).toHaveCount(0);
-  await expect(panel.locator('.bc-msg.bot').last()).toContainText('info@bosphorly.com');
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('BOS-CARD-1');
 });
 
 test('RTL chat panels for Hebrew, Arabic and Persian keep the email box hidden and the message area dominant', async ({ page }) => {
