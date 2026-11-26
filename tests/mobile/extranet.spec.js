@@ -307,3 +307,20 @@ test('Stage 2 inbox reply requires preview and second confirmation; mobile layou
  await page.getByRole('button',{name:'Onayla ve uygula'}).click();await expect(page.locator('dialog[open]')).toHaveCount(0);expect(sent).toBe(true);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });
+
+test('Booking email preview never sends before the second confirmation',async({page})=>{
+ let sent=false;
+ const booking={uid:'mr:BOS-EMAIL',recordType:'member_request',recordId:'BOS-EMAIL',displayRef:'BOS-EMAIL',productId:'bb-sunset',productTitle:'Boğaz turu',serviceDate:'2027-01-01',guests:2,status:'confirmed',allowedNextStatuses:['completed','cancelled'],paymentStatus:'pending',source:'whatsapp',lang:'en',memberTier:'silver',hasEmail:true,guestEmailMasked:'g***@example.com',events:[],internalNotes:[]};
+ await page.route('https://**/v1/extranet/**',async route=>{const path=new URL(route.request().url()).pathname;let body={};
+ if(path.endsWith('/session'))body={authenticated:true,csrfToken:'booking-csrf',user:{id:'staff',role:'staff'}};
+ else if(path.endsWith('/dashboard'))body={periods:{today:{},week:{},month:{}},statusBreakdown:{},recentBookings:[]};
+ else if(path.endsWith('/bookings'))body={items:[booking],total:1,page:1,totalPages:1,filterOptions:{products:[],sources:['whatsapp'],languages:['en']}};
+ else if(path.endsWith('/email-preview')){expect(route.request().headers()['x-csrf-token']).toBe('booking-csrf');body={confirmationId:'draft',preview:{to:'g***@example.com',subject:'Booking confirmation',body:'Your booking has been confirmed.'}};}
+ else if(path.endsWith('/email-confirm')){expect(route.request().postDataJSON()).toEqual({confirmationId:'draft',confirm:true});sent=true;body={sent:true};}
+ else body={booking,availableProviders:[]};
+ await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+ });
+ await page.goto('/extranet/');await page.locator('#navBookings').click();await page.getByRole('button',{name:'Detay →',exact:true}).click();await page.getByRole('button',{name:'E-postayı önizle'}).click();
+ await expect(page.locator('dialog.ex-card[open]')).toContainText('Your booking has been confirmed.');expect(sent).toBe(false);await page.getByRole('button',{name:'Onayla ve gönder'}).click();await expect.poll(()=>sent).toBe(true);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+});

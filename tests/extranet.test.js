@@ -1262,3 +1262,29 @@ test('Stage 0: first passkey enrollment rejects bearer-only access and unrecogni
  assert.equal(denied.status,401);assert.equal(denied.body.code,'FRESH_OTP_REQUIRED');
  assert.equal((await callWorker(env,'/v1/extranet/unknown')).status,401);
 });
+
+test('Stage 1: dashboard exposes cohort conversion, tier/language distribution and top requested tours',async()=>{
+ const env=createTestEnv();const owner=await createExtranetActor(env,'owner@test.example','owner');const guest=await signUpMember(env,'metrics@test.example');
+ env.DB.raw.prepare("INSERT INTO member_requests(ref,member_id,service_id,service_date,guests,state) VALUES('BOS-METRICS',?,'bb-sunset','2027-01-01',2,'fulfilled')").run(guest.id);
+ const r=await callWorker(env,'/v1/extranet/dashboard',{cookie:owner.cookie});assert.equal(r.status,200);
+ assert.equal(r.body.periods.today.completed,1);assert.equal(r.body.periods.today.conversion.completionRate,1);assert.equal(r.body.tierDistribution.platinum,1);assert.ok(r.body.topTours.some(x=>x.id==='bb-sunset'&&x.count===1));assert.ok(Object.values(r.body.languageDistribution).includes(1));
+});
+
+test('Stage 1: booking mail requires auth, CSRF, valid status, actor-bound preview and second confirmation, and retains history',async t=>{
+ const env=createTestEnv();const staff=await createExtranetActor(env,'staff-mail@test.example','staff');const other=await createExtranetActor(env,'other-mail@test.example','staff');const guest=await signUpMember({...env,RESEND_API_KEY:''},'guest-mail@test.example');
+ env.DB.raw.prepare("INSERT INTO member_requests(ref,member_id,service_id,service_date,guests,state) VALUES('BOS-MAIL',?,'bb-sunset','2027-01-01',2,'requested')").run(guest.id);
+ Object.assign(env,{RESEND_API_KEY:'mock',REQUEST_FROM_EMAIL:'test@example.com'});
+ const base='/v1/extranet/bookings/mr:BOS-MAIL';const request={method:'POST',cookie:staff.cookie,csrf:staff.csrf,body:{lang:'en',template:'confirmation'}};
+ assert.equal((await callWorker(env,base+'/email-preview',{method:'POST',body:{}})).status,401);
+ assert.equal((await callWorker(env,base+'/email-preview',{...request,csrf:''})).status,403);
+ assert.equal((await callWorker(env,base+'/email-preview',request)).status,409);
+ env.DB.raw.exec("INSERT INTO extranet_booking_meta(record_type,record_id,workflow_status) VALUES('member_request','BOS-MAIL','confirmed')");
+ const preview=await callWorker(env,base+'/email-preview',request);assert.equal(preview.status,200);assert.ok(!preview.body.preview.to.includes('guest-mail'));
+ const confirmation={method:'POST',cookie:staff.cookie,csrf:staff.csrf,body:{confirmationId:preview.body.confirmationId,confirm:true}};
+ assert.equal((await callWorker(env,base+'/email-confirm',{...confirmation,cookie:other.cookie,csrf:other.csrf})).status,409);
+ let sent=0;t.mock.method(globalThis,'fetch',async(url,init)=>{sent++;const body=JSON.parse(init.body);assert.deepEqual(body.to,['guest-mail@test.example']);assert.match(body.text,/confirmed/);return Response.json({id:'sent'});});
+ assert.equal((await callWorker(env,base+'/email-confirm',confirmation)).body.sent,true);
+ assert.equal((await callWorker(env,base+'/email-confirm',confirmation)).status,409);assert.equal(sent,1);
+ const detail=await callWorker(env,base,{cookie:staff.cookie});assert.equal(detail.body.booking.emailHistory[0].status,'sent');
+ assert.equal(env.DB.raw.prepare("SELECT COUNT(*) AS n FROM extranet_audit WHERE action='booking_email_result'").get().n,1);
+});

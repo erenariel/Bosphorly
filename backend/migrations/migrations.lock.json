@@ -14,5 +14,6 @@
   "0013_whatsapp.sql": "254d698d8521eeba4627abd8e072fd074abc73154d16c0c82adb496699d227ae",
   "0014_extranet_stage1.sql": "4e19d8642fd7bbcc6e02cc80e0cfc71e845ed3ecba7142c817983f80473cccc6",
   "0015_extranet_stage2.sql": "689f77f52b97a2e60e826034384e62103fe4f327dbe902a2e96e2e7bb3eef7e2",
-  "0016_extranet_security.sql": "ad56a62d84ee910e087791293d4bd9d3e6a622ab1da2c0dda19d1438899acb75"
+  "0016_extranet_security.sql": "ad56a62d84ee910e087791293d4bd9d3e6a622ab1da2c0dda19d1438899acb75",
+  "0017_extranet_booking_emails.sql": "9302c35c297e8c312cf64a94fdb1cd29ae4012e37b41cab4c5f9b505e50fc36a"
 }
