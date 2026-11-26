@@ -1,5 +1,5 @@
 'use strict';
-/* Bosphorly Extranet — Aşama 1: Güvenli Giriş (Üye + Zorunlu Passkey), RBAC (Owner/Admin/Staff),
+/* Bosphorly Extranet — Aşama 1: Güvenli Giriş (E-posta kodu veya Passkey), RBAC (Owner/Admin/Staff),
    30 dk Hareketsizlik Koruması, Gösterge Paneli ve Rezervasyon Yönetimi. */
 (() => {
   const IDLE_LIMIT_MS = 30 * 60 * 1000;
@@ -45,6 +45,7 @@
     owner: 'Owner',
     admin: 'Admin',
     staff: 'Staff',
+    partner: 'Partner',
   };
 
   const $ = (id) => document.getElementById(id);
@@ -325,7 +326,10 @@
     $('appShell').hidden = false;
     startIdleWatchdog();
 
-    await switchView('dashboard');
+    const partner=currentUser.role==='partner';
+    for(const id of ['navDashboard','navBookings','navMembers','navInbox'])$(id).hidden=partner;
+    if(partner){$('viewDashboard').hidden=true;showBanner('Partner hesabınız doğrulandı. Size atanan rezervasyonlar partner aşamasında açılacak.');}
+    else await switchView('dashboard');
   }
 
   async function checkMemberExtranetStatus(memberBearer) {

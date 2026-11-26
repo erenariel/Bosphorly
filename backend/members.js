@@ -143,7 +143,7 @@ async function memberFromSession(request, env) {
 
 async function isProtectedExtranetMember(env, m) {
   if (!m) return false;
-  if (typeof env.ADMIN_OWNER_EMAIL === 'string' && env.ADMIN_OWNER_EMAIL.trim().toLowerCase() === String(m.email || '').trim().toLowerCase()) {
+  if (isOwnerEmail(env,m.email)) {
     return true;
   }
   try {
