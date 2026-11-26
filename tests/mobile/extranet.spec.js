@@ -76,6 +76,7 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
             confirmed: 2,
             cancelled: 1,
             newMembers: 3,
+            expectedCommission: { EUR: 1200 },
             estimatedCommission: { EUR: 3240, TRY: 0, USD: 0, GBP: 0 },
             grossCommission: { EUR: 3600, TRY: 0, USD: 0, GBP: 0 },
           },
@@ -219,6 +220,8 @@ test('Extranet gate, passkey setup prompt, mobile responsiveness (360/390/768), 
   await expect(page.locator('#kpiNewRequests')).toHaveText('4');
   await expect(page.locator('#kpiCommission')).toContainText('€32,4');
   await expect(page.locator('#kpiCommissionGross')).toHaveText('brüt €36');
+  await expect(page.locator('#kpiCommissionExpected')).toHaveText('Beklenen (onaylı): €12');
+  await expect(page.getByText('Kesinleşmiş Komisyon (Net)', {exact:true})).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
 
   // Switch to Reservations view & check Owner CSV button

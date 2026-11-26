@@ -1,3 +1,4 @@
+import { commissionAmounts } from './commission.js';
 import {catalogRoutes} from './extranet-catalog.js';
 import {partnerRoutes} from './extranet-partners.js';
 import {campaignRoutes} from './extranet-campaigns.js';
@@ -522,6 +523,8 @@ function normalizeBookingRow(env, b) {
   return {
     uid: `bk:${b.id}`,
     recordType: 'booking',
+    isTest: b.is_test === 1,
+    refundedMinor: Number(b.refunded_minor || 0),
     recordId: b.id,
     displayRef: b.id,
     productId: b.experience_id,
@@ -588,6 +591,8 @@ function normalizeMemberRequestRow(env, r) {
   return {
     uid: `mr:${r.ref}`,
     recordType: 'member_request',
+    isTest: r.is_test === 1,
+    refundedMinor: Number(r.refunded_minor || 0),
     recordId: r.ref,
     displayRef: r.ref,
     productId: r.service_id,
@@ -680,9 +685,9 @@ async function loadAllReservations(env, sqlDateFilter = null) {
 
   const bkRes = await env.DB.prepare(
     `SELECT b.id, b.experience_id, b.price_id, b.service_date, b.guests, b.total_minor, b.currency,
-            b.referral_hash, b.commission_bps, b.state AS db_state, b.created_at,
+            b.is_test, b.referral_hash, b.commission_bps, b.state AS db_state, b.created_at,
             e.title AS exp_title, e.provider_id AS exp_provider_id,
-            meta.workflow_status, meta.payment_status, meta.assigned_provider_id,
+            meta.workflow_status, meta.payment_status, meta.refunded_minor, meta.assigned_provider_id,
             meta.member_id AS meta_member_id, meta.guest_name, meta.guest_email, meta.guest_phone,
             meta.guest_hotel, meta.guest_room, meta.source AS meta_source, meta.lang AS meta_lang,
             meta.coupon_id AS meta_coupon_id, meta.updated_at AS meta_updated_at,
@@ -705,9 +710,9 @@ async function loadAllReservations(env, sqlDateFilter = null) {
 
   const mrRes = await env.DB.prepare(
     `SELECT r.ref, r.member_id, r.service_id, r.service_date, r.guests, r.coupon_id,
-            r.state AS db_state, r.created_at, r.closed_at, r.req_type, r.title, r.operator,
+            r.is_test, r.state AS db_state, r.created_at, r.closed_at, r.req_type, r.title, r.operator,
             r.service_time, r.total_text, r.notes,
-            meta.workflow_status, meta.payment_status, meta.assigned_provider_id,
+            meta.workflow_status, meta.payment_status, meta.refunded_minor, meta.assigned_provider_id,
             meta.source AS meta_source, meta.lang AS meta_lang, meta.updated_at AS meta_updated_at,
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
@@ -750,9 +755,9 @@ async function loadSingleReservation(env, rawId) {
   if (prefType !== 'member_request') {
     const b = await env.DB.prepare(
       `SELECT b.id, b.experience_id, b.price_id, b.service_date, b.guests, b.total_minor, b.currency,
-              b.referral_hash, b.commission_bps, b.state AS db_state, b.created_at,
+              b.is_test, b.referral_hash, b.commission_bps, b.state AS db_state, b.created_at,
               e.title AS exp_title, e.provider_id AS exp_provider_id,
-              meta.workflow_status, meta.payment_status, meta.assigned_provider_id,
+              meta.workflow_status, meta.payment_status, meta.refunded_minor, meta.assigned_provider_id,
               meta.member_id AS meta_member_id, meta.guest_name, meta.guest_email, meta.guest_phone,
               meta.guest_hotel, meta.guest_room, meta.source AS meta_source, meta.lang AS meta_lang,
               meta.coupon_id AS meta_coupon_id, meta.updated_at AS meta_updated_at,
@@ -777,9 +782,9 @@ async function loadSingleReservation(env, rawId) {
 
   const r = await env.DB.prepare(
     `SELECT r.ref, r.member_id, r.service_id, r.service_date, r.guests, r.coupon_id,
-            r.state AS db_state, r.created_at, r.closed_at, r.req_type, r.title, r.operator,
+            r.is_test, r.state AS db_state, r.created_at, r.closed_at, r.req_type, r.title, r.operator,
             r.service_time, r.total_text, r.notes,
-            meta.workflow_status, meta.payment_status, meta.assigned_provider_id,
+            meta.workflow_status, meta.payment_status, meta.refunded_minor, meta.assigned_provider_id,
             meta.source AS meta_source, meta.lang AS meta_lang, meta.updated_at AS meta_updated_at,
             m.email AS mem_email, m.name AS mem_name, m.phone AS mem_phone, m.hotel AS mem_hotel,
             m.room AS mem_room, m.lang AS mem_lang, m.country AS mem_country, m.hotel_id AS mem_hotel_id,
@@ -939,8 +944,10 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
     let completed=0,cohortConfirmed=0,cohortCompleted=0;
     const estimatedCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
     const grossCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
+    const expectedCommission = { EUR: 0, TRY: 0, USD: 0, GBP: 0 };
 
     for (const item of merged) {
+      if (item.isTest) continue;
       const createdInPeriod = String(item.createdAt || '') >= startSql;
       const updatedInPeriod = String(item.updatedAt || item.createdAt || '') >= startSql;
       if (createdInPeriod) {
@@ -951,8 +958,10 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
       if ((item.status === 'confirmed' || item.status === 'completed') && updatedInPeriod) {
         confirmed++;
         if (item.currency && Object.prototype.hasOwnProperty.call(estimatedCommission, item.currency)) {
-          estimatedCommission[item.currency] += Number(item.estimatedCommissionMinor || 0);
-          grossCommission[item.currency] += Number(item.grossCommissionMinor || 0);
+          const amounts = commissionAmounts(item);
+          estimatedCommission[item.currency] += amounts.finalizedNet;
+          grossCommission[item.currency] += amounts.finalizedGross;
+          expectedCommission[item.currency] += amounts.expectedNet;
         }
       }
       if(item.status==='completed'&&updatedInPeriod)completed++;
@@ -970,7 +979,9 @@ async function computeDashboardMetrics(env, nowMs = Date.now()) {
       confirmed,
       cancelled,
       newMembers: Number(memRow?.n || 0),
-      estimatedCommission,
+      estimatedCommission, // compatibility: now finalized only
+      finalizedCommission: estimatedCommission,
+      expectedCommission,
       grossCommission,
     };
   };
@@ -1139,14 +1150,15 @@ function upsertMetaStatement(env, item, patch, nowSql) {
   const nextPayment = patch.paymentStatus ?? item.paymentStatus;
   const nextProvider = patch.assignedProviderId !== undefined ? patch.assignedProviderId : item.providerId;
   return env.DB.prepare(
-    `INSERT INTO extranet_booking_meta (record_type, record_id, workflow_status, payment_status, assigned_provider_id, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?)
+    `INSERT INTO extranet_booking_meta (record_type, record_id, workflow_status, payment_status, assigned_provider_id, refunded_minor, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(record_type, record_id) DO UPDATE SET
        workflow_status = excluded.workflow_status,
        payment_status = excluded.payment_status,
        assigned_provider_id = excluded.assigned_provider_id,
+       refunded_minor = excluded.refunded_minor,
        updated_at = excluded.updated_at`
-  ).bind(item.recordType, item.recordId, nextWorkflow, nextPayment, nextProvider, nowSql);
+  ).bind(item.recordType, item.recordId, nextWorkflow, nextPayment, nextProvider, patch.refundedMinor ?? item.refundedMinor ?? 0, nowSql);
 }
 
 async function changeReservationStatus(request,env,auth,rawBookingId,nowSql) {
@@ -2017,7 +2029,7 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
       if (subAction === 'payment' && method === 'POST') {
         const auth = await requireExtranetAuth(request, env, ['owner', 'admin'], nowMs);
         const body = await readJsonBody(request, 2048);
-        const allowedKeys = new Set(['paymentStatus', 'note']);
+        const allowedKeys = new Set(['paymentStatus', 'note', 'refundedMinor']);
         if (Object.keys(body).some((k) => !allowedKeys.has(k))) {
           fail(400, 'Yalnızca ödeme durumu (beklemede/ödendi/iade edildi) kaydedilebilir; kart veya ödeme aracı bilgisi gönderilemez.');
         }
@@ -2032,9 +2044,14 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
         const item = await loadSingleReservation(env, rawBookingId);
         const oldPayment = item.paymentStatus;
+        const refundedMinor = body.refundedMinor ?? item.refundedMinor ?? 0;
+        if (!Number.isSafeInteger(refundedMinor) || refundedMinor < 0 ||
+            (refundedMinor > 0 && (!Number.isSafeInteger(item.totalMinor) || refundedMinor > item.totalMinor))) {
+          fail(400, 'İade tutarı toplam tutarı aşmayan, kuruş cinsinden pozitif bir tam sayı olmalı.');
+        }
 
         const stmts = [
-          upsertMetaStatement(env, item, { paymentStatus: nextPayment }, nowSql),
+          upsertMetaStatement(env, item, { paymentStatus: nextPayment, refundedMinor }, nowSql),
           env.DB.prepare(
             `INSERT INTO booking_events (id, booking_id, idempotency_key, from_state, to_state, actor_id, evidence_reference, created_at)
              VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
@@ -2054,8 +2071,8 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
             action: 'update_payment_status',
             targetType: 'booking',
             targetId: item.uid,
-            oldValue: { paymentStatus: oldPayment },
-            newValue: { paymentStatus: nextPayment },
+            oldValue: { paymentStatus: oldPayment, refundedMinor: item.refundedMinor },
+            newValue: { paymentStatus: nextPayment, refundedMinor },
             ipAddress: auth.ipAddress,
             nowSql,
           }),
