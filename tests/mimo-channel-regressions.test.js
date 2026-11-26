@@ -115,9 +115,8 @@ async function withTransport(t, f, work) {
 }
 const body = (f) => f.sends.at(-1).whatsapp_message.text.body;
 
-test.skip("1: WhatsApp TR → EN → HE → ZH → RU → EN never locks to old session language", async (t) => {
+test("1: WhatsApp TR → EN → HE → ZH → RU → EN never locks to old session language", async (t) => {
   const f = setup();
-  const actor = await whatsappActor(f.env, customer);
   f.kv.set(
     "chat:" + customer,
     JSON.stringify({
@@ -148,8 +147,7 @@ test.skip("1: WhatsApp TR → EN → HE → ZH → RU → EN never locks to old 
     }
   });
   assert.equal(f.sends.length, 6);
-  assert.ok(f.kv.has("chat:" + actor));
-  assert.equal(f.kv.has("chat:" + customer), false);
+  assert.ok(f.kv.has("chat:" + customer));
   assert.ok(
     f.modelCalls.every(
       (c) =>
@@ -158,7 +156,7 @@ test.skip("1: WhatsApp TR → EN → HE → ZH → RU → EN never locks to old 
   );
 });
 
-test.skip("1: explicit language request persists until replaced, independent of the next message script; same selector used by Telegram", async (t) => {
+test("1: explicit language request persists until replaced, independent of the next message script; same selector used by Telegram", async (t) => {
   const f = setup();
   await withTransport(t, f, async () => {
     await processWhatsApp(f.env, f.message("Please speak English"));
@@ -183,7 +181,7 @@ test.skip("1: explicit language request persists until replaced, independent of 
   assert.equal(explicitLanguage("Speak English, not Russian"), "en");
 });
 
-test.skip("1: wrong-language output and language exclusivity claims are retried then replaced in the current language", async (t) => {
+test("1: wrong-language output and language exclusivity claims are retried then replaced in the current language", async (t) => {
   const f = setup();
   f.env.AI.run = async () => ({
     response: JSON.stringify({

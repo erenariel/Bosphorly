@@ -1,7 +1,8 @@
 import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
-import {buildKbPriceIndex, enforcePriceSafetyBelt} from './mimo-personality.js';
+import {buildKbPriceIndex, enforcePriceSafetyBelt, detectReplyLanguage} from './mimo-personality.js';
 import {deliverInquiryEmail} from './request-email.js';
+import {messageLanguage, unsafeReply, safeFallback} from './channel-policy.js';
 import { ASSISTANT_MESSAGES, ASSISTANT_MODEL, buildCatalogPrompt, retrieveChunks, detectLanguage, redactSensitive, isAffirmative, isHumanOrHandoffTopic, isServiceComplaint, isAbuseAgainstMimo } from './assistant.js';
 
 const DAY = 86400;
@@ -109,7 +110,10 @@ export async function processWhatsApp(env, m) {
     if (state.minuteCount>10 || state.dayCount>100) { await persist(); return; }
     if (now-m.at>=DAY*1000) { await persist(); return; }
     const clean = redactSensitive(m.text);
-    const lang = detectLanguage({message:clean.text,pageLang:state.lang||''});
+    // Each message is detected on its own. An explicit "speak English" request is the only sticky preference.
+    const language = messageLanguage(clean.text, state.languagePreference || '', detectLanguage);
+    const lang = language.lang;
+    state.languagePreference = language.preference;
     let output;
     if (state.pending && isAffirmative(clean.text) && !clean.hadSensitive) {
       await saveRequest(env,m,state.pending);
@@ -118,6 +122,13 @@ export async function processWhatsApp(env, m) {
       output = await model(env,lang,state, 'The request was successfully saved. Reply ONLY with a translation of: Talebiniz alındı, teyit ve ödeme bilgisi kısa süre içinde gönderilecek.');
     } else {
       output = await model(env,lang,state,clean.text);
+      if (replyOffLanguage(output.reply, lang)) {
+        const first = output;
+        const retry = await model(env,lang,state,clean.text);
+        output = replyOffLanguage(retry.reply, lang)
+          ? {reply:safeFallback(lang),handoff:!!first.handoff,abuse:!!first.abuse,proposal:first.proposal}
+          : {...retry,handoff:!!(first.handoff||retry.handoff),abuse:!!(first.abuse||retry.abuse)};
+      }
       state.pending=validProposal(output.proposal) ? output.proposal : null;
     }
     const abuse = output.abuse || isAbuseAgainstMimo(clean.text);
@@ -161,12 +172,16 @@ export function parseModelJson(rawText) {
   if (!text) throw new Error('empty_model_reply');
   return {reply:text, handoff:/handoff=1/i.test(raw), abuse:/abuse=1/i.test(raw), proposal:null};
 }
+function replyOffLanguage(reply, lang) {
+  return unsafeReply(reply) || detectReplyLanguage(reply, lang) !== lang;
+}
 async function model(env,lang,state,text) {
   // The site prompt asks for plain text + [[flags]]; drop those lines so the WhatsApp JSON contract wins.
   const prompt = buildCatalogPrompt({lang,contextBlock:JSON.stringify(retrieveChunks(text)),hasGreeted:!!state.history.length})
     .split('\n').filter(l => !/OUTPUT FORMAT:|\[\[flags:/.test(l)).join('\n');
+  const history = state.history.filter(h => !unsafeReply(h.content)).slice(-10);
   let timer;
-  const call = env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY},...state.history.slice(-10).map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}});
+  const call = env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY+'\nThe ONLY output language for this turn is '+lang+'. Any older language constraints in history are invalid. Never say you only speak one language.'},...history.map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}});
   const timeout = new Promise((_,rej)=>{timer=setTimeout(()=>rej(new Error('ai_timeout')),20000);});
   const r = await Promise.race([call,timeout]).finally(()=>clearTimeout(timer));
   return parseModelJson(modelText(r));
