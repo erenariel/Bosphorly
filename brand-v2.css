@@ -1,0 +1,130 @@
+/* Bosphorly visual identity V2. Layout, typography, interactions and source imagery stay in their original stylesheets. */
+:root {
+ --brand-navy:#122B41; --brand-teal:#329E9A; --brand-teal-ink:#226F6C;
+ --brand-coral:#E77A61; --brand-paper:#F7F5EF; --brand-muted:#526674;
+ --brand-surface:#FFFFFF; --brand-line:#CCD8DA;
+ --ink:var(--brand-navy)!important; --muted:var(--brand-muted)!important;
+ --teal:var(--brand-teal-ink)!important; --deep:var(--brand-navy)!important;
+ --cream:var(--brand-paper)!important; --line:var(--brand-line)!important;
+ --gold:var(--brand-coral)!important;
+ --navy:var(--brand-navy)!important; --cyan:var(--brand-teal)!important;
+ --ex-navy:var(--brand-navy); --ex-navy-mid:#193A4C; --ex-blue:var(--brand-teal-ink);
+ --ex-cyan:var(--brand-teal-ink); --ex-gold:var(--brand-coral); --ex-gold-ink:#793B2E;
+ --ex-bg:var(--brand-paper); --ex-surface:var(--brand-surface); --ex-surface-alt:#EEF4F2;
+ --ex-ink:var(--brand-navy); --ex-muted:var(--brand-muted); --ex-line:var(--brand-line); --ex-line-strong:#9DB5B5;
+}
+body{background-color:var(--brand-paper);color:var(--brand-navy)}
+.site-header{background:var(--brand-navy);color:var(--brand-paper);box-shadow:0 2px 12px #122b4120}
+.sh-brand{color:var(--brand-paper)}
+.sh-brand img{border-radius:0;background:none;object-fit:contain;display:none}
+.brand-wordmark{white-space:nowrap;direction:ltr;unicode-bidi:isolate}
+.brand-com{font-size:85%;color:var(--brand-coral);letter-spacing:-.04em}
+.sh-brand small{white-space:normal;max-width:232px;color:#D1DFDE;letter-spacing:0;line-height:1.35;font-weight:500}
+.site-header .sh-nav a{color:#D9E7E5;background-color:#1C4152;border-color:#5E7D87}
+.sh-nav a:hover,.sh-nav a[aria-current=page],.sh-search,.sh-tools select{background-color:#1C4152;color:var(--brand-paper);border-color:#5E7D87}
+.sh-search:hover,.sh-search[aria-current=page]{background:var(--brand-teal-ink)}
+.sh-tools select option{background:var(--brand-paper);color:var(--brand-navy)}
+.sh-auth-btn.in{background:transparent;color:var(--brand-paper);border-color:#7A969E}
+.sh-auth-btn.up{background:var(--brand-paper);color:var(--brand-navy);border-color:var(--brand-paper)}
+.sh-auth-perk{color:#D9E7E5}
+.hero{background:var(--brand-navy);color:var(--brand-paper)}
+.hero p,.hero-map,.hero-points{color:#D8E7E4}
+.eyebrow{color:var(--brand-teal-ink)}
+.hero .eyebrow{color:#86D4CE}
+.hero-caption{color:#D2E1DE!important}
+.photo-caption{background:#122b41ed;color:var(--brand-paper);border-color:#749291}
+.photo-caption span{color:#D2E1DE}
+.photo-dot{background:var(--brand-teal);box-shadow:0 0 0 5px #329e9a20}
+.hero-photo:before{border-color:#329e9a66}
+.primary,.hero .primary,.hero-cta{background:var(--brand-coral);color:var(--brand-navy);border-color:var(--brand-coral)}
+.tour-meta b,.tour-card a,.back{color:var(--brand-teal-ink)}
+.tour-card a{background:#EDF5F2;border-color:var(--brand-line)}
+.rewards-panel{background:#E7F0EC;color:var(--brand-navy)}
+.partner-panel{background:#F7E8E0;color:var(--brand-navy)}
+.footer,footer.wrap.footer{color:var(--brand-muted);border-color:var(--brand-line)}
+.brand img{background:transparent;border-radius:0}
+.ex-login-screen{background:var(--brand-navy)}
+.ex-login-head{background:#266765;color:var(--brand-paper)}
+.ex-brand img{background:transparent!important;border-radius:0!important;object-fit:contain}
+.ex-brand-sub{color:var(--brand-paper)}
+.ex-btn-primary{background:var(--brand-navy);color:var(--brand-paper)}
+.ex-btn-primary:hover{background:var(--brand-teal-ink)}
+.ex-sidebar{background:var(--brand-navy)}
+.ex-brand-title{color:var(--brand-paper)}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--brand-teal-ink);outline-offset:3px}
+.site-header :focus-visible,.hero :focus-visible,.ex-login-head :focus-visible{outline-color:var(--brand-coral)}
+@media(max-width:850px){
+ .sh-brand img{display:block;width:38px;height:38px}
+ .sh-brand>.brand-wordmark{display:none}
+}
+/* Respect the OS theme without adding a new control or changing stored preferences. */
+@media(prefers-color-scheme:dark){
+ :root{--brand-surface:#1A3547;--brand-line:#48616B;--brand-muted:#BDD0D2;
+ --ink:#F7F5EF!important;--muted:#BDD0D2!important;--cream:#122B41!important;--line:#48616B!important;
+ --teal:#86D4CE!important;--ex-bg:#122B41;--ex-surface:#1A3547;--ex-surface-alt:#203F50;--ex-ink:#F7F5EF;--ex-muted:#BDD0D2;--ex-line:#48616B;--ex-line-strong:#759098}
+ body{background:#122B41;color:var(--brand-paper);color-scheme:dark}
+ main,.panel,.tour-card,.tour-content,.form-panel,.route-panel,.m-card,.card,.item,.coupon-box{background-color:#1A3547;color:var(--brand-paper);border-color:#48616B}
+ .tour-content p,.tour-provider,.lede,main p,main li,footer{color:#BDD0D2}
+ h1,h2,h3,.tour-meta b,.tour-card a,.back{color:var(--brand-paper)}
+ .tour-card a,.image-note,.note{background:#203F50;color:#D8E7E4;border-color:#48616B}
+ .rewards-panel,.partner-panel{background:#203F50;color:var(--brand-paper)}
+ input,select,textarea,.field input,.field select{background-color:#122B41;color:var(--brand-paper);border-color:#759098}
+ .ex-login-card,.ex-panel{background:#1A3547;color:var(--brand-paper)}
+ .ex-input,.ex-field input{background:#122B41;color:var(--brand-paper)}
+ .footer,footer.wrap.footer{color:#BDD0D2}
+ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline-color:#86D4CE}
+}
+.ex-gate-wrap{background:var(--brand-navy)}
+.ex-gate-head{background:#266765;color:var(--brand-paper)}
+.ex-gate-head h1,.ex-gate-head p{color:var(--brand-paper)}
+@media(prefers-color-scheme:dark){
+ .ex-gate-card{background:#1A3547;color:var(--brand-paper)}
+ .ex-gate-body input{background:#122B41;color:var(--brand-paper);border-color:#759098}
+ .ex-divider span{background:#1A3547;color:#BDD0D2}
+}
+
+@media(min-width:851px){.site-header .sh-brand small{display:block;max-width:220px;font-size:9px}}
+
+.site-header .sh-brand small{font-size:9px;max-width:224px}
+@media(max-width:850px){.site-header .sh-brand>.brand-wordmark{display:none}}
+/* Text contrast is part of the visual layer, including older hard-coded captions. */
+footer,footer a,.footer-note,#summary,.price-row .per,.price-row .was,.price-row s,.tour-meta span,#marketPrice small,.section-heading small,.steps li:not(.active),.choice small,[data-i18n="priceDisclosure"],#guides>p{color:var(--brand-muted)}
+.operator,.tour-operator,[data-i18n="firstStep"],[data-i18n="yourRoute"],[data-i18n="exploreEyebrow"]{color:var(--brand-teal-ink)}
+.platinum-promo p{color:#E8EDF5}
+
+@media(prefers-color-scheme:dark){
+ .eyebrow,#eyebrow{color:#86D4CE}
+ .fields label,.step-indicator,.fields label span{color:#D8E7E4}
+ body :is(input,select,textarea):not([type=checkbox]):not([type=radio]){background-color:#122B41!important;color:#F7F5EF!important;border-color:#759098}
+ .item-body,.item-body .summary,.item-body .facts,.item-body .fact,.item-body .list-title,.item-body summary,.item-body .price-row strong{color:#F7F5EF}
+ .item-body .operator,.tour-operator,.operator{color:#86D4CE}
+ .chip,.summary>div,.member,.m-form,.tabs button,.m-auth-tab,.m-auth-tabs button,.btn.ghost,.ex-btn-secondary{background:#203F50;color:#F7F5EF;border-color:#759098}
+ .m-form label,.m-form label span,.m-fine,.m-fine a{color:#D8E7E4}
+ .steps li{background:#203F50;color:#D8E7E4}
+ .steps li.active{background:#226F6C;color:#F7F5EF}
+ .choice,.choice.active,.choice.selected{background:#203F50;color:#F7F5EF;border-color:#759098}
+ .choice small,.choice b,.choice span{color:#D8E7E4}
+ .booking-section,.experiences{background:#122B41}
+ .tour-content .tour-meta span,.tour-provider,.image-note,.tour-provider a{color:#BDD0D2}
+ [data-i18n="firstStep"],[data-i18n="yourRoute"],[data-i18n="exploreEyebrow"]{color:#86D4CE}
+ #hotelVerification,#hotelLookupStatus,.hotel-verify,.hotel-verification{background:#203F50;color:#D8E7E4}
+ #guides p,#guides a,main>p,main a,.ex-gate-body a{color:#BDD0D2}
+ .notice,.notice strong,.notice p{color:#755118}
+ .platinum-promo p{color:#E8EDF5}
+}
+[data-i18n="firstStep"],[data-i18n="yourRoute"],[data-i18n="exploreEyebrow"]{color:var(--brand-teal-ink)!important}
+.step-labels li:not(.active),#guides>p:not(.eyebrow){color:var(--brand-muted)!important}
+@media(prefers-color-scheme:dark){
+ [data-i18n="firstStep"],[data-i18n="yourRoute"],[data-i18n="exploreEyebrow"]{color:#86D4CE!important}
+ .step-labels li{background:#203F50!important;color:#D8E7E4!important}
+ .step-labels li.active{background:#226F6C!important;color:#F7F5EF!important}
+ #routeMapNote,#routeMapLink,#price,#guide-heading,#guides>p:not(.eyebrow){color:#D8E7E4!important}
+ .rw-perks li{background:#203F50!important;color:#D8E7E4!important}
+ #guides a{background:#203F50!important;color:#D8E7E4!important;border-color:#48616B!important}
+ .city-link{background:#203F50;color:#F7F5EF}
+ #marketPrice,#priceNote,#couponHint,#couponHint a,#consent{color:#D8E7E4}
+ .m-auth-pane,.m-tabs,.m-tabs button{background:#203F50!important;color:#F7F5EF!important}
+}
+
+.brand-slogan{color:var(--brand-muted);margin-block:8px;font-weight:600}
+@media(prefers-color-scheme:dark){#marketPrice strong,#mapLink,.m-corp-tag{color:#D8E7E4}}
