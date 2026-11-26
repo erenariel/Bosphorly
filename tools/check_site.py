@@ -93,11 +93,13 @@ def assert_booking_safety():
     assert "hotelPlacesMount" in homepage and "hotelVerification" in homepage
     assert "Illustrative transfer price" not in homepage
     assert "data/home-prices.json" in homepage
-    assert "assets/brand/approved-icon.webp" in homepage
+    assert "assets/high-fidelity/b-emblem.svg" in homepage
     assert "config/maps-public.js" in homepage
     key = (ROOT / "config/maps-public.js").read_text(encoding="utf-8")
     assert 'googleMapsBrowserKey: ""' in key, "Do not commit real Google credentials in the public template"
-    assert (ROOT / "assets/brand/approved-icon.webp").stat().st_size > 1000
+    from xml.etree import ElementTree
+    icon = ElementTree.parse(ROOT / "assets/high-fidelity/b-emblem.svg").getroot()
+    assert icon.tag.endswith("}svg") and icon.findall("{*}path")
     assert (ROOT / "assets/maps/istanbul-schematic.svg").stat().st_size > 500
     page = (ROOT / "explore.html").read_text()
     assert 'id="mapFallback"' in page and 'id="getting-around"' in page
