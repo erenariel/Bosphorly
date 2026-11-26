@@ -234,6 +234,8 @@ function addDirectDelivery(box, request, lang) {
       if (response.status !== 202 || !(await response.json()).accepted) throw new Error();
       button.textContent = label; button.hidden = true;
       status.dataset.state = 'ok'; status.textContent = '✅ ' + T.ok;
+      // Only the accepted HTTP 202 response is a lead; never send request data to Google.
+      try { window.BosphorlyMeasurement?.acceptedRequest(); } catch { /* Measurement cannot affect delivery. */ }
     } catch {
       button.disabled = false; button.textContent = label;
       status.dataset.state = 'error'; status.textContent = T.fail;
