@@ -29,6 +29,7 @@ const clean = (s, n = 500) =>
       /\b(?:cvv|cvc|security code)\s*[:=]?\s*\d{3,4}/gi,
       "[SECURITY CODE REDACTED]",
     )
+    .replace(/\b(?:pasaport|passport|паспорт)(?:\s*(?:no|number|numarası|numarasi|№))?\s*[:#-]?\s*[A-Z0-9]{6,12}\b/gi, "[PASSPORT REDACTED]")
     .replace(/[\u0000-\u0008]/g, "")
     .trim()
     .slice(0, n);
@@ -88,7 +89,7 @@ export async function createSupportRequest(
       guests: details?.guests,
       name: clean(details?.name, 120),
       contactPreference: clean(details?.contactPreference || channel, 20),
-      contact: clean(trustedContact || details?.contact, 254),
+      contact: trustedContact ? String(trustedContact).trim().slice(0,254) : clean(details?.contact, 254),
       notes: clean(details?.notes, 1000),
     };
     if (
