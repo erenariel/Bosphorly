@@ -1,3 +1,5 @@
+const brandIconPaths={"menu": "M3 6h18M3 12h18M3 18h18", "filter": "M3 6h18M6 12h12M9 18h6", "pin": "M12 22s8-8 8-14a8 8 0 0 0-16 0c0 6 8 14 8 14zm0-11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z", "calendar": "M3 5h18v16H3zM3 10h18M7 3v5m10-5v5", "users": "M3 21v-2a6 6 0 0 1 12 0v2m-6-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm7-7a4 4 0 0 1 0 7m2 2a5 5 0 0 1 4 5v2", "shield": "M12 2l9 4v6c0 5-5 8-9 10-4-2-9-5-9-10V6zm-4 10 3 3 5-6", "award": "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zm-4-1-2 8 6-3 6 3-2-8", "support": "M3 14v-2a9 9 0 0 1 18 0v5l-4 3h-4M3 12h4v7H3zm14 0h4v7h-4z", "bolt": "M14 2 4 14h7l-1 8 10-13h-7z", "arrow": "M4 12h16m-6-6 6 6-6 6"};
+window.brandIcon=name=>'<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="'+brandIconPaths[name]+'"/></svg>';
 /* Presentation and navigation adapters only. No service, identity or transaction implementation. */
 (()=>{
  if(window.__bosphorlyHfReady)return;window.__bosphorlyHfReady=true;
@@ -27,7 +29,7 @@
  id:['Tur','Transfer','Pengalaman','Jelajahi','Pilih pengalaman','Tanggal','Peserta','Cari','Pengalaman populer','Rencanakan bersama Mimo','Jelajahi Istanbul dengan ide khusus untuk Anda.','Halo, saya Mimo!','Lihat semua','Cara lain menjelajahi Istanbul']
  };
  const keys=['tours','transfer','experiences','discover','experienceLabel','date','guests','search','popular','planTitle','planText','mimoHello','all','moreWays'];
- const locale=()=>String(document.documentElement.lang||'en').slice(0,2);
+ const locale=()=>String(window.BOSPHORLY_LANG_ALT ? document.documentElement.lang : window.BosphorlyLang?.pick() || document.documentElement.lang || 'en').slice(0,2);
  const dictionary=()=>Object.fromEntries(keys.map((k,i)=>[k,(short[locale()]||short.en)[i]]));
  let selectedTab='tours';
  const setText=(e,t)=>{if(e&&e.textContent!==t)e.textContent=t};
@@ -35,7 +37,7 @@
   const ask=document.getElementById('heroMimoAsk');if(ask){ask.click();return}
   if(window.__bosphorlyOpenMimo){window.__bosphorlyOpenMimo();return}
   const fab=document.querySelector('.bc-fab');if(fab){fab.click();return}
-  const base=document.getElementById('siteHeader')?.dataset.base||'';location.href=base+'mimo/'+locale()+'.html';
+  const base=document.querySelector('.site-header')?.dataset.base||'';location.href=base+'mimo/'+locale()+'.html';
  }
  function enhancePlainHeaders(){
   const script=document.querySelector('script[src*="high-fidelity-ui.js"]');if(!script)return;
@@ -53,7 +55,7 @@
  function enhanceHeader(){
   for(const header of document.querySelectorAll('.site-header')){
    if(header.dataset.hfReady)continue;header.dataset.hfReady='true';
-   const base=document.getElementById('siteHeader')?.dataset.base||'';
+   const base=header.dataset.base||'';
    const brand=header.querySelector('.sh-brand');if(brand){const image=brand.querySelector('img');if(image)image.src=base+'assets/high-fidelity/b-emblem.svg';const text=brand.querySelector(':scope>span');if(text){text.className='hf-wordmark';text.dir='ltr';text.innerHTML='Bosphorly<span class="hf-com">.com</span><small>Your Intelligent Travel Companion in Istanbul.</small>'}}
    const nav=header.querySelector('.sh-nav');if(nav){
     const anchors=[...nav.querySelectorAll(':scope>a')];const tourLinks=anchors.filter(a=>a.getAttribute('href')==='#experiences'||/(?:tours|prices)\.html/.test(a.getAttribute('href')));const transfer=anchors.find(a=>a.getAttribute('href')?.includes('#booking'));const discovery=anchors.filter(a=>!tourLinks.includes(a)&&a!==transfer);
@@ -64,7 +66,7 @@
     const extra=document.createElement('a');extra.href=base+'extranet/';extra.textContent='Extranet';extra.className='hf-extranet-link';nav.append(extra);
    }
    header.querySelectorAll('.hf-nav-group').forEach(group=>group.addEventListener('toggle',()=>{if(group.open)header.querySelectorAll('.hf-nav-group').forEach(other=>{if(other!==group)other.open=false})}));
-   const toggle=document.createElement('button');toggle.type='button';toggle.className='hf-menu-toggle';toggle.textContent='☰';toggle.setAttribute('aria-label','Menu');toggle.setAttribute('aria-expanded','false');toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));header.dataset.hfMenuOpen=String(open)});header.querySelector('.sh-inner')?.append(toggle);
+   const toggle=document.createElement('button');toggle.type='button';toggle.className='hf-menu-toggle';toggle.innerHTML=window.brandIcon('menu');toggle.setAttribute('aria-label','Menu');toggle.setAttribute('aria-expanded','false');toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));header.dataset.hfMenuOpen=String(open)});header.querySelector('.sh-inner')?.append(toggle);
   }
  }
  function options(){
@@ -91,10 +93,16 @@
   cards();
  }
  function init(){
+  document.addEventListener('keydown',event=>{
+   if(event.key!=='Escape')return;
+   const header=document.querySelector('.site-header[data-hf-menu-open=true]');
+   if(header){const button=header.querySelector('.hf-menu-toggle');button.click();button.focus()}
+  });
+
   enhanceHeader();
   const utilities=document.getElementById('hfHeroUtilities');if(utilities)requestAnimationFrame(()=>document.querySelectorAll('.hero-copy>:not(h1):not(#heroMimo):not([data-i18n="heroSub"])').forEach(e=>utilities.append(e)));
   const head=document.querySelector('#experiences .section-heading');
-  if(head){const filters=document.querySelector('#experiences .filters');if(filters){const menu=document.createElement('details');menu.className='hf-filter-menu';const summary=document.createElement('summary');summary.setAttribute('aria-label','Experience filters');summary.textContent='☷';menu.append(summary,filters);filters.addEventListener('click',e=>{if(e.target.closest('[data-filter]'))menu.open=false});head.append(menu)}}if(head&&!head.querySelector('.hf-view-all')){const all=document.createElement('a');all.href='prices.html';all.className='hf-view-all';all.dataset.hfCopy='all';head.append(all)}
+  if(head){const filters=document.querySelector('#experiences .filters');if(filters){const menu=document.createElement('details');menu.className='hf-filter-menu';const summary=document.createElement('summary');summary.setAttribute('aria-label','Experience filters');summary.innerHTML=window.brandIcon('filter');menu.append(summary,filters);filters.addEventListener('click',e=>{if(e.target.closest('[data-filter]'))menu.open=false});head.append(menu)}}if(head&&!head.querySelector('.hf-view-all')){const all=document.createElement('a');all.href='prices.html';all.className='hf-view-all';all.dataset.hfCopy='all';head.append(all)}
   document.querySelectorAll('[data-hf-open-mimo]').forEach(e=>e.addEventListener('click',openMimo));
   const date=document.getElementById('hfDate');if(date){const today=new Date();today.setMinutes(today.getMinutes()-today.getTimezoneOffset());date.min=today.toISOString().slice(0,10)}
   const tabs=[...document.querySelectorAll('[data-hf-tab]')];

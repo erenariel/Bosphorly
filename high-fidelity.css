@@ -115,7 +115,7 @@ html{scroll-padding-top:100px}body{background:var(--hf-paper);color:var(--hf-ink
  .fields label,.step-indicator,.fields label span,.item-body,.item-body .summary,.item-body .facts,.item-body .fact,.item-body .list-title,.item-body summary,.item-body .price-row strong{color:#F7F5EF}
  input,select,textarea{background-color:#102A43;color:#F7F5EF;border-color:#759098}.fields input,.fields select,.filters input,.filters select{background-color:#102A43;color:#F7F5EF}
  .eyebrow,#eyebrow,.operator,.tour-operator,main a{color:#8CD0CA}.notice,.notice p,.notice strong{color:#755118}.m-tabs,.m-tabs button,.btn.ghost,.ex-btn-secondary,.chip,.summary>div,.city-link{background:#204557;color:#F7F5EF}
- .platinum-promo p{color:#E8EDF5}.item-body .price-row .per,.item-body .price-row .was,footer,footer a{color:#BDCDD2}.ex-gate-head{background:#23625F}.ex-gate-wrap{background:#102A43}
+ .platinum-promo p{color:inherit}.item-body .price-row .per,.item-body .price-row .was,footer,footer a{color:#BDCDD2}.ex-gate-head{background:#23625F}.ex-gate-wrap{background:#102A43}
 }
 @media(prefers-reduced-motion:reduce){.hf-home .hero-photo,.hf-planner,.hf-home .tour-card{animation:none!important;transition:none!important}}
 /* Asset silhouettes must remain transparent, including legacy avatar styles. */
@@ -184,7 +184,7 @@ body:not(.hf-home) main h1,body:not(.hf-home) .intro h1{font-family:Georgia,'Tim
 .eyebrow,#eyebrow,.operator{color:#247A77}
 footer,footer a,.footer-note,.footer-meta,.footer-meta b,#summary,.price-row .per,.price-row .was,.price-row s,#marketPrice small,.step-labels li:not(.active),.choice small,[data-i18n="priceDisclosure"]{color:var(--hf-muted)}
 [data-i18n="firstStep"],[data-i18n="yourRoute"],[data-i18n="exploreEyebrow"],#guides>.eyebrow{color:#247A77!important}
-#guides>p:not(.eyebrow){color:var(--hf-muted)!important}.platinum-promo p{color:#E8EDF5}
+#guides>p:not(.eyebrow){color:var(--hf-muted)!important}.platinum-promo p{color:inherit}
 @media(max-width:900px){
  .site-header .sh-nav>a,.site-header .hf-nav-group>summary{font-size:11px;padding:8px 12px;border:1px solid #6F939C;border-radius:20px;line-height:1.1}
  .site-header .hf-nav-group:has([aria-current=page])>summary{color:#F7F5EF;background:#247A77;border-color:#4FA7A3}
@@ -230,3 +230,23 @@ footer,footer a,.footer-note,.footer-meta,.footer-meta b,#summary,.price-row .pe
 /* Preserve the reference’s supporting line as live localized text. */
 .hf-home .hero-copy>[data-i18n="heroSub"]{display:block!important;position:absolute;inset-inline-start:150px;top:clamp(195px,14vw,222px);margin:0;width:42%;max-width:460px;font:400 18px/1.45 system-ui;color:#F7F5EF;text-shadow:0 1px 4px #102a43}
 @media(max-width:900px){.hf-home .hero-copy>[data-i18n="heroSub"]{inset-inline-start:23px;top:145px;width:52%;max-width:245px;font-size:12px;line-height:1.35}.hf-home .hero h1{font-size:30px}}
+/* The shared header owns its layout, including on guide and account pages. */
+header.site-header{position:relative;inset:auto;z-index:950;background:var(--hf-navy);color:var(--hf-paper);width:100%;max-width:none;margin:0;padding:0}
+header.site-header .sh-brand>.hf-wordmark{display:block;color:#F7F5EF;opacity:1;visibility:visible}
+header.site-header .sh-brand .hf-com{color:#E67B60}
+.site-header button svg{vertical-align:middle}
+@media(max-width:900px){
+ header.site-header[data-hf-menu-open=true] .sh-nav{display:grid;grid-template-columns:1fr 1fr;gap:6px;overflow:visible}
+ header.site-header[data-hf-menu-open=true] .sh-nav>a,header.site-header[data-hf-menu-open=true] .sh-nav summary{display:flex;justify-content:start;border-radius:9px;min-height:44px;padding:10px 14px;background:#193e50}
+ header.site-header[data-hf-menu-open=true] .hf-subnav{z-index:4}
+ header.site-header[data-hf-menu-open=true] .sh-tools,header.site-header[data-hf-menu-open=true] .sh-auth:not([hidden]){justify-content:flex-start;padding:6px 0}
+ header.site-header .hf-menu-toggle{width:44px;height:44px}
+}
+body:has(.site-header[data-hf-menu-open=true]) :is(.mimo-intro,.bc-mobile-welcome){visibility:hidden}
+.platinum-promo{background:var(--hf-surface);color:var(--hf-ink);border-color:var(--hf-teal)}
+#member .m-auth-pane,#member .m-perk-card,#member .m-journey,#member .m-shell{background:var(--hf-surface);color:var(--hf-ink);border-color:var(--hf-line)}
+#member .m-corp-bar{background:#102A43;color:#F7F5EF;border-radius:10px;padding:8px 12px}
+#member .m-corp-tag{color:#F7F5EF}
+#member .m-perk-art,#member .m-journey-max{color:var(--teal)}
+#member .m-perk-desc,#member .m-lead{color:var(--hf-muted)}
+header.site-header nav.sh-nav{max-width:none;margin:0}

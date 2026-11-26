@@ -1,23 +1,21 @@
 {
   "name": "Bosphorly",
   "short_name": "Bosphorly",
-  "description": "Istanbul, made simple — concept prototype",
+  "description": "Istanbul, made simple \u2014 concept prototype",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#081153",
-  "theme_color": "#081153",
+  "background_color": "#102A43",
+  "theme_color": "#102A43",
   "icons": [
     {
-      "src": "assets/brand/approved-icon.webp",
-      "sizes": "160x160",
-      "type": "image/webp",
-      "purpose": "any"
+      "src": "assets/high-fidelity/touch.png",
+      "type": "image/png",
+      "sizes": "180x180"
     },
     {
-      "src": "assets/brand/brandmark.svg",
-      "sizes": "any",
+      "src": "assets/high-fidelity/b-emblem.svg",
       "type": "image/svg+xml",
-      "purpose": "any"
+      "sizes": "any"
     }
   ]
 }

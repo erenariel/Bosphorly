@@ -6,7 +6,7 @@
   const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const platinumCopy = {
-    benefits: lang === 'tr' ? 'Platinum: günde 200 Mimo mesajı, öncelikli Free Upgrade, %10 VIP indirim, Platinum’a ulaşınca tek seferlik %10 hediye kupon (180 gün). Bir sonraki İstanbul ziyaretin için 1 günlük ücretsiz eSIM internet 🎁 (yakında)' : 'Platinum: 200 daily Mimo chats, priority Free Upgrade, 10% VIP discount and a one-time 10% gift coupon upon reaching Platinum (180 days). Free 1-day eSIM data for your next Istanbul visit 🎁 (coming soon)',
+    benefits: lang === 'tr' ? 'Platinum: günde 200 Mimo mesajı, öncelikli ücretsiz sınıf yükseltme, %10 VIP indirim, Platinum’a ulaşınca tek seferlik %10 hediye kupon (180 gün). Bir sonraki İstanbul ziyaretin için 1 günlük ücretsiz eSIM internet (yakında)' : 'Platinum: 200 daily Mimo chats, priority Free Upgrade, 10% VIP discount and a one-time 10% gift coupon upon reaching Platinum (180 days). Free 1-day eSIM data for your next Istanbul visit (coming soon)',
     join: lang === 'tr' ? 'Üye ol, turlarınla yüksel: Platinum’da günde 200 Mimo mesajı, %10 VIP indirim ve hediyeler.' : 'Join and rise with every tour: Platinum unlocks 200 daily Mimo chats, 10% VIP discount and gifts.',
     step: lang === 'tr' ? 'Bu tur seni Platinum’a 1 adım yaklaştırır.' : 'This tour brings you one step closer to Platinum.'
   };
@@ -48,7 +48,7 @@
   const withCurrency = host.dataset.currency !== 'off';
   const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['faq', 'faq.html']].concat(window.BOSPHORLY_API && window.BOSPHORLY_API.base ? [] : [['account', 'account.html']]);
   const header = document.createElement('header');
-  header.className = 'site-header';
+  header.className = 'site-header';header.dataset.base=base;
   header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/high-fidelity/b-emblem.svg" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span class="hf-wordmark" dir="ltr">Bosphorly<span class="hf-dotcom">.com</span><small>Your Intelligent Travel Companion in Istanbul.</small></span></a>' +
     '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div>' +
     '<div class="sh-auth" hidden><span class="sh-auth-perk">' + (L.perk[lang] || L.perk.en) + '</span><a class="sh-auth-btn in" href="' + base + 'account.html">' + ICON_IN + '<span>' + (L.signin[lang] || L.signin.en) + '</span></a><a class="sh-auth-btn up" href="' + base + 'account.html#signup">' + ICON_UP + '<span>' + (L.signup[lang] || L.signup.en) + '</span></a></div>' +
@@ -61,8 +61,8 @@
     nav.append(a);
   }
   const authBar = header.querySelector('.sh-auth');
-  const journey = platinumPromo('join-header', 'Silver → Gold → Platinum 💎 · ' + platinumCopy.join + ' ' + platinumCopy.benefits);
-  if (journey) (document.querySelector('main') || document.body).prepend(journey);
+  const journey = platinumPromo('join-header', (lang==='tr'?'Gümüş · Altın · Platinum · ':'Silver · Gold · Platinum · ') + platinumCopy.join + ' ' + platinumCopy.benefits);
+  if (journey && !host.dataset.compact) host.after(journey);
   const memberBar = header.querySelector('.sh-member');
   const nameEl = memberBar.querySelector('.sh-member-name');
   const tierEl = memberBar.querySelector('.sh-member-tier');

@@ -70,7 +70,7 @@
       note.className = 'bc-mobile-welcome';
       note.setAttribute('aria-live', 'polite');
       launcher.append(note);
-      note.textContent = (welcome[launcher.lang] || welcome.en) + ' 👋';
+      note.textContent = (welcome[launcher.lang] || welcome.en);
       if (!placeCornerNote(note, launcher)) note.hidden = true;
       avatar.classList.add('bc-mobile-hop');
       const events = new AbortController();
@@ -105,7 +105,7 @@
     bubble.setAttribute('aria-live','polite');
     intro.append(image, bubble);
     document.body.append(intro);
-    bubble.textContent = (welcome[launcher.lang] || welcome.en) + ' 👋';
+    bubble.textContent = (welcome[launcher.lang] || welcome.en);
     document.body.classList.add('mimo-introducing');
     const events = new AbortController();
     const options = {signal:events.signal, capture:true};
