@@ -364,7 +364,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
 if (location.hostname === 'bosphorly.com' &&
     !/^\/(?:extranet(?:\/|$)|(?:account|dashboard|partner|presentation|404)\.html$)/.test(location.pathname)) {
   const analytics = document.createElement('script');
-  analytics.src = new URL('../site-analytics.js', document.currentScript.src).href;
+  analytics.src = new URL('../site-analytics.js?v=20261126ads', document.currentScript.src).href;
   document.head.append(analytics);
 }
 
