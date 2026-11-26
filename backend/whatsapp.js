@@ -6,10 +6,10 @@ import {memberTierById} from './mimo.js';
 import {CHANNEL_POLICY,messageLanguage,boundaryIntent,channelText,unsafeReply,tidyReply,catalogReply,safeFallback,identityDiscount,bookingChange,wantsCityList,cityList} from './channel-policy.js';
 import {detectReplyLanguage} from './mimo-personality.js';
 import {captureMessage} from './message-store.js';
-import {deliverInquiryEmail} from './request-email.js';
 import { ASSISTANT_MESSAGES, ASSISTANT_MODEL, buildCatalogPrompt, retrieveChunks, detectLanguage, redactSensitive, isAffirmative, isHumanOrHandoffTopic, isServiceComplaint, isAbuseAgainstMimo, checkAndIncrementLimits, hashActorKey } from './assistant.js';
 
 const DAY = 86400;
+export const DEFAULT_TELNYX_MESSAGING_PROFILE_ID='4001a210-1b06-40b0-be85-2cc64e97452d';
 export const whatsappActor = (env,phone) => hashActorKey('wa:'+phone,env.CODE_PEPPER||'');
 const phoneOK = p => typeof p === 'string' && /^\+[1-9]\d{6,14}$/.test(p);
 export const maskPhone = p => `${String(p).slice(0,3)}•••${String(p).slice(-4)}`;
@@ -58,7 +58,7 @@ export async function sendWhatsApp(env, phone, reply, at, {skipMuteCheck=false,t
   if (Date.now()-at >= DAY*1000 || at > Date.now()+300000 || (!skipMuteCheck && await muted(env,phone))) {
     console.log(JSON.stringify({channel:'whatsapp',event:'send_suppressed',actor:await whatsappActor(env,phone)})); return false;
   }
-  const r = await fetch('https://api.telnyx.com/v2/messages/whatsapp',{method:'POST',signal:AbortSignal.timeout(Math.max(1,Math.floor(timeoutMs))),headers:{Authorization:`Bearer ${env.TELNYX_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({from:env.WHATSAPP_PHONE_NUMBER,to:phone,whatsapp_message:{type:'text',text:{body:redactSensitive(reply).text.split(/\n\s*\n/).slice(0,5).join('\n\n').slice(0,3000)}}})});
+  const r = await fetch('https://api.telnyx.com/v2/messages/whatsapp',{method:'POST',signal:AbortSignal.timeout(Math.max(1,Math.floor(timeoutMs))),headers:{Authorization:`Bearer ${env.TELNYX_API_KEY}`,'Content-Type':'application/json'},body:JSON.stringify({type:'WHATSAPP',from:env.WHATSAPP_PHONE_NUMBER,to:phone,messaging_profile_id:env.TELNYX_MESSAGING_PROFILE_ID||DEFAULT_TELNYX_MESSAGING_PROFILE_ID,whatsapp_message:{type:'text',text:{preview_url:false,body:redactSensitive(reply).text.split(/\n\s*\n/).slice(0,5).join('\n\n').slice(0,3000)}}})});
   if (!r.ok) {
     let providerCodes=[];
     try{providerCodes=(await r.json()).errors?.map(e=>String(e.code)).filter(code=>/^\d{3,6}$/.test(code)).slice(0,5)||[];}catch{}

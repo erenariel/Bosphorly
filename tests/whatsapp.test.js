@@ -144,3 +144,19 @@ test('signed webhook acknowledges immediately and its waitUntil task recovers fr
  const ack=await handleWhatsApp(new Request('https://api.example/webhooks/whatsapp/telnyx',{method:'POST',headers:{'telnyx-timestamp':ts,'telnyx-signature-ed25519':signature},body:raw}),f.env,{waitUntil:p=>waits.push(p)});
  assert.equal(ack.status,200);await Promise.all(waits);assert.equal(sent.length,1);assert.match(sent[0].whatsapp_message.text.body,/info@bosphorly.com/);assert.equal(f.controls.size,0);
 });
+
+test('WhatsApp send includes the Telnyx channel type and the verified messaging profile required by the non-SMS sender',async t=>{
+ const {DEFAULT_TELNYX_MESSAGING_PROFILE_ID}=await import('../backend/whatsapp.js');const f=fixture();let sent;
+ t.mock.method(globalThis,'fetch',async(_url,options)=>{sent={headers:options.headers,body:JSON.parse(options.body)};return Response.json({data:{id:'accepted'}});});
+ assert.equal(await sendWhatsApp(f.env,customer,'Hello',Date.now()),true);
+ assert.equal(sent.body.type,'WHATSAPP');assert.equal(sent.body.from,f.env.WHATSAPP_PHONE_NUMBER);assert.equal(sent.body.to,customer);
+ assert.equal(sent.body.messaging_profile_id,DEFAULT_TELNYX_MESSAGING_PROFILE_ID);assert.equal(DEFAULT_TELNYX_MESSAGING_PROFILE_ID,'4001a210-1b06-40b0-be85-2cc64e97452d');
+ assert.equal(sent.body.whatsapp_message.text.preview_url,false);assert.equal(sent.headers.Authorization,'Bearer test');
+ f.env.TELNYX_MESSAGING_PROFILE_ID='profile-for-a-different-environment';await sendWhatsApp(f.env,customer,'Hello',Date.now());assert.equal(sent.body.messaging_profile_id,f.env.TELNYX_MESSAGING_PROFILE_ID);
+});
+
+test('both normal and recovery sends use the same WhatsApp messaging profile',async t=>{
+ const f=fixture(),attempts=[];f.env.TELNYX_MESSAGING_PROFILE_ID='profile-test';f.env.AI.run=async()=>{throw Error('ai_timeout')};
+ t.mock.method(globalThis,'fetch',async(url,options)=>{if(String(url).includes('telnyx')){const body=JSON.parse(options.body);attempts.push(body);return body.type==='WHATSAPP'&&body.messaging_profile_id==='profile-test'?Response.json({data:{id:'accepted'}}):Response.json({errors:[{code:'10004'}]},{status:400});}return Response.json({ok:true});});
+ assert.equal(await processWhatsApp(f.env,parseWhatsApp(payload('Can you help me?','recovery-profile'),business)),true);assert.equal(attempts.length,1);assert.equal(attempts[0].messaging_profile_id,'profile-test');
+});
