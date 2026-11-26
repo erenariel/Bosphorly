@@ -950,7 +950,7 @@ test('375x667 RTL layout (he, ar, fa) keeps input in viewport, >=70% log area, a
   }
 });
 
-test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims history to 4, strips leaked tags, and shows happy Mimo on booking confirmation', async ({ page }) => {
+test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, retains bounded request history, strips leaked tags, and shows happy Mimo on booking confirmation', async ({ page }) => {
   await page.route('https://challenges.cloudflare.com/**', async (route) => {
     await route.fulfill({
       contentType: 'text/javascript',
@@ -1013,7 +1013,7 @@ test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims 
   // Client upper cap aborts stalling SSE cleanly and renders localized tryAgain
   await expect(panel.locator('.bc-msg.bot').last()).toContainText('martılar kafamı karıştırdı', { timeout: 3000 });
   await expect(panel.locator('.bc-send')).toBeEnabled();
-  expect(await page.evaluate(() => window.__capturedHistLens[0])).toBe(4);
+  expect(await page.evaluate(() => window.__capturedHistLens[0])).toBe(6);
 
   // Second turn verifies client strips any stray <|channel>thought or [[flags:...]]
   await panel.locator('.bc-input').fill('Favorin hangisi?');

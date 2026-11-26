@@ -125,3 +125,18 @@ test('0021 preserves existing booking requests and adds safe commission defaults
   assert.equal(db.prepare('SELECT refunded_minor FROM extranet_booking_meta').get().refunded_minor, 0);
   assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(), []);
 });
+
+test('0022 preserves data, grants existing Cafer staff admin with audit and leaves owner/disabled roles intact',()=>{
+ for(const [role,active,expected] of [['staff',1,'admin'],['owner',1,'owner'],['staff',0,'staff']]){
+  const db=new DatabaseSync(':memory:');const {sqlFiles}=collectDefinedTables();
+  for(const file of sqlFiles.filter(f=>f<'0022'))db.exec(readFileSync(join(MIGRATIONS_DIR,file),'utf8'));
+  db.exec(`INSERT INTO members(id,email,referral_code) VALUES('cafer','cafer@bosphorly.com','CAF');`);
+  db.prepare('INSERT INTO extranet_users(member_id,role,active) VALUES(?,?,?)').run('cafer',role,active);
+  db.exec(`INSERT INTO extranet_messages(id,source,subject,body,created_at,expires_at) VALUES('old','form','Old','Private body','2026-11-01','2099-01-01');`);
+  db.exec(readFileSync(join(MIGRATIONS_DIR,'0022_support_requests.sql'),'utf8'));
+  assert.equal(db.prepare("SELECT body FROM extranet_messages WHERE id='old'").get().body,'Private body');
+  assert.equal(db.prepare("SELECT role FROM extranet_users WHERE member_id='cafer'").get().role,expected);
+  assert.equal(db.prepare("SELECT COUNT(*) n FROM extranet_audit WHERE action='support_admin_bootstrap'").get().n,expected==='admin'?1:0);
+  assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);
+ }
+});

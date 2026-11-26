@@ -1,3 +1,4 @@
+import {retrySupportEmails} from './support-requests.js';
 import {withConsoleRuntime} from './console-runtime.js';
 import {publicCatalog} from './extranet-catalog.js';
 import {captureMessage,cleanupInbox,redactCards} from './message-store.js';
@@ -142,6 +143,7 @@ export default {async fetch(request,env,ctx) {
 },
 async scheduled(event, env, ctx) {
  ctx.waitUntil(cleanupInbox(env));
+ ctx.waitUntil(retrySupportEmails(env).catch(()=>console.error(JSON.stringify({event:"support_retry_failed"}))));
  if (event.cron === '0 * * * *') { ctx.waitUntil(purgeWhatsApp(env)); return; }
  const job = sendWeeklyMimoReport(env);
  if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(job);

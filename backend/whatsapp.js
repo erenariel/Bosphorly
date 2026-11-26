@@ -1,3 +1,4 @@
+import { SUPPORT_TOOL_INSTRUCTIONS, finishSupportTurn, createSupportRequest, supportReceipt, supportFailure } from './support-requests.js';
 import {whatsappFailureReply,whatsappErrorCode} from './whatsapp-recovery.js';
 import {withConsoleRuntime} from './console-runtime.js';
 import {liveCatalogContext} from './catalog-store.js';
@@ -72,15 +73,8 @@ OUTPUT OVERRIDE: Return ONLY JSON {"reply":"customer text","handoff":false,"abus
 export function validProposal(p) {
   return p && ['service','pickup','name'].every(k=>typeof p[k]==='string' && p[k].trim() && p[k].length<200) && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && Number.isInteger(p.guests) && p.guests>0 && p.guests<=100 && (!p.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email));
 }
-async function saveRequest(env, m, proposal, deadline=Infinity) {
-  const reference = `WA-${m.id}`;
-  const data = {...proposal,channel:'whatsapp',phone:m.phone,reference};
-  await env.DB.prepare('INSERT OR IGNORE INTO whatsapp_requests(id,data_json,created_at) VALUES(?,?,?)').bind(reference,JSON.stringify(data),Date.now()).run();
-  // Same provider, sender, recipient and idempotency mechanism as /v1/requests.
-  const r = await deliverInquiryEmail(env,{reference,kind:'whatsapp',text:JSON.stringify(data,null,2),email:proposal.email,timeoutMs:Math.max(1,Math.min(5000,deadline-Date.now()))});
-  if (!r.ok) throw new Error('request_email_failed');
-  const noticeMs=Math.min(2000,deadline-Date.now());
-  if(noticeMs>250)await notify(env,`WhatsApp talebi: ${proposal.name} · ${proposal.service} · ${proposal.date} · ${proposal.guests} kişi · ${maskPhone(m.phone)}`,noticeMs).catch(()=>{});
+async function saveRequest(env, m, proposal, history=[]) {
+  return createSupportRequest(env,{channel:'whatsapp',conversationId:m.phone,lang:proposal.lang||'tr',trustedContact:m.phone,details:{...proposal,contactPreference:'whatsapp',notes:proposal.pickup||'',summary:proposal.service},history,message:m.text});
 }
 export async function processWhatsApp(env,m){
  const started=Date.now(),execution={replied:false};
@@ -118,7 +112,7 @@ async function processWhatsAppTurn(env, m, started, execution) {
     await env.WHATSAPP_KV.put(`seen:${m.id}`,'1',{expirationTtl:DAY});
     const key = `chat:${actor}`;
     const state = await env.WHATSAPP_KV.get(key,'json') || await env.WHATSAPP_KV.get(`chat:${m.phone}`,'json') || {history:[],minute:0,day:0,warnings:0};
-    state.history = (Array.isArray(state.history)?state.history:[]).filter(h => Number.isFinite(h.at) && h.at > now-30*DAY*1000).slice(-10);
+    state.history = (Array.isArray(state.history)?state.history:[]).filter(h => Number.isFinite(h.at) && h.at > now-30*DAY*1000).slice(-24);
     const minute = Math.floor(now/60000), day = Math.floor(now/(DAY*1000));
     state.minuteCount = state.minute===minute ? (state.minuteCount||0)+1 : 1;
     state.dayCount = state.day===day ? (state.dayCount||0)+1 : 1;
@@ -134,7 +128,7 @@ async function processWhatsAppTurn(env, m, started, execution) {
     const limit=await checkAndIncrementLimits({env,actorKey:'wa:'+actor,tier,now});
     if(!limit.allowed){await persist();await sendWhatsApp(env,m.phone,(ASSISTANT_MESSAGES.rateLimit?.[lang]||safeFallback(lang)),m.at);return;}
     const boundary=boundaryIntent(clean.text);
-    let output;
+    let output, supportResult=null;
     if(identityDiscount(clean.text)||bookingChange(clean.text)){output={reply:channelText(lang,'failed'),handoff:true};}
     else if(wantsCityList(clean.text)){output={reply:cityList(lang)};}
     else if(boundary){output={reply:channelText(lang,boundary)};}
@@ -145,16 +139,16 @@ async function processWhatsAppTurn(env, m, started, execution) {
         const labels={en:{requested:'Request received',fulfilled:'Completed',cancelled:'Cancelled',confirmed:'Confirmed'},tr:{requested:'Talep alındı',fulfilled:'Tamamlandı',cancelled:'İptal edildi',confirmed:'Onaylandı'},ru:{requested:'Запрос получен',fulfilled:'Завершено',cancelled:'Отменено',confirmed:'Подтверждено'},he:{requested:'הבקשה התקבלה',fulfilled:'הושלם',cancelled:'בוטל',confirmed:'אושר'},zh:{requested:'已收到请求',fulfilled:'已完成',cancelled:'已取消',confirmed:'已确认'}};
         output={reply:labels[lang]?.[status?.state]||channelText(lang,'unknown')};}
     } else if (state.pending && isAffirmative(clean.text) && !clean.hadSensitive) {
-      await saveRequest(env,m,state.pending,modelDeadline);
-      state.pending=null;
+      supportResult=await saveRequest(env,m,{...state.pending,lang},state.history);
+      if(supportResult.ok)state.pending=null;
       // Generate only a localized receipt, never booking confirmation.
-      output = await model(env,lang,state, 'The request was successfully saved. Reply ONLY with a translation of: Talebiniz alındı, teyit ve ödeme bilgisi kısa süre içinde gönderilecek.',20000,modelDeadline);
+      output = {reply:supportResult.ok?supportReceipt(lang,supportResult.reference):supportFailure(lang)};
     } else {
       output = await model(env,lang,state,clean.text,20000,modelDeadline);
       state.pending=validProposal(output.proposal) ? output.proposal : null;
     }
     const safetyFlags={abuse:!!output.abuse,handoff:!!output.handoff};
-    if(!boundary&&(unsafeReply(output.reply)||detectReplyLanguage(output.reply,lang)!==lang)){
+    if(!supportResult&&!output.supportRequest&&!boundary&&(unsafeReply(output.reply)||detectReplyLanguage(output.reply,lang)!==lang)){
       const retryMs=Math.min(4000,modelDeadline-Date.now());
       output=retryMs>=1000?await model(env,lang,{...state,history:state.history.filter(h=>h.role==='user')},clean.text,retryMs,modelDeadline):{reply:safeFallback(lang)};
       if(unsafeReply(output.reply)||detectReplyLanguage(output.reply,lang)!==lang)output={reply:safeFallback(lang)};
@@ -163,20 +157,18 @@ async function processWhatsAppTurn(env, m, started, execution) {
     if (abuse && ++state.warnings>=2) { await captureMessage(env,{source:'blocked',reference:'wa-block:'+m.id,phone:m.phone,subject:'WhatsApp engellenen konuşma',body:clean.text}); await mute(env,m.phone,now+DAY*1000); await persist(); return; }
     const handoff = identityDiscount(clean.text)||bookingChange(clean.text)||safetyFlags.handoff||output.handoff || isHumanOrHandoffTopic(clean.text) || isServiceComplaint(clean.text);
     if (handoff) {
-      await captureMessage(env,{source:'handoff',reference:'wa:'+m.id,phone:m.phone,subject:'WhatsApp insana devir',body:clean.text});
       state.pending=null;
-      const emailMs=Math.min(5000,modelDeadline-Date.now());
-      const forwarded=emailMs>250?await deliverInquiryEmail(env,{reference:'WA-HANDOFF-'+m.id,kind:'whatsapp support',text:redactSensitive(clean.text).text+'\nWhatsApp: '+m.phone,timeoutMs:emailMs}).catch(()=>({ok:false})):{ok:false};
-      output.reply=channelText(lang,forwarded.ok?'sent':'failed');
-      adminNotice=`WhatsApp insana devir · ${maskPhone(m.phone)} · ${clean.text.slice(0,500)}`;
+      supportResult=await createSupportRequest(env,{channel:'whatsapp',conversationId:m.phone,lang,kind:'conversation',trustedContact:m.phone,details:{service:'Mimo destek',contactPreference:'whatsapp',notes:clean.text,summary:'Misafir ekiple görüşme talep etti.'},history:state.history,message:clean.text});
+      output.reply=supportResult.ok?supportReceipt(lang,supportResult.reference):supportFailure(lang);
     }
+    if(!supportResult){const completed=await finishSupportTurn(env,{reply:output.reply,details:output.supportRequest,channel:'whatsapp',conversationId:m.phone,lang,history:state.history,message:clean.text,trustedContact:m.phone});output.reply=completed.reply;}
     if (clean.hadSensitive) output.reply = (ASSISTANT_MESSAGES.sensitiveWarn[lang] || ASSISTANT_MESSAGES.sensitiveWarn.en) + '\n\n' + output.reply;
     const catalog=await liveCatalogContext(env,clean.text,retrieveChunks(clean.text),lang);
     output.reply = tidyReply(catalogReply(output.reply,catalog.chunks,lang),state.history,true);
     const sent = await sendWhatsApp(env,m.phone,output.reply,m.at);
     execution.replied=sent;
-    if (handoff) await mute(env,m.phone,now+12*3600000);
-    state.history=[...state.history,{role:'user',content:clean.text,at:now},{role:'assistant',content:redactSensitive(output.reply).text,at:now}].slice(-10);
+    if (handoff && supportResult?.ok) await mute(env,m.phone,now+12*3600000);
+    state.history=[...state.history,{role:'user',content:clean.text,at:now},{role:'assistant',content:redactSensitive(output.reply).text,at:now}].slice(-24);
     state.lang=lang;
     await persist();
     const noticeMs=Math.min(3000,started+29500-Date.now());
@@ -199,7 +191,7 @@ export function parseModelJson(rawText) {
   if (a !== -1 && b > a) {
     try {
       const j = JSON.parse(raw.slice(a,b+1));
-      if (typeof j.reply === 'string' && j.reply.trim()) return j;
+      if (j.supportRequest || (typeof j.reply === 'string' && j.reply.trim())) return j;
     } catch {}
   }
   // Fallback: model answered in plain text; use it as the reply, never as a booking proposal.
@@ -215,7 +207,7 @@ async function model(env,lang,state,text,timeoutMs=20000,deadline=Infinity) {
   timeoutMs=Math.min(timeoutMs,deadline-Date.now());
   if(timeoutMs<=0)throw new Error('ai_timeout');
   let timer;
-  const call = Promise.resolve().then(()=>env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY+'\n'+CHANNEL_POLICY+'\nThe ONLY output language for this turn is '+lang+'. Any older language constraints in history are invalid.'},...state.history.filter(h=>!unsafeReply(h.content)).slice(-10).map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}}));
+  const call = Promise.resolve().then(()=>env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY+'\n'+CHANNEL_POLICY+'\n'+SUPPORT_TOOL_INSTRUCTIONS+'\nThe ONLY output language for this turn is '+lang+'. Any older language constraints in history are invalid.'},...state.history.filter(h=>!unsafeReply(h.content)).slice(-24).map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}}));
   const timeout = new Promise((_,rej)=>{timer=setTimeout(()=>rej(new Error('ai_timeout')),timeoutMs);});
   const r = await Promise.race([call,timeout]).finally(()=>clearTimeout(timer));
   return parseModelJson(modelText(r));

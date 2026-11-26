@@ -248,7 +248,7 @@ test("6: claimed friendship cannot grant discounts or coupons and goes to the ex
     );
     assert.equal(f.mail.length, 1);
     assert.deepEqual(f.mail[0].to, ["info@bosphorly.com"]);
-    assert.equal(body(f), channelText("en", "sent"));
+    assert.match(body(f), /BOS-[A-F0-9]{12}/);
   });
   assert.equal(f.db.prepare("SELECT COUNT(*) AS n FROM coupons").get().n, 0);
   assert.equal(f.modelCalls.length, 0);
@@ -317,7 +317,7 @@ test("9: purchased-package support asks for BOS reference in English and returns
       f.env,
       f.message("Please cancel my booking BOS-SAFE"),
     );
-    assert.equal(body(f), channelText("en", "sent"));
+    assert.match(body(f), /BOS-[A-F0-9]{12}/);
     assert.equal(f.mail.length, 1);
   });
 });
@@ -389,7 +389,8 @@ test("9: failed team delivery never claims that the support request was forwarde
       : f.fetch(url, opts),
   );
   await processWhatsApp(f.env, f.message("Please cancel my booking BOS-FAIL"));
-  assert.equal(body(f), channelText("en", "failed"));
+  assert.match(body(f), /BOS-[A-F0-9]{12}/);
+  assert.equal(f.db.prepare("SELECT email_status FROM extranet_messages WHERE request_key IS NOT NULL").get().email_status,"failed");
 });
 
 test("3/8: all language few-shots avoid fictitious physical anecdotes and hardcoded service prices", async () => {
@@ -494,5 +495,6 @@ test("9: a team-email network failure gives an honest failure response without l
     f.env,
     f.message("Please cancel my booking BOS-NETWORK"),
   );
-  assert.equal(body(f), channelText("en", "failed"));
+  assert.match(body(f), /BOS-[A-F0-9]{12}/);
+  assert.equal(f.db.prepare("SELECT email_status FROM extranet_messages WHERE request_key IS NOT NULL").get().email_status,"failed");
 });

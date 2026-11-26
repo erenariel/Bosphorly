@@ -555,7 +555,7 @@ export async function stage2Routes(request, env, url, nowMs, h) {
         ...args,
       ),
       items = await rows(
-        "SELECT id,source,channel,assigned_to,subject,status,name,email,created_at FROM extranet_messages " +
+        "SELECT id,source,channel,assigned_to,subject,status,name,email,created_at,email_status,email_attempts FROM extranet_messages " +
           where +
           " ORDER BY CASE WHEN source='handoff' AND status NOT IN('replied','archived') THEN 0 ELSE 1 END,created_at DESC LIMIT 20 OFFSET ?",
         ...args,
@@ -587,6 +587,7 @@ export async function stage2Routes(request, env, url, nowMs, h) {
       await log("view_message", "message", id, null, null).run();
       return respond({
         ...m,
+        support_json: undefined, request_key: undefined, conversation_hash: undefined,
         body: pii(m.body),
         subject: pii(m.subject),
         email: maskEmail(m.email),

@@ -1,3 +1,4 @@
+import {supportReceipt,supportFailure} from './support-requests.js';
 import {withConsoleRuntime} from './console-runtime.js';
 import {messageLanguage} from './channel-policy.js';
 import {adminWhatsApp} from './whatsapp.js';
@@ -306,7 +307,7 @@ async function getState(env, chatId, now = Date.now()) {
 
 async function saveState(env, chatId, pendingHandoff, lang, history, now = Date.now()) {
   if (!env.DB) return;
-  const trimmed = (Array.isArray(history) ? history : []).slice(-4);
+  const trimmed = (Array.isArray(history) ? history : []).slice(-24);
   const mode = typeof pendingHandoff === 'number' ? pendingHandoff : (pendingHandoff ? 1 : 0);
   await env.DB.prepare(
     `INSERT INTO telegram_handoff_state (chat_id, pending_handoff, lang, context_json, updated_at)
@@ -450,10 +451,10 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
       history: state.history,
       message: text,
       source: 'telegram',
-      meta: { telegramUser: tgUser },
+      meta: { telegramUser: tgUser,conversationId:String(chatId) },
     });
     await clearState(env, chatId);
-    await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', state.lang || lang) : t('forwardFailed', state.lang || lang));
+    await sendTelegramMessage(env, chatId, forwarded.ok ? supportReceipt(state.lang||lang,forwarded.reference) : supportFailure(state.lang||lang));
     return new Response(JSON.stringify({ ok: true, forwarded: forwarded.ok }), { status: 200 });
   }
 
@@ -469,10 +470,10 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
           history: state.history,
           message: text,
           source: 'telegram',
-          meta: { telegramUser: tgUser },
+          meta: { telegramUser: tgUser,conversationId:String(chatId) },
         });
         await clearState(env, chatId);
-        await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', activeLang) : t('forwardFailed', activeLang));
+        await sendTelegramMessage(env, chatId, forwarded.ok ? supportReceipt(activeLang,forwarded.reference) : supportFailure(activeLang));
         return new Response(JSON.stringify({ ok: true, handoff: true, forwarded: forwarded.ok }), { status: 200 });
       }
       await saveState(env, chatId, 1, activeLang, state.history, now);
@@ -485,7 +486,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
         ...state.history,
         { role: 'user', content: redactSensitive(text).text },
         { role: 'assistant', content: reply },
-      ].slice(-4);
+      ].slice(-24);
       await saveState(env, chatId, 0, activeLang, nextHistory, now);
       await sendTelegramMessage(env, chatId, reply);
       return new Response(JSON.stringify({ ok: true, handoff: false }), { status: 200 });
@@ -534,7 +535,7 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
     ...history,
     { role: 'user', content: cleanUser },
     { role: 'assistant', content: res.reply, languagePreference:language.preference },
-  ].slice(-4);
+  ].slice(-24);
 
   if (res.handoffOffer) {
     await saveState(env, chatId, 2, res.lang || lang, nextHistory, now);
@@ -552,10 +553,10 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
         history,
         message: cleanUser,
         source: 'telegram',
-        meta: { telegramUser: tgUser },
+        meta: { telegramUser: tgUser,conversationId:String(chatId) },
       });
       await clearState(env, chatId);
-      await sendTelegramMessage(env, chatId, forwarded.ok ? t('forwarded', res.lang || lang) : t('forwardFailed', res.lang || lang));
+      await sendTelegramMessage(env, chatId, forwarded.ok ? supportReceipt(res.lang||lang,forwarded.reference) : supportFailure(res.lang||lang));
       return new Response(JSON.stringify({ ok: true, handoff: true, forwarded: forwarded.ok }), { status: 200 });
     }
     await saveState(env, chatId, 1, res.lang || lang, nextHistory, now);

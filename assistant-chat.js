@@ -163,8 +163,13 @@
   } catch {
     sessionId = 's_' + Math.random().toString(36).slice(2, 10);
   }
+  const requestHistory = () => {
+    const recent = history.slice(-24).map(h => ({...h, content:String(h.content||'').slice(0,400)}));
+    while (recent.length && new TextEncoder().encode(JSON.stringify(recent)).byteLength > 9000) recent.shift();
+    return recent;
+  };
   const saveHistory = () => {
-    try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-12))); } catch {}
+    try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-24))); } catch {}
   };
   let chatSession = '';
   try { chatSession = sessionStorage.getItem(CHAT_SESSION_KEY) || ''; } catch { chatSession = ''; }
@@ -847,7 +852,7 @@
     sendBtn.disabled = true;
     showTyping();
     const CLIENT_CAP_MS = Number(window.__BOSPHORLY_MIMO_CAP_MS) > 0 ? Number(window.__BOSPHORLY_MIMO_CAP_MS) : 25000;
-    const recent = history.slice(-4);
+    const recent = requestHistory();
     const abortCtrl = typeof AbortController === 'function' ? new AbortController() : null;
     const capTimer = setTimeout(() => {
       if (abortCtrl) abortCtrl.abort(new Error('stream_timeout'));
@@ -1232,7 +1237,7 @@
     const postHandoff = (authPayload) => fetch(`${apiBase}/v1/assistant/handoff`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, lang, history: history.slice(-4), sessionId, ...authPayload }),
+      body: JSON.stringify({ email, lang, history: requestHistory(), sessionId, ...authPayload }),
     });
     try {
       let res;
