@@ -632,6 +632,7 @@ test('assistant handoff forwards conversation to info@bosphorly.com with Reply-T
   });
   const res = await worker.fetch(req, baseEnv({DB:supportDb()}));
   assert.equal(res.status, 202);
+  const receipt=await res.json();assert.ok(receipt.reply.includes(receipt.reference));
   assert.deepEqual(sent.to, ['info@bosphorly.com']);
   assert.equal(sent.reply_to, undefined); // Team replies are managed from the durable inbox.
   assert.ok(!sent.text.includes('4532123456789012'));

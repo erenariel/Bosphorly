@@ -282,7 +282,7 @@ test('all Telegram links stay hidden when telegramBot in config/api.js is empty'
 test('email handoff stays out of DOM until requested, opens inline under matching Mimo reply, and closes/hides quick actions on mobile after first message', async ({ page }) => {
   let calls = 0;
   await page.route('**/v1/assistant/handoff', async (route) => {
-    await route.fulfill({ status: 202, contentType: 'application/json', body: JSON.stringify({ accepted: true, reference: 'BOS-CARD-1' }) });
+    await route.fulfill({ status: 202, contentType: 'application/json', body: JSON.stringify({ accepted: true, reference: 'BOS-CARD-1', reply:'Talebini aldım, referans numaran BOS-CARD-1.' }) });
   });
   await page.route('**/v1/assistant', async (route) => {
     calls += 1;
@@ -562,7 +562,7 @@ test('Turnstile renders interaction-only in hidden footer container, stays invis
   });
   await page.route('**/v1/assistant/handoff', async (route) => {
     handoffPayloads.push(route.request().postDataJSON());
-    await route.fulfill({ status: 202, contentType: 'application/json', body: JSON.stringify({ accepted: true, reference: 'BOS-CHAT-1' }) });
+    await route.fulfill({ status: 202, contentType: 'application/json', body: JSON.stringify({ accepted: true, reference: 'BOS-CHAT-1', reply:'Talebini aldım, referans numaran BOS-CHAT-1.' }) });
   });
   await page.route('**/v1/assistant', async (route) => {
     const body = route.request().postDataJSON();
@@ -680,6 +680,7 @@ test('Turnstile renders interaction-only in hidden footer container, stays invis
   await expect.poll(() => handoffPayloads.length).toBe(1);
   expect(handoffPayloads[0].chatSession).toBe('sess-1');
   expect(handoffPayloads[0].turnstileToken).toBeUndefined();
+  await expect(panel.locator('.bc-msg.bot').last()).toContainText('BOS-CHAT-1');
 
   // Now simulate expired/invalid chatSession on message 4: server returns 403 once, client resets Turnstile silently and retries
   await page.unroute('**/v1/assistant');

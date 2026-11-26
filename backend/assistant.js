@@ -1,4 +1,4 @@
-import { SUPPORT_TOOL_INSTRUCTIONS, finishSupportTurn, unsupportedClaim, unsupportedReply, createSupportRequest } from './support-requests.js';
+import { SUPPORT_TOOL_INSTRUCTIONS, finishSupportTurn, unsupportedClaim, unsupportedReply, createSupportRequest, supportReceipt, supportFailure } from './support-requests.js';
 import {liveCatalogContext} from './catalog-store.js';
 import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
@@ -2970,8 +2970,8 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
       source: 'web',
       meta:{conversationId:cleanSessionId||`ip:${ip}`},
     });
-    if (!forwarded.ok) return jsonResp({ error: forwarded.error }, forwarded.status);
-    const acceptedBody = { accepted: true, reference: forwarded.reference };
+    if (!forwarded.ok) return jsonResp({ error: forwarded.error, reply:supportFailure(body.lang) }, forwarded.status);
+    const acceptedBody = { accepted: true, reference: forwarded.reference, reply:supportReceipt(body.lang,forwarded.reference) };
     if (auth.chatSession) acceptedBody.chatSession = auth.chatSession;
     return jsonResp(acceptedBody, 202);
   }
