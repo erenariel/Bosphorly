@@ -64,7 +64,8 @@
     stopSpeak: { tr:'Okumayı durdur', en:'Stop reading', ru:'Остановить чтение', uk:'Зупинити читання', de:'Vorlesen stoppen', fr:'Arrêter la lecture', nl:'Stop met voorlezen', ar:'إيقاف القراءة', he:'עצירת ההקראה', az:'Oxumağı dayandır', fa:'توقف خواندن', es:'Detener lectura', it:'Interrompi lettura', pt:'Parar leitura', hr:'Zaustavi čitanje', hu:'Felolvasás leállítása', bs:'Zaustavi čitanje', zh:'停止朗读', ja:'読み上げを停止', ko:'읽기 중지', hi:'पढ़ना रोकें', bn:'পড়া বন্ধ করুন', id:'Hentikan pembacaan' },
     noVoiceDevice: { tr:'Bu dilde cihazında ses yok', en:'No voice available on your device for this language', ru:'На устройстве нет голоса для этого языка', uk:'На пристрої немає голосу для цієї мови', de:'Auf deinem Gerät ist keine Stimme für diese Sprache verfügbar', fr:'Aucune voix disponible sur votre appareil pour cette langue', nl:'Geen stem beschikbaar op je apparaat voor deze taal', ar:'لا يتوفر صوت لهذه اللغة على جهازك', he:'אין קול זמין במכשיר שלך לשפה זו', az:'Cihazınızda bu dil üçün səs yoxdur', fa:'صدایی برای این زبان روی دستگاه شما موجود نیست', es:'No hay una voz disponible en tu dispositivo para este idioma', it:'Nessuna voce disponibile sul tuo dispositivo per questa lingua', pt:'Nenhuma voz disponível no seu dispositivo para este idioma', hr:'Na tvom uređaju nema glasa za ovaj jezik', hu:'Nincs elérhető hang az eszközödön ehhez a nyelvhez', bs:'Na tvom uređaju nema glasa za ovaj jezik', zh:'你的设备上没有此语言的语音', ja:'この言語の音声はこの端末にありません', ko:'이 기기에서 이 언어의 음성을 사용할 수 없습니다', hi:'आपके डिवाइस पर इस भाषा के लिए कोई आवाज़ उपलब्ध नहीं है', bn:'এই ভাষার জন্য আপনার ডিভাইসে কোনো ভয়েস নেই', id:'Tidak ada suara di perangkatmu untuk bahasa ini' },
     remember: { tr:'Mimo konuşma tarzımı ve ilgi alanlarımı hatırlasın 💙', en:'Let Mimo remember my tone and interests 💙', ru:'Пусть Mimo запоминает мой тон и интересы 💙', uk:'Нехай Mimo запам’ятовує мій стиль і інтереси 💙', de:'Mimo darf meinen Ton und meine Interessen merken 💙', fr:'Mimo peut retenir mon ton et mes centres d’intérêt 💙', nl:'Mimo mag mijn toon en interesses onthouden 💙', ar:'ليتذكر Mimo أسلوب حديثي واهتماماتي 💙', he:'ש־Mimo יזכור את סגנון הדיבור ואת תחומי העניין שלי 💙', az:'Mimo danışıq tərzimi və maraqlarımı xatırlasın 💙', fa:'Mimo لحن گفتگو و علاقه‌هایم را به خاطر بسپارد 💙', es:'Que Mimo recuerde mi tono y mis intereses 💙', it:'Mimo ricordi il mio tono e i miei interessi 💙', pt:'O Mimo pode lembrar o meu tom e os meus interesses 💙', hr:'Neka Mimo zapamti moj ton i interese 💙', hu:'A Mimo emlékezzen a hangnememre és az érdeklődésemre 💙', bs:'Neka Mimo zapamti moj ton i interese 💙', zh:'让 Mimo 记住我的说话风格和兴趣 💙', ja:'Mimoに話し方と興味を覚えておいてほしい 💙', ko:'Mimo가 내 말투와 관심사를 기억하도록 허용 💙', hi:'Mimo मेरी बातचीत की शैली और रुचियाँ याद रखे 💙', bn:'Mimo যেন আমার কথার ধরন ও আগ্রহ মনে রাখে 💙', id:'Biarkan Mimo mengingat gaya bicara dan minat saya 💙' },
-    rememberNo: { tr:'Şimdi değil', en:'Not now', ru:'Не сейчас', uk:'Не зараз', de:'Nicht jetzt', fr:'Pas maintenant', nl:'Niet nu', ar:'ليس الآن', he:'לא עכשיו', az:'İndi yox', fa:'حالا نه', es:'Ahora no', it:'Non ora', pt:'Agora não', hr:'Ne sada', hu:'Most nem', bs:'Ne sada', zh:'暂时不要', ja:'今はしない', ko:'지금은 아니요', hi:'अभी नहीं', bn:'এখন নয়', id:'Jangan sekarang' }
+    rememberNo: { tr:'Şimdi değil', en:'Not now', ru:'Не сейчас', uk:'Не зараз', de:'Nicht jetzt', fr:'Pas maintenant', nl:'Niet nu', ar:'ليس الآن', he:'לא עכשיו', az:'İndi yox', fa:'حالا نه', es:'Ahora no', it:'Non ora', pt:'Agora não', hr:'Ne sada', hu:'Most nem', bs:'Ne sada', zh:'暂时不要', ja:'今はしない', ko:'지금은 아니요', hi:'अभी नहीं', bn:'এখন নয়', id:'Jangan sekarang' },
+    maintenance: { tr:'Şu an bakımdayız, bize info@bosphorly.com adresinden ulaşabilirsiniz.', en:'We are currently under maintenance; you can reach us at info@bosphorly.com.', ru:'Сейчас ведутся технические работы; вы можете связаться с нами по адресу info@bosphorly.com.', uk:'Зараз тривають технічні роботи; ви можете зв’язатися з нами за адресою info@bosphorly.com.', de:'Wir führen gerade Wartungsarbeiten durch; Sie erreichen uns unter info@bosphorly.com.', fr:'Nous sommes actuellement en maintenance ; vous pouvez nous contacter à info@bosphorly.com.', nl:'We voeren momenteel onderhoud uit; u kunt ons bereiken via info@bosphorly.com.', ar:'نحن في وضع الصيانة حاليًا؛ يمكنكم التواصل معنا عبر info@bosphorly.com.', he:'אנחנו כעת בתחזוקה; ניתן לפנות אלינו בכתובת info@bosphorly.com.', az:'Hazırda texniki baxımdayıq, bizimlə info@bosphorly.com ünvanından əlaqə saxlaya bilərsiniz.', fa:'در حال حاضر در وضعیت تعمیرات هستیم؛ می‌توانید از طریق info@bosphorly.com با ما در تماس باشید.', es:'Estamos en mantenimiento en este momento; puedes contactarnos en info@bosphorly.com.', it:'Siamo attualmente in manutenzione; puoi contattarci a info@bosphorly.com.', pt:'Estamos em manutenção no momento; você pode entrar em contato pelo info@bosphorly.com.', hr:'Trenutačno smo u održavanju; možete nam se javiti na info@bosphorly.com.', hu:'Jelenleg karbantartást végzünk; az info@bosphorly.com címen érhet el minket.', bs:'Trenutno smo na održavanju; možete nam se javiti na info@bosphorly.com.', zh:'我们目前正在维护中，您可以通过 info@bosphorly.com 联系我们。', ja:'ただいまメンテナンス中です。info@bosphorly.com までご連絡ください。', ko:'현재 점검 중입니다. info@bosphorly.com으로 문의해 주세요.', hi:'हम अभी रखरखाव में हैं; आप हमसे info@bosphorly.com पर संपर्क कर सकते हैं।', bn:'আমরা এখন রক্ষণাবেক্ষণে আছি; আমাদের সাথে info@bosphorly.com-এ যোগাযোগ করতে পারেন।', id:'Saat ini kami sedang dalam pemeliharaan; Anda dapat menghubungi kami di info@bosphorly.com.' }
   };
   const tr = (k) => (UI[k] && (UI[k][lang] || UI[k].en)) || '';
   const SPEECH_LOCALES = { ar:'ar-SA', az:'az-AZ', bn:'bn-BD', bs:'bs-BA', de:'de-DE', en:'en-US', es:'es-ES', fa:'fa-IR', fr:'fr-FR', he:'he-IL', hi:'hi-IN', hr:'hr-HR', hu:'hu-HU', id:'id-ID', it:'it-IT', ja:'ja-JP', ko:'ko-KR', nl:'nl-NL', pt:'pt-PT', ru:'ru-RU', tr:'tr-TR', uk:'uk-UA', zh:'zh-CN' };
@@ -427,7 +428,7 @@
       if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
       const host = u.hostname.toLowerCase();
       if (host === 'bosphorly.com' || host === 'www.bosphorly.com') return true;
-      if (host === 't.me' && /^\/BosphorlyBot\/?$/i.test(u.pathname)) return true;
+      if (host === 't.me' && /^\/BosphorlyBot\/?$/i.test(u.pathname)) return document.documentElement.getAttribute('data-ch-tg') !== 'off';
       return false;
     } catch {
       return false;
@@ -613,7 +614,7 @@
       row.appendChild(div);
     }
     logEl.appendChild(row);
-    if (isFirstBotMsg && !kindNoteSeen && !history.length && !logEl.querySelector('.bc-kind-note')) {
+    if (isFirstBotMsg && !opts.maintenance && !kindNoteSeen && !history.length && !logEl.querySelector('.bc-kind-note')) {
       const note = document.createElement('div');
       note.className = 'bc-kind-note';
       note.textContent = tr('kindNote');
@@ -685,6 +686,58 @@
     if (!headAvatar.classList.contains('bc-speaking')) {
       headAvatar.src = mimoSrc('happy');
       headAvatar.dataset.state = 'happy';
+    }
+  }
+
+  let isMaintenance = false;
+  const actionsWrapEl = panel.querySelector('.bc-actions');
+  function syncMaintenanceMode(off, customMsg) {
+    const nextOff = Boolean(off);
+    if (nextOff) {
+      isMaintenance = true;
+      panel.dataset.maintenance = 'true';
+      panel.classList.add('bc-is-maintenance');
+      stopSpeaking();
+      if (panel.querySelector('.bc-mic.listening')) stopDictation();
+      removeHandoffCard();
+      if (!history.length) {
+        logEl.replaceChildren();
+      }
+      const existingMaint = logEl.querySelector('.bc-maintenance-row .bc-msg');
+      const textToShow = customMsg || tr('maintenance');
+      if (existingMaint) {
+        setBotMessageBody(existingMaint, textToShow);
+      } else {
+        const mItem = renderMsg('bot', textToShow, { noFeedback: true, maintenance: true, avatarState: 'default' });
+        mItem.row.classList.add('bc-maintenance-row');
+      }
+      quickEl.hidden = true;
+      if (actionsWrapEl) actionsWrapEl.hidden = true;
+      if (rememberBox) rememberBox.hidden = true;
+      input.value = '';
+      input.disabled = true;
+      if (micBtn) micBtn.disabled = true;
+      sendBtn.disabled = true;
+      humanBtn.disabled = true;
+      quickToggleBtn.disabled = true;
+    } else if (isMaintenance) {
+      isMaintenance = false;
+      delete panel.dataset.maintenance;
+      panel.classList.remove('bc-is-maintenance');
+      logEl.querySelectorAll('.bc-maintenance-row').forEach((n) => n.remove());
+      if (!logEl.querySelector('.bc-msg-row') && !history.length) {
+        renderMsg('bot', buildInitialWelcome(), { avatarState: 'hello' });
+      }
+      quickEl.hidden = false;
+      if (actionsWrapEl) actionsWrapEl.hidden = false;
+      syncQuickActions(true);
+      if (!isChatClosed) {
+        input.disabled = false;
+        if (micBtn) micBtn.disabled = false;
+        sendBtn.disabled = false;
+        humanBtn.disabled = false;
+        quickToggleBtn.disabled = false;
+      }
     }
   }
 
@@ -832,7 +885,7 @@
 
   async function submitMessage(rawMessage) {
     const message = String(rawMessage || '').trim();
-    if (!message || sendBtn.disabled || isChatClosed) return;
+    if (!message || sendBtn.disabled || isChatClosed || isMaintenance) return;
     stopSpeaking();
     if (!apiBase) {
       renderMsg('user', message);
@@ -994,6 +1047,12 @@
         saveChatSession(data.chatSession);
       }
       const msgLang = (data && typeof data.lang === 'string' && data.lang) ? data.lang : lang;
+      if (data && data.maintenance === true) {
+        hideTyping();
+        if (streamMsg) streamMsg.row.remove();
+        syncMaintenanceMode(true, sanitizeClientText(data.reply || '') || tr('maintenance'));
+        return;
+      }
       if (data.closed || data.status === 'closed') {
         const closeReply = data.reply || tr('abuseClose');
         history.push({ role: 'assistant', content: closeReply });
@@ -1081,7 +1140,7 @@
     } finally {
       clearTimeout(capTimer);
       hideTyping();
-      sendBtn.disabled = isChatClosed;
+      sendBtn.disabled = isChatClosed || isMaintenance;
     }
   }
 
@@ -1812,11 +1871,21 @@
     setTimeout(syncMobileViewport, 60);
   });
 
+  const initialMimoOff = window.BosphorlyChannels && window.BosphorlyChannels.state
+    ? window.BosphorlyChannels.state().mimo === false
+    : document.documentElement.getAttribute('data-ch-mimo') === 'off';
+  if (initialMimoOff) syncMaintenanceMode(true);
+  document.addEventListener('bosphorly:channels', (ev) => {
+    syncMaintenanceMode(Boolean(ev && ev.detail && ev.detail.mimo === false));
+  });
+
   applyOpenState(true);
-  loadTurnstile();
-  loadRemember();
-  if (!isChatClosed && window.innerWidth > 480) input.focus();
-  if (window.__bosphorlyInitialQuestion && !isChatClosed) {
+  if (!isMaintenance) {
+    loadTurnstile();
+    loadRemember();
+  }
+  if (!isChatClosed && !isMaintenance && window.innerWidth > 480) input.focus();
+  if (window.__bosphorlyInitialQuestion && !isChatClosed && !isMaintenance) {
     const q = window.__bosphorlyInitialQuestion;
     window.__bosphorlyInitialQuestion = '';
     submitMessage(q);

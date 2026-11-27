@@ -1,3 +1,4 @@
+import {adminEmergencyTelegram,isChannelDisabled} from './emergency-channels.js';
 import {withConsoleRuntime} from './console-runtime.js';
 import {messageLanguage} from './channel-policy.js';
 import {adminWhatsApp} from './whatsapp.js';
@@ -357,6 +358,8 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
 
   const chatId = String(msg.chat.id);
   if (await adminWhatsApp(env,chatId,msg.from?.id,msg.text)) return new Response('{"ok":true}');
+  if (await adminEmergencyTelegram(env,chatId,msg.from?.id,msg.text,now)) return new Response('{"ok":true}');
+  if (await isChannelDisabled(env,'telegram')) return new Response('{"ok":true}');
   const actorKey = `tg:${chatId}`;
 
   const blockStatus = await getBlockStatus({ env, actorKeys: [actorKey], now });

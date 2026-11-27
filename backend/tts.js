@@ -1,3 +1,4 @@
+import {isChannelDisabled} from './emergency-channels.js';
 import {recordTtsUsage} from './console-runtime.js';
 // Google Cloud Text-to-Speech ("Chirp 3 HD - Puck") proxy with per-actor rate limit,
 // D1 monthly character quota cap, Cloudflare Cache API caching, and silent fallback.
@@ -489,6 +490,7 @@ export async function handleTtsRoute(request, env, _url, now = Date.now()) {
   });
 
   if (request.method !== 'POST') return jsonResp({ error: 'Method not allowed' }, 405);
+  if (await isChannelDisabled(env, 'mimo')) return jsonResp({ fallback: true, maintenance: true }, 503);
 
   const ip = (request.headers.get('CF-Connecting-IP') || 'unknown').trim() || 'unknown';
   const explicitChatHeader = (request.headers.get('X-Chat-Session') || '').trim();

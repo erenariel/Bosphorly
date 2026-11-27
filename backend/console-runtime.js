@@ -9,13 +9,8 @@ export async function consoleSettings(env) {
     return typeof row?.value_json === "string"
       ? JSON.parse(row.value_json)
       : {};
-  } catch (e) {
-    if (
-      /no such table.*extranet_settings/.test(e.message) ||
-      /unsupported|unexpected|not implemented/i.test(e.message)
-    )
-      return {};
-    throw e;
+  } catch {
+    return {};
   }
 }
 export function deploymentCaps(env) {

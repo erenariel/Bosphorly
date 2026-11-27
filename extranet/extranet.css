@@ -1100,3 +1100,22 @@ dialog pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 #viewPartners { overflow-wrap:anywhere; } #viewPartners form {display:flex;flex-wrap:wrap;gap:12px;margin:16px 0;} #viewPartners input {max-width:100%;min-width:0;padding:10px;}
 
 #viewCatalog,#viewSettings{overflow-wrap:anywhere} #viewCatalog form,#viewSettings form{display:grid;gap:14px;max-width:100%} #viewCatalog input,#viewSettings input,#viewCatalog textarea{display:block;max-width:100%;width:100%;padding:10px;min-width:0} #viewCatalog textarea{min-height:90px} #viewCatalog details{padding:10px;border:1px solid #ccd8e8;border-radius:8px}
+
+.ex-nav-emergency { color: #ffcfcc; }
+.ex-nav-emergency[aria-current="page"] { background: #7f1d1d; color: #fff; box-shadow: inset 3px 0 0 #fca5a5; }
+#viewEmergency { overflow-wrap: anywhere; }
+.ex-em-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 16px 0; }
+.ex-em-card { background: var(--ex-surface); border: 1px solid var(--ex-line); border-radius: var(--ex-radius); padding: 16px; display: grid; gap: 10px; }
+.ex-em-card[data-state="closed"], .ex-em-card[data-state="locked"] { border-color: #f0b4b4; background: #fffafa; }
+.ex-em-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.ex-em-head h2 { margin: 0; font-size: 17px; }
+.ex-em-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 850; }
+.ex-em-badge[data-state="open"] { background: var(--ex-ok-bg); color: var(--ex-ok-ink); }
+.ex-em-badge[data-state="closed"] { background: var(--ex-err-bg); color: var(--ex-err-ink); }
+.ex-em-badge[data-state="locked"] { background: #3b0d0d; color: #ffe4e4; }
+.ex-em-open-form { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ex-em-open-form input { flex: 1 1 150px; min-width: 0; max-width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--ex-line-strong); border-radius: var(--ex-radius-sm); }
+.ex-em-banner-box { background: var(--ex-surface); border: 1px solid var(--ex-line); border-radius: var(--ex-radius); padding: 16px; margin: 16px 0; display: grid; gap: 10px; }
+.ex-em-banner-box textarea { width: 100%; max-width: 100%; min-height: 84px; padding: 10px 12px; border: 1px solid var(--ex-line-strong); border-radius: var(--ex-radius-sm); }
+.ex-em-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 720px) { .ex-em-grid { grid-template-columns: 1fr; } }

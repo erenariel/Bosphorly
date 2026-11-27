@@ -3,6 +3,161 @@
 // keeps working with device-only requests.
 window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extranetBase: '', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
 
+// Public channel emergency switch state (/v1/public/channels, <=60s cache).
+// Fail-closed for WhatsApp/Telegram/Instagram buttons until verified open.
+window.BosphorlyChannels = (() => {
+  const docEl = document.documentElement;
+  const isExtranet = Boolean(docEl && docEl.hasAttribute('data-no-mimo'));
+  const current = {
+    whatsapp: false,
+    telegram: false,
+    instagram: false,
+    mimo: true,
+    banner: '',
+    loaded: false,
+    failed: false,
+  };
+
+  const applyDomAttrs = () => {
+    if (!docEl || isExtranet) return;
+    docEl.setAttribute('data-ch-wa', current.whatsapp ? 'on' : 'off');
+    docEl.setAttribute('data-ch-tg', current.telegram ? 'on' : 'off');
+    docEl.setAttribute('data-ch-ig', current.instagram ? 'on' : 'off');
+    docEl.setAttribute('data-ch-mimo', current.mimo ? 'on' : 'off');
+  };
+
+  const renderBannerText = (el, text) => {
+    el.replaceChildren();
+    const parts = String(text).split(/(info@bosphorly\.com)/gi);
+    for (const part of parts) {
+      if (!part) continue;
+      if (part.toLowerCase() === 'info@bosphorly.com') {
+        const a = document.createElement('a');
+        a.href = 'mailto:info@bosphorly.com';
+        a.textContent = part;
+        el.appendChild(a);
+      } else {
+        el.appendChild(document.createTextNode(part));
+      }
+    }
+  };
+
+  const syncBanner = () => {
+    if (isExtranet || !document.body) return;
+    const existing = document.getElementById('bosphorlyEmergencyBanner');
+    if (!current.banner) {
+      if (existing) existing.remove();
+      return;
+    }
+    let bar = existing;
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'bosphorlyEmergencyBanner';
+      bar.className = 'bc-emergency-banner';
+      bar.setAttribute('role', 'alert');
+      document.body.prepend(bar);
+    }
+    renderBannerText(bar, current.banner);
+  };
+
+  const injectGuardStyles = () => {
+    if (isExtranet || !document.head || document.getElementById('bc-channel-guard')) return;
+    const st = document.createElement('style');
+    st.id = 'bc-channel-guard';
+    st.textContent =
+      'html[data-ch-wa="off"] .social-whatsapp,html[data-ch-wa="off"] .social-hero,html[data-ch-wa="off"] .bc-wa-link,html[data-ch-wa="off"] a[href*="wa.me/"],html[data-ch-wa="off"] [data-ch-sep="wa"]{display:none!important}' +
+      'html[data-ch-tg="off"] .tg-btn,html[data-ch-tg="off"] .tg-foot,html[data-ch-tg="off"] .tg-after,html[data-ch-tg="off"] #heroMimoTg,html[data-ch-tg="off"] #heroTelegram,html[data-ch-tg="off"] #footerTelegramWrap,html[data-ch-tg="off"] #askTelegram,html[data-ch-tg="off"] .bc-tg-link,html[data-ch-tg="off"] .m-telegram-widget,html[data-ch-tg="off"] a[href*="t.me/"],html[data-ch-tg="off"] [data-ch-sep="tg"]{display:none!important}' +
+      'html[data-ch-ig="off"] .social-instagram,html[data-ch-ig="off"] a[href*="instagram.com/"]{display:none!important}' +
+      'html[data-ch-mimo="off"] .bc-bubble,html[data-ch-mimo="off"] .mimo-intro{display:none!important}' +
+      '.bc-emergency-banner{background:#fff4db;color:#5c3300;border-bottom:2px solid #f0b84b;padding:10px 16px;font:600 13.5px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;text-align:center;word-break:break-word;overflow-wrap:anywhere;box-sizing:border-box;width:100%;z-index:950;position:relative}' +
+      '.bc-emergency-banner a{color:#0a1753;font-weight:800;text-decoration:underline}';
+    document.head.appendChild(st);
+  };
+
+  const emit = () => {
+    applyDomAttrs();
+    syncBanner();
+    try {
+      document.dispatchEvent(new CustomEvent('bosphorly:channels', { detail: { ...current } }));
+    } catch {}
+  };
+
+  let inFlight = null;
+  const refresh = async () => {
+    if (isExtranet) return { ...current };
+    if (inFlight) return inFlight;
+    const apiBase = String((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '');
+    if (!apiBase) {
+      Object.assign(current, { whatsapp: false, telegram: false, instagram: false, mimo: true, banner: '', loaded: true, failed: true });
+      emit();
+      return { ...current };
+    }
+    inFlight = (async () => {
+      try {
+        const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+        const timer = ctrl ? setTimeout(() => ctrl.abort(), 4000) : 0;
+        let res;
+        try {
+          res = await fetch(apiBase + '/v1/public/channels', {
+            credentials: 'omit',
+            ...(ctrl ? { signal: ctrl.signal } : {}),
+          });
+        } finally {
+          if (timer) clearTimeout(timer);
+        }
+        if (!res || !res.ok) throw new Error('channels_status');
+        const data = await res.json();
+        if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('channels_json');
+        Object.assign(current, {
+          whatsapp: data.whatsapp === true,
+          telegram: data.telegram === true,
+          instagram: data.instagram === true,
+          mimo: data.mimo !== false,
+          banner: typeof data.banner === 'string' ? data.banner.trim().slice(0, 500) : '',
+          loaded: true,
+          failed: false,
+        });
+      } catch {
+        Object.assign(current, {
+          whatsapp: false,
+          telegram: false,
+          instagram: false,
+          mimo: true,
+          banner: '',
+          loaded: true,
+          failed: true,
+        });
+      } finally {
+        inFlight = null;
+      }
+      emit();
+      return { ...current };
+    })();
+    return inFlight;
+  };
+
+  if (!isExtranet) {
+    injectGuardStyles();
+    applyDomAttrs();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => { injectGuardStyles(); syncBanner(); }, { once: true });
+    }
+    setInterval(() => {
+      if (document.visibilityState !== 'hidden') refresh();
+    }, 45000);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') refresh();
+    });
+  }
+  const initialPromise = isExtranet ? Promise.resolve({ ...current }) : refresh();
+
+  return Object.freeze({
+    state: () => ({ ...current }),
+    ready: () => initialPromise,
+    refresh,
+  });
+})();
+
 // Lightweight floating Mimo assistant button + non-intrusive greeting bubble (lazy-loads assistant-chat.js & CSS when opened).
 (() => {
   const base = document.currentScript && document.currentScript.src
@@ -329,7 +484,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       css.href = base + 'assistant-chat.css?v=20261123f';
       document.head.appendChild(css);
       const js = document.createElement('script');
-      js.src = base + 'assistant-chat.js?v=20261123f';
+      js.src = base + 'assistant-chat.js?v=20261123f-e1';
       js.defer = true;
       document.body.appendChild(js);
     };
@@ -404,6 +559,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       const collapseDelay = typeof window.__BOSPHORLY_MIMO_COLLAPSE_MS === 'number' ? window.__BOSPHORLY_MIMO_COLLAPSE_MS : 10000;
       function showGreeting() {
         if (hasSeenBubble() || loaded) return;
+        if (document.documentElement.getAttribute('data-ch-mimo') === 'off') return;
         if (formInteracted || isFormField(document.activeElement)) return;
         const panel = document.querySelector('.bc-panel');
         if (panel && !panel.hidden) return;
