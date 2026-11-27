@@ -38,6 +38,7 @@ test('Public channel fail-closed safety: buttons start hidden before /v1/public/
 
   // Booking page works normally even when /v1/public/channels fails
   await page.goto('/booking.html?service=bb-sunset&lang=tr');
+  await expect(page.locator('#offer option[value="bb-sunset"]')).toHaveCount(1);
   await expect(page.locator('#submit')).toBeVisible();
   await page.locator('#date').fill(new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10));
   await page.locator('#date').dispatchEvent('change');
