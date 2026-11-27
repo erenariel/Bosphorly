@@ -131,7 +131,7 @@ section[id]{scroll-margin-top:170px}
 .hero .hero-auth-btn.in:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.5)}
 .hero .hero-caption{margin-top:12px;color:#b8cae4!important}
 .hero .hero-mimo{display:flex;align-items:center;gap:8px;margin-top:14px;padding:0;max-width:580px;background:none;border:0;min-height:0}
-.hero .hero-mimo-avatar{width:22px;height:22px;border-radius:50%;flex:none;display:block;background:#fff}
+.hero .hero-mimo-avatar{width:30px;height:30px;border-radius:50%;flex:none;display:block;background:#fbf0de;border:2px solid #f47458;box-sizing:border-box;object-fit:cover;box-shadow:0 2px 8px #0a175340}
 .hero .hero-mimo-body{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;flex:1;min-width:0}
 .hero .hero-mimo-ask{background:none;border:0;padding:0;min-height:32px;min-width:0;color:#f47458;font:800 13px/1.2 inherit;cursor:pointer;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero .hero-mimo-ask:hover{text-decoration:underline;text-underline-offset:3px}
