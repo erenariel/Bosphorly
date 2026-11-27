@@ -127,6 +127,7 @@
         <button type="button" class="ex-nav-btn" id="navPartners">Partnerler</button>
         <button type="button" class="ex-nav-btn" id="navCampaigns">Kampanyalar ve kuponlar</button>
         <button type="button" class="ex-nav-btn" id="navInbox">✉ Mesajlar</button>
+        <button type="button" class="ex-nav-btn ex-nav-emergency" id="navEmergency" data-view="emergency" hidden><span>🛡️</span> Acil Durum ve Güvenlik Merkezi</button>
       </nav>
 
       <div class="ex-side-user">
@@ -360,6 +361,71 @@
       <div id="priorityHandoffs"></div>
       <label>Kaynak <select id="inboxSource"><option value="">Tümü</option><option value="form">Site formu</option><option value="handoff">İnsana devir</option><option value="complaint">Şikâyet</option><option value="blocked">Engellenen</option></select></label>
       <p id="inboxCount" role="status"></p><div id="messageDetail"></div><div id="inboxList"></div><button id="inboxPrev" type="button" class="ex-btn">Önceki</button><button id="inboxNext" type="button" class="ex-btn">Sonraki</button></section>
+
+      <!-- GÖRÜNÜM: ACİL DURUM VE GÜVENLİK MERKEZİ (Münhasır Owner) -->
+      <section id="viewEmergency" hidden aria-labelledby="emergencyHeading">
+        <header class="ex-page-head">
+          <div>
+            <div class="ex-eyebrow">Münhasır Güvenlik Paneli · Çift Hesap Doğrulamalı</div>
+            <h1 id="emergencyHeading">Acil Durum ve Güvenlik Merkezi</h1>
+            <p>Herhangi bir iletişim kanalında şüpheli etkinlik tespit edildiğinde yalnızca ilgili kanalı dondurun. Web sitesi, turlar, rezervasyonlar, e-postalar ve diğer açık kanallar etkilenmez.</p>
+          </div>
+          <div class="ex-head-tools">
+            <button type="button" id="btnRefreshEmergency" class="ex-btn ex-btn-secondary ex-btn-sm">↻ Durumu Yenile</button>
+            <button type="button" id="btnEmergencyCloseAll" class="ex-btn ex-btn-danger ex-btn-sm">🛑 Bütün İletişim Kanallarını Kapat</button>
+          </div>
+        </header>
+
+        <div id="emergencyConfigAlert" class="ex-alert ex-alert-warn" role="status" hidden></div>
+
+        <section id="emergencyTelegramSection" class="ex-panel" hidden>
+          <div class="ex-panel-head">
+            <h2>Telegram Üzerinden Gelen Acil Kapatma Talepleri</h2>
+          </div>
+          <div id="emergencyTelegramList" class="emg-audit-list"></div>
+        </section>
+
+        <div id="emergencyChannelsGrid" class="emg-channels-grid" aria-label="İletişim kanalı anahtarları"></div>
+
+        <section id="emergencyBannerPanel" class="ex-panel" aria-labelledby="emgBannerHeading">
+          <div class="ex-panel-head">
+            <h2 id="emgBannerHeading">Web Sitesi Güvenlik Uyarı Bandı</h2>
+            <span id="emgBannerStatusBadge" class="emg-badge emg-badge-closed">● Kapalı</span>
+          </div>
+          <p class="emg-meta" style="margin-bottom:10px">İsteğe bağlı uyarı bandı yalnızca düz metin olarak güvenli biçimde işlenir; zararlı HTML veya JavaScript çalıştırılmaz. Açma, güncelleme ve kapatma işlemleri çift hesap doğrulamasına tabidir.</p>
+          <form id="emergencyBannerForm" class="emg-banner-form" novalidate>
+            <label class="ex-field">
+              <span>Hazır çok dilli şablon (isteğe bağlı)</span>
+              <select id="emgBannerPreset">
+                <option value="">Özel Metin</option>
+              </select>
+            </label>
+            <label class="ex-field">
+              <span>Uyarı bandı metni (en fazla 500 karakter)</span>
+              <textarea id="emgBannerText" maxlength="500" placeholder="Örn: WhatsApp hesabımız geçici olarak kapalıdır. Başka numaralardan gelen mesajlara itibar etmeyin. Bize yalnızca info@bosphorly.com üzerinden ulaşın."></textarea>
+            </label>
+            <div class="emg-card-actions">
+              <button type="submit" id="btnSaveBanner" class="ex-btn ex-btn-primary">Uyarı Bandını Doğrula ve Yayınla</button>
+              <button type="button" id="btnDisableBanner" class="ex-btn ex-btn-secondary">Uyarı Bandını Kapat</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="ex-panel">
+          <div class="ex-panel-head">
+            <h2>Son Güvenlik İşlemleri</h2>
+          </div>
+          <div id="emergencyRecentList" class="emg-audit-list"></div>
+        </section>
+
+        <section class="ex-panel">
+          <div class="ex-panel-head">
+            <h2>Salt Okunur Güvenlik Denetim Kaydı (Audit Log)</h2>
+          </div>
+          <p class="emg-meta" style="margin-bottom:10px">Başarılı kanal/bant değişiklikleri ve başarısız yetkisiz veya hatalı doğrulama denemeleri değiştirilemez ve silinemez biçimde kaydedilir.</p>
+          <div id="emergencyAuditList" class="emg-audit-list"></div>
+        </section>
+      </section>
     </main>
   </div>
 
@@ -374,6 +440,50 @@
         <button type="button" id="btnCloseDrawer" class="ex-btn ex-btn-secondary ex-btn-sm">✕ Kapat</button>
       </header>
       <div id="drawerBody" class="ex-drawer-body"></div>
+    </div>
+  </dialog>
+
+  <!-- ÇİFT HESAP DOĞRULAMA PENCERESİ (<dialog>) -->
+  <dialog id="emergencyVerifyModal" class="emg-modal" aria-labelledby="emgModalTitle">
+    <div class="emg-modal-inner">
+      <header class="emg-modal-head">
+        <div>
+          <span class="ex-brand-sub">Çift Hesap Güvenlik Doğrulaması</span>
+          <h2 id="emgModalTitle">Acil İşlem Onayı</h2>
+        </div>
+        <button type="button" id="btnCloseEmgModal" class="ex-btn ex-btn-secondary ex-btn-sm">✕ Kapat</button>
+      </header>
+
+      <div id="emgModalAlert" class="ex-alert" role="status" aria-live="polite" hidden></div>
+      <p id="emgModalDesc" class="emg-meta" style="font-size:13.5px;color:#223556"></p>
+
+      <!-- Aşama 1: İşlem Onayı ve Kod Gönderimi -->
+      <form id="emgConfirmForm" novalidate style="display:grid;gap:12px">
+        <div id="emgReopenAcWrap" hidden>
+          <label class="ex-field">
+            <span>Yeniden açma işlemini onaylamak için <strong>AÇ</strong> yazın</span>
+            <input id="emgReopenConfirmInput" class="emg-ac-input" type="text" maxlength="10" autocomplete="off" placeholder="AÇ">
+          </label>
+        </div>
+        <div class="emg-card-actions">
+          <button type="submit" id="btnRequestEmgCode" class="ex-btn ex-btn-danger" style="flex:1">İkinci Hesaba Doğrulama Kodu Gönder</button>
+          <button type="button" id="btnCancelEmgStep1" class="ex-btn ex-btn-secondary">Vazgeç</button>
+        </div>
+      </form>
+
+      <!-- Aşama 2: 6 Haneli Tek Kullanımlık Kod Doğrulaması -->
+      <form id="emgVerifyForm" novalidate hidden style="display:grid;gap:12px">
+        <p id="emgOtpMeta" class="emg-meta"></p>
+        <label class="ex-field">
+          <span>İkinci doğrulama e-postasına gönderilen 6 haneli kod</span>
+          <input id="emgOtpInput" class="emg-code-input" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="one-time-code" placeholder="000000" required>
+        </label>
+        <div class="emg-card-actions">
+          <button type="submit" id="btnSubmitEmgOtp" class="ex-btn ex-btn-primary" style="flex:1">Kodu Doğrula ve Uygula</button>
+          <button type="button" id="btnResendEmgOtp" class="ex-btn ex-btn-secondary" disabled>Yeni Kod İste</button>
+        </div>
+        <button type="button" id="btnAbortPendingEmg" class="ex-btn ex-btn-secondary ex-btn-sm">Bekleyen Doğrulamayı İptal Et</button>
+      </form>
     </div>
   </dialog>
 

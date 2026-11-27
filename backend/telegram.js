@@ -1,6 +1,7 @@
 import {withConsoleRuntime} from './console-runtime.js';
 import {messageLanguage} from './channel-policy.js';
 import {adminWhatsApp} from './whatsapp.js';
+import {isChannelEnabled, guardTelegramWebhook} from './emergency.js';
 import {
   ASSISTANT_MESSAGES,
   SUPPORTED_LANGS,
@@ -259,6 +260,7 @@ async function fetchTelegramVoice(env, fileId) {
 }
 
 async function sendTelegramMessage(env, chatId, text) {
+  if (!await isChannelEnabled(env, 'telegram')) return;
   if (!env.TELEGRAM_BOT_TOKEN) return;
   const cleanText = formatTelegramPlainText(text);
   await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -354,6 +356,9 @@ export async function handleTelegramWebhook(request, env, now = Date.now(), ctx)
   if (!msg || !msg.chat || msg.chat.type !== 'private') {
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   }
+
+  const emergencyResp = await guardTelegramWebhook(env, msg, now);
+  if (emergencyResp) return emergencyResp;
 
   const chatId = String(msg.chat.id);
   if (await adminWhatsApp(env,chatId,msg.from?.id,msg.text)) return new Response('{"ok":true}');
