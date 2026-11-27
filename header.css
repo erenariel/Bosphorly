@@ -24,7 +24,7 @@
 .sh-auth,.sh-member{grid-area:auth;display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:6px;border-top:1px solid rgba(159,182,220,.16);min-width:0}
 .sh-auth[hidden],.sh-member[hidden]{display:none!important}
 .sh-auth-perk{font:700 12px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;color:#dbe8ff;margin-inline-end:auto}
-.sh-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;white-space:nowrap;border-radius:10px;padding:8px 14px;font:750 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.1px;transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
+.sh-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;white-space:nowrap;border-radius:12px;min-height:38px;padding:8px 14px;font:750 13px/1 system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:-.1px;box-sizing:border-box;transition:background .15s,border-color .15s,color .15s,box-shadow .15s}
 .sh-auth-btn svg{width:14px;height:14px;flex:none;display:block}
 .sh-auth-btn.in{background:rgba(255,255,255,.07);border:1px solid rgba(203,217,239,.35);color:#eef4ff}
 .sh-auth-btn.in:hover{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.55);color:#fff}
@@ -50,7 +50,7 @@
  .sh-nav{justify-content:flex-start;gap:2px;overflow:hidden;margin-inline-start:12px}
  .sh-nav a{padding:9px 10px;font-size:13.5px;color:#cbd9ef}
  .sh-nav a:hover{background:transparent;color:#fff}
- .sh-nav a[aria-current=page]{background:transparent;color:#fff;box-shadow:inset 0 -2px 0 #ffbf62;border-radius:0}
+ .sh-nav a[aria-current=page]{background:transparent;color:#fff;box-shadow:inset 0 -2px 0 #f47458;border-radius:0}
  .sh-auth,.sh-member{border-top:0;padding-top:0;gap:8px}
  .sh-auth-perk{display:none}
  .sh-auth-btn{padding:9px 14px;font-size:13px}
@@ -71,7 +71,7 @@
  .sh-tools select{max-width:112px;font-size:12.5px;padding:7px 22px 7px 10px;min-height:36px}
  .sh-auth{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding-top:6px}
  .sh-auth-perk{display:none}
- .sh-auth-btn{padding:10px 12px;font-size:13.5px}
+ .sh-auth-btn{padding:10px 12px;font-size:13.5px;min-height:42px}
  .sh-member{justify-content:space-between;flex-wrap:nowrap;gap:6px}
  .sh-member-pill{flex:1 1 auto;padding:7px 10px;font-size:12.5px;gap:6px}
  .sh-member-name{max-width:130px}
@@ -89,7 +89,7 @@ section[id]{scroll-margin-top:170px}
 /* Telegram CTA buttons (44px+ touch target on mobile, RTL-friendly). */
 .tg-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:9px 15px;border-radius:12px;border:1px solid #1d8ec8;background:#e8f6fd;color:#0a4b73;font:700 13.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none;cursor:pointer;box-sizing:border-box;max-width:100%}
 .tg-btn:hover{background:#d6effb;border-color:#157ab0}
-.tg-btn:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
+.tg-btn:focus-visible{outline:3px solid #22c3c9;outline-offset:2px}
 .tg-btn[hidden]{display:none!important}
 .tg-btn .tg-ico{width:18px;height:18px;flex:none;display:block}
 .tg-btn.tg-after{margin-top:12px;background:#fff;border-color:#88cbe8;color:#0a4b73}
@@ -98,47 +98,49 @@ section[id]{scroll-margin-top:170px}
 .social-links{display:inline-flex;flex-wrap:wrap;align-items:center;gap:8px;margin-inline-start:6px;vertical-align:middle}
 .tg-btn.tg-foot,.social-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:6px 13px;border-radius:999px;border:1px solid #d5e0ef;background:#fff;color:#16305f;font:700 12.5px/1.2 system-ui,-apple-system,"Segoe UI",sans-serif;text-decoration:none!important;white-space:nowrap;box-sizing:border-box;max-width:100%;vertical-align:middle;transition:background .15s,border-color .15s}
 .tg-btn.tg-foot:hover,.social-btn:hover{background:#f3f7fc;border-color:#9cb8dc;color:#0a1753}
-.social-btn:focus-visible{outline:3px solid #00bed9;outline-offset:2px}
+.social-btn:focus-visible{outline:3px solid #22c3c9;outline-offset:2px}
 .tg-btn.tg-foot .tg-ico,.social-btn .social-ico{width:16px;height:16px;flex:none;display:block}
 @media (max-width:768px){.tg-btn.tg-foot,.social-btn{min-height:44px;padding:8px 14px}}
 
-/* Home hero: two clear actions, quiet secondary links, the corporate privilege card, then one thin Mimo line. */
-.hero .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:6px}
-.hero .hero-actions .hero-cta{margin:0;padding:15px 26px;border-radius:12px;font-size:15px}
-.hero .hero-cta2{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.32);color:#fff;font-weight:800;font-size:15px;text-decoration:none;transition:background .15s,border-color .15s}
-.hero .hero-cta2:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.55)}
-.hero .hero-links{display:flex;flex-wrap:wrap;align-items:center;gap:2px 24px;margin-top:16px}
-.hero .hero-links-group{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 22px;max-width:100%}
+/* Home hero: one coral primary CTA, consistent 12px radius & 48px height, calm legible secondary links, Mimo outer border coral. */
+.hero .hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:4px}
+.hero .hero-actions .hero-cta{display:inline-flex;align-items:center;justify-content:center;margin:0;min-height:48px;padding:13px 26px;border-radius:12px;background:#f47458;border:1px solid #f47458;color:#0a1753;font-weight:800;font-size:15px;line-height:1.2;box-sizing:border-box}
+.hero .hero-actions .hero-cta:hover{background:#f7886f;border-color:#f7886f}
+.hero .hero-cta2{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:13px 24px;border-radius:12px;border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.04);color:#fff;font-weight:750;font-size:15px;line-height:1.2;text-decoration:none;box-sizing:border-box;transition:background .15s,border-color .15s}
+.hero .hero-cta2:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.55)}
+.hero .hero-links{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:18px;padding-top:2px}
+.hero .hero-links-group{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px 20px;max-width:100%}
 .hero .hero-links-chat:empty{display:none}
-.hero .hero-links .hero-map,.hero .hero-links .tg-btn.tg-hero,.hero .hero-links .social-btn.social-hero{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;min-height:34px;background:none;border:0;border-radius:0;color:#b9cbe6;font-family:inherit;font-size:13px;font-weight:700;line-height:1.4;text-decoration:none!important;white-space:nowrap}
-.hero .hero-links .hero-map:hover,.hero .hero-links .tg-btn.tg-hero:hover,.hero .hero-links .social-btn.social-hero:hover{color:#fff;background:none}
+.hero .hero-links .hero-map,.hero .hero-links .tg-btn.tg-hero,.hero .hero-links .social-btn.social-hero{display:inline-flex;align-items:center;gap:6px;margin:0;padding:0;min-height:34px;background:none;border:0;border-radius:0;color:#d2e0f5;font-family:inherit;font-size:13px;font-weight:600;line-height:1.4;text-decoration:none!important;white-space:nowrap}
+.hero .hero-links .hero-map:hover,.hero .hero-links .tg-btn.tg-hero:hover,.hero .hero-links .social-btn.social-hero:hover{color:#fff;background:none;text-decoration:underline!important;text-underline-offset:3px}
 .hero .hero-links .tg-btn.tg-hero .tg-ico,.hero .hero-links .social-btn.social-hero .social-ico{width:15px;height:15px;flex:none;display:block}
-.hero .hero-auth{display:grid;gap:10px;margin-top:18px;padding:12px 15px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:rgba(7,18,64,.48);backdrop-filter:blur(8px);max-width:580px}
+.hero .hero-auth{display:grid;gap:10px;margin-top:20px;padding:14px 16px;border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(7,18,64,.52);backdrop-filter:blur(8px);max-width:580px}
 .hero .hero-auth[hidden]{display:none!important}
 .hero .hero-auth-top{display:flex;align-items:center;gap:9px}
-.hero .hero-auth-art{width:28px;height:28px;border-radius:8px;background:rgba(123,227,245,.13);border:1px solid rgba(142,232,248,.24);color:#8ee8f8;display:grid;place-items:center;flex:none}
+.hero .hero-auth-art{width:28px;height:28px;border-radius:8px;background:rgba(34,195,201,.14);border:1px solid rgba(34,195,201,.32);color:#22c3c9;display:grid;place-items:center;flex:none}
 .hero .hero-auth-art svg{width:15px;height:15px}
-.hero .hero-auth-kicker{font-size:10.5px;font-weight:800;letter-spacing:.75px;text-transform:uppercase;color:#8ee8f8;line-height:1.2}
-.hero .hero-auth-deal{margin-inline-start:auto;font:800 11px/1 ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:#ffdc7a;background:rgba(255,220,122,.14);border:1px solid rgba(255,220,122,.34);border-radius:999px;padding:4px 9px;white-space:nowrap}
+.hero .hero-auth-kicker{font-size:10.5px;font-weight:800;letter-spacing:.75px;text-transform:uppercase;color:#22c3c9;line-height:1.2}
+.hero .hero-auth-deal{margin-inline-start:auto;font:800 11px/1 ui-monospace,Menlo,Consolas,monospace;font-style:normal;color:#ffd4ca;background:rgba(244,116,88,.18);border:1px solid rgba(244,116,88,.45);border-radius:999px;padding:4px 9px;white-space:nowrap}
 .hero .hero-auth-row{display:flex;align-items:center;justify-content:space-between;gap:8px 10px;flex-wrap:wrap}
 .hero .hero-auth-badge{margin:0;font-size:12px;font-weight:600;color:#eef4ff;line-height:1.35}
-.hero .hero-auth-btns{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-inline-start:auto}
-.hero .hero-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 11px;border-radius:9px;font-family:inherit;font-size:12px;line-height:1;font-weight:800;text-decoration:none;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s}
+.hero .hero-auth-btns{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-inline-start:auto}
+.hero .hero-auth-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 14px;border-radius:12px;font-family:inherit;font-size:12.5px;line-height:1;font-weight:800;text-decoration:none;white-space:nowrap;cursor:pointer;box-sizing:border-box;transition:background .15s,border-color .15s}
 .hero .hero-auth-btn.up{background:#fff;border:1px solid #fff;color:#0a1753}
 .hero .hero-auth-btn.up:hover{background:#eef5ff;border-color:#dbe8ff}
 .hero .hero-auth-btn.in{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.28);color:#fff;font-weight:750}
 .hero .hero-auth-btn.in:hover{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.5)}
-.hero .hero-caption{margin-top:12px}
-.hero .hero-mimo{display:flex;align-items:center;gap:8px;margin-top:8px;padding:0;max-width:580px;background:none;border:0;min-height:0}
+.hero .hero-caption{margin-top:12px;color:#b8cae4!important}
+.hero .hero-mimo{display:flex;align-items:center;gap:8px;margin-top:14px;padding:0;max-width:580px;background:none;border:0;min-height:0}
 .hero .hero-mimo-avatar{width:22px;height:22px;border-radius:50%;flex:none;display:block;background:#fff}
 .hero .hero-mimo-body{display:flex;flex-wrap:nowrap;align-items:center;gap:10px;flex:1;min-width:0}
-.hero .hero-mimo-ask{background:none;border:0;padding:0;min-height:32px;min-width:0;color:#ffbf62;font:800 13px/1.2 inherit;cursor:pointer;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero .hero-mimo-ask{background:none;border:0;padding:0;min-height:32px;min-width:0;color:#f47458;font:800 13px/1.2 inherit;cursor:pointer;text-align:start;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero .hero-mimo-ask:hover{text-decoration:underline;text-underline-offset:3px}
-.hero .hero-mimo-tg{color:#b9cbe6;font:600 12.5px/1.2 inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hero .hero-mimo-tg{color:#c8d8ef;font:600 12.5px/1.2 inherit;text-decoration:none;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap;flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .hero .hero-mimo-tg:hover{color:#fff}
 .hero .hero-mimo-tg[hidden]{display:none!important}
+.bc-fab,.bc-bubble,.mimo-intro span,.bc-mobile-welcome{border-color:#f47458!important}
 @media (max-width:768px){.hero .hero-links .hero-map,.hero .hero-links .tg-btn.tg-hero,.hero .hero-links .social-btn.social-hero{min-height:45px}}
-@media (max-width:560px){.hero .hero-actions>a{flex:1 1 100%;justify-content:center;text-align:center}.hero .hero-links{flex-direction:column;align-items:flex-start;gap:0;margin-top:14px}.hero .hero-links-group{gap:0 18px}}
+@media (max-width:560px){.hero .hero-actions>a{flex:1 1 100%;justify-content:center;text-align:center}.hero .hero-links{flex-direction:column;align-items:flex-start;gap:2px;margin-top:16px}.hero .hero-links-group{gap:2px 18px}}
 @media (max-width:900px){.hero #heroAuth{display:none!important}}
 
 /* Home footer: clean row of meta links + unified channel pills, followed by the disclaimer note. */
