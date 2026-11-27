@@ -391,10 +391,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       const css = document.createElement('link');
       css.rel = 'stylesheet';
 
-      css.href = base + 'mimo-intro.css?v=20261123c';
+      css.href = base + 'mimo-intro.css?v=20261127m';
       document.head.appendChild(css);
       const script = document.createElement('script');
-      script.src = base + 'mimo-intro.js?v=20261123c';
+      script.src = base + 'mimo-intro.js?v=20261127m';
       script.defer = true;
       document.head.appendChild(script);
     }
