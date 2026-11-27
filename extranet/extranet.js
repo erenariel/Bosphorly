@@ -1055,7 +1055,8 @@
 
       if (
         pendingSessionVerif &&
-        (pendingSessionVerif.targetChannel === ch.id || pendingSessionVerif.targetChannel === 'all')
+        (pendingSessionVerif.targetChannel === ch.id ||
+          (pendingSessionVerif.targetChannel === 'all' && ch.pendingVerification))
       ) {
         const resumeBtn = el('button', 'ex-btn ex-btn-gold ex-btn-sm', 'Bekleyen Kodu Gir');
         resumeBtn.type = 'button';

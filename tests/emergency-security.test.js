@@ -1349,6 +1349,9 @@ test('8. Bulk reactivation (reopen_all): "AÇ" + fresh Gmail OTP, no OTP reuse f
     assert.ok(!JSON.stringify(bulk.body).includes(bulkCode));
     const otpMail = sent.find((m) => m.body.text.includes(bulk.body.operationId));
     assert.deepEqual([].concat(otpMail.body.to), [VERIFY_GMAIL]);
+    const pendingSt = await callExtranet(env, '/v1/extranet/emergency/status', { actor: owner, nowMs: now + 200 });
+    assert.equal(pendingSt.body.channels.find((c) => c.id === 'whatsapp').pendingVerification, true);
+    assert.equal(pendingSt.body.channels.find((c) => c.id === 'instagram').pendingVerification, false, 'env-locked channel is not marked pending during reopen_all');
     const superseded = await post('/v1/extranet/emergency/verify', { operationId: single.body.operationId, code: singleCode, targetChannel: 'whatsapp', actionType: 'reopen', confirmReopenText: 'AÇ' }, now + 500);
     assert.equal(superseded.status, 409);
     assert.equal(superseded.body.code, 'CODE_INVALIDATED');
