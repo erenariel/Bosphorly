@@ -7,7 +7,15 @@
       if (!inner || !nav) continue;
       inner.classList.remove('sh-two-rows');
       if (innerWidth <= 900) continue;
-      if (nav.scrollWidth > nav.clientWidth + 1) inner.classList.add('sh-two-rows');
+      let overflow = nav.scrollWidth > nav.clientWidth + 1;
+      if (!overflow) {
+        const nr = nav.getBoundingClientRect();
+        for (const a of nav.children) {
+          const r = a.getBoundingClientRect();
+          if (r.width && (r.left < nr.left - 1 || r.right > nr.right + 1)) { overflow = true; break; }
+        }
+      }
+      if (overflow) inner.classList.add('sh-two-rows');
     }
   };
   let t;
