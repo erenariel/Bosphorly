@@ -1,3 +1,4 @@
+import {supportDb} from './support-db.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, statSync } from 'node:fs';
@@ -382,7 +383,7 @@ test('invalid Turnstile token is rejected with 403 and CORS is restricted to PUB
     headers: { Origin: ORIGIN, 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: 'IST transfer?', lang: 'en', history: [], turnstileToken: 'bad-token' }),
   });
-  const res = await worker.fetch(req, baseEnv());
+  const res = await worker.fetch(req, baseEnv({DB:supportDb()}));
   assert.equal(res.status, 403);
   assert.equal(res.headers.get('Access-Control-Allow-Origin'), ORIGIN);
 
@@ -631,12 +632,13 @@ test('assistant handoff forwards conversation to info@bosphorly.com with Reply-T
       turnstileToken: 'ok',
     }),
   });
-  const res = await worker.fetch(req, baseEnv());
+  const res = await worker.fetch(req, baseEnv({DB:supportDb()}));
   assert.equal(res.status, 202);
+  const receipt=await res.json();assert.ok(receipt.reply.includes(receipt.reference));
   assert.deepEqual(sent.to, ['info@bosphorly.com']);
-  assert.equal(sent.reply_to, 'guest@example.org');
+  assert.equal(sent.reply_to, undefined); // Team replies are managed from the durable inbox.
   assert.ok(!sent.text.includes('4532123456789012'));
-  assert.ok(sent.text.includes('[CARD REDACTED]'));
+  assert.ok(!sent.text.includes('Recent conversation'), 'Raw transcripts stay in the authorized inbox');
 });
 
 test('retrieveChunks covers transfers, discover places, routes, and themed tours', () => {
@@ -734,7 +736,7 @@ test('telegram webhook asks handoff confirmation then forwards linked member ema
     }),
   };
 
-  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: mockDb });
+  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: supportDb(mockDb) });
 
   // Turn 1: asks "Ekibimize iletmemi ister misin?"
   const req1 = new Request(`${ORIGIN}/v1/telegram/webhook`, {
@@ -768,10 +770,10 @@ test('telegram webhook asks handoff confirmation then forwards linked member ema
   const res2 = await worker.fetch(req2, env);
   assert.equal(res2.status, 200);
   assert.ok(sentEmail, 'email should be forwarded immediately for linked member after confirmation');
-  assert.equal(sentEmail.reply_to, 'linked-member@example.org');
-  assert.ok(sentEmail.text.includes('Telegram: @eren_guest'));
+  assert.equal(sentEmail.reply_to, undefined);
+  assert.ok(sentEmail.text.includes('Kanal: telegram'));
   assert.ok(!sentEmail.text.includes('Telegram chat ID'));
-  assert.ok(tgReplies[1] && tgReplies[1].text.includes('info@bosphorly.com'));
+  assert.ok(tgReplies[1] && /BOS-[A-F0-9]{12}/.test(tgReplies[1].text));
 });
 
 
@@ -866,7 +868,7 @@ test('telegram webhook /start <lang> sends welcome in payload lang, saves chat l
     }),
   };
 
-  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: mockDb });
+  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: supportDb(mockDb) });
 
   // 1. /start he overrides language_code ("en") and saves "he" for chat 111
   const resHe = await worker.fetch(new Request(`${ORIGIN}/v1/telegram/webhook`, {
@@ -1030,7 +1032,7 @@ test('👍/👎 feedback endpoint (/v1/assistant/feedback) stores only vote & la
     }),
   };
 
-  const env = baseEnv({ DB: mockDb });
+  const env = baseEnv({ DB: supportDb(mockDb) });
 
   // Valid 👍 request with ONLY vote and lang
   const reqUp = new Request(`${ORIGIN}/v1/assistant/feedback`, {
@@ -1125,7 +1127,7 @@ test('zero-tolerance abuse vs service complaint: insults & threats close immedia
 
   const now = Date.now();
   const pepper = 'pepper-zero-tol';
-  const env = baseEnv({ CODE_PEPPER: pepper, DB: mockDb });
+  const env = baseEnv({ CODE_PEPPER: pepper, DB: supportDb(mockDb) });
 
   // 1. Service complaints must NOT close chat; they route to handoffOffer
   for (const complaint of ['transfer gelmedi', 'berbat hizmet verdi acente']) {
@@ -1262,7 +1264,7 @@ test('Telegram zero-tolerance: blocks chat_id for 7 days on 1st violation, unblo
     }),
   };
 
-  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: mockDb });
+  const env = baseEnv({ CODE_PEPPER: pepper, TELEGRAM_BOT_TOKEN: 'bot-tok', DB: supportDb(mockDb) });
   const makeReq = (text) =>
     new Request(`${ORIGIN}/v1/telegram/webhook`, {
       method: 'POST',
@@ -1346,7 +1348,7 @@ test('chatSession: Turnstile required on first request, valid chatSession accept
   };
   const env = baseEnv({
     CODE_PEPPER: pepper,
-    DB: mockDb,
+    DB: supportDb(mockDb),
     AI: {
       run: async () => ({
         response: 'Sabah Boğaz turu €25 civarındadır. https://bosphorly.com/booking.html?service=bb-morning&lang=tr\n[[flags:abuse=0;handoff=0]]',
@@ -1774,11 +1776,11 @@ test('model config disables thinking, caps tokens at 350, compacts prompt, and u
   assert.ok(sysInfo.includes('Samimi "sen" hitabı'));
   assert.ok(sysInfo.includes('EXAMPLES:'));
   assert.ok(sysInfo.includes('[[flags:abuse=0;handoff=0]]'));
-  assert.ok(sysInfo.length < 4800, `Character prompt + 7 few-shots + 3 chunks stay compact (got ${sysInfo.length})`);
+  assert.ok(sysInfo.length < 6000, `Character prompt + 7 few-shots + 3 chunks stay compact (got ${sysInfo.length})`);
 
   await runAssistant({ message: 'Boğaz turu fiyatı ne kadar?', pageLang: 'tr', env, actorKey: 'cfg-check-price' });
   const sysPrice = capturedOpts.messages[0].content;
-  assert.ok(sysPrice.length < 5600, `5-chunk price prompt stays compact (got ${sysPrice.length})`);
+  assert.ok(sysPrice.length < 7000, `5-chunk price prompt stays compact (got ${sysPrice.length})`);
 });
 
 test('repeat greetings and "Ben Mimo" intros are suppressed on follow-up turns and web chat after initial welcome', async () => {
@@ -2139,7 +2141,7 @@ test('small talk ("nasılsın?", "Selam nasılsın") recovers non-JSON/truncated
 
 // ---------------- Mimo 2.0 Suite ----------------
 
-test('Mimo 2.0: retrieval defaults to 3 chunks (5 for price queries) and history trims to 4 messages', async () => {
+test('Mimo 2.0: retrieval defaults to 3 chunks (5 for price queries) and request collection retains bounded history', async () => {
   const defaultChunks = retrieveChunks('Bosphorus sunset cruise');
   assert.equal(defaultChunks.length, 3, 'default retrieval k should be 3 for non-price queries');
   const priceChunks = retrieveChunks('Bosphorus sunset cruise price');
@@ -2171,7 +2173,7 @@ test('Mimo 2.0: retrieval defaults to 3 chunks (5 for price queries) and history
     actorKey: 'mimo2-hist4',
   });
   assert.equal(res.handoff, false);
-  assert.equal(seenHistoryCount, 4, 'model should receive at most 4 history turns');
+  assert.equal(seenHistoryCount, 6, 'request collection retains earlier guest details (cap 24)');
 });
 
 test('Mimo 2.0: strips Gemma 4 <|channel>thought, <think>, and [[flags:...]] while respecting flag values', async () => {

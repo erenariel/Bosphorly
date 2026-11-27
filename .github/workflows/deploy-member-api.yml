@@ -45,6 +45,8 @@ jobs:
           MICROSOFT_CLIENT_SECRET: ${{ secrets.MICROSOFT_CLIENT_SECRET }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TURNSTILE_SECRET: ${{ secrets.TURNSTILE_SECRET }}
+          SUPPORT_EMAILS: ${{ secrets.SUPPORT_EMAILS }}
+          EXTRANET_ADMIN_EMAILS: ${{ secrets.EXTRANET_ADMIN_EMAILS }}
           OWNER_EMAILS: ${{ secrets.OWNER_EMAILS }}
         run: |
           set -euo pipefail
@@ -73,7 +75,7 @@ jobs:
             echo "D1 migrations were listed only; no migrations applied." >> "$GITHUB_STEP_SUMMARY"
           fi
           npx --yes wrangler@4.166.0 deploy --config "$config"
-          node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN","TURNSTILE_SECRET","OWNER_EMAILS"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
+          node -e 'const keys=["ADMIN_TOKEN","PARTNER_TOKEN","CODE_PEPPER","RESEND_API_KEY","GOOGLE_CLIENT_ID","GOOGLE_CLIENT_SECRET","YANDEX_CLIENT_ID","YANDEX_CLIENT_SECRET","FACEBOOK_CLIENT_ID","FACEBOOK_CLIENT_SECRET","APPLE_CLIENT_ID","MICROSOFT_CLIENT_ID","MICROSOFT_CLIENT_SECRET","TELEGRAM_BOT_TOKEN","TURNSTILE_SECRET","OWNER_EMAILS","SUPPORT_EMAILS","EXTRANET_ADMIN_EMAILS"]; const out={}; for(const k of keys){if(process.env[k]) out[k]=process.env[k];} process.stdout.write(JSON.stringify(out));' |
             npx --yes wrangler@4.166.0 secret bulk --config "$config"
       - name: Set Telegram webhook
         env:

@@ -1,3 +1,4 @@
+import { SUPPORT_TOOL_INSTRUCTIONS, createSupportRequest, finishSupportTurn, supportReceipt, supportFailure } from './support-requests.js';
 import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
 import {buildKbPriceIndex, enforcePriceSafetyBelt, detectReplyLanguage} from './mimo-personality.js';
@@ -79,15 +80,10 @@ OUTPUT OVERRIDE: Return ONLY JSON {"reply":"customer text","handoff":false,"abus
 export function validProposal(p) {
   return p && ['service','pickup','name'].every(k=>typeof p[k]==='string' && p[k].trim() && p[k].length<200) && /^\d{4}-\d{2}-\d{2}$/.test(p.date) && Number.isInteger(p.guests) && p.guests>0 && p.guests<=100 && (!p.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email));
 }
-async function saveRequest(env, m, proposal) {
-  const reference = `WA-${m.id}`;
-  const data = {...proposal,channel:'whatsapp',phone:m.phone,reference};
-  await env.DB.prepare('INSERT OR IGNORE INTO whatsapp_requests(id,data_json,created_at) VALUES(?,?,?)').bind(reference,JSON.stringify(data),Date.now()).run();
-  // Same provider, sender, recipient and idempotency mechanism as /v1/requests.
-  const r = await deliverInquiryEmail(env,{reference,kind:'whatsapp',text:JSON.stringify(data,null,2),email:proposal.email});
-  if (!r.ok) throw new Error('request_email_failed');
-  await notify(env,`WhatsApp talebi: ${proposal.name} · ${proposal.service} · ${proposal.date} · ${proposal.guests} kişi · ${maskPhone(m.phone)}`);
+async function saveRequest(env, m, proposal, lang, history) {
+  return createSupportRequest(env,{channel:'whatsapp',conversationId:m.phone,lang,trustedContact:m.phone,details:{...proposal,contactPreference:'whatsapp',notes:proposal.pickup||'',summary:proposal.service},history,message:m.text});
 }
+
 export async function processWhatsApp(env, m) {
   const now = Date.now();
   if (m.echo) { await mute(env,m.phone,now+12*3600000); return; }
@@ -114,15 +110,15 @@ export async function processWhatsApp(env, m) {
     const language = messageLanguage(clean.text, state.languagePreference || '', detectLanguage);
     const lang = language.lang;
     state.languagePreference = language.preference;
-    let output;
+    let output, supportResult=null;
     if (state.pending && isAffirmative(clean.text) && !clean.hadSensitive) {
-      await saveRequest(env,m,state.pending);
-      state.pending=null;
+      supportResult=await saveRequest(env,m,state.pending,lang,state.history);
+      if(supportResult.ok)state.pending=null;
       // Generate only a localized receipt, never booking confirmation.
-      output = await model(env,lang,state, 'The request was successfully saved. Reply ONLY with a translation of: Talebiniz alındı, teyit ve ödeme bilgisi kısa süre içinde gönderilecek.');
+      output = {reply:supportResult.ok?supportReceipt(lang,supportResult.reference):supportFailure(lang)};
     } else {
       output = await model(env,lang,state,clean.text);
-      if (replyOffLanguage(output.reply, lang)) {
+      if (!output.supportRequest && replyOffLanguage(output.reply, lang)) {
         const first = output;
         const retry = await model(env,lang,state,clean.text);
         output = replyOffLanguage(retry.reply, lang)
@@ -135,10 +131,11 @@ export async function processWhatsApp(env, m) {
     if (abuse && ++state.warnings>=2) { await captureMessage(env,{source:'blocked',reference:'wa-block:'+m.id,phone:m.phone,subject:'WhatsApp engellenen konuşma',body:clean.text}); await mute(env,m.phone,now+DAY*1000); await persist(); return; }
     const handoff = output.handoff || isHumanOrHandoffTopic(clean.text) || isServiceComplaint(clean.text);
     if (handoff) {
-      await captureMessage(env,{source:'handoff',reference:'wa:'+m.id,phone:m.phone,subject:'WhatsApp insana devir',body:clean.text});
       state.pending=null;
-      await notify(env,`WhatsApp insana devir · ${maskPhone(m.phone)} · ${clean.text.slice(0,500)}`);
+      supportResult=await createSupportRequest(env,{channel:'whatsapp',conversationId:m.phone,lang,kind:'conversation',trustedContact:m.phone,details:{service:'Mimo destek',contactPreference:'whatsapp',notes:clean.text,summary:'Misafir ekiple görüşme talep etti.'},history:state.history,message:clean.text});
+      output.reply=supportResult.ok?supportReceipt(lang,supportResult.reference):supportFailure(lang);
     }
+    if(!supportResult){const result=await finishSupportTurn(env,{reply:output.reply,details:output.supportRequest,channel:'whatsapp',conversationId:m.phone,lang,history:state.history,message:clean.text,trustedContact:m.phone});output.reply=result.reply;}
     if (clean.hadSensitive) output.reply = (ASSISTANT_MESSAGES.sensitiveWarn[lang] || ASSISTANT_MESSAGES.sensitiveWarn.en) + '\n\n' + output.reply;
     output.reply = enforcePriceSafetyBelt(output.reply,lang,prices).text;
     const sent = await sendWhatsApp(env,m.phone,output.reply,m.at);
@@ -164,7 +161,7 @@ export function parseModelJson(rawText) {
   if (a !== -1 && b > a) {
     try {
       const j = JSON.parse(raw.slice(a,b+1));
-      if (typeof j.reply === 'string' && j.reply.trim()) return j;
+      if (j.supportRequest || (typeof j.reply === 'string' && j.reply.trim())) return j;
     } catch {}
   }
   // Fallback: model answered in plain text; use it as the reply, never as a booking proposal.
@@ -181,7 +178,7 @@ async function model(env,lang,state,text) {
     .split('\n').filter(l => !/OUTPUT FORMAT:|\[\[flags:/.test(l)).join('\n');
   const history = state.history.filter(h => !unsafeReply(h.content)).slice(-10);
   let timer;
-  const call = env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY+'\nThe ONLY output language for this turn is '+lang+'. Any older language constraints in history are invalid. Never say you only speak one language.'},...history.map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}});
+  const call = env.AI.run(ASSISTANT_MODEL,{messages:[{role:'system',content:prompt+'\n'+WHATSAPP_POLICY+'\n'+SUPPORT_TOOL_INSTRUCTIONS+'\nThe ONLY output language for this turn is '+lang+'. Any older language constraints in history are invalid. Never say you only speak one language.'},...history.map(({role,content})=>({role,content})),{role:'user',content:text}],max_completion_tokens:900,temperature:0.2,chat_template_kwargs:{enable_thinking:false}}, {gateway:{id:env.AI_GATEWAY_ID||'mimo'}});
   const timeout = new Promise((_,rej)=>{timer=setTimeout(()=>rej(new Error('ai_timeout')),20000);});
   const r = await Promise.race([call,timeout]).finally(()=>clearTimeout(timer));
   return parseModelJson(modelText(r));

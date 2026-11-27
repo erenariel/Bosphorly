@@ -1,3 +1,4 @@
+import { SUPPORT_TOOL_INSTRUCTIONS, finishSupportTurn, unsupportedClaim, unsupportedReply, createSupportRequest, supportReceipt, supportFailure } from './support-requests.js';
 import {liveCatalogContext} from './catalog-store.js';
 import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
@@ -1399,9 +1400,10 @@ function parseModelOutput(raw) {
   const objCandidate =
     (raw && typeof raw.response === 'object' && raw.response !== null && raw.response) ||
     (raw && raw.result && typeof raw.result.response === 'object' && raw.result.response !== null && raw.result.response);
-  if (objCandidate && (typeof objCandidate.reply === 'string' || objCandidate.abuse === true)) {
+  if (objCandidate && (typeof objCandidate.reply === 'string' || objCandidate.abuse === true || objCandidate.supportRequest)) {
     const cleaned = extractFlagsTag(stripModelThinking(typeof objCandidate.reply === 'string' ? objCandidate.reply : ''));
     return {
+      supportRequest: objCandidate.supportRequest,
       abuse: Boolean(objCandidate.abuse) || cleaned.abuse,
       handoff: Boolean(objCandidate.handoff) || cleaned.handoff,
       reply: cleaned.text.trim(),
@@ -1418,9 +1420,10 @@ function parseModelOutput(raw) {
     if (jsonMatch) {
       try {
         const obj = JSON.parse(jsonMatch[0]);
-        if (obj && (typeof obj.reply === 'string' || obj.abuse === true)) {
+        if (obj && (typeof obj.reply === 'string' || obj.abuse === true || obj.supportRequest)) {
           const nested = extractFlagsTag(stripModelThinking(typeof obj.reply === 'string' ? obj.reply : ''));
           return {
+            supportRequest: obj.supportRequest,
             abuse: Boolean(obj.abuse) || nested.abuse,
             handoff: Boolean(obj.handoff) || nested.handoff,
             reply: nested.text.trim(),
@@ -1818,7 +1821,7 @@ async function prepareAssistantTurn({
   const warnPrefix = msgSensitive ? msg('sensitiveWarn', lang) + '\n\n' : '';
 
   const safeHistory = (Array.isArray(history) ? history : [])
-    .slice(-4)
+    .slice(-24)
     .filter((h) => h && (h.role === 'user' || h.role === 'assistant') && typeof h.content === 'string')
     .map((h) => ({ role: h.role, content: redactSensitive(h.content).text.slice(0, 600) }));
 
@@ -1832,7 +1835,7 @@ async function prepareAssistantTurn({
 
   if (isPreviousHandoffOffer(safeHistory)) {
     if (isAffirmative(cleanMsg)) {
-      return { path: 'handoff_yes', lang, effectiveChannel, earlyResult: { ok: true, handoff: true, lang, reply: `${warnPrefix}${msg('handoff', lang)}` } };
+      return { path: 'handoff_yes', lang, effectiveChannel, earlyResult: { ok: true, handoff: true, lang, reply: `${warnPrefix}${unsupportedReply(lang)}` } };
     }
     if (isNegative(cleanMsg)) {
       return { path: 'handoff_no', lang, effectiveChannel, earlyResult: { ok: true, handoff: false, lang, reply: `${warnPrefix}${msg('handoffDeclined', lang)}` } };
@@ -1912,6 +1915,7 @@ async function prepareAssistantTurn({
       : '(No exact catalog match; answer from general Istanbul knowledge and mention Bosphorly only if relevant.)';
   const promptArgs = { lang, timeGreet, timeHumor, guestName, hasGreeted, aiIdentityAsked, contextBlock, memberNote };
   let systemPrompt = smallTalkKind ? buildSmallTalkPrompt(promptArgs) : buildCatalogPrompt(promptArgs);
+  systemPrompt += '\n' + SUPPORT_TOOL_INSTRUCTIONS;
   systemPrompt += '\nDo not promote Platinum in normal conversation. Explain membership benefits only when the guest asks about membership or benefits.';
   if (tier === 'platinum') systemPrompt += '\nBu misafir Platinum üye; ona sıcak, kişisel ve özenli davran, gerektiğinde önceliğini hissettir ama abartılı övgü yapma.';
   const messages = [
@@ -1960,6 +1964,10 @@ async function finalizeModelOutput({
       reply: msg('abuseClose', lang),
     };
   }
+  if (parsed.supportRequest) {
+    const outcome = await finishSupportTurn(env,{details:parsed.supportRequest,channel:effectiveChannel,conversationId:effectiveActorKeys?.find(k=>k.startsWith('sess:'))||effectiveActorKeys?.[0],lang,history:safeHistory,message:cleanMsg,trustedContact:effectiveChannel==='telegram'?effectiveActorKeys?.find(k=>k.startsWith('tg:')):''});
+    return {ok:true,lang,...outcome};
+  }
   if (smallTalkKind && parsed.handoff && parsed.reply && !parsed.abuse) {
     parsed = { ...parsed, handoff: false };
   }
@@ -1993,6 +2001,7 @@ async function finalizeModelOutput({
   reply=unsafeReply(reply)||(prep.effectiveChannel==='telegram'&&detectReplyLanguage(reply,lang)!==lang)?safeFallback(lang):tidyReply(reply,safeHistory,false);
   if (guestName) reply = attachGuestName(reply, guestName);
   reply = enforceMaxEmojis(capWords(reply, 120), 2);
+  if(unsupportedClaim(reply,[...safeHistory.filter(h=>h.role==='user').map(h=>h.content),cleanMsg].join('\n')))reply=unsupportedReply(lang);
   return { ok: true, handoff: false, lang, reply: `${warnPrefix}${reply}` };
 }
 
@@ -2231,6 +2240,7 @@ function extractStreamTokenText(payloadStr) {
 
 function toHttpAssistantBody(result, chatSession = null) {
   const body = {
+    ...(result.reference?{reference:result.reference}:{}),
     reply: result.reply,
     handoff: Boolean(result.handoff),
     handoffOffer: Boolean(result.handoffOffer),
@@ -2298,46 +2308,8 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
         sendEvent(controller, 'session', { chatSession });
       }
 
-      const emitSafePrefix = (decoded) => {
-        if (abortedEarly || !langVerified || !varietyVerified) return;
-        let working = decoded;
-        if (prep.hasGreeted && !prep.aiIdentityAsked) {
-          if (working.length < 64) return;
-          working = stripRepeatIntroAndGreeting(working);
-        }
-        let safeLimit = Math.max(0, working.length - 36);
-        if (safeLimit <= 0) return;
-
-        // If the tail after the last complete sentence looks like a price, currency, or partial sentence near a tag,
-        // wait until sentence terminator so price/ethical belts check the full sentence before emitting to guest.
-        const sentBoundary = findLastSentenceBoundary(working.slice(0, safeLimit));
-        const unendedTail = working.slice(Math.max(0, sentBoundary));
-        if (/\d|[€$₺£₽¥]|EUR|USD|TRY|TL/i.test(unendedTail)) {
-          if (sentBoundary <= 0) return;
-          safeLimit = sentBoundary;
-        }
-
-        let cut = working.slice(0, safeLimit);
-        const lastWs = Math.max(cut.lastIndexOf(' '), cut.lastIndexOf('\n'));
-        if (lastWs > 0 && sentBoundary !== safeLimit) cut = cut.slice(0, lastWs + 1);
-
-        let cleaned = stripFakeUrgency(stripExternalLinks(redactSensitive(cut).text));
-        cleaned = enforceEthicalBoundary(cleaned, prep.lang, prep.cleanMsg, prep.safeHistory).text;
-        cleaned = enforcePriceSafetyBelt(cleaned, prep.lang, prep.catalogPriceIndex||KB_PRICE_PAIRS).text;
-        cleaned = enforceMaxEmojis(cleaned, 2);
-        if (/\s$/.test(cut) && cleaned && !/\s$/.test(cleaned)) {
-          cleaned += ' ';
-        }
-        const prefixed = (!warned && prep.warnPrefix ? prep.warnPrefix : '') + cleaned;
-        if (prefixed.length > emittedText.length && prefixed.startsWith(emittedText)) {
-          const delta = prefixed.slice(emittedText.length);
-          if (delta) {
-            warned = true;
-            emittedText = prefixed;
-            sendEvent(controller, 'delta', { t: delta });
-          }
-        }
-      };
+      // No draft can reach the guest before server-side tool execution and the honesty guard.
+      const emitSafePrefix = () => {};
 
       const finishWithFinalized = async (finalized, extraPath = null) => {
         if (!finalized.closed && !finalized.handoffOffer && !finalized.fallback && finalized.reply) {
@@ -2553,47 +2525,10 @@ export async function forwardConversationEmail({ env, email, lang = 'en', histor
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
     return { ok: false, status: 400, error: 'Valid email is required' };
   }
-  const fromEmail = env.REQUEST_FROM_EMAIL || env.MAIL_FROM;
-  if (!env.RESEND_API_KEY || !fromEmail) {
-    return { ok: false, status: 503, error: 'Email delivery is not configured' };
-  }
-  const safeHistory = (Array.isArray(history) ? history : [])
-    .slice(-4)
-    .filter((h) => h && typeof h.content === 'string')
-    .map((h) => `${h.role === 'assistant' ? 'Assistant' : 'Guest'}: ${redactSensitive(h.content).text}`);
-  const cleanMessage = redactSensitive(message).text.trim();
-  const ref = `BOS-CHAT-${Date.now().toString(36).toUpperCase()}`;
-  const subject = `Bosphorly ${source} assistant handoff · ${ref}`;
-  const lines = [
-    subject,
-    `Source: ${source}`,
-    `Language: ${lang}`,
-    `Guest email: ${cleanEmail}`,
-    meta.telegramUser ? `Telegram: ${meta.telegramUser}` : '',
-    '',
-    'Recent conversation:',
-    ...(safeHistory.length ? safeHistory : ['(no prior turns)']),
-    cleanMessage ? `Latest message: ${cleanMessage}` : '',
-  ].filter(Boolean);
-
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      'Content-Type': 'application/json',
-      'Idempotency-Key': ref,
-    },
-    body: JSON.stringify({
-      from: fromEmail,
-      to: ['info@bosphorly.com'],
-      subject,
-      text: lines.join('\n'),
-      reply_to: cleanEmail,
-    }),
+  return createSupportRequest(env,{
+    channel:source,conversationId:meta.conversationId||meta.telegramUser||cleanEmail,lang,kind:'conversation',
+    details:{service:'Mimo destek',date:'',guests:null,name:'',contactPreference:'email',contact:cleanEmail,notes:message,summary:'Misafir ekiple görüşme talep etti.'},history,message
   });
-  if (!res.ok) return { ok: false, status: 502, error: 'Email provider rejected request' };
-  await captureMessage(env,{source:'handoff',reference:ref,email:cleanEmail,channel:source,subject,body:lines.join('\n')});
-  return { ok: true, reference: ref };
 }
 
 export const CHAT_SESSION_TTL_MS = 30 * 60 * 1000;
@@ -2917,7 +2852,7 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
       return jsonResp({ error: 'Invalid message' }, 400);
     }
     const pageLang = typeof body.lang === 'string' ? body.lang : '';
-    const hist = Array.isArray(body.history) ? body.history.slice(-4) : [];
+    const hist = Array.isArray(body.history) ? body.history.slice(-24) : [];
     const alreadyGreeted = Boolean(body.greeted);
     const wantsStream = Boolean(
       body.stream === true || (request.headers.get('Accept') || '').toLowerCase().includes('text/event-stream')
@@ -3030,12 +2965,13 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
       env,
       email: body.email,
       lang: typeof body.lang === 'string' ? body.lang : 'en',
-      history: Array.isArray(body.history) ? body.history.slice(-4) : [],
+      history: Array.isArray(body.history) ? body.history.slice(-24) : [],
       message: typeof body.message === 'string' ? body.message : '',
       source: 'web',
+      meta:{conversationId:cleanSessionId||`ip:${ip}`},
     });
-    if (!forwarded.ok) return jsonResp({ error: forwarded.error }, forwarded.status);
-    const acceptedBody = { accepted: true, reference: forwarded.reference };
+    if (!forwarded.ok) return jsonResp({ error: forwarded.error, reply:supportFailure(body.lang) }, forwarded.status);
+    const acceptedBody = { accepted: true, reference: forwarded.reference, reply:supportReceipt(body.lang,forwarded.reference) };
     if (auth.chatSession) acceptedBody.chatSession = auth.chatSession;
     return jsonResp(acceptedBody, 202);
   }

@@ -330,7 +330,7 @@
     const partner=currentUser.role==='partner';
     for(const id of ['navDashboard','navBookings','navMembers','navInbox','navCampaigns','navCatalog','navSettings'])$(id).hidden=partner;
     if(partner){$('navPartners').hidden=false;await switchView('partners');}
-    else { $('navCatalog').hidden=!manager();$('navSettings').hidden=!manager();$('navPartners').hidden=!manager();$('navCampaigns').hidden=!manager();await switchView('dashboard'); }
+    else { $('navCatalog').hidden=!manager();$('navSettings').hidden=!manager();$('navPartners').hidden=!manager();$('navCampaigns').hidden=!manager();await switchView('dashboard'); const messageId=new URLSearchParams(location.search).get('message');if(messageId){await switchView('inbox');await openMessage(messageId);} }
   }
 
   async function checkMemberExtranetStatus(memberBearer) {
@@ -564,13 +564,13 @@
     const list=$('inboxList');list.replaceChildren();
     try{const data=await extranetApi('/v1/extranet/messages?page='+page+'&status='+$('inboxStatus').value+'&source='+$('inboxSource').value+'&channel='+$('inboxChannel').value+'&assignedTo='+$('inboxAssigned').value);inboxPage=data.page;
       $('inboxCount').textContent=data.total+' mesaj · Sayfa '+data.page;
-      for(const item of data.messages){const card=node('section',null,'ex-detail-section');card.append(node('h2',item.subject),node('p',item.source+' · '+(item.channel||'web')+' · Atanan: '+(item.assigned_to||'yok')+' · '+item.status+' · '+item.created_at+' · '+(item.email||'')),button('Mesajı aç',()=>openMessage(item.id)));list.append(card);}
+      for(const item of data.messages){const card=node('section',null,'ex-detail-section');card.append(node('h2',item.subject),node('p',item.email_status==='failed'?'E-posta gönderilemedi · Deneme: '+item.email_attempts:''),node('p',item.source+' · '+(item.channel||'web')+' · Atanan: '+(item.assigned_to||'yok')+' · '+item.status+' · '+item.created_at+' · '+(item.email||'')),button('Mesajı aç',()=>openMessage(item.id)));list.append(card);}
       $('inboxPrev').disabled=page<=1;$('inboxNext').disabled=page*20>=data.total;
     }catch(e){list.append(node('p',e.message));}
   }
   async function openMessage(id) {
     const box=$('messageDetail');box.replaceChildren();
-    try{const data=await extranetApi('/v1/extranet/messages/'+id);box.append(node('h2',data.subject),node('p',data.email||'E-posta yok'),node('pre',data.body));
+    try{const data=await extranetApi('/v1/extranet/messages/'+id);box.append(node('h2',data.subject),node('p',data.email||'E-posta yok'),node('pre',data.body),node('p',data.email_status==='failed'?'E-posta gönderilemedi · Deneme: '+data.email_attempts:''));
       for(const state of [['new','Yeni'],['read','Okundu'],['replied','Yanıtlandı'],['archived','Kapandı']])box.append(button(state[1],async()=>{await extranetApi('/v1/extranet/messages/'+id+'/status',{method:'POST',body:{status:state[0]}});await loadInbox(inboxPage);}));
       const assignment=button('Mesajı bana ata',async()=>{await extranetApi('/v1/extranet/messages/'+id+'/assignment',{method:'POST',body:{memberId:currentUser.id}});await loadInbox(inboxPage);});box.append(assignment);
       for(const note of data.notes)box.append(node('p','İç not: '+note.body));

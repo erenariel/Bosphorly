@@ -1421,3 +1421,23 @@ test('commission dashboard excludes unpaid, refunded, cancelled and test request
   assert.equal(changed.body.booking.refundedMinor, 5000);
   assert.ok(env.DB.raw.prepare("SELECT new_value FROM extranet_audit WHERE action='update_payment_status'").all().some(r => JSON.parse(r.new_value).refundedMinor === 5000));
 });
+
+test('support requests reach the authorized inbox, hide raw support metadata and protect owner-only controls from Cafer admin',async t=>{
+ const {createSupportRequest}=await import('../backend/support-requests.js');
+ const env=createTestEnv();
+ const cafer=await signUpMember(env,'cafer@bosphorly.com');
+ const authStatus=await callWorker(env,'/v1/extranet/auth/status',{method:'POST',body:{},bearer:cafer.token});
+ assert.equal(authStatus.status,200);assert.equal(authStatus.body.user.role,'admin');
+ const admin=await createExtranetActor(env,'cafer@bosphorly.com','admin');
+ const staff=await createExtranetActor(env,'support-staff@test.example','staff');
+ t.mock.method(globalThis,'fetch',async()=>Response.json({}, {status:503}));
+ const result=await createSupportRequest(env,{channel:'web',conversationId:'extranet-test',lang:'tr',details:{service:'Boğaz',date:'2026-12-10',guests:2,name:'Guest',contactPreference:'email',contact:'private-guest@example.org'},message:'Talep'});
+ assert.equal(result.ok,true);
+ assert.equal((await callWorker(env,'/v1/extranet/messages')).status,401);
+ const inbox=await callWorker(env,'/v1/extranet/messages',{cookie:admin.cookie});assert.equal(inbox.status,200);assert.equal(inbox.body.messages[0].email_status,'failed');
+ const detail=await callWorker(env,'/v1/extranet/messages/'+result.id,{cookie:staff.cookie});assert.equal(detail.status,200);assert.equal(detail.body.support_json,undefined);assert.equal(detail.body.conversation_hash,undefined);assert.ok(!JSON.stringify(detail.body).includes('private-guest@example.org'));
+ assert.equal((await callWorker(env,'/v1/extranet/members',{cookie:admin.cookie})).status,200);
+ const post={method:'POST',cookie:admin.cookie,csrf:admin.csrf,body:{assistantDailyLimit:10}};
+ assert.equal((await callWorker(env,'/v1/extranet/settings',post)).status,403);
+ assert.equal((await callWorker(env,'/v1/extranet/settings',{...post,body:{OWNER_EMAILS:'cafer@bosphorly.com'}})).status,403);
+});

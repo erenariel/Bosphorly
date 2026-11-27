@@ -368,3 +368,16 @@ test('Catalog editor preserves revision/CSRF and settings remain owner-only in t
  await page.goto('/extranet/');await page.locator('#navCatalog').click();await expect(page.locator('#catalogContent')).toContainText('Eksik çeviriler: he');await page.getByRole('button',{name:'Düzenle: test-tour'}).click();await page.getByText('EN çeviri',{exact:true}).click();await page.getByLabel('EN başlık',{exact:true}).fill('Updated Tour');await page.getByRole('button',{name:'Katalog kaydını kaydet'}).click();await expect.poll(()=>saved).toBe(true);
  await page.locator('#navSettings').click();await expect(page.locator('#settingsContent')).toContainText('yalnız owner');await expect(page.getByRole('button',{name:'Ayarları kaydet'})).toHaveCount(0);role='owner';await page.reload();await page.locator('#navSettings').click();await expect(page.getByRole('button',{name:'Ayarları kaydet'})).toBeVisible();await expect(page.getByLabel('Mimo operasyonel günlük tavan',{exact:true})).toHaveAttribute('max','1000');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
 });
+
+test('Support email deep link opens failed delivery in the inbox for an admin on mobile',async({page})=>{
+ const data={id:'support-test',source:'handoff',channel:'web',reference:'BOS-ABC123456789',subject:'[Yeni talep] BOS-ABC123456789',status:'new',email:'a***e@example.org',email_status:'failed',email_attempts:3,created_at:'2026-11-26',body:'Hizmet: Sunset cruise',notes:[],replies:[]};
+ await page.route('https://**/v1/extranet/**',r=>{
+  const path=new URL(r.request().url()).pathname;
+  const body=path.endsWith('/session')?{authenticated:true,csrfToken:'csrf',user:{id:'admin-test',email:'cafer@bosphorly.com',role:'admin'}}:path.endsWith('/dashboard')?{periods:{today:{},week:{},month:{}},recentBookings:[],statusBreakdown:{}}:path.endsWith('/messages/support-test')?data:path.endsWith('/messages')?{messages:[data],total:1,page:1}:{};
+  return r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+ });
+ await page.goto('/extranet/?message=support-test');
+ await expect(page.locator('#messageDetail')).toContainText('BOS-ABC123456789');
+ await expect(page.locator('#messageDetail')).toContainText('E-posta gönderilemedi · Deneme: 3');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBeTruthy();
+});

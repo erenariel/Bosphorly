@@ -43,7 +43,6 @@
     yesForward: { tr:'Evet, ilet', en:'Yes, forward', ru:'Да, передать', uk:'Так, передати', de:'Ja, weiterleiten', fr:'Oui, transmettre', nl:'Ja, stuur door', ar:'نعم، أرسلها', he:'כן, להעביר', az:'Bəli, göndər', fa:'بله، ارسال کن', es:'Sí, enviar', it:'Sì, inoltra', pt:'Sim, encaminhar', hr:'Da, proslijedi', hu:'Igen, továbbítsd', bs:'Da, proslijedi', zh:'是的，请转发', ja:'はい、引き継ぐ', ko:'네, 전달해 줘', hi:'हाँ, भेजें', bn:'হ্যাঁ, পাঠান', id:'Ya, teruskan' },
     noThanks: { tr:'Hayır, teşekkürler', en:'No thanks', ru:'Нет, спасибо', uk:'Ні, дякую', de:'Nein, danke', fr:'Non merci', nl:'Nee, bedankt', ar:'لا، شكرًا', he:'לא, תודה', az:'Xeyr, təşəkkür', fa:'خیر، ممنون', es:'No, gracias', it:'No, grazie', pt:'Não, obrigado', hr:'Ne, hvala', hu:'Nem, köszönöm', bs:'Ne, hvala', zh:'不用了，谢谢', ja:'いいえ、結構です', ko:'아니요, 괜찮아요', hi:'नहीं, धन्यवाद', bn:'না, ধন্যবাদ', id:'Tidak, terima kasih' },
     close: { tr:'Kapat', en:'Close', ru:'Закрыть', uk:'Закрити', de:'Schließen', fr:'Fermer', nl:'Sluiten', ar:'إغلاق', he:'סגור', az:'Bağla', fa:'بستن', es:'Cerrar', it:'Chiudi', pt:'Fechar', hr:'Zatvori', hu:'Bezárás', bs:'Zatvori', zh:'关闭', ja:'閉じる', ko:'닫기', hi:'बंद करें', bn:'বন্ধ করুন', id:'Tutup' },
-    forwarded: { tr:'Sohbetin info@bosphorly.com adresine iletildi. En kısa sürede e-posta ile dönüş yapacağız.', en:'Your conversation was forwarded to info@bosphorly.com. We will reply by email shortly.', ru:'Переписка отправлена на info@bosphorly.com. Мы скоро ответим по e-mail.', uk:'Розмову надіслано на info@bosphorly.com. Ми скоро відповімо електронною поштою.', de:'Deine Nachricht wurde an info@bosphorly.com weitergeleitet. Wir antworten in Kürze per E-Mail.', fr:'Ta conversation a été transmise à info@bosphorly.com. Nous te répondrons vite par e-mail.', nl:'Je gesprek is doorgestuurd naar info@bosphorly.com. We reageren spoedig per e-mail.', ar:'تم إرسال محادثتك إلى info@bosphorly.com. سنرد عليك عبر البريد الإلكتروني قريبًا.', he:'השיחה הועברה אל info@bosphorly.com. נחזור אליך בדוא״ל בהקדם.', az:'Söhbətin info@bosphorly.com ünvanına göndərildi.', fa:'گفتگویت به info@bosphorly.com ارسال شد. به‌زودی پاسخ می‌دهیم.', es:'Tu conversación se envió a info@bosphorly.com. Responderemos por correo pronto.', it:'La conversazione è stata inoltrata a info@bosphorly.com. Risponderemo via e-mail.', pt:'Sua conversa foi enviada para info@bosphorly.com. Responderemos por e-mail em breve.', hr:'Razgovor je proslijeđen na info@bosphorly.com.', hu:'A beszélgetést továbbítottuk a info@bosphorly.com címre.', bs:'Razgovor je proslijeđen na info@bosphorly.com.', zh:'你的对话已转发至 info@bosphorly.com，我们会尽快邮件回复。', ja:'会話内容を info@bosphorly.com に送信したよ。まもなくメールで返信するね。', ko:'대화 내용이 info@bosphorly.com으로 전달되었어요. 곧 이메일로 회신드릴게요.', hi:'तुम्हारी बातचीत info@bosphorly.com पर भेज दी गई है।', bn:'তোমার কথোপকথন info@bosphorly.com-এ পাঠানো হয়েছে।', id:'Percakapan kamu sudah diteruskan ke info@bosphorly.com.' },
     verifyFirst: { tr:'Lütfen önce güvenlik doğrulamasını tamamla.', en:'Please complete the security check first.', ru:'Пожалуйста, сначала пройди проверку безопасности.', uk:'Будь ласка, спочатку пройди перевірку безпеки.', de:'Bitte schließe zuerst die Sicherheitsprüfung ab.', fr:'Complète d’abord la vérification de sécurité.', nl:'Voltooi eerst de beveiligingscontrole.', ar:'يرجى إكمال التحقق الأمني أولاً.', he:'נא להשלים תחילה את בדיקת האבטחה.', az:'Zəhmət olmasa təhlükəsizlik yoxlamasını tamamla.', fa:'لطفاً ابتدا بررسی امنیتی را تکمیل کن.', es:'Completa primero la verificación de seguridad.', it:'Completa prima la verifica di sicurezza.', pt:'Conclua primeiro a verificação de segurança.', hr:'Molimo dovrši sigurnosnu provjeru.', hu:'Kérjük, először végezd el a biztonsági ellenőrzést.', bs:'Molimo dovrši sigurnosnu provjeru.', zh:'请先完成安全验证。', ja:'先にセキュリティ確認を完了してね。', ko:'먼저 보안 확인을 완료해 주세요.', hi:'कृपया पहले सुरक्षा जांच पूरी करो।', bn:'অনুগ্রহ করে প্রথমে নিরাপত্তা যাচাই সম্পন্ন করো।', id:'Harap selesaikan pemeriksaan keamanan dulu ya.' },
     offline: { tr:'Mimo şu an çevrimdışı; soruların için info@bosphorly.com adresine yazabilirsin.', en:'Mimo is currently offline; please email info@bosphorly.com for help.', ru:'Mimo сейчас недоступен; напиши на info@bosphorly.com.', uk:'Mimo зараз недоступний; напиши на info@bosphorly.com.', de:'Mimo ist offline; schreib uns an info@bosphorly.com.', fr:'Mimo est hors ligne ; écris à info@bosphorly.com.', nl:'Mimo is offline; mail naar info@bosphorly.com.', ar:'Mimo غير متصل حاليًا؛ يرجى مراسلة info@bosphorly.com.', he:'Mimo לא זמין כרגע; כתוב ל-info@bosphorly.com.', az:'Mimo hazırda oflayndır; info@bosphorly.com ünvanına yaz.', fa:'Mimo آفلاین است؛ لطفاً به info@bosphorly.com ایمیل بزن.', es:'Mimo está desconectado; escribe a info@bosphorly.com.', it:'Mimo non è disponibile; scrivi a info@bosphorly.com.', pt:'Mimo está offline; escreva para info@bosphorly.com.', hr:'Mimo je izvan mreže; piši na info@bosphorly.com.', hu:'Mimo jelenleg offline; írj a info@bosphorly.com címre.', bs:'Mimo je van mreže; piši na info@bosphorly.com.', zh:'Mimo 当前离线，请发送邮件至 info@bosphorly.com。', ja:'Mimoは現在オフラインです。info@bosphorly.com までメールで連絡してね。', ko:'Mimo가 현재 오프라인이에요. info@bosphorly.com으로 문의해 주세요.', hi:'Mimo अभी ऑफ़लाइन है; info@bosphorly.com पर ईमेल करो।', bn:'Mimo এখন অফলাইন; info@bosphorly.com-এ ইমেইল করো।', id:'Mimo sedang offline; silakan email ke info@bosphorly.com.' },
     continueTg: { tr:"Telegram'dan devam et", en:'Continue on Telegram', ru:'Продолжить в Telegram', uk:'Продовжити в Telegram', de:'Auf Telegram fortsetzen', fr:'Continuer sur Telegram', nl:'Ga verder op Telegram', ar:'تابع على تيليجرام', he:'המשך בטלגרם', az:'Telegram-da davam et', fa:'در تلگرام ادامه بده', es:'Continuar en Telegram', it:'Continua su Telegram', pt:'Continuar no Telegram', hr:'Nastavi na Telegramu', hu:'Folytatás Telegramon', bs:'Nastavi na Telegramu', zh:'在 Telegram 继续对话', ja:'Telegramで続ける', ko:'Telegram에서 계속하기', hi:'Telegram पर जारी रखो', bn:'Telegram-এ চালিয়ে যাও', id:'Lanjutkan di Telegram' },
@@ -163,8 +162,13 @@
   } catch {
     sessionId = 's_' + Math.random().toString(36).slice(2, 10);
   }
+  const requestHistory = () => {
+    const recent = history.slice(-24).map(h => ({...h, content:String(h.content||'').slice(0,400)}));
+    while (recent.length && new TextEncoder().encode(JSON.stringify(recent)).byteLength > 9000) recent.shift();
+    return recent;
+  };
   const saveHistory = () => {
-    try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-12))); } catch {}
+    try { sessionStorage.setItem(STORE_KEY, JSON.stringify(history.slice(-24))); } catch {}
   };
   let chatSession = '';
   try { chatSession = sessionStorage.getItem(CHAT_SESSION_KEY) || ''; } catch { chatSession = ''; }
@@ -847,7 +851,7 @@
     sendBtn.disabled = true;
     showTyping();
     const CLIENT_CAP_MS = Number(window.__BOSPHORLY_MIMO_CAP_MS) > 0 ? Number(window.__BOSPHORLY_MIMO_CAP_MS) : 25000;
-    const recent = history.slice(-4);
+    const recent = requestHistory();
     const abortCtrl = typeof AbortController === 'function' ? new AbortController() : null;
     const capTimer = setTimeout(() => {
       if (abortCtrl) abortCtrl.abort(new Error('stream_timeout'));
@@ -1232,7 +1236,7 @@
     const postHandoff = (authPayload) => fetch(`${apiBase}/v1/assistant/handoff`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, lang, history: history.slice(-4), sessionId, ...authPayload }),
+      body: JSON.stringify({ email, lang, history: requestHistory(), sessionId, ...authPayload }),
     });
     try {
       let res;
@@ -1269,13 +1273,13 @@
         lockChatClosed();
         return;
       }
-      if (res.ok) {
+      if (res.ok && data.accepted && typeof data.reference==='string' && /^BOS-[A-Z0-9-]+$/.test(data.reference) && typeof data.reply==='string' && data.reply.includes(data.reference)) {
         card.remove();
-        renderMsg('bot', tr('forwarded'));
+        renderMsg('bot', data.reply);
       } else if (res.status === 403) {
         renderMsg('bot', tr('verifyFirst'), { noFeedback: true });
       } else {
-        renderMsg('bot', tr('offline'));
+        renderMsg('bot', !res.ok && typeof data.reply==='string'?data.reply:tr('offline'));
       }
     } catch {
       renderMsg('bot', tr('offline'));

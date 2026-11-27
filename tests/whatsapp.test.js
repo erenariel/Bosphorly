@@ -1,3 +1,4 @@
+import {supportDb} from './support-db.js';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {verifyTelnyx,parseWhatsApp,handleWhatsApp,processWhatsApp,sendWhatsApp,adminWhatsApp,WHATSAPP_POLICY,DEFAULT_TELNYX_MESSAGING_PROFILE_ID} from '../backend/whatsapp.js';
@@ -6,6 +7,7 @@ function payload(text='Boğaz turu istiyorum',id='message-1') {return {data:{eve
 function fixture() {
  const kv=new Map(), seen=new Set(), controls=new Map(); let calls=0; const outputs=[];
  const env={WHATSAPP_PHONE_NUMBER:business,WHATSAPP_KV:{async get(k){return kv.has(k)?JSON.parse(kv.get(k)):null},async put(k,v,opts){assert.ok(opts.expirationTtl<=2592000);kv.set(k,v)}},DB:{prepare(sql){let args;return {bind(...v){args=v;return this},async first(){if(sql.includes('SELECT until_ms'))return {until_ms:controls.get(args[0])||0};if(sql.includes('whatsapp_leases'))return {phone:args[0]};if(sql.includes('whatsapp_seen')) {if(seen.has(args[0]))return null;seen.add(args[0]);return {id:args[0]}}},async run(){if(sql.includes('INSERT INTO whatsapp_control'))controls.set(args[0],args[1]);return {success:true}}}}},AI:{async run(_model,options){calls++;outputs.push(options);return {response:JSON.stringify({reply:'Hangi tarih için düşünüyorsunuz?',handoff:false,abuse:false,proposal:null})}}},TELNYX_API_KEY:'test',TELEGRAM_BOT_TOKEN:'test',TELEGRAM_ADMIN_CHAT_ID:'123',RESEND_API_KEY:'test',REQUEST_FROM_EMAIL:'test@example.com'};
+ env.DB=supportDb(env.DB);
  return {env,kv,controls,outputs,get calls(){return calls}};
 }
 test('signed raw payload, tampering, stale/future timestamps and invalid key',async()=>{
@@ -56,8 +58,8 @@ test('confirmation persists WhatsApp source and reuses form delivery without req
   await processWhatsApp(f.env,parseWhatsApp(payload('evet','confirmed'),business));
   const mail=requests.find(r=>r.url.includes('resend.com'));
   assert.equal(mail.body.reply_to,undefined);
-  assert.equal(JSON.parse(mail.body.text).channel,'whatsapp');
-  assert.equal(JSON.parse(mail.body.text).phone,customer);
+  assert.match(mail.body.text,/Kanal: whatsapp/);
+  assert.ok(mail.body.text.includes(customer));
   assert.equal(JSON.parse(f.kv.get(`chat:${customer}`)).pending,null);
   await processWhatsApp(f.env,parseWhatsApp(payload('evet','confirmed'),business));
   assert.equal(requests.filter(r=>r.url.includes('resend.com')).length,1);
