@@ -11,6 +11,7 @@ export const EMERGENCY_ACTIONS = Object.freeze([
   'close',
   'reopen',
   'close_all',
+  'reopen_all',
   'banner_enable',
   'banner_disable',
   'banner_update',
@@ -1058,6 +1059,7 @@ const ACTION_LABELS_TR = Object.freeze({
   close: 'Acil Kanal Kapatma',
   reopen: 'Kanal Yeniden Açma',
   close_all: 'Bütün Kanalları Acil Kapatma',
+  reopen_all: 'Bütün Kanalları Yeniden Açma',
   banner_enable: 'Güvenlik Uyarı Bandını Açma',
   banner_disable: 'Güvenlik Uyarı Bandını Kapatma',
   banner_update: 'Güvenlik Uyarı Bandı Metnini Güncelleme',
@@ -1184,7 +1186,7 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
     ).results || [];
 
     const recentOperations = auditLogs
-      .filter((a) => a.outcome === 'success' && ['close', 'reopen', 'close_all', 'banner_enable', 'banner_disable', 'banner_update'].includes(a.action_type))
+      .filter((a) => a.outcome === 'success' && ['close', 'reopen', 'close_all', 'reopen_all', 'banner_enable', 'banner_disable', 'banner_update'].includes(a.action_type))
       .slice(0, 10);
 
     const pendingNotifRow = await db
@@ -1322,6 +1324,49 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
       h.fail(409, `${ENV_LOCK_WARNING}. Kanal zaten altyapı kilidiyle kapalıdır.`, 'ENV_LOCKED');
     }
 
+    if (actionType === 'reopen_all') {
+      if (targetChannel !== 'all') {
+        h.fail(400, 'Toplu yeniden açma yalnızca "all" hedefiyle yapılabilir.', 'INVALID_CHANNEL');
+      }
+      const reopenAllAudit = (auditAction, reason) =>
+        writeSecurityAudit(
+          env,
+          {
+            actorEmail: actor.email,
+            actorMemberId: actor.memberId,
+            actorRole: actor.role,
+            channel: 'all',
+            actionType: auditAction,
+            source: 'extranet',
+            outcome: 'failed',
+            reason,
+            ipAddress: actor.ipAddress,
+          },
+          nowMs
+        );
+      if (EMERGENCY_CHANNELS.every((ch) => isChannelEnvLocked(env, ch))) {
+        await reopenAllAudit('reopen_all_blocked_env_lock', 'env_lock_active_all_channels');
+        h.fail(409, `${ENV_LOCK_WARNING}. Panelden bu kilit kaldırılamaz.`, 'ENV_LOCKED');
+      }
+      if (String(body.confirmReopenText || '').trim() !== 'AÇ') {
+        await reopenAllAudit('reopen_all_missing_ac_confirmation', 'missing_AC_confirmation');
+        h.fail(400, 'Toplu yeniden açma işlemi için doğrulama alanına tam olarak "AÇ" yazılmalıdır.', 'REOPEN_CONFIRM_REQUIRED');
+      }
+      const { byChannel: currentStates } = await loadAllChannelStatesForAdmin(env, nowMs);
+      const reopenable = EMERGENCY_CHANNELS.filter((ch) => {
+        const row = currentStates.get(ch);
+        return !isChannelEnvLocked(env, ch) && row && Number(row.enabled) !== 1;
+      });
+      if (!reopenable.length) {
+        const anyEnvLockedClosed = EMERGENCY_CHANNELS.some((ch) => isChannelEnvLocked(env, ch));
+        if (anyEnvLockedClosed) {
+          await reopenAllAudit('reopen_all_blocked_env_lock', 'only_env_locked_channels_closed');
+          h.fail(409, `${ENV_LOCK_WARNING}. Panelden bu kilit kaldırılamaz.`, 'ENV_LOCKED');
+        }
+        h.fail(409, 'Yeniden açılabilecek kapalı kanal bulunmuyor.', 'NOTHING_TO_REOPEN');
+      }
+    }
+
     let payloadObj = {};
     if (actionType.startsWith('banner_')) {
       if (targetChannel !== 'banner') {
@@ -1338,7 +1383,7 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
         text: actionType === 'banner_disable' ? cleanText : cleanText,
         preset: actionType === 'banner_disable' ? '' : preset,
       };
-    } else if (!['close', 'reopen', 'close_all'].includes(actionType)) {
+    } else if (!['close', 'reopen', 'close_all', 'reopen_all'].includes(actionType)) {
       h.fail(400, 'Geçersiz işlem türü.', 'INVALID_ACTION');
     }
 
@@ -1648,7 +1693,7 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
       h.fail(400, 'Doğrulama kodu seçilen kanal veya işlem türüyle eşleşmiyor.', 'BINDING_MISMATCH');
     }
 
-    if (actionType === 'reopen') {
+    if (actionType === 'reopen' || actionType === 'reopen_all') {
       if (String(body.confirmReopenText || '').trim() !== 'AÇ') {
         await writeSecurityAudit(
           env,
@@ -1658,7 +1703,7 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
             actorMemberId: actor.memberId,
             actorRole: actor.role,
             channel: targetChannel,
-            actionType: 'reopen',
+            actionType,
             source: 'extranet',
             outcome: 'failed',
             reason: 'missing_AC_confirmation_on_verify',
@@ -1668,7 +1713,10 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
         );
         h.fail(400, 'Yeniden açma işlemi için "AÇ" onayı zorunludur.', 'REOPEN_CONFIRM_REQUIRED');
       }
-      if (isChannelEnvLocked(env, targetChannel)) {
+      if (actionType === 'reopen' && isChannelEnvLocked(env, targetChannel)) {
+        h.fail(409, `${ENV_LOCK_WARNING}. Panelden bu kilit kaldırılamaz.`, 'ENV_LOCKED');
+      }
+      if (actionType === 'reopen_all' && EMERGENCY_CHANNELS.every((ch) => isChannelEnvLocked(env, ch))) {
         h.fail(409, `${ENV_LOCK_WARNING}. Panelden bu kilit kaldırılamaz.`, 'ENV_LOCKED');
       }
     }
@@ -1924,6 +1972,31 @@ export async function emergencyExtranetRoutes(request, env, url, nowMs, h) {
       for (const ch of EMERGENCY_CHANNELS) {
         prevSummary[ch] = upsertChannelState(ch, false).enabled ? 'open' : 'closed';
         nextSummary[ch] = 'closed';
+      }
+    } else if (actionType === 'reopen_all') {
+      // Toplu yeniden etkinleştirme: yalnızca panelden kapatılmış ve altyapı (env) kilidi
+      // olmayan kanallar açılır. *_DISABLED=1 kilitli kanallara hiçbir şekilde dokunulmaz.
+      prevSummary = {};
+      nextSummary = {};
+      for (const ch of EMERGENCY_CHANNELS) {
+        const row = byChannel.get(ch);
+        const d1Enabled = row ? Number(row.enabled) === 1 : true;
+        if (isChannelEnvLocked(env, ch)) {
+          prevSummary[ch] = d1Enabled ? 'env_locked' : 'closed_env_locked';
+          nextSummary[ch] = d1Enabled ? 'env_locked' : 'closed_env_locked';
+          continue;
+        }
+        if (d1Enabled) {
+          prevSummary[ch] = 'open';
+          nextSummary[ch] = 'open';
+          continue;
+        }
+        upsertChannelState(ch, true);
+        prevSummary[ch] = 'closed';
+        nextSummary[ch] = 'open';
+      }
+      if (!Object.values(prevSummary).includes('closed')) {
+        h.fail(409, 'Yeniden açılabilecek kapalı kanal bulunmuyor. Kanal durumu değiştirilmedi.', 'NOTHING_TO_REOPEN');
       }
     } else if (actionType.startsWith('banner_')) {
       const bEnabled = Boolean(parsedPayload.enabled);

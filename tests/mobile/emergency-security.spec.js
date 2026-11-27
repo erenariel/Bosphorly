@@ -276,7 +276,7 @@ test('Extranet Emergency & Security Center UI: visible ONLY to info@bosphorly.co
   await page.route('https://**/v1/extranet/emergency/verify', async (r) => {
     lastVerifyPayload = r.request().postDataJSON();
     waPending = false;
-    waEnabled = lastVerifyPayload.actionType === 'reopen';
+    waEnabled = lastVerifyPayload.actionType === 'reopen' || lastVerifyPayload.actionType === 'reopen_all';
     await r.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -339,5 +339,48 @@ test('Extranet Emergency & Security Center UI: visible ONLY to info@bosphorly.co
   await page.locator('#btnSubmitEmgOtp').click();
   await expect(waCard).toContainText('Açık');
   expect(lastVerifyPayload.confirmReopenText).toBe('AÇ');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+
+  // 5. Bulk reactivation: disabled while only env-locked Telegram is closed
+  const reopenAllBtn = page.locator('#btnEmergencyReopenAll');
+  await expect(reopenAllBtn).toBeVisible();
+  await expect(reopenAllBtn).toBeDisabled();
+
+  // Close all -> OTP -> WhatsApp closed -> bulk reopen becomes available
+  await page.locator('#btnEmergencyCloseAll').click();
+  await expect(page.locator('#emgReopenAcWrap')).toBeHidden();
+  await page.locator('#btnRequestEmgCode').click();
+  await expect(page.locator('#emgVerifyForm')).toBeVisible();
+  expect(lastRequestCodePayload).toMatchObject({ targetChannel: 'all', actionType: 'close_all' });
+  await page.locator('#emgOtpInput').fill('111222');
+  await page.locator('#btnSubmitEmgOtp').click();
+  await expect(waCard).toContainText('Kapalı');
+  await expect(reopenAllBtn).toBeEnabled();
+
+  // Bulk reopen requires exact "AÇ" + fresh OTP
+  await reopenAllBtn.click();
+  await expect(page.locator('#emgReopenAcWrap')).toBeVisible();
+  await expect(page.locator('#emgModalDesc')).toContainText('_DISABLED=1');
+  await page.locator('#emgReopenConfirmInput').fill('ac');
+  await page.locator('#btnRequestEmgCode').click();
+  await expect(page.locator('#emgModalAlert')).toContainText('"AÇ"');
+  await expect(page.locator('#emgVerifyForm')).toBeHidden();
+  await page.locator('#emgReopenConfirmInput').fill('AÇ');
+  await page.locator('#btnRequestEmgCode').click();
+  await expect(page.locator('#emgVerifyForm')).toBeVisible();
+  expect(lastRequestCodePayload).toMatchObject({ targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+  await page.locator('#emgOtpInput').fill('333444');
+  await page.locator('#btnSubmitEmgOtp').click();
+  await expect(waCard).toContainText('Açık');
+  expect(lastVerifyPayload).toEqual({
+    operationId: 'op-live-1',
+    code: '333444',
+    targetChannel: 'all',
+    actionType: 'reopen_all',
+    confirmReopenText: 'AÇ',
+  });
+  await expect(reopenAllBtn).toBeDisabled();
+  await expect(tgCard.locator('[data-emg-action="reopen-telegram"]')).toBeDisabled();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
 });

@@ -660,7 +660,7 @@ async function setChannelDirectlyViaDualAuth(env, owner, targetChannel, actionTy
         targetChannel,
         actionType,
         confirmAction: true,
-        ...(actionType === 'reopen' ? { confirmReopenText: 'AÇ' } : {}),
+        ...(actionType === 'reopen' || actionType === 'reopen_all' ? { confirmReopenText: 'AÇ' } : {}),
         ...extra,
       },
     });
@@ -675,7 +675,7 @@ async function setChannelDirectlyViaDualAuth(env, owner, targetChannel, actionTy
         code,
         targetChannel,
         actionType,
-        ...(actionType === 'reopen' ? { confirmReopenText: 'AÇ' } : {}),
+        ...(actionType === 'reopen' || actionType === 'reopen_all' ? { confirmReopenText: 'AÇ' } : {}),
       },
     });
     assert.equal(verRes.status, 200);
@@ -1247,4 +1247,158 @@ test('7. Cloudflare environment locks (*_DISABLED=1), D1 transient failure conti
   assert.throws(() => {
     env.DB.raw.exec(`DELETE FROM emergency_audit_log`);
   }, /emergency audit log is immutable/);
+});
+
+test('8. Bulk reactivation (reopen_all): "AÇ" + fresh Gmail OTP, no OTP reuse from close_all/reopen, env-locked channels stay locked, atomic audit + notification, Telegram /acil_ac hepsi forbidden', async () => {
+  const env = createEnv({ INSTAGRAM_DISABLED: '1' });
+  let now = 1_770_500_000_000;
+  const owner = seedExtranetSession(env, 'info@bosphorly.com', 'owner', now);
+  const otherOwner = seedExtranetSession(env, 'second-owner@bosphorly.example', 'owner', now);
+  const sent = [];
+  const tgOutbox = [];
+  const origFetch = globalThis.fetch;
+  const installFetch = () => {
+    globalThis.fetch = async (url, opts) => {
+      if (String(url).includes('api.resend.com/emails')) {
+        sent.push({ url, body: JSON.parse(opts.body) });
+        return Response.json({ id: `mail_${sent.length}` });
+      }
+      if (String(url).includes('api.telegram.org')) {
+        tgOutbox.push(JSON.parse(opts.body));
+        return Response.json({ ok: true });
+      }
+      throw new Error(`Unexpected fetch: ${url}`);
+    };
+  };
+  const post = (path, body, nowMs, actor = owner) => callExtranet(env, path, { method: 'POST', actor, nowMs, body });
+
+  try {
+    installFetch();
+    // A) Nothing panel-closed yet (only Instagram env-locked) -> reopen_all refused, env lock never lifted.
+    const early = await post('/v1/extranet/emergency/request-code', { targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now);
+    assert.equal(early.status, 409);
+    assert.equal(early.body.code, 'ENV_LOCKED');
+
+    // B) Close all channels with dual-account verification.
+    globalThis.fetch = origFetch;
+    const closeAll = await setChannelDirectlyViaDualAuth(env, owner, 'all', 'close_all', now);
+    const closeAllOpId = closeAll.body.operationId || env.DB.raw
+      .prepare(`SELECT operation_id FROM emergency_verifications WHERE action_type = 'close_all' AND status = 'consumed'`)
+      .get().operation_id;
+    installFetch();
+    for (const ch of ['whatsapp', 'telegram', 'instagram', 'mimo']) {
+      assert.equal(await isChannelEnabled(env, ch), false, `${ch} closed after close_all`);
+    }
+
+    // C) Only info@bosphorly.com may request reopen_all.
+    now += OTP_COOLDOWN_MS + 5000;
+    const forbidden = await post('/v1/extranet/emergency/request-code', { targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now, otherOwner);
+    assert.equal(forbidden.status, 403);
+
+    // D) "AÇ" is mandatory and target must be 'all'.
+    const noAc = await post('/v1/extranet/emergency/request-code', { targetChannel: 'all', actionType: 'reopen_all', confirmAction: true }, now);
+    assert.equal(noAc.status, 400);
+    assert.equal(noAc.body.code, 'REOPEN_CONFIRM_REQUIRED');
+    const wrongTarget = await post('/v1/extranet/emergency/request-code', { targetChannel: 'whatsapp', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now);
+    assert.equal(wrongTarget.status, 400);
+    assert.equal(wrongTarget.body.code, 'INVALID_CHANNEL');
+
+    // E) Telegram /acil_ac hepsi is forbidden and changes nothing.
+    const tgSecret = await computeTelegramWebhookSecret(env.CODE_PEPPER);
+    const tgRes = await handleTelegramWebhook(
+      new Request('https://api.bosphorly.com/v1/telegram/webhook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Telegram-Bot-Api-Secret-Token': tgSecret },
+        body: JSON.stringify({
+          update_id: 9,
+          message: {
+            message_id: 901,
+            date: Math.floor(now / 1000),
+            chat: { id: Number(env.TELEGRAM_ADMIN_CHAT_ID), type: 'private' },
+            from: { id: Number(env.TELEGRAM_ADMIN_CHAT_ID) },
+            text: '/acil_ac hepsi',
+          },
+        }),
+      }),
+      env,
+      now,
+      { waitUntil() {} }
+    );
+    assert.equal(tgRes.status, 200);
+    assert.equal((await tgRes.json()).denied, 'reopen_forbidden');
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), false);
+
+    // F) A single-channel reopen OTP cannot be used for reopen_all (and vice versa).
+    const single = await post('/v1/extranet/emergency/request-code', { targetChannel: 'whatsapp', actionType: 'reopen', confirmReopenText: 'AÇ' }, now);
+    assert.equal(single.status, 200);
+    const singleCode = extractSixDigitCodeFromEmails(sent.map((m) => ({ body: { text: m.body.text } })), single.body.operationId);
+    const crossSingle = await post('/v1/extranet/emergency/verify', { operationId: single.body.operationId, code: singleCode, targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now + 1000);
+    assert.equal(crossSingle.status, 400);
+    assert.equal(crossSingle.body.code, 'BINDING_MISMATCH');
+
+    // G) The consumed close_all operation cannot be replayed as reopen_all.
+    const crossCloseAll = await post('/v1/extranet/emergency/verify', { operationId: closeAllOpId, code: '000000', targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now + 1500);
+    assert.equal(crossCloseAll.status, 400);
+    assert.equal(crossCloseAll.body.code, 'BINDING_MISMATCH');
+
+    // H) Fresh reopen_all OTP supersedes the pending single reopen OTP.
+    now += OTP_COOLDOWN_MS + 5000;
+    const bulk = await post('/v1/extranet/emergency/request-code', { targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ', confirmAction: true }, now);
+    assert.equal(bulk.status, 200);
+    const bulkCode = extractSixDigitCodeFromEmails(sent.map((m) => ({ body: { text: m.body.text } })), bulk.body.operationId);
+    assert.ok(!JSON.stringify(bulk.body).includes(bulkCode));
+    const otpMail = sent.find((m) => m.body.text.includes(bulk.body.operationId));
+    assert.deepEqual([].concat(otpMail.body.to), [VERIFY_GMAIL]);
+    const superseded = await post('/v1/extranet/emergency/verify', { operationId: single.body.operationId, code: singleCode, targetChannel: 'whatsapp', actionType: 'reopen', confirmReopenText: 'AÇ' }, now + 500);
+    assert.equal(superseded.status, 409);
+    assert.equal(superseded.body.code, 'CODE_INVALIDATED');
+
+    // I) Verify without "AÇ" is refused and leaves every channel closed.
+    const verifyNoAc = await post('/v1/extranet/emergency/verify', { operationId: bulk.body.operationId, code: bulkCode, targetChannel: 'all', actionType: 'reopen_all' }, now + 1000);
+    assert.equal(verifyNoAc.status, 400);
+    assert.equal(verifyNoAc.body.code, 'REOPEN_CONFIRM_REQUIRED');
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), false);
+
+    // J) Successful bulk reactivation.
+    const ok = await post('/v1/extranet/emergency/verify', { operationId: bulk.body.operationId, code: bulkCode, targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now + 2000);
+    assert.equal(ok.status, 200);
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), true);
+    assert.equal(await isChannelEnabled(env, 'telegram'), true);
+    assert.equal(await isChannelEnabled(env, 'mimo'), true);
+    assert.equal(await isChannelEnabled(env, 'instagram'), false, 'INSTAGRAM_DISABLED=1 env lock must never be lifted from the panel');
+
+    const st = await callExtranet(env, '/v1/extranet/emergency/status', { actor: owner, nowMs: now + 3000 });
+    const ig = st.body.channels.find((c) => c.id === 'instagram');
+    assert.equal(ig.enabled, false);
+    assert.equal(ig.envLocked, true);
+    assert.equal(ig.d1Enabled, false, 'D1 row of env-locked channel is not touched by reopen_all');
+
+    const audit = env.DB.raw
+      .prepare(`SELECT * FROM emergency_audit_log WHERE operation_id = ? AND outcome = 'success'`)
+      .get(bulk.body.operationId);
+    assert.equal(audit.action_type, 'reopen_all');
+    assert.equal(audit.channel, 'all');
+    assert.deepEqual(JSON.parse(audit.previous_state), { whatsapp: 'closed', telegram: 'closed', instagram: 'closed_env_locked', mimo: 'closed' });
+    assert.deepEqual(JSON.parse(audit.new_state), { whatsapp: 'open', telegram: 'open', instagram: 'closed_env_locked', mimo: 'open' });
+    assert.ok(!JSON.stringify(audit).includes(bulkCode));
+    const exAudit = env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM extranet_audit WHERE action = 'emergency_reopen_all'`).get();
+    assert.equal(exAudit.n, 1);
+    const notif = env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM emergency_notification_queue WHERE operation_id = ?`).get(bulk.body.operationId);
+    assert.equal(notif.n, 1);
+    const openWindows = env.DB.raw.prepare(`SELECT COUNT(*) AS n FROM emergency_closed_windows WHERE reopened_at_ms IS NULL`).get();
+    assert.equal(openWindows.n, 0, 'WhatsApp/Telegram closed windows are closed atomically');
+    assert.equal(JSON.parse(env.WHATSAPP_KV.map.get('emergency:ch:whatsapp')).enabled, true);
+    assert.equal(JSON.parse(env.WHATSAPP_KV.map.get('emergency:ch:instagram')).enabled, false);
+
+    // K) Replay is rejected; another reopen_all has nothing to reopen except env-locked Instagram.
+    const replay = await post('/v1/extranet/emergency/verify', { operationId: bulk.body.operationId, code: bulkCode, targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now + 4000);
+    assert.equal(replay.status, 409);
+    assert.equal(replay.body.code, 'CODE_ALREADY_USED');
+    now += OTP_COOLDOWN_MS + 5000;
+    const again = await post('/v1/extranet/emergency/request-code', { targetChannel: 'all', actionType: 'reopen_all', confirmReopenText: 'AÇ' }, now);
+    assert.equal(again.status, 409);
+    assert.equal(again.body.code, 'ENV_LOCKED');
+  } finally {
+    globalThis.fetch = origFetch;
+  }
 });

@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS emergency_verifications (
   actor_member_id TEXT NOT NULL,
   actor_email TEXT NOT NULL,
   target_channel TEXT NOT NULL CHECK(target_channel IN ('whatsapp', 'telegram', 'instagram', 'mimo', 'all', 'banner')),
-  action_type TEXT NOT NULL CHECK(action_type IN ('close', 'reopen', 'close_all', 'banner_enable', 'banner_disable', 'banner_update')),
+  action_type TEXT NOT NULL CHECK(action_type IN ('close', 'reopen', 'close_all', 'reopen_all', 'banner_enable', 'banner_disable', 'banner_update')),
   payload_json TEXT NOT NULL DEFAULT '{}',
   code_hmac TEXT NOT NULL,
   attempts INTEGER NOT NULL DEFAULT 0 CHECK(attempts >= 0 AND attempts <= 10),
