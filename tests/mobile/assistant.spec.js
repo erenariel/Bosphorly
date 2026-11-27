@@ -91,7 +91,7 @@ test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile withou
   await page.goto('/index.html?lang=tr');
   const fab = page.locator('.bc-fab');
   await expect(fab).toBeVisible();
-  await expect(fab.locator('img.bc-fab-avatar')).toHaveAttribute('src', /assets\/brand\/mimo\/mimo-default\.svg$/);
+  await expect(fab.locator('img.bc-fab-avatar')).toHaveAttribute('src', /assets\/brand\/mimo\/mimo-head\.webp$/);
 
   // Hero Mimo card is visible in Turkish with button and Telegram link
   const heroMimo = page.locator('#heroMimo');
@@ -138,7 +138,7 @@ test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic w
   await expect(fab).toBeVisible();
   const fabBox = await fab.boundingBox();
   const vp = page.viewportSize();
-  expect(fabBox.x).toBeLessThan(vp.width / 2);
+  expect(vp.width - fabBox.x - fabBox.width).toBe(16);
 
   await expect(page.locator('#heroMimoAsk')).toContainText('لديك سؤال؟ اسأل Mimo');
 
@@ -395,6 +395,7 @@ test('RTL chat panels for Hebrew, Arabic and Persian keep the email box hidden a
 });
 
 test('greeting bubble shows once per session, does NOT contain kindNote, does not cover mobile reservation buttons, hides on input focus, and closes on Escape', async ({ page }) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
   await page.addInitScript(() => {
     window.__BOSPHORLY_MIMO_BUBBLE_MS = 250;
     window.__BOSPHORLY_MIMO_COLLAPSE_MS = 8000;
@@ -404,10 +405,10 @@ test('greeting bubble shows once per session, does NOT contain kindNote, does no
   const bubble = page.locator('.bc-bubble');
   await expect(bubble).toBeVisible({ timeout: 3000 });
   await expect(bubble).toHaveAttribute('aria-live', 'polite');
-  await expect(bubble.locator('.bc-bubble-text')).toContainText('Merhaba, ben Mimo 👋');
+  await expect(bubble.locator('.bc-bubble-text')).toContainText('Merhaba! Ben Mimo. Sana nasıl yardım edebilirim?');
   await expect(bubble).not.toContainText('Saygısız dil');
   await expect(bubble.locator('.bc-kind-note')).toHaveCount(0);
-  await expect(bubble.locator('.bc-bubble-chip')).toHaveCount(2);
+  await expect(bubble.locator('.bc-bubble-chip')).toHaveCount(3);
 
   // Verify Playwright bounding box: bubble does NOT overlap the reservation button (#toStep2)
   const reserveBtn = page.locator('#toStep2');
@@ -1024,7 +1025,7 @@ test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims 
   expect(botText).not.toContain('hidden');
   expect(botText).not.toContain('[[flags:');
 
-  // Reservation confirmation displays Mimo happy thank-you message and mimo-happy.svg
+  // Reservation confirmation displays Mimo happy thank-you message and the full-body WebP
   await page.goto('/booking.html?service=bb-sunset&lang=tr');
   await page.locator('#date').fill(new Date(Date.now() + 2 * 86400000).toISOString().slice(0, 10));
   await page.locator('#date').dispatchEvent('change');
@@ -1039,7 +1040,7 @@ test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims 
   await expect(thanks).toBeVisible();
   await expect(thanks.locator('.mimo-thanks-text')).toContainText('Harika seçim');
   const thanksImg = thanks.locator('img.mimo-thanks-img');
-  await expect(thanksImg).toHaveAttribute('src', /mimo-happy\.svg$/);
+  await expect(thanksImg).toHaveAttribute('src', /mimo-full\.webp$/);
 });
 
 test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, animates avatar, stops Audio on mic/send/close/pagehide', async ({ page }) => {
@@ -1182,9 +1183,9 @@ test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, a
 
   await expect(speakBtn).toHaveAttribute('aria-pressed', 'true');
   await expect(speakBtn).toHaveAttribute('aria-label', 'Okumayı durdur');
-  await expect(panel.locator('.bc-head-avatar')).toHaveAttribute('src', /mimo-speaking\.svg$/);
+  await expect(panel.locator('.bc-head-avatar')).toHaveAttribute('src', /mimo-head\.webp$/);
   await expect(panel.locator('.bc-head-avatar')).toHaveClass(/bc-speaking/);
-  await expect(panel.locator('.bc-bot-avatar').last()).toHaveAttribute('src', /mimo-speaking\.svg$/);
+  await expect(panel.locator('.bc-bot-avatar').last()).toHaveAttribute('src', /mimo-head\.webp$/);
 
   // Click again -> pauses Audio, cancels speech, resets avatar
   await speakBtn.click();
