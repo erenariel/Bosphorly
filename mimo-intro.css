@@ -27,10 +27,12 @@ body.mimo-introducing .bc-launcher, body.mimo-introducing .bc-bubble { opacity: 
 body.mimo-introducing::after { content:""; position:fixed; inset:0; background:#101a32; z-index:940; pointer-events:none; animation:mimo-shade 2s both; }
 @keyframes mimo-shade { 0%,100% {opacity:0} 20%,78% {opacity:.22} }
 .bc-launcher button.bc-fab { background:#FBF0DE; border:4px solid #F47458; box-shadow:0 4px 16px #101a3230; overflow:hidden; }
-.bc-launcher img.bc-fab-avatar { object-fit:contain; }
-body .bc-bubble, body .bc-bubble[dir="rtl"] { top:auto; bottom:var(--mimo-bubble-bottom,110px); border-radius:16px; display:block; white-space:normal; padding:14px; }
+.bc-launcher img.bc-fab-avatar { object-fit:cover; object-position:center; width:100%; height:100%; }
+body .bc-bubble, body .bc-bubble[dir="rtl"] { top:auto; bottom:112px; border-radius:16px; display:block; white-space:normal; padding:14px; }
 body .bc-bubble-text { white-space:normal; cursor:default; }
 body .bc-bubble-chips { flex-wrap:wrap; margin-top:10px; }
 body .bc-bubble-chip { text-decoration:none; padding:6px 10px; }
 @media(prefers-reduced-motion:no-preference) { .bc-fab-avatar.mimo-docked { animation:mimo-settle .45s ease-out; } }
 @keyframes mimo-settle { 50% { transform:rotate(-10deg); } }
+
+@media (max-width:1023.98px) { body .bc-bubble, body .bc-bubble[dir="rtl"] {bottom:82px} }

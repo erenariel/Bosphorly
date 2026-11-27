@@ -149,11 +149,13 @@ test('all 23 languages have complete static dictionaries and pass greeting small
   const apiJs = readFileSync(new URL('../config/api.js', import.meta.url), 'utf8');
   const labelsMatch = apiJs.match(/const LABELS = (\{[^}]+\});/);
   const labelsObj = new Function(`return ${labelsMatch[1]}`)();
-  const bubbleMatch = apiJs.match(/const BUBBLE_GREET = (\{[^}]+\});/);
-  const bubbleObj = new Function(`return ${bubbleMatch[1]}`)();
-  for (const lang of ALL_23_LANGS) {
-    assert.ok(typeof labelsObj[lang] === 'string' && labelsObj[lang].trim().length > 0, `config/api LABELS.${lang}`);
-    assert.ok(typeof bubbleObj[lang] === 'string' && bubbleObj[lang].includes('Mimo'), `config/api BUBBLE_GREET.${lang}`);
+  for (const key of ['HELLO', 'HELP', 'Q_TRANSFER', 'TOURS', 'BROWSE']) {
+    const match = apiJs.match(new RegExp('const ' + key + ' = (\\{[^}]+\\});'));
+    const messages = JSON.parse(match[1]);
+    for (const lang of ALL_23_LANGS) {
+      assert.ok(labelsObj[lang]?.trim(), `config/api LABELS.${lang}`);
+      assert.ok(messages[lang]?.trim(), `config/api ${key}.${lang}`);
+    }
   }
 
   const GREETINGS = {
@@ -485,7 +487,7 @@ test('AI timeout is 9s, retries once, and the email handoff fallback stays on ca
   const recovered = await runAssistant({
     message: 'Bosphorus cruise schedule?',
     pageLang: 'en',
-    aiTimeoutMs: 25,
+    aiTimeoutMs: 250,
     env: {
       AI: {
         run: () => {
@@ -511,7 +513,7 @@ test('AI timeout is 9s, retries once, and the email handoff fallback stays on ca
   const catalogTimeout = await runAssistant({
     message: 'Boğaz turu fiyatı nedir?',
     pageLang: 'tr',
-    aiTimeoutMs: 25,
+    aiTimeoutMs: 250,
     env: {
       AI: {
         run: () => {
@@ -531,7 +533,7 @@ test('AI timeout is 9s, retries once, and the email handoff fallback stays on ca
   const smallTimeout = await runAssistant({
     message: 'Bugün hava nasıl?',
     pageLang: 'tr',
-    aiTimeoutMs: 25,
+    aiTimeoutMs: 250,
     env: {
       AI: {
         run: () => {
@@ -552,7 +554,7 @@ test('AI timeout is 9s, retries once, and the email handoff fallback stays on ca
   const hardError = await runAssistant({
     message: 'How is the weather today?',
     pageLang: 'en',
-    aiTimeoutMs: 25,
+    aiTimeoutMs: 250,
     env: {
       AI: {
         run: async () => {
@@ -571,7 +573,7 @@ test('AI timeout is 9s, retries once, and the email handoff fallback stays on ca
   const chatTimeout = await runAssistant({
     message: 'nasılsın',
     pageLang: 'tr',
-    aiTimeoutMs: 25,
+    aiTimeoutMs: 250,
     env: {
       AI: {
         run: () => {
@@ -915,10 +917,10 @@ test('telegram webhook /start <lang> sends welcome in payload lang, saves chat l
 });
 
 
-test('Mimo mascot SVG files (default, hello, thinking, happy) exist under assets/brand/mimo/ and are < 4 KB each', () => {
+test('Mimo mascot SVG files (default, hello, thinking, happy) exist under assets/brand/mimo/legacy/ and are < 4 KB each', () => {
   const states = ['mimo-default.svg', 'mimo-hello.svg', 'mimo-thinking.svg', 'mimo-happy.svg'];
   for (const file of states) {
-    const url = new URL(`../assets/brand/mimo/${file}`, import.meta.url);
+    const url = new URL(`../assets/brand/mimo/legacy/${file}`, import.meta.url);
     const st = statSync(url);
     assert.ok(st.size > 200 && st.size < 4096, `${file} must be < 4 KB (actual: ${st.size} bytes)`);
     const svg = readFileSync(url, 'utf8');
@@ -1966,7 +1968,7 @@ test('SSE streaming retries a timeout once, uses tryAgain off-catalog, and keeps
   async function post(message, lang, run) {
     const env = baseEnv({
       CODE_PEPPER: pepper,
-      ASSISTANT_AI_TIMEOUT_MS: '25',
+      ASSISTANT_AI_TIMEOUT_MS: '250',
       AI: { run },
     });
     const res = await worker.fetch(new Request(`${ORIGIN}/v1/assistant`, {

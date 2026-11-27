@@ -17,8 +17,8 @@ function loadClientHelpers() {
   )(SPEECH_LOCALES);
 }
 
-test('mimo-speaking.svg exists under assets/brand/mimo/, uses #0a1753, and is < 4 KB', () => {
-  const url = new URL('../assets/brand/mimo/mimo-speaking.svg', import.meta.url);
+test('mimo-speaking.svg exists under assets/brand/mimo/legacy/, uses #0a1753, and is < 4 KB', () => {
+  const url = new URL('../assets/brand/mimo/legacy/mimo-speaking.svg', import.meta.url);
   const st = statSync(url);
   assert.ok(st.size > 200 && st.size < 4096, `Expected < 4 KB SVG, got ${st.size}`);
   const svg = readFileSync(url, 'utf8');
