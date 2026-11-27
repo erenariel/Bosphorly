@@ -329,6 +329,7 @@
 
     const partner=currentUser.role==='partner';
     for(const id of ['navDashboard','navBookings','navMembers','navInbox','navCampaigns','navCatalog','navSettings'])$(id).hidden=partner;
+    if ($('navEmergency')) $('navEmergency').hidden = currentUser.role !== 'owner';
     if(partner){$('navPartners').hidden=false;await switchView('partners');}
     else { $('navCatalog').hidden=!manager();$('navSettings').hidden=!manager();$('navPartners').hidden=!manager();$('navCampaigns').hidden=!manager();await switchView('dashboard'); }
   }
@@ -632,9 +633,208 @@
     finally {membersBusy=false;}
   }
 
+  const EMERGENCY_CHANNEL_META = [
+    ['whatsapp', 'WhatsApp (Telnyx)', 'Sitedeki tüm WhatsApp butonları/linkleri ve Mimo WhatsApp önerileri gizlenir; Telnyx webhook mesajları işlemeden 200 döner; Mimo WhatsApp’tan mesaj göndermez.'],
+    ['telegram', 'Telegram (@BosphorlyBot)', 'Sitedeki tüm Telegram linkleri gizlenir; Telegram botu mesajlara cevap vermez.'],
+    ['instagram', 'Instagram', 'Sitedeki Instagram linkleri ve ikonları gizlenir.'],
+    ['mimo', 'Mimo Web Sohbeti', 'Sohbet penceresi misafirin dilinde "Şu an bakımdayız, bize info@bosphorly.com adresinden ulaşabilirsiniz." mesajını gösterir.'],
+  ];
+
+  async function loadEmergency() {
+    const host = $('emergencyContent');
+    if (!host) return;
+    host.replaceChildren(el('p', 'ex-cell-sub', 'Acil durum kanal anahtarları yükleniyor…'));
+    if (!currentUser || currentUser.role !== 'owner') {
+      host.replaceChildren(el('div', 'ex-alert ex-alert-err', 'Bu panel yalnızca işletme sahibine (Owner) açıktır.'));
+      return;
+    }
+    try {
+      const data = await extranetApi('/v1/extranet/emergency');
+      host.replaceChildren();
+
+      const info = el('div', 'ex-alert ex-alert-warn');
+      info.textContent = 'Kapatılan kanal sitede en geç 1 dakika içinde gizlenir ve arka uçta anında durur. Site, tur sayfaları, rezervasyon formu, Extranet ve e-posta bildirimleri normal çalışmaya devam eder.';
+      host.appendChild(info);
+
+      const topActions = el('div', 'ex-em-actions');
+      topActions.style.marginTop = '12px';
+      const closeAllBtn = el('button', 'ex-btn ex-btn-danger', '🚨 Tüm Kanalları Hemen Kapat');
+      closeAllBtn.type = 'button';
+      closeAllBtn.id = 'btnEmergencyCloseAll';
+      closeAllBtn.onclick = async () => {
+        if (!window.confirm('TÜM kanallar (WhatsApp, Telegram, Instagram, Mimo Web) anında kapatılsın mı?')) return;
+        closeAllBtn.disabled = true;
+        try {
+          await extranetApi('/v1/extranet/emergency', {
+            method: 'POST',
+            body: { channel: 'hepsi', enabled: false, confirm: true },
+          });
+          showBanner('Tüm kanallar acil olarak kapatıldı ve bildirim e-postası gönderildi.', 'ok');
+          await loadEmergency();
+        } catch (err) {
+          closeAllBtn.disabled = false;
+          showBanner(err.message, 'err');
+        }
+      };
+      topActions.appendChild(closeAllBtn);
+      host.appendChild(topActions);
+
+      const grid = el('div', 'ex-em-grid');
+      for (const [key, title, desc] of EMERGENCY_CHANNEL_META) {
+        const ch = (data.channels && data.channels[key]) || { enabled: true, stored: true, lockedByEnv: false, envVar: '' };
+        const stateKey = ch.lockedByEnv ? 'locked' : ch.enabled ? 'open' : 'closed';
+        const card = el('article', 'ex-em-card');
+        card.dataset.channel = key;
+        card.dataset.state = stateKey;
+
+        const head = el('div', 'ex-em-head');
+        head.appendChild(el('h2', null, title));
+        const badgeText = ch.lockedByEnv
+          ? `Ortam değişkeniyle kilitli (${ch.envVar}=1)`
+          : ch.enabled
+            ? 'AÇIK'
+            : 'KAPALI';
+        const badge = el('span', 'ex-em-badge', badgeText);
+        badge.dataset.state = stateKey;
+        head.appendChild(badge);
+        card.appendChild(head);
+        card.appendChild(el('p', 'ex-cell-sub', desc));
+
+        if (ch.lockedByEnv) {
+          card.appendChild(el('div', 'ex-alert ex-alert-err', `Bu kanal Worker ortam değişkeniyle kilitli (${ch.envVar}=1). Yeniden açmak için önce Worker ortam değişkenini kaldırın.`));
+        } else if (ch.enabled) {
+          const closeBtn = el('button', 'ex-btn ex-btn-danger', 'Hemen Kapat');
+          closeBtn.type = 'button';
+          closeBtn.dataset.action = 'close-channel';
+          closeBtn.onclick = async () => {
+            if (!window.confirm(`${title} kanalı hemen kapatılsın mı?`)) return;
+            closeBtn.disabled = true;
+            try {
+              await extranetApi('/v1/extranet/emergency', {
+                method: 'POST',
+                body: { channel: key, enabled: false, confirm: true },
+              });
+              showBanner(`${title} kapatıldı ve bildirim e-postası gönderildi.`, 'ok');
+              await loadEmergency();
+            } catch (err) {
+              closeBtn.disabled = false;
+              showBanner(err.message, 'err');
+            }
+          };
+          card.appendChild(closeBtn);
+        } else {
+          const form = el('form', 'ex-em-open-form');
+          form.dataset.action = 'open-channel-form';
+          const confirmInput = el('input');
+          confirmInput.type = 'text';
+          confirmInput.placeholder = 'Onay için AÇ yazın';
+          confirmInput.setAttribute('aria-label', `${title} açma onayı`);
+          confirmInput.maxLength = 10;
+          const openBtn = el('button', 'ex-btn ex-btn-ok', 'Kanalı Aç');
+          openBtn.type = 'submit';
+          const errSpan = el('p', 'ex-cell-sub');
+          errSpan.style.color = '#a12626';
+          errSpan.hidden = true;
+          form.onsubmit = async (ev) => {
+            ev.preventDefault();
+            errSpan.hidden = true;
+            openBtn.disabled = true;
+            try {
+              await extranetApi('/v1/extranet/emergency', {
+                method: 'POST',
+                body: { channel: key, enabled: true, confirmText: confirmInput.value },
+              });
+              showBanner(`${title} yeniden açıldı ve bildirim e-postası gönderildi.`, 'ok');
+              await loadEmergency();
+            } catch (err) {
+              openBtn.disabled = false;
+              errSpan.textContent = err.message;
+              errSpan.hidden = false;
+            }
+          };
+          form.append(confirmInput, openBtn);
+          card.append(form, errSpan);
+        }
+        grid.appendChild(card);
+      }
+      host.appendChild(grid);
+
+      const bannerBox = el('section', 'ex-em-banner-box');
+      bannerBox.appendChild(el('h2', null, 'Site Üst Uyarı Bandı (İsteğe Bağlı)'));
+      bannerBox.appendChild(el('p', 'ex-cell-sub', 'Doluysa tüm sayfaların en üstünde görünür; boş bırakıldığında gizlenir. Kart numarası girilemez.'));
+      const bannerInput = el('textarea');
+      bannerInput.id = 'emergencyBannerInput';
+      bannerInput.maxLength = 500;
+      bannerInput.value = data.banner || '';
+      bannerInput.placeholder = 'WhatsApp hesabımız geçici olarak kapalıdır. Başka numaralardan gelen mesajlara itibar etmeyin; bize yalnızca info@bosphorly.com üzerinden ulaşın.';
+      bannerInput.setAttribute('aria-label', 'Site üst uyarı bandı metni');
+      const bannerBtns = el('div', 'ex-em-actions');
+      const saveBannerBtn = el('button', 'ex-btn ex-btn-primary', 'Uyarı Bandını Kaydet');
+      saveBannerBtn.type = 'button';
+      saveBannerBtn.id = 'btnSaveEmergencyBanner';
+      saveBannerBtn.onclick = async () => {
+        if (looksLikeCardNumber(bannerInput.value)) {
+          showBanner('Güvenlik kuralı: Uyarı bandına kart numarası yazılamaz.', 'err');
+          return;
+        }
+        saveBannerBtn.disabled = true;
+        try {
+          await extranetApi('/v1/extranet/emergency', {
+            method: 'POST',
+            body: { banner: bannerInput.value },
+          });
+          showBanner('Uyarı bandı güncellendi.', 'ok');
+          await loadEmergency();
+        } catch (err) {
+          saveBannerBtn.disabled = false;
+          showBanner(err.message, 'err');
+        }
+      };
+      const clearBannerBtn = el('button', 'ex-btn ex-btn-secondary', 'Bandı Kaldır');
+      clearBannerBtn.type = 'button';
+      clearBannerBtn.id = 'btnClearEmergencyBanner';
+      clearBannerBtn.onclick = async () => {
+        clearBannerBtn.disabled = true;
+        try {
+          await extranetApi('/v1/extranet/emergency', {
+            method: 'POST',
+            body: { banner: '' },
+          });
+          showBanner('Uyarı bandı kaldırıldı.', 'ok');
+          await loadEmergency();
+        } catch (err) {
+          clearBannerBtn.disabled = false;
+          showBanner(err.message, 'err');
+        }
+      };
+      bannerBtns.append(saveBannerBtn, clearBannerBtn);
+      bannerBox.append(bannerInput, bannerBtns);
+      host.appendChild(bannerBox);
+
+      const auditSec = el('section', 'ex-detail-section');
+      auditSec.appendChild(el('h2', null, 'Son Acil Durum İşlemleri (Audit Log)'));
+      if (Array.isArray(data.audit) && data.audit.length) {
+        for (const item of data.audit) {
+          auditSec.appendChild(
+            el('p', 'ex-cell-sub', `${formatDateTimeTr(item.created_at)} · ${item.action} · ${item.target_id || ''} · İşleyen: ${item.actor_member_id}`)
+          );
+        }
+      } else {
+        auditSec.appendChild(el('p', 'ex-cell-sub', 'Henüz acil durum değişikliği kaydı yok (tüm kanallar varsayılan AÇIK durumda).'));
+      }
+      host.appendChild(auditSec);
+    } catch (err) {
+      host.replaceChildren(el('div', 'ex-alert ex-alert-err', err.message || 'Acil Durum paneli yüklenemedi.'));
+    }
+  }
+
   async function switchView(viewName) {
+    if (viewName === 'emergency' && (!currentUser || currentUser.role !== 'owner')) return;
     activeView = viewName;
+    if ($('viewEmergency')) $('viewEmergency').hidden = viewName !== 'emergency';
+    if ($('navEmergency')) $('navEmergency').setAttribute('aria-current', viewName === 'emergency' ? 'page' : 'false');
     $('viewCatalog').hidden=viewName!=='catalog';$('viewSettings').hidden=viewName!=='settings';
+    if(viewName==='emergency')await loadEmergency();
     if(viewName==='catalog')await loadCatalogue();if(viewName==='settings')await loadSettings();
     $('viewPartners').hidden=viewName!=='partners';
     if(viewName==='partners')await loadPartners();
@@ -1398,6 +1598,7 @@
     $('inboxChannel').onchange=()=>loadInbox(1);$('inboxAssigned').onchange=()=>loadInbox(1);
     $('navCampaigns').onclick=()=>switchView('campaigns');
     $('navInbox').onclick=()=>switchView('inbox');
+    if ($('navEmergency')) $('navEmergency').onclick = () => switchView('emergency');
     $('inboxStatus').onchange=()=>loadInbox(1);$('inboxSource').onchange=()=>loadInbox(1);$('inboxPrev').onclick=()=>loadInbox(inboxPage-1);$('inboxNext').onclick=()=>loadInbox(inboxPage+1);
     $('memberTierFilter').onchange=()=>loadMembers(1);$('memberStatus').onchange=()=>loadMembers(1);$('memberProvider').onchange=()=>loadMembers(1);
     $('memberBulk').onclick=()=>{const ids=[...document.querySelectorAll('[data-member-id]:checked')].map(n=>n.dataset.memberId);previewAndConfirm('/v1/extranet/members/tier-bulk-preview',{ids,tier:$('bulkTier').value,days:$('bulkDays').value?Number($('bulkDays').value):null,reason:$('bulkReason').value}).catch(e=>alert(e.message));};

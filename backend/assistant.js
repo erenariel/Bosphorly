@@ -1,3 +1,4 @@
+import {isChannelDisabled, maintenanceMessage} from './emergency-channels.js';
 import {liveCatalogContext} from './catalog-store.js';
 import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
@@ -2812,6 +2813,33 @@ async function readAudioBody(request, maxBytes) {
   return { audio };
 }
 
+function scrubDisabledChannelsFromReply(text, { waDisabled, tgDisabled, lang }) {
+  let out = String(text || '');
+  if (waDisabled) {
+    out = out
+      .replace(/\[([^\]]*)\]\(https?:\/\/(?:www\.)?wa\.me\/[^)\s]*\)/gi, '')
+      .replace(/https?:\/\/(?:www\.)?wa\.me\/[^\s)>\]"']*/gi, '')
+      .replace(/\bwa\.me\/[^\s)>\]"']*/gi, '')
+      .replace(/\+?1[\s().-]*619[\s().-]*738[\s().-]*6408/g, '')
+      .replace(/[^.!?\n]*(?:WhatsApp|واتساب|וואטסאפ|ватсап|واتساپ)[^.!?\n]*[.!?]?/giu, '');
+  }
+  if (tgDisabled) {
+    out = out
+      .replace(/\[([^\]]*)\]\(https?:\/\/t\.me\/[^)\s]*\)/gi, '')
+      .replace(/https?:\/\/t\.me\/[^\s)>\]"']*/gi, '')
+      .replace(/\bt\.me\/[^\s)>\]"']*/gi, '')
+      .replace(/@BosphorlyBot\b/gi, 'info@bosphorly.com')
+      .replace(/[^.!?\n]*(?:Telegram|تيليجرام|טלגרם|телеграм|تلگرام)[^.!?\n]*[.!?]?/giu, '');
+  }
+  out = out.replace(/[ \t]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+  if (!out) {
+    return lang === 'tr'
+      ? 'Bize info@bosphorly.com adresinden ulaşabilirsiniz.'
+      : 'You can reach us at info@bosphorly.com.';
+  }
+  return out;
+}
+
 export async function handleAssistantRoutes(request, env, url, ctx) {
   const origin = request.headers.get('Origin');
   const jsonResp = (body, status = 200) => {
@@ -2828,6 +2856,20 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
   };
 
   if (request.method !== 'POST') return jsonResp({ error: 'Method not allowed' }, 405);
+
+  if (await isChannelDisabled(env, 'mimo')) {
+    if (url.pathname === '/v1/assistant') {
+      const parsedMaint = await readJsonBody(request);
+      const bMaint = parsedMaint && parsedMaint.data && typeof parsedMaint.data === 'object' ? parsedMaint.data : {};
+      const langMaint =
+        normalizeLang(typeof bMaint.lang === 'string' ? bMaint.lang : '') ||
+        detectLanguage({ message: typeof bMaint.message === 'string' ? bMaint.message : '' }) ||
+        'en';
+      return jsonResp({ reply: maintenanceMessage(langMaint), maintenance: true, lang: langMaint }, 200);
+    }
+    const qLang = normalizeLang(url.searchParams.get('lang') || '') || 'en';
+    return jsonResp({ error: maintenanceMessage(qLang), maintenance: true, lang: qLang }, 503);
+  }
 
   if (url.pathname === '/v1/assistant/transcribe') {
     const ip = (request.headers.get('CF-Connecting-IP') || 'unknown').trim() || 'unknown';
@@ -2919,7 +2961,12 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
     const pageLang = typeof body.lang === 'string' ? body.lang : '';
     const hist = Array.isArray(body.history) ? body.history.slice(-4) : [];
     const alreadyGreeted = Boolean(body.greeted);
-    const wantsStream = Boolean(
+    const [waDisabled, tgDisabled] = await Promise.all([
+      isChannelDisabled(env, 'whatsapp'),
+      isChannelDisabled(env, 'telegram'),
+    ]);
+    const hasDisabledSiblingChannel = waDisabled || tgDisabled;
+    const wantsStream = !hasDisabledSiblingChannel && Boolean(
       body.stream === true || (request.headers.get('Accept') || '').toLowerCase().includes('text/event-stream')
     );
     const rawAiTimeout = Number(env && env.ASSISTANT_AI_TIMEOUT_MS);
@@ -3003,6 +3050,13 @@ export async function handleAssistantRoutes(request, env, url, ctx) {
       aiTimeoutMs,
       memberNote,
     });
+    if (hasDisabledSiblingChannel && result && typeof result.reply === 'string') {
+      result.reply = scrubDisabledChannelsFromReply(result.reply, {
+        waDisabled,
+        tgDisabled,
+        lang: result.lang,
+      });
+    }
     try {
       await runInBackground(ctx, observeAssistantTurn(env, { message: body.message, result, now }));
     } catch { /* stats are best-effort */ }

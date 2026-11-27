@@ -1,3 +1,4 @@
+import {isChannelDisabled} from './emergency-channels.js';
 import {captureMessage} from './message-store.js';
 import knowledge from './knowledge.json' with { type: 'json' };
 import {buildKbPriceIndex, enforcePriceSafetyBelt, detectReplyLanguage} from './mimo-personality.js';
@@ -53,6 +54,7 @@ async function mute(env, phone, until) {
   await env.DB.prepare('INSERT INTO whatsapp_control(phone,until_ms) VALUES(?,?) ON CONFLICT(phone) DO UPDATE SET until_ms=MAX(until_ms,excluded.until_ms)').bind(phone,until).run();
 }
 export async function sendWhatsApp(env, phone, reply, at) {
+  if (await isChannelDisabled(env,'whatsapp')) return false;
   if (Date.now()-at >= DAY*1000 || at > Date.now()+300000 || await muted(env,phone)) {
     console.log(JSON.stringify({channel:'whatsapp',event:'send_suppressed',reason:'window_or_muted'})); return false;
   }
@@ -89,6 +91,7 @@ async function saveRequest(env, m, proposal) {
   await notify(env,`WhatsApp talebi: ${proposal.name} · ${proposal.service} · ${proposal.date} · ${proposal.guests} kişi · ${maskPhone(m.phone)}`);
 }
 export async function processWhatsApp(env, m) {
+  if (await isChannelDisabled(env,'whatsapp')) return false;
   const now = Date.now();
   if (m.echo) { await mute(env,m.phone,now+12*3600000); return; }
   if (await muted(env,m.phone)) return;
@@ -188,6 +191,7 @@ async function model(env,lang,state,text) {
 }
 export async function handleWhatsApp(request,env,ctx) {
   if (request.method!=='POST') return new Response('Method not allowed',{status:405});
+  if (await isChannelDisabled(env,'whatsapp')) return new Response('OK');
   let raw='';
   const reader=request.body?.getReader();
   if (reader) { let size=0; const decoder=new TextDecoder(); while(true) { const {done,value}=await reader.read(); if(done) break; size+=value.byteLength; if(size>65536) { await reader.cancel(); return new Response('Too large',{status:413}); } raw+=decoder.decode(value,{stream:true}); } raw+=decoder.decode(); }

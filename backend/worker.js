@@ -1,4 +1,5 @@
 import {withConsoleRuntime} from './console-runtime.js';
+import {publicChannelsResponse} from './emergency-channels.js';
 import {publicCatalog} from './extranet-catalog.js';
 import {captureMessage,cleanupInbox,redactCards} from './message-store.js';
 import {deliverInquiryEmail} from './request-email.js';
@@ -22,6 +23,11 @@ function isAllowedOrigin(origin, env) {
 export default {async fetch(request,env,ctx) {
  const url=new URL(request.url);
  if (url.pathname==='/webhooks/whatsapp/telnyx') return handleWhatsApp(request,env,ctx);
+ if (url.pathname==='/v1/public/channels') {
+  if (request.method==='OPTIONS') return new Response(null,{status:204,headers:{'Access-Control-Allow-Origin':'*','Access-Control-Allow-Methods':'GET, OPTIONS','Access-Control-Max-Age':'600'}});
+  if (request.method!=='GET') return json({error:'Method not allowed'},405);
+  return publicChannelsResponse(env);
+ }
  const origin=request.headers.get('Origin');
  const allowedOrigin=isAllowedOrigin(origin, env);
  const isOauth=url.pathname.startsWith('/v1/auth/oauth/');
