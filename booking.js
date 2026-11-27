@@ -2196,7 +2196,7 @@
     const hint = prof && prof.tier !== 'platinum' ? P?.promo('booking-step', P.step) : null;
     if (hint) $('result').append(hint);
     const vipText = prof && prof.tier === 'platinum'
-      ? (lang === 'tr' ? '💎 Platinum VIP ayrıcalığın aktif: Öncelikli Free Upgrade + VIP servislerde %10 indirim. Günde 200 Mimo mesajı, Platinum’a ulaşınca %10 hediye kupon, 1 günlük eSIM hediyesi (yakında).' : '💎 Platinum VIP active: Priority Free Upgrade + 10% VIP priority discount. 200 daily Mimo chats, 10% gift coupon on reaching Platinum, free 1-day eSIM data (coming soon).')
+      ? (lang === 'tr' ? '💎 Platinum VIP ayrıcalığın aktif: Öncelikli Free Upgrade + VIP servislerde %10 indirim. Günde 200 Mimo mesajı, Platinum’a ulaşınca %10 hediye kupon.' : '💎 Platinum VIP active: Priority Free Upgrade + 10% VIP priority discount. 200 daily Mimo chats, 10% gift coupon on reaching Platinum.')
       : prof && prof.tier === 'gold'
         ? (lang === 'tr' ? '🥇 Gold ayrıcalığın aktif: Müsaitliğe göre Free Upgrade + VIP servislerde %3 öncelik.' : '🥇 Gold tier active: Free Upgrade (subject to availability) + 3% VIP priority.')
         : '';
@@ -2252,7 +2252,7 @@
     }
     const memProf = MB && MB.signedIn() ? MB.cachedProfile() : null;
     const vipNote = memProf && memProf.tier === 'platinum'
-      ? (lang === 'tr' ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim) · günde 200 Mimo mesajı · Platinum’a ulaşınca %10 hediye kupon · 1 günlük eSIM hediyesi (yakında)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount) · 200 daily Mimo chats · 10% gift coupon on reaching Platinum · free 1-day eSIM data (coming soon)')
+      ? (lang === 'tr' ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim) · günde 200 Mimo mesajı · Platinum’a ulaşınca %10 hediye kupon' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount) · 200 daily Mimo chats · 10% gift coupon on reaching Platinum')
       : memProf && memProf.tier === 'gold'
         ? (lang === 'tr' ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %3 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 3% VIP priority)')
         : null;

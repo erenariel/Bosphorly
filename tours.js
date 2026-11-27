@@ -109,7 +109,7 @@
     };
   };
   const tierText = tier => {
-    if (tier === 'platinum') return tr ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim) · günde 200 Mimo mesajı · Platinum’a ulaşınca %10 hediye kupon · 1 günlük eSIM hediyesi (yakında)' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount) · 200 daily Mimo chats · 10% gift coupon on reaching Platinum · free 1-day eSIM data (coming soon)';
+    if (tier === 'platinum') return tr ? '💎 Platinum VIP (Öncelikli Free Upgrade + %10 VIP indirim) · günde 200 Mimo mesajı · Platinum’a ulaşınca %10 hediye kupon' : '💎 Platinum VIP (Priority Free Upgrade + 10% VIP discount) · 200 daily Mimo chats · 10% gift coupon on reaching Platinum';
     if (tier === 'gold') return tr ? '🥇 Gold (Müsaitliğe göre Free Upgrade + %3 VIP öncelik)' : '🥇 Gold (Free Upgrade if available + 3% VIP priority)';
     return '🥈 Silver';
   };

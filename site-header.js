@@ -6,7 +6,7 @@
   const lang = window.BOSPHORLY_LANG_ALT ? (document.documentElement.lang || 'en').slice(0, 2)
     : window.BosphorlyLang ? window.BosphorlyLang.pick() : 'en';
   const platinumCopy = {
-    benefits: lang === 'tr' ? 'Platinum: günde 200 Mimo mesajı, öncelikli Free Upgrade, %10 VIP indirim, Platinum’a ulaşınca tek seferlik %10 hediye kupon (180 gün). Bir sonraki İstanbul ziyaretin için 1 günlük ücretsiz eSIM internet 🎁 (yakında)' : 'Platinum: 200 daily Mimo chats, priority Free Upgrade, 10% VIP discount and a one-time 10% gift coupon upon reaching Platinum (180 days). Free 1-day eSIM data for your next Istanbul visit 🎁 (coming soon)',
+    benefits: lang === 'tr' ? 'Platinum: günde 200 Mimo mesajı, öncelikli Free Upgrade, %10 VIP indirim, Platinum’a ulaşınca tek seferlik %10 hediye kupon (180 gün).' : 'Platinum: 200 daily Mimo chats, priority Free Upgrade, 10% VIP discount and a one-time 10% gift coupon upon reaching Platinum (180 days).',
     join: lang === 'tr' ? 'Üye ol, turlarınla yüksel: Platinum’da günde 200 Mimo mesajı, %10 VIP indirim ve hediyeler.' : 'Join and rise with every tour: Platinum unlocks 200 daily Mimo chats, 10% VIP discount and gifts.',
     step: lang === 'tr' ? 'Bu tur seni Platinum’a 1 adım yaklaştırır.' : 'This tour brings you one step closer to Platinum.'
   };
