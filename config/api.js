@@ -17,10 +17,59 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
     return (document.documentElement.lang || 'en').slice(0, 2) || 'en';
   };
   const LABELS = { tr:'Mimo’ya sor · İstanbul asistanın', en:'Ask Mimo · Your Istanbul assistant', ru:'Спросить Mimo · Твой ассистент по Стамбулу', uk:'Запитати Mimo · Твій асистент у Стамбулі', de:'Mimo fragen · Dein Istanbul-Assistent', fr:'Demander à Mimo · Ton assistant Istanbul', nl:'Vraag Mimo · Je Istanbul-assistent', ar:'اسأل Mimo · مساعدك في إسطنبول', he:'שאל את Mimo · העוזר שלך באיסטנבול', az:'Mimo-dan soruş · İstanbul köməkçin', fa:'از Mimo بپرس · دستیار استانبول تو', es:'Preguntar a Mimo · Tu asistente de Estambul', it:'Chiedi a Mimo · Il tuo assistente per Istanbul', pt:'Perguntar ao Mimo · Seu assistente em Istambul', hr:'Pitaj Mima · Tvoj Istanbul asistent', hu:'Kérdezd Mimót · Isztambuli asszisztensed', bs:'Pitaj Mima · Tvoj Istanbul asistent', zh:'咨询 Mimo · 你的伊斯坦布尔助手', ja:'Mimoに質問 · イスタンブール案内アシスタント', ko:'Mimo에게 질문 · 나의 이스탄불 도우미', hi:'Mimo से पूछो · तुम्हारा इस्तांबुल सहायक', bn:'Mimo-কে জিজ্ঞাসা করো · তোমার ইস্তাম্বুল সহায়ক', id:'Tanya Mimo · Asisten Istanbul kamu' };
-  const BUBBLE_GREET = { tr:'Merhaba, ben Mimo 👋 İstanbul’da sana nasıl yardım edebilirim?', en:'Hi, I’m Mimo 👋 How can I help you in Istanbul?', ru:'Привет, я Mimo 👋 Чем помочь тебе в Стамбуле?', uk:'Привіт, я Mimo 👋 Чим допомогти тобі у Стамбулі?', de:'Hallo, ich bin Mimo 👋 Wie kann ich dir in Istanbul helfen?', fr:'Salut, je suis Mimo 👋 Comment t’aider à Istanbul ?', nl:'Hoi, ik ben Mimo 👋 Hoe kan ik je helpen in Istanbul?', ar:'مرحبًا، أنا Mimo 👋 كيف يمكنني مساعدتك في إسطنبول؟', he:'היי, אני Mimo 👋 איך אוכל לעזור לך באיסטנבול?', az:'Salam, mən Mimo 👋 İstanbulda sənə necə kömək edə bilərəm?', fa:'سلام، من Mimo هستم 👋 در استانبول چطور کمکت کنم؟', es:'Hola, soy Mimo 👋 ¿Cómo puedo ayudarte en Estambul?', it:'Ciao, sono Mimo 👋 Come posso aiutarti a Istanbul?', pt:'Oi, sou Mimo 👋 Como posso ajudar você em Istambul?', hr:'Bok, ja sam Mimo 👋 Kako ti mogu pomoći u Istanbulu?', hu:'Szia, Mimo vagyok 👋 Miben segíthetek Isztambulban?', bs:'Ćao, ja sam Mimo 👋 Kako ti mogu pomoći u Istanbulu?', zh:'你好，我是 Mimo 👋 在伊斯坦布尔有什么可以帮你？', ja:'こんにちは、Mimoだよ 👋 イスタンブールで何かお手伝いしようか？', ko:'안녕, Mimo예요 👋 이스탄불에서 무엇을 도와줄까요?', hi:'नमस्ते, मैं Mimo हूँ 👋 इस्तांबुल में मैं तुम्हारी कैसे मदद कर सकता हूँ?', bn:'হ্যালো, আমি Mimo 👋 ইস্তাম্বুলে তোমাকে কীভাবে সাহায্য করতে পারি?', id:'Halo, aku Mimo 👋 Ada yang bisa aku bantu di Istanbul?' };
+  const BUBBLE_GREET = { tr:'Merhaba! Ben Mimo. Sana nasıl yardım edebilirim?', en:'Hi, I’m Mimo 👋 How can I help you in Istanbul?', ru:'Привет, я Mimo 👋 Чем помочь тебе в Стамбуле?', uk:'Привіт, я Mimo 👋 Чим допомогти тобі у Стамбулі?', de:'Hallo, ich bin Mimo 👋 Wie kann ich dir in Istanbul helfen?', fr:'Salut, je suis Mimo 👋 Comment t’aider à Istanbul ?', nl:'Hoi, ik ben Mimo 👋 Hoe kan ik je helpen in Istanbul?', ar:'مرحبًا، أنا Mimo 👋 كيف يمكنني مساعدتك في إسطنبول؟', he:'היי, אני Mimo 👋 איך אוכל לעזור לך באיסטנבול?', az:'Salam, mən Mimo 👋 İstanbulda sənə necə kömək edə bilərəm?', fa:'سلام، من Mimo هستم 👋 در استانبول چطور کمکت کنم؟', es:'Hola, soy Mimo 👋 ¿Cómo puedo ayudarte en Estambul?', it:'Ciao, sono Mimo 👋 Come posso aiutarti a Istanbul?', pt:'Oi, sou Mimo 👋 Como posso ajudar você em Istambul?', hr:'Bok, ja sam Mimo 👋 Kako ti mogu pomoći u Istanbulu?', hu:'Szia, Mimo vagyok 👋 Miben segíthetek Isztambulban?', bs:'Ćao, ja sam Mimo 👋 Kako ti mogu pomoći u Istanbulu?', zh:'你好，我是 Mimo 👋 在伊斯坦布尔有什么可以帮你？', ja:'こんにちは、Mimoだよ 👋 イスタンブールで何かお手伝いしようか？', ko:'안녕, Mimo예요 👋 이스탄불에서 무엇을 도와줄까요?', hi:'नमस्ते, मैं Mimo हूँ 👋 इस्तांबुल में मैं तुम्हारी कैसे मदद कर सकता हूँ?', bn:'হ্যালো, আমি Mimo 👋 ইস্তাম্বুলে তোমাকে কীভাবে সাহায্য করতে পারি?', id:'Halo, aku Mimo 👋 Ada yang bisa aku bantu di Istanbul?' };
   const MEMBER_GREET = { tr:'Tekrar hoş geldin, {name} 💙', en:'Welcome back, {name} 💙', ru:'С возвращением, {name} 💙', uk:'З поверненням, {name} 💙', de:'Willkommen zurück, {name} 💙', fr:'Bon retour, {name} 💙', nl:'Welkom terug, {name} 💙', ar:'أهلاً بعودتك، {name} 💙', he:'ברוך שובך, {name} 💙', az:'Yenidən xoş gəldin, {name} 💙', fa:'خوش برگشتی، {name} 💙', es:'Bienvenido de nuevo, {name} 💙', it:'Bentornato, {name} 💙', pt:'Bem-vindo de volta, {name} 💙', hr:'Dobro došao natrag, {name} 💙', hu:'Üdv újra itt, {name} 💙', bs:'Dobro došao nazad, {name} 💙', zh:'欢迎回来，{name} 💙', ja:'おかえりなさい、{name} 💙', ko:'다시 오신 것을 환영해요, {name} 💙', hi:'वापसी पर स्वागत है, {name} 💙', bn:'ফিরে আসার জন্য স্বাগতম, {name} 💙', id:'Selamat datang kembali, {name} 💙' };
-  const Q_TRANSFER = { tr:'✈️ Havalimanı transferi', en:'✈️ Airport transfer', ru:'✈️ Трансфер из аэропорта', uk:'✈️ Трансфер з аеропорту', de:'✈️ Flughafentransfer', fr:'✈️ Transfert aéroport', nl:'✈️ Luchthaventransfer', ar:'✈️ النقل من المطار', he:'✈️ הסעה משדה התעופה', az:'✈️ Hava limanı transferi', fa:'✈️ ترانسفر فرودگاه', es:'✈️ Traslado aeropuerto', it:'✈️ Transfer aeroporto', pt:'✈️ Traslado aeroporto', hr:'✈️ Prijevoz s aerodroma', hu:'✈️ Reptéri transzfer', bs:'✈️ Transfer s aerodroma', zh:'✈️ 机场接送', ja:'✈️ 空港送迎', ko:'✈️ 공항 픽업', hi:'✈️ एयरपोर्ट ट्रांसफ़र', bn:'✈️ এয়ারপোর্ট ট্রান্সফার', id:'✈️ Transfer bandara' };
-  const Q_CRUISE = { tr:'⛵ Boğaz turu', en:'⛵ Bosphorus cruise', ru:'⛵ Круиз по Босфору', uk:'⛵ Круїз Босфором', de:'⛵ Bosporus-Fahrt', fr:'⛵ Croisière Bosphore', nl:'⛵ Bosporuscruise', ar:'⛵ جولة البوسفور', he:'⛵ שייט בבוספורוס', az:'⛵ Boğaz turu', fa:'⛵ کروز بسفر', es:'⛵ Crucero Bósforo', it:'⛵ Crociera Bosforo', pt:'⛵ Cruzeiro Bósforo', hr:'⛵ Krstarenje Bosporom', hu:'⛵ Boszporuszi hajóút', bs:'⛵ Krstarenje Bosporom', zh:'⛵ 博斯普鲁斯游船', ja:'⛵ ボスポラスクルーズ', ko:'⛵ 보스포루스 크루즈', hi:'⛵ बोस्फोरस क्रूज़', bn:'⛵ বসফরাস ক্রুজ', id:'⛵ Pelayaran Bosphorus' };
+  const Q_TRANSFER = { tr:'Transfer', en:'✈️ Airport transfer', ru:'✈️ Трансфер из аэропорта', uk:'✈️ Трансфер з аеропорту', de:'✈️ Flughafentransfer', fr:'✈️ Transfert aéroport', nl:'✈️ Luchthaventransfer', ar:'✈️ النقل من المطار', he:'✈️ הסעה משדה התעופה', az:'✈️ Hava limanı transferi', fa:'✈️ ترانسفر فرودگاه', es:'✈️ Traslado aeropuerto', it:'✈️ Transfer aeroporto', pt:'✈️ Traslado aeroporto', hr:'✈️ Prijevoz s aerodroma', hu:'✈️ Reptéri transzfer', bs:'✈️ Transfer s aerodroma', zh:'✈️ 机场接送', ja:'✈️ 空港送迎', ko:'✈️ 공항 픽업', hi:'✈️ एयरपोर्ट ट्रांसफ़र', bn:'✈️ এয়ারপোর্ট ট্রান্সফার', id:'✈️ Transfer bandara' };
+  const TOURS = {
+    "tr": "Tur bul",
+    "en": "Find a tour",
+    "ru": "Найти тур",
+    "uk": "Знайти тур",
+    "de": "Tour finden",
+    "fr": "Trouver une visite",
+    "nl": "Zoek een tour",
+    "ar": "ابحث عن جولة",
+    "he": "חיפוש סיור",
+    "az": "Tur tap",
+    "fa": "یافتن تور",
+    "es": "Buscar un tour",
+    "it": "Trova un tour",
+    "pt": "Encontrar um passeio",
+    "hr": "Pronađi turu",
+    "hu": "Túra keresése",
+    "bs": "Pronađi turu",
+    "zh": "查找行程",
+    "ja": "ツアーを探す",
+    "ko": "투어 찾기",
+    "hi": "टूर खोजें",
+    "bn": "ট্যুর খুঁজুন",
+    "id": "Cari tur"
+};
+  const BROWSE = {
+    "tr": "Sadece bakıyorum",
+    "en": "Just browsing",
+    "ru": "Просто смотрю",
+    "uk": "Просто переглядаю",
+    "de": "Ich schaue nur",
+    "fr": "Je regarde seulement",
+    "nl": "Ik kijk even rond",
+    "ar": "أتصفح فقط",
+    "he": "רק מסתכלים",
+    "az": "Sadəcə baxıram",
+    "fa": "فقط نگاه می‌کنم",
+    "es": "Solo estoy mirando",
+    "it": "Do solo un’occhiata",
+    "pt": "Só estou olhando",
+    "hr": "Samo gledam",
+    "hu": "Csak nézelődöm",
+    "bs": "Samo gledam",
+    "zh": "随便看看",
+    "ja": "見ているだけです",
+    "ko": "그냥 둘러볼게요",
+    "hi": "बस देख रहा हूँ",
+    "bn": "শুধু দেখছি",
+    "id": "Hanya melihat-lihat"
+};
   const CLOSE_LBL = { tr:'Kapat', en:'Close', ru:'Закрыть', uk:'Закрити', de:'Schließen', fr:'Fermer', nl:'Sluiten', ar:'إغلاق', he:'סגור', az:'Bağla', fa:'بستن', es:'Cerrar', it:'Chiudi', pt:'Fechar', hr:'Zatvori', hu:'Bezárás', bs:'Zatvori', zh:'关闭', ja:'閉じる', ko:'닫기', hi:'बंद करें', bn:'বন্ধ করুন', id:'Tutup' };
 
   const BUBBLE_KEY = 'bosphorly.mimo_greeted';
@@ -29,20 +78,6 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
   };
   const markBubbleSeen = () => {
     try { sessionStorage.setItem(BUBBLE_KEY, '1'); } catch {}
-  };
-
-  const getSignedInMemberName = () => {
-    try {
-      const M = window.BosphorlyMember;
-      const signedIn = M ? M.signedIn() : !!(window.BOSPHORLY_API && window.BOSPHORLY_API.base && localStorage.getItem('bosphorly.session'));
-      if (!signedIn) return '';
-      const prof = (M && M.cachedProfile && M.cachedProfile()) || JSON.parse(localStorage.getItem('bosphorly.member_cache') || 'null');
-      const acct = (window.BosphorlyAccount && window.BosphorlyAccount.profile && window.BosphorlyAccount.profile()) || null;
-      const raw = (prof && prof.name) || (acct && acct.name) || '';
-      return String(raw || '').trim();
-    } catch {
-      return '';
-    }
   };
 
   const injectFabStyles = () => {
@@ -105,10 +140,11 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
 
     const avatar = document.createElement('img');
     avatar.className = 'bc-fab-avatar';
-    avatar.src = base + 'assets/brand/mimo/mimo-default.svg';
+    avatar.src = base + 'assets/brand/mimo/mimo-head.webp';
     avatar.alt = 'Mimo';
     avatar.width = 44;
     avatar.height = 44;
+    avatar.loading = 'lazy';
     avatar.decoding = 'async';
     btn.appendChild(avatar);
 
@@ -118,28 +154,29 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
     if (rtl) bubble.setAttribute('dir', 'rtl');
     bubble.hidden = true;
 
-    const buildBubbleText = () => {
-      const l = pickLang();
-      const mName = getSignedInMemberName();
-      const greet = BUBBLE_GREET[l] || BUBBLE_GREET.en;
-      if (mName) {
-        const wb = (MEMBER_GREET[l] || MEMBER_GREET.en).replace('{name}', mName);
-        return wb + ' · ' + greet;
+    let returning = false;
+    try { returning = !!localStorage.getItem('bosphorly.mimo_intro'); } catch {}
+    const greeting = BUBBLE_GREET[lang] || BUBBLE_GREET.en;
+    {
+      bubble.innerHTML = '<div class="bc-bubble-top"><span class="bc-bubble-text"></span><button type="button" class="bc-bubble-close">×</button></div>';
+      bubble.querySelector('.bc-bubble-close').setAttribute('aria-label', CLOSE_LBL[lang] || CLOSE_LBL.en);
+      const back = (MEMBER_GREET[lang] || MEMBER_GREET.en).replace(/[,،、]?\s*\{name\}.*$/, '!');
+      bubble.querySelector('.bc-bubble-text').textContent = returning ? back : greeting;
+      if (!returning) {
+        const actions = document.createElement('div');
+        actions.className = 'bc-bubble-chips';
+        for (const [labels, path] of [[TOURS, 'tours.html'], [Q_TRANSFER, 'index.html'], [BROWSE, null]]) {
+          const el = document.createElement(path ? 'a' : 'button');
+          el.className = 'bc-bubble-chip';
+          el.textContent = labels[lang] || labels.en;
+          el.setAttribute('aria-label', el.textContent);
+          if (path) el.href = base + path + '?lang=' + encodeURIComponent(lang) + (labels === Q_TRANSFER ? '#booking' : '');
+          else el.addEventListener('click', () => hideBubble());
+          actions.append(el);
+        }
+        bubble.append(actions);
       }
-      return greet;
-    };
-
-    bubble.innerHTML =
-      `<div class="bc-bubble-top"><span class="bc-bubble-text"></span>` +
-      `<button type="button" class="bc-bubble-close" aria-label="${CLOSE_LBL[lang] || CLOSE_LBL.en}">×</button></div>` +
-      `<div class="bc-bubble-chips">` +
-      `<button type="button" class="bc-bubble-chip" data-q="transfer">${Q_TRANSFER[lang] || Q_TRANSFER.en}</button>` +
-      `<button type="button" class="bc-bubble-chip" data-q="cruise">${Q_CRUISE[lang] || Q_CRUISE.en}</button>` +
-      `</div>`;
-
-    const bubbleTextEl = bubble.querySelector('.bc-bubble-text');
-    bubbleTextEl.textContent = buildBubbleText();
-
+    }
     let collapseTimer = null;
     const hideBubble = (markSeen = true) => {
       if (collapseTimer) { clearTimeout(collapseTimer); collapseTimer = null; }
@@ -154,9 +191,9 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
         bubble.style.bottom = '';
         return;
       }
-      bubble.style.bottom = 'auto';
-      bubble.style.top = '64px';
-      const targets = document.querySelectorAll('#toStep2, #toStep3, #submitDemo, #submit, .tf-send, #reservation-form input:focus, #bookingForm input:focus');
+      bubble.style.bottom = '';
+      bubble.style.top = '';
+      const targets = document.querySelectorAll('.hero-auth-btn, header button, #toStep2, #toStep3, #submitDemo, #submit, .tf-send, #reservation-form input:focus, #bookingForm input:focus');
       const bRect = bubble.getBoundingClientRect();
       for (const t of targets) {
         const r = t.getBoundingClientRect();
@@ -164,8 +201,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
         const overlaps = bRect.left < r.right && bRect.right > r.left && bRect.top < r.bottom && bRect.bottom > r.top;
         if (overlaps) {
           if (r.top > 70) {
+            bubble.style.bottom = 'auto';
             bubble.style.top = Math.max(8, Math.floor(r.top - bRect.height - 8)) + 'px';
           } else {
+            bubble.style.bottom = 'auto';
             bubble.style.top = Math.min(window.innerHeight - bRect.height - 76, Math.ceil(r.bottom + 8)) + 'px';
           }
           break;
@@ -215,18 +254,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       openChatPanel('');
     });
 
-    bubbleTextEl.addEventListener('click', () => openChatPanel(''));
     bubble.querySelector('.bc-bubble-close').addEventListener('click', (e) => {
       e.stopPropagation();
       hideBubble(true);
     });
-    bubble.querySelectorAll('.bc-bubble-chip').forEach((chip) => {
-      chip.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openChatPanel(chip.textContent.trim());
-      });
-    });
-
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !bubble.hidden) {
         hideBubble(true);
@@ -256,6 +287,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
     launcher.className = 'bc-launcher';
     launcher.dir = rtl ? 'rtl' : 'ltr';
     launcher.lang = lang;
+    launcher.dataset.hello = greeting.split(lang === 'tr' ? '.' : ' 👋')[0];
     btn.id = 'bc-launch-button';
     const label = document.createElement('label');
     label.htmlFor = btn.id;
@@ -265,10 +297,10 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
     document.body.appendChild(launcher);
 
     const mobile = matchMedia('(max-width: 1023.98px)');
-    if (mobile.matches) {
+    {
       const css = document.createElement('link');
       css.rel = 'stylesheet';
-      css.media = mobile.media;
+
       css.href = base + 'mimo-intro.css?v=20261123c';
       document.head.appendChild(css);
       const script = document.createElement('script');
@@ -277,11 +309,33 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       document.head.appendChild(script);
     }
 
+    const caption = document.querySelector('.photo-caption');
+    if (caption) {
+      const positionLauncher = () => {
+        const rect = caption.getBoundingClientRect();
+        const fab = btn.getBoundingClientRect();
+        const dock = mobile.matches ? btn : launcher;
+        const overlaps = rect.left < fab.right && rect.right > fab.left &&
+          rect.top < innerHeight - 16 && rect.bottom > innerHeight - 16 - fab.height;
+        const lift = overlaps ? Math.max(16, innerHeight - rect.top + 32) : 16;
+        dock.style.bottom = lift + 'px';
+        bubble.style.setProperty('--mimo-bubble-bottom', lift + fab.height + 12 + 'px');
+      };
+      positionLauncher();
+      const observer = new ResizeObserver(positionLauncher);
+      observer.observe(caption);
+      observer.observe(document.body);
+      requestAnimationFrame(positionLauncher);
+      window.addEventListener('load', positionLauncher, {once:true});
+      window.addEventListener('scroll', positionLauncher, {passive:true});
+      window.addEventListener('resize', positionLauncher);
+    }
+
     if (!hasSeenBubble()) {
-      const bubbleDelay = typeof window.__BOSPHORLY_MIMO_BUBBLE_MS === 'number' ? window.__BOSPHORLY_MIMO_BUBBLE_MS : 5000;
+      const bubbleDelay = typeof window.__BOSPHORLY_MIMO_BUBBLE_MS === 'number' ? window.__BOSPHORLY_MIMO_BUBBLE_MS : 250;
       const collapseDelay = typeof window.__BOSPHORLY_MIMO_COLLAPSE_MS === 'number' ? window.__BOSPHORLY_MIMO_COLLAPSE_MS : 10000;
       function showGreeting() {
-        if (document.querySelector('.bc-mobile-welcome')) {
+        if (!window.__mimoReady) {
           document.addEventListener('mimo:welcome-end', showGreeting, {once:true});
           return;
         }
@@ -289,13 +343,12 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
         if (formInteracted || isFormField(document.activeElement)) return;
         const panel = document.querySelector('.bc-panel');
         if (panel && !panel.hidden) return;
-        bubbleTextEl.textContent = buildBubbleText();
-        markBubbleSeen();
+
         bubble.hidden = false;
         ensureSafeMobilePosition();
-        collapseTimer = setTimeout(() => {
+        if (returning) collapseTimer = setTimeout(() => {
           bubble.hidden = true;
-        }, collapseDelay);
+        }, Math.min(collapseDelay, 4000));
       }
       setTimeout(() => {
         if (mobile.matches && document.readyState !== 'complete') {
@@ -342,7 +395,7 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       wrap.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;margin:10px 0 8px;border-radius:12px;background:#f0f7ff;border:1px solid #d5e6fb;color:#11314d;font-size:.93rem;line-height:1.4;font-weight:600';
       const img = document.createElement('img');
       img.className = 'mimo-thanks-img';
-      img.src = base + 'assets/brand/mimo/mimo-happy.svg';
+      img.src = base + 'assets/brand/mimo/mimo-full.webp';
       img.alt = 'Mimo';
       img.width = 38;
       img.height = 38;
