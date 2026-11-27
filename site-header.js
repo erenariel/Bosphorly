@@ -49,7 +49,7 @@
   const links = [['home', 'index.html'], ['transfer', 'index.html#booking'], ['prices', 'prices.html'], ['tours', 'tours.html'], ['discover', 'explore.html'], ['faq', 'faq.html']].concat(window.BOSPHORLY_API && window.BOSPHORLY_API.base ? [] : [['account', 'account.html']]);
   const header = document.createElement('header');
   header.className = 'site-header';
-  header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp?v=20261126logo2" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span><span class="sh-word" dir="ltr">Bosphorly<span class="sh-tld" dir="ltr">.com</span></span><small dir="ltr">Your Intelligent Travel Companion in Istanbul</small></span></a>' +
+  header.innerHTML = '<div class="sh-inner"><a class="sh-brand" aria-label="Bosphorly" href="' + base + 'index.html"><img src="' + base + 'assets/brand/approved-icon.webp?v=20261127a" alt="Bosphorly logo" width="38" height="38" loading="lazy" decoding="async"><span><span class="sh-word" dir="ltr">Bosphorly<span class="sh-tld" dir="ltr">.com</span></span><small dir="ltr">Your Intelligent Travel Companion</small></span></a>' +
     '<nav class="sh-nav" aria-label="Main navigation"></nav><div class="sh-tools"><a class="sh-search" href="' + base + 'search.html" aria-label="' + (L.search[lang] || L.search.en) + '" title="' + (L.search[lang] || L.search.en) + '"' + (page === 'search' ? ' aria-current="page"' : '') + '><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.4" fill="none"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></a><span data-lang-mount></span>' + (withCurrency ? '<span data-currency-mount></span>' : '') + '</div>' +
     '<div class="sh-auth" hidden><span class="sh-auth-perk">' + (L.perk[lang] || L.perk.en) + '</span><a class="sh-auth-btn in" href="' + base + 'account.html">' + ICON_IN + '<span>' + (L.signin[lang] || L.signin.en) + '</span></a><a class="sh-auth-btn up" href="' + base + 'account.html#signup">' + ICON_UP + '<span>' + (L.signup[lang] || L.signup.en) + '</span></a></div>' +
     '<div class="sh-member" hidden><a class="sh-member-pill" href="' + base + 'account.html"><span class="sh-member-name"></span><span class="sh-member-tier" data-tier="silver"></span><span class="sh-member-coupons" hidden></span></a><button class="sh-member-out" type="button">' + (L.signout[lang] || L.signout.en) + '</button></div></div>';
@@ -120,7 +120,7 @@
   window.addEventListener('bosphorly:member-changed', syncMemberBar);
   window.addEventListener('storage', e => { if (!e.key || e.key.startsWith('bosphorly.')) syncMemberBar(); });
   host.replaceWith(header);
-  if (!document.querySelector('script[src*="header-fit.js"]')) { const fit = document.createElement('script'); fit.src = base + 'header-fit.js?v=20261126logo2'; fit.defer = true; document.head.append(fit); }
+  if (!document.querySelector('script[src*="header-fit.js"]')) { const fit = document.createElement('script'); fit.src = base + 'header-fit.js?v=20261127a'; fit.defer = true; document.head.append(fit); }
   if (window.BosphorlyLang && window.BosphorlyLang.mount) window.BosphorlyLang.mount();
 })();
 
