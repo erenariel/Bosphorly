@@ -3,6 +3,203 @@
 // keeps working with device-only requests.
 window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extranetBase: '', transferMailBase: 'https://bosphorly-transfer-mail.erennkirazz98.workers.dev', turnstileSiteKey: '0x4AAAAAAGLGiuSp0XpkdcLs', telegramBot: 'BosphorlyBot' });
 
+// Independent public channel gate & XSS-safe security warning banner (polls /v1/public/channels every <=30s).
+(() => {
+  const root = document.documentElement;
+  const isExtranet = (root && root.hasAttribute('data-no-mimo')) || /^\/extranet(?:\/|$)/.test(location.pathname || '');
+  if (isExtranet) return;
+
+  if (!document.getElementById('bc-channel-gate')) {
+    const gateStyle = document.createElement('style');
+    gateStyle.id = 'bc-channel-gate';
+    gateStyle.textContent =
+      'html:not([data-ch-whatsapp="1"]) a[href*="wa.me"],' +
+      'html:not([data-ch-whatsapp="1"]) .social-whatsapp,' +
+      'html:not([data-ch-whatsapp="1"]) .bc-wa-link,' +
+      'html:not([data-ch-whatsapp="1"]) [data-channel-item="whatsapp"]{display:none!important}' +
+      'html:not([data-ch-telegram="1"]) a[href*="t.me/"],' +
+      'html:not([data-ch-telegram="1"]) .tg-btn,' +
+      'html:not([data-ch-telegram="1"]) .bc-tg-link,' +
+      'html:not([data-ch-telegram="1"]) #heroMimoTg,' +
+      'html:not([data-ch-telegram="1"]) #footerTelegramWrap,' +
+      'html:not([data-ch-telegram="1"]) [data-channel-item="telegram"]{display:none!important}' +
+      'html:not([data-ch-instagram="1"]) a[href*="instagram.com"],' +
+      'html:not([data-ch-instagram="1"]) .social-instagram,' +
+      'html:not([data-ch-instagram="1"]) [data-channel-item="instagram"]{display:none!important}' +
+      'html:not([data-ch-whatsapp="1"]):not([data-ch-instagram="1"]) .social-links{display:none!important}' +
+      'html[data-ch-mimo="0"] .bc-bubble,html[data-ch-mimo="0"] .mimo-intro{display:none!important}' +
+      '.bc-sec-banner{width:100%;max-width:100%;box-sizing:border-box;background:#7a1c1c;color:#fff8eb;border-bottom:2px solid #ffd565;padding:10px 16px;font:600 13.5px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;position:relative;z-index:960;overflow-wrap:anywhere}' +
+      '.bc-sec-banner-inner{max-width:1160px;margin:0 auto;display:flex;align-items:flex-start;gap:10px}' +
+      '.bc-sec-banner-ico{flex-shrink:0;font-size:15px;line-height:1.35}' +
+      '.bc-sec-banner-txt{min-width:0;flex:1}';
+    (document.head || root).appendChild(gateStyle);
+  }
+
+  const wrapChannelSeparators = () => {
+    document.querySelectorAll('a[href*="t.me/"], a[href*="wa.me"], a[href*="instagram.com"]').forEach((a) => {
+      const href = a.getAttribute('href') || '';
+      const ch = href.includes('wa.me') ? 'whatsapp' : href.includes('t.me/') ? 'telegram' : 'instagram';
+      const prev = a.previousSibling;
+      if (prev && prev.nodeType === 3 && /^\s*·\s*$/.test(prev.nodeValue || '')) {
+        const sep = document.createElement('span');
+        sep.dataset.channelItem = ch;
+        sep.textContent = prev.nodeValue;
+        prev.parentNode.replaceChild(sep, prev);
+      }
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wrapChannelSeparators);
+  else wrapChannelSeparators();
+
+  const currentDocLang = () => {
+    const raw = (root && root.lang) || (window.BosphorlyLang && window.BosphorlyLang.pick && window.BosphorlyLang.pick()) || 'en';
+    const short = String(raw || 'en').trim().toLowerCase().split(/[-_]/)[0];
+    return short === 'in' ? 'id' : (short || 'en');
+  };
+
+  let latestState = {
+    loaded: false,
+    ok: false,
+    channels: { whatsapp: false, telegram: false, instagram: false, mimo: true },
+    banner: { enabled: false, text: '', translations: null },
+  };
+
+  const renderSecurityBanner = () => {
+    if (!document.body) return;
+    let bar = document.getElementById('bosphorlySecurityBanner');
+    const b = latestState.banner;
+    if (!b || !b.enabled) {
+      if (bar) bar.remove();
+      return;
+    }
+    const lang = currentDocLang();
+    const trMap = b.translations && typeof b.translations === 'object' ? b.translations : null;
+    const rawMsg = (trMap && (trMap[lang] || trMap.en || trMap.tr)) || b.text || '';
+    const cleanMsg = String(rawMsg || '').replace(/[\u0000-\u001F\u007F]/g, ' ').trim();
+    if (!cleanMsg) {
+      if (bar) bar.remove();
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'bosphorlySecurityBanner';
+      bar.className = 'bc-sec-banner';
+      bar.setAttribute('role', 'region');
+      bar.setAttribute('aria-label', lang === 'tr' ? 'Güvenlik duyurusu' : 'Security notice');
+      const inner = document.createElement('div');
+      inner.className = 'bc-sec-banner-inner';
+      const ico = document.createElement('span');
+      ico.className = 'bc-sec-banner-ico';
+      ico.setAttribute('aria-hidden', 'true');
+      ico.textContent = '⚠️';
+      const txt = document.createElement('span');
+      txt.className = 'bc-sec-banner-txt';
+      inner.append(ico, txt);
+      bar.appendChild(inner);
+      document.body.prepend(bar);
+    }
+    const rtl = ['ar', 'he', 'fa'].includes(lang);
+    bar.dir = rtl ? 'rtl' : 'ltr';
+    const txtNode = bar.querySelector('.bc-sec-banner-txt');
+    if (txtNode) txtNode.textContent = cleanMsg;
+  };
+
+  const applyChannelAttributes = (channelsObj, ok) => {
+    const wa = Boolean(ok && channelsObj && channelsObj.whatsapp === true);
+    const tg = Boolean(ok && channelsObj && channelsObj.telegram === true);
+    const ig = Boolean(ok && channelsObj && channelsObj.instagram === true);
+    const mimo = ok && channelsObj ? channelsObj.mimo !== false : true;
+    root.dataset.chWhatsapp = wa ? '1' : '0';
+    root.dataset.chTelegram = tg ? '1' : '0';
+    root.dataset.chInstagram = ig ? '1' : '0';
+    root.dataset.chMimo = mimo ? '1' : '0';
+    wrapChannelSeparators();
+    renderSecurityBanner();
+    const detail = {
+      loaded: true,
+      ok: Boolean(ok),
+      channels: { whatsapp: wa, telegram: tg, instagram: ig, mimo },
+      banner: latestState.banner,
+    };
+    latestState = detail;
+    try {
+      document.dispatchEvent(new CustomEvent('bosphorly:channels', { detail }));
+    } catch {}
+  };
+
+  let inflight = null;
+  const fetchChannels = async () => {
+    const apiBase = String((window.BOSPHORLY_API && window.BOSPHORLY_API.base) || '').replace(/\/+$/, '');
+    if (!apiBase) {
+      latestState.banner = { enabled: false, text: '', translations: null };
+      applyChannelAttributes(null, false);
+      return latestState;
+    }
+    if (inflight) return inflight;
+    inflight = (async () => {
+      try {
+        const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+        const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, 4000);
+        let res;
+        try {
+          res = await fetch(apiBase + '/v1/public/channels', {
+            method: 'GET',
+            credentials: 'omit',
+            cache: 'no-store',
+            ...(ctrl ? { signal: ctrl.signal } : {}),
+          });
+        } finally {
+          clearTimeout(timer);
+        }
+        if (!res || !res.ok) {
+          applyChannelAttributes(null, false);
+          return latestState;
+        }
+        const data = await res.json();
+        if (!data || typeof data.channels !== 'object') {
+          applyChannelAttributes(null, false);
+          return latestState;
+        }
+        latestState.banner = data.banner && typeof data.banner === 'object'
+          ? {
+              enabled: Boolean(data.banner.enabled),
+              text: typeof data.banner.text === 'string' ? data.banner.text : '',
+              translations: data.banner.translations && typeof data.banner.translations === 'object' ? data.banner.translations : null,
+            }
+          : { enabled: false, text: '', translations: null };
+        applyChannelAttributes(data.channels, true);
+        return latestState;
+      } catch {
+        applyChannelAttributes(null, false);
+        return latestState;
+      } finally {
+        inflight = null;
+      }
+    })();
+    return inflight;
+  };
+
+  const pollMs = Math.max(1000, Math.min(60000, Number(window.__BOSPHORLY_CHANNELS_POLL_MS) || 30000));
+  fetchChannels();
+  setInterval(() => {
+    if (document.visibilityState !== 'hidden') fetchChannels();
+  }, pollMs);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') fetchChannels();
+  });
+  document.addEventListener('bosphorly:lang', renderSecurityBanner);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderSecurityBanner);
+  if (typeof MutationObserver === 'function' && root) {
+    new MutationObserver(renderSecurityBanner).observe(root, { attributes: true, attributeFilter: ['lang'] });
+  }
+
+  window.BosphorlyChannels = Object.freeze({
+    refresh: fetchChannels,
+    getState: () => latestState,
+    pollIntervalMs: pollMs,
+  });
+})();
+
 // Lightweight floating Mimo assistant button + non-intrusive greeting bubble (lazy-loads assistant-chat.js & CSS when opened).
 (() => {
   const base = document.currentScript && document.currentScript.src
@@ -399,11 +596,18 @@ window.BOSPHORLY_API = Object.freeze({ base: 'https://api.bosphorly.com', extran
       document.head.appendChild(script);
     }
 
+    document.addEventListener('bosphorly:channels', (ev) => {
+      if (ev && ev.detail && ev.detail.channels && ev.detail.channels.mimo === false) {
+        hideBubble(false);
+      }
+    });
+
     if (!hasSeenBubble()) {
       const bubbleDelay = typeof window.__BOSPHORLY_MIMO_BUBBLE_MS === 'number' ? window.__BOSPHORLY_MIMO_BUBBLE_MS : 250;
       const collapseDelay = typeof window.__BOSPHORLY_MIMO_COLLAPSE_MS === 'number' ? window.__BOSPHORLY_MIMO_COLLAPSE_MS : 10000;
       function showGreeting() {
         if (hasSeenBubble() || loaded) return;
+        if (document.documentElement.dataset.chMimo === '0') return;
         if (formInteracted || isFormField(document.activeElement)) return;
         const panel = document.querySelector('.bc-panel');
         if (panel && !panel.hidden) return;

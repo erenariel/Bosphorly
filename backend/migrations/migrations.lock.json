@@ -19,5 +19,6 @@
   "0018_extranet_campaign_approval.sql": "0d8214a24c4dc43c4f4d288b283ce58d5ef00b3814043cfc86d2b22d000c5ac2",
   "0019_extranet_partners_inbox.sql": "6ce595941d6402b41c0ef676106dc42b6fa7da013261396b64c6a0058ff776f5",
   "0020_extranet_catalog_settings.sql": "c541f1a075d7e87dbc7a7c931e210a2896748459789a14fc0896c35d4358d102",
-  "0021_commission_basis.sql": "635419fc27f68fcf8f35a7284329d842afbbb1d5f5f050cff37e072109f284e9"
+  "0021_commission_basis.sql": "635419fc27f68fcf8f35a7284329d842afbbb1d5f5f050cff37e072109f284e9",
+  "0022_emergency_security_center.sql": "a8880656be57a4d3c9bd3577da26fe30d4696810944fbb4ddf172cddc1acfdef"
 }
