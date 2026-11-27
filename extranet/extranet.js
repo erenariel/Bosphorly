@@ -695,6 +695,7 @@
     close: 'Acil Kanal Kapatma',
     reopen: 'Kanal Yeniden Açma',
     close_all: 'Bütün İletişim Kanallarını Acil Kapatma',
+    reopen_all: 'Bütün İletişim Kanallarını Yeniden Açma',
     banner_enable: 'Güvenlik Uyarı Bandını Yayınlama',
     banner_update: 'Güvenlik Uyarı Bandını Güncelleme',
     banner_disable: 'Güvenlik Uyarı Bandını Kapatma',
@@ -763,17 +764,19 @@
       expiresAtMs: ctx.expiresAtMs || 0,
       cooldownUntilMs: ctx.cooldownRemainingSec ? Date.now() + ctx.cooldownRemainingSec * 1000 : 0,
       maskedVerifyEmail: ctx.maskedVerifyEmail || (emgStateCache?.configStatus?.maskedVerifyEmail || ''),
-      reopenText: ctx.actionType === 'reopen' && ctx.operationId ? 'AÇ' : '',
+      reopenText: (ctx.actionType === 'reopen' || ctx.actionType === 'reopen_all') && ctx.operationId ? 'AÇ' : '',
     };
 
     const modal = $('emergencyVerifyModal');
     $('emgModalTitle').textContent = `${ctx.targetLabel} · ${EMG_ACTION_TITLES[ctx.actionType] || ctx.actionType}`;
     showEmgModalAlert('');
 
-    const isReopen = ctx.actionType === 'reopen';
+    const isReopen = ctx.actionType === 'reopen' || ctx.actionType === 'reopen_all';
     const destLabel = emgModalContext.maskedVerifyEmail || 'sunucuda kayıtlı ikinci kişisel doğrulama e-postası';
     $('emgModalDesc').textContent = isReopen
-      ? `${ctx.targetLabel} kanalını yeniden etkinleştirmek için aşağıya büyük harflerle "AÇ" yazın ve ${destLabel} adresine gönderilecek tek kullanımlık 6 haneli kodu doğrulayın.`
+      ? ctx.actionType === 'reopen_all'
+        ? `Panelden kapatılmış bütün kanalları yeniden etkinleştirmek için aşağıya büyük harflerle "AÇ" yazın ve ${destLabel} adresine gönderilecek tek kullanımlık 6 haneli kodu doğrulayın. Cloudflare ortam değişkeniyle (*_DISABLED=1) kilitlenen kanallar panelden açılamaz ve kapalı kalır.`
+        : `${ctx.targetLabel} kanalını yeniden etkinleştirmek için aşağıya büyük harflerle "AÇ" yazın ve ${destLabel} adresine gönderilecek tek kullanımlık 6 haneli kodu doğrulayın.`
       : `${ctx.targetLabel} üzerinde işlem yapmak için ${destLabel} adresine tek kullanımlık 6 haneli doğrulama kodu gönderilecektir. Web sitesi, rezervasyonlar ve diğer açık kanallar etkilenmez.`;
 
     $('emgReopenAcWrap').hidden = !isReopen;
@@ -807,7 +810,7 @@
 
   async function requestEmergencyOtpCode() {
     if (!emgModalContext) return;
-    const isReopen = emgModalContext.actionType === 'reopen';
+    const isReopen = emgModalContext.actionType === 'reopen' || emgModalContext.actionType === 'reopen_all';
     const acVal = $('emgReopenConfirmInput').value.trim();
     if (isReopen && acVal !== 'AÇ') {
       showEmgModalAlert('Yeniden açma işlemini başlatmak için doğrulama alanına tam olarak "AÇ" yazmalısınız.', 'err');
@@ -872,7 +875,7 @@
       targetChannel: emgModalContext.targetChannel,
       actionType: emgModalContext.actionType,
     };
-    if (emgModalContext.actionType === 'reopen') {
+    if (emgModalContext.actionType === 'reopen' || emgModalContext.actionType === 'reopen_all') {
       payload.confirmReopenText = emgModalContext.reopenText || 'AÇ';
     }
 
@@ -912,6 +915,13 @@
 
   function renderEmergencyCenter(data) {
     emgStateCache = data;
+
+    // Toplu yeniden açma: yalnızca env kilidi olmayan en az bir kapalı kanal varsa etkin.
+    const reopenAllBtn = $('btnEmergencyReopenAll');
+    if (reopenAllBtn) {
+      const chs = Array.isArray(data.channels) ? data.channels : [];
+      reopenAllBtn.disabled = !chs.some((c) => !c.enabled && !c.envLocked);
+    }
 
     // 1. Config / Notification alert
     const cfgAlert = $('emergencyConfigAlert');
@@ -1976,6 +1986,16 @@
           targetChannel: 'all',
           targetLabel: 'Bütün İletişim Kanalları',
           actionType: 'close_all',
+          cooldownRemainingSec: emgStateCache?.cooldownRemainingSec || 0,
+          maskedVerifyEmail: emgStateCache?.configStatus?.maskedVerifyEmail || '',
+        });
+    }
+    if ($('btnEmergencyReopenAll')) {
+      $('btnEmergencyReopenAll').onclick = () =>
+        openEmergencyModal({
+          targetChannel: 'all',
+          targetLabel: 'Bütün İletişim Kanalları',
+          actionType: 'reopen_all',
           cooldownRemainingSec: emgStateCache?.cooldownRemainingSec || 0,
           maskedVerifyEmail: emgStateCache?.configStatus?.maskedVerifyEmail || '',
         });
