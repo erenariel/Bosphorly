@@ -18,7 +18,7 @@ test('local draft, logo, RTL, map fallback and no collection',async({page})=>{
  await expect(page.locator('#price')).toContainText('110');
  await expect(page.locator('#time option').last()).toHaveText('22:00');
  await page.goto('/booking.html?service=bb-sunset&lang=en');
- await expect(page.locator('.sh-brand img')).toHaveAttribute('src','assets/brand/approved-icon.webp');
+ await expect(page.locator('.sh-brand img')).toHaveAttribute('src',/^assets\/brand\/approved-icon\.webp(\?v=[\w.-]+)?$/);
  await expect.poll(()=>page.locator('.sh-brand img').evaluate(e=>e.complete&&e.naturalWidth>0)).toBeTruthy();
  await page.locator('#ack').check();await page.locator('#submit').click();
  await expect(page.locator('#error')).toBeVisible();
