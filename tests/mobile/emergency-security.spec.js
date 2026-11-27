@@ -8,11 +8,13 @@ test('Public channel fail-closed safety: buttons start hidden before /v1/public/
 
   await page.route('**/v1/public/channels', async (route) => {
     await gatePromise;
-    await route.fulfill({
-      status: 503,
-      contentType: 'application/json',
-      body: JSON.stringify({ error: 'Channel status temporarily unavailable' }),
-    });
+    try {
+      await route.fulfill({
+        status: 503,
+        contentType: 'application/json',
+        body: JSON.stringify({ error: 'Channel status temporarily unavailable' }),
+      });
+    } catch {}
   });
 
   await page.goto('/index.html?lang=tr');

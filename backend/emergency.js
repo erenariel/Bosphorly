@@ -1106,7 +1106,10 @@ async function loadAllChannelStatesForAdmin(env, nowMs) {
     const envLocked = isChannelEnvLocked(env, id);
     const effectiveEnabled = envLocked ? false : d1Enabled;
     const pendingVerification = Boolean(
-      pendingRow && (pendingRow.target_channel === id || pendingRow.target_channel === 'all')
+      pendingRow &&
+        (pendingRow.target_channel === id ||
+          (pendingRow.target_channel === 'all' &&
+            (pendingRow.action_type === 'reopen_all' ? !envLocked && !d1Enabled : !envLocked)))
     );
     return {
       id,
