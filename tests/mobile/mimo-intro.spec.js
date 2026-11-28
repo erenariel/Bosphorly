@@ -6,7 +6,7 @@ test.beforeEach(async ({page}) => {
 
 test('desktop introduction docks once, then the launcher lazy-loads chat', async ({page}) => {
   await page.setViewportSize({width:1280,height:800});
-  await page.goto('/?lang=tr');
+  await page.goto('/faq.html?lang=tr');
   const intro = page.locator('.mimo-intro');
   const fab = page.locator('.bc-fab');
   await expect(intro.getByText('Merhaba! Ben Mimo')).toBeVisible();
@@ -25,7 +25,7 @@ test('desktop introduction docks once, then the launcher lazy-loads chat', async
 test('reduced motion opens directly on the desktop launcher', async ({page}) => {
   await page.setViewportSize({width:1280,height:800});
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.goto('/');
+  await page.goto('/faq.html');
   await expect(page.locator('.mimo-intro')).toHaveCount(0);
   await expect(page.locator('.bc-launcher')).toHaveCSS('opacity','1');
   expect(await page.evaluate(() => localStorage.getItem('bosphorly.mimo_intro'))).toBe('1');
@@ -34,7 +34,7 @@ test('reduced motion opens directly on the desktop launcher', async ({page}) => 
 test('390px corner welcome runs once and yields to the existing greeting', async ({page}) => {
   await page.setViewportSize({width:390,height:844});
   await page.addInitScript(() => { window.__BOSPHORLY_MIMO_BUBBLE_MS = 150; });
-  await page.goto('/?lang=tr');
+  await page.goto('/faq.html?lang=tr');
   const note = page.locator('.mimo-intro');
   await expect(note).toHaveText('Merhaba! Ben Mimo');
   await expect(note).toBeVisible();
@@ -53,7 +53,7 @@ test('390px corner welcome runs once and yields to the existing greeting', async
 test('390px reduced motion bypasses the corner welcome', async ({page}) => {
   await page.setViewportSize({width:390,height:844});
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.goto('/');
+  await page.goto('/faq.html');
   await expect(page.locator('.mimo-intro')).toHaveCount(0);
   expect(await page.evaluate(() => localStorage.getItem('bosphorly.mimo_intro'))).toBe('1');
 });
@@ -86,7 +86,7 @@ test('390px launcher remains tappable during the RTL welcome', async ({page}) =>
 
 test('RTL label sits to the left and an intro click reaches the page', async ({page}) => {
   await page.setViewportSize({width:1200,height:800});
-  await page.goto('/?lang=ar');
+  await page.goto('/faq.html?lang=ar');
   const intro = page.locator('.mimo-intro');
   await expect(intro).toHaveAttribute('dir','rtl');
   const label = await page.locator('.bc-launcher-label').boundingBox();
@@ -130,7 +130,7 @@ for (const [label, destination] of [['Tur bul', '/tours.html?lang=tr'], ['Transf
     page.on('request', r => {
       if (/assistant-chat\.js|\/v1\/(?:assistant|mimo|chat)/.test(r.url())) requests.push(r.url());
     });
-    await page.goto('/?lang=tr');
+    await page.goto('/faq.html?lang=tr');
     await page.locator('.bc-bubble-chip').filter({hasText:label}).click();
     if (destination) await expect(page).toHaveURL(url => url.pathname + url.search + url.hash === destination);
     else await expect(page.locator('.bc-bubble')).toBeHidden();
@@ -140,7 +140,7 @@ for (const [label, destination] of [['Tur bul', '/tours.html?lang=tr'], ['Transf
 
 test('closing welcome suppresses it for the visit even without the intro script', async ({page}) => {
   await page.route('**/mimo-intro.js*', route => route.abort());
-  await page.goto('/?lang=tr');
+  await page.goto('/faq.html?lang=tr');
   await page.locator('.bc-bubble-close').click();
   await page.reload();
   await page.waitForTimeout(3500);
@@ -167,7 +167,7 @@ test('launcher stays at its physical bottom-right inset while scrolling', async 
   await page.emulateMedia({reducedMotion:'reduce'});
   for (const width of [390,1280,1440]) {
     await page.setViewportSize({width,height:844});
-    await page.goto('/?lang=he');
+    await page.goto('/faq.html?lang=he');
     const fab = page.locator('.bc-fab');
     const before = await fab.boundingBox();
     const inset = width === 390 ? 16 : 24;

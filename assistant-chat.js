@@ -993,6 +993,7 @@
       if (data && typeof data.chatSession === 'string' && data.chatSession) {
         saveChatSession(data.chatSession);
       }
+      if (res.status === 429) document.dispatchEvent(new Event('bosphorly:mimo-limit'));
       const msgLang = (data && typeof data.lang === 'string' && data.lang) ? data.lang : lang;
       if (data.closed || data.status === 'closed') {
         const closeReply = data.reply || tr('abuseClose');

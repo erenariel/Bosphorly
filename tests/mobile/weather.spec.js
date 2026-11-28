@@ -54,6 +54,6 @@ test('the forecast leaves nothing in the browser storage', async ({ page }) => {
   await stub(page);
   await page.goto('/index.html?lang=en');
   await expect(page.locator('#weather .wx-day')).toHaveCount(7);
-  expect(await page.evaluate(() => Object.keys(sessionStorage).filter(key => key !== 'bosphorly.mimo_intro'))).toEqual([]);
+  expect(await page.evaluate(() => Object.keys(sessionStorage).filter(key => !['bosphorly.mimo_intro', 'bosphorly.hero.mimo-status'].includes(key)))).toEqual([]);
   expect(await page.evaluate(() => Object.keys(localStorage).filter(k => /weather/.test(k)))).toEqual([]);
 });
