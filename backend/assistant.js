@@ -1,3 +1,4 @@
+import { usesGemini, callGemini } from './mimo-gemini.js';
 import {liveCatalogContext} from './catalog-store.js';
 import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
@@ -1528,6 +1529,32 @@ async function runAiWithRetry(env, messages, timeoutMs, temperature, extra = {},
   throw second.error;
 }
 
+async function runSelectedModel(env, prep, budget, stream = false) {
+  if (!usesGemini(env, prep.effectiveChannel)) {
+    const run = stream ? runAiStreamWithRetry : runAiWithRetry;
+    return run(env, prep.messages, prep.timeoutMs, prep.temperature, {}, budget);
+  }
+  budget.totalBudgetMs = Math.min(20000, budget.totalBudgetMs);
+  budget.callsUsed++;
+  const controller = new AbortController();
+  const timeout = Math.min(10000, prep.timeoutMs, budget.remainingMs());
+  let timer;
+  try {
+    const gateway = env.AI.gateway(getAiGatewayOptions(env).gateway.id);
+    const request = Promise.resolve(gateway.getUrl('google-ai-studio')).then(url =>
+      callGemini(url, env.GEMINI_API_KEY, prep.messages, prep.effectiveChannel, prep.temperature, controller.signal));
+    const response = await Promise.race([request, new Promise((_, reject) => {
+      timer = setTimeout(() => { controller.abort(); reject(new Error('Gemini timeout')); }, timeout);
+    })]);
+    return stream ? { kind: 'value', value: { response } } : { response };
+  } catch {
+    const value = await runAiWithRetry(env, prep.messages, Math.min(prep.timeoutMs, budget.remainingMs()), prep.temperature, {}, budget);
+    return stream ? { kind: 'value', value } : value;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function readStreamChunkWithTimeout(reader, timeoutMs) {
   let timer;
   const readCall = Promise.resolve().then(() => reader.read()).then(
@@ -2117,7 +2144,7 @@ export async function runAssistant({
   const budget = createAiBudget(prep.timeoutMs, aiStart);
   let lastParseFailed = false;
   try {
-    let parsed = parseModelOutput(await runAiWithRetry(env, prep.messages, prep.timeoutMs, prep.temperature, {}, budget));
+    let parsed = parseModelOutput(await runSelectedModel(env, prep, budget));
     lastParseFailed = Boolean(parsed.parseFailed);
     let extraPath = null;
     if (!parsed.parseFailed && parsed.reply && !parsed.abuse && !parsed.handoff) {
@@ -2364,14 +2391,7 @@ function createAssistantSseResponse({ prep, env, chatSession, headers, reqStart,
       };
 
       try {
-        const streamResult = await runAiStreamWithRetry(
-          env,
-          prep.messages,
-          prep.timeoutMs,
-          prep.temperature,
-          {},
-          budget,
-        );
+        const streamResult = await runSelectedModel(env, prep, budget, true);
 
         if (streamResult.kind === 'value') {
           ttftMs = Date.now() - aiStart;
