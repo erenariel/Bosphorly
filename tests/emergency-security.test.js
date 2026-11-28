@@ -1621,4 +1621,120 @@ test('10. WhatsApp guard path: non-message webhook fast-path, stalled D1 fail-op
   }
 });
 
+test('11. BSUID ("TR.xxx") hidden sender + array recipient ([{phone_number}]): replies to BSUID with identical Telnyx payload when open, suppresses when closed, and resumes after reopen', async () => {
+  const { publicKeyB64, privateKey } = await createTelnyxKeyPair();
+  const env = createEnv({ TELNYX_PUBLIC_KEY: publicKeyB64 });
+  const bsuid = 'TR.2239592296598770';
+  const buildBsuidArrayPayload = (text, id, tsSec) =>
+    JSON.stringify({
+      data: {
+        event_type: 'message.received',
+        payload: {
+          id,
+          type: 'WHATSAPP',
+          direction: 'inbound',
+          from: { phone_number: '' },
+          to: [{ phone_number: WA_BUSINESS, status: 'webhook_delivered' }],
+          body: {
+            type: 'text',
+            from: '',
+            from_user_id: bsuid,
+            timestamp: String(tsSec),
+            text: { body: text },
+          },
+        },
+      },
+    });
+
+  const telnyxCalls = [];
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    if (String(url).includes('api.telnyx.com')) {
+      telnyxCalls.push({ url, body: JSON.parse(opts.body) });
+      return Response.json({ data: { id: 'out-bsuid' } });
+    }
+    return Response.json({ ok: true, id: 'email-bsuid' });
+  };
+
+  try {
+    // 1) Channel OPEN: BSUID + [{phone_number}] -> reply goes to BSUID with identical Telnyx payload
+    const baseSec = Math.floor(Date.now() / 1000);
+    const openRaw = buildBsuidArrayPayload('selam', 'wa-bsuid-open-1', baseSec);
+    const openJobs = [];
+    const openRes = await handleWhatsApp(await signTelnyxRequest(openRaw, privateKey), env, {
+      waitUntil: (p) => openJobs.push(p),
+    });
+    assert.equal(openRes.status, 200);
+    await Promise.all(openJobs);
+    assert.equal(telnyxCalls.length, 1);
+    assert.equal(telnyxCalls[0].url, 'https://api.telnyx.com/v2/messages/whatsapp');
+    assert.deepEqual(telnyxCalls[0].body, {
+      type: 'WHATSAPP',
+      from: WA_BUSINESS,
+      to: bsuid,
+      messaging_profile_id: DEFAULT_TELNYX_MESSAGING_PROFILE_ID,
+      whatsapp_message: {
+        type: 'text',
+        text: {
+          body: 'Boğaz turumuz her akşam düzenlenmektedir.',
+          preview_url: false,
+        },
+      },
+    });
+
+    // 2) Channel CLOSED: BSUID + [{phone_number}] -> 200 OK, zero background jobs, zero Telnyx calls
+    let nowMs = (baseSec - 120) * 1000;
+    const owner = seedExtranetSession(env, 'info@bosphorly.com', 'owner', nowMs);
+    await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'close', nowMs);
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), false);
+
+    const closedRaw = buildBsuidArrayPayload('kapalıyken selam', 'wa-bsuid-closed-1', baseSec - 60);
+    const closedJobs = [];
+    const closedRes = await handleWhatsApp(await signTelnyxRequest(closedRaw, privateKey), env, {
+      waitUntil: (p) => closedJobs.push(p),
+    });
+    assert.equal(closedRes.status, 200);
+    assert.equal(closedJobs.length, 0);
+    assert.equal(telnyxCalls.length, 1);
+
+    // 3) Channel REOPENED ("AÇ"): closed-window BSUID replay stays dropped; fresh BSUID + [{phone_number}] sends to BSUID!
+    const reopenAtMs = baseSec * 1000 + 200;
+    await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'reopen', reopenAtMs - 1000);
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), true);
+
+    const replayJobs = [];
+    const replayRes = await handleWhatsApp(await signTelnyxRequest(closedRaw, privateKey), env, {
+      waitUntil: (p) => replayJobs.push(p),
+    });
+    assert.equal(replayRes.status, 200);
+    assert.equal(replayJobs.length, 0);
+    assert.equal(telnyxCalls.length, 1);
+
+    const reopenedRaw = buildBsuidArrayPayload('tekrar açıldı selam', 'wa-bsuid-reopen-1', baseSec + 1);
+    const reopenedJobs = [];
+    const reopenedRes = await handleWhatsApp(await signTelnyxRequest(reopenedRaw, privateKey), env, {
+      waitUntil: (p) => reopenedJobs.push(p),
+    });
+    assert.equal(reopenedRes.status, 200);
+    await Promise.all(reopenedJobs);
+    assert.equal(telnyxCalls.length, 2);
+    assert.deepEqual(telnyxCalls[1].body, {
+      type: 'WHATSAPP',
+      from: WA_BUSINESS,
+      to: bsuid,
+      messaging_profile_id: DEFAULT_TELNYX_MESSAGING_PROFILE_ID,
+      whatsapp_message: {
+        type: 'text',
+        text: {
+          body: 'Boğaz turumuz her akşam düzenlenmektedir.',
+          preview_url: false,
+        },
+      },
+    });
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
+
 
