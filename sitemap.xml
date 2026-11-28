@@ -2,18 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://bosphorly.com/</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/booking.html</loc><lastmod>2026-11-21</lastmod></url>
-  <url><loc>https://bosphorly.com/explore.html</loc><lastmod>2026-11-21</lastmod></url>
-  <url><loc>https://bosphorly.com/faq.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/explore.html</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://bosphorly.com/faq.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/prices.html</loc><lastmod>2026-11-21</lastmod></url>
-  <url><loc>https://bosphorly.com/privacy.html</loc><lastmod>2026-11-21</lastmod></url>
-  <url><loc>https://bosphorly.com/route.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/privacy.html</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://bosphorly.com/route.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/search.html</loc><lastmod>2026-11-21</lastmod></url>
-  <url><loc>https://bosphorly.com/tours.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/tours.html</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://bosphorly.com/de/flughafentransfer-istanbul.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/en/airport-transfer.html</loc><lastmod>2026-11-25</lastmod></url>
-  <url><loc>https://bosphorly.com/en/bosphorus-cruises.html</loc><lastmod>2026-11-21</lastmod></url>
-  <url><loc>https://bosphorly.com/en/istanbul-guide.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/en/bosphorus-cruises.html</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://bosphorly.com/en/istanbul-guide.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/en/old-city.html</loc><lastmod>2026-11-21</lastmod></url>
   <url><loc>https://bosphorly.com/en/public-transport.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/fr/transfert-aeroport-istanbul.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/he/airport-transfer.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/mimo/ar.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/mimo/az.html</loc><lastmod>2026-11-25</lastmod></url>
@@ -38,9 +40,9 @@
   <url><loc>https://bosphorly.com/mimo/tr.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/mimo/uk.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/mimo/zh.html</loc><lastmod>2026-11-25</lastmod></url>
-  <url><loc>https://bosphorly.com/tr/bogaz-turlari.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/tr/bogaz-turlari.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/tr/havalimani-transferi.html</loc><lastmod>2026-11-25</lastmod></url>
-  <url><loc>https://bosphorly.com/tr/istanbul-rehberi.html</loc><lastmod>2026-11-21</lastmod></url>
+  <url><loc>https://bosphorly.com/tr/istanbul-rehberi.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://bosphorly.com/tr/tarihi-yarimada.html</loc><lastmod>2026-11-21</lastmod></url>
   <url><loc>https://bosphorly.com/tr/toplu-tasima.html</loc><lastmod>2026-11-21</lastmod></url>
 </urlset>

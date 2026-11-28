@@ -48,7 +48,8 @@ FAQ_LINKS = {2: ("transfer", "index.html#booking"), 6: ("privacy", "privacy.html
 def site_pages() -> list[str]:
     """Every page of the site (root, en/, tr/), as paths relative to the repository."""
     files = list(ROOT.glob("*.html")) + list((ROOT / "en").glob("*.html")) + list((ROOT / "tr").glob("*.html"))
-    files.extend((ROOT / "he").glob("*.html"))
+    for locale in ("he", "de", "fr"):
+        files.extend((ROOT / locale).glob("*.html"))
     files.extend((ROOT / "mimo").glob("*.html"))
     return sorted(p.relative_to(ROOT).as_posix() for p in files)
 

@@ -23,7 +23,10 @@ def build():
         title, desc, example, chat = (escape(item[k]) for k in ("title", "description", "example", "chat"))
         question, answer = map(escape, faq[code]["qa"][1])
         direction = "rtl" if code in {"ar", "fa", "he"} else "ltr"
-        guide_link = '<a href="../he/airport-transfer.html">מדריך הסעות לסולטנאחמט</a> · ' if code == "he" else ""
+        guide_links = {"en":["../en/airport-transfer.html","Airport arrival guide"],"tr":["../tr/havalimani-transferi.html","Havalimanı varış rehberi"],"he":["../he/airport-transfer.html","מדריך הסעות לסולטנאחמט"],"de":["../de/flughafentransfer-istanbul.html","Flughafentransfer Istanbul: Preise und Abholung"],"fr":["../fr/transfert-aeroport-istanbul.html","Transfert aéroport Istanbul : tarifs et prise en charge"]}
+        guide = guide_links.get(code)
+        guide_link = f'<a href="{escape(guide[0])}">{escape(guide[1])}</a> · ' if guide else ""
+        extra = {"en":"<section><h2>What can Mimo help me plan?</h2><p>Mimo can help compare arrival options, plan a first visit, and identify questions to ask a tour provider. For current schedules, availability and booking terms, check the operator's confirmation. AI answers can be mistaken.</p><p><a href=\"../en/istanbul-guide.html\">Three-day Istanbul itinerary</a> · <a href=\"../en/bosphorus-cruises.html\">Compare Bosphorus cruises</a></p></section>","tr":"<section><h2>Mimo hangi konularda yardımcı olur?</h2><p>Mimo ulaşım seçeneklerini karşılaştırmana, ilk İstanbul gezini planlamana ve tur sağlayıcısına soracağın soruları belirlemene yardımcı olabilir. Güncel saatleri, müsaitliği ve rezervasyon koşullarını sağlayıcıdan doğrula. Yapay zekâ cevapları hatalı olabilir.</p><p><a href=\"../tr/istanbul-rehberi.html\">Üç günlük İstanbul planı</a> · <a href=\"../tr/bogaz-turlari.html\">Boğaz turlarını karşılaştır</a></p></section>"}.get(code, "")
         page = f"""<!doctype html>
 <html lang="{code}" dir="{direction}">
 <head>
@@ -50,7 +53,7 @@ def build():
 <p><a id="web-chat" href="../?lang={code}#heroMimoAsk">{chat}</a> · <a href="https://t.me/{bot}?start={code}">Telegram</a> · <a href="https://wa.me/{phone}">WhatsApp</a></p>
 <h2>{question}</h2><p>{answer}</p>
 <p>{guide_link}<a href="../?lang={code}#booking">{escape(faq[code]['links']['transfer'])}</a> · <a href="../faq.html?lang={code}">{escape(faq[code]['nav'])}</a></p>
-</main>
+{extra}</main>
 <footer><nav>{languages}</nav></footer>
 </body></html>
 """
