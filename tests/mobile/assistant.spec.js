@@ -1,5 +1,18 @@
 import { test, expect } from '@playwright/test';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/v1/public/channels', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        channels: { whatsapp: true, telegram: true, instagram: true, mimo: true },
+        banner: { enabled: false, text: '' },
+      }),
+    })
+  );
+});
+
 async function expectChatPanelLayout(page, panel) {
   const vp = page.viewportSize();
   const isMobile = vp.width <= 480;
