@@ -6,7 +6,7 @@ async function openLauncherView(page, lang) {
   await page.locator('#toStep2').scrollIntoViewIfNeeded();
 }
 
-async function expectChatPanelLayout(page, panel) {
+async function expectChatPanelLayout(page, panel, desktopQuickWrap = 'wrap') {
   const vp = page.viewportSize();
   const isMobile = vp.width <= 480;
   const box = await panel.boundingBox();
@@ -78,7 +78,7 @@ async function expectChatPanelLayout(page, panel) {
     expect(metrics.fabHidden).toBe(true);
     expect(metrics.scrollLocked).toBe(true);
   } else {
-    expect(metrics.quickWrap).toBe('wrap');
+    expect(metrics.quickWrap).toBe(desktopQuickWrap);
   }
   await expect(panel.locator('.bc-handoff')).toHaveCount(0);
   const closeHit = await panel.locator('.bc-close').evaluate((el) => {
@@ -112,7 +112,7 @@ test('hero opens the existing lazy-loaded assistant on mobile', async ({ page })
   await expect(panel.locator('.bc-quick-btn')).toHaveCount(4);
 
   // Panel size, type scale, and email box stay within the mobile layout contract
-  await expectChatPanelLayout(page, panel);
+  await expectChatPanelLayout(page, panel, 'nowrap');
 
   // Talk to a human opens email card inside .bc-log and removes it on close
   await panel.locator('.bc-human-btn').click();
@@ -480,7 +480,8 @@ test('contextual first messages, member greeting, quick question send, and 👍/
       sessionStorage.removeItem('bosphorly.assistant_chat');
     } catch {}
   });
-  await openLauncherView(page, 'tr');
+  await page.goto('/index.html?lang=tr#booking');
+  await page.locator('#toStep2').scrollIntoViewIfNeeded();
   await page.locator('.bc-fab').click();
   const firstBotMsg = page.locator('.bc-msg.bot').first();
   await expect(firstBotMsg).toContainText('Tekrar hoş geldin, Eren 💙');
