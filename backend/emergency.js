@@ -281,9 +281,15 @@ async function readChannelRecordWithContinuity(env, channel) {
       lastReopenedAtMs: Number(row.last_reopened_at_ms || 0),
       updatedAtMs: Number(row.updated_at_ms || 0),
     };
+    const prevMem = isoMap ? isoMap.get(channel) : null;
     if (isoMap) isoMap.set(channel, state);
-    // Mirror explicit state rows into persistent KV so a closed channel never reopens on D1 blips across isolates.
-    await writeKvJson(env, `emergency:ch:${channel}`, state);
+    if (!prevMem || Number(prevMem.updatedAtMs || 0) !== state.updatedAtMs) {
+      const kvExisting = await readKvJson(env, `emergency:ch:${channel}`);
+      if (!kvExisting || Number(kvExisting.updatedAtMs || 0) !== state.updatedAtMs) {
+        // Mirror explicit state rows into persistent KV only when updatedAtMs changed so a closed channel never reopens on D1 blips across isolates.
+        await writeKvJson(env, `emergency:ch:${channel}`, state);
+      }
+    }
     return { ...state, envLocked: false, known: true, fromFallback: false };
   } catch (err) {
     if (isMissingEmergencyTableError(err)) {

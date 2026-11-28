@@ -1405,3 +1405,92 @@ test('8. Bulk reactivation (reopen_all): "AÇ" + fresh Gmail OTP, no OTP reuse f
     globalThis.fetch = origFetch;
   }
 });
+
+test('9. KV mirror writes ONLY when updatedAtMs changes; repeated reads do zero KV writes while fail-open and closed-channel continuity stay intact', async () => {
+  const sharedKvMap = new Map();
+  let kvPutCalls = 0;
+  const makeTrackedKv = () => {
+    const base = createKvStore(sharedKvMap);
+    return {
+      ...base,
+      async put(key, val, opts) {
+        if (String(key).startsWith('emergency:ch:')) kvPutCalls += 1;
+        return base.put(key, val, opts);
+      },
+    };
+  };
+
+  const env = createEnv({ WHATSAPP_KV: makeTrackedKv() });
+  let now = 1_770_600_000_000;
+  const owner = seedExtranetSession(env, 'info@bosphorly.com', 'owner', now);
+
+  // 1) Default state (no D1 rows): repeated reads perform 0 KV writes.
+  for (let i = 0; i < 4; i++) {
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), true);
+    const pub = await worker.fetch(new Request('https://api.bosphorly.com/v1/public/channels', { headers: { Origin: ORIGIN } }), env);
+    assert.equal(pub.status, 200);
+  }
+  assert.equal(kvPutCalls, 0);
+
+  // 2) Close WhatsApp -> verify writes KV once; subsequent reads in same isolate AND cold isolate do 0 KV writes.
+  await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'close', now);
+  const putsAfterClose = kvPutCalls;
+  assert.equal(putsAfterClose, 1);
+
+  for (let i = 0; i < 5; i++) {
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), false);
+    const pub = await worker.fetch(new Request('https://api.bosphorly.com/v1/public/channels', { headers: { Origin: ORIGIN } }), env);
+    assert.equal((await pub.json()).channels.whatsapp, false);
+  }
+  assert.equal(kvPutCalls, putsAfterClose, 'Warm isolate reads must not write KV when updatedAtMs is unchanged');
+
+  // Fresh isolate (distinct DB wrapper object -> empty WeakMap isolate cache) sharing D1 SQLite + KV:
+  const wrapSameSqliteNewIsolate = () => ({
+    ...env,
+    WHATSAPP_KV: makeTrackedKv(),
+    DB: {
+      prepare: (sql) => env.DB.prepare(sql),
+      batch: (list) => env.DB.batch(list),
+    },
+  });
+  const coldIsolateEnv = wrapSameSqliteNewIsolate();
+  for (let i = 0; i < 5; i++) {
+    assert.equal(await isChannelEnabled(coldIsolateEnv, 'whatsapp'), false);
+  }
+  assert.equal(kvPutCalls, putsAfterClose, 'Cold isolate reads must not write KV when KV already has matching updatedAtMs');
+
+  // 3) If D1 updated_at_ms advances (e.g., KV missed a write or expired), first read syncs KV once, next reads do 0 writes.
+  const nextUpdatedAtMs = now + 90_000;
+  env.DB.raw
+    .prepare(`UPDATE emergency_channel_states SET updated_at_ms = ? WHERE channel = 'whatsapp'`)
+    .run(nextUpdatedAtMs);
+  assert.equal(await isChannelEnabled(env, 'whatsapp'), false);
+  assert.equal(kvPutCalls, putsAfterClose + 1, 'Changed updatedAtMs triggers exactly one KV sync write');
+  for (let i = 0; i < 5; i++) {
+    assert.equal(await isChannelEnabled(env, 'whatsapp'), false);
+    assert.equal(await isChannelEnabled(coldIsolateEnv, 'whatsapp'), false);
+  }
+  assert.equal(kvPutCalls, putsAfterClose + 1, 'Subsequent reads after sync do zero KV writes');
+
+  // 4) Transient D1 read outage on a brand-new isolate: closed WhatsApp stays closed, open Telegram stays fail-open.
+  const outageEnv = {
+    ...env,
+    WHATSAPP_KV: makeTrackedKv(),
+    DB: {
+      prepare() {
+        return {
+          bind() {
+            return this;
+          },
+          async first() {
+            throw new Error('D1_READ_OUTAGE');
+          },
+        };
+      },
+    },
+  };
+  assert.equal(await isChannelEnabled(outageEnv, 'whatsapp'), false, 'Closed channel stays closed during D1 outage');
+  assert.equal(await isChannelEnabled(outageEnv, 'telegram'), true, 'Open channel fails open during D1 outage');
+  assert.equal(kvPutCalls, putsAfterClose + 1);
+});
+
