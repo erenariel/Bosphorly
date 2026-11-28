@@ -1,6 +1,8 @@
 import {test, expect} from '@playwright/test';
 
 test('Mimo status is cached, a chip uses the launcher, and booking keeps airport and date', async ({page}) => {
+  await page.addInitScript(() => sessionStorage.setItem('bosphorly.assistant_chat_session','hero-chip-test'));
+  await page.route('**/v1/assistant', route => route.fulfill({json:{reply:'Welcome to Istanbul!',lang:'en'}}));
   let reads = 0;
   await page.route('**/v1/public/channels', route => {
     reads++;
