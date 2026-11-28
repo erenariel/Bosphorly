@@ -20,6 +20,7 @@ import {
   MIMO_MAINTENANCE_MESSAGES,
   OTP_COOLDOWN_MS,
   OTP_TTL_MS,
+  allowWhatsAppWebhook,
   flushEmergencyNotifications,
   isChannelEnabled,
 } from '../backend/emergency.js';
@@ -1493,4 +1494,131 @@ test('9. KV mirror writes ONLY when updatedAtMs changes; repeated reads do zero 
   assert.equal(await isChannelEnabled(outageEnv, 'telegram'), true, 'Open channel fails open during D1 outage');
   assert.equal(kvPutCalls, putsAfterClose + 1);
 });
+
+test('10. WhatsApp guard path: non-message webhook fast-path, stalled D1 fail-open (<2s ACK), closed-stays-closed on hang, and same-second reopen reply', async () => {
+  const { publicKeyB64, privateKey } = await createTelnyxKeyPair();
+  const env = createEnv({ TELNYX_PUBLIC_KEY: publicKeyB64 });
+
+  // (a) Delivery status webhook (message.sent) performs 0 emergency D1 reads when not env-locked
+  let emergencyStateReads = 0;
+  const origPrepare = env.DB.prepare.bind(env.DB);
+  env.DB.prepare = (sql) => {
+    if (sql.includes('emergency_channel_states')) emergencyStateReads++;
+    return origPrepare(sql);
+  };
+  const deliveryRaw = JSON.stringify({
+    data: {
+      event_type: 'message.sent',
+      payload: { id: 'wa-deliv-1', type: 'WHATSAPP', to: [{ status: 'sent' }] },
+    },
+  });
+  assert.equal(await allowWhatsAppWebhook(env, deliveryRaw), true);
+  assert.equal(emergencyStateReads, 0, 'Delivery receipts must not query emergency_channel_states');
+
+  // (b) Stalled/hanging emergency_channel_states D1 query when WhatsApp is OPEN:
+  // handleWhatsApp must ACK 200 OK in < 1.8s (within Telnyx 2s budget) and sendWhatsApp must fail-open and send!
+  const telnyxCalls = [];
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (url, opts) => {
+    if (String(url).includes('api.telnyx.com')) {
+      telnyxCalls.push({ url, body: JSON.parse(opts.body) });
+      return Response.json({ data: { id: 'out-stalled-open' } });
+    }
+    return Response.json({ ok: true, id: 'email-1' });
+  };
+
+  try {
+    const stalledOpenEnv = {
+      ...env,
+      DB: {
+        prepare(sql) {
+          if (sql.includes('emergency_channel_states')) {
+            return {
+              bind() {
+                return this;
+              },
+              first() {
+                return new Promise((resolve) => {
+                  const t = setTimeout(() => resolve(null), 5000);
+                  t.unref?.();
+                });
+              },
+            };
+          }
+          return origPrepare(sql);
+        },
+        batch: (list) => env.DB.batch(list),
+      },
+    };
+
+    const rawOpen = buildWaInboundPayload('Merhaba Boğaz turu', 'wa-stalled-open-1');
+    const signedOpenReq = await signTelnyxRequest(rawOpen, privateKey);
+    const jobs = [];
+    const t0 = Date.now();
+    const ackRes = await handleWhatsApp(signedOpenReq, stalledOpenEnv, { waitUntil: (p) => jobs.push(p) });
+    const ackMs = Date.now() - t0;
+    assert.equal(ackRes.status, 200);
+    assert.ok(ackMs < 1800, `Webhook ACK took ${ackMs}ms; must stay within Telnyx 2s budget even when D1 stalls`);
+    await Promise.all(jobs);
+    assert.equal(telnyxCalls.length, 1, 'Open WhatsApp must still send reply when emergency D1 query stalls');
+
+    // (c) Close WhatsApp -> if D1 subsequently stalls on a cold isolate, KV mirror keeps WhatsApp CLOSED!
+    env.DB.prepare = origPrepare;
+    const reopenSec = Math.floor(Date.now() / 1000);
+    const closeAtMs = (reopenSec - 120) * 1000 + 100;
+    const owner = seedExtranetSession(env, 'info@bosphorly.com', 'owner', closeAtMs);
+    await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'close', closeAtMs);
+
+    const stalledClosedColdEnv = {
+      ...env,
+      DB: {
+        prepare(sql) {
+          if (sql.includes('emergency_channel_states') || sql.includes('emergency_dropped_messages')) {
+            return {
+              bind() {
+                return this;
+              },
+              first() {
+                return new Promise((resolve) => {
+                  const t = setTimeout(() => resolve(null), 5000);
+                  t.unref?.();
+                });
+              },
+              run() {
+                return new Promise((resolve) => {
+                  const t = setTimeout(() => resolve({ success: true }), 5000);
+                  t.unref?.();
+                });
+              },
+            };
+          }
+          return origPrepare(sql);
+        },
+        batch: (list) => env.DB.batch(list),
+      },
+    };
+
+    const closedJobs = [];
+    const closedReq = await signTelnyxRequest(buildWaInboundPayload('Kapalıyken deneme', 'wa-stalled-closed-1'), privateKey);
+    const closedRes = await handleWhatsApp(closedReq, stalledClosedColdEnv, { waitUntil: (p) => closedJobs.push(p) });
+    assert.equal(closedRes.status, 200);
+    assert.equal(closedJobs.length, 0, 'Closed WhatsApp must stay closed via KV mirror even when D1 hangs');
+    assert.equal(telnyxCalls.length, 1);
+
+    // (d) Same-second post-reopen message: /verify commits reopen at reopenSec*1000 + 850ms, message sent at reopenSec*1000 + 920ms (Telnyx timestamp = reopenSec)
+    const reopenCommitMs = reopenSec * 1000 + 850;
+    await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'reopen', reopenCommitMs - 1000);
+
+    const sameSecRaw = buildWaInboundPayload('Tekrar açıldıktan hemen sonra selam', 'wa-same-sec-after-reopen', reopenSec);
+    const sameSecReq = await signTelnyxRequest(sameSecRaw, privateKey);
+    const sameSecJobs = [];
+    const sameSecRes = await handleWhatsApp(sameSecReq, env, { waitUntil: (p) => sameSecJobs.push(p) });
+    assert.equal(sameSecRes.status, 200);
+    await Promise.all(sameSecJobs);
+    assert.equal(telnyxCalls.length, 2, 'Post-reopen message in the same whole second must be answered');
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
+
 

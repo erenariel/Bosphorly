@@ -199,18 +199,33 @@ function primaryDb(env) {
 
 function getIsolateMap(env) {
   if (!env || !env.DB || typeof env.DB !== 'object') return null;
-  let map = isolateStateCache.get(env.DB);
-  if (!map) {
-    map = new Map();
-    isolateStateCache.set(env.DB, map);
+  try {
+    let map = isolateStateCache.get(env.DB);
+    if (!map) {
+      map = new Map();
+      isolateStateCache.set(env.DB, map);
+    }
+    return map;
+  } catch {
+    return null;
   }
-  return map;
+}
+
+const CHANNEL_GUARD_D1_TIMEOUT_MS = 1200;
+const CHANNEL_GUARD_KV_TIMEOUT_MS = 600;
+
+function withBoundedTimeout(promise, ms, code = 'emergency_io_timeout') {
+  let timer;
+  const timeoutPromise = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(code)), ms);
+  });
+  return Promise.race([Promise.resolve(promise), timeoutPromise]).finally(() => clearTimeout(timer));
 }
 
 async function readKvJson(env, key) {
   if (!env || !env.WHATSAPP_KV || typeof env.WHATSAPP_KV.get !== 'function') return null;
   try {
-    const val = await env.WHATSAPP_KV.get(key, 'json');
+    const val = await withBoundedTimeout(env.WHATSAPP_KV.get(key, 'json'), CHANNEL_GUARD_KV_TIMEOUT_MS, 'emergency_kv_timeout');
     if (!val) return null;
     if (typeof val === 'string') return JSON.parse(val);
     if (typeof val === 'object') return val;
@@ -223,7 +238,11 @@ async function readKvJson(env, key) {
 async function writeKvJson(env, key, obj) {
   if (!env || !env.WHATSAPP_KV || typeof env.WHATSAPP_KV.put !== 'function') return;
   try {
-    await env.WHATSAPP_KV.put(key, JSON.stringify(obj), { expirationTtl: KV_STATE_TTL_SEC });
+    await withBoundedTimeout(
+      env.WHATSAPP_KV.put(key, JSON.stringify(obj), { expirationTtl: KV_STATE_TTL_SEC }),
+      CHANNEL_GUARD_KV_TIMEOUT_MS,
+      'emergency_kv_timeout'
+    );
   } catch {
     // Best-effort secondary mirror; D1 primary remains source of truth.
   }
@@ -250,14 +269,19 @@ async function readChannelRecordWithContinuity(env, channel) {
     return { enabled: channel !== 'banner', envLocked: false, lastClosedAtMs: 0, lastReopenedAtMs: 0, known: true, fromFallback: false };
   }
 
-  const isoMap = getIsolateMap(env);
+  let isoMap = null;
   try {
-    const row = await db
-      .prepare(
-        'SELECT enabled, banner_text, banner_preset, last_closed_at_ms, last_reopened_at_ms, updated_at_ms FROM emergency_channel_states WHERE channel = ?'
-      )
-      .bind(channel)
-      .first();
+    isoMap = getIsolateMap(env);
+    const row = await withBoundedTimeout(
+      db
+        .prepare(
+          'SELECT enabled, banner_text, banner_preset, last_closed_at_ms, last_reopened_at_ms, updated_at_ms FROM emergency_channel_states WHERE channel = ?'
+        )
+        .bind(channel)
+        .first(),
+      CHANNEL_GUARD_D1_TIMEOUT_MS,
+      'emergency_d1_timeout'
+    );
 
     if (!row) {
       const openDefault = channel !== 'banner';
@@ -305,7 +329,7 @@ async function readChannelRecordWithContinuity(env, channel) {
       };
     }
 
-    // Transient D1 read error: check persistent KV mirror + isolate cache so previously closed channels stay closed
+    // Transient D1 read error or timeout: check persistent KV mirror + isolate cache so previously closed channels stay closed
     // and previously open channels keep running without disruption.
     const memCached = isoMap ? isoMap.get(channel) : null;
     const kvCached = await readKvJson(env, `emergency:ch:${channel}`);
@@ -358,13 +382,17 @@ async function recordDroppedMessage(env, channel, messageKey, nowMs = Date.now()
   const db = primaryDb(env);
   if (!db || typeof db.prepare !== 'function') return;
   try {
-    await db
-      .prepare(
-        `INSERT OR IGNORE INTO emergency_dropped_messages (channel, message_key, dropped_at_ms, expires_at_ms)
-         VALUES (?, ?, ?, ?)`
-      )
-      .bind(channel, String(messageKey).slice(0, 160), nowMs, nowMs + DROPPED_MSG_TTL_MS)
-      .run();
+    await withBoundedTimeout(
+      db
+        .prepare(
+          `INSERT OR IGNORE INTO emergency_dropped_messages (channel, message_key, dropped_at_ms, expires_at_ms)
+           VALUES (?, ?, ?, ?)`
+        )
+        .bind(channel, String(messageKey).slice(0, 160), nowMs, nowMs + DROPPED_MSG_TTL_MS)
+        .run(),
+      CHANNEL_GUARD_D1_TIMEOUT_MS,
+      'emergency_d1_timeout'
+    );
   } catch {
     // Best-effort recording; must never break webhook 200 ACK.
   }
@@ -376,21 +404,31 @@ async function wasMessageInClosedPeriod(env, channel, messageKey, messageAtMs, l
   if (!db || typeof db.prepare !== 'function') return false;
   try {
     if (messageKey) {
-      const dropped = await db
-        .prepare('SELECT message_key FROM emergency_dropped_messages WHERE channel = ? AND message_key = ?')
-        .bind(channel, String(messageKey).slice(0, 160))
-        .first();
+      const dropped = await withBoundedTimeout(
+        db
+          .prepare('SELECT message_key FROM emergency_dropped_messages WHERE channel = ? AND message_key = ?')
+          .bind(channel, String(messageKey).slice(0, 160))
+          .first(),
+        CHANNEL_GUARD_D1_TIMEOUT_MS,
+        'emergency_d1_timeout'
+      );
       if (dropped) return true;
     }
     if (Number.isFinite(messageAtMs) && messageAtMs > 0) {
-      const win = await db
-        .prepare(
-          `SELECT id FROM emergency_closed_windows
-           WHERE channel = ? AND closed_at_ms <= ? AND (reopened_at_ms IS NULL OR ? <= reopened_at_ms)
-           LIMIT 1`
-        )
-        .bind(channel, messageAtMs, messageAtMs)
-        .first();
+      // WhatsApp/Telegram message timestamps have 1-second resolution (ts * 1000).
+      // Floor reopened_at_ms to whole seconds so a message sent in the same second right after reopen is never dropped.
+      const win = await withBoundedTimeout(
+        db
+          .prepare(
+            `SELECT id FROM emergency_closed_windows
+             WHERE channel = ? AND closed_at_ms <= ? AND (reopened_at_ms IS NULL OR ? < (reopened_at_ms / 1000) * 1000)
+             LIMIT 1`
+          )
+          .bind(channel, messageAtMs, messageAtMs)
+          .first(),
+        CHANNEL_GUARD_D1_TIMEOUT_MS,
+        'emergency_d1_timeout'
+      );
       if (win) return true;
     }
   } catch {
@@ -403,20 +441,37 @@ export async function allowWhatsAppWebhook(env, raw, nowMs = Date.now()) {
   let msgId = '';
   let msgAtMs = 0;
   let isMessageEvent = false;
+  let parsedValidObject = false;
   try {
     const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
-    const d = parsed?.data;
-    const p = d?.payload;
-    if (p && p.type === 'WHATSAPP' && typeof p.id === 'string') {
-      if (d.event_type === 'message.received' || d.event_type === 'message.echo') {
-        isMessageEvent = true;
-        msgId = p.id;
-        const ts = Number(p.body?.timestamp);
-        if (Number.isFinite(ts) && ts > 0) msgAtMs = ts * 1000;
+    if (parsed && typeof parsed === 'object') {
+      parsedValidObject = true;
+      const d = parsed?.data;
+      const p = d?.payload;
+      if (p && p.type === 'WHATSAPP' && typeof p.id === 'string') {
+        if (d.event_type === 'message.received' || d.event_type === 'message.echo') {
+          isMessageEvent = true;
+          msgId = p.id;
+          const ts = Number(p.body?.timestamp);
+          if (Number.isFinite(ts) && ts > 0) msgAtMs = ts * 1000;
+        }
       }
     }
   } catch {
     // Invalid JSON continues to handleWhatsApp's own 400 handler when open, or is safely ignored when closed.
+  }
+
+  if (isChannelEnvLocked(env, 'whatsapp')) {
+    if (isMessageEvent && msgId) {
+      await recordDroppedMessage(env, 'whatsapp', msgId, nowMs);
+    }
+    return false;
+  }
+
+  // Delivery status webhooks (message.sent / message.finalized / message.read) never trigger Mimo replies;
+  // avoid unnecessary D1 round-trips inside Telnyx's 2-second webhook ACK budget.
+  if (parsedValidObject && !isMessageEvent) {
+    return true;
   }
 
   const record = await readChannelRecordWithContinuity(env, 'whatsapp');
