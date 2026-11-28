@@ -1208,6 +1208,7 @@ test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, a
   expect(await page.evaluate(() => localStorage.getItem('bosphorly.mimo_tts'))).toBe('1');
 
   await page.reload();
+  await page.locator('#toStep2').scrollIntoViewIfNeeded();
   await page.locator('.bc-fab').click();
   await expect(panel.locator('.bc-tts-toggle')).toHaveAttribute('aria-checked', 'true');
 
