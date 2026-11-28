@@ -172,6 +172,15 @@
     document.head.append(tag);
   }
   window.BosphorlyMeasurement = Object.freeze({
+    heroEvent(name, value) {
+      if (!loaded || mode === 'no') return;
+      let params = {};
+      if (name === 'hero_ask_mimo' && ['typed', 'chip'].includes(value)) params.source = value;
+      else if (name === 'hero_quick_search' && ['transfer', 'cruise', 'tours'].includes(value)) params.tab = value;
+      else if (name !== 'hero_mimo_unavailable') return;
+      if (mode === 'both') window.dataLayer.push({event:name, ...params});
+      else send('event', name, {send_to:id, ...params});
+    },
     acceptedRequest() {
       if (!loaded || mode === 'no') return;
       if (mode === 'both') window.dataLayer.push({event: 'bosphorly_booking_request_accepted'});

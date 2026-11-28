@@ -1,0 +1,56 @@
+@property --ai-angle { syntax:"<angle>"; inherits:false; initial-value:0deg }
+.hero.ai-hero {position:relative;isolation:isolate;padding:clamp(48px,6vw,96px) 20px 40px;background:#0a1753;color:white;overflow:hidden}
+.ai-photo,.ai-hero::before {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;z-index:-2}
+.hero.ai-hero::before {content:"";z-index:-1;background:linear-gradient(100deg,#0a1753f2,#0a1753c9 48%,#0a17536b)}
+.ai-inner {width:min(100%,850px);margin:auto}
+.ai-hero [hidden] {display:none!important}
+#ai-online {display:inline-flex;align-items:center;gap:9px;border:1px solid #ffffff52;border-radius:30px;padding:7px 14px;background:#0a1753aa;font-size:.84rem}
+#ai-online i {border-radius:50%;width:8px;height:8px;background:#71ecc0;animation:ai-pulse 3s infinite}
+.ai-hero h1 {font-size:clamp(3rem,7vw,6.5rem);line-height:1.04;letter-spacing:-.055em;color:white;margin:18px 0 10px;max-width:none}
+.ai-hero h1 span {color:#22c3c9}
+.ai-hero .ai-sub {color:white;max-width:62ch;line-height:1.5;margin:0 0 24px}
+#ai-box {border:2px solid transparent;border-radius:22px;background:linear-gradient(#101d50,#101d50) padding-box,conic-gradient(from var(--ai-angle),#f47458,#22c3c9,#a782ec,#f47458) border-box;animation:ai-ring 14s linear infinite;padding:20px 24px;box-shadow:0 8px 35px #05092d52}
+.ai-entry,.ai-tabs,.ai-chips,#ai-quick {display:flex;gap:10px;align-items:center}
+.ai-entry {margin:8px 0}
+.ai-hero input,.ai-hero select,.ai-hero button {font:inherit;min-width:0;min-height:44px}
+.ai-hero button,#ai-team {cursor:pointer;border:0;border-radius:12px;padding:8px 16px;font-weight:700}
+.ai-entry input {flex:1;width:0;background:#fff;color:#0a1753;border:0;border-radius:10px;padding:10px 14px}
+.ai-go,#ai-team {background:#f47458;color:#101a46}
+#ai-team {display:inline-flex;align-items:center;min-height:44px}
+.ai-chips {flex-wrap:wrap;gap:4px 10px}
+.ai-chips button {background:transparent;color:#d8ffff;font-size:.88rem;padding:4px 8px;text-align:start;text-decoration:underline;text-underline-offset:4px}
+#ai-box small {color:#d1d9eb}
+#ai-limit a {color:#8ff5eb}
+.ai-divider {display:flex;align-items:center;gap:14px;margin:18px 0;color:white;font-size:.85rem}
+.ai-divider::before,.ai-divider::after {content:"";height:1px;background:#ffffff66;flex:1}
+.ai-card {padding:12px 18px 18px;background:white;border-radius:16px;color:#0a1753}
+.ai-tabs button {background:transparent;color:#46506f}
+.ai-tabs button[aria-pressed=true] {background:#e0f5f4;color:#0a1753}
+#ai-quick {align-items:end;margin-top:14px}
+#ai-quick label {flex:1;min-width:0;font-size:.82rem;font-weight:700}
+#ai-quick input,#ai-quick select {display:block;width:100%;border:1px solid #bdc6d4;border-radius:8px;padding:6px 10px;margin-top:4px;background:white;color:#0a1753;font-size:16px}
+.ai-next {background:#0a1753;color:white}
+.ai-trust {margin-top:18px;text-align:center;font-size:.88rem}
+.ai-secondary {display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px}
+.ai-secondary .hero-map {color:#0a1753}
+body.ai-box-visible :is(.bc-launcher,.bc-bubble,.mimo-intro) {visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+body:has(.ai-hero) .bc-launcher {transition:opacity .2s}
+@keyframes ai-ring {to {--ai-angle:360deg}}
+@keyframes ai-pulse {50% {box-shadow:0 0 0 5px #71ecc030}}
+@media(max-width:767px){
+.hero.ai-hero {padding:36px 16px 28px;min-height:calc(100svh - 70px)}
+.ai-sub,.ai-divider,.ai-trust {display:none}
+#ai-box {padding:14px}.ai-entry {display:grid;grid-template-columns:38px minmax(0,1fr)}.ai-entry img {width:38px;height:38px}.ai-entry input {width:100%;font-size:16px}.ai-go {grid-column:1/-1}
+.ai-chips {gap:2px}.ai-chips button {font-size:.83rem}
+.ai-tabs {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.ai-tabs button {padding:5px;line-height:1.15}
+.ai-card {margin-top:16px;padding:6px}
+#ai-quick {flex-wrap:wrap;padding:4px}.ai-next {width:100%}
+}
+@media(prefers-reduced-motion:reduce){#ai-box,#ai-online i {animation:none}body:has(.ai-hero) .bc-launcher {transition:none}}
+.hero.ai-secondary {padding:14px max(16px,calc((100% - 1000px)/2));background:#0a1753}
+.ai-tab-short {display:none}
+.ai-chips button {text-decoration:none;background:#ffffff0d;border:1px solid #ffffff35;border-radius:24px;margin-block:4px}
+@media(max-width:767px){
+.ai-tab-short {display:inline}.ai-tab-full {display:none}
+.ai-card:not(:has([aria-expanded=true])) #ai-quick {display:none}
+}

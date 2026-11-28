@@ -1,6 +1,12 @@
 import { test, expect } from '@playwright/test';
 
-async function expectChatPanelLayout(page, panel) {
+// The homepage launcher becomes available once its in-page equivalent leaves the viewport.
+async function openLauncherView(page, lang) {
+  await page.goto('/index.html?lang=' + lang);
+  await page.locator('#toStep2').scrollIntoViewIfNeeded();
+}
+
+async function expectChatPanelLayout(page, panel, desktopQuickWrap = 'wrap') {
   const vp = page.viewportSize();
   const isMobile = vp.width <= 480;
   const box = await panel.boundingBox();
@@ -72,7 +78,7 @@ async function expectChatPanelLayout(page, panel) {
     expect(metrics.fabHidden).toBe(true);
     expect(metrics.scrollLocked).toBe(true);
   } else {
-    expect(metrics.quickWrap).toBe('wrap');
+    expect(metrics.quickWrap).toBe(desktopQuickWrap);
   }
   await expect(panel.locator('.bc-handoff')).toHaveCount(0);
   const closeHit = await panel.locator('.bc-close').evaluate((el) => {
@@ -87,22 +93,12 @@ async function expectChatPanelLayout(page, panel) {
   expect(input.y + input.height).toBeLessThanOrEqual(vp.height + 1);
 }
 
-test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile without horizontal overflow, and Hero Mimo card opens panel', async ({ page }) => {
+test('hero opens the existing lazy-loaded assistant on mobile', async ({ page }) => {
   await page.goto('/index.html?lang=tr');
-  const fab = page.locator('.bc-fab');
-  await expect(fab).toBeVisible();
-  await expect(fab.locator('img.bc-fab-avatar')).toHaveAttribute('src', /assets\/brand\/mimo\/mimo-head\.webp$/);
-
-  // Hero Mimo card is visible in Turkish with button and Telegram link
-  const heroMimo = page.locator('#heroMimo');
-  await expect(heroMimo).toBeVisible();
-  await expect(page.locator('#heroMimoAsk')).toContainText('Sorun mu var? Mimo’ya sor');
-  await expect(page.locator('#heroMimoTg')).toContainText('Telegram’da da buradayım');
-
-  // Not loaded before click
+  await expect(page.locator('.bc-fab')).toBeHidden();
+  await expect(page.locator('.ai-go')).toHaveText('Mimo’ya sor');
   await expect(page.locator('script[src*="assistant-chat.js"]')).toHaveCount(0);
-
-  await page.locator('#heroMimoAsk').click();
+  await page.locator('.ai-chips button').first().click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
   await expect(panel.locator('.bc-title')).toHaveText('Mimo · İstanbul asistanın');
@@ -116,7 +112,7 @@ test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile withou
   await expect(panel.locator('.bc-quick-btn')).toHaveCount(4);
 
   // Panel size, type scale, and email box stay within the mobile layout contract
-  await expectChatPanelLayout(page, panel);
+  await expectChatPanelLayout(page, panel, 'nowrap');
 
   // Talk to a human opens email card inside .bc-log and removes it on close
   await panel.locator('.bc-human-btn').click();
@@ -133,14 +129,14 @@ test('assistant button shows Mimo mascot, lazy-loads chat panel on mobile withou
 });
 
 test('assistant chat panel and Hero Mimo card render cleanly in RTL for Arabic without horizontal overflow', async ({ page }) => {
-  await page.goto('/index.html?lang=ar');
+  await openLauncherView(page, 'ar');
   const fab = page.locator('.bc-fab');
   await expect(fab).toBeVisible();
   const fabBox = await fab.boundingBox();
   const vp = page.viewportSize();
   expect(vp.width - fabBox.x - fabBox.width).toBe(16);
 
-  await expect(page.locator('#heroMimoAsk')).toContainText('لديك سؤال؟ اسأل Mimo');
+  await expect(page.locator('.ai-go')).toHaveText('اسأل Mimo');
 
   await fab.click();
   const panel = page.locator('.bc-panel');
@@ -212,7 +208,7 @@ test('Telegram CTAs render with language param, local SVG, >=44px touch target, 
 });
 
 test('Hero WhatsApp link matches Telegram link aesthetics and footer channel pills share identical dimensions', async ({ page }) => {
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   const heroTg = page.locator('#heroTelegram');
   const heroWa = page.locator('.hero .social-hero');
   const heroMap = page.locator('.hero .hero-map').first();
@@ -257,7 +253,7 @@ test('all Telegram links stay hidden when telegramBot in config/api.js is empty'
     contentType: 'text/javascript',
     body: 'window.BOSPHORLY_API=Object.freeze({base:"",transferMailBase:"",turnstileSiteKey:"",telegramBot:""});',
   }));
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await expect(page.locator('#heroTelegram')).toBeHidden();
   await expect(page.locator('#footerTelegramWrap')).toBeHidden();
   await expect(page.locator('a[href*="t.me"]')).toHaveCount(0);
@@ -305,7 +301,7 @@ test('email handoff stays out of DOM until requested, opens inline under matchin
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   const vp = page.viewportSize();
@@ -379,7 +375,7 @@ test('email handoff stays out of DOM until requested, opens inline under matchin
 
 test('RTL chat panels for Hebrew, Arabic and Persian keep the email box hidden and the message area dominant', async ({ page }) => {
   for (const lang of ['he', 'ar', 'fa']) {
-    await page.goto(`/index.html?lang=${lang}`);
+    await openLauncherView(page, lang);
     await page.locator('.bc-fab').click();
     const panel = page.locator('.bc-panel');
     await expect(panel).toBeVisible();
@@ -401,7 +397,7 @@ test('greeting bubble shows once per session, does NOT contain kindNote, does no
     window.__BOSPHORLY_MIMO_COLLAPSE_MS = 8000;
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   const bubble = page.locator('.bc-bubble');
   await expect(bubble).toBeVisible({ timeout: 3000 });
   await expect(bubble).toHaveAttribute('aria-live', 'polite');
@@ -442,7 +438,7 @@ test('prefers-reduced-motion disables Mimo entrance and blink animations', async
   await page.addInitScript(() => {
     window.__BOSPHORLY_MIMO_POP_MS = 100;
   });
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.waitForTimeout(250);
 
   const fab = page.locator('.bc-fab');
@@ -485,6 +481,7 @@ test('contextual first messages, member greeting, quick question send, and 👍/
     } catch {}
   });
   await page.goto('/index.html?lang=tr#booking');
+  await page.locator('#toStep2').scrollIntoViewIfNeeded();
   await page.locator('.bc-fab').click();
   const firstBotMsg = page.locator('.bc-msg.bot').first();
   await expect(firstBotMsg).toContainText('Tekrar hoş geldin, Eren 💙');
@@ -530,7 +527,7 @@ test('zero-tolerance closure locks input box and all panel buttons immediately o
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -624,7 +621,7 @@ test('Turnstile renders interaction-only in hidden footer container, stays invis
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -755,7 +752,7 @@ test('mini-Markdown escapes HTML/XSS first, renders **bold** and <br>, and restr
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -807,7 +804,7 @@ test('panel open pre-warms Turnstile token in background, shows 8s intermediate 
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -893,7 +890,7 @@ test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visu
       await page.evaluate(() => { sessionStorage.clear(); window.__setMockVvHeight(0); });
     }
 
-    await page.goto('/index.html?lang=tr');
+    await openLauncherView(page, 'tr');
     await page.locator('.bc-fab').click();
     const panel = page.locator('.bc-panel');
     await expect(panel).toBeVisible();
@@ -917,6 +914,7 @@ test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visu
     expect(initialMetrics.botBg).not.toBe('rgb(255, 255, 255)');
 
     await page.reload();
+    await page.locator('#toStep2').scrollIntoViewIfNeeded();
     await page.locator('.bc-fab').click();
     await expect(page.locator('.bc-panel')).toBeVisible();
     await expect(page.locator('.bc-panel .bc-kind-note')).toHaveCount(0);
@@ -939,7 +937,7 @@ test('375x667 (iPhone SE) & 393x852 (iPhone 15) fullscreen layout, keyboard visu
 test('375x667 RTL layout (he, ar, fa) keeps input in viewport, >=70% log area, and no horizontal overflow', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   for (const lang of ['he', 'ar', 'fa']) {
-    await page.goto(`/index.html?lang=${lang}`);
+    await openLauncherView(page, lang);
     await page.locator('.bc-fab').click();
     const panel = page.locator('.bc-panel');
     await expect(panel).toBeVisible();
@@ -973,7 +971,7 @@ test('Mimo 2.0: client enforces 25s SSE upper cap with tryAgain recovery, trims 
     );
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -1142,7 +1140,7 @@ test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, a
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -1217,6 +1215,7 @@ test('Mimo voice reply: default off, persists toggle, plays /v1/tts Audio MP3, a
   expect(await page.evaluate(() => localStorage.getItem('bosphorly.mimo_tts'))).toBe('1');
 
   await page.reload();
+  await page.locator('#toStep2').scrollIntoViewIfNeeded();
   await page.locator('.bc-fab').click();
   await expect(panel.locator('.bc-tts-toggle')).toHaveAttribute('aria-checked', 'true');
 
@@ -1303,7 +1302,7 @@ test('Mimo voice reply falls back silently to speechSynthesis (pitch=1.2, rate=1
     });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
 
@@ -1379,7 +1378,7 @@ test('Mimo voice reply waits for full SSE completion (never chunk-by-chunk), str
     await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ fallback: true }) });
   });
 
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -1421,7 +1420,7 @@ test('Mimo voice reply waits for full SSE completion (never chunk-by-chunk), str
 
   // Verify RTL languages (he, ar, fa) keep header and voice controls inside viewport with zero overflow
   for (const lang of ['he', 'ar', 'fa']) {
-    await page.goto(`/index.html?lang=${lang}`);
+    await openLauncherView(page, lang);
     await page.locator('.bc-fab').click();
     await expect(panel).toBeVisible();
     await expect(panel).toHaveAttribute('dir', 'rtl');
@@ -1464,7 +1463,7 @@ test('Mimo voice reply shows localized noVoiceDevice note when /v1/tts falls bac
   });
 
   // Chirp supports DE, so controls show; if /v1/tts returns fallback and device has no DE voice, .bc-tts-note explains cleanly
-  await page.goto('/index.html?lang=de');
+  await openLauncherView(page, 'de');
   await page.locator('.bc-fab').click();
   const panel = page.locator('.bc-panel');
   await expect(panel).toBeVisible();
@@ -1482,7 +1481,7 @@ test('Mimo voice reply shows localized noVoiceDevice note when /v1/tts falls bac
   expect(await page.evaluate(() => window.__ttsSpokenNoVoice)).toBe(0);
 
   // Chirp does NOT support fa; when device also lacks Persian voice, controls remain hidden
-  await page.goto('/index.html?lang=fa');
+  await openLauncherView(page, 'fa');
   await page.locator('.bc-fab').click();
   await expect(panel.locator('.bc-tts-toggle')).toBeHidden();
   await expect(panel.locator('.bc-speak-btn').first()).toBeHidden();
@@ -1506,7 +1505,7 @@ test('Mimo voice reply shows localized noVoiceDevice note when /v1/tts falls bac
       },
     });
   });
-  await page.goto('/index.html?lang=tr');
+  await openLauncherView(page, 'tr');
   await page.locator('.bc-fab').click();
   await expect(panel.locator('.bc-tts-toggle')).toBeVisible();
   await panel.locator('.bc-speak-btn').first().click();
