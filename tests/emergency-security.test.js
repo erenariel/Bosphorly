@@ -12,6 +12,7 @@ import {
   handleWhatsApp,
   parseWhatsApp,
   processWhatsApp,
+  whatsAppSkip,
 } from '../backend/whatsapp.js';
 import { computeTelegramWebhookSecret, handleTelegramWebhook } from '../backend/telegram.js';
 import {
@@ -1494,3 +1495,228 @@ test('9. KV mirror writes ONLY when updatedAtMs changes; repeated reads do zero 
   assert.equal(kvPutCalls, putsAfterClose + 1);
 });
 
+test('10. WhatsApp #137 BSUID sender + array recipient path is preserved end-to-end with Emergency Center guards', async () => {
+  const { privateKey, publicKeyB64 } = await createTelnyxKeyPair();
+  const env = createEnv({ TELNYX_PUBLIC_KEY: publicKeyB64 });
+  let now = 1_770_700_000_000;
+  const owner = seedExtranetSession(env, 'info@bosphorly.com', 'owner', now);
+
+  const BSUID = 'US.13491208655302741918';
+  const ENT_BSUID = 'TR.ENT.9876543210';
+
+  const buildBsuidArrayToPayload = ({
+    id,
+    text = 'Merhaba, Boğaz turu fiyatınız nedir?',
+    bsuid = BSUID,
+    fromPhone = '',
+    to = [{ phone_number: WA_BUSINESS }],
+    tsSec = Math.floor(Date.now() / 1000),
+  }) =>
+    JSON.stringify({
+      data: {
+        event_type: 'message.received',
+        payload: {
+          id,
+          type: 'WHATSAPP',
+          direction: 'inbound',
+          from: { phone_number: fromPhone },
+          to,
+          body: {
+            type: 'text',
+            from: '',
+            from_user_id: bsuid,
+            timestamp: String(tsSec),
+            text: { body: text },
+          },
+        },
+      },
+    });
+
+  const origFetch = globalThis.fetch;
+  const telnyxCalls = [];
+
+  try {
+    // 1) Open state: BSUID hidden-number sender + array recipient routes through worker.fetch -> handleWhatsApp -> allowWhatsAppWebhook -> parseWhatsApp -> sendWhatsApp
+    env.AI.run = async () => ({
+      response: JSON.stringify({
+        reply: 'Merhaba! Boğaz turu için hangi tarihi düşünüyorsunuz?',
+        handoff: false,
+        abuse: false,
+        proposal: null,
+      }),
+    });
+    globalThis.fetch = async (url, opts) => {
+      if (String(url).includes('api.telnyx.com')) {
+        telnyxCalls.push({ url, body: JSON.parse(opts.body) });
+        return Response.json({ data: { id: 'out-bsuid-1' } });
+      }
+      return Response.json({ ok: true });
+    };
+
+    const rawOpen = buildBsuidArrayToPayload({ id: 'wa-bsuid-open-1' });
+    const parsedOpen = parseWhatsApp(JSON.parse(rawOpen), WA_BUSINESS);
+    assert.ok(parsedOpen, 'parseWhatsApp must accept BSUID sender + array recipient');
+    assert.equal(parsedOpen.phone, BSUID);
+
+    const openJobs = [];
+    const openRes = await worker.fetch(await signTelnyxRequest(rawOpen, privateKey), env, {
+      waitUntil: (p) => openJobs.push(p),
+    });
+    assert.equal(openRes.status, 200);
+    assert.equal(openJobs.length, 1, 'Open channel must schedule processWhatsApp for BSUID + array recipient');
+    await Promise.all(openJobs);
+
+    assert.equal(telnyxCalls.length, 1);
+    assert.equal(telnyxCalls[0].url, 'https://api.telnyx.com/v2/messages/whatsapp');
+    assert.deepEqual(telnyxCalls[0].body, {
+      type: 'WHATSAPP',
+      from: WA_BUSINESS,
+      to: BSUID,
+      messaging_profile_id: DEFAULT_TELNYX_MESSAGING_PROFILE_ID,
+      whatsapp_message: {
+        type: 'text',
+        text: {
+          body: 'Merhaba! Boğaz turu için hangi tarihi düşünüyorsunuz?',
+          preview_url: false,
+        },
+      },
+    });
+
+    // Enterprise BSUID in from.phone_number + multi-entry array recipient also matches business and replies to ENT_BSUID
+    const rawEnt = buildBsuidArrayToPayload({
+      id: 'wa-bsuid-ent-1',
+      bsuid: ENT_BSUID,
+      fromPhone: ENT_BSUID,
+      to: ['+19990001111', { phone_number: WA_BUSINESS }],
+    });
+    const entJobs = [];
+    const entRes = await worker.fetch(await signTelnyxRequest(rawEnt, privateKey), env, {
+      waitUntil: (p) => entJobs.push(p),
+    });
+    assert.equal(entRes.status, 200);
+    await Promise.all(entJobs);
+    assert.equal(telnyxCalls.length, 2);
+    assert.equal(telnyxCalls[1].body.to, ENT_BSUID);
+
+    // Non-matching array recipient is ignored without leaking BSUID or text in whatsAppSkip
+    const rawOtherBiz = buildBsuidArrayToPayload({
+      id: 'wa-bsuid-other-biz',
+      to: [{ phone_number: '+19998887777' }],
+    });
+    const skipShape = whatsAppSkip(JSON.parse(rawOtherBiz), WA_BUSINESS);
+    assert.equal(skipShape.to_match, false);
+    assert.equal(skipShape.to_kind, 'array');
+    assert.equal(skipShape.user_id, 'bsuid');
+    assert.equal(JSON.stringify(skipShape).includes(BSUID), false);
+
+    // 2) Close WhatsApp via Emergency Center: BSUID + array recipient is dropped cleanly at allowWhatsAppWebhook (200 OK, 0 AI/Telnyx)
+    globalThis.fetch = origFetch;
+    await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'close', now);
+
+    let closedAiCalls = 0;
+    env.AI.run = async () => {
+      closedAiCalls++;
+      return { response: JSON.stringify({ reply: 'Should not run', handoff: false, abuse: false, proposal: null }) };
+    };
+    globalThis.fetch = async (url, opts) => {
+      if (String(url).includes('api.telnyx.com')) {
+        telnyxCalls.push({ url, body: JSON.parse(opts.body) });
+        return Response.json({ data: { id: 'out-closed' } });
+      }
+      return Response.json({ ok: true });
+    };
+
+    const closedTsSec = Math.floor(now / 1000) + 2;
+    const rawClosedBsuid = buildBsuidArrayToPayload({
+      id: 'wa-bsuid-closed-1',
+      tsSec: closedTsSec,
+    });
+    const closedJobs = [];
+    const closedRes = await worker.fetch(await signTelnyxRequest(rawClosedBsuid, privateKey), env, {
+      waitUntil: (p) => closedJobs.push(p),
+    });
+    assert.equal(closedRes.status, 200);
+    assert.equal(closedJobs.length, 0);
+    assert.equal(closedAiCalls, 0);
+    assert.equal(telnyxCalls.length, 2);
+
+    // 3) Reopen WhatsApp: closed-window BSUID message is NOT replayed; fresh BSUID + array recipient replies at BSUID; outbound echo mutes BSUID
+    globalThis.fetch = origFetch;
+    now += OTP_COOLDOWN_MS + 10_000;
+    await setChannelDirectlyViaDualAuth(env, owner, 'whatsapp', 'reopen', now);
+
+    env.AI.run = async () => ({
+      response: JSON.stringify({
+        reply: 'Kanal yeniden açıldı, size yardımcı olabilirim.',
+        handoff: false,
+        abuse: false,
+        proposal: null,
+      }),
+    });
+    globalThis.fetch = async (url, opts) => {
+      if (String(url).includes('api.telnyx.com')) {
+        telnyxCalls.push({ url, body: JSON.parse(opts.body) });
+        return Response.json({ data: { id: 'out-reopen-bsuid' } });
+      }
+      return Response.json({ ok: true });
+    };
+
+    const replayJobs = [];
+    const replayRes = await worker.fetch(await signTelnyxRequest(rawClosedBsuid, privateKey), env, {
+      waitUntil: (p) => replayJobs.push(p),
+    });
+    assert.equal(replayRes.status, 200);
+    assert.equal(replayJobs.length, 0, 'Closed-window BSUID message must not replay after reopen');
+    assert.equal(telnyxCalls.length, 2);
+
+    const rawFreshBsuid = buildBsuidArrayToPayload({
+      id: 'wa-bsuid-fresh-after-reopen',
+      tsSec: Math.floor(Date.now() / 1000),
+    });
+    const freshJobs = [];
+    const freshRes = await worker.fetch(await signTelnyxRequest(rawFreshBsuid, privateKey), env, {
+      waitUntil: (p) => freshJobs.push(p),
+    });
+    assert.equal(freshRes.status, 200);
+    await Promise.all(freshJobs);
+    assert.equal(telnyxCalls.length, 3);
+    assert.equal(telnyxCalls[2].body.to, BSUID);
+    assert.equal(telnyxCalls[2].body.from, WA_BUSINESS);
+    assert.equal(telnyxCalls[2].body.messaging_profile_id, DEFAULT_TELNYX_MESSAGING_PROFILE_ID);
+
+    // Outbound Business App echo to BSUID mutes Mimo for that BSUID
+    const echoRaw = JSON.stringify({
+      data: {
+        event_type: 'message.echo',
+        payload: {
+          id: 'wa-bsuid-echo-1',
+          type: 'WHATSAPP',
+          origin: 'whatsapp_business_app',
+          direction: 'outbound',
+          from: { phone_number: WA_BUSINESS },
+          to: BSUID,
+          body: { type: 'text', timestamp: String(Math.floor(Date.now() / 1000)), text: { body: 'Ekip yanıtı' } },
+        },
+      },
+    });
+    const echoJobs = [];
+    const echoRes = await worker.fetch(await signTelnyxRequest(echoRaw, privateKey), env, {
+      waitUntil: (p) => echoJobs.push(p),
+    });
+    assert.equal(echoRes.status, 200);
+    await Promise.all(echoJobs);
+
+    const mutedFollowupRaw = buildBsuidArrayToPayload({
+      id: 'wa-bsuid-after-echo',
+      tsSec: Math.floor(Date.now() / 1000),
+    });
+    const mutedJobs = [];
+    await worker.fetch(await signTelnyxRequest(mutedFollowupRaw, privateKey), env, {
+      waitUntil: (p) => mutedJobs.push(p),
+    });
+    await Promise.all(mutedJobs);
+    assert.equal(telnyxCalls.length, 3, 'Muted BSUID after outbound echo must not receive automated reply');
+  } finally {
+    globalThis.fetch = origFetch;
+  }
+});
