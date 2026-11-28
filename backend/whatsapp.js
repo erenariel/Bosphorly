@@ -11,6 +11,9 @@ const prices = buildKbPriceIndex(knowledge);
 export const DEFAULT_TELNYX_MESSAGING_PROFILE_ID = '4001a210-1b06-40b0-be85-2cc64e97452d';
 const GUEST_FALLBACK = 'Şu an yoğunum, birazdan tekrar dener misin? Acil destek: info@bosphorly.com';
 const phoneOK = p => typeof p === 'string' && /^\+[1-9]\d{6,14}$/.test(p);
+// Meta BSUID when the sender hides their phone. A BSUID is never treated as a phone number.
+const bsuidOK = p => typeof p === 'string' && /^[A-Za-z]{2}\.(?:ENT\.)?[A-Za-z0-9]{8,128}$/.test(p);
+const addressOK = p => phoneOK(p) || bsuidOK(p);
 export const maskPhone = p => `${String(p).slice(0,3)}•••${String(p).slice(-4)}`;
 const bytes = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 export async function verifyTelnyx(raw, headers, key, now = Date.now()) {
@@ -21,16 +24,74 @@ export async function verifyTelnyx(raw, headers, key, now = Date.now()) {
     return await crypto.subtle.verify('Ed25519', publicKey, bytes(headers.get('telnyx-signature-ed25519')), new TextEncoder().encode(`${ts}|${raw}`));
   } catch { return false; }
 }
+function textOf(value) {
+  if (typeof value === 'string') return value.trim();
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = textOf(item?.phone_number ?? item?.phone ?? item);
+      if (found) return found;
+    }
+    return '';
+  }
+  if (value && typeof value === 'object') return textOf(value.phone_number ?? value.phone ?? '');
+  return '';
+}
+function asE164(value) {
+  const raw = textOf(value);
+  if (bsuidOK(raw)) return '';
+  if (phoneOK(raw)) return raw;
+  const digits = raw.replace(/\D/g, '');
+  const plus = `+${digits}`;
+  return phoneOK(plus) ? plus : '';
+}
+function senderOf(p) {
+  for (const candidate of [p.from?.phone_number, typeof p.from === 'string' ? p.from : '', p.body?.from]) {
+    const phone = asE164(candidate);
+    if (phone) return phone;
+  }
+  for (const candidate of [p.body?.from_user_id, p.from?.user_id, p.from_user_id, p.from?.phone_number, p.body?.from]) {
+    const id = textOf(candidate);
+    if (bsuidOK(id)) return id;
+  }
+  return '';
+}
+function hitsBusiness(p, business) {
+  const want = asE164(business) || textOf(business);
+  const values = Array.isArray(p.to) ? p.to : [p.to];
+  return values.some(value => asE164(value) === want || textOf(value) === want);
+}
 export function parseWhatsApp(event, business) {
   const d = event?.data, p = d?.payload;
   if (!p || p.type !== 'WHATSAPP' || typeof p.id !== 'string') return null;
-  if (d.event_type === 'message.echo' && p.origin === 'whatsapp_business_app' && p.direction === 'outbound' && p.from?.phone_number === business && phoneOK(p.to))
-    return { id:p.id, phone:p.to, echo:true };
-  if (d.event_type !== 'message.received' || p.direction !== 'inbound' || p.to !== business || !phoneOK(p.from?.phone_number)) return null;
+  const businessPhone = asE164(business) || textOf(business);
+  if (d.event_type === 'message.echo' && p.origin === 'whatsapp_business_app' && p.direction === 'outbound' && asE164(p.from) === businessPhone) {
+    const phone = asE164(p.to) || (bsuidOK(textOf(p.to)) ? textOf(p.to) : '');
+    if (addressOK(phone)) return { id:p.id, phone, echo:true };
+  }
+  const phone = senderOf(p);
+  if (d.event_type !== 'message.received' || p.direction !== 'inbound' || !hitsBusiness(p, business) || !addressOK(phone)) return null;
   if (p.body?.type !== 'text' || typeof p.body.text?.body !== 'string') return null;
   const at = Number(p.body.timestamp) * 1000;
   if (!Number.isFinite(at) || at <= 0) return null;
-  return { id:p.id, phone:p.from.phone_number, text:p.body.text.body.slice(0,4000), at };
+  return { id:p.id, phone, text:p.body.text.body.slice(0,4000), at };
+}
+export function whatsAppSkip(event, business) {
+  const d = event?.data, p = d?.payload;
+  if (!p || d.event_type !== 'message.received' || parseWhatsApp(event, business)) return null;
+  const from = textOf(p.from?.phone_number ?? p.from);
+  const bodyFrom = textOf(p.body?.from);
+  const userId = textOf(p.body?.from_user_id);
+  const kind = value => phoneOK(asE164(value)) ? 'e164' : bsuidOK(textOf(value)) ? 'bsuid' : textOf(value) ? 'other' : 'empty';
+  return {
+    direction: typeof p.direction === 'string' ? p.direction.slice(0, 24) : '',
+    type: typeof p.type === 'string' ? p.type.slice(0, 24) : '',
+    body_type: typeof p.body?.type === 'string' ? p.body.type.slice(0, 24) : '',
+    to_match: hitsBusiness(p, business),
+    to_kind: Array.isArray(p.to) ? 'array' : p.to && typeof p.to === 'object' ? 'object' : typeof p.to === 'string' ? 'string' : 'missing',
+    from_kind: kind(from),
+    body_from_kind: kind(bodyFrom),
+    user_id: bsuidOK(userId) ? 'bsuid' : userId ? 'other' : 'missing',
+  };
 }
 export async function adminWhatsApp(env, chat, sender, text) {
   const m = /^\/mimo_(on|off)(?:@\w+)?\s+(\+[1-9]\d{6,14})$/.exec(text || '');
@@ -195,7 +256,11 @@ export async function handleWhatsApp(request,env,ctx) {
   if (!env.WHATSAPP_KV || !env.DB || !env.TELNYX_API_KEY || !env.TELEGRAM_ADMIN_CHAT_ID || !env.RESEND_API_KEY || !env.REQUEST_FROM_EMAIL) return new Response('Not configured',{status:503});
   let event, m;
   try { event=JSON.parse(raw); m=parseWhatsApp(event,env.WHATSAPP_PHONE_NUMBER); } catch { return new Response('Invalid JSON',{status:400}); }
-  if (!m) logDelivery(event);
+  if (!m) {
+    logDelivery(event);
+    const skip = whatsAppSkip(event, env.WHATSAPP_PHONE_NUMBER);
+    if (skip) console.log(JSON.stringify({channel:'whatsapp',event:'inbound_ignored',...skip}));
+  }
   if (m) ctx.waitUntil(processWhatsApp(env,m).catch(async(err)=>{
     const code = failureCode(err);
     console.error(JSON.stringify({channel:'whatsapp',event:'processing_failed',error:code}));
