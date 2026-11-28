@@ -4,7 +4,6 @@ import {partnerRoutes} from './extranet-partners.js';
 import {campaignRoutes} from './extranet-campaigns.js';
 import {operationsRoutes} from './extranet-operations.js';
 import {stage2Routes} from './extranet-stage2.js';
-import {emergencyExtranetRoutes} from './emergency.js';
 import {MemberSuspendedError,assertMemberActive,recordMemberLogin} from './member-controls.js';
 import {membershipTier, MEMBER_TIERS} from './membership-tier.js';
 // Bosphorly Extranet API (/v1/extranet/*) — Stage 1: Authentication, RBAC (owner/admin/staff),
@@ -1750,9 +1749,6 @@ export async function handleExtranetRoutes(request, env, url, nowMs = Date.now()
 
     const stage2 = await stage2Routes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,ownerEmail:isOwnerEmail,maskEmail,maskPhone,cookie:buildSessionCookie});
     if(stage2)return stage2;
-
-    const emergency = await emergencyExtranetRoutes(request,env,url,nowMs,{auth:requireExtranetAuth,fail,json:jsonResponse,body:readJsonBody,audit:buildAuditStatement,cookie:buildSessionCookie});
-    if(emergency)return emergency;
 
     // 6. Dashboard (GET /v1/extranet/dashboard)
     if (method === 'GET' && path === '/v1/extranet/dashboard') {
