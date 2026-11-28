@@ -4,6 +4,7 @@ import {buildKbPriceIndex, enforcePriceSafetyBelt, detectReplyLanguage} from './
 import {deliverInquiryEmail} from './request-email.js';
 import {messageLanguage, unsafeReply, safeFallback} from './channel-policy.js';
 import { ASSISTANT_MESSAGES, ASSISTANT_MODEL, buildCatalogPrompt, retrieveChunks, detectLanguage, redactSensitive, isAffirmative, isHumanOrHandoffTopic, isServiceComplaint, isAbuseAgainstMimo } from './assistant.js';
+import {isChannelEnabled, allowWhatsAppWebhook} from './emergency.js';
 
 const DAY = 86400;
 const prices = buildKbPriceIndex(knowledge);
@@ -114,6 +115,7 @@ async function mute(env, phone, until) {
   await env.DB.prepare('INSERT INTO whatsapp_control(phone,until_ms) VALUES(?,?) ON CONFLICT(phone) DO UPDATE SET until_ms=MAX(until_ms,excluded.until_ms)').bind(phone,until).run();
 }
 export async function sendWhatsApp(env, phone, reply, at) {
+  if (!await isChannelEnabled(env, 'whatsapp')) return false;
   if (Date.now()-at >= DAY*1000 || at > Date.now()+300000 || await muted(env,phone)) {
     console.log(JSON.stringify({channel:'whatsapp',event:'send_suppressed',reason:'window_or_muted'})); return false;
   }
@@ -254,6 +256,7 @@ export async function handleWhatsApp(request,env,ctx) {
   if (reader) { let size=0; const decoder=new TextDecoder(); while(true) { const {done,value}=await reader.read(); if(done) break; size+=value.byteLength; if(size>65536) { await reader.cancel(); return new Response('Too large',{status:413}); } raw+=decoder.decode(value,{stream:true}); } raw+=decoder.decode(); }
   if (!await verifyTelnyx(raw,request.headers,env.TELNYX_PUBLIC_KEY)) return new Response('Unauthorized',{status:401});
   if (!env.WHATSAPP_KV || !env.DB || !env.TELNYX_API_KEY || !env.TELEGRAM_ADMIN_CHAT_ID || !env.RESEND_API_KEY || !env.REQUEST_FROM_EMAIL) return new Response('Not configured',{status:503});
+  if (!await allowWhatsAppWebhook(env, raw)) return new Response('OK');
   let event, m;
   try { event=JSON.parse(raw); m=parseWhatsApp(event,env.WHATSAPP_PHONE_NUMBER); } catch { return new Response('Invalid JSON',{status:400}); }
   if (!m) {
