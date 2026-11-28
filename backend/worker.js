@@ -11,7 +11,6 @@ import {handleTtsRoute} from './tts.js';
 import {handleTelegramWebhook} from './telegram.js';
 import {sendWeeklyMimoReport} from './mimo.js';
 import {handleExtranetRoutes, isExtranetRoute} from './extranet.js';
-import {handlePublicChannels, guardMimoWebAssistantRequest, flushEmergencyNotifications} from './emergency.js';
 const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function isAllowedOrigin(origin, env) {
  if (!origin || !env?.PUBLIC_ORIGIN) return false;
@@ -30,7 +29,6 @@ export default {async fetch(request,env,ctx) {
  if (!isOauth && origin && !allowedOrigin) return json({error:'Origin denied'},403);
  if (request.method==='OPTIONS') return new Response(null,{status:204,headers:allowedOrigin?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, POST, OPTIONS','Access-Control-Allow-Headers':'Content-Type, Authorization, X-Member-Session, X-Chat-Session, X-CSRF-Token','Vary':'Origin',...(isExtranetRoute(url.pathname)?{'Access-Control-Allow-Credentials':'true'}:{})}:{}});
  if(url.pathname==='/v1/catalog'&&request.method==='GET'){let r;try{r=await publicCatalog(env);}catch{r=json({error:'Catalog unavailable'},503);}if(allowedOrigin){r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}return r;}
- if(url.pathname==='/v1/public/channels'){let r;try{r=await handlePublicChannels(request,env);}catch{r=json({error:'Channel status unavailable'},503);}if(allowedOrigin){r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}return r;}
  if (isExtranetRoute(url.pathname)) {
  if (request.headers.get('Sec-Fetch-Site')==='cross-site') return json({error:'Cross-site denied'},403);
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
@@ -50,8 +48,6 @@ export default {async fetch(request,env,ctx) {
  }
  if (url.pathname==='/v1/assistant' || url.pathname==='/v1/assistant/handoff' || url.pathname==='/v1/assistant/feedback' || url.pathname==='/v1/assistant/transcribe') {
  if (!env.RATE_LIMITER || !(await env.RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP')||'unknown'})).success) return json({error:'Rate limited'},429);
- const mimoGuard=await guardMimoWebAssistantRequest(request,env,url);
- if (mimoGuard) {if(allowedOrigin && !mimoGuard.headers.has('Access-Control-Allow-Origin')) {mimoGuard.headers.set('Access-Control-Allow-Origin',origin);mimoGuard.headers.set('Vary','Origin');} return mimoGuard;}
  try{env=await withConsoleRuntime(env);}catch{return json({error:'Configuration unavailable'},503);}
  const r=await handleAssistantRoutes(request,env,url,ctx);
  if(allowedOrigin && !r.headers.has('Access-Control-Allow-Origin')) {r.headers.set('Access-Control-Allow-Origin',origin);r.headers.set('Vary','Origin');}
@@ -145,7 +141,6 @@ export default {async fetch(request,env,ctx) {
  return response;
 },
 async scheduled(event, env, ctx) {
- if (ctx && typeof ctx.waitUntil === 'function') ctx.waitUntil(flushEmergencyNotifications(env).catch(() => {}));
  ctx.waitUntil(cleanupInbox(env));
  if (event.cron === '0 * * * *') { ctx.waitUntil(purgeWhatsApp(env)); return; }
  const job = sendWeeklyMimoReport(env);

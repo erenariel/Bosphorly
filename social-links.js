@@ -58,7 +58,6 @@
     const options = opts && typeof opts === 'object' ? opts : {};
     const a = document.createElement('a');
     a.className = 'social-btn social-' + channel.id + (options.className ? ' ' + options.className : '');
-    a.dataset.channelItem = channel.id;
     a.href = channel.href;
     a.target = '_blank';
     a.rel = 'noopener';
