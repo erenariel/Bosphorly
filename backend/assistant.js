@@ -1,4 +1,4 @@
-import { usesGemini, callGemini } from './mimo-gemini.js';
+import { usesGemini, callVertex } from './mimo-gemini.js';
 import {liveCatalogContext} from './catalog-store.js';
 import {CHANNEL_POLICY,boundaryIntent,channelText,tidyReply,unsafeReply,safeFallback,identityDiscount,wantsCityList,cityList} from './channel-policy.js';
 import {memberControls} from './member-controls.js';
@@ -1541,8 +1541,8 @@ async function runSelectedModel(env, prep, budget, stream = false) {
   let timer;
   try {
     const gateway = env.AI.gateway(getAiGatewayOptions(env).gateway.id);
-    const request = Promise.resolve(gateway.getUrl('google-ai-studio')).then(url =>
-      callGemini(url, env.GEMINI_API_KEY, prep.messages, prep.effectiveChannel, prep.temperature, controller.signal));
+    const request = Promise.resolve(gateway.getUrl('google-vertex-ai')).then(url =>
+      callVertex(url, env.GOOGLE_VERTEX_SA_JSON, prep.messages, prep.effectiveChannel, prep.temperature, controller.signal));
     const response = await Promise.race([request, new Promise((_, reject) => {
       timer = setTimeout(() => { controller.abort(); reject(new Error('Gemini timeout')); }, timeout);
     })]);
